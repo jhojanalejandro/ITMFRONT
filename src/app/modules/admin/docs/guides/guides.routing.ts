@@ -9,13 +9,6 @@ import { ComponentStructureComponent } from 'app/modules/admin/docs/guides/devel
 import { StarterKitComponent } from 'app/modules/admin/docs/guides/development/starter-kit/starter-kit';
 import { DeploymentComponent } from 'app/modules/admin/docs/guides/development/deployment/deployment';
 import { UpdatingComponent } from 'app/modules/admin/docs/guides/development/updating/updating';
-import { ThemeLayoutsComponent } from 'app/modules/admin/docs/guides/customization/theme-layouts/theme-layouts';
-import { PageLayoutsComponent } from 'app/modules/admin/docs/guides/customization/page-layouts/page-layouts';
-import { TailwindCSSComponent } from 'app/modules/admin/docs/guides/customization/tailwindcss/tailwindcss';
-import { ThemingComponent } from 'app/modules/admin/docs/guides/customization/theming/theming';
-import { ComponentThemingComponent } from 'app/modules/admin/docs/guides/customization/component-theming/component-theming';
-import { SplashScreenCustomizationComponent } from 'app/modules/admin/docs/guides/customization/splash-screen/splash-screen';
-import { MultiLanguageCustomizationComponent } from 'app/modules/admin/docs/guides/customization/multi-language/multi-language';
 import { JwtComponent } from 'app/modules/admin/docs/guides/authentication/jwt/jwt';
 
 export const guidesRoutes: Route[] = [
@@ -81,44 +74,6 @@ export const guidesRoutes: Route[] = [
                     {
                         path     : 'updating',
                         component: UpdatingComponent
-                    }
-                ]
-            },
-            {
-                path    : 'customization',
-                children: [
-                    {
-                        path      : '',
-                        pathMatch : 'full',
-                        redirectTo: 'theme-layouts'
-                    },
-                    {
-                        path     : 'theme-layouts',
-                        component: ThemeLayoutsComponent
-                    },
-                    {
-                        path     : 'page-layouts',
-                        component: PageLayoutsComponent
-                    },
-                    {
-                        path     : 'tailwindcss',
-                        component: TailwindCSSComponent
-                    },
-                    {
-                        path     : 'theming',
-                        component: ThemingComponent
-                    },
-                    {
-                        path     : 'component-theming',
-                        component: ComponentThemingComponent
-                    },
-                    {
-                        path     : 'splash-screen',
-                        component: SplashScreenCustomizationComponent
-                    },
-                    {
-                        path     : 'multi-language',
-                        component: MultiLanguageCustomizationComponent
                     }
                 ]
             },

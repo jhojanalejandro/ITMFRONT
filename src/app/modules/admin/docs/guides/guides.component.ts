@@ -97,55 +97,6 @@ export class GuidesComponent implements OnInit, OnDestroy
                 ]
             },
             {
-                id      : 'customization',
-                title   : 'Customization',
-                type    : 'group',
-                children: [
-                    {
-                        id   : 'customization.theme-layouts',
-                        title: 'Theme layouts',
-                        type : 'basic',
-                        link : '/docs/guides/customization/theme-layouts'
-                    },
-                    {
-                        id   : 'customization.page-layouts',
-                        title: 'Page layouts',
-                        type : 'basic',
-                        link : '/docs/guides/customization/page-layouts'
-                    },
-                    {
-                        id   : 'customization.tailwindcss',
-                        title: 'TailwindCSS',
-                        type : 'basic',
-                        link : '/docs/guides/customization/tailwindcss'
-                    },
-                    {
-                        id   : 'customization.theming',
-                        title: 'Theming',
-                        type : 'basic',
-                        link : '/docs/guides/customization/theming'
-                    },
-                    {
-                        id   : 'customization.component-theming',
-                        title: 'Component theming',
-                        type : 'basic',
-                        link : '/docs/guides/customization/component-theming'
-                    },
-                    {
-                        id   : 'customization.splash-screen',
-                        title: 'Splash screen',
-                        type : 'basic',
-                        link : '/docs/guides/customization/splash-screen'
-                    },
-                    {
-                        id   : 'customization.multi-language',
-                        title: 'Multi language',
-                        type : 'basic',
-                        link : '/docs/guides/customization/multi-language'
-                    }
-                ]
-            },
-            {
                 id      : 'authentication',
                 title   : 'Authentication',
                 type    : 'group',

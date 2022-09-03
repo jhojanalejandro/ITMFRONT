@@ -42,12 +42,12 @@
                 </div>
 
                 <!-- Title -->
-                <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Sign in</div>
+                <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">iniciar sesion</div>
                 <div class="flex items-baseline mt-0.5 font-medium">
                     <div>Don't have an account?</div>
                     <a
                         class="ml-1 text-primary-500 hover:underline"
-                        [routerLink]="['/sign-up']">Sign up
+                        [routerLink]="['/sign-up']">Registrarse
                     </a>
                 </div>
 
@@ -70,22 +70,22 @@
 
                     <!-- Email field -->
                     <mat-form-field class="w-full">
-                        <mat-label>Email address</mat-label>
+                        <mat-label>Correo</mat-label>
                         <input
                             id="email"
                             matInput
                             [formControlName]="'email'">
                         <mat-error *ngIf="signInForm.get('email').hasError('required')">
-                            Email address is required
+                            Se requiere Dirección de correo electrónico
                         </mat-error>
                         <mat-error *ngIf="signInForm.get('email').hasError('email')">
-                            Please enter a valid email address
+                           Por favor, introduce un correo electrónico válido
                         </mat-error>
                     </mat-form-field>
 
                     <!-- Password field -->
                     <mat-form-field class="w-full">
-                        <mat-label>Password</mat-label>
+                        <mat-label>Conraseña</mat-label>
                         <input
                             id="password"
                             matInput
@@ -107,7 +107,7 @@
                                 [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                         </button>
                         <mat-error>
-                            Password is required
+                            se requiere contraseña
                         </mat-error>
                     </mat-form-field>
 
@@ -120,7 +120,7 @@
                         </mat-checkbox>
                         <a
                             class="text-md font-medium text-primary-500 hover:underline"
-                            [routerLink]="['/forgot-password']">Forgot password?
+                            [routerLink]="['/forgot-password']">Se te olvidó tu contraseña?
                         </a>
                     </div>
 
@@ -140,40 +140,6 @@
                             [mode]="'indeterminate'"></mat-progress-spinner>
                     </button>
 
-                    <!-- Separator -->
-                    <div class="flex items-center mt-8">
-                        <div class="flex-auto mt-px border-t"></div>
-                        <div class="mx-2 text-secondary">Or continue with</div>
-                        <div class="flex-auto mt-px border-t"></div>
-                    </div>
-
-                    <!-- Single sign-on buttons -->
-                    <div class="flex items-center mt-8 space-x-4">
-                        <button
-                            class="flex-auto"
-                            type="button"
-                            mat-stroked-button>
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'feather:facebook'"></mat-icon>
-                        </button>
-                        <button
-                            class="flex-auto"
-                            type="button"
-                            mat-stroked-button>
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'feather:twitter'"></mat-icon>
-                        </button>
-                        <button
-                            class="flex-auto"
-                            type="button"
-                            mat-stroked-button>
-                            <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'feather:github'"></mat-icon>
-                        </button>
-                    </div>
                 </form>
             </div>
         </div>

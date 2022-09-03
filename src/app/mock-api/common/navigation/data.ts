@@ -17,13 +17,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/project'
             },
             {
-                id   : 'dashboards.analytics',
-                title: 'Analytics',
-                type : 'basic',
-                icon : 'heroicons_outline:chart-pie',
-                link : '/dashboards/analytics'
-            },
-            {
                 id   : 'dashboards.finance',
                 title: 'Finance',
                 type : 'basic',
@@ -67,42 +60,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'heroicons_outline:check-circle',
                 link : '/apps/tasks'
-            }
-        ]
-    },
-    {
-        id      : 'pages',
-        title   : 'Pages',
-        subtitle: 'Custom made page designs',
-        type    : 'group',
-        icon    : 'heroicons_outline:document',
-        children: [
-            {
-                id      : 'pages.error',
-                title   : 'Error',
-                type    : 'collapsable',
-                icon    : 'heroicons_outline:exclamation-circle',
-                children: [
-                    {
-                        id   : 'pages.error.404',
-                        title: '404',
-                        type : 'basic',
-                        link : '/pages/error/404'
-                    },
-                    {
-                        id   : 'pages.error.500',
-                        title: '500',
-                        type : 'basic',
-                        link : '/pages/error/500'
-                    }
-                ]
-            },
-            {
-                id   : 'pages.settings',
-                title: 'Settings',
-                type : 'basic',
-                icon : 'heroicons_outline:cog',
-                link : '/pages/settings'
             }
         ]
     },

@@ -19,13 +19,6 @@ import { ComponentStructureComponent } from 'app/modules/admin/docs/guides/devel
 import { StarterKitComponent } from 'app/modules/admin/docs/guides/development/starter-kit/starter-kit';
 import { DeploymentComponent } from 'app/modules/admin/docs/guides/development/deployment/deployment';
 import { UpdatingComponent } from 'app/modules/admin/docs/guides/development/updating/updating';
-import { ThemeLayoutsComponent } from 'app/modules/admin/docs/guides/customization/theme-layouts/theme-layouts';
-import { PageLayoutsComponent } from 'app/modules/admin/docs/guides/customization/page-layouts/page-layouts';
-import { TailwindCSSComponent } from 'app/modules/admin/docs/guides/customization/tailwindcss/tailwindcss';
-import { ThemingComponent } from 'app/modules/admin/docs/guides/customization/theming/theming';
-import { ComponentThemingComponent } from 'app/modules/admin/docs/guides/customization/component-theming/component-theming';
-import { SplashScreenCustomizationComponent } from 'app/modules/admin/docs/guides/customization/splash-screen/splash-screen';
-import { MultiLanguageCustomizationComponent } from 'app/modules/admin/docs/guides/customization/multi-language/multi-language';
 import { JwtComponent } from 'app/modules/admin/docs/guides/authentication/jwt/jwt';
 import { guidesRoutes } from 'app/modules/admin/docs/guides/guides.routing';
 
@@ -41,13 +34,6 @@ import { guidesRoutes } from 'app/modules/admin/docs/guides/guides.routing';
         StarterKitComponent,
         DeploymentComponent,
         UpdatingComponent,
-        ThemeLayoutsComponent,
-        PageLayoutsComponent,
-        TailwindCSSComponent,
-        ThemingComponent,
-        ComponentThemingComponent,
-        SplashScreenCustomizationComponent,
-        MultiLanguageCustomizationComponent,
         JwtComponent
     ],
     imports     : [

@@ -16,15 +16,6 @@ export const shortcuts = [
         link       : '/docs/guides/getting-started/introduction',
         useRouter  : true
     },
-
-    {
-        id         : '3c48e75e-2ae7-4b73-938a-12dc655be28b',
-        label      : 'Dashboard',
-        description: 'User analytics',
-        icon       : 'heroicons_outline:chart-pie',
-        link       : '/dashboards/analytics',
-        useRouter  : true
-    },
     {
         id         : '56a0a561-17e7-40b3-bd75-0b6cef230b7e',
         label      : 'Tasks',

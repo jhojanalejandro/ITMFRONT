@@ -32,14 +32,14 @@
                 <div class="w-48">
                     <img src="assets/images/logo/logoItm.jpeg">
                 </div>
-
+                <div class="text-2xl text-warn-500 ">Este registro es solo para personal autorizado</div>
                 <!-- Title -->
-                <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Sign up</div>
+                <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Registrarse</div>
                 <div class="flex items-baseline mt-0.5 font-medium">
-                    <div>Already have an account?</div>
+                    <div>Ya tienes una cuenta?</div>
                     <a
                         class="ml-1 text-primary-500 hover:underline"
-                        [routerLink]="['/pages/authentication/sign-in']">Sign in
+                        [routerLink]="['/pages/authentication/sign-in']">Iniciar sesion
                     </a>
                 </div>
 
@@ -61,34 +61,34 @@
 
                     <!-- Name field -->
                     <mat-form-field class="w-full">
-                        <mat-label>Full name</mat-label>
+                        <mat-label>Nombre completo</mat-label>
                         <input
                             id="name"
                             matInput
                             [formControlName]="'name'">
                         <mat-error *ngIf="signUpForm.get('name').hasError('required')">
-                            Full name is required
+                            Se requiere el nombre completo
                         </mat-error>
                     </mat-form-field>
 
                     <!-- Email field -->
                     <mat-form-field class="w-full">
-                        <mat-label>Email address</mat-label>
+                        <mat-label>Correo electrónico</mat-label>
                         <input
                             id="email"
                             matInput
                             [formControlName]="'email'">
                         <mat-error *ngIf="signUpForm.get('email').hasError('required')">
-                            Email address is required
+                            Se requiere Dirección de correo electrónico
                         </mat-error>
                         <mat-error *ngIf="signUpForm.get('email').hasError('email')">
-                            Please enter a valid email address
+                            Por favor, introduce una dirección de correo electrónico válida
                         </mat-error>
                     </mat-form-field>
 
                     <!-- Password field -->
                     <mat-form-field class="w-full">
-                        <mat-label>Password</mat-label>
+                        <mat-label>Contraseña</mat-label>
                         <input
                             id="password"
                             matInput
@@ -110,37 +110,9 @@
                                 [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                         </button>
                         <mat-error>
-                            Password is required
+                           se requiere contraseña
                         </mat-error>
                     </mat-form-field>
-
-                    <!-- Company field -->
-                    <mat-form-field class="w-full">
-                        <mat-label>Company</mat-label>
-                        <input
-                            id="company-confirm"
-                            matInput
-                            [formControlName]="'company'">
-                    </mat-form-field>
-
-                    <!-- ToS and PP -->
-                    <div class="inline-flex items-end w-full mt-1.5">
-                        <mat-checkbox
-                            [color]="'primary'"
-                            [formControlName]="'agreements'">
-                            <span>I agree to the</span>
-                            <a
-                                class="ml-1 text-primary-500 hover:underline"
-                                [routerLink]="['./']">Terms of Service
-                            </a>
-                            <span>and</span>
-                            <a
-                                class="ml-1 text-primary-500 hover:underline"
-                                [routerLink]="['./']">Privacy Policy
-                            </a>
-                        </mat-checkbox>
-                    </div>
-
                     <!-- Submit button -->
                     <button
                         class="fuse-mat-button-large w-full mt-6"
@@ -149,7 +121,7 @@
                         [disabled]="signUpForm.disabled"
                         (click)="signUp()">
                         <span *ngIf="!signUpForm.disabled">
-                            Create your free account
+                            Registrarse
                         </span>
                         <mat-progress-spinner
                             *ngIf="signUpForm.disabled"
