@@ -42,32 +42,20 @@ export class SettingsComponent implements OnInit, OnDestroy
             {
                 id         : 'account',
                 icon       : 'heroicons_outline:user-circle',
-                title      : 'Account',
-                description: 'Manage your public profile and private information'
+                title      : 'Cuenta',
+                description: 'Administra tu perfil e información privada'
             },
             {
                 id         : 'security',
                 icon       : 'heroicons_outline:lock-closed',
-                title      : 'Security',
-                description: 'Manage your password and 2-step verification preferences'
-            },
-            {
-                id         : 'plan-billing',
-                icon       : 'heroicons_outline:credit-card',
-                title      : 'Plan & Billing',
-                description: 'Manage your subscription plan, payment method and billing information'
-            },
-            {
-                id         : 'notifications',
-                icon       : 'heroicons_outline:bell',
-                title      : 'Notifications',
-                description: 'Manage when you\'ll be notified on which channels'
+                title      : 'Seguridad',
+                description: 'Administre su contraseña y preferencias de verificación en dos pasos'
             },
             {
                 id         : 'team',
                 icon       : 'heroicons_outline:user-group',
-                title      : 'Team',
-                description: 'Manage your existing team and change roles/permissions'
+                title      : 'Equipo de trabajo',
+                description: 'Administre su equipo existente y cambie roles/permisos'
             }
         ];
 

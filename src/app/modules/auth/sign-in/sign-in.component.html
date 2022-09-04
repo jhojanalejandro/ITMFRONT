@@ -23,15 +23,11 @@
             <!-- @formatter:on -->
             <!-- Content -->
             <div class="z-10 relative w-full max-w-2xl">
-                <div class="text-7xl font-bold leading-none text-gray-100">
-                    <div>Bienvenido a</div>
+                <!-- <div class="text-7xl font-bold leading-none text-primary-500">
+                    <div>Bienvenido al</div>
                     <div>Modulo de contratacion</div>
-                </div>
+                </div> -->
 
-                <div class="flex items-center mt-8">
-          
-                    <div class="ml-4 font-medium tracking-tight text-gray-400">More than 17k people joined us, it's your turn</div>
-                </div>
             </div>
         </div>
         <div class="w-full sm:w-auto py-8 px-4 sm:p-12 md:p-16">
@@ -44,7 +40,7 @@
                 <!-- Title -->
                 <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">iniciar sesion</div>
                 <div class="flex items-baseline mt-0.5 font-medium">
-                    <div>Don't have an account?</div>
+                    <div>No tengo una cuenta?</div>
                     <a
                         class="ml-1 text-primary-500 hover:underline"
                         [routerLink]="['/sign-up']">Registrarse
@@ -113,11 +109,6 @@
 
                     <!-- Actions -->
                     <div class="inline-flex items-end justify-between w-full mt-1.5">
-                        <mat-checkbox
-                            [color]="'primary'"
-                            [formControlName]="'rememberMe'">
-                            Remember me
-                        </mat-checkbox>
                         <a
                             class="text-md font-medium text-primary-500 hover:underline"
                             [routerLink]="['/forgot-password']">Se te olvidó tu contraseña?
@@ -132,7 +123,7 @@
                         [disabled]="signInForm.disabled"
                         (click)="signIn()">
                         <span *ngIf="!signInForm.disabled">
-                            Sign in
+                            Iniciar sesion
                         </span>
                         <mat-progress-spinner
                             *ngIf="signInForm.disabled"

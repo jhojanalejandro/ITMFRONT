@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { IUser } from 'app/layout/common/models/userAuthenticate';
 
 @Component({
     selector     : 'auth-sign-in',
@@ -46,19 +47,11 @@ export class AuthSignInComponent implements OnInit
     {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            email     : ['hughes.brian@company.com', [Validators.required, Validators.email]],
-            password  : ['admin', Validators.required],
-            rememberMe: ['']
+            email     : [null, [Validators.required, Validators.email]],
+            password  : [null, Validators.required]
         });
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Sign in
-     */
     signIn(): void
     {
         // Return if the form is invalid
@@ -72,9 +65,12 @@ export class AuthSignInComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
-
+        const useraLogin: IUser={
+            username: this.signInForm.value.email,
+            password: this.signInForm.value.password
+          };
         // Sign in
-        this._authService.signIn(this.signInForm.value)
+        this._authService.signIn(useraLogin)
             .subscribe(
                 () => {
 
@@ -99,7 +95,7 @@ export class AuthSignInComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Wrong email or password'
+                        message: 'Correo o contraseña equivocada'
                     };
 
                     // Show the alert

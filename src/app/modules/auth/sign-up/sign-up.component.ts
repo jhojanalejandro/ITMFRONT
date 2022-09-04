@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { IUserModel } from 'app/layout/common/models/user-model';
 
 @Component({
     selector     : 'auth-sign-up',
@@ -48,6 +49,7 @@ export class AuthSignUpComponent implements OnInit
                 name      : ['', Validators.required],
                 email     : ['', [Validators.required, Validators.email]],
                 password  : ['', Validators.required],
+                phoneNumber : ['', Validators.required]
             }
         );
     }
@@ -59,8 +61,18 @@ export class AuthSignUpComponent implements OnInit
     /**
      * Sign up
      */
-    signUp(): void
+    async signUp()
     {
+
+        const userRegister: IUserModel={
+            userName: this.signUpForm.value.name,
+            userPassword: this.signUpForm.value.password,
+            idRoll: 2,
+            permission: true,
+            userEmail: this.signUpForm.value.email,
+            phoneNumber: this.signUpForm.value.phoneNumber.toString()
+
+        };
         // Do nothing if the form is invalid
         if ( this.signUpForm.invalid )
         {
@@ -72,20 +84,18 @@ export class AuthSignUpComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
-
+        debugger
         // Sign up
-        this._authService.signUp(this.signUpForm.value)
-            .subscribe(
+        (await this._authService.signUp(userRegister)).subscribe(
                 (response) => {
 
                     // Navigate to the confirmation required page
                     this._router.navigateByUrl('/confirmation-required');
                 },
                 (response) => {
-
+                    console.log('error',response);             
                     // Re-enable the form
                     this.signUpForm.enable();
-
                     // Reset the form
                     this.signUpNgForm.resetForm();
 
