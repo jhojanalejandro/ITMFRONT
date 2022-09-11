@@ -15,6 +15,14 @@ export const environment = {
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
     getByIdTicketUserEndpoint: 'User/GetByIdAllTickets/',
+
+    addContractorEndpoint: 'Contractor/Add',
+    UpdateContractorEndpoint: 'Contractor/Update',
+
+
+    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
+
+
 };
 
 /*

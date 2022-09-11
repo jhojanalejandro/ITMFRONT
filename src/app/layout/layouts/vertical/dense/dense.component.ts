@@ -5,6 +5,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 
 @Component({
     selector     : 'dense-layout',
@@ -15,6 +17,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
 {
     isScreenSmall: boolean;
     navigation: Navigation;
+    user: User;
     navigationAppearance: 'default' | 'dense' = 'dense';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -26,6 +29,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
         private _router: Router,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _userService: UserService,
         private _fuseNavigationService: FuseNavigationService
     )
     {
@@ -57,6 +61,12 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((navigation: Navigation) => {
                 this.navigation = navigation;
+            });
+
+            this._userService.user$
+            .pipe((takeUntil(this._unsubscribeAll)))
+            .subscribe((user: User) => {
+                this.user = user;
             });
 
         // Subscribe to media changes

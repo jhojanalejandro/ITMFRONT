@@ -9,6 +9,7 @@ import { fileManagerRoutes } from 'app/modules/admin/apps/file-manager/file-mana
 import { FileManagerComponent } from 'app/modules/admin/apps/file-manager/file-manager.component';
 import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/details/details.component';
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
     declarations: [
@@ -18,11 +19,8 @@ import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/li
     ],
     imports     : [
         RouterModule.forChild(fileManagerRoutes),
-        MatButtonModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatTooltipModule,
-        SharedModule
+        SharedModule,
+        Ng2SearchPipeModule
     ]
 })
 export class FileManagerModule

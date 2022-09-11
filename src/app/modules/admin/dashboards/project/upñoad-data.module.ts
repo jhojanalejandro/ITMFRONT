@@ -14,12 +14,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
-import { ProjectComponent } from 'app/modules/admin/dashboards/project/project.component';
-import { projectRoutes } from 'app/modules/admin/dashboards/project/project.routing';
+import { UploadDataComponent } from 'app/modules/admin/dashboards/project/upload-data.component';
+import { projectRoutes } from 'app/modules/admin/dashboards/project/upload-data.routing';
+import { ContractorRegister } from './register-contractor/register-contractor.component';
 
 @NgModule({
     declarations: [
-        ProjectComponent
+        UploadDataComponent,
+        ContractorRegister
     ],
     imports     : [
         RouterModule.forChild(projectRoutes),

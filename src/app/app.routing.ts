@@ -77,7 +77,7 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'project', loadChildren: () => import('app/modules/admin/dashboards/project/project.module').then(m => m.ProjectModule)},
+                {path: 'project', loadChildren: () => import('app/modules/admin/dashboards/project/upñoad-data.module').then(m => m.ProjectModule)},
                 {path: 'finance', loadChildren: () => import('app/modules/admin/dashboards/finance/finance.module').then(m => m.FinanceModule)},
             ]},
 

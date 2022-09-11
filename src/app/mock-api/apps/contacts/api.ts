@@ -67,7 +67,7 @@ export class ContactsMockApi
                     // Filter the contacts
                     contacts = contacts.filter(contact => contact.name && contact.name.toLowerCase().includes(query.toLowerCase()));
                 }
-
++
                 // Sort the contacts by the name field by default
                 contacts.sort((a, b) => a.name.localeCompare(b.name));
 

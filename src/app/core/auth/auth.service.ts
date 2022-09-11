@@ -51,6 +51,22 @@ export class AuthService
         return localStorage.getItem('accessToken') ?? '';
     }
 
+    set accessEmail(name: string)
+    {
+        localStorage.setItem('accessEmail', name);
+    }
+    get accessEmail(): string
+    {
+        return localStorage.getItem('accessEmail') ?? '';
+    }
+    set accessAvatar(name: string)
+    {
+        localStorage.setItem('accessAvatar', name);
+    }
+    get accessAvatar(): string
+    {
+        return localStorage.getItem('accessAvatar') ?? '';
+    }
     get accessId(): string
     {
         return localStorage.getItem('accessId') ?? '';
@@ -108,6 +124,7 @@ export class AuthService
                 this.accessToken = response.accessToken;
                 this.accessId = response.id;
                 this.accessName = response.userName
+                this.accessEmail = response.userEmail 
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true

@@ -45,49 +45,54 @@ export class SettingsTeamComponent implements OnInit
                 avatar: 'assets/images/avatars/female-02.jpg',
                 name  : 'Laverne Dodson',
                 email : 'lavernedodson@mail.ca',
-                role  : 'write'
+                role  : 'Escribir'
             },
             {
                 avatar: 'assets/images/avatars/female-03.jpg',
                 name  : 'Trudy Berg',
                 email : 'trudyberg@mail.us',
-                role  : 'read'
+                role  : 'Leer'
             },
             {
                 avatar: 'assets/images/avatars/male-07.jpg',
                 name  : 'Lamb Underwood',
                 email : 'lambunderwood@mail.me',
-                role  : 'read'
+                role  : 'Leer'
             },
             {
                 avatar: 'assets/images/avatars/male-08.jpg',
                 name  : 'Mcleod Wagner',
                 email : 'mcleodwagner@mail.biz',
-                role  : 'read'
+                role  : 'Leer'
             },
             {
                 avatar: 'assets/images/avatars/female-07.jpg',
                 name  : 'Shannon Kennedy',
                 email : 'shannonkennedy@mail.ca',
-                role  : 'read'
+                role  : 'Leer'
             }
         ];
 
         // Setup the roles
         this.roles = [
             {
-                label      : 'Read',
-                value      : 'read',
+                label      : 'Leer',
+                value      : 'Leer',
                 description: 'Can read and clone this repository. Can also open and comment on issues and pull requests.'
             },
             {
-                label      : 'Write',
-                value      : 'write',
+                label      : 'Escribir',
+                value      : 'Escribir',
+                description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
+            },
+            {
+                label      : 'Leer y Escribir',
+                value      : 'Leer y escribir',
                 description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
             },
             {
                 label      : 'Admin',
-                value      : 'admin',
+                value      : 'Admin',
                 description: 'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
             }
         ];

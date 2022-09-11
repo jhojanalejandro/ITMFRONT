@@ -28,6 +28,28 @@ export class FileManagerMockApi
      */
     registerHandlers(): void
     {
+        this._fuseMockApiService
+        .onGet('api/apps/file-manager/search')
+        .reply(({request}) => {
+            // Get the search query
+            const query = request.params.get('query');
+
+            // Clone the contacts
+            let items = cloneDeep(this._items);
+
+            // If the query exists...
+            if ( query )
+            {
+                // Filter the contacts
+                items = items.filter(item => item.name && item.name.toLowerCase().includes(query.toLowerCase()));
+            }
++
+            // Sort the contacts by the name field by default
+            items.sort((a, b) => a.name.localeCompare(b.name));
+
+            // Return the response
+            return [200, items];
+        });
         // -----------------------------------------------------------------------------------------------------
         // @ Items - GET
         // -----------------------------------------------------------------------------------------------------

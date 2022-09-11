@@ -1,0 +1,208 @@
+<mat-dialog-content class="mat-typography">
+    <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Registrar Contratista</p>
+    <div class="option">
+        <!-- Alert -->
+        <fuse-alert
+        class="mt-8 -mb-4 text-red-500"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type"
+
+        [@shake]="alert.type === 'error'">
+        {{alert.message}}
+    </fuse-alert>
+</div>
+    <form [formGroup]="formContractor" class="example-form">
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Nombre</mat-label>
+                <input type="text"  id="nombre" formControlName="nombre" autocomplete="off" matInput placeholder="Nombre contratista" >
+                <mat-error *ngIf="formContractor.get('nombre').hasError('required')">
+                    El Campo nombre es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Apellido</mat-label>
+                <input type="text"  id="apellido" formControlName="apellido" autocomplete="off" matInput placeholder="Apellido contratista" >
+                <mat-error *ngIf="formContractor.get('apellido').hasError('required')">
+                    El Campo apellido es requerido
+                </mat-error>
+            </mat-form-field>
+            
+
+        </div>
+        <br>
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Numero celular</mat-label>
+                <input type="number"  id="celular" formControlName="celular" autocomplete="off" matInput placeholder="Numero celular" >
+                <mat-error *ngIf="formContractor.get('celular').hasError('required')">
+                    El Campo nombre es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Numero Telefono</mat-label>
+                <input type="number"  id="telefono" formControlName="telefono" autocomplete="off" matInput placeholder="Numero telefono" >
+                <mat-error *ngIf="formContractor.get('telefono').hasError('required')">
+                    El Campo telefono es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <div class="nationality"> 
+            <div>
+                <h2 class="example-h2">GENERO</h2>            
+                <section class="example-section">
+                  <mat-radio-group [(ngModel)]="labelPosition">
+                    <mat-radio-button class="example-margin" value="M">Masculino</mat-radio-button>
+                    <mat-radio-button class="example-margin" value="F">Femenino</mat-radio-button>
+                    <mat-radio-button class="example-margin" value="I">Indefinido</mat-radio-button>   
+                  </mat-radio-group>
+                </section>
+            </div>
+            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
+                <mat-label >Nacionalidad</mat-label>
+                <mat-select [formControlName]="'nacionalidad'" name="nacionalidad">
+                    <mat-option *ngFor="let nacionalidad of nacionalidades" [value]="nacionalidad.viewValue">
+                        {{nacionalidad.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+
+
+        </div>
+        <br>
+        <div class="nationality"> 
+            <mat-form-field class="direction" appearance="outline">
+                <mat-label>Direccion</mat-label>
+                <input type="text"  id="nodireccionmbre" formControlName="direccion" autocomplete="off" matInput placeholder="Direccion" >
+                <mat-error *ngIf="formContractor.get('direccion').hasError('required')">
+                    El Campo Direccion es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <div class="drop">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Cedula</mat-label>
+                <input type="number"  id="documentodeidentificacion" formControlName="documentodeidentificacion" autocomplete="off" matInput placeholder="Cedula contratista" >
+                <mat-error *ngIf="formContractor.get('documentodeidentificacion').hasError('required')">
+                    El Campo cedula es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Lugar de expedicion</mat-label>
+                <mat-select [formControlName]="'lugardeexpedicion'" name="hiring">
+                    <mat-option *ngFor="let department of departments"  [value]="department.id">
+                        {{department.departamento}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formContractor.get('lugardeexpedicion').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field (click)="picker.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha de Nacimiento</mat-label>
+                <input matInput id="fechanacimiento" autocomplete="off" formControlName="fechanacimiento" [matDatepicker]="picker">
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-error *ngIf="formContractor.get('fechanacimiento').hasError('required')">
+                    Este Campo es requerido
+                 </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <div class="drop"> 
+
+            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
+                <mat-label >Municipio</mat-label>
+                <mat-select [formControlName]="'municipio'" name="municipio">
+                    <mat-option *ngFor="let municipios of municipio" [value]="municipios">
+                        {{municipios}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
+                <mat-label >Comuna</mat-label>
+                <mat-select [formControlName]="'comuna'" name="comuna">
+                    <mat-option *ngFor="let comuna of comunas" [value]="comuna.viewValue">
+                        {{comuna.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
+                <mat-label >Barrio</mat-label>
+                <mat-select [formControlName]="'barrio'" name="comuna">
+                    <mat-option *ngFor="let barrio of comunas" [value]="barrio.viewValue">
+                        {{barrio.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+        </div>
+        <br>
+        <p class="nationality">  <mat-label>Datos de entidad bancaria</mat-label>  </p>
+        <div class="drop"> 
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Entidad bancaria</mat-label>
+                <mat-select [formControlName]="'entidades'" name="entidades">
+                    <mat-option *ngFor="let etb of entidadesB" [value]="etb.viewValue">
+                        {{etb.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Tipo cuenta</mat-label>
+                <mat-select [formControlName]="'tipodecuenta'" name="tipodecuenta">
+                    <mat-option *ngFor="let tpc of tipoCuenta" [value]="tpc.viewValue">
+                        {{tpc.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Numero Cuenta</mat-label>
+                <input type="number"  id="cuentabancaria" formControlName="cuentabancaria" autocomplete="off" matInput placeholder="Numero cuenta bancaria" >
+                <mat-error *ngIf="formContractor.get('cuentabancaria').hasError('required')">
+                    El Campo Cuenta bancaria es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <p class="nationality">Datos de seguridad social  </p>
+        <div class="drop"> 
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Entidad Eps</mat-label>
+                <mat-select [formControlName]="'eps'" name="eps">
+                    <mat-option *ngFor="let eps of entidadesEps" [value]="eps.viewValue">
+                        {{eps.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Entidad Pensiones</mat-label>
+                <mat-select [formControlName]="'pensiones'" name="pension">
+                    <mat-option *ngFor="let pension of entidadesP" [value]="pension.viewValue">
+                        {{pension.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Entidad Arl</mat-label>
+                <mat-select [formControlName]="'arl'" name="arl">
+                    <mat-option *ngFor="let arl of entidadesdArl" [value]="arl.viewValue">
+                        {{arl.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field> 
+        </div>
+
+  </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close class="text-warn-500" (click)="close()">Cancelar</button>
+    <button mat-button type="submit" [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled" class="text-green-500" (click)="addContractor()">Aceptar</button>
+  </mat-dialog-actions>

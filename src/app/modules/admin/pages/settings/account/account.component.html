@@ -22,24 +22,11 @@
                         matInput>
                 </mat-form-field>
             </div>
-            <!-- Username -->
-            <div class="sm:col-span-4">
-                <mat-form-field class="fuse-mat-no-subscript fuse-mat-emphasized-affix w-full">
-                    <mat-label>Username</mat-label>
-                    <div
-                        class="text-secondary"
-                        matPrefix>
-                        fusetheme.com/
-                    </div>
-                    <input
-                        [formControlName]="'username'"
-                        matInput>
-                </mat-form-field>
-            </div>
+
             <!-- Title -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Title</mat-label>
+                    <mat-label>Cargo</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:briefcase'"
@@ -53,16 +40,12 @@
 
         <!-- Divider -->
         <div class="my-10 border-t"></div>
-        <!-- Section -->
-        <div class="w-full">
-            <div class="text-xl">Informacion personal</div>
-            <div class="text-secondary">Detalles de comunicación en caso de que queramos conectar con usted. Estos se mantendrán en privado.</div>
-        </div>
+
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
             <!-- Email -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Email</mat-label>
+                    <mat-label>Correo</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:mail'"
@@ -75,13 +58,13 @@
             <!-- Phone -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Phone</mat-label>
+                    <mat-label>Telefono</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:phone'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'phone'"
+                        [formControlName]="'phone'" 
                         matInput>
                 </mat-form-field>
             </div>

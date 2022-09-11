@@ -63,11 +63,6 @@ export class UserComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Update the user status
      *
@@ -81,7 +76,7 @@ export class UserComponent implements OnInit, OnDestroy
             return;
         }
 
-        // Update the user
+                // Update the user
         this._userService.update({
             ...this.user,
             status

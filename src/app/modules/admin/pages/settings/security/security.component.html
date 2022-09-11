@@ -48,26 +48,6 @@
             <div class="text-xl">Preferencias de seguridad</div>
             <div class="text-secondary">Mantenga su cuenta más segura con las siguientes preferencias.</div>
         </div>
-        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-            <!-- 2-step auth -->
-            <div class="sm:col-span-4 flex items-center justify-between">
-                <div
-                    class="flex-auto cursor-pointer"
-                    (click)="twoStepToggle.toggle()">
-                    <div class="leading-6 font-medium">Enable 2-step authentication</div>
-                    <div class="text-md text-secondary">
-                        Protects you against password theft by requesting an authentication code via SMS on every login.
-                    </div>
-                </div>
-                <mat-slide-toggle
-                    class="ml-4"
-                    [color]="'primary'"
-                    [formControlName]="'twoStep'"
-                    #twoStepToggle>
-                </mat-slide-toggle>
-            </div>
-
-        </div>
 
         <!-- Divider -->
         <div class="my-10 border-t"></div>
@@ -77,13 +57,13 @@
             <button
                 mat-stroked-button
                 type="button">
-                Cancel
+                Cancelar
             </button>
             <button
                 class="ml-4"
                 mat-flat-button
                 type="button"
-                [color]="'primary'">Save
+                [color]="'primary'">Guardar
             </button>
         </div>
     </form>

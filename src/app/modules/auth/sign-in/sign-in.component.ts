@@ -101,6 +101,6 @@ export class AuthSignInComponent implements OnInit
                     // Show the alert
                     this.showAlert = true;
                 }
-            );
+        );
     }
 }
