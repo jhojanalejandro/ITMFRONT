@@ -1,6 +1,8 @@
 export interface IContractor{
+    id?: any;
     nombre: string;
     apellido: string;
+    correo: string;
     documentodeidentificacion: string;
     lugardeexpedicion: string;
     fechanacimiento: Date;
