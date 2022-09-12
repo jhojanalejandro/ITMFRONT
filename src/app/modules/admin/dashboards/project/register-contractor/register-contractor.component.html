@@ -14,10 +14,14 @@
     </fuse-alert>
 </div>
     <form [formGroup]="formContractor" class="example-form">
-        <div class="nationality">
+        <div class="drop">
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Nombre</mat-label>
                 <input type="text"  id="nombre" formControlName="nombre" autocomplete="off" matInput placeholder="Nombre contratista" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('nombre').hasError('required')">
                     El Campo nombre es requerido
                 </mat-error>
@@ -26,8 +30,23 @@
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Apellido</mat-label>
                 <input type="text"  id="apellido" formControlName="apellido" autocomplete="off" matInput placeholder="Apellido contratista" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('apellido').hasError('required')">
                     El Campo apellido es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Correo</mat-label>
+                <input type="mail"  id="correo" formControlName="correo" autocomplete="off" matInput placeholder="Correo" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('correo').hasError('required')">
+                    El Campo nombre es requerido
                 </mat-error>
             </mat-form-field>
             
@@ -38,6 +57,10 @@
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Numero celular</mat-label>
                 <input type="number"  id="celular" formControlName="celular" autocomplete="off" matInput placeholder="Numero celular" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('celular').hasError('required')">
                     El Campo nombre es requerido
                 </mat-error>
@@ -46,6 +69,10 @@
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Numero Telefono</mat-label>
                 <input type="number"  id="telefono" formControlName="telefono" autocomplete="off" matInput placeholder="Numero telefono" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('telefono').hasError('required')">
                     El Campo telefono es requerido
                 </mat-error>
@@ -53,42 +80,45 @@
         </div>
         <br>
         <div class="nationality"> 
-            <div>
-                <h2 class="example-h2">GENERO</h2>            
-                <section class="example-section">
-                  <mat-radio-group [(ngModel)]="labelPosition">
-                    <mat-radio-button class="example-margin" value="M">Masculino</mat-radio-button>
-                    <mat-radio-button class="example-margin" value="F">Femenino</mat-radio-button>
-                    <mat-radio-button class="example-margin" value="I">Indefinido</mat-radio-button>   
-                  </mat-radio-group>
-                </section>
+            <div class="drop">
+                <div class="hiring">   
+                    <h2 class="example-h2">GENERO</h2>            
+                    <section class="example-section">
+                      <mat-radio-group formControlName="sexo">
+                        <mat-radio-button value="Masculino" class="example-margin" value="M">Masculino</mat-radio-button>
+                        <mat-radio-button value="Femenino" class="example-margin" value="F">Femenino</mat-radio-button>
+                        <mat-radio-button value="Indefinido" class="example-margin" value="I">Indefinido</mat-radio-button>   
+                      </mat-radio-group>
+                    </section>
+
+                </div>
+
             </div>
-            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
+            <mat-form-field class="hiring flex-auto gt-xs:pr-3" appearance="outline">
                 <mat-label >Nacionalidad</mat-label>
-                <mat-select [formControlName]="'nacionalidad'" name="nacionalidad">
+                <mat-select matNativeControl [formControlName]="'nacionalidad'" name="nacionalidad">
                     <mat-option *ngFor="let nacionalidad of nacionalidades" [value]="nacionalidad.viewValue">
                         {{nacionalidad.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
             </mat-form-field> 
 
 
         </div>
-        <br>
-        <div class="nationality"> 
-            <mat-form-field class="direction" appearance="outline">
-                <mat-label>Direccion</mat-label>
-                <input type="text"  id="nodireccionmbre" formControlName="direccion" autocomplete="off" matInput placeholder="Direccion" >
-                <mat-error *ngIf="formContractor.get('direccion').hasError('required')">
-                    El Campo Direccion es requerido
-                </mat-error>
-            </mat-form-field>
-        </div>
+
         <br>
         <div class="drop">
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Cedula</mat-label>
                 <input type="number"  id="documentodeidentificacion" formControlName="documentodeidentificacion" autocomplete="off" matInput placeholder="Cedula contratista" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('documentodeidentificacion').hasError('required')">
                     El Campo cedula es requerido
                 </mat-error>
@@ -96,10 +126,14 @@
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Lugar de expedicion</mat-label>
                 <mat-select [formControlName]="'lugardeexpedicion'" name="hiring">
-                    <mat-option *ngFor="let department of departments"  [value]="department.id">
+                    <mat-option *ngFor="let department of departmentos"  [value]="department.departamento">
                         {{department.departamento}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('lugardeexpedicion').hasError('required')">
                     Este Campo es requerido
                 </mat-error>
@@ -116,8 +150,23 @@
             </mat-form-field>
         </div>
         <br>
+        <p class="nationality"> Datos de residencia  </p>
         <div class="drop"> 
-
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Lugar de Residencia</mat-label>
+                <mat-select [formControlName]="'departamento'" name="hiring">
+                    <mat-option *ngFor="let department of departmentos"  [value]="department.id">
+                        {{department.departamento}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('lugardeexpedicion').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
             <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
                 <mat-label >Municipio</mat-label>
                 <mat-select [formControlName]="'municipio'" name="municipio">
@@ -125,34 +174,72 @@
                         {{municipios}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('municipio').hasError('required')">
+                    Este Campo es requerido
+                 </mat-error>
             </mat-form-field> 
-            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
+            <mat-form-field class="hiring" appearance="outline" >
                 <mat-label >Comuna</mat-label>
                 <mat-select [formControlName]="'comuna'" name="comuna">
                     <mat-option *ngFor="let comuna of comunas" [value]="comuna.viewValue">
                         {{comuna.viewValue}}
                     </mat-option>
                 </mat-select>
-            </mat-form-field> 
-            <mat-form-field class="hiring" appearance="outline" (click)="getMunicipio()">
-                <mat-label >Barrio</mat-label>
-                <mat-select [formControlName]="'barrio'" name="comuna">
-                    <mat-option *ngFor="let barrio of comunas" [value]="barrio.viewValue">
-                        {{barrio.viewValue}}
-                    </mat-option>
-                </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('comuna').hasError('required')">
+                    Este Campo es requerido
+                 </mat-error>
             </mat-form-field> 
         </div>
         <br>
-        <p class="nationality">  <mat-label>Datos de entidad bancaria</mat-label>  </p>
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Barrio</mat-label>
+                <input type="text"  id="barrio" formControlName="barrio" autocomplete="off" matInput placeholder="Barrio" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:home'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('barrio').hasError('required')">
+                    El Campo barrio es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="direction" appearance="outline">
+                <mat-label>Direccion</mat-label>
+                <input type="text"  id="nodireccionmbre" formControlName="direccion" autocomplete="off" matInput placeholder="Direccion" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:home'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('direccion').hasError('required')">
+                    El Campo Direccion es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <p class="nationality"> Datos de entidad bancaria  </p>
         <div class="drop"> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Entidad bancaria</mat-label>
-                <mat-select [formControlName]="'entidades'" name="entidades">
+                <mat-select [formControlName]="'entidadcuentabancaria'" name="entidadcuentabancaria">
                     <mat-option *ngFor="let etb of entidadesB" [value]="etb.viewValue">
                         {{etb.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('entidadcuentabancaria').hasError('required')">
+                    El Campo Entidad bancaria es requerido
+                </mat-error>
             </mat-form-field> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Tipo cuenta</mat-label>
@@ -161,10 +248,21 @@
                         {{tpc.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('tipodecuenta').hasError('required')">
+                    El Campo Entidad bancaria es requerido
+                </mat-error>
             </mat-form-field> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Numero Cuenta</mat-label>
                 <input type="number"  id="cuentabancaria" formControlName="cuentabancaria" autocomplete="off" matInput placeholder="Numero cuenta bancaria" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:credit-card'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('cuentabancaria').hasError('required')">
                     El Campo Cuenta bancaria es requerido
                 </mat-error>
@@ -180,14 +278,28 @@
                         {{eps.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('eps').hasError('required')">
+                    El Campo EPS es requerido
+                </mat-error>
             </mat-form-field> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Entidad Pensiones</mat-label>
-                <mat-select [formControlName]="'pensiones'" name="pension">
+                <mat-select [formControlName]="'pension'" name="pension">
                     <mat-option *ngFor="let pension of entidadesP" [value]="pension.viewValue">
                         {{pension.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('pension').hasError('required')">
+                    El Campo pension es requerido
+                </mat-error>
             </mat-form-field> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Entidad Arl</mat-label>
@@ -196,6 +308,13 @@
                         {{arl.viewValue}}
                     </mat-option>
                 </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('arl').hasError('required')">
+                    El Campo arl es requerido
+                </mat-error>
             </mat-form-field> 
         </div>
 
