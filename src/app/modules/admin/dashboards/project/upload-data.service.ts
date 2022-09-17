@@ -36,21 +36,21 @@ export class UploadDataService
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Get data
-     */
-    getData(): Observable<any>
+
+    // async addContractor(data: any ): Promise<Observable<IResponse>>{
+    //     let urlEndpointupdate = this.apiUrl + environment.addContractorEndpoint;
+    //     return await  this._httpClient.post<IResponse>(urlEndpointupdate, data);
+    // }
+    getAllUser(): Observable<any>
     {
-        return this._httpClient.get('api/dashboards/project').pipe(
+        let urlEndPoint = this.apiUrl+ environment.getAllUserEndpoint;
+        return  this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
                 this._data.next(response);
             })
         );
     }
-    // async addContractor(data: any ): Promise<Observable<IResponse>>{
-    //     let urlEndpointupdate = this.apiUrl + environment.addContractorEndpoint;
-    //     return await  this._httpClient.post<IResponse>(urlEndpointupdate, data);
-    // }
+
     addContractor(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -59,5 +59,10 @@ export class UploadDataService
     async getDepartments(){
         let urlEndPoint = environment.getDepartmentsColombia;
         return await this._httpClient.get<any>(urlEndPoint);
+    }
+
+    async getTicketsUser(id: any){
+        let urlEndPoint = this.apiUrl+ environment.getByIdTicketUserEndpoint;
+        return await this._httpClient.get<any>(urlEndPoint + id);
     }
 }

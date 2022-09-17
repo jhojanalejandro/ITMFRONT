@@ -88,147 +88,71 @@
     <!-- Main -->
     <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
         <div class="w-full max-w-screen-xl mx-auto">
-            <!-- Tabs -->
-            <mat-tab-group
-                class="sm:px-2"
-                [animationDuration]="'0'">
-
-                <!-- Home -->
-                <mat-tab label="Inicio">
-                    <ng-template matTabContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
-                            <!-- Summary -->
-                            <!-- <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-     
- 
-                            </div> -->
-                            <!-- Overdue -->
-                            <!-- <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Overdue</div>
-                                    <div class="ml-2 -mt-2 -mr-3">
-                                        <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="overdueMenu">
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                                        </button>
-                                        <mat-menu #overdueMenu="matMenu">
-                                            <button mat-menu-item>Yesterday</button>
-                                            <button mat-menu-item>2 days ago</button>
-                                            <button mat-menu-item>3 days ago</button>
-                                        </mat-menu>
-                                    </div>
-                                </div>
-
-                            </div> -->
-                            <!-- Issues -->
-                            <!-- <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Issues</div>
-                                    <div class="ml-2 -mt-2 -mr-3">
-                                        <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="issuesMenu">
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                                        </button>
-                                        <mat-menu #issuesMenu="matMenu">
-                                            <button mat-menu-item>Yesterday</button>
-                                            <button mat-menu-item>2 days ago</button>
-                                            <button mat-menu-item>3 days ago</button>
-                                        </mat-menu>
-                                    </div>
-                                </div>
-              
-                            </div> -->
-                            <!-- Features -->
-                            <!-- <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <div class="flex items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Features</div>
-                                    <div class="ml-2 -mt-2 -mr-3">
-                                        <button
-                                            mat-icon-button
-                                            [matMenuTriggerFor]="featuresMenu">
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                                        </button>
-                                        <mat-menu #featuresMenu="matMenu">
-                                            <button mat-menu-item>Yesterday</button>
-                                            <button mat-menu-item>2 days ago</button>
-                                            <button mat-menu-item>3 days ago</button>
-                                        </mat-menu>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col items-center mt-2">
-                                    <div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">38</div>
-                                    <div class="text-lg font-medium text-green-600 dark:text-green-500">Proposals</div>
-                                    <div class="flex items-baseline justify-center w-full mt-5 text-secondary">
-                                        <div class="text-md font-medium truncate">Implemented:</div>
-                                        <div class="ml-1.5 text-lg font-semibold">16</div>
-                                    </div>
-                                </div>
-                            </div> -->
-                            <!-- Github issues summary -->
-                            <!-- <div class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <div class="flex flex-col sm:flex-row items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Github Issues Summary</div>
-                                    <div class="mt-3 sm:mt-0 sm:ml-2">
-                                        <mat-button-toggle-group
-                                            value="this-week"
-                                            #githubIssuesWeekSelector="matButtonToggleGroup">
-                                            <mat-button-toggle value="last-week">Last Week</mat-button-toggle>
-                                            <mat-button-toggle value="this-week">This Week</mat-button-toggle>
-                                        </mat-button-toggle-group>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
-               
-                                </div>
-                            </div> -->
-                            <!-- Schedule -->
-                            <!-- <div class="sm:col-span-2 md:col-span-4 lg:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <div class="flex flex-col sm:flex-row items-start justify-between">
-                                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Schedule</div>
-                                    <div class="mt-3 sm:mt-0 sm:ml-2">
-                                        <mat-button-toggle-group
-                                            value="today"
-                                            #scheduleDaySelector="matButtonToggleGroup">
-                                            <mat-button-toggle value="today">Today</mat-button-toggle>
-                                            <mat-button-toggle value="tomorrow">Tomorrow</mat-button-toggle>
-                                        </mat-button-toggle-group>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col mt-2 divide-y">
-                      
-                                </div>
-                            </div> -->
-                        </div>
-                    </ng-template>
-                </mat-tab>
-
-                <!-- Budget -->
-                <!-- <mat-tab label="Cargar Datos">
-                    <ng-template matTabContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-6 gap-6 w-full min-w-0">
-  
-                        </div>
-                    </ng-template>
-                </mat-tab> -->
-
-                <!-- Team -->
-                <!-- <mat-tab label="Otros">
-                    <ng-template matTabContent>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full min-w-0">
-
-                        </div>
-                    </ng-template>
-                </mat-tab> -->
-
-            </mat-tab-group>
+            <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">nuestros usuarios</div>
+                    <div class="text-secondary font-medium">puedes buscar usuarios</div>
+                </div>
+                <div class="inputsearch" >
+                    <mat-form-field appearance="outline">
+                      <mat-label><mat-icon >
+                        search</mat-icon></mat-label>   
+                      <input   matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
+                    </mat-form-field>
+                    <mat-form-field class="hiring" appearance="outline">
+                        <mat-label >Entidad Pensiones</mat-label>
+                        <mat-select [formControlName]="'pension'" name="pension">
+                            <mat-option *ngFor="let pension of entidadesP" [value]="pension.viewValue">
+                                {{pension.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon
+                        class="icon-size-5"
+                        matSuffix
+                        [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                        <!-- <mat-error *ngIf="formContractor.get('pension').hasError('required')">
+                            El Campo pension es requerido
+                        </mat-error> -->
+                    </mat-form-field> 
+                </div>
+                <div class="overflow-x-auto mx-6">
+                    <table
+                        class="w-full bg-transparent"
+                        mat-table
+                        matSort
+                        [dataSource]="dataSource"
+                        [trackBy]="trackByFn"
+                        cdkDropList          
+                        cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="drop($event)"
+                        matSort (matSortChange)="announceSortChange($event)"
+                        >
+                
+                        <ng-container  *ngFor="let columna of columnas"  matColumnDef="{{columna.name}}" class="demo">
+                        <th mat-header-cell class="centre" cdkDrag mat-sort-header   *matHeaderCellDef> {{columna.title}} </th>
+                        <td mat-cell  [class.selected]="element.selected"
+                        (click)="element.selected = !element.selected;"   *matCellDef="let element"   
+                         > <p *ngIf="element[columna.name]!= element.TicketCount && element[columna.name]!= element.userEmail && element[columna.name]!= element.userName" > {{element[columna.name] }}</p> <p *ngIf="element[columna.name]== element.userName || element[columna.name]== element.userEmail">{{element[columna.name]}} </p> <span
+                         *ngIf="element[columna.name]== element.TicketCount;" 
+                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                         [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.TicketCount < 20,
+                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.TicketCount > 20}">
+                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                     </span></td>
+                        </ng-container>
+                                        
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                        </tr>
+                
+                        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"  
+                
+                        (click)="selection.toggle(row); selectRowFull(row)">
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { IContractor } from 'app/layout/common/models/contractor';
-import { UploadDataComponent } from '../upload-data.component';
 import { UploadDataService } from '../upload-data.service';
 import swal from 'sweetalert2';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
@@ -28,10 +27,9 @@ export class ContractorRegister implements OnInit {
     type   : 'warn',
     message: ''
   };
-  departments: any;
+  departmentos: any = GlobalCont.departamentos;
   municipio: any;
   showAlert: boolean = false;
-  data: any;
   registerDate = new Date();
   entidadesB: any = GlobalCont.entidadesB;
   entidadesEps: any = GlobalCont.eps;
@@ -49,66 +47,104 @@ export class ContractorRegister implements OnInit {
 
     ngOnInit(): void {
         // this.getRaffle();
-      
-      this.getDepartamento();
-        this.formContractor = this._formBuilder.group({
-          nombre: new FormControl(null, Validators.required),
-          apellido: new FormControl(null, Validators.required),
-          documentodeidentificacion: new FormControl(null, Validators.required),
-          lugardeexpedicion: new FormControl(null, Validators.required),
-          fechanacimiento: new FormControl(null, Validators.required),
-          municipio: new FormControl(null, Validators.required),
-          comuna: new FormControl(null, Validators.required),
-          barrio: new FormControl(null, Validators.required),
-          telefono: new FormControl(null, Validators.required),
-          celular: new FormControl(null, Validators.required),
-          sexo: new FormControl(null, Validators.required),
-          nacionalidad: new FormControl(null, Validators.required),
-          direccion: new FormControl(null, Validators.required),
-          departamento: new FormControl(null, Validators.required),
-          eps: new FormControl(null, Validators.required),
-          pension: new FormControl(null, Validators.required),
-          arl: new FormControl(null, Validators.required),
-          cuentabancaria: new FormControl(null, Validators.required),
-          tipodecuenta: new FormControl(null, Validators.required),
-          entidadcuentabancaria: new FormControl(null, Validators.required),
+
+      // this.getDepartamento();
+      this.formContractor = this._formBuilder.group({
+        consecutivo: new FormControl(null, Validators.required),
+        cpc: new FormControl(null, Validators.required),
+        nombreCpc: new FormControl(null, Validators.required),
+        contrato: new FormControl(null, Validators.required),
+        compromiso: new FormControl(null, Validators.required),
+        fechaContrato: new FormControl(null, Validators.required),
+        fechaInicioProyectado: new FormControl(null, Validators.required),
+        fechaInicioReal: new FormControl(null, Validators.required),
+        fechaFinalizacion: new FormControl(null, Validators.required),
+        honorariosMensuales: new FormControl(null, Validators.required),
+        actividad: new FormControl(null, Validators.required),
+        encabezado: new FormControl(null, Validators.required),
+        ejecucion: new FormControl(null, Validators.required),
+        obligacionesGenerales: new FormControl(null, Validators.required),
+        obligacionesEspecificas: new FormControl(null, Validators.required),
+        profesional: new FormControl(null, Validators.required),
+        laboral: new FormControl(null, Validators.required),
+        fechaComite: new FormControl(null, Validators.required),
+        requierePoliza: new FormControl(null, Validators.required),
+        noPoliza: new FormControl(null, Validators.required),
+        vigenciaInicial: new FormControl(null, Validators.required),
+        vigenciaFinal: new FormControl(null, Validators.required),
+        fechaExPedicionPoliza: new FormControl(null, Validators.required),
+        valorAsegurado: new FormControl(null, Validators.required),
+        fechaExaPreocupacional: new FormControl(null, Validators.required),
+        nivel: new FormControl(null, Validators.required),
+        interventor: new FormControl(null, Validators.required),
+        cargoInterventor: new FormControl(null, Validators.required),
+        noAdicion: new FormControl(null, Validators.required),
+        fechaInicioAplicacion: new FormControl(null, Validators.required),
+        fechaterminacionAplicacion: new FormControl(null, Validators.required),
+        duracionTotal: new FormControl(null, Validators.required),
+        eps: new FormControl(null, Validators.required),
+        pension: new FormControl(null, Validators.required),
+        arl: new FormControl(null, Validators.required),
+        cuentabancaria: new FormControl(null, Validators.required),
+        tipodecuenta: new FormControl(null, Validators.required),
+        entidadcuentabancaria: new FormControl(null, Validators.required),
 
       });
     }
     close(){
-      this.data = 'vacio'
      
-      this.matDialogRef.close(this.data);   
+      this.matDialogRef.close();   
     }
     async addContractor() {
         const registerContractor: IContractor={
-          nombre: this.formContractor.value.nombre,
-          apellido: this.formContractor.value.apellido,
-          documentodeidentificacion: this.formContractor.value.documentodeidentificacion,
-          lugardeexpedicion: this.formContractor.value.winOportunities,
-          fechanacimiento: this.formContractor.value.cipher,
-          municipio: this.formContractor.value.ticketCant,
-          comuna: this.formContractor.value.priceTicket,
-          barrio: this.formContractor.value.valueReward,
-          telefono: this.formContractor.value.telefono,
-          celular: this.formContractor.value.celular,
-          sexo: this.formContractor.value.sexo,
-          direccion: this.formContractor.value.direccion,
-          departamento: this.formContractor.value.departamento,
-          eps: this.formContractor.value.departamento,
-          pension: this.formContractor.value.departamento,
-          arl: this.formContractor.value.departamento,
-          cuentabancaria: this.formContractor.value.departamento,
-          tipodecuenta: this.formContractor.value.departamento,
-          entidadcuentabancaria: this.formContractor.value.departamento,
-          nacionalidad: this.formContractor.value.nacionalidad,
-        };   
+          consecutivo: this.formContractor.value.consecutivo,
+          cpc: this.formContractor.value.cpc,
+          nombreCpc: this.formContractor.value.nombreCpc,
+          contrato: this.formContractor.value.contrato.toString(),
+          compromiso: this.formContractor.value.compromiso,
+          fechaContrato: this.formContractor.value.fechaContrato,
+          fechaInicioProyectado: this.formContractor.value.fechaInicioProyectado,
+          fechaInicioReal: this.formContractor.value.fechaInicioReal,
+          fechaFinalizacion: this.formContractor.value.fechaFinalizacion,
+          honorariosMensuales: this.formContractor.value.honorariosMensuales,
+          actividad: this.formContractor.value.actividad,
+          encabezado: this.formContractor.value.encabezado,
+          ejecucion: this.formContractor.value.ejecucion,
+          obligacionesGenerales: this.formContractor.value.obligacionesGenerales,
+          obligacionesEspecificas: this.formContractor.value.obligacionesEspecificas,
+          profesional: this.formContractor.value.profesional,
+          laboral: this.formContractor.value.laboral,
+          fechaComite: this.formContractor.value.fechaComite,
+          requierePoliza: this.formContractor.value.requierePoliza,
+          noPoliza: this.formContractor.value.noPoliza,
+          vigenciaInicial: this.formContractor.value.vigenciaInicial,
+          vigenciaFinal: this.formContractor.value.vigenciaFinal,
+          fechaExPedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
+          valorAsegurado: this.formContractor.value.valorAsegurado,
+          fechaExaPreocupacional: this.formContractor.value.fechaExaPreocupacional,
+          nivel: this.formContractor.value.nivel,
+          interventor: this.formContractor.value.interventor,
+          cargoInterventor: this.formContractor.value.cargoInterventor,
+          noAdicion: this.formContractor.value.cargoInterventor,
+          fechaInicioAplicacion: this.formContractor.value.fechaInicioAplicacion,
+          fechaterminacionAplicacion: this.formContractor.value.fechaterminacionAplicacion,
+          duracionTotal: this.formContractor.value.duracionTotal,
+
+          eps: this.formContractor.value.eps,
+          pension: this.formContractor.value.pension,
+          arl: this.formContractor.value.arl,
+          cuentabancaria: this.formContractor.value.cuentabancaria.toString(),
+          tipodecuenta: this.formContractor.value.tipodecuenta,
+          entidadcuentabancaria: this.formContractor.value.entidadcuentabancaria,
+        };  
       this._upload
       .addContractor(registerContractor)
       .subscribe((res) => {   
-        swal.fire('Eliminado!', '', 'success');
-          this.data = res;
-          this.matDialogRef.close(this.data);     
+        if(res){
+          swal.fire('Contratista Registrado Exitosamente!', '', 'success');
+          this.matDialogRef.close();     
+        }
+
       },
       (response) => {
           this.formContractor.enable();
@@ -129,16 +165,14 @@ export class ContractorRegister implements OnInit {
     //         this.RaffleNameData = Response;
     //     });
     // }
-    async getDepartamento(){
-      (await  this._upload.getDepartments()).subscribe((Response) =>{
-        this.departments = Response;                
-      })
-    }
+    // async getDepartamento(){
+    //   (await  this._upload.getDepartments()).subscribe((Response) =>{
+    //     this.departments = Response;                
+    //   })
+    // }
 
     async getMunicipio(){
-      (await  this._upload.getDepartments()).subscribe((Response) =>{
-        this.municipio = Response[this.formContractor.value.departamento].ciudades;            
-    })
-
-}
+      // this.municipio = this.departamentos[this.formContractor.value.departamento].ciudades;   
+       this.municipio = GlobalCont.departamentos[this.formContractor.value.departamento].ciudades;            
+    }
 }
