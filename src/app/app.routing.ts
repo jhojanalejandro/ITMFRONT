@@ -86,6 +86,7 @@ export const appRoutes: Route[] = [
                 {path: 'academy', loadChildren: () => import('app/modules/admin/apps/academy/academy.module').then(m => m.AcademyModule)},
                 {path: 'contacts', loadChildren: () => import('app/modules/admin/apps/contacts/contacts.module').then(m => m.ContactsModule)},
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
+                {path: 'documentos', loadChildren: () => import('app/modules/admin/apps/file-manager/show-file/show-file.module').then(m => m.ShowFileModule)},
                 {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)},
             ]},
 

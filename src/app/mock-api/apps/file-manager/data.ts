@@ -36,68 +36,68 @@ export const items = [
         contents   : '24 files',
         description: 'Work related files, mainly documents and paychecks.'
     },
-    {
-        id         : '3ffc3d84-8f2d-4929-903a-ef6fc21657a7',
-        folderId   : null,
-        name       : 'Estimated budget',
-        createdBy  : 'Brian Hughes',
-        createdAt  : 'December 14, 2020',
-        modifiedAt : 'December 14, 2020',
-        size       : '679 KB',
-        type       : 'XLS',
-        contents   : null,
-        description: null
-    },
+    // {
+    //     id         : '3ffc3d84-8f2d-4929-903a-ef6fc21657a7',
+    //     folderId   : null,
+    //     name       : 'Estimated budget',
+    //     createdBy  : 'Brian Hughes',
+    //     createdAt  : 'December 14, 2020',
+    //     modifiedAt : 'December 14, 2020',
+    //     size       : '679 KB',
+    //     type       : 'XLS',
+    //     contents   : null,
+    //     description: null
+    // },
 
-    {
-        id         : '4f64597a-df7e-461c-ad60-f33e5f7e0747',
-        folderId   : null,
-        name       : 'Invoices',
-        createdBy  : 'Brian Hughes',
-        createdAt  : 'January 12, 2020',
-        modifiedAt : 'January 12, 2020',
-        size       : '17.8 MB',
-        type       : 'PDF',
-        contents   : null,
-        description: null
-    },
-    {
-        id         : 'e445c445-57b2-4476-8c62-b068e3774b8e',
-        folderId   : null,
-        name       : 'Crash logs',
-        createdBy  : 'Brian Hughes',
-        createdAt  : 'June 8, 2020',
-        modifiedAt : 'June 8, 2020',
-        size       : '11.3 MB',
-        type       : 'TXT',
-        contents   : null,
-        description: null
-    },
-    {
-        id         : 'ae908d59-07da-4dd8-aba0-124e50289295',
-        folderId   : null,
-        name       : 'Biometric portrait',
-        createdBy  : 'Brian Hughes',
-        createdAt  : 'August 29, 2020',
-        modifiedAt : 'August 29, 2020',
-        size       : '4.5 MB',
-        type       : 'DOC',
-        contents   : null,
-        description: null
-    },
+    // {
+    //     id         : '4f64597a-df7e-461c-ad60-f33e5f7e0747',
+    //     folderId   : null,
+    //     name       : 'Invoices',
+    //     createdBy  : 'Brian Hughes',
+    //     createdAt  : 'January 12, 2020',
+    //     modifiedAt : 'January 12, 2020',
+    //     size       : '17.8 MB',
+    //     type       : 'PDF',
+    //     contents   : null,
+    //     description: null
+    // },
+    // {
+    //     id         : 'e445c445-57b2-4476-8c62-b068e3774b8e',
+    //     folderId   : null,
+    //     name       : 'Crash logs',
+    //     createdBy  : 'Brian Hughes',
+    //     createdAt  : 'June 8, 2020',
+    //     modifiedAt : 'June 8, 2020',
+    //     size       : '11.3 MB',
+    //     type       : 'TXT',
+    //     contents   : null,
+    //     description: null
+    // },
+    // {
+    //     id         : 'ae908d59-07da-4dd8-aba0-124e50289295',
+    //     folderId   : null,
+    //     name       : 'Biometric portrait',
+    //     createdBy  : 'Brian Hughes',
+    //     createdAt  : 'August 29, 2020',
+    //     modifiedAt : 'August 29, 2020',
+    //     size       : '4.5 MB',
+    //     type       : 'DOC',
+    //     contents   : null,
+    //     description: null
+    // },
 
-    {
-        id         : '630d2e9a-d110-47a0-ac03-256073a0f56d',
-        folderId   : null,
-        name       : 'Scanned image 20201012-2',
-        createdBy  : 'Brian Hughes',
-        createdAt  : 'September 14, 2020',
-        modifiedAt : 'September 14, 2020',
-        size       : '7.4 MB',
-        type       : 'JPG',
-        contents   : null,
-        description: null
-    },
+    // {
+    //     id         : '630d2e9a-d110-47a0-ac03-256073a0f56d',
+    //     folderId   : null,
+    //     name       : 'Scanned image 20201012-2',
+    //     createdBy  : 'Brian Hughes',
+    //     createdAt  : 'September 14, 2020',
+    //     modifiedAt : 'September 14, 2020',
+    //     size       : '7.4 MB',
+    //     type       : 'JPG',
+    //     contents   : null,
+    //     description: null
+    // },
     {
         id         : '74010810-16cf-441d-a1aa-c9fb620fceea',
         folderId   : 'cd6897cb-acfd-4016-8b53-3f66a5b5fc68',

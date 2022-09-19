@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UploadDataService } from './upload-data.service';
-import { ContractorRegister } from './register-contractor/register-contractor.component';
+import { ContractorRegisterComponent } from './register-contractor/register-contractor.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator } from '@angular/material/paginator';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { ProjectFolderComponent } from './register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from './upload-file/upload-file.component';
 
 @Component({
     selector       : 'upload',
@@ -24,22 +24,22 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 })
 export class UploadDataComponent implements OnInit, OnDestroy
 {
+    selectContract: any;
     data: any;
     userName: any;
-    selectedProject: string = 'ACME Corp. Backend App';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     @ViewChild('recentTransactionsTable', {read: MatSort}) recentTransactionsTableMatSort: MatSort;
-    @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort!: MatSort;
     @ViewChild(MatTable) table!: MatTable<any>;
     raffleName: any;
+    contratos: any;
     configForm: FormGroup;
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['userName','lastName','identificationCard','userEmail','country', 'department','municipality','TicketCount'];
+    displayedColumns: string[] = ['nombre','apellido','documentodeidentificacion','correo','telefono','nacionalidad','fechanacimiento','acciones'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
 
     /**
@@ -47,70 +47,59 @@ export class UploadDataComponent implements OnInit, OnDestroy
      */
     constructor(
         private _uploadData: UploadDataService,
-        private authService: AuthService,
         private _matDialog: MatDialog,
-        private router: Router,
+        private auth: AuthService,
         private cdref: ChangeDetectorRef,
         private _liveAnnouncer: LiveAnnouncer,     
     )
     {
     }
-
     columnas = [ 
-        {title: 'NOMBRE', name: 'userName'},
-        {title: 'APELLIDO', name: 'lastName'},
-        {title: 'CEDULA', name: 'identificationCard'},
-        {title: 'CORREO', name: 'userEmail'},
-        {title: 'PAIS', name: 'country'},
-        {title: 'DEPARTAMENTO', name: 'department'},
-        {title: 'MUNICIPIO', name: 'municipality'},
-        {title: 'Cantidad de boletos', name: 'TicketCount'}
+        {title: 'NOMBRE', name: 'nombre'},
+        {title: 'APELLIDO', name: 'apellido'},
+        {title: 'CEDULA', name: 'documentodeidentificacion'},
+        {title: 'CORREO', name: 'correo'},
+        {title: 'TELEFONO', name: 'telefono'},
+        {title: 'NACIONALIDAD', name: 'nacionalidad'},
+        {title: 'FECHA NACIMIENTO', name: 'fechanacimiento'},
+        {title: 'ACCIONES', name: 'acciones'}
       ]
 
-    /**
-     * On init
-     */
-
-    openDialog(route: any) {
+    openDialog(route: any,data: any) {
         //this.validateDinamycKey();
         switch(route){
-            case 'register':
-            const dialogRef = this._matDialog.open(ContractorRegister);
-            dialogRef.afterClosed().subscribe(datos => {
+            case 'registerFolder':
+            const dialogRefPrroject = this._matDialog.open(ProjectFolderComponent);
+            dialogRefPrroject.afterClosed().subscribe(datos => {
               if(datos){      
+                this.getContractsData();
+                
                 // console.log('datos ',datos);               
               }               
             });
             break
-        //     case 'addRafle':
-        //         const dialogRefs = this.dialog.open(AddRaffleComponent);
-        //         dialogRefs.afterClosed().subscribe((result) => {
-
-        //         });
-        //     break
-        //     case 'winTicket':
-        //         const dialogWin = this.dialog.open(WinTicketComponent);
-        //         dialogWin.afterClosed().subscribe(datos => {
-        //             if(datos != 'vacio'){
-        //                 this.dataRandom = datos; 
-        //                 this.divShow = true;  
-        //             }
-                                           
-        //         });
-        //     break
-        //     case 'raffleList':
-        //         this._router.navigate(['lista/rifas']);
-        //     break
-        //     case 'ticketList':
-        //         this._router.navigate(['lista/boletos']);
-        //     break
-        //     case 'style':
-        //         this._router.navigate(['juega'], { skipLocationChange: true });
-        //     break
-        //     case 'resultados':
-        //          this._router.navigate(['lista/resultados']);
-
-        //     break
+            case 'registerData':
+        const dialogRef =  this._matDialog.open(ContractorRegisterComponent, {
+          autoFocus: false,
+          data     : {
+              idUser: this.auth.accessId,
+              data
+          }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          if(result){
+            this.getContractsData();
+          }
+      }); 
+                break
+            case 'upload':
+                const dialogWin = this._matDialog.open(UploadFileComponent);
+                dialogWin.afterClosed().subscribe(datos => {
+                    if(datos){
+                        this.getContractsData();
+                    }                                   
+                });
+            break
         //     case 'resultadosQr':
         //         this._router.navigate(['lista/resultados/qr'], { skipLocationChange: true });
 
@@ -140,9 +129,9 @@ export class UploadDataComponent implements OnInit, OnDestroy
        */
       ngOnInit(): void
       {
-          this.getUserData();
+          this.getContractsData();
+          this.userName = this.auth.accessName
       }
-         
         //metodo de filtrar los datos de las columnas
         applyFilter(event: Event) {
             const filterValue = (event.target as HTMLInputElement).value;
@@ -155,34 +144,38 @@ export class UploadDataComponent implements OnInit, OnDestroy
           this.dataSource.sort = this.recentTransactionsTableMatSort;
       }
   
-      /**
-       * On destroy
-       */
       ngOnDestroy(): void
       {
           // Unsubscribe from all subscriptions
           this._unsubscribeAll.next(null);
           this._unsubscribeAll.complete();
       }
-  
-    
-      selectRowFull(userId: any) {    
-          this.router.navigateByUrl('pages/usuario/detalle/' + userId.id)
+      selectRowFull(data: any) { 
+        
+        const dialogRef =  this._matDialog.open(ContractorRegisterComponent, {
+            autoFocus: false,
+            data     : {
+                idUser: this.auth.accessId,
+                data
+            }
+          });
+          dialogRef.afterClosed().subscribe((result) => {
+            if(result){
+              this.getContractsData();
+            }
+        }); 
     }
    
-    getUserData(){
+    getContractsData(){
               // Get the data
-              this._uploadData.getAllUser()
+              this._uploadData.getAllContract()
               .pipe(takeUntil(this._unsubscribeAll))
               .subscribe((data) => {
-                      
-                for (let index = 0; index < data.length; index++) {
-                  this.getTicketUser(data[index].id, index);
-                }   
-                this.dataSource= new MatTableDataSource(data);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort= this.sort;
-                this.dataSource.data = data;  
+                this.contratos = data;
+                // for (let index = 0; index < data.length; index++) {
+                //   this.getDataContractor(data[index].id, index, data[index].registerDate);
+                // }   
+
           });
     }
       /**
@@ -196,12 +189,22 @@ export class UploadDataComponent implements OnInit, OnDestroy
           return item.id || index;
       }
    
-      async getTicketUser(id: any, po: any) {
-          (await this._uploadData.getTicketsUser(id)).subscribe((Response) => {
-              this.dataSource.data[po].TicketCount =  Response.length;
-          });
-  
-      }
+
+    async getDataContractor(id: any) {
+      (await this._uploadData.getByIdProject(id)).subscribe((Response) => {
+        this.dataSource= new MatTableDataSource(Response);
+        this.dataSource.sort= this.sort;
+        this.dataSource.data = Response;  
+      });
+
+    }
+    onChange(newValue) {
+      console.log('cambio',newValue);
+      this.selectContract = newValue;
+      this.getDataContractor(this.selectContract );
+      // don't forget to update the model here
+      // ... do other stuff here ...
+  }
 
 
 }

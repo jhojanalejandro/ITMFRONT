@@ -1,4 +1,4 @@
-import { Component, OnInit,Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,7 +18,7 @@ import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class ContractorRegister implements OnInit {
+export class ContractorRegisterComponent implements OnInit {
   checked = false;
   indeterminate = false;
   labelPosition: 'before' | 'after' = 'after';
@@ -41,13 +41,14 @@ export class ContractorRegister implements OnInit {
   nacionalidades: any = GlobalCont.nacionalidad;
 
     constructor(private _upload: UploadDataService,
-      public matDialogRef: MatDialogRef<ContractorRegister>,
+      private ref: ChangeDetectorRef,
+      public matDialogRef: MatDialogRef<ContractorRegisterComponent>,
       @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
       ) {}
 
     ngOnInit(): void {
         // this.getRaffle();
-
+      
       // this.getDepartamento();
       this.formContractor = this._formBuilder.group({
         consecutivo: new FormControl(null, Validators.required),
@@ -90,11 +91,10 @@ export class ContractorRegister implements OnInit {
         entidadcuentabancaria: new FormControl(null, Validators.required),
 
       });
+      console.log('llega dialog',this.datos);
+
     }
-    close(){
-     
-      this.matDialogRef.close();   
-    }
+
     async addContractor() {
         const registerContractor: IContractor={
           consecutivo: this.formContractor.value.consecutivo,
@@ -129,7 +129,6 @@ export class ContractorRegister implements OnInit {
           fechaInicioAplicacion: this.formContractor.value.fechaInicioAplicacion,
           fechaterminacionAplicacion: this.formContractor.value.fechaterminacionAplicacion,
           duracionTotal: this.formContractor.value.duracionTotal,
-
           eps: this.formContractor.value.eps,
           pension: this.formContractor.value.pension,
           arl: this.formContractor.value.arl,
@@ -142,13 +141,13 @@ export class ContractorRegister implements OnInit {
       .subscribe((res) => {   
         if(res){
           swal.fire('Contratista Registrado Exitosamente!', '', 'success');
-          this.matDialogRef.close();     
+          this.ref.detectChanges();
+          this.ref.markForCheck();  
         }
 
       },
       (response) => {
           this.formContractor.enable();
-         
           // Set the alert
           this.alert = {
               type   : 'error',

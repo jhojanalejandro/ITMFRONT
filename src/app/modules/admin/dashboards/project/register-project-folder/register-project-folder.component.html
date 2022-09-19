@@ -1,0 +1,61 @@
+<mat-dialog-content class="mat-typography">
+    <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Registrar Contrato</p>
+    <div class="option">
+        <!-- Alert -->
+        <fuse-alert
+        class="mt-8 -mb-4 text-red-500"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type"
+
+        [@shake]="alert.type === 'error'">
+        {{alert.message}}
+    </fuse-alert>
+</div>
+    <form [formGroup]="formProject" class="example-form">
+        <div class="folder">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Nombre Empresa</mat-label>
+                <input type="text"  id="companyName" formControlName="companyName" autocomplete="off" matInput placeholder="Nombre empresa" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                <mat-error *ngIf="formProject.get('companyName').hasError('required')">
+                    El Campo empresa es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Nombre projecto</mat-label>
+                <input type="text"  id="projectName" formControlName="projectName" autocomplete="off" matInput placeholder="Nombre projecto" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                <mat-error *ngIf="formProject.get('projectName').hasError('required')">
+                    El Campo Proyecto es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <div class="folder">
+            <mat-form-field class="hiringD" appearance="outline">
+                <mat-label>Descripcion</mat-label>
+                <textarea type="text"  class="example-full-width" id="description" formControlName="description" autocomplete="off" matInput placeholder="Descripcion"></textarea>
+                <mat-error *ngIf="formProject.get('description').hasError('required')">
+                    El Campo Descripcion es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+      
+       
+        
+  </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="true" class="text-warn-500" (click)="close()">Cancelar</button>
+    <button mat-button type="submit" [mat-dialog-close]="true" [disabled]="formProject .disabled" *ngIf="!formProject.disabled" class="text-green-500" (click)="addProjectFolder()">Aceptar</button>
+  </mat-dialog-actions>

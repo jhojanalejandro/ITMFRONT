@@ -16,12 +16,16 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { UploadDataComponent } from 'app/modules/admin/dashboards/project/upload-data.component';
 import { projectRoutes } from 'app/modules/admin/dashboards/project/upload-data.routing';
-import { ContractorRegister } from './register-contractor/register-contractor.component';
+import { ContractorRegisterComponent } from './register-contractor/register-contractor.component';
+import { ProjectFolderComponent } from './register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from './upload-file/upload-file.component';
 
 @NgModule({
     declarations: [
         UploadDataComponent,
-        ContractorRegister
+        ContractorRegisterComponent,
+        ProjectFolderComponent,
+        UploadFileComponent
     ],
     imports     : [
         RouterModule.forChild(projectRoutes),

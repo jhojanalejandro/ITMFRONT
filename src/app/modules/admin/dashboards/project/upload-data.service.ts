@@ -32,24 +32,16 @@ export class UploadDataService
         return this._data.asObservable();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
 
     // async addContractor(data: any ): Promise<Observable<IResponse>>{
     //     let urlEndpointupdate = this.apiUrl + environment.addContractorEndpoint;
-    //     return await  this._httpClient.post<IResponse>(urlEndpointupdate, data);
     // }
-    getAllUser(): Observable<any>
-    {
-        let urlEndPoint = this.apiUrl+ environment.getAllUserEndpoint;
-        return  this._httpClient.get(urlEndPoint).pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
-    }
+
+
+    async getByIdProject(id: any){
+        let urlEndPoint = this.apiUrl+ environment.GetByIdFolderContractorEndpoint;
+        return await this._httpClient.get<any>(urlEndPoint + id);
+    }   
 
     addContractor(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
@@ -60,9 +52,19 @@ export class UploadDataService
         let urlEndPoint = environment.getDepartmentsColombia;
         return await this._httpClient.get<any>(urlEndPoint);
     }
+    
+    addProjectFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
 
-    async getTicketsUser(id: any){
-        let urlEndPoint = this.apiUrl+ environment.getByIdTicketUserEndpoint;
-        return await this._httpClient.get<any>(urlEndPoint + id);
+    getAllContract(): Observable<any>
+    {
+        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
+        return  this._httpClient.get(urlEndPoint).pipe(
+            tap((response: any) => {
+                this._data.next(response);
+            })
+        );
     }
 }
