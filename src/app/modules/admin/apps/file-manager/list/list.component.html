@@ -27,7 +27,7 @@
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <ng-container *ngIf="!items.path.length">
-                                {{items.folders.length}} Carpetas
+                                {{items.folders.length}} carpetas
                             </ng-container>
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items.path.length">
@@ -53,7 +53,6 @@
                                 </div>
                             </ng-container>
                         </div>
-                                                                 <!-- Search -->
                         <div class="flex-auto">
                             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
                                 <mat-icon
@@ -71,7 +70,6 @@
                     </div>
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0">
-  
                         <!-- Upload button -->
                         <button
                             mat-flat-button
@@ -83,17 +81,16 @@
                 </div>
 
                 <!-- Items list -->
-                
                 <ng-container *ngIf="items && (items.folders.length > 0 || items.files.length > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Folders -->
                         <ng-container *ngIf="items.folders.length > 0">
                             <div>
                                 <div class="font-medium">Carpetas</div>
-                                <div class="flex flex-wrap -m-2 mt-2">
-                                    <ng-container *ngFor="let folder of items.folders  | filter:searchText; trackBy:trackByFn ">
+                                <div
+                                    class="flex flex-wrap -m-2 mt-2">
+                                    <ng-container *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
                                         <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
-                                            
                                             <a
                                                 class="absolute z-20 top-1.5 right-1.5 w-8 h-8 min-h-8"
                                                 (click)="$event.preventDefault()"
@@ -103,7 +100,6 @@
                                                     class="icon-size-5"
                                                     [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
                                             </a>
-
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
                                                 [routerLink]="['/apps/file-manager/folders/', folder.id]">
@@ -133,7 +129,7 @@
                         <!-- Files -->
                         <ng-container *ngIf="items.files.length > 0">
                             <div>
-                                <div class="font-medium">Archivos</div>
+                                <div class="font-medium">Files</div>
                                 <div
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let file of items.files; trackBy:trackByFn">

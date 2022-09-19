@@ -14,10 +14,17 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
-    getByIdTicketUserEndpoint: 'User/GetByIdAllTickets/',
 
     addContractorEndpoint: 'Contractor/Add',
     UpdateContractorEndpoint: 'Contractor/Update',
+    GetByIdFolderContractorEndpoint: 'Contractor/GetAllByFolder/',
+    GetFolderContractorEndpoint: 'Contractor/GetAll/',
+
+    addProjectFolderEndpoint: 'ProjectFolder/Add',
+    UpdateProjectFolderEndpoint: 'ProjectFolder/Update',
+    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
+    GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById',
+    DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
 
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

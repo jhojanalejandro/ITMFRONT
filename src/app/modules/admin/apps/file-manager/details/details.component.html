@@ -44,24 +44,24 @@
     <div class="text-lg font-medium mt-8">Information</div>
     <div class="flex flex-col mt-4 border-t border-b divide-y font-medium">
         <div class="flex items-center justify-between py-3">
-            <div class="text-secondary">Created By</div>
+            <div class="text-secondary">Creado por</div>
             <div>{{item.createdBy}}</div>
         </div>
         <div class="flex items-center justify-between py-3">
-            <div class="text-secondary">Created At</div>
+            <div class="text-secondary">Creado en</div>
             <div>{{item.createdAt}}</div>
         </div>
         <div class="flex items-center justify-between py-3">
-            <div class="text-secondary">Modified At</div>
+            <div class="text-secondary">Modificado el</div>
             <div>{{item.modifiedAt}}</div>
         </div>
         <div class="flex items-center justify-between py-3">
-            <div class="text-secondary">Size</div>
+            <div class="text-secondary">Tamaño</div>
             <div>{{item.size}}</div>
         </div>
         <ng-container *ngIf="item.contents">
             <div class="flex items-center justify-between py-3">
-                <div class="text-secondary">Contents</div>
+                <div class="text-secondary">Contenido</div>
                 <div>{{item.contents}}</div>
             </div>
         </ng-container>
@@ -69,7 +69,7 @@
 
     <!-- Description -->
     <div class="flex items-center justify-between mt-8">
-        <div class="text-lg font-medium">Description</div>
+        <div class="text-lg font-medium">Descripcion</div>
         <button mat-icon-button>
             <mat-icon
                 class="icon-size-5"
@@ -93,12 +93,15 @@
             class="flex-auto"
             mat-flat-button
             [color]="'primary'">
-            Download
+            Descargar
         </button>
         <button
             class="flex-auto"
             mat-stroked-button>
-            Delete
+            Eliminar
+        </button>
+        <button (click)="openDialog()" class="bg-green-500 flex-auto" mat-stroked-button>
+            Ver documento
         </button>
     </div>
 

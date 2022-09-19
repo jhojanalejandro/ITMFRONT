@@ -1,0 +1,55 @@
+<mat-dialog-content class="mat-typography">
+    <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Registrar Contrato</p>
+    <div class="option">
+        <!-- Alert -->
+        <fuse-alert
+            class="mt-8 -mb-4 text-red-500"
+            *ngIf="showAlert"
+            [appearance]="'outline'"
+            [showIcon]="false"
+            [type]="alert.type"
+
+            [@shake]="alert.type === 'error'">
+            {{alert.message}}
+        </fuse-alert>
+    </div>
+    <form [formGroup]="formProject" class="example-form">
+        <div class="folder">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >CONTRATOS</mat-label>
+                <mat-select formControlName="IdProject"  (ngModelChange)="onChange($event)" name="contrato">
+                    <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
+                        {{contarto.projectName}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                <!-- <mat-error *ngIf="formContractor.get('pension').hasError('required')">
+                    El Campo pension es requerido
+                </mat-error> -->
+            </mat-form-field> 
+            <div class="text-center">
+                <input formControlName="file" type="file" 
+                mat-flat-button color="primary"  (change)="onChange($event)">
+            </div>
+            <!-- Shareable short link of  uploaded file -->
+            <div class="container text-center jumbotron"
+                *ngIf="shortLink">
+                <h2> Visit Here</h2>
+                <a href="{{shortLink}}">{{shortLink}}</a>
+            </div>
+            
+            <!--Flag variable is used here-->
+            <div class="container" *ngIf="loading">
+                <h3>Loading ...</h3>
+            </div>
+        </div>
+    </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="true" class="text-warn-500" (click)="close()">Cancelar</button>
+    <button mat-button type="submit" [mat-dialog-close]="true" [disabled]="formProject .disabled" *ngIf="!formProject.disabled" class="text-primary-500" (click)="addProjectFolder()">Cargar archivo</button>
+  </mat-dialog-actions>

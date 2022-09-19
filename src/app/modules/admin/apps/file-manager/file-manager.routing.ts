@@ -4,6 +4,7 @@ import { FileManagerComponent } from 'app/modules/admin/apps/file-manager/file-m
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/details/details.component';
 import { FileManagerFolderResolver, FileManagerItemResolver, FileManagerItemsResolver } from 'app/modules/admin/apps/file-manager/file-manager.resolvers';
+import { ShowFileComponent } from './show-file/show-file.component';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -45,5 +46,12 @@ export const fileManagerRoutes: Route[] = [
                 ]
             }
         ]
+    },
+    {
+        path     : 'folders/:folderId/details/:id/documentos',
+        component: ShowFileComponent,
+        // resolve  : {
+        //     data: UploadDataResolver
+        // }
     }
 ];

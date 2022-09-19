@@ -11,7 +11,6 @@ export class FileManagerService
     // Private
     private _item: BehaviorSubject<Item | null> = new BehaviorSubject(null);
     private _items: BehaviorSubject<Items | null> = new BehaviorSubject(null);
-    private item: BehaviorSubject<Item[] | null> = new BehaviorSubject(null);
 
     /**
      * Constructor
@@ -82,17 +81,6 @@ export class FileManagerService
                 }
 
                 return of(item);
-            })
-        );
-    }
-
-    searchFiles(query: string): Observable<Item[]>
-    {
-        return this._httpClient.get<Item[]>('api/apps/file-manager/search', {
-            params: {query}
-        }).pipe(
-            tap((item) => {
-                this.item.next(item);
             })
         );
     }

@@ -4,6 +4,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { MatDialog } from '@angular/material/dialog';
+import { ShowFileComponent } from '../show-file/show-file.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector       : 'file-manager-details',
@@ -22,15 +25,12 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fileManagerListComponent: FileManagerListComponent,
-        private _fileManagerService: FileManagerService
+        private _fileManagerService: FileManagerService,
+        private _router: Router,
+
     )
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * On init
      */
@@ -86,5 +86,10 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+    openDialog() {
+        //this.validateDinamycKey();
+        this._router.navigate(['apps/documentos']);
+
     }
 }

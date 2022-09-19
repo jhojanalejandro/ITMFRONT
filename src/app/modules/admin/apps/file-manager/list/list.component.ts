@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
-import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
+import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+
+
 
 @Component({
     selector       : 'file-manager-list',
@@ -23,8 +25,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-
-
     /**
      * Constructor
      */
@@ -37,10 +37,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     )
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * On init
@@ -88,17 +84,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-
-            this.searchInputControl.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                switchMap(query =>
-                    
-                    // Search
-                    this._fileManagerService.searchFiles(query)
-                )
-            )
-            .subscribe();
 
         // Subscribe to MatDrawer opened change
         this.matDrawer.openedChange.subscribe((opened) => {
@@ -149,7 +134,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     {
         return item.id || index;
     }
-
+    
     private _normalizeValue(value: string): string {
         return value.toString().replace(/[0-9]/g, '');
     }
