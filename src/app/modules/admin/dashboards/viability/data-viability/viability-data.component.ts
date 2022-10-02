@@ -65,7 +65,7 @@ export class ViabilityDataComponent implements OnInit {
           contrato: this.formContractor.value.contrato.toString()
         };  
       this._upload
-      .addContractor(registerViability)
+      .addViability(registerViability)
       .subscribe((res) => {   
         if(res){
           swal.fire('Contratista Registrado Exitosamente!', '', 'success');
