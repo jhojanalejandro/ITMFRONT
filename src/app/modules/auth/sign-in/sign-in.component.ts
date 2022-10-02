@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { IUser } from 'app/layout/common/models/userAuthenticate';
 
 @Component({
@@ -16,7 +17,7 @@ import { IUser } from 'app/layout/common/models/userAuthenticate';
 export class AuthSignInComponent implements OnInit
 {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
-
+    tipoUsuario: any =GlobalCont.TipoUsuario
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',
         message: ''
@@ -48,36 +49,35 @@ export class AuthSignInComponent implements OnInit
         // Create the form
         this.signInForm = this._formBuilder.group({
             email     : [null, [Validators.required, Validators.email]],
+            userType     : [null, Validators.required],
             password  : [null, Validators.required]
         });
     }
 
     signIn(): void
     {
-        // Return if the form is invalid
+                // Return if the form is invalid
         if ( this.signInForm.invalid )
         {
             return;
         }
-
-        // Disable the form
-        this.signInForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
         const useraLogin: IUser={
             username: this.signInForm.value.email,
-            password: this.signInForm.value.password
+            password: this.signInForm.value.password,
+
           };
+
+        if(this.signInForm.value.userType == 'Profesional'){
+                   // Disable the form
+        this.signInForm.disable();
+
+        // Hide the alert
+
         // Sign in
         this._authService.signIn(useraLogin)
             .subscribe(
                 () => {
-
-                    // Set the redirect url.
-                    // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                    // to the correct page after a successful sign in. This way, that url can be set via
-                    // routing file and we don't have to touch here.
                     const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
                     // Navigate to the redirect url
@@ -95,12 +95,42 @@ export class AuthSignInComponent implements OnInit
                     // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: 'Correo o contraseña equivocada'
+                        message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
                     };
 
                     // Show the alert
                     this.showAlert = true;
                 }
         );
+        }else{
+                    // Sign in
+        this._authService.signInContractor(useraLogin)
+        .subscribe(
+            () => {
+                // Navigate to the redirect url
+                this._router.navigate(['apps/inicio/contratista']);
+
+            },
+            (response) => {
+
+                // Re-enable the form
+                this.signInForm.enable();
+
+                // Reset the form
+                this.signInNgForm.resetForm();
+
+                // Set the alert
+                this.alert = {
+                    type   : 'error',
+                    message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
+                };
+
+                // Show the alert
+                this.showAlert = true;
+            }
+    );
+        }
+
+ 
     }
 }

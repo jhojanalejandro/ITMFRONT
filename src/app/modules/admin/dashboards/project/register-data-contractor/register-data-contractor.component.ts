@@ -13,22 +13,21 @@ import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 
 @Component({
     selector: 'app-register-contractor',
-    templateUrl: './register-contractor.component.html',
-    styleUrls: ['./register-contractor.component.scss'],
+    templateUrl: './register-data-contractor.component.html',
+    styleUrls: ['./register-data-contractor.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class ContractorRegisterComponent implements OnInit {
+export class ContractorDataRegisterComponent implements OnInit {
   checked = false;
   indeterminate = false;
+  formFieldHelpers: string[] = [''];
   labelPosition: 'before' | 'after' = 'after';
   disabled = false;
   alert: { type: FuseAlertType; message: string } = {
     type   : 'warn',
     message: ''
   };
-  departmentos: any = GlobalCont.departamentos;
-  municipio: any;
   showAlert: boolean = false;
   registerDate = new Date();
   entidadesB: any = GlobalCont.entidadesB;
@@ -42,14 +41,12 @@ export class ContractorRegisterComponent implements OnInit {
 
     constructor(private _upload: UploadDataService,
       private ref: ChangeDetectorRef,
-      public matDialogRef: MatDialogRef<ContractorRegisterComponent>,
+      public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
       @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
       ) {}
 
     ngOnInit(): void {
-        // this.getRaffle();
-      
-      // this.getDepartamento();
+      // this.ref.detectChanges();
       this.formContractor = this._formBuilder.group({
         consecutivo: new FormControl(null, Validators.required),
         cpc: new FormControl(null, Validators.required),
@@ -170,8 +167,8 @@ export class ContractorRegisterComponent implements OnInit {
     //   })
     // }
 
-    async getMunicipio(){
-      // this.municipio = this.departamentos[this.formContractor.value.departamento].ciudades;   
-       this.municipio = GlobalCont.departamentos[this.formContractor.value.departamento].ciudades;            
-    }
+    // async getMunicipio(){
+    //   // this.municipio = this.departamentos[this.formContractor.value.departamento].ciudades;   
+    //    this.municipio = GlobalCont.departamentos[this.formContractor.value.departamento].ciudades;            
+    // }
 }

@@ -9,15 +9,18 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
-import { FinanceComponent } from 'app/modules/admin/dashboards/finance/finance.component';
-import { financeRoutes } from 'app/modules/admin/dashboards/finance/finance.routing';
+import { HomeContractorComponent } from './home-contractor.component';
+import { UploadDataContractoDataComponent } from './data-viability/upload-data-contractor.component';
+import { contractorRoutes } from './home-contractor.routing';
+
 
 @NgModule({
     declarations: [
-        FinanceComponent
+        HomeContractorComponent,
+        UploadDataContractoDataComponent
     ],
     imports     : [
-        RouterModule.forChild(financeRoutes),
+        RouterModule.forChild(contractorRoutes),
         MatButtonModule,
         MatDividerModule,
         MatIconModule,
@@ -29,6 +32,6 @@ import { financeRoutes } from 'app/modules/admin/dashboards/finance/finance.rout
         SharedModule
     ]
 })
-export class FinanceModule
+export class HomeContractorModule
 {
 }

@@ -46,6 +46,7 @@ export class SearchMockApi
             .onPost('api/common/search')
             .reply(({request}) => {
 
+                
                 // Get the search query
                 const query = cloneDeep(request.body.query.toLowerCase());
 
@@ -99,8 +100,8 @@ export class SearchMockApi
 
                     // Add to the results
                     results.push({
-                        id     : 'pages',
-                        label  : 'Pages',
+                        id     : 'paginas',
+                        label  : 'paginas',
                         results: pagesResults
                     });
                 }

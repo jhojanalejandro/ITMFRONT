@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AuthService } from 'app/core/auth/auth.service';
+import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 
 @Component({
     selector       : 'settings-team',
@@ -9,12 +12,16 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@
 export class SettingsTeamComponent implements OnInit
 {
     members: any[];
-    roles: any[];
+    roles: any = GlobalCont.roles;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
      */
-    constructor()
+    constructor(private _authService: AuthService,
+        private _changeDetectorRef: ChangeDetectorRef,
+
+        )
     {
     }
 
@@ -27,75 +34,79 @@ export class SettingsTeamComponent implements OnInit
      */
     ngOnInit(): void
     {
-        // Setup the team members
-        this.members = [
-            {
-                avatar: 'assets/images/avatars/male-01.jpg',
-                name  : 'Dejesus Michael',
-                email : 'dejesusmichael@mail.org',
-                role  : 'admin'
-            },
-            {
-                avatar: 'assets/images/avatars/male-03.jpg',
-                name  : 'Mclaughlin Steele',
-                email : 'mclaughlinsteele@mail.me',
-                role  : 'admin'
-            },
-            {
-                avatar: 'assets/images/avatars/female-02.jpg',
-                name  : 'Laverne Dodson',
-                email : 'lavernedodson@mail.ca',
-                role  : 'Escribir'
-            },
-            {
-                avatar: 'assets/images/avatars/female-03.jpg',
-                name  : 'Trudy Berg',
-                email : 'trudyberg@mail.us',
-                role  : 'Leer'
-            },
-            {
-                avatar: 'assets/images/avatars/male-07.jpg',
-                name  : 'Lamb Underwood',
-                email : 'lambunderwood@mail.me',
-                role  : 'Leer'
-            },
-            {
-                avatar: 'assets/images/avatars/male-08.jpg',
-                name  : 'Mcleod Wagner',
-                email : 'mcleodwagner@mail.biz',
-                role  : 'Leer'
-            },
-            {
-                avatar: 'assets/images/avatars/female-07.jpg',
-                name  : 'Shannon Kennedy',
-                email : 'shannonkennedy@mail.ca',
-                role  : 'Leer'
+        this._authService.teams$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((teams: any) => {
+            // Mark for check
+            for (let index = 0; index < teams.length; index++) {
+                if(teams[index].avatar == 'vacio'){
+                    teams[index].avatar = 'assets/images/avatars/male-07.jpg';
+                }  
+                
             }
-        ];
+            this.members = teams;
+            //this._changeDetectorRef.markForCheck();
+        });
+
+
+        
+        // (this._authService.getAllUser()).subscribe((Response) => {
+        //     for (let index = 0; index < Response.length; index++) {
+        //         if(Response[index].avatar = 'vacio'){
+        //             Response[index].avatar = 'assets/images/avatars/male-07.jpg';
+        //         }  
+                
+        //     }
+        //     this.members = [Response];
+        // });
+        // this.members = [
+        //     {
+        //         avatar: 'assets/images/avatars/male-01.jpg',
+        //         name  : 'Dejesus Michael',
+        //         email : 'dejesusmichael@mail.org',
+        //         role  : 'admin'
+        //     },
+        //     {
+        //         avatar: 'assets/images/avatars/male-03.jpg',
+        //         name  : 'Mclaughlin Steele',
+        //         email : 'mclaughlinsteele@mail.me',
+        //         role  : 'admin'
+        //     },
+        //     {
+        //         avatar: 'assets/images/avatars/female-02.jpg',
+        //         name  : 'Laverne Dodson',
+        //         email : 'lavernedodson@mail.ca',
+        //         role  : 'Escribir'
+        //     },
+        //     {
+        //         avatar: 'assets/images/avatars/female-03.jpg',
+        //         name  : 'Trudy Berg',
+        //         email : 'trudyberg@mail.us',
+        //         role  : 'Leer'
+        //     },
+        //     {
+        //         avatar: 'assets/images/avatars/male-07.jpg',
+        //         name  : 'Lamb Underwood',
+        //         email : 'lambunderwood@mail.me',
+        //         role  : 'Leer'
+        //     },
+        //     {
+        //         avatar: 'assets/images/avatars/male-08.jpg',
+        //         name  : 'Mcleod Wagner',
+        //         email : 'mcleodwagner@mail.biz',
+        //         role  : 'Leer'
+        //     },
+        //     {
+        //         avatar: 'assets/images/avatars/female-07.jpg',
+        //         name  : 'Shannon Kennedy',
+        //         email : 'shannonkennedy@mail.ca',
+        //         role  : 'Leer'
+        //     }
+        // ];
+        
 
         // Setup the roles
-        this.roles = [
-            {
-                label      : 'Leer',
-                value      : 'Leer',
-                description: 'Can read and clone this repository. Can also open and comment on issues and pull requests.'
-            },
-            {
-                label      : 'Escribir',
-                value      : 'Escribir',
-                description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
-            },
-            {
-                label      : 'Leer y Escribir',
-                value      : 'Leer y escribir',
-                description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
-            },
-            {
-                label      : 'Admin',
-                value      : 'Admin',
-                description: 'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
-            }
-        ];
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -111,5 +122,9 @@ export class SettingsTeamComponent implements OnInit
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+
+    async getDtaUser() {
+
     }
 }

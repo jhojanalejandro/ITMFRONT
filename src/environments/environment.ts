@@ -9,6 +9,7 @@ export const environment = {
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
     updateUserEndpoint: 'User/Update',
+    updatePasswordUserEndpoint: 'User/UpdatePassword',
     getAllUserEndpoint: 'User/GetAll',
     getAllUserEmployeesEndpoint: 'User/GetAllEmployees',
     deleteUserEndpoint: 'User/Delete/',
@@ -23,8 +24,17 @@ export const environment = {
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/Update',
     GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
-    GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById',
+    GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
+
+    addFileEndpoint: 'Files/AddFileContractor',
+    UpdateFileEndpoint: 'Files/Update',
+    GetAllFileEndpoint: 'Files/GetAll',
+    GetByIdFileEndpoint: 'Files/GetById/',
+    DeleteFileEndpoint: 'Files/Delete',
+    AuthContractor: 'Files/Autenticate',
+
+
 
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

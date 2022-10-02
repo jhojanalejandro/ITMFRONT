@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
@@ -12,6 +12,8 @@ export class AuthService
     private _authenticated: boolean = false;
     encryptText: string = 'encrypt';  
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _teams: BehaviorSubject<any> = new BehaviorSubject(null);
+
     apiUrl: any = environment.apiURL;
 
     /**
@@ -28,6 +30,12 @@ export class AuthService
     get user$(): Observable<any>
     {
         return this._data.asObservable();
+    }
+
+    
+    get teams$(): Observable<any>
+    {
+        return this._teams.asObservable();
     }
     /**
      * Setter & getter for access token
@@ -137,6 +145,33 @@ export class AuthService
         );
     }
 
+    signInContractor(credentials: any): Observable<any>
+    {
+        // Throw error, if the user is already logged in
+        if ( this._authenticated )
+        {
+            return throwError('User is already logged in.');
+        }
+
+        return this._httpClient.post<IResponse>(this.apiUrl  + environment.AuthContractor, credentials).pipe(
+            switchMap((response: any) => {
+
+                // Store the access token in the local storage
+                this.accessToken = response.accessToken;
+                this.accessId = response.id;
+                this.accessName = response.NombreCompleto
+                this.accessEmail = response.Correo 
+                // let plainText:string;
+                // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
+                // Set the authenticated flag to true
+                this._authenticated = true;
+                // Store the user on the user service
+                this._userService.user = response;
+                // Return a new observable with the response                
+                return of(response);
+            })
+        );
+    }
     getUser(): Observable<any>
     {
         // Throw error, if the user is already logged in
@@ -158,6 +193,22 @@ export class AuthService
                 // Return a new observable with the response
                 this._data.next(response);
                 return of(response);
+            })
+        );
+    }
+
+    
+    async getUserById(id: any){
+        let urlEndPoint = this.apiUrl+ environment.getByIdUserEndpoint;
+        return await this._httpClient.get<any>(urlEndPoint + id);
+    }
+
+    getAllUser(): Observable<any>
+    {
+        let urlEndPoint = this.apiUrl+ environment.getAllUserEndpoint;
+        return  this._httpClient.get(urlEndPoint).pipe(
+            tap((response: any) => {
+                this._data.next(response);
             })
         );
     }
@@ -266,4 +317,25 @@ export class AuthService
         // If the access token exists and it didn't expire, sign in using it
         return this.signInUsingToken();
     }
+
+    updatePasswordUser(data: any){
+        return this._httpClient.post<IResponse>(environment.apiURL + environment.updatePasswordUserEndpoint, data).pipe(
+            switchMap((response: any) => {        
+                return of(response);
+            })
+        );
+    }
+
+    getTeams(): Observable<any>
+    {
+
+        return this._httpClient.get<IResponse>(this.apiUrl + environment.getAllUserEndpoint ).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
+    }
+
 }

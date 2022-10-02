@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class FinanceService
+export class NominaService
 {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
 

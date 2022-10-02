@@ -10,18 +10,25 @@ export const defaultNavigation: FuseNavigationItem[] = [
         icon    : 'heroicons_outline:home',
         children: [
             {
-                id   : 'dashboards.project',
+                id   : 'dashboards.inicio',
                 title: 'Cargar datos',
                 type : 'basic',
                 icon : 'heroicons_outline:clipboard-check',
-                link : '/dashboards/project'
+                link : '/dashboards/inicio'
             },
             {
-                id   : 'dashboards.finance',
-                title: 'Obligaciones',
+                id   : 'dashboards.nomina',
+                title: 'Nomina',
                 type : 'basic',
                 icon : 'heroicons_outline:cash',
-                link : '/dashboards/finance'
+                link : '/dashboards/nomina'
+            },
+            {
+                id   : 'dashboards.viabilidad',
+                title: 'viabilidad',
+                type : 'basic',
+                icon : 'heroicons_outline:clipboard-list',
+                link : '/dashboards/viabilidad'
             }
         ]
     },

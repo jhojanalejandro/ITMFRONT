@@ -31,7 +31,6 @@ export class UserMockApi implements OnInit {
 
 
     getuser(){
-        debugger
         this._userServ.getUser().subscribe((response) => {
             
  

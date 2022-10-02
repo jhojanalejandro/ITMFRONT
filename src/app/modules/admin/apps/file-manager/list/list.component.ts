@@ -6,6 +6,8 @@ import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-man
 import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
 
 
 
@@ -25,6 +27,8 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
+    id: any;
+
     /**
      * Constructor
      */
@@ -33,21 +37,17 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _fileManagerService: FileManagerService,
-        private _fuseMediaWatcherService: FuseMediaWatcherService
-    )
-    {
-    }
+        private _fuseMediaWatcherService: FuseMediaWatcherService,
+        private _matDialog: MatDialog,
+    ){}
 
-    /**
-     * On init
-     */
     ngOnInit(): void
-    {
+    {   
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'number' ? value : value.numbers)),
             map(numbers => (numbers ? this._filter(numbers) : this.items)),
-          );
+            );
 
           this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
@@ -58,7 +58,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: Items) => {
                 this.items = items;
-
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -68,7 +67,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: Item) => {
                 this.selectedItem = item;
-
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -77,25 +75,14 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((state) => {
-
                 // Calculate the drawer mode
                 this.drawerMode = state.matches ? 'side' : 'over';
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-
-        // Subscribe to MatDrawer opened change
-        this.matDrawer.openedChange.subscribe((opened) => {
-            if ( !opened )
-            {
-                // Remove the selected contact when drawer closed
-                this.items = null;
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            }
-        });
+            console.log('items',this.items.folders);
+         
     }
 
     /**
@@ -108,10 +95,10 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
+    getId(id: any){
+            console.log('id folder', id);
+            this.id = id;
+    }
     /**
      * On backdrop clicked
      */
@@ -119,7 +106,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     {
         // Go back to the list
         this._router.navigate(['./'], {relativeTo: this._activatedRoute});
-
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
@@ -143,21 +129,40 @@ export class FileManagerListComponent implements OnInit, OnDestroy
             const filterValue = this._normalizeValue(value);
             return this.items.filter(street => this._normalizeValue(street).includes(filterValue));
         }
-
     }
 
     private _filter(number: any): any[] {
         const filterValue = number;
         
         return this.items.filter(option => option=== number);
-      }
-
-      
-      applyFilter(event: Event) {
+    }
+    applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         // let studentObj =  this.dataRandom.find(t=>t.fullname ===event);
         this.items.filter = filterValue;
         // return this.dataRandom.number.find(number => number === event)
-
-      }
+    }
+    openDialog() {
+        //this.validateDinamycKey();
+        const dialogRef =  this._matDialog.open(UploadFileComponent, {
+            autoFocus: false,
+            data     : {
+                show: false,
+                idContractor: this.id
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if(result){
+            }
+        });               
+    }
+    // getAllfolders(){
+    //     this._fileManagerService.getAllFolder()
+    //     .pipe(takeUntil(this._unsubscribeAll))
+    //     .subscribe((data) => {
+           
+    //         console.log('cambio',this.items.folders);
+            
+    // });
+    // }
 }

@@ -3,7 +3,7 @@ import { UploadDataComponent } from './upload-data.component';
 // import { UploadDataResolver } from 'app/modules/admin/dashboards/project/upload-data.resolvers';
 // 
 
-export const projectRoutes: Route[] = [
+export const uploadDataRoutes: Route[] = [
     {
         path     : '',
         component: UploadDataComponent,

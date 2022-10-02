@@ -32,7 +32,7 @@ export class FinanceMockApi
         // @ Sales - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/dashboards/finance')
+            .onGet('api/dashboards/nomina')
             .reply(() => [200, cloneDeep(this._finance)]);
     }
 }

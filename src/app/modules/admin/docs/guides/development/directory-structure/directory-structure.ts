@@ -88,7 +88,7 @@ export class DirectoryStructureComponent implements OnInit
                             {name: 'apps/'},
                             {name: 'common/'},
                             {name: 'dashboards/'},
-                            {name: 'pages/'},
+                            {name: 'paginas/'},
                             {name: 'ui/'},
                             {name: 'index.ts'}
                         ]

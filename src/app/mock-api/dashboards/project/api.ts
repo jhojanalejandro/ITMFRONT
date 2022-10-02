@@ -32,7 +32,7 @@ export class ProjectMockApi
         // @ Sales - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onGet('api/dashboards/project')
+            .onGet('api/dashboards/inicio')
             .reply(() => [200, cloneDeep(this._project)]);
     }
 }

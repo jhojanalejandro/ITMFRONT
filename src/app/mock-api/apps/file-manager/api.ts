@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { FuseMockApiService } from '@fuse/lib/mock-api/mock-api.service';
-import { items as itemsData } from 'app/mock-api/apps/file-manager/data';
+import { items, items as itemsData } from 'app/mock-api/apps/file-manager/data';
+import { environment } from 'environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, Subject, takeUntil, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FileManagerMockApi
 {
-    private _items: any[] = itemsData;
+    private _items: any[] = items;
+    apiUrl: any = environment.apiURL;
+    private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(private _fuseMockApiService: FuseMockApiService, private _httpClient: HttpClient)
     {
         // Register Mock API handlers
         this.registerHandlers();
@@ -56,8 +62,8 @@ export class FileManagerMockApi
         this._fuseMockApiService
             .onGet('api/apps/file-manager')
             .reply(({request}) => {
-
-                // Clone the items
+    
+                                    // Clone the items
                 let items = cloneDeep(this._items);
 
                 // See if a folder id exist
@@ -67,15 +73,14 @@ export class FileManagerMockApi
                 // that means we want to root items which have folder id
                 // of null
                 items = items.filter(item => item.folderId === folderId);
-
+                debugger
                 // Separate the items by folders and files
                 const folders = items.filter(item => item.type === 'folder');
                 const files = items.filter(item => item.type !== 'folder');
-
+                debugger
                 // Sort the folders and files alphabetically by filename
                 folders.sort((a, b) => a.name.localeCompare(b.name));
                 files.sort((a, b) => a.name.localeCompare(b.name));
-
                 // Figure out the path and attach it to the response
                 // Prepare the empty paths array
                 const pathItems = cloneDeep(this._items);
@@ -109,7 +114,10 @@ export class FileManagerMockApi
                         files,
                         path
                     }
-                ];
+                ];                          
+  
             });
     }
+
+
 }

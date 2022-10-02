@@ -39,7 +39,7 @@
                     <div>Ya tienes una cuenta?</div>
                     <a
                         class="ml-1 text-primary-500 hover:underline"
-                        [routerLink]="['/pages/authentication/sign-in']">Iniciar sesion
+                        [routerLink]="['/paginas/authentication/sign-in']">Iniciar sesion
                     </a>
                 </div>
 
@@ -86,6 +86,21 @@
                         </mat-error>
                     </mat-form-field>
 
+                    <mat-form-field class="w-full" appearance="outline">
+                        <mat-label >Cargo profesional</mat-label>
+                        <mat-select [formControlName]="'professional'" name="professional">
+                            <mat-option *ngFor="let profesional of profesionales" [value]="profesional.viewValue">
+                                {{profesional.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon
+                        class="icon-size-5"
+                        matSuffix
+                        [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                        <mat-error *ngIf="signUpForm.get('professional').hasError('required')">
+                            El Campo pension es requerido
+                        </mat-error>
+                    </mat-form-field> 
                     <!-- Password field -->
                     <mat-form-field class="w-full">
                         <mat-label>Contraseña</mat-label>
@@ -107,6 +122,33 @@
                             <mat-icon
                                 class="icon-size-5"
                                 *ngIf="passwordField.type === 'text'"
+                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                        </button>
+                        <mat-error>
+                           se requiere contraseña
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Confirmar Contraseña</mat-label>
+                        <input
+                            id="confirmPassword"
+                            matInput
+                            type="password"
+                            [formControlName]="'confirmPassword'"
+                            #confirmPasswordField>
+                        <button
+                            mat-icon-button
+                            type="button"
+                            (click)="confirmPasswordField.type === 'password' ? confirmPasswordField.type = 'text' : confirmPasswordField.type = 'password'"
+                            matSuffix>
+                            <mat-icon
+                                class="icon-size-5"
+                                *ngIf="confirmPasswordField.type === 'password'"
+                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                            <mat-icon
+                                class="icon-size-5"
+                                *ngIf="confirmPasswordField.type === 'text'"
                                 [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                         </button>
                         <mat-error>

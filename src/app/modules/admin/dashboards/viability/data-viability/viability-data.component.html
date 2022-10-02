@@ -1,0 +1,161 @@
+<mat-dialog-content class="mat-typography">
+    <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Registrar Datos del Contratista</p>
+    <div class="option">
+        <!-- Alert -->
+        <fuse-alert
+        class="mt-8 -mb-4 text-red-500"
+        *ngIf="showAlert"
+        [appearance]="'outline'"
+        [showIcon]="false"
+        [type]="alert.type"
+
+        [@shake]="alert.type === 'error'">
+        {{alert.message}}
+    </fuse-alert>
+</div>
+    <form [formGroup]="formContractor" class="example-form">
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Consecutivo</mat-label>
+                <input type="text"  id="consecutivo" formControlName="consecutivo" autocomplete="off" matInput placeholder="Consecutivo" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('consecutivo').hasError('required')">
+                    El Campo consecutivo es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>CPC</mat-label>
+                <input type="text"  id="cpc" formControlName="cpc" autocomplete="off" matInput placeholder="CPC" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('cpc').hasError('required')">
+                    El Campo cpc es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Nombre Cpc</mat-label>
+                <input type="mail"  id="nombreCpc" formControlName="nombreCpc" autocomplete="off" matInput placeholder="Nombre Cpc" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('nombreCpc').hasError('required')">
+                    El Campo nombre cpc es requerido
+                </mat-error>
+            </mat-form-field>
+            
+
+        </div>
+        <br>
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Contrato</mat-label>
+                <input type="number"  id="contrato" formControlName="contrato" autocomplete="off" matInput placeholder="Contrato" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('contrato').hasError('required')">
+                    El Campo contrato es requerido
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Compromiso</mat-label>
+                <input type="number"  id="compromiso" formControlName="compromiso" autocomplete="off" matInput placeholder="Compromiso" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('compromiso').hasError('required')">
+                    El Campo cedula es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <div class="drop">
+            <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha Contrato</mat-label>
+                <input matInput id="fechaContrato" autocomplete="off" formControlName="fechaContrato" [matDatepicker]="pickerContrato">
+                <mat-datepicker #pickerContrato></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>
+                <mat-error *ngIf="formContractor.get('fechaContrato').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field (click)="pickerIP.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha Inicio Proyectado</mat-label>
+                <input matInput id="fechaInicioProyectado" autocomplete="off" formControlName="fechaInicioProyectado" [matDatepicker]="pickerIP">
+                <mat-datepicker #pickerIP></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerIP"></mat-datepicker-toggle>
+                <mat-error *ngIf="formContractor.get('fechaInicioProyectado').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field (click)="pickerIR.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha Inicio Real</mat-label>
+                <input matInput id="fechaInicioReal" autocomplete="off" formControlName="fechaInicioReal" [matDatepicker]="pickerIR">
+                <mat-datepicker #pickerIR></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerIR"></mat-datepicker-toggle>
+                <mat-error *ngIf="formContractor.get('fechaInicioReal').hasError('required')">
+                    Este Campo es requerido
+                 </mat-error>
+            </mat-form-field>
+            <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha de Finalizacion</mat-label>
+                <input matInput id="fechaFinalizacion" autocomplete="off" formControlName="fechaFinalizacion" [matDatepicker]="pickerF">
+                <mat-datepicker #pickerF></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
+                <mat-error *ngIf="formContractor.get('fechaFinalizacion').hasError('required')">
+                    Este Campo es requerido
+                 </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <p class="nationality"> OBLIGACIONES GENERALES  </p>
+        <br>
+
+        <div class="flex">
+            <mat-form-field class="fuse-mat-textarea flex-auto">
+                <textarea
+                    matInput id="obligacionesGenerales" formControlName="obligacionesGenerales" autocomplete="off" matInput placeholder="Obligaciones Generales"></textarea>
+                <mat-icon
+                    class="icon-size-5"
+                    matPrefix
+                    [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
+                    <mat-error *ngIf="formContractor.get('obligacionesGenerales').hasError('obligacionesGenerales')">
+                        El Campo Obligaciones Manuales es requerido
+                    </mat-error>
+            </mat-form-field>
+        </div>
+        <br>
+        <p class="nationality"> OBLIGACIONES ESPECIFICAS </p>
+        <br>
+        <div class="flex">
+            <mat-form-field class="fuse-mat-textarea flex-auto">
+                <textarea
+                    matInput id="obligacionesEspecificas" formControlName="obligacionesEspecificas" autocomplete="off" matInput placeholder="obligaciones Especificas"></textarea>
+                <mat-icon
+                    class="icon-size-5"
+                    matPrefix
+                    [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
+                    <mat-error *ngIf="formContractor.get('obligacionesEspecificas').hasError('obligacionesGenerales')">
+                        El Campo Obligaciones es requerido
+                    </mat-error>
+            </mat-form-field>
+        </div>
+       
+   
+  </form>
+
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
+    <button mat-button type="submit" [mat-dialog-close]="true" [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled" class="text-green-500" (click)="addContractor()">Aceptar</button>
+  </mat-dialog-actions>

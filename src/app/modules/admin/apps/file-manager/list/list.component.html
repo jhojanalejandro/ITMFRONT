@@ -27,7 +27,7 @@
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <ng-container *ngIf="!items.path.length">
-                                {{items.folders.length}} carpetas
+                                {{items.folders.length}} carpetas, {{items.files.length}} Archivos
                             </ng-container>
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items.path.length">
@@ -41,10 +41,10 @@
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.name}}</a>
+                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.companyName}}</a>
                                         </ng-container>
                                         <ng-container *ngIf="last">
-                                            <div>{{path.name}}</div>
+                                            <div>{{path.companyName}}</div>
                                         </ng-container>
                                         <ng-container *ngIf="!last">
                                             <div class="">/</div>
@@ -72,6 +72,7 @@
                     <div class="mt-4 sm:mt-0">
                         <!-- Upload button -->
                         <button
+                            (click)="openDialog()"
                             mat-flat-button
                             [color]="'primary'">
                             <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
@@ -102,7 +103,8 @@
                                             </a>
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', folder.id]">
+                                                [routerLink]="['/apps/file-manager/folders/', folder.id]"
+                                                (click)="getId(folder.id)">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->
@@ -114,7 +116,10 @@
                                                 <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.name">{{folder.name}}</div>
+                                                        [matTooltip]="folder.companyName">{{folder.companyName}}</div>
+                                                        <div
+                                                        class="truncate"
+                                                        [matTooltip]="folder.companyName">{{folder.projectName}}</div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>
                                                     </ng-container>
@@ -129,7 +134,7 @@
                         <!-- Files -->
                         <ng-container *ngIf="items.files.length > 0">
                             <div>
-                                <div class="font-medium">Files</div>
+                                <div class="font-medium">Archivos</div>
                                 <div
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let file of items.files; trackBy:trackByFn">
@@ -158,7 +163,7 @@
                                             <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                 <div
                                                     class="truncate"
-                                                    [matTooltip]="file.name">{{file.name}}</div>
+                                                    [matTooltip]="file.companyName">{{file.companyName}}</div>
                                                 <ng-container *ngIf="file.contents">
                                                     <div class="text-secondary truncate">{{file.contents}}</div>
                                                 </ng-container>
@@ -177,7 +182,7 @@
                         <mat-icon
                             class="icon-size-24"
                             [svgIcon]="'iconsmind:file_hide'"></mat-icon>
-                        <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no items!</div>
+                        <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">No hay items!</div>
                     </div>
                 </ng-template>
 

@@ -34,6 +34,8 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatChipsModule } from '@angular/material/chips';
+
 
 @NgModule({
   declarations:[
@@ -78,6 +80,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     TranslocoModule,
     NgApexchartsModule,
     MatRippleModule,
+    MatChipsModule
   ],
   exports: [
     MatButtonModule,
@@ -118,7 +121,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     TranslocoModule,
     NgApexchartsModule,
     MatRippleModule,
-       
+    MatChipsModule
   ],
 })
 

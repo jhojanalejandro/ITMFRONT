@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { fuseAnimations } from '@fuse/animations';
-import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IUserModel } from 'app/layout/common/models/user-model';
 import {  Subject, takeUntil } from 'rxjs';
@@ -48,7 +46,6 @@ export class SettingsAccountComponent implements OnInit
             this.userName = data.userName
             this.email = data.userEmail
             this.roll = data.idRoll;
-            debugger
             this.accountForm = this._formBuilder.group({
                 name    : [this.userName],
                 email   : [this.email, Validators.email],
@@ -56,9 +53,7 @@ export class SettingsAccountComponent implements OnInit
                 title   :[this.roll]
             });
         });
-      
         // Create the form
-   
 
     }
 
@@ -66,6 +61,8 @@ export class SettingsAccountComponent implements OnInit
         const updateUser: IUserModel={
             id: this._authService.accessId,
             userName: this.accountForm.value.name,
+            avatar: 'avatar',
+            Professionalposition: 'profesional',
             phoneNumber: this.accountForm.value.phoneNumber,
             idRoll: this.roll,
             userEmail: this.accountForm.value.email,

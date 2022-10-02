@@ -1,13 +1,12 @@
-import { Component, OnInit,Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
-import { UploadDataService } from '../upload-data.service';
 import swal from 'sweetalert2';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { IProjectFolder } from 'app/layout/common/models/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
-import { Subject,takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
+import { UploadFileDataService } from './upload-file.service';
 
 @Component({
     selector: 'app-register-contractor',
@@ -19,59 +18,58 @@ import { Subject,takeUntil } from 'rxjs';
 export class UploadFileComponent implements OnInit {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
-  file: File = null; // Variable to store file
+  file: any = null; // Variable to store file
   indeterminate = false;
   showAlert: boolean = false;
   registerDate = new Date();
   selectContract: any;
   contratos: any;
-  formProject: FormGroup; 
+  mostrarContrato = false;
+  numberOfTicks = 0;
+  formFile: FormGroup; 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
-    private _upload: UploadDataService,
-    private authService: AuthService,
+    private ref: ChangeDetectorRef,
+    private _upload: UploadFileDataService,
+    private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
-    @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
-    ) {}
+    private _formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) private _data: { show: any, idContractor: any }
+    ) {
+
+      setInterval(() => {
+        this.numberOfTicks++;
+        // require view to be updated
+        this.ref.detectChanges();
+        this.ref.markForCheck();
+      }, 1000);
+    }
 
   ngOnInit(): void {
+    console.log('llega id', this._data);
+    
+    if(this._data.show){      
+      this.mostrarContrato = true;
+    }
     this.getContractsData();
-    this.formProject = this._formBuilder.group({
+    this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
-      IdProject: new FormControl(null, Validators.required),      
+      filesName: new FormControl(null, Validators.required),      
+      IdProject: new FormControl(null, Validators.required), 
     });
   }
-  close(){
-    this.matDialogRef.close();   
-  }
-  async addProjectFolder() {
-    const registerProject: IProjectFolder={
-      idUser: this.authService.accessId,
-      companyName: this.formProject.value.companyName,
-      projectName: this.formProject.value.projectName,
-      registerDate: this.registerDate, 
-      modifyDate: this.registerDate,        
-    };  
-    this._upload.addProjectFolder(registerProject).subscribe((res) => {   
-        if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
-          this.matDialogRef.close();     
-        }
 
-    },
-    (response) => {
-      this.formProject.enable();
-      console.log('error',response);    
-      // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
-      // Show the alert
-      this.showAlert = true;
-    });
-  }
   onChange(event) {
-    this.file = event.target.files[0];
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        this.file = reader.result;
+        console.log('base 64', this.file);   
+    };
   }
+
 
   onUpload() {
     this.loading = !this.loading;
@@ -95,6 +93,40 @@ export class UploadFileComponent implements OnInit {
       this.contratos = data;
 
     });
+  }
+
+  uploadPdfFile(event) {
+    // this.file = this.getBase64(this.file);
+    // const pdfFiles = this.file;
+    // const pdfFile = pdfFiles.item(0);
+    // const formdata: FormData = new FormData();
+    // formdata.append('pdfFile', pdfFile); 
+    const data: any= {
+      filesName: this.formFile.value.filesName,
+      fileName: this.file,
+      fileType: 'PDF',
+      idContractor: 14,
+      idUser: this._auth.accessId.toString(),
+    }
+  // Should match the parameter name in backend
+    this._upload.UploadFileContractor(data).subscribe((res) => {   
+      if(res){
+        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        //this.matDialogRef.close();  
+        this.ref.detectChanges();
+        this.ref.markForCheck();   
+      }
+
+  },
+  (response) => {
+    this.formFile.enable();
+    console.log('error',response);    
+    // Set the alert
+    swal.fire('Error al Registrar la informacion!', '', 'error');
+    // Show the alert
+    this.showAlert = true;
+  });
+
   }
 
 

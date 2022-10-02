@@ -3,7 +3,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UploadDataService } from './upload-data.service';
-import { ContractorRegisterComponent } from './register-contractor/register-contractor.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
@@ -14,7 +13,8 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ProjectFolderComponent } from './register-project-folder/register-project-folder.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 @Component({
     selector       : 'upload',
     styleUrls: ['./upload-data.component.scss'],
@@ -31,15 +31,12 @@ export class UploadDataComponent implements OnInit, OnDestroy
     @ViewChild('recentTransactionsTable', {read: MatSort}) recentTransactionsTableMatSort: MatSort;
     @ViewChild(MatSort, { static: true }) sort!: MatSort;
     @ViewChild(MatTable) table!: MatTable<any>;
-    raffleName: any;
-    contratos: any;
-    configForm: FormGroup;
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['nombre','apellido','documentodeidentificacion','correo','telefono','nacionalidad','fechanacimiento','acciones'];
+    displayedColumns: string[] = ['id','companyName','projectName','registerDate','action'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
 
     /**
@@ -50,20 +47,27 @@ export class UploadDataComponent implements OnInit, OnDestroy
         private _matDialog: MatDialog,
         private auth: AuthService,
         private cdref: ChangeDetectorRef,
-        private _liveAnnouncer: LiveAnnouncer,     
+        private _liveAnnouncer: LiveAnnouncer,   
+        private _router:  Router
     )
     {
     }
     columnas = [ 
-        {title: 'NOMBRE', name: 'nombre'},
-        {title: 'APELLIDO', name: 'apellido'},
-        {title: 'CEDULA', name: 'documentodeidentificacion'},
-        {title: 'CORREO', name: 'correo'},
-        {title: 'TELEFONO', name: 'telefono'},
-        {title: 'NACIONALIDAD', name: 'nacionalidad'},
-        {title: 'FECHA NACIMIENTO', name: 'fechanacimiento'},
-        {title: 'ACCIONES', name: 'acciones'}
-      ]
+        {title: 'secuencia', name: 'id'},
+        {title: 'NOMBRE EMPRESA', name: 'companyName'},
+        {title: 'NOMBRE PROYECTO', name: 'projectName'},
+        {title: 'FECHA REGISTRO', name: 'registerDate'},
+        // {title: 'FECHA MODIFICACION', name: 'modifyDate'},
+        {title: 'ACCIONES', name: 'action'},    
+    ]
+    ngOnInit(): void
+    {
+        this.getContractsData();
+        this.userName = this.auth.accessName.toUpperCase();
+        console.log(GlobalCont.numeroALetras(58225,'PESOS'));
+        
+        
+    }
 
     openDialog(route: any,data: any) {
         //this.validateDinamycKey();
@@ -78,36 +82,39 @@ export class UploadDataComponent implements OnInit, OnDestroy
               }               
             });
             break
-            case 'registerData':
-        const dialogRef =  this._matDialog.open(ContractorRegisterComponent, {
-          autoFocus: false,
-          data     : {
-              idUser: this.auth.accessId,
-              data
-          }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-          if(result){
-            this.getContractsData();
-          }
-      }); 
-                break
-            case 'upload':
-                const dialogWin = this._matDialog.open(UploadFileComponent);
-                dialogWin.afterClosed().subscribe(datos => {
-                    if(datos){
-                        this.getContractsData();
-                    }                                   
-                });
+            case 'editData':
+              const dialogRef =  this._matDialog.open(ProjectFolderComponent, {
+                autoFocus: false,
+                data     : {
+                    data
+                }
+              });
+              dialogRef.afterClosed().subscribe((result) => {
+                if(result){
+                  this.getContractsData();
+                }
+              }); 
             break
-        //     case 'resultadosQr':
-        //         this._router.navigate(['lista/resultados/qr'], { skipLocationChange: true });
+            case 'upload':
+              const dialogUpload =  this._matDialog.open(UploadFileComponent, {
+                autoFocus: false,
+                data     : {
+                    show: true
+                }
+              });
+              dialogUpload.afterClosed().subscribe((result) => {
+                if(result){
+                    
+                }
+              });   
+            break
+            case 'registerData':
+              this._router.navigate(['/dashboards/lista-contratistas/'+ data.id]);
 
-        //    break
+          break
 
         }
     }
-        
     announceSortChange(sortState: Sort) {
         if (sortState.direction) {
           this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
@@ -127,11 +134,7 @@ export class UploadDataComponent implements OnInit, OnDestroy
       /**
        * On init
        */
-      ngOnInit(): void
-      {
-          this.getContractsData();
-          this.userName = this.auth.accessName
-      }
+  
         //metodo de filtrar los datos de las columnas
         applyFilter(event: Event) {
             const filterValue = (event.target as HTMLInputElement).value;
@@ -150,33 +153,20 @@ export class UploadDataComponent implements OnInit, OnDestroy
           this._unsubscribeAll.next(null);
           this._unsubscribeAll.complete();
       }
-      selectRowFull(data: any) { 
-        
-        const dialogRef =  this._matDialog.open(ContractorRegisterComponent, {
-            autoFocus: false,
-            data     : {
-                idUser: this.auth.accessId,
-                data
-            }
-          });
-          dialogRef.afterClosed().subscribe((result) => {
-            if(result){
-              this.getContractsData();
-            }
-        }); 
+      selectRowFull(data: any, type: any) { 
+      if(type === 'register'){
+      }
+
     }
    
     getContractsData(){
               // Get the data
-              this._uploadData.getAllContract()
-              .pipe(takeUntil(this._unsubscribeAll))
-              .subscribe((data) => {
-                this.contratos = data;
-                // for (let index = 0; index < data.length; index++) {
-                //   this.getDataContractor(data[index].id, index, data[index].registerDate);
-                // }   
-
-          });
+      this._uploadData.getAllContract().pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((Response) => {
+          this.dataSource= new MatTableDataSource(Response);
+          this.dataSource.sort= this.sort;
+          this.dataSource.data = Response;  
+      });
     }
       /**
        * Track by function for ngFor loops
@@ -189,22 +179,6 @@ export class UploadDataComponent implements OnInit, OnDestroy
           return item.id || index;
       }
    
-
-    async getDataContractor(id: any) {
-      (await this._uploadData.getByIdProject(id)).subscribe((Response) => {
-        this.dataSource= new MatTableDataSource(Response);
-        this.dataSource.sort= this.sort;
-        this.dataSource.data = Response;  
-      });
-
-    }
-    onChange(newValue) {
-      console.log('cambio',newValue);
-      this.selectContract = newValue;
-      this.getDataContractor(this.selectContract );
-      // don't forget to update the model here
-      // ... do other stuff here ...
-  }
 
 
 }

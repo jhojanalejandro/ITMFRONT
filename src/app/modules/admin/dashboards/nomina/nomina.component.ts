@@ -3,15 +3,15 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
-import { FinanceService } from 'app/modules/admin/dashboards/finance/finance.service';
+import { NominaService } from 'app/modules/admin/dashboards/nomina/nomina.service';
 
 @Component({
-    selector       : 'finance',
-    templateUrl    : './finance.component.html',
+    selector       : 'nomina',
+    templateUrl    : './nomina.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FinanceComponent implements OnInit, AfterViewInit, OnDestroy
+export class NominaComponent implements OnInit, AfterViewInit, OnDestroy
 {
     @ViewChild('recentTransactionsTable', {read: MatSort}) recentTransactionsTableMatSort: MatSort;
 
@@ -24,33 +24,28 @@ export class FinanceComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Constructor
      */
-    constructor(private _financeService: FinanceService)
+    constructor(private _financeService: NominaService)
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * On init
      */
     ngOnInit(): void
     {
         // Get the data
-        this._financeService.data$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((data) => {
+        // this._financeService.data$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((data) => {
 
-                // Store the data
-                this.data = data;
+        //         // Store the data
+        //         this.data = data;
 
-                // Store the table data
-                this.recentTransactionsDataSource.data = data.recentTransactions;
+        //         // Store the table data
+        //         this.recentTransactionsDataSource.data = data.recentTransactions;
 
-                // Prepare the chart data
-                this._prepareChartData();
-            });
+        //         // Prepare the chart data
+        //         this._prepareChartData();
+        //     });
     }
 
     /**

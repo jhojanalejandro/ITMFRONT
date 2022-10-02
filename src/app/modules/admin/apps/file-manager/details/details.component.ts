@@ -4,9 +4,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
-import { MatDialog } from '@angular/material/dialog';
-import { ShowFileComponent } from '../show-file/show-file.component';
-import { Router } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
+import { ActivatedRoute, Router } from '@angular/router';
+import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
     selector       : 'file-manager-details',
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 export class FileManagerDetailsComponent implements OnInit, OnDestroy
 {
     item: Item;
+    id: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -27,15 +29,12 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
         private _fileManagerListComponent: FileManagerListComponent,
         private _fileManagerService: FileManagerService,
         private _router: Router,
+        private _authService: AuthService
+    ){}
 
-    )
-    {
-    }
-    /**
-     * On init
-     */
     ngOnInit(): void
     {
+        //this.numberWin = this.router.snapshot.paramMap.get('number') || 'null';
         // Open the drawer
         this._fileManagerListComponent.matDrawer.open();
 
@@ -43,7 +42,9 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: Item) => {
-
+                this.id = item.id;
+                console.log('archivo', item);
+                
                 // Open the drawer in case it is closed
                 this._fileManagerListComponent.matDrawer.open();
 
@@ -54,7 +55,6 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
     }
-
     /**
      * On destroy
      */
@@ -64,14 +64,6 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Close the drawer
-     */
     closeDrawer(): Promise<MatDrawerToggleResult>
     {
         return this._fileManagerListComponent.matDrawer.close();
@@ -89,7 +81,31 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     }
     openDialog() {
         //this.validateDinamycKey();
-        this._router.navigate(['apps/documentos']);
-
+        this._router.navigate(['apps/archivo/'+ this.id]);
     }
+    encryptData(data) {
+        try {
+            return CryptoJS.AES.encrypt(JSON.stringify(data), GlobalCont.encryptSecretKey).toString();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    async getUserById() {
+        (await this._authService.getUserById(this.id)).subscribe((Response) => {
+        //   this.userName = Response.userName
+        //   this.lastName = Response.lastName
+        //   this.identificationCard = Response.identificationCard
+        });
+    }
+
+    // async getFilesBy() {
+    //     (await this._authService.getUserById(this.userId)).subscribe((Response) => {
+    //     //   this.userName = Response.userName
+    //     //   this.lastName = Response.lastName
+    //     //   this.identificationCard = Response.identificationCard
+    //     });
+    // }
+
 }

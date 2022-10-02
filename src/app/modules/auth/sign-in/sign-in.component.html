@@ -64,6 +64,21 @@
                     [formGroup]="signInForm"
                     #signInNgForm="ngForm">
 
+                    <mat-form-field  class="hiring" appearance="outline">
+                        <mat-label >Tipo de usuario</mat-label>
+                        <mat-select formControlName="userType"   name="contrato">
+                            <mat-option *ngFor="let usuario of tipoUsuario" [value]="usuario.viewValue">
+                                {{usuario.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon
+                        class="icon-size-5"
+                        matSuffix
+                        [svgIcon]="'heroicons_solid:user-group'"></mat-icon>
+                        <!-- <mat-error *ngIf="formContractor.get('pension').hasError('required')">
+                            El Campo pension es requerido
+                        </mat-error> -->
+                    </mat-form-field> 
                     <!-- Email field -->
                     <mat-form-field class="w-full">
                         <mat-label>Correo</mat-label>
@@ -81,7 +96,7 @@
 
                     <!-- Password field -->
                     <mat-form-field class="w-full">
-                        <mat-label>Conraseña</mat-label>
+                        <mat-label>Contraseña</mat-label>
                         <input
                             id="password"
                             matInput

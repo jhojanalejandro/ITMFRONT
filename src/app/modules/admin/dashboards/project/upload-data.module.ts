@@ -15,20 +15,18 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { UploadDataComponent } from 'app/modules/admin/dashboards/project/upload-data.component';
-import { projectRoutes } from 'app/modules/admin/dashboards/project/upload-data.routing';
-import { ContractorRegisterComponent } from './register-contractor/register-contractor.component';
+import { uploadDataRoutes } from 'app/modules/admin/dashboards/project/upload-data.routing';
 import { ProjectFolderComponent } from './register-project-folder/register-project-folder.component';
 import { UploadFileComponent } from './upload-file/upload-file.component';
 
 @NgModule({
     declarations: [
         UploadDataComponent,
-        ContractorRegisterComponent,
         ProjectFolderComponent,
         UploadFileComponent
     ],
     imports     : [
-        RouterModule.forChild(projectRoutes),
+        RouterModule.forChild(uploadDataRoutes),
         MatButtonModule,
         MatButtonToggleModule,
         MatDividerModule,
@@ -45,6 +43,6 @@ import { UploadFileComponent } from './upload-file/upload-file.component';
         SharedModule
     ]
 })
-export class ProjectModule
+export class UploadModule
 {
 }

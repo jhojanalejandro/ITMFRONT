@@ -32,17 +32,15 @@ export class UploadDataService
         return this._data.asObservable();
     }
 
-
-    // async addContractor(data: any ): Promise<Observable<IResponse>>{
-    //     let urlEndpointupdate = this.apiUrl + environment.addContractorEndpoint;
-    // }
-
-
     async getByIdProject(id: any){
         let urlEndPoint = this.apiUrl+ environment.GetByIdFolderContractorEndpoint;
         return await this._httpClient.get<any>(urlEndPoint + id);
     }   
 
+    async getByIdFile(id: any){
+        let urlEndPoint = this.apiUrl+ environment.GetByIdFileEndpoint;
+        return await this._httpClient.get<any>(urlEndPoint + id);
+    }  
     addContractor(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -55,6 +53,11 @@ export class UploadDataService
     
     addProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
+
+    UpdateProjectFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

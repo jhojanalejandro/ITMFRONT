@@ -10,14 +10,14 @@ import { InitialDataResolver } from 'app/app.resolvers';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/dashboards/project'
-    {path: '', pathMatch : 'full', redirectTo: 'dashboards/project'},
+    {path: '', pathMatch : 'full', redirectTo: 'dashboards/inicio'},
 
     // Redirect signed in user to the '/dashboards/project'
     //
     // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboards/project'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboards/inicio'},
 
     // Auth routes for guests
     {
@@ -77,8 +77,11 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'project', loadChildren: () => import('app/modules/admin/dashboards/project/upñoad-data.module').then(m => m.ProjectModule)},
-                {path: 'finance', loadChildren: () => import('app/modules/admin/dashboards/finance/finance.module').then(m => m.FinanceModule)},
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/project/upload-data.module').then(m => m.UploadModule)},
+                {path: 'lista-contratistas/:id', loadChildren: () => import('app/modules/admin/dashboards/project/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
+                {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)},
+                {path: 'viabilidad', loadChildren: () => import('app/modules/admin/dashboards/viability/viability.module').then(m => m.ViabilityModule)},
+
             ]},
 
             // Apps
@@ -86,12 +89,14 @@ export const appRoutes: Route[] = [
                 {path: 'academy', loadChildren: () => import('app/modules/admin/apps/academy/academy.module').then(m => m.AcademyModule)},
                 {path: 'contacts', loadChildren: () => import('app/modules/admin/apps/contacts/contacts.module').then(m => m.ContactsModule)},
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
-                {path: 'documentos', loadChildren: () => import('app/modules/admin/apps/file-manager/show-file/show-file.module').then(m => m.ShowFileModule)},
+                {path: 'archivo/:id', loadChildren: () => import('app/modules/admin/apps/file-manager/show-file/show-file.module').then(m => m.ShowFileModule)},
                 {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)},
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/apps/home-contractor/home-contractor.module').then(m => m.HomeContractorModule)},
+
             ]},
 
             // Pages
-            {path: 'pages', children: [
+            {path: 'paginas', children: [
 
                 // Error
                 {path: 'error', children: [
@@ -101,7 +106,7 @@ export const appRoutes: Route[] = [
 
 
                 // Settings
-                {path: 'settings', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
+                {path: 'configuraciones', loadChildren: () => import('app/modules/admin/pages/settings/settings.module').then(m => m.SettingsModule)},
             ]},
 
             // Documentation

@@ -28,7 +28,7 @@ export class FileManagerItemsResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
     {
-        return this._fileManagerService.getItems();
+        return this._fileManagerService.getAllFolder();
     }
 }
 
@@ -59,7 +59,7 @@ export class FileManagerFolderResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
     {
-        return this._fileManagerService.getItems(route.paramMap.get('folderId'))
+        return this._fileManagerService.getAllFolder(route.paramMap.get('folderId'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {

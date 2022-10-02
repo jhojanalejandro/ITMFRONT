@@ -3,6 +3,7 @@ export interface IProjectFolder{
     idUser: any;
     companyName: string;
     projectName: string;
+    descriptionProject: string;
     registerDate: Date;
     modifyDate: Date;
 }

@@ -11,12 +11,14 @@ import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { FileListComponent } from './list-file/file-list.component';
 
 @NgModule({
     declarations: [
         FileManagerComponent,
         FileManagerDetailsComponent,
         FileManagerListComponent,
+        FileListComponent
     ],
     imports     : [
         RouterModule.forChild(fileManagerRoutes),
@@ -25,9 +27,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
         MatSidenavModule,
         MatTooltipModule,
         SharedModule,
-        PdfViewerModule,
         Ng2SearchPipeModule
-
     ]
 })
 export class FileManagerModule

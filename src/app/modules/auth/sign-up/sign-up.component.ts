@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from 'app/layout/common/models/user-model';
 
 @Component({
@@ -21,6 +22,7 @@ export class AuthSignUpComponent implements OnInit
         type   : 'success',
         message: ''
     };
+    profesionales: any = GlobalCont.profesional;
     signUpForm: FormGroup;
     showAlert: boolean = false;
 
@@ -49,6 +51,8 @@ export class AuthSignUpComponent implements OnInit
                 name      : ['', Validators.required],
                 email     : ['', [Validators.required, Validators.email]],
                 password  : ['', Validators.required],
+                confirmPassword : ['', Validators.required],
+                professional : ['', Validators.required],
                 phoneNumber : ['', Validators.required]
             }
         );
@@ -67,8 +71,9 @@ export class AuthSignUpComponent implements OnInit
         const userRegister: IUserModel={
             userName: this.signUpForm.value.name,
             userPassword: this.signUpForm.value.password,
-            idRoll: 2,
-            permission: true,
+            idRoll: 1,
+            avatar: 'vacio',
+            Professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
             phoneNumber: this.signUpForm.value.phoneNumber.toString()
 
