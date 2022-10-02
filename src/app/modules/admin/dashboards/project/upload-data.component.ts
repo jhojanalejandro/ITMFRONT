@@ -75,9 +75,9 @@ export class UploadDataComponent implements OnInit, OnDestroy
             case 'registerFolder':
             const dialogRefPrroject = this._matDialog.open(ProjectFolderComponent);
             dialogRefPrroject.afterClosed().subscribe(datos => {
+              debugger
               if(datos){      
                 this.getContractsData();
-                
                 // console.log('datos ',datos);               
               }               
             });

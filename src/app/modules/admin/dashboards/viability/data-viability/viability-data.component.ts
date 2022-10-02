@@ -51,43 +51,21 @@ export class ViabilityDataComponent implements OnInit {
         consecutivo: new FormControl(null, Validators.required),
         cpc: new FormControl(null, Validators.required),
         nombreCpc: new FormControl(null, Validators.required),
-        contrato: new FormControl(null, Validators.required),
-        compromiso: new FormControl(null, Validators.required),
-        fechaContrato: new FormControl(null, Validators.required),
-        fechaInicioProyectado: new FormControl(null, Validators.required),
-        fechaInicioReal: new FormControl(null, Validators.required),
-        fechaFinalizacion: new FormControl(null, Validators.required),
-        honorariosMensuales: new FormControl(null, Validators.required),
-        actividad: new FormControl(null, Validators.required),
-        encabezado: new FormControl(null, Validators.required),
-        ejecucion: new FormControl(null, Validators.required),
-        obligacionesGenerales: new FormControl(null, Validators.required),
-        obligacionesEspecificas: new FormControl(null, Validators.required),
+        contrato: new FormControl(null, Validators.required)
 
       });
 
     }
 
     async addContractor() {
-        const registerContractor: any={
+        const registerViability: any={
           consecutivo: this.formContractor.value.consecutivo,
           cpc: this.formContractor.value.cpc,
           nombreCpc: this.formContractor.value.nombreCpc,
-          contrato: this.formContractor.value.contrato.toString(),
-          compromiso: this.formContractor.value.compromiso,
-          fechaContrato: this.formContractor.value.fechaContrato,
-          fechaInicioProyectado: this.formContractor.value.fechaInicioProyectado,
-          fechaInicioReal: this.formContractor.value.fechaInicioReal,
-          fechaFinalizacion: this.formContractor.value.fechaFinalizacion,
-          honorariosMensuales: this.formContractor.value.honorariosMensuales,
-          actividad: this.formContractor.value.actividad,
-          encabezado: this.formContractor.value.encabezado,
-          ejecucion: this.formContractor.value.ejecucion,
-          obligacionesGenerales: this.formContractor.value.obligacionesGenerales,
-          obligacionesEspecificas: this.formContractor.value.obligacionesEspecificas
+          contrato: this.formContractor.value.contrato.toString()
         };  
       this._upload
-      .addContractor(registerContractor)
+      .addContractor(registerViability)
       .subscribe((res) => {   
         if(res){
           swal.fire('Contratista Registrado Exitosamente!', '', 'success');

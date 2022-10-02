@@ -62,14 +62,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
-        // Get the item
-        this._fileManagerService.item$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
-                this.selectedItem = item;
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
@@ -80,9 +72,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
-            });
-            console.log('items',this.items.folders);
-         
+            });         
     }
 
     /**
@@ -110,6 +100,9 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         this._changeDetectorRef.markForCheck();
     }
 
+    foderAgreement(id: any){
+        this._router.navigate(['/apps/file-manager/folders/contractor/',id], {relativeTo: this._activatedRoute});
+    }
     /**
      * Track by function for ngFor loops
      *
@@ -156,13 +149,5 @@ export class FileManagerListComponent implements OnInit, OnDestroy
             }
         });               
     }
-    // getAllfolders(){
-    //     this._fileManagerService.getAllFolder()
-    //     .pipe(takeUntil(this._unsubscribeAll))
-    //     .subscribe((data) => {
-           
-    //         console.log('cambio',this.items.folders);
-            
-    // });
-    // }
+
 }

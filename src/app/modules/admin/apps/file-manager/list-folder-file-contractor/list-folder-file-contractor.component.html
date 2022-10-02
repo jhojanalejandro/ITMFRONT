@@ -68,17 +68,16 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <!-- Actions -->
-                    <div class="mt-4 sm:mt-0">
-                        <!-- Upload button -->
-                        <button
-                            (click)="openDialog()"
-                            mat-flat-button
-                            [color]="'primary'">
-                            <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
-                            <span class="ml-2 mr-1">Cargar Archivos</span>
-                        </button>
-                    </div>
+                 <!-- Actions -->
+                 <div class="mt-4 sm:mt-0">
+                    <!-- Upload button -->
+                    <button
+                        mat-flat-button
+                        [color]="'primary'">
+                        <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
+                        <span class="ml-2 mr-1">Crear Carpeta</span>
+                    </button>
+                </div>
                 </div>
 
                 <!-- Items list -->
@@ -103,8 +102,7 @@
                                             </a>
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', folder.id]"
-                                                (click)="foderAgreement(folder.id)">
+                                                [routerLink]="['/apps/file-manager/file/contractor/', folder.id]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->
@@ -130,7 +128,6 @@
                                 </div>
                             </div>
                         </ng-container>
-
                     </div>
                 </ng-container>
 

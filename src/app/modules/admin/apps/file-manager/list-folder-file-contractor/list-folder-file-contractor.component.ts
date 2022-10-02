@@ -12,12 +12,12 @@ import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload
 
 
 @Component({
-    selector       : 'file-list',
-    templateUrl    : './file-list.component.html',
+    selector       : 'list-folder-file-contractor',
+    templateUrl    : './list-folder-file-contractor.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileListComponent implements OnInit, OnDestroy
+export class ListFolderFileContractorComponent implements OnInit, OnDestroy
 {
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
@@ -27,7 +27,7 @@ export class FileListComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    id: any;
+    idFolder: any;
 
     /**
      * Constructor
@@ -38,11 +38,13 @@ export class FileListComponent implements OnInit, OnDestroy
         private _router: Router,
         private _fileManagerService: FileManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _matDialog: MatDialog,
+        private router: ActivatedRoute
     ){}
 
     ngOnInit(): void
     {   
+        this.idFolder = this.router.snapshot.paramMap.get('folderId') || 'null';
+
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'number' ? value : value.numbers)),
@@ -53,6 +55,14 @@ export class FileListComponent implements OnInit, OnDestroy
             startWith(''),
             map(value => this._filter2(value)),
           );
+        // Get the items
+        this._fileManagerService.getAllFolderFileContractor()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((items) => {
+                this.items = items;
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
 
         // Get the item
         this._fileManagerService.item$
@@ -87,9 +97,8 @@ export class FileListComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
 
-    getId(id: any){
-            console.log('id folder', id);
-            this.id = id;
+    Files(id: any){
+        this._router.navigate(['/apps/file-manager/folders/agreement/',id], {relativeTo: this._activatedRoute});
     }
     /**
      * On backdrop clicked
@@ -134,20 +143,7 @@ export class FileListComponent implements OnInit, OnDestroy
         this.items.filter = filterValue;
         // return this.dataRandom.number.find(number => number === event)
     }
-    openDialog() {
-        //this.validateDinamycKey();
-        const dialogRef =  this._matDialog.open(UploadFileComponent, {
-            autoFocus: false,
-            data     : {
-                show: false,
-                idContractor: this.id
-            }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if(result){
-            }
-        });               
-    }
+
     // getAllfolders(){
     //     this._fileManagerService.getAllFolder()
     //     .pipe(takeUntil(this._unsubscribeAll))

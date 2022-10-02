@@ -10,15 +10,15 @@ import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
-    selector       : 'file-manager-details',
-    templateUrl    : './details.component.html',
+    selector       : 'fdetail-folder',
+    templateUrl    : './detail-folder.component.html',
     encapsulation  : ViewEncapsulation.None,
-    //changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileManagerDetailsComponent implements OnInit, OnDestroy
+export class DetailFolderComponent implements OnInit, OnDestroy
 {
-    item: any;
-    userName: any;
+    item: Item;
+    id: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -41,14 +41,15 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
         // Get the item
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: any) => {
+            .subscribe((item: Item) => {
+                this.id = item.id;
+                console.log('archivo', item);
+                
                 // Open the drawer in case it is closed
                 this._fileManagerListComponent.matDrawer.open();
 
                 // Get the item
                 this.item = item;
-                this.item.type = 'carpeta'; 
-                this.getUserById(this.item.idUser);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -80,7 +81,7 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     }
     openDialog() {
         //this.validateDinamycKey();
-        this._router.navigate(['apps/archivo/'+ this.item.id]);
+        this._router.navigate(['apps/archivo/'+ this.id]);
     }
     encryptData(data) {
         try {
@@ -91,19 +92,19 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     }
 
 
-    async getUserById(id: any) {
-        (await this._authService.getUserById(id)).subscribe((Response) => {
-        return this.userName = Response.userName
+    async getUserById() {
+        (await this._authService.getUserById(this.id)).subscribe((Response) => {
+        //   this.userName = Response.userName
         //   this.lastName = Response.lastName
         //   this.identificationCard = Response.identificationCard
         });
     }
 
     // async getFilesBy() {
-    //     (await this._authService.getUserById(this.item[0].idUser)).subscribe((Response) => {
-    //     this.userName = Response.userName
-    //       this.lastName = Response.lastName
-    //       this.identificationCard = Response.identificationCard
+    //     (await this._authService.getUserById(this.userId)).subscribe((Response) => {
+    //     //   this.userName = Response.userName
+    //     //   this.lastName = Response.lastName
+    //     //   this.identificationCard = Response.identificationCard
     //     });
     // }
 

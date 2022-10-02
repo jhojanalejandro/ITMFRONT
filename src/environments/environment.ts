@@ -35,6 +35,12 @@ export const environment = {
     AuthContractor: 'Files/Autenticate',
 
 
+    addHiringEndpoint: 'HiringData/Add',
+    UpdateHiringEndpoint: 'HiringData/Update',
+    GetAllHiringEndpoint: 'HiringData/GetAll',
+    GetByIdHiringEndpoint: 'HiringData/GetById/',
+    DeleteHiringEndpoint: 'HiringData/Delete',
+
 
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

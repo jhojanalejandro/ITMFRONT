@@ -41,10 +41,10 @@
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.companyName}}</a>
+                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.nombreCompleto}}</a>
                                         </ng-container>
                                         <ng-container *ngIf="last">
-                                            <div>{{path.companyName}}</div>
+                                            <div>{{path.nombreCompleto}}</div>
                                         </ng-container>
                                         <ng-container *ngIf="!last">
                                             <div class="">/</div>
@@ -68,17 +68,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <!-- Actions -->
-                    <div class="mt-4 sm:mt-0">
-                        <!-- Upload button -->
-                        <button
-                            (click)="openDialog()"
-                            mat-flat-button
-                            [color]="'primary'">
-                            <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
-                            <span class="ml-2 mr-1">Cargar Archivos</span>
-                        </button>
-                    </div>
+    
                 </div>
 
                 <!-- Items list -->
@@ -92,15 +82,6 @@
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
                                         <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
-                                            <a
-                                                class="absolute z-20 top-1.5 right-1.5 w-8 h-8 min-h-8"
-                                                (click)="$event.preventDefault()"
-                                                [routerLink]="['./details/', folder.id]"
-                                                mat-icon-button>
-                                                <mat-icon
-                                                    class="icon-size-5"
-                                                    [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
-                                            </a>
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
                                                 [routerLink]="['/apps/file-manager/folders/', folder.id]"
@@ -116,10 +97,12 @@
                                                 <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.companyName">{{folder.companyName}}</div>
-                                                        <div
+                                                        [matTooltip]="folder.nombreCompleto">{{folder.nombreCompleto}}
+                                                    </div>
+                                                    <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.companyName">{{folder.projectName}}</div>
+                                                        [matTooltip]="folder.documentoDeIdentidificacion">{{folder.documentoDeIdentidificacion}}
+                                                    </div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>
                                                     </ng-container>
@@ -130,7 +113,6 @@
                                 </div>
                             </div>
                         </ng-container>
-
                     </div>
                 </ng-container>
 

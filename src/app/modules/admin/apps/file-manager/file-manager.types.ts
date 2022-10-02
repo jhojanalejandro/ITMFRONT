@@ -4,6 +4,11 @@ export interface Items
     files: Item[];
     path: any[];
 }
+export interface ItemsC
+{
+    folders: Item[];
+    path: any[];
+}
 
 export interface Item
 {

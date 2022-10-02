@@ -4,6 +4,10 @@ import { FileManagerComponent } from 'app/modules/admin/apps/file-manager/file-m
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/details/details.component';
 import { FileManagerFolderResolver, FileManagerItemResolver, FileManagerItemsResolver } from 'app/modules/admin/apps/file-manager/file-manager.resolvers';
+import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
+import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
+import { FileManagerFolderCResolver } from './list-folder-contractor/list-folder.resolvers';
+import { FileListComponent } from './list-file/file-list.component';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -43,6 +47,25 @@ export const fileManagerRoutes: Route[] = [
                         canDeactivate: [CanDeactivateFileManagerDetails]
                     }
                 ]
+            },
+            {
+                path     : 'folders/file/contractor/:contractorId',
+                component: ListFolderFileContractorComponent,
+
+            },
+            {
+                path     : 'folders/contractor/:folderId',
+                component: ListFolderContractorComponent,
+                resolve  : {
+                    item: FileManagerFolderCResolver
+                },
+            },
+            {
+                path     : 'file/contractor/:fileId',
+                component: FileListComponent,
+                resolve  : {
+                    item: FileManagerFolderCResolver
+                },
             }
         ]
     }

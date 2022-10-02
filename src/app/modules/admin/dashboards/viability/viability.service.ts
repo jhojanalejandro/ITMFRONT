@@ -51,8 +51,8 @@ export class ViabilityService
         let urlEndPoint = this.apiUrl+ environment.GetByIdFileEndpoint;
         return await this._httpClient.get<any>(urlEndPoint + id);
     }  
-    addContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
+    addViability(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateHiringEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

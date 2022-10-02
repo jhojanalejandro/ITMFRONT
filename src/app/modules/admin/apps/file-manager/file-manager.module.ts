@@ -12,13 +12,19 @@ import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/li
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FileListComponent } from './list-file/file-list.component';
+import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
+import { DetailFolderComponent } from './details-file/detail-folder.component';
+import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
 
 @NgModule({
     declarations: [
         FileManagerComponent,
         FileManagerDetailsComponent,
         FileManagerListComponent,
-        FileListComponent
+        ListFolderFileContractorComponent,
+        ListFolderContractorComponent,
+        FileListComponent,
+        DetailFolderComponent
     ],
     imports     : [
         RouterModule.forChild(fileManagerRoutes),

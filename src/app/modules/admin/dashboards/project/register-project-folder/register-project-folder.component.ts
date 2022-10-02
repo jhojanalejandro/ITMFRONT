@@ -69,7 +69,7 @@ export class ProjectFolderComponent implements OnInit {
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,
-      registerDate: this._data[0].registerDate, 
+      registerDate: this.registerDate, 
       modifyDate: this.registerDate,        
     };  
     this._upload.addProjectFolder(registerProject).subscribe((res) => {   
@@ -91,12 +91,14 @@ export class ProjectFolderComponent implements OnInit {
     });
   }
 
+
   async editProjectFolder(){
     const registerProject: IProjectFolder={
       id: this._data.data.id,
       idUser: this.authService.accessId,
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
+      descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 
       modifyDate: this.registerDate,        
     };  
