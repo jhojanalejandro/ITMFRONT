@@ -61,13 +61,13 @@ export class UploadFileComponent implements OnInit {
   }
 
   onChange(event) {
-    const file = event.target.files[0];
+    this.file = event.target.files[0];
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-        this.file = reader.result;
-        console.log('base 64', this.file);   
-    };
+    reader.readAsDataURL(this.file);
+    // reader.onload = () => {
+    //     this.file = reader.result;
+    //     console.log('base 64', this.file);   
+    // };
   }
 
 
@@ -85,6 +85,7 @@ export class UploadFileComponent implements OnInit {
     //     }
     // );
   }
+  
   getContractsData(){
     // Get the data
     this._upload.getAllContract()
@@ -96,20 +97,16 @@ export class UploadFileComponent implements OnInit {
   }
 
   uploadPdfFile(event) {
-    // this.file = this.getBase64(this.file);
-    // const pdfFiles = this.file;
-    // const pdfFile = pdfFiles.item(0);
-    // const formdata: FormData = new FormData();
-    // formdata.append('pdfFile', pdfFile); 
-    const data: any= {
-      filesName: this.formFile.value.filesName,
-      fileName: this.file,
-      fileType: 'PDF',
-      idContractor: 14,
-      idUser: this._auth.accessId.toString(),
-    }
+    
+    let fileToUpload = <File>this.file;
+    const formData = new FormData();
+    formData.append('excel', fileToUpload, fileToUpload.name);
+    formData.append('idUser', this._auth.accessId.toString());
+    formData.append('idContrato', '2');
+    console.log(formData);
+    
   // Should match the parameter name in backend
-    this._upload.UploadFileContractor(data).subscribe((res) => {   
+    this._upload.UploadFileContractor(formData).subscribe((res) => {   
       if(res){
         swal.fire('informacion Registrada Exitosamente!', '', 'success');
         //this.matDialogRef.close();  

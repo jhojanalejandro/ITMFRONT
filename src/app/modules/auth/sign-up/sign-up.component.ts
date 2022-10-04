@@ -71,7 +71,7 @@ export class AuthSignUpComponent implements OnInit
         const userRegister: IUserModel={
             userName: this.signUpForm.value.name,
             userPassword: this.signUpForm.value.password,
-            idRoll: 7,
+            idRoll: 1,
             avatar: 'vacio',
             Professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
