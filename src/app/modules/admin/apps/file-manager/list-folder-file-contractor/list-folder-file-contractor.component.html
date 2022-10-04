@@ -24,13 +24,10 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
                     <!-- Title -->
                     <div>
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">Carpetas Contratista</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
-                            <ng-container *ngIf="!items.path.length">
-                                {{items.folders.length}} carpetas
-                            </ng-container>
                             <!-- Breadcrumbs -->
-                            <ng-container *ngIf="items.path.length">
+                            <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
                                     <a
                                         class="text-primary cursor-pointer"
@@ -73,7 +70,8 @@
                     <!-- Upload button -->
                     <button
                         mat-flat-button
-                        [color]="'primary'">
+                        [color]="'primary'"
+                        (click)="openDialog()">
                         <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
                         <span class="ml-2 mr-1">Crear Carpeta</span>
                     </button>
@@ -81,10 +79,10 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items && (items.folders.length > 0 || items.files.length > 0); else noItems">
+                <ng-container *ngIf="items && (items > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Folders -->
-                        <ng-container *ngIf="items.folders.length > 0">
+                        <ng-container *ngIf="items > 0">
                             <div>
                                 <div class="font-medium">Carpetas</div>
                                 <div

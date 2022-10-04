@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { IUserModel } from 'app/layout/common/models/user-model';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import swal from 'sweetalert2';
 
 @Component({
     selector       : 'settings-team',
@@ -18,10 +20,7 @@ export class SettingsTeamComponent implements OnInit
     /**
      * Constructor
      */
-    constructor(private _authService: AuthService,
-        private _changeDetectorRef: ChangeDetectorRef,
-
-        )
+    constructor(private _authService: AuthService)
     {
     }
 
@@ -49,69 +48,8 @@ export class SettingsTeamComponent implements OnInit
         });
 
 
-        
-        // (this._authService.getAllUser()).subscribe((Response) => {
-        //     for (let index = 0; index < Response.length; index++) {
-        //         if(Response[index].avatar = 'vacio'){
-        //             Response[index].avatar = 'assets/images/avatars/male-07.jpg';
-        //         }  
-                
-        //     }
-        //     this.members = [Response];
-        // });
-        // this.members = [
-        //     {
-        //         avatar: 'assets/images/avatars/male-01.jpg',
-        //         name  : 'Dejesus Michael',
-        //         email : 'dejesusmichael@mail.org',
-        //         role  : 'admin'
-        //     },
-        //     {
-        //         avatar: 'assets/images/avatars/male-03.jpg',
-        //         name  : 'Mclaughlin Steele',
-        //         email : 'mclaughlinsteele@mail.me',
-        //         role  : 'admin'
-        //     },
-        //     {
-        //         avatar: 'assets/images/avatars/female-02.jpg',
-        //         name  : 'Laverne Dodson',
-        //         email : 'lavernedodson@mail.ca',
-        //         role  : 'Escribir'
-        //     },
-        //     {
-        //         avatar: 'assets/images/avatars/female-03.jpg',
-        //         name  : 'Trudy Berg',
-        //         email : 'trudyberg@mail.us',
-        //         role  : 'Leer'
-        //     },
-        //     {
-        //         avatar: 'assets/images/avatars/male-07.jpg',
-        //         name  : 'Lamb Underwood',
-        //         email : 'lambunderwood@mail.me',
-        //         role  : 'Leer'
-        //     },
-        //     {
-        //         avatar: 'assets/images/avatars/male-08.jpg',
-        //         name  : 'Mcleod Wagner',
-        //         email : 'mcleodwagner@mail.biz',
-        //         role  : 'Leer'
-        //     },
-        //     {
-        //         avatar: 'assets/images/avatars/female-07.jpg',
-        //         name  : 'Shannon Kennedy',
-        //         email : 'shannonkennedy@mail.ca',
-        //         role  : 'Leer'
-        //     }
-        // ];
-        
-
-        // Setup the roles
 
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Track by function for ngFor loops
@@ -126,5 +64,24 @@ export class SettingsTeamComponent implements OnInit
 
     async getDtaUser() {
 
+    }
+
+    onChange(event, user: any) {
+        debugger
+        user.rollName = event
+        this._authService
+        .updateUser(user)
+        .subscribe((res) => {   
+          if(res){
+            swal.fire('Usuario Actualizado Exitosamente!', '', 'success');
+
+          }
+  
+        },
+        (response) => {
+            swal.fire('Error al actualizar!', '', 'success');
+
+
+        });
     }
 }

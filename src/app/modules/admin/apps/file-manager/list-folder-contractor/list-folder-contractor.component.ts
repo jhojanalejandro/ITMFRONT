@@ -74,7 +74,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-         
     }
 
     /**
@@ -87,9 +86,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
 
-    Files(id: any){
-        this._router.navigate(['/apps/file-manager/folders/file/contractor/',id], {relativeTo: this._activatedRoute});
-    }
     /**
      * On backdrop clicked
      */

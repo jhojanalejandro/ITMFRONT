@@ -100,19 +100,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         this._changeDetectorRef.markForCheck();
     }
 
-    foderAgreement(id: any){
-        this._router.navigate(['/apps/file-manager/folders/contractor/',id], {relativeTo: this._activatedRoute});
-    }
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
-    }
     
     private _normalizeValue(value: string): string {
         return value.toString().replace(/[0-9]/g, '');

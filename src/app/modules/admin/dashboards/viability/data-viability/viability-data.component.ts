@@ -48,21 +48,21 @@ export class ViabilityDataComponent implements OnInit {
     ngOnInit(): void {
       // this.ref.detectChanges();
       this.formContractor = this._formBuilder.group({
-        consecutivo: new FormControl(null, Validators.required),
-        cpc: new FormControl(null, Validators.required),
-        nombreCpc: new FormControl(null, Validators.required),
-        contrato: new FormControl(null, Validators.required)
+        rubropresupuestal: new FormControl(null, Validators.required),
+        nombredelrubro: new FormControl(null, Validators.required),
+        fuenteRubro: new FormControl(null, Validators.required),
+        posicion: new FormControl(null, Validators.required)
 
       });
 
     }
 
-    async addContractor() {
+    async addViability() {
         const registerViability: any={
-          consecutivo: this.formContractor.value.consecutivo,
-          cpc: this.formContractor.value.cpc,
-          nombreCpc: this.formContractor.value.nombreCpc,
-          contrato: this.formContractor.value.contrato.toString()
+          rubropresupuestal: this.formContractor.value.rubropresupuestal,
+          nombredelrubro: this.formContractor.value.cpc,
+          fuenteRubro: this.formContractor.value.fuenteRubro,
+          posicion: this.formContractor.value.posicion
         };  
       this._upload
       .addViability(registerViability)
@@ -77,6 +77,8 @@ export class ViabilityDataComponent implements OnInit {
       (response) => {
           this.formContractor.enable();
           // Set the alert
+          swal.fire('Error en el registro de la informacion!', '', 'error');
+
           this.alert = {
               type   : 'error',
               message: 'ERROR EN LA INFORMACION'

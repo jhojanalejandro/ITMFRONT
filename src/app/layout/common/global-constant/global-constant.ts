@@ -20,25 +20,36 @@ export class GlobalCont {
     ] 
     public static roles = [
         {
+            label      : 'Admin',
+            value      : 'Admin',
+            description: 'Administrador de la cuenta'
+        },
+        {
+            label      : 'Leer, Escribir, y Eliminar',
+            value      : 'Leer, Escribir, y Eliminar',
+            description: 'jefe de personal.'
+        },
+        {
+            label      : 'Leer y Escribir',
+            value      : 'Leer y Escribir',
+            description: 'Solo puede leer y escribir'
+        },
+        {
             label      : 'Leer',
             value      : 'Leer',
-            description: 'Can read and clone this repository. Can also open and comment on issues and pull requests.'
+            description: 'Solo puede leer datos.'
         },
         {
             label      : 'Escribir',
             value      : 'Escribir',
-            description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
+            description: 'Solo puede escribir datos.'
         },
         {
-            label      : 'Leer y Escribir',
-            value      : 'Leer y escribir',
-            description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
-        },
-        {
-            label      : 'Admin',
-            value      : 'Admin',
-            description: 'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
+            label      : 'Desactivar',
+            value      : 'desactivada',
+            description: 'Usuarios innactivos.'
         }
+
     ];
     public static genero: TypeSelectString[]=[
         { viewValue: 'masculino'},

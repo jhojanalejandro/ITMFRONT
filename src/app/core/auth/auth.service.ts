@@ -213,7 +213,8 @@ export class AuthService
         );
     }
     updateUser(data: any){
-        return this._httpClient.post<IResponse>(this.apiUrl + environment.updateUserEndpoint, data).pipe(
+        let urlEndPoint = this.apiUrl+ environment.updateUserEndpoint;
+        return this._httpClient.post<IResponse>(urlEndPoint, data).pipe(
             switchMap((response: any) => {        
                 return of(response);
             })

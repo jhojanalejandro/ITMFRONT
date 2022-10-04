@@ -4,6 +4,7 @@ import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError 
 import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
 import { cloneDeep } from 'lodash-es';
+import { IResponse } from 'app/layout/common/models/Response';
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,7 @@ export class FileManagerService
     private _item: BehaviorSubject<Item | null> = new BehaviorSubject(null);
     private _items: BehaviorSubject<Items | null> = new BehaviorSubject(null);
     private _itemsC: BehaviorSubject<ItemsC | null> = new BehaviorSubject(null);
+    private _itemsFC: BehaviorSubject<ItemsC | null> = new BehaviorSubject(null);
 
     apiUrl: any = environment.apiURL;
 
@@ -39,6 +41,11 @@ export class FileManagerService
     get itemsC$(): Observable<ItemsC>
     {
         return this._itemsC.asObservable();
+    }
+
+    get itemsFC$(): Observable<ItemsC>
+    {
+        return this._itemsFC.asObservable();
     }
     /**
      * Getter for item
@@ -283,13 +290,24 @@ export class FileManagerService
                 folders,
                 path
             }
-            this._itemsC.next(data);
+            this._itemsFC.next(data);
                 
             })
         ); 
         
 
     
+    }
+
+    addFolderContractor(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
+
+    
+    UpdateProjectFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
   
 }

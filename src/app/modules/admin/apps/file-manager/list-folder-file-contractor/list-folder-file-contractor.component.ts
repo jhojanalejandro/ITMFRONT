@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
-import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
+import { FolderContractorComponent } from './register-folder-contractor/register-folder-contractor.component';
 
 
 
@@ -27,7 +27,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    idFolder: any;
+    contractorId: any;
 
     /**
      * Constructor
@@ -38,12 +38,14 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
         private _router: Router,
         private _fileManagerService: FileManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private router: ActivatedRoute
+        private router: ActivatedRoute,
+        private _matDialog: MatDialog,
+
     ){}
 
     ngOnInit(): void
     {   
-        this.idFolder = this.router.snapshot.paramMap.get('folderId') || 'null';
+        this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
 
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
@@ -56,22 +58,14 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
             map(value => this._filter2(value)),
           );
         // Get the items
-        this._fileManagerService.getAllFolderFileContractor()
+        this._fileManagerService.itemsFC$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items) => {
+            .subscribe((items: ItemsC) => {
                 this.items = items;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
 
-        // Get the item
-        this._fileManagerService.item$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
-                this.selectedItem = item;
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
@@ -83,7 +77,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-            console.log('items',this.items.folders);
          
     }
 
@@ -144,13 +137,19 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
         // return this.dataRandom.number.find(number => number === event)
     }
 
-    // getAllfolders(){
-    //     this._fileManagerService.getAllFolder()
-    //     .pipe(takeUntil(this._unsubscribeAll))
-    //     .subscribe((data) => {
-           
-    //         console.log('cambio',this.items.folders);
-            
-    // });
-    // }
+    openDialog() {
+        const dialogRef =  this._matDialog.open(FolderContractorComponent, {
+            autoFocus: false,
+            data     : {
+                folderId: this.contractorId,
+                folderName: 'vacio'
+            }
+          });
+          dialogRef.afterClosed().subscribe((result) => {
+            if(result){
+            //   this.getFolders();
+            }
+          });         
+    }
+
 }

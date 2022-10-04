@@ -15,6 +15,7 @@ import { FileListComponent } from './list-file/file-list.component';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
 import { DetailFolderComponent } from './details-file/detail-folder.component';
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
+import { FolderContractorComponent } from './list-folder-file-contractor/register-folder-contractor/register-folder-contractor.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import { ListFolderFileContractorComponent } from './list-folder-file-contractor
         ListFolderFileContractorComponent,
         ListFolderContractorComponent,
         FileListComponent,
-        DetailFolderComponent
+        DetailFolderComponent,
+        FolderContractorComponent
     ],
     imports     : [
         RouterModule.forChild(fileManagerRoutes),

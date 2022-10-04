@@ -41,10 +41,7 @@
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.companyName}}</a>
-                                        </ng-container>
-                                        <ng-container *ngIf="last">
-                                            <div>{{path.companyName}}</div>
+                                                [routerLink]="['/apps/file-manager/folders/', path.id]"></a>
                                         </ng-container>
                                         <ng-container *ngIf="!last">
                                             <div class="">/</div>
@@ -103,8 +100,7 @@
                                             </a>
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', folder.id]"
-                                                (click)="foderAgreement(folder.id)">
+                                                [routerLink]="['/apps/file-manager/folders/contractor/', folder.id]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->

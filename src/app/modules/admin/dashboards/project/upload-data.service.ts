@@ -61,6 +61,7 @@ export class UploadDataService
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
+
     getAllContract(): Observable<any>
     {
         let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
