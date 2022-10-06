@@ -38,10 +38,10 @@
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.companyName}}</a>
+                                                [routerLink]="['/apps/file-manager/file/contractor/', folder.id]">{{path.folderName}}</a>
                                         </ng-container>
                                         <ng-container *ngIf="last">
-                                            <div>{{path.companyName}}</div>
+                                            <div>{{path.folderName}}</div>
                                         </ng-container>
                                         <ng-container *ngIf="!last">
                                             <div class="">/</div>
@@ -79,10 +79,10 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items && (items > 0); else noItems">
+                <ng-container *ngIf="items &&(items.folders.length > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Folders -->
-                        <ng-container *ngIf="items > 0">
+                        <ng-container *ngIf="items.folders.length  > 0">
                             <div>
                                 <div class="font-medium">Carpetas</div>
                                 <div
@@ -100,7 +100,7 @@
                                             </a>
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/file/contractor/', folder.id]">
+                                                [routerLink]="['/apps/file-manager/file/contractor/',ruta]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->
@@ -112,10 +112,10 @@
                                                 <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.companyName">{{folder.companyName}}</div>
+                                                        [matTooltip]="folder.folderName">{{folder.folderName}}</div>
                                                         <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.companyName">{{folder.projectName}}</div>
+                                                        [matTooltip]="folder.descriptionProject">{{folder.descriptionProject}}</div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>
                                                     </ng-container>

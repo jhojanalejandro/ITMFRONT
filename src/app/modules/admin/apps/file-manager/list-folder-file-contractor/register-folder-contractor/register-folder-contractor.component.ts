@@ -67,14 +67,16 @@ export class FolderContractorComponent implements OnInit {
     this.ref.detectChanges();
   }
   async addProjectFolder() {
+    
     const registerGFolder: IFolderContractor={
-      idUser: this.authService.accessId,
-      idContractor: this._data.data.folderId,
+      idUser: Number(this.authService.accessId),
+      idContractor: Number(this._data.contractorId),
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
-      modifyDate: this.registerDate,        
+      modifyDate: this.registerDate      
     };  
+    debugger
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
           swal.fire('informacion Registrada Exitosamente!', '', 'success');
@@ -83,8 +85,7 @@ export class FolderContractorComponent implements OnInit {
           this.ref.markForCheck();   
         }
 
-    },
-    (response) => {
+    },(response) => {
       this.formProject.enable();
       console.log('error',response);    
       // Set the alert
@@ -124,5 +125,8 @@ export class FolderContractorComponent implements OnInit {
     });
 
   }
+  cerrar(): void {
+    this.matDialogRef.close();
+  } 
 
 }

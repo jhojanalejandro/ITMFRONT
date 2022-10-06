@@ -89,7 +89,6 @@ export class AuthSignUpComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
-        debugger
         // Sign up
         (await this._authService.signUp(userRegister)).subscribe(
                 (response) => {

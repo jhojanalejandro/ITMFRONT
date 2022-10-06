@@ -23,3 +23,11 @@ mat-form-field{
 .direction{
     width: 500px !important;
 }
+::-webkit-file-upload-button {
+    background: rgb(53, 164, 96);
+    padding: 0.5em;
+    border-radius: 25px;
+}
+.modal-body{
+    margin-bottom: 15px;
+}

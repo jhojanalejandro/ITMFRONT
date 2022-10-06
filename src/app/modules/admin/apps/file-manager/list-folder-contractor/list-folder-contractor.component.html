@@ -72,7 +72,7 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items && (items.folders.length > 0 || items.files.length > 0); else noItems">
+                <ng-container *ngIf="items && (items.folders.length > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Folders -->
                         <ng-container *ngIf="items.folders.length > 0">
@@ -84,7 +84,7 @@
                                         <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/file/contractor/', folder.id]">
+                                                [routerLink]="['/apps/file-manager/folders/file/', folder.id]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->

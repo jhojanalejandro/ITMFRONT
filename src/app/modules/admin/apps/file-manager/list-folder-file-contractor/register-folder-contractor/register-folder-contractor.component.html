@@ -1,20 +1,18 @@
-<mat-dialog-content class="mat-typography">
-    <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Registrar Contrato</p>
-    <div class="option">
-        <!-- Alert -->
-        <fuse-alert
-        class="mt-8 -mb-4 text-red-500"
-        *ngIf="showAlert"
-        [appearance]="'outline'"
-        [showIcon]="false"
-        [type]="alert.type"
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Registrar Contrato</div>
+        <button
+            mat-icon-button
+            (click)="cerrar()"
+            [tabIndex]="-1">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
 
-        [@shake]="alert.type === 'error'">
-        {{alert.message}}
-    </fuse-alert>
-</div>
     <form [formGroup]="formProject" class="example-form">
-        <div class="folder">
+        <div class="folder pt-8">
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Nombre Archivo</mat-label>
                 <input type="text"  id="folderName" formControlName="folderName" autocomplete="off" matInput placeholder="Nombre Carpeta" >
@@ -26,18 +24,6 @@
                     Este campo es requerido
                 </mat-error>
             </mat-form-field>
-
-            <!-- <mat-form-field class="hiring" appearance="outline">
-                <mat-label>Nombre projecto</mat-label>
-                <input type="text"  id="projectName" formControlName="projectName" autocomplete="off" matInput placeholder="Nombre projecto" >
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                <mat-error *ngIf="formProject.get('projectName').hasError('required')">
-                    El Campo Proyecto es requerido
-                </mat-error>
-            </mat-form-field> -->
         </div>
         <br>
         <div class="folder">
@@ -54,9 +40,9 @@
         
   </form>
 
-  </mat-dialog-content>
+</div>
   <mat-dialog-actions align="end">
-    <button mat-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
-    <button mat-button color="primary" [mat-dialog-close]="true" *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
-    <button mat-button type="submit" [mat-dialog-close]="true" [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" class="text-green-500" (click)="addProjectFolder()">Aceptar</button>
+    <button mat-stroked-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
+    <button mat-flat-button [color]="'primary'" [mat-dialog-close]="true" *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
+    <button mat-flat-button [color]="'primary'" type="submit" [mat-dialog-close]="true" [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Aceptar</button>
   </mat-dialog-actions>

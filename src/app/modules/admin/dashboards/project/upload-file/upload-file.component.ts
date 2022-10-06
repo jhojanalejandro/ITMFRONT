@@ -71,6 +71,9 @@ export class UploadFileComponent implements OnInit {
   }
 
 
+  cerrar(): void {
+    this.matDialogRef.close();
+  } 
   onUpload() {
     this.loading = !this.loading;
     console.log(this.file);

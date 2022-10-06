@@ -73,11 +73,9 @@ export class FileManagerMockApi
                 // that means we want to root items which have folder id
                 // of null
                 items = items.filter(item => item.folderId === folderId);
-                debugger
                 // Separate the items by folders and files
                 const folders = items.filter(item => item.type === 'folder');
                 const files = items.filter(item => item.type !== 'folder');
-                debugger
                 // Sort the folders and files alphabetically by filename
                 folders.sort((a, b) => a.name.localeCompare(b.name));
                 files.sort((a, b) => a.name.localeCompare(b.name));

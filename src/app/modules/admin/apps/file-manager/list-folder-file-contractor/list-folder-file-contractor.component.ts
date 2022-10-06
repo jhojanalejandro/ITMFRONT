@@ -27,8 +27,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    contractorId: any;
-
+    folderId: any;
+    ruta: any;
     /**
      * Constructor
      */
@@ -45,8 +45,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {   
-        this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
-
+        this.folderId = this.router.snapshot.paramMap.get('folderId') || 'null';
+        
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'number' ? value : value.numbers)),
@@ -62,6 +62,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: ItemsC) => {
                 this.items = items;
+                this.ruta = this.items.folders[0].idContractor + '/'+ this.folderId;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -141,7 +142,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
         const dialogRef =  this._matDialog.open(FolderContractorComponent, {
             autoFocus: false,
             data     : {
-                folderId: this.contractorId,
+                contractorId: this.folderId,
                 folderName: 'vacio'
             }
           });

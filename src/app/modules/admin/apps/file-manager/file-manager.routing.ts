@@ -8,6 +8,8 @@ import { ListFolderContractorComponent } from './list-folder-contractor/list-fol
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
 import { FileManagerFolderCResolver } from './list-folder-contractor/list-folder.resolvers';
 import { FileListComponent } from './list-file/file-list.component';
+import { FileManagerFolderCFResolver } from './list-folder-file-contractor/list-folder-file.resolvers';
+import { FileManagerItemFResolver } from './list-file/list-file.resolvers';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -42,16 +44,18 @@ export const fileManagerRoutes: Route[] = [
                         path         : 'details/:id',
                         component    : FileManagerDetailsComponent,
                         resolve      : {
-                            item: FileManagerItemResolver
+                            item: FileManagerItemFResolver
                         },
                         canDeactivate: [CanDeactivateFileManagerDetails]
                     }
                 ]
             },
             {
-                path     : 'folders/file/contractor/:contractorId',
+                path     : 'folders/file/:folderId',
                 component: ListFolderFileContractorComponent,
-
+                resolve  : {
+                    item: FileManagerFolderCFResolver
+                },
             },
             {
                 path     : 'folders/contractor/:folderId',
@@ -61,10 +65,10 @@ export const fileManagerRoutes: Route[] = [
                 },
             },
             {
-                path     : 'file/contractor/:fileId',
+                path     : 'file/contractor/:contractorId',
                 component: FileListComponent,
                 resolve  : {
-                    item: FileManagerFolderCResolver
+                    item: FileManagerItemResolver
                 },
             }
         ]

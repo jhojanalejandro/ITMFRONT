@@ -67,7 +67,6 @@ export class SettingsTeamComponent implements OnInit
     }
 
     onChange(event, user: any) {
-        debugger
         user.rollName = event
         this._authService
         .updateUser(user)

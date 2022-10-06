@@ -60,10 +60,13 @@ export class FileManagerService
     /**
      * Get item by id
      */
-    getItemById(id: string): Observable<Item>
+    getItemById(idC: any | null = null): Observable<Item>
     {
-        let urlEndPoint = this.apiUrl+ environment.GetByIdProjectFolderEndpoint + id;
-        return this._httpClient.get<any>(urlEndPoint).pipe(
+        let arr = idC.split('/');
+        debugger
+        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
+        let urlEndPoint = this.apiUrl+ environment.GetAllFileByIdEndpoint;
+        return this._httpClient.get<any>(urlEndPoint+1).pipe(
             tap((response: any) => {
 
                 // Update the item
@@ -73,7 +76,7 @@ export class FileManagerService
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + id + '!');
+                    return throwError('Could not found the item with id of ' + idC + '!');
                 }
 
                 return of(item);
@@ -81,7 +84,7 @@ export class FileManagerService
         );
     }
 
-    getItemByIdFolderContractoe(id: string): Observable<Item>
+    getItemByIdFolderContractor(id: string): Observable<Item>
     {
         let urlEndPoint = this.apiUrl+ environment.GetByIdProjectFolderEndpoint + id;
         return this._httpClient.get<any>(urlEndPoint).pipe(
@@ -234,11 +237,10 @@ export class FileManagerService
     }
 
 
-    getAllFolderFileContractor(folderIds: string | null = null): Observable<Item[]>
+    getAllFolderFileContractor(id: string | null = null): Observable<Item[]>
     {
-
-        let urlEndPoint = this.apiUrl+ environment.GetByIdFolderContractorEndpoint;
-        return  this._httpClient.get<Items>(urlEndPoint+folderIds).pipe(
+        let urlEndPoint = this.apiUrl+ environment.GetFolderFileContractorEndpoint;
+        return  this._httpClient.get<Items>(urlEndPoint+id).pipe(
             tap((response: any) => {
         // this._items.next(response);
         // Clone the items
@@ -247,19 +249,17 @@ export class FileManagerService
         }
         let items = cloneDeep(response);
         // See if a folder id exist
-        const folderId = response[0].id;
+        const folderId = response[0].idContractor;
 
         // Filter the items by folder id. If folder id is null,
         // that means we want to root items which have folder id
         // of null
-        items = items.filter(item => item.id === folderId);
+        items = items.filter(item => item.idContractor === folderId);
         
         // Separate the items by folders and files
         const folders = items.filter(item => item.type === 'folder');
-        const files = items.filter(item => item.type !== 'folder');
-
         // Sort the folders and files alphabetically by filename
-        folders.sort((a, b) => a.companyName.localeCompare(b.companyName));
+        folders.sort((a, b) => a.folderName.localeCompare(b.folderName));
         // Figure out the path and attach it to the response
         // Prepare the empty paths array
         const pathItems = cloneDeep(response);
@@ -300,7 +300,7 @@ export class FileManagerService
     }
 
     addFolderContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl+ environment.addFolderFileContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

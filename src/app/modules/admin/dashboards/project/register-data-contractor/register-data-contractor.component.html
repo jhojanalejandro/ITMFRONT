@@ -1,5 +1,15 @@
-<mat-dialog-content class="mat-typography">
-    <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Registrar Datos del Contratista</p>
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Registrar Datos del Contratista</div>
+        <button
+            mat-icon-button
+            (click)="cerrar()"
+            [tabIndex]="-1">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
     <div class="option">
         <!-- Alert -->
         <fuse-alert
@@ -13,6 +23,7 @@
         {{alert.message}}
     </fuse-alert>
 </div>
+    <br>
     <form [formGroup]="formContractor" class="example-form">
         <div class="nationality">
             <mat-form-field class="hiring" appearance="outline">
@@ -107,6 +118,10 @@
                     Este Campo es requerido
                  </mat-error>
             </mat-form-field>
+
+        </div>
+        <br>
+        <div class="nationality">
             <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
                 <mat-label>Fecha de Finalizacion</mat-label>
                 <input matInput id="fechaFinalizacion" autocomplete="off" formControlName="fechaFinalizacion" [matDatepicker]="pickerF">
@@ -114,7 +129,7 @@
                 <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
                 <mat-error *ngIf="formContractor.get('fechaFinalizacion').hasError('required')">
                     Este Campo es requerido
-                 </mat-error>
+                </mat-error>
             </mat-form-field>
         </div>
         <br>
@@ -490,8 +505,8 @@
 
   </form>
 
-  </mat-dialog-content>
+</div>
   <mat-dialog-actions align="end">
-    <button mat-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
-    <button mat-button type="submit" [mat-dialog-close]="true" [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled" class="text-green-500" (click)="addContractor()">Aceptar</button>
+    <button mat-stroked-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
+    <button mat-flat-button [color]="'primary'" type="submit" [mat-dialog-close]="true" [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled" (click)="addContractor()">Aceptar</button>
   </mat-dialog-actions>

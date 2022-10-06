@@ -107,7 +107,7 @@ export class FileManagerItemResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getItemById(route.paramMap.get('id'))
+        return this._fileManagerService.getItemById(route.paramMap.get('contractorId'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {

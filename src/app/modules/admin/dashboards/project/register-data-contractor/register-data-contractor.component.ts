@@ -156,6 +156,9 @@ export class ContractorDataRegisterComponent implements OnInit {
       });
     }
 
+    cerrar(): void {
+      this.matDialogRef.close();
+  }
     // async getRaffle() {
     //     (await this.api.getAllRaffleNames()).subscribe((Response) => {
     //         this.RaffleNameData = Response;

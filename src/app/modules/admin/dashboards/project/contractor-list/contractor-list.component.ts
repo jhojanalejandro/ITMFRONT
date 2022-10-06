@@ -40,7 +40,7 @@ export class ContractorListComponent implements OnInit, OnDestroy
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['nombre','apellido','documentodeidentificacion','correo','telefono','nacionalidad','fechanacimiento','acciones'];
+    displayedColumns: string[] = ['nombreCompleto','documentoDeIdentidificacion','correo','telefono','nacionalidad','fechanacimiento','acciones'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
 
     /**
@@ -57,9 +57,8 @@ export class ContractorListComponent implements OnInit, OnDestroy
     {
     }
     columnas = [ 
-        {title: 'NOMBRE', name: 'nombre'},
-        {title: 'APELLIDO', name: 'apellido'},
-        {title: 'CEDULA', name: 'documentodeidentificacion'},
+        {title: 'NOMBRE', name: 'nombreCompleto'},
+        {title: 'CEDULA', name: 'documentoDeIdentidificacion'},
         {title: 'CORREO', name: 'correo'},
         {title: 'TELEFONO', name: 'telefono'},
         {title: 'NACIONALIDAD', name: 'nacionalidad'},
@@ -167,6 +166,8 @@ export class ContractorListComponent implements OnInit, OnDestroy
     async getDataContractor(id: any) {
       (await this._contractorList.getByIdProject(id)).subscribe((Response) => {
         this.dataSource= new MatTableDataSource(Response);
+        console.log(Response);
+        
         this.dataSource.sort= this.sort;
         this.dataSource.data = Response;  
       });

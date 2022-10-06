@@ -121,5 +121,8 @@ export class ProjectFolderComponent implements OnInit {
     });
 
   }
+  cerrar(): void {
+    this.matDialogRef.close();
+  } 
 
 }

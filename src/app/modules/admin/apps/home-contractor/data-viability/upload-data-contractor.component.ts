@@ -150,6 +150,7 @@ export class UploadDataContractoDataComponent implements OnInit {
               type   : 'error',
               message: 'ERROR EN LA INFORMACION'
           };
+          swal.fire('Contratista Registrado Exitosamente!', '', 'success');
 
           // Show the alert
           this.showAlert = true;

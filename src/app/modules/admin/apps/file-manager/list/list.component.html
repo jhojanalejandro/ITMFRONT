@@ -32,10 +32,6 @@
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items.path.length">
                                 <div class="flex items-center space-x-2">
-                                    <a
-                                        class="text-primary cursor-pointer"
-                                        [routerLink]="['/apps/file-manager']">Inicio
-                                    </a>
                                     <div class="">/</div>
                                     <ng-container *ngFor="let path of items.path; let last = last; trackBy: trackByFn">
                                         <ng-container *ngIf="!last">
@@ -65,17 +61,7 @@
                             </mat-form-field>
                         </div>
                     </div>
-                    <!-- Actions -->
-                    <div class="mt-4 sm:mt-0">
-                        <!-- Upload button -->
-                        <button
-                            (click)="openDialog()"
-                            mat-flat-button
-                            [color]="'primary'">
-                            <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
-                            <span class="ml-2 mr-1">Cargar Archivos</span>
-                        </button>
-                    </div>
+
                 </div>
 
                 <!-- Items list -->

@@ -26,11 +26,8 @@
                     <div>
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
-                            <ng-container *ngIf="!items.path.length">
-                                {{items.folders.length}} carpetas, {{items.files.length}} Archivos
-                            </ng-container>
                             <!-- Breadcrumbs -->
-                            <ng-container *ngIf="items.path.length">
+                            <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
                                     <a
                                         class="text-primary cursor-pointer"
@@ -82,15 +79,15 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items && (items.folders.length > 0 || items.files.length > 0); else noItems">
+                <ng-container *ngIf="items && (items.id > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Files -->
-                        <ng-container *ngIf="items.files.length > 0">
+                        <ng-container *ngIf="items.id > 0">
                             <div>
                                 <div class="font-medium">Archivos</div>
                                 <div
                                     class="flex flex-wrap -m-2 mt-2">
-                                    <ng-container *ngFor="let file of items.files; trackBy:trackByFn">
+                                    <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <a
                                             class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
                                             [routerLink]="['./details/', file.id]">

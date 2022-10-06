@@ -73,7 +73,6 @@ export class FileListComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-            console.log('items',this.items.folders);
          
     }
 
