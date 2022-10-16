@@ -16,21 +16,21 @@
         </mat-drawer>
 
         <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
-
             <!-- Main -->
             <div class="flex flex-col flex-auto">
 
                 <!-- Header -->
                 <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
+
                     <!-- Title -->
                     <div>
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratistas</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <ng-container *ngIf="!items.path.length">
                                 {{items.folders.length}} carpetas
                             </ng-container>
                             <!-- Breadcrumbs -->
-                            <ng-container *ngIf="items.path.length">
+                            <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
                                     <a
                                         class="text-primary cursor-pointer"
@@ -68,7 +68,16 @@
                             </mat-form-field>
                         </div>
                     </div>
-    
+                        <!-- Actions -->
+                        <div class="mt-4 sm:mt-0">
+                            <!-- Upload button -->
+                            <button
+                                mat-flat-button
+                                [color]="'primary'">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
+                                <span class="ml-2 mr-1">Cargar Archivos</span>
+                            </button>
+                        </div>
                 </div>
 
                 <!-- Items list -->
@@ -100,7 +109,7 @@
                                                     </div>
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.documentoDeIdentidificacion">{{folder.documentoDeIdentidificacion}}
+                                                        [matTooltip]="folder.documentoDeIdentificacion">{{folder.documentoDeIdentificacion}}
                                                     </div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>

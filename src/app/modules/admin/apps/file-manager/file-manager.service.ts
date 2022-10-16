@@ -62,21 +62,51 @@ export class FileManagerService
      */
     getItemById(idC: any | null = null): Observable<Item>
     {
-        let arr = idC.split('/');
         debugger
+        let arr = idC.split('/');
+        const GetFile: any={ 
+            contractorId: arr[0],
+            folderId: arr[1]
+        }
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileByIdEndpoint;
-        return this._httpClient.get<any>(urlEndPoint+1).pipe(
-            tap((response: any) => {
-
+        return this._httpClient.post<any>(urlEndPoint,GetFile).pipe(
+            tap((items) => {
                 // Update the item
-                this._item.next(response);
+                debugger
+                const item = [...items.files] = items || null;
+                this._item.next(item);
+                
             }),
             switchMap((item) => {
 
                 if ( !item )
                 {
                     return throwError('Could not found the item with id of ' + idC + '!');
+                }
+
+                return of(item);
+            })
+        );
+    }
+
+    getItemByIdDetail(id: any | null = null): Observable<Item>
+    {
+        debugger
+        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
+        let urlEndPoint = this.apiUrl+ environment.GetByIdFileEndpoint;
+        return this._httpClient.get<any>(urlEndPoint + id).pipe(
+            tap((item) => {
+                // Update the item
+                debugger
+                this._item.next(item);
+                
+            }),
+            switchMap((item) => {
+
+                if ( !item )
+                {
+                    return throwError('Could not found the item with id of ' + id + '!');
                 }
 
                 return of(item);
@@ -242,19 +272,23 @@ export class FileManagerService
         let urlEndPoint = this.apiUrl+ environment.GetFolderFileContractorEndpoint;
         return  this._httpClient.get<Items>(urlEndPoint+id).pipe(
             tap((response: any) => {
-        // this._items.next(response);
         // Clone the items
         for (let index = 0; index < response.length; index++) {
             response[index].type = 'folder';
         }
         let items = cloneDeep(response);
         // See if a folder id exist
-        const folderId = response[0].idContractor;
-
+        let folderId;
+        if(response.length > 0){
+            folderId = response[0].contractorId;
+        }else{
+            folderId = 0;
+        }
+    
         // Filter the items by folder id. If folder id is null,
         // that means we want to root items which have folder id
         // of null
-        items = items.filter(item => item.idContractor === folderId);
+        items = items.filter(item => item.contractorId === folderId);
         
         // Separate the items by folders and files
         const folders = items.filter(item => item.type === 'folder');

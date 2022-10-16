@@ -13,7 +13,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FileListComponent } from './list-file/file-list.component';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
-import { DetailFolderComponent } from './details-file/detail-folder.component';
+import { DetailFileComponent } from './details-file/detail-file.component';
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
 import { FolderContractorComponent } from './list-folder-file-contractor/register-folder-contractor/register-folder-contractor.component';
 
@@ -25,7 +25,7 @@ import { FolderContractorComponent } from './list-folder-file-contractor/registe
         ListFolderFileContractorComponent,
         ListFolderContractorComponent,
         FileListComponent,
-        DetailFolderComponent,
+        DetailFileComponent,
         FolderContractorComponent
     ],
     imports     : [

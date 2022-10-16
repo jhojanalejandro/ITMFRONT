@@ -45,7 +45,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {   
-        this.folderId = this.router.snapshot.paramMap.get('folderId') || 'null';
+        this.folderId = this.router.snapshot.paramMap.get('contractorId') || 'null';
         
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
@@ -62,7 +62,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: ItemsC) => {
                 this.items = items;
-                this.ruta = this.items.folders[0].idContractor + '/'+ this.folderId;
+                this.ruta = this.items.folders[0].contractorId + '/';
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -153,4 +153,11 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
           });         
     }
 
+    onChange(event) {
+        debugger
+        // reader.onload = () => {
+        //     this.file = reader.result;
+        //     console.log('base 64', this.file);   
+        // };
+      }
 }

@@ -21,14 +21,13 @@ export class FileListComponent implements OnInit, OnDestroy
 {
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
-    selectedItem: Item;
+    selectedItem: Items;
     items: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    id: any;
-
+    data: any;
     /**
      * Constructor
      */
@@ -43,6 +42,8 @@ export class FileListComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {   
+        this.data = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
+
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'number' ? value : value.numbers)),
@@ -57,8 +58,9 @@ export class FileListComponent implements OnInit, OnDestroy
         // Get the item
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
-                this.selectedItem = item;
+            .subscribe((item) => {
+                this.items = item;
+                debugger
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -88,7 +90,7 @@ export class FileListComponent implements OnInit, OnDestroy
 
     getId(id: any){
             console.log('id folder', id);
-            this.id = id;
+            this.data = id;
     }
     /**
      * On backdrop clicked
@@ -139,7 +141,7 @@ export class FileListComponent implements OnInit, OnDestroy
             autoFocus: false,
             data     : {
                 show: false,
-                idContractor: this.id
+                contractorId: this.data
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -147,13 +149,13 @@ export class FileListComponent implements OnInit, OnDestroy
             }
         });               
     }
-    // getAllfolders(){
-    //     this._fileManagerService.getAllFolder()
-    //     .pipe(takeUntil(this._unsubscribeAll))
-    //     .subscribe((data) => {
-           
-    //         console.log('cambio',this.items.folders);
-            
-    // });
-    // }
+
+    onChange(event) {
+        debugger
+        // reader.onload = () => {
+        //     this.file = reader.result;
+        //     console.log('base 64', this.file);   
+        // };
+      }
+
 }

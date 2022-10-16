@@ -7,7 +7,7 @@ import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 @Injectable({
     providedIn: 'root'
 })
-export class FileManagerItemsCFResolver implements Resolve<any>
+export class DetailFileManagerItemResolver implements Resolve<any>
 {
     /**
      * Constructor
@@ -26,16 +26,17 @@ export class FileManagerItemsCFResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getAllFolderFileContractor();
+        return this._fileManagerService.getItemByIdDetail();
     }
 }
+
 
 @Injectable({
     providedIn: 'root'
 })
-export class FileManagerFolderCFResolver implements Resolve<any>
+export class DetailFileManagerItemFResolver implements Resolve<any>
 {
     /**
      * Constructor
@@ -57,15 +58,16 @@ export class FileManagerFolderCFResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getAllFolderFileContractor(route.paramMap.get('contractorId'))
+        return this._fileManagerService.getItemByIdDetail(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
-                        
+
                            // Log the error
                            console.error(error);
+
                            // Get the parent url
                            const parentUrl = state.url.split('/').slice(0, -1).join('/');
 
@@ -78,5 +80,7 @@ export class FileManagerFolderCFResolver implements Resolve<any>
                    );
     }
 }
+
+
 
 

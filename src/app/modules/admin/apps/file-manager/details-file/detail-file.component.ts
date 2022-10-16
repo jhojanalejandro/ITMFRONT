@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, takeUntil } from 'rxjs';
-import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
+import { FileListComponent } from '../list-file/file-list.component';
 
 @Component({
-    selector       : 'fdetail-folder',
-    templateUrl    : './detail-folder.component.html',
+    selector       : 'detail-file',
+    templateUrl    : './detail-file.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailFolderComponent implements OnInit, OnDestroy
+export class DetailFileComponent implements OnInit, OnDestroy
 {
-    item: Item;
+    item: any;
     id: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -26,7 +26,7 @@ export class DetailFolderComponent implements OnInit, OnDestroy
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fileManagerListComponent: FileManagerListComponent,
+        private _listComponent: FileListComponent,
         private _fileManagerService: FileManagerService,
         private _router: Router,
         private _authService: AuthService
@@ -34,9 +34,10 @@ export class DetailFolderComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
+        debugger
         //this.numberWin = this.router.snapshot.paramMap.get('number') || 'null';
         // Open the drawer
-        this._fileManagerListComponent.matDrawer.open();
+        this._listComponent.matDrawer.open();
 
         // Get the item
         this._fileManagerService.item$
@@ -44,9 +45,9 @@ export class DetailFolderComponent implements OnInit, OnDestroy
             .subscribe((item: Item) => {
                 this.id = item.id;
                 console.log('archivo', item);
-                
+                debugger
                 // Open the drawer in case it is closed
-                this._fileManagerListComponent.matDrawer.open();
+                this._listComponent.matDrawer.open();
 
                 // Get the item
                 this.item = item;
@@ -66,7 +67,7 @@ export class DetailFolderComponent implements OnInit, OnDestroy
     }
     closeDrawer(): Promise<MatDrawerToggleResult>
     {
-        return this._fileManagerListComponent.matDrawer.close();
+        return this._listComponent.matDrawer.close();
     }
 
     /**

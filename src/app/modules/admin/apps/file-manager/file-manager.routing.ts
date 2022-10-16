@@ -9,7 +9,9 @@ import { ListFolderFileContractorComponent } from './list-folder-file-contractor
 import { FileManagerFolderCResolver } from './list-folder-contractor/list-folder.resolvers';
 import { FileListComponent } from './list-file/file-list.component';
 import { FileManagerFolderCFResolver } from './list-folder-file-contractor/list-folder-file.resolvers';
-import { FileManagerItemFResolver } from './list-file/list-file.resolvers';
+import { FileManagerItemFResolver } from './list-file/file-list.resolvers';
+import { DetailFileComponent } from './details-file/detail-file.component';
+import { DetailFileManagerItemFResolver } from './details-file/detail-file.resolvers';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -51,7 +53,7 @@ export const fileManagerRoutes: Route[] = [
                 ]
             },
             {
-                path     : 'folders/file/:folderId',
+                path     : 'folders/file/:contractorId',
                 component: ListFolderFileContractorComponent,
                 resolve  : {
                     item: FileManagerFolderCFResolver
@@ -68,9 +70,27 @@ export const fileManagerRoutes: Route[] = [
                 path     : 'file/contractor/:contractorId',
                 component: FileListComponent,
                 resolve  : {
-                    item: FileManagerItemResolver
+                    item: FileManagerItemFResolver
                 },
-            }
+                children : [
+                    {
+                        path         : 'details/file/:id',
+                        component    : DetailFileComponent,
+                        resolve      : {
+                            item: DetailFileManagerItemFResolver
+                        },
+                        canDeactivate: [CanDeactivateFileManagerDetails]
+                    }
+                ]
+            },
+            // {
+            //     path     : '/detail/:id',
+            //     component: DetailFileComponent,
+            //     resolve      : {
+            //         item: DetailFileManagerItemFResolver
+            //     },
+            //     // canDeactivate: [CanDeactivateFileManagerDetails]
+            // }
         ]
     }
 ];

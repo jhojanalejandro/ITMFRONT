@@ -24,7 +24,7 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
                     <!-- Title -->
                     <div>
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Archivos</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">
@@ -34,14 +34,14 @@
                                         [routerLink]="['/apps/file-manager']">Inicio
                                     </a>
                                     <div class="">/</div>
-                                    <ng-container *ngFor="let path of items.path; let last = last; trackBy: trackByFn">
+                                    <ng-container *ngFor="let path of items.files; let last = last; trackBy: trackByFn">
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.companyName}}</a>
+                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.filesName}}</a>
                                         </ng-container>
                                         <ng-container *ngIf="last">
-                                            <div>{{path.companyName}}</div>
+                                            <div>{{path.filesName}}</div>
                                         </ng-container>
                                         <ng-container *ngIf="!last">
                                             <div class="">/</div>
@@ -79,10 +79,10 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items && (items.id > 0); else noItems">
+                <ng-container *ngIf="items.files.length > 0; else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Files -->
-                        <ng-container *ngIf="items.id > 0">
+                        <ng-container *ngIf="items.files.length > 0">
                             <div>
                                 <div class="font-medium">Archivos</div>
                                 <div
@@ -90,7 +90,7 @@
                                     <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <a
                                             class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
-                                            [routerLink]="['./details/', file.id]">
+                                            [routerLink]="['./details/file/', file.id]">
                                             <div class="aspect-w-9 aspect-h-6">
                                                 <div class="flex items-center justify-center">
                                                     <!-- Icons -->
@@ -100,12 +100,12 @@
                                                             [svgIcon]="'iconsmind:file'"></mat-icon>
                                                         <div
                                                             class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                                            [class.bg-red-600]="file.type === 'PDF'"
-                                                            [class.bg-blue-600]="file.type === 'DOC'"
-                                                            [class.bg-green-600]="file.type === 'XLS'"
-                                                            [class.bg-gray-600]="file.type === 'TXT'"
-                                                            [class.bg-amber-600]="file.type === 'JPG'">
-                                                            {{file.type.toUpperCase()}}
+                                                            [class.bg-red-600]="file.typeFile === 'PDF'"
+                                                            [class.bg-blue-600]="file.typeFile === 'DOC'"
+                                                            [class.bg-green-600]="file.typeFile === 'XLS'"
+                                                            [class.bg-gray-600]="file.typeFile === 'TXT'"
+                                                            [class.bg-amber-600]="file.typeFile === 'JPG'">
+                                                            {{file.typeFile.toUpperCase()}}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -113,10 +113,7 @@
                                             <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                 <div
                                                     class="truncate"
-                                                    [matTooltip]="file.companyName">{{file.companyName}}</div>
-                                                <ng-container *ngIf="file.contents">
-                                                    <div class="text-secondary truncate">{{file.contents}}</div>
-                                                </ng-container>
+                                                    [matTooltip]="file.filesName">{{file.filesName}}</div>
                                             </div>
                                         </a>
                                     </ng-container>

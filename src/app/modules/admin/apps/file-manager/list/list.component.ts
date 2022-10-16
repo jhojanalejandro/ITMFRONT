@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
+import { DetailFileComponent } from '../details-file/detail-file.component';
 
 
 
