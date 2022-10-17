@@ -108,7 +108,7 @@ export class AuthSignInComponent implements OnInit
         .subscribe(
             () => {
                 // Navigate to the redirect url
-                this._router.navigate(['apps/inicio/contratista']);
+                this._router.navigate(['inicio/contratista']);
 
             },
             (response) => {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from 'app/layout/common/models/user-model';
@@ -11,7 +11,7 @@ import swal from 'sweetalert2';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsTeamComponent implements OnInit
+export class SettingsTeamComponent implements OnInit,OnChanges
 {
     members: any[];
     roles: any = GlobalCont.roles;
@@ -22,6 +22,10 @@ export class SettingsTeamComponent implements OnInit
      */
     constructor(private _authService: AuthService)
     {
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        debugger
+        throw new Error('Method not implemented.');
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -46,9 +50,6 @@ export class SettingsTeamComponent implements OnInit
             this.members = teams;
             //this._changeDetectorRef.markForCheck();
         });
-
-
-
     }
 
     /**
@@ -62,12 +63,10 @@ export class SettingsTeamComponent implements OnInit
         return item.id || index;
     }
 
-    async getDtaUser() {
 
-    }
-
-    onChange(event, user: any) {
-        user.rollName = event
+    onChange(user: any) {
+        debugger
+        // user.rollName = event
         this._authService
         .updateUser(user)
         .subscribe((res) => {   

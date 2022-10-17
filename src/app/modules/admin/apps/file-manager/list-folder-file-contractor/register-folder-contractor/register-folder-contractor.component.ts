@@ -49,7 +49,6 @@ export class FolderContractorComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log('llega',this._data);
     if(this._data.folderName != 'vacio'){
       this.editData = true;
       this.folderName = this._data.data.projectName;
@@ -69,14 +68,13 @@ export class FolderContractorComponent implements OnInit {
   async addProjectFolder() {
     
     const registerGFolder: IFolderContractor={
-      idUser: Number(this.authService.accessId),
-      idContractor: Number(this._data.contractorId),
+      userId: Number(this.authService.accessId),
+      contractorId: Number(this._data.contractorId),
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
       modifyDate: this.registerDate      
     };  
-    debugger
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
           swal.fire('informacion Registrada Exitosamente!', '', 'success');
@@ -99,8 +97,8 @@ export class FolderContractorComponent implements OnInit {
   async editProjectFolder(){
     const registerProject: IFolderContractor={
       id: this._data.data.id,
-      idUser: this.authService.accessId,
-      idContractor: this._data.folderId,
+      userId: this.authService.accessId,
+      contractorId: this._data.folderId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 

@@ -152,15 +152,13 @@ export class AuthService
         {
             return throwError('User is already logged in.');
         }
-
         return this._httpClient.post<IResponse>(this.apiUrl  + environment.AuthContractor, credentials).pipe(
             switchMap((response: any) => {
-
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
                 this.accessId = response.id;
-                this.accessName = response.NombreCompleto
-                this.accessEmail = response.Correo 
+                this.accessName = response.userName
+                this.accessEmail = response.userEmail 
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true

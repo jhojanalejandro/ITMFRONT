@@ -49,6 +49,23 @@
                 </mat-error>
             </mat-form-field>
         </div>
+        <div class="folder pt-8">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Estado contrato</mat-label>
+                <mat-select [formControlName]="'ejecucion'" name="ejecucion">
+                    <mat-option *ngFor="let exe of ejecucion" [value]="exe.viewValue">
+                        {{exe.viewValue}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                <mat-error *ngIf="formProject.get('ejecucion').hasError('required')">
+                    El Campo Entidad bancaria es requerido
+                </mat-error>
+            </mat-form-field> 
+        </div>
         <br>
         <div class="folder">
             <mat-form-field class="hiringD" appearance="outline">

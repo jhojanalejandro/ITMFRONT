@@ -10,31 +10,18 @@ import { FuseNavigationModule } from '@fuse/components/navigation';
 import { FuseScrollResetModule } from '@fuse/directives/scroll-reset';
 import { SharedModule } from 'app/shared/shared.module';
 import { GuidesComponent } from 'app/modules/admin/docs/guides/guides.component';
-import { IntroductionComponent } from 'app/modules/admin/docs/guides/getting-started/introduction/introduction';
 import { PrerequisitesComponent } from 'app/modules/admin/docs/guides/getting-started/prerequisites/prerequisites';
-import { InstallationComponent } from 'app/modules/admin/docs/guides/getting-started/installation/installation';
 import { ServingComponent } from 'app/modules/admin/docs/guides/getting-started/serving/serving';
-import { DirectoryStructureComponent } from 'app/modules/admin/docs/guides/development/directory-structure/directory-structure';
-import { ComponentStructureComponent } from 'app/modules/admin/docs/guides/development/component-structure/component-structure';
-import { StarterKitComponent } from 'app/modules/admin/docs/guides/development/starter-kit/starter-kit';
-import { DeploymentComponent } from 'app/modules/admin/docs/guides/development/deployment/deployment';
-import { UpdatingComponent } from 'app/modules/admin/docs/guides/development/updating/updating';
-import { JwtComponent } from 'app/modules/admin/docs/guides/authentication/jwt/jwt';
+
 import { guidesRoutes } from 'app/modules/admin/docs/guides/guides.routing';
+import { ContractsComponent } from './getting-started/contracts/contracts.component';
 
 @NgModule({
     declarations: [
         GuidesComponent,
-        IntroductionComponent,
+        ContractsComponent,
         PrerequisitesComponent,
-        InstallationComponent,
         ServingComponent,
-        DirectoryStructureComponent,
-        ComponentStructureComponent,
-        StarterKitComponent,
-        DeploymentComponent,
-        UpdatingComponent,
-        JwtComponent
     ],
     imports     : [
         RouterModule.forChild(guidesRoutes),

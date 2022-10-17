@@ -1,15 +1,15 @@
-<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Registrar Datos del Contratista</div>
-        <button
-            mat-icon-button
-            (click)="cerrar()"
-            [tabIndex]="-1">
-            <mat-icon
-                class="text-current"
-                [svgIcon]="'heroicons_outline:x'"></mat-icon>
-        </button>
-    </div>
+<div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">Registrar Datos del Contratista</div>
+    <button
+        mat-icon-button
+        (click)="cerrar()"
+        [tabIndex]="-1">
+        <mat-icon
+            class="text-current"
+            [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+</div>
+<mat-dialog-content >
     <div class="option">
         <!-- Alert -->
         <fuse-alert
@@ -26,17 +26,6 @@
     <br>
     <form [formGroup]="formContractor" class="example-form">
         <div class="nationality">
-            <mat-form-field class="hiring" appearance="outline">
-                <mat-label>Consecutivo</mat-label>
-                <input type="text"  id="consecutivo" formControlName="consecutivo" autocomplete="off" matInput placeholder="Consecutivo" >
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                <mat-error *ngIf="formContractor.get('consecutivo').hasError('required')">
-                    El Campo consecutivo es requerido
-                </mat-error>
-            </mat-form-field>
 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>CPC</mat-label>
@@ -90,7 +79,7 @@
             </mat-form-field>
         </div>
         <br>
-        <div class="drop">
+        <div class="nationality">
             <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
                 <mat-label>Fecha Contrato</mat-label>
                 <input matInput id="fechaContrato" autocomplete="off" formControlName="fechaContrato" [matDatepicker]="pickerContrato">
@@ -131,9 +120,20 @@
                     Este Campo es requerido
                 </mat-error>
             </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Ejecucion</mat-label>
+                <input type="text"  id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput placeholder="Actividad" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:menu-alt-1'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('ejecucion').hasError('required')">
+                    El Campo ejecucion Mensuales es requerido
+                </mat-error>
+            </mat-form-field>
         </div>
         <br>
-        <p class="nationality"> OBLIGACIONES GENERALES  </p>
+        <!-- <p class="nationality"> OBLIGACIONES GENERALES  </p>
         <br>
 
         <div class="flex">
@@ -148,11 +148,11 @@
                         El Campo Obligaciones Manuales es requerido
                     </mat-error>
             </mat-form-field>
-        </div>
-        <br>
+        </div> -->
+        <!-- <br>
         <p class="nationality"> OBLIGACIONES ESPECIFICAS </p>
-        <br>
-        <div class="flex">
+        <br> -->
+        <!-- <div class="flex">
             <mat-form-field class="fuse-mat-textarea flex-auto">
                 <textarea
                     matInput id="obligacionesEspecificas" formControlName="obligacionesEspecificas" autocomplete="off" matInput placeholder="obligaciones Especificas"></textarea>
@@ -164,7 +164,7 @@
                         El Campo Obligaciones es requerido
                     </mat-error>
             </mat-form-field>
-        </div>
+        </div> -->
         <div class="flex">
             <mat-form-field class="flex-auto" appearance="outline">
                 <mat-label>Actividad</mat-label>
@@ -193,7 +193,7 @@
         </div>
         <br>
         <div class="nationality">
-            <mat-form-field class="hiring" appearance="outline">
+            <!-- <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Honorarios Mensuales</mat-label>
                 <input type="text"  id="honorariosMensuales" formControlName="honorariosMensuales" autocomplete="off" matInput placeholder="Consecutivo" >
                 <mat-icon
@@ -203,22 +203,12 @@
                 <mat-error *ngIf="formContractor.get('honorariosMensuales').hasError('required')">
                     El Campo honorarios Mensuales es requerido
                 </mat-error>
-            </mat-form-field>
-            <mat-form-field class="hiring" appearance="outline">
-                <mat-label>Ejecucion</mat-label>
-                <input type="text"  id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput placeholder="Actividad" >
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:menu-alt-1'"></mat-icon>
-                <mat-error *ngIf="formContractor.get('ejecucion').hasError('required')">
-                    El Campo ejecucion Mensuales es requerido
-                </mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
+
         </div>
         <br>
         <div class="nationality"> 
-            <mat-form-field class="hiring" appearance="outline">
+            <!-- <mat-form-field class="hiring" appearance="outline">
                 <mat-label>profesional</mat-label>
                 <input type="text"  id="profesional" formControlName="profesional" autocomplete="off" matInput placeholder="Profesional" >
                 <mat-icon
@@ -239,7 +229,7 @@
                 <mat-error *ngIf="formContractor.get('laboral').hasError('required')">
                     El Campo laboral requerido
                 </mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
             <mat-form-field (click)="pickerFC.open()" class="hiring" appearance="outline">
                 <mat-label>Fecha Comite</mat-label>
                 <input matInput id="fechaComite" autocomplete="off" formControlName="fechaComite" [matDatepicker]="pickerFC">
@@ -255,8 +245,8 @@
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Requiere poliza Arl</mat-label>
                 <mat-select [formControlName]="'requierePoliza'" name="requierePoliza">
-                    <mat-option *ngFor="let arl of entidadesdArl" [value]="arl.viewValue">
-                        {{arl.viewValue}}
+                    <mat-option *ngFor="let poliza of requierePoliza" [value]="poliza.viewValue">
+                        {{poliza.viewValue}}
                     </mat-option>
                 </mat-select>
                 <mat-icon
@@ -409,7 +399,7 @@
             </mat-form-field> 
         </div>
         <br>
-        <p class="nationality"> Datos de entidad bancaria  </p>
+        <p class="text nationality"> Datos de entidad bancaria  </p>
         <div class="nationality"> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Entidad bancaria</mat-label>
@@ -454,7 +444,7 @@
             </mat-form-field>
         </div>
         <br>
-        <p class="nationality">Datos de seguridad social  </p>
+        <p class="text nationality">Datos de seguridad social  </p>
         <div class="nationality"> 
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Entidad Eps</mat-label>
@@ -504,8 +494,7 @@
         </div>
 
   </form>
-
-</div>
+</mat-dialog-content >
   <mat-dialog-actions align="end">
     <button mat-stroked-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
     <button mat-flat-button [color]="'primary'" type="submit" [mat-dialog-close]="true" [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled" (click)="addContractor()">Aceptar</button>

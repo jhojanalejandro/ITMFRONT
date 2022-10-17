@@ -34,7 +34,6 @@ const routerConfig: ExtraOptions = {
 
         // Core module of your application
         CoreModule,
-
         // Layout module of your application
         LayoutModule,
 

@@ -27,17 +27,18 @@
                 <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
                     <div class="order-2 sm:order-1 ml-4 sm:ml-0">
                         <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-50">
-                            <mat-select  
+                            <mat-select   (change)="onChange($event)"
                                 [panelClass]="'w-72 min-w-72 max-w-72 h-auto max-h-none'"
                                 [value]="member.role"
                                 disableOptionCentering
                                 #roleSelect="matSelect">
-                                <mat-select-trigger  class="text-md">
+                                <mat-select-trigger 
+                                class="text-md">
                                     <span>Role:</span>
                                     <span class="ml-1 font-medium">{{roleSelect.value | titlecase}}</span>
                                 </mat-select-trigger>
                                 <ng-container *ngFor="let role of roles">
-                                    <mat-option (change)="onChange($event,member)"
+                                    <mat-option (change)="onChange(member)"
                                         class="h-auto py-4 leading-none"
                                         [value]="role.value">
                                         <div class="font-medium">{{role.label}}</div>

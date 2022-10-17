@@ -2,42 +2,47 @@ import { DecimalPipe } from "@angular/common";
 
 export interface IContractor{
     id?: any;
-    consecutivo: string;
     cpc: string;
     nombreCpc: string;
     contrato: string;
     compromiso: string;
-    fechaContrato: Date;
-    fechaInicioProyectado: Date;
-    fechaInicioReal: Date;
-    fechaFinalizacion: string;
-    honorariosMensuales: string;
+    fechaDeContrato: Date;
+    fechaDeInicioProyectado: Date;
+    fechaRealDeInicio: Date;
+    fechaFinalizacion: Date;
+    fechaFinalizacionConvenio: Date;
     actividad: string;
     encabezado: string;
     ejecucion: string;
-    obligacionesGenerales: string;
-    obligacionesEspecificas: string;
-    profesional: string;
-    laboral: string;
-    fechaComite: Date;
+    actaComite: any;
+    // obligacionesGenerales: string;
+    // obligacionesEspecificas: string;
+    // profesional: string;
+    // laboral: string;
+    fechaDeComite: Date;
     requierePoliza: string;
     noPoliza: string;
     vigenciaInicial: Date;
     vigenciaFinal: Date;
-    fechaExPedicionPoliza: Date;
-    valorAsegurado: DecimalPipe;
+    fechaExpedicionPoliza: Date;
+    valorAsegurado: any;
     fechaExaPreocupacional: Date;
-    nivel: string;
-    interventor: string;
-    cargoInterventor: string;
+    nivel: any;
+    interventorItm: string;
+    cargoInterventorItm: string;
     noAdicion: string;
-    fechaInicioAplicacion: Date;
-    fechaterminacionAplicacion: Date;
-    duracionTotal: number;
+    fechaInicioAmpliacion: Date;
+    fechaDeTerminacionAmpliacion: Date;
+    // duracionTotal: number;
     eps: string;
     pension: string;
     arl: string;
-    cuentabancaria: string;
-    tipodecuenta: string;
-    entidadcuentabancaria: string;
+    cuentaBancaria: string;
+    tipoCuenta: string;
+    entidadCuentaBancaria: string;
+    rubroPresupuestal: string;
+    nombreDelRubro: string,
+    // "entidadAseguradora": "string",
+    // "fechaExpedicionPoliza": "2022-10-14T00:44:38.250Z",
+  
 }

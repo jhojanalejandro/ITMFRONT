@@ -1,15 +1,10 @@
 import { Route } from '@angular/router';
 import { GuidesComponent } from 'app/modules/admin/docs/guides/guides.component';
-import { IntroductionComponent } from 'app/modules/admin/docs/guides/getting-started/introduction/introduction';
 import { PrerequisitesComponent } from 'app/modules/admin/docs/guides/getting-started/prerequisites/prerequisites';
-import { InstallationComponent } from 'app/modules/admin/docs/guides/getting-started/installation/installation';
 import { ServingComponent } from 'app/modules/admin/docs/guides/getting-started/serving/serving';
-import { DirectoryStructureComponent } from 'app/modules/admin/docs/guides/development/directory-structure/directory-structure';
-import { ComponentStructureComponent } from 'app/modules/admin/docs/guides/development/component-structure/component-structure';
-import { StarterKitComponent } from 'app/modules/admin/docs/guides/development/starter-kit/starter-kit';
-import { DeploymentComponent } from 'app/modules/admin/docs/guides/development/deployment/deployment';
-import { UpdatingComponent } from 'app/modules/admin/docs/guides/development/updating/updating';
-import { JwtComponent } from 'app/modules/admin/docs/guides/authentication/jwt/jwt';
+import { ContractsComponent } from './getting-started/contracts/contracts.component';
+import { FileManagerFolderResolver } from '../../apps/file-manager/file-manager.resolvers';
+
 
 export const guidesRoutes: Route[] = [
     {
@@ -27,67 +22,22 @@ export const guidesRoutes: Route[] = [
                     {
                         path      : '',
                         pathMatch : 'full',
-                        redirectTo: 'introduction'
+                        redirectTo: 'contratos'
                     },
                     {
-                        path     : 'introduction',
-                        component: IntroductionComponent
+                        path     : 'contratos',
+                        component: ContractsComponent,
+                        resolve  : {
+                            item: FileManagerFolderResolver
+                        },
                     },
                     {
                         path     : 'prerequisites',
                         component: PrerequisitesComponent
                     },
                     {
-                        path     : 'installation',
-                        component: InstallationComponent
-                    },
-                    {
                         path     : 'serving',
                         component: ServingComponent
-                    }
-                ]
-            },
-            {
-                path    : 'development',
-                children: [
-                    {
-                        path      : '',
-                        pathMatch : 'full',
-                        redirectTo: 'structure'
-                    },
-                    {
-                        path     : 'directory-structure',
-                        component: DirectoryStructureComponent
-                    },
-                    {
-                        path     : 'component-structure',
-                        component: ComponentStructureComponent
-                    },
-                    {
-                        path     : 'starter-kit',
-                        component: StarterKitComponent
-                    },
-                    {
-                        path     : 'deployment',
-                        component: DeploymentComponent
-                    },
-                    {
-                        path     : 'updating',
-                        component: UpdatingComponent
-                    }
-                ]
-            },
-            {
-                path    : 'authentication',
-                children: [
-                    {
-                        path      : '',
-                        pathMatch : 'full',
-                        redirectTo: 'jwt'
-                    },
-                    {
-                        path     : 'jwt',
-                        component: JwtComponent
                     }
                 ]
             }
