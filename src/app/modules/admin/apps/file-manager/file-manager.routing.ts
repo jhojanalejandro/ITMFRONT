@@ -46,7 +46,7 @@ export const fileManagerRoutes: Route[] = [
                         path         : 'details/:id',
                         component    : FileManagerDetailsComponent,
                         resolve      : {
-                            item: FileManagerItemFResolver
+                            item: FileManagerItemResolver
                         },
                         canDeactivate: [CanDeactivateFileManagerDetails]
                     }

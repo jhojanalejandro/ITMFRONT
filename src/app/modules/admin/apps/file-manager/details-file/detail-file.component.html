@@ -31,7 +31,7 @@
             [class.bg-green-600]="item.typeFile === 'XLS'"
             [class.bg-gray-600]="item.typeFile === 'TXT'"
             [class.bg-amber-600]="item.typeFile === 'JPG'">
-            {{item.type.toUpperCase()}}
+            {{item.typeFile.toUpperCase()}}
         </div>
     </div>
 
@@ -40,15 +40,15 @@
     <div class="flex flex-col mt-4 border-t border-b divide-y font-medium">
         <div class="flex items-center justify-between py-3">
             <div class="text-secondary">Creado por</div>
-            <div>{{item.userId}}</div>
+            <div>{{userName}}</div>
         </div>
         <div class="flex items-center justify-between py-3">
             <div class="text-secondary">Creado en</div>
-            <div>{{item.registerDate}}</div>
+            <div>{{item.registerDate | date}}</div>
         </div>
         <div class="flex items-center justify-between py-3">
             <div class="text-secondary">Modificado el</div>
-            <div>{{item.registerDate}}</div>
+            <div>{{item.registerDate | date}}</div>
         </div>
         <ng-container *ngIf="item.contents">
             <div class="flex items-center justify-between py-3">
@@ -69,10 +69,10 @@
     </div>
     <div class="flex mt-2 border-t">
         <div class="py-3">
-            <ng-container *ngIf="item.description">
-                <div>{{item.description}}</div>
+            <ng-container *ngIf="item.descriptionFile">
+                <div>{{item.descriptionFile}}</div>
             </ng-container>
-            <ng-container *ngIf="!item.description">
+            <ng-container *ngIf="!item.descriptionFile">
                 <div class="italic text-secondary">Click here to add a description</div>
             </ng-container>
         </div>
@@ -86,7 +86,7 @@
             [color]="'primary'">
             Descargar
         </button> -->
-        <button (click)="openDialog()" class="bg-green-500 flex-auto" mat-stroked-button>
+        <button class="bg-green-500 flex-auto" [routerLink]="['/apps/archivo/', item.id]" mat-stroked-button>
             Ver documento
         </button>
         <button

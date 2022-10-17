@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
+import { FileListManagerService } from './list-file.service';
 
 
 
@@ -35,7 +36,7 @@ export class FileListComponent implements OnInit, OnDestroy
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _fileManagerService: FileManagerService,
+        private _fileManagerService: FileListManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _matDialog: MatDialog,
     ){}
@@ -58,12 +59,12 @@ export class FileListComponent implements OnInit, OnDestroy
         // Get the item
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item) => {
+            .subscribe((item: Item) => {
                 this.items = item;
-                debugger
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')

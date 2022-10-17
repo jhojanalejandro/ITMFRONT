@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, takeUntil } from 'rxjs';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 import { FileListComponent } from '../list-file/file-list.component';
+import { FileListManagerService } from '../list-file/list-file.service';
 
 @Component({
     selector       : 'detail-file',
@@ -17,6 +17,7 @@ import { FileListComponent } from '../list-file/file-list.component';
 })
 export class DetailFileComponent implements OnInit, OnDestroy
 {
+    userName: any;
     item: any;
     id: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -27,31 +28,29 @@ export class DetailFileComponent implements OnInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _listComponent: FileListComponent,
-        private _fileManagerService: FileManagerService,
+        private _fileManagerService: FileListManagerService,
         private _router: Router,
         private _authService: AuthService
     ){}
 
     ngOnInit(): void
     {
-        debugger
         //this.numberWin = this.router.snapshot.paramMap.get('number') || 'null';
         // Open the drawer
         this._listComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.item$
+        this._fileManagerService.itemD$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: Item) => {
                 this.id = item.id;
                 console.log('archivo', item);
-                debugger
                 // Open the drawer in case it is closed
                 this._listComponent.matDrawer.open();
 
                 // Get the item
                 this.item = item;
-
+                this.getUserById(this.item.userId);
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -93,20 +92,10 @@ export class DetailFileComponent implements OnInit, OnDestroy
     }
 
 
-    async getUserById() {
-        (await this._authService.getUserById(this.id)).subscribe((Response) => {
-        //   this.userName = Response.userName
-        //   this.lastName = Response.lastName
-        //   this.identificationCard = Response.identificationCard
+    async getUserById(id: any) {
+        (await this._authService.getUserById(id)).subscribe((Response) => {
+          this.userName = Response.userName
         });
     }
-
-    // async getFilesBy() {
-    //     (await this._authService.getUserById(this.userId)).subscribe((Response) => {
-    //     //   this.userName = Response.userName
-    //     //   this.lastName = Response.lastName
-    //     //   this.identificationCard = Response.identificationCard
-    //     });
-    // }
 
 }

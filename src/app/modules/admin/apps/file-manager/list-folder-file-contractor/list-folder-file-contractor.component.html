@@ -41,7 +41,7 @@
                                         class="text-primary cursor-pointer"
                                         [routerLink]="['/apps/file-manager']">Inicio
                                     </a>
-                                    <ng-container *ngFor="let path of items.path; let last = last; trackBy: trackByFn">
+                                    <ng-container *ngFor="let path of items.path; let last = last; trackBy:trackByFn">
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
