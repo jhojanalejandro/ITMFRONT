@@ -58,7 +58,7 @@ export class UploadDataComponent implements OnInit, OnDestroy
         {title: 'NOMBRE PROYECTO', name: 'projectName'},
         {title: 'FECHA REGISTRO', name: 'registerDate'},
         // {title: 'FECHA MODIFICACION', name: 'modifyDate'},
-        {title: 'ACCIONES', name: 'action'},    
+        {title: '', name: 'action'},    
     ]
     ngOnInit(): void
     {
