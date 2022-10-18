@@ -16,21 +16,21 @@
         </mat-drawer>
 
         <mat-drawer-content class="flex flex-col bg-gray-100 dark:bg-transparent">
-
             <!-- Main -->
             <div class="flex flex-col flex-auto">
 
                 <!-- Header -->
                 <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
+
                     <!-- Title -->
                     <div>
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratistas</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <ng-container *ngIf="!items.path.length">
                                 {{items.folders.length}} carpetas
                             </ng-container>
                             <!-- Breadcrumbs -->
-                            <ng-container *ngIf="items.path.length">
+                            <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
                                     <a
                                         class="text-primary cursor-pointer"
@@ -68,9 +68,102 @@
                             </mat-form-field>
                         </div>
                     </div>
-    
+                        <!-- Actions -->
+                        <div class="mt-4 sm:mt-0">
+                            <!-- Upload button -->
+                            <button
+                                mat-flat-button
+                                [color]="'primary'">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
+                                <span class="ml-2 mr-1">Cargar Archivos</span>
+                            </button>
+                        </div>
                 </div>
-
+                <ng-container *ngIf="item && (item.files.length > 0)">
+                    <div class="p-6 md:p-8 space-y-8">
+                        <ng-container *ngIf="item.files.length > 0">
+                            <div class="p-6 md:p-8 space-y-8">
+                                <!-- Files -->
+                                <ng-container *ngIf="item.files.length > 0">
+                                    <div>
+                                        <div class="font-medium">Archivos</div>
+                                        <div
+                                            class="flex flex-wrap -m-2 mt-2">
+                                            <ng-container *ngFor="let file of item; trackBy:trackByFn">
+                                                <a
+                                                    class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+                                                    [routerLink]="['./details/file/', file.id]">
+                                                    <div class="aspect-w-9 aspect-h-6">
+                                                        <div class="flex items-center justify-center">
+                                                            <!-- Icons -->
+                                                            <div class="relative">
+                                                                <mat-icon
+                                                                    class="icon-size-14 text-hint"
+                                                                    [svgIcon]="'iconsmind:file'"></mat-icon>
+                                                                <div
+                                                                    class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                                                    [class.bg-red-600]="file.typeFile === 'PDF'"
+                                                                    [class.bg-blue-600]="file.typeFile === 'DOC'"
+                                                                    [class.bg-green-600]="file.typeFile === 'XLS'"
+                                                                    [class.bg-gray-600]="file.typeFile === 'TXT'"
+                                                                    [class.bg-amber-600]="file.typeFile === 'JPG'">
+                                                                    {{file.typeFile.toUpperCase()}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                                        <div
+                                                            class="truncate"
+                                                            [matTooltip]="file.filesName">{{file.filesName}}</div>
+                                                    </div>
+                                                </a>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                        <!-- Folders -->
+                        <ng-container *ngIf="items.folders.length > 0">
+                            <div>
+                                <div class="font-medium">Carpetas</div>
+                                <div
+                                    class="flex flex-wrap -m-2 mt-2">
+                                    <ng-container *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
+                                        <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
+                                            <a
+                                                class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
+                                                [routerLink]="['/apps/file-manager/folders/file/', folder.id]">
+                                                <div class="aspect-w-9 aspect-h-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <!-- Icon -->
+                                                        <mat-icon
+                                                            class="icon-size-14 text-hint"
+                                                            [svgIcon]="'iconsmind:folder'"></mat-icon>
+                                                    </div>
+                                                </div>
+                                                <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                                    <div
+                                                        class="truncate"
+                                                        [matTooltip]="folder.nombreCompleto">{{folder.nombreCompleto}}
+                                                    </div>
+                                                    <div
+                                                        class="truncate"
+                                                        [matTooltip]="folder.documentoDeIdentificacion">{{folder.documentoDeIdentificacion}}
+                                                    </div>
+                                                    <ng-container *ngIf="folder.contents">
+                                                        <div class="text-secondary truncate">{{folder.contents}}</div>
+                                                    </ng-container>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
                 <!-- Items list -->
                 <ng-container *ngIf="items && (items.folders.length > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
@@ -100,7 +193,7 @@
                                                     </div>
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.documentoDeIdentidificacion">{{folder.documentoDeIdentidificacion}}
+                                                        [matTooltip]="folder.documentoDeIdentificacion">{{folder.documentoDeIdentificacion}}
                                                     </div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>

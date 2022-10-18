@@ -26,6 +26,10 @@ export class UploadFileDataService
     }
 
 
+    UploadFileExcel(formdata: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addExcelContractorEndpoint;
+         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
     UploadFileContractor(formdata: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addFileEndpoint;
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);

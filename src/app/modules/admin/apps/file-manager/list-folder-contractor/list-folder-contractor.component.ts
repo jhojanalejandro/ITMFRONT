@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
+import { ListFolderContractorService } from './list-folder-contractor.service';
 
 
 
@@ -21,7 +20,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
 {
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
-    selectedItem: any;
+    item: any;
     items: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -36,7 +35,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _fileManagerService: FileManagerService,
+        private _fileManagerService: ListFolderContractorService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private router: ActivatedRoute
     ){}
@@ -64,6 +63,13 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
+            this._fileManagerService.item$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((item: Item) => {
+                this.item = item;
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
             .pipe(takeUntil(this._unsubscribeAll))

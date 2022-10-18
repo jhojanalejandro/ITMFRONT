@@ -12,12 +12,12 @@
     <!-- Preview -->
     <div class="aspect-w-9 aspect-h-6 mt-8">
         <div class="flex items-center justify-center border rounded-lg bg-gray-50 dark:bg-card">
-            <ng-container *ngIf="item.type === 'folder'">
+            <ng-container *ngIf="item.type === 'carpeta'">
                 <mat-icon
                     class="icon-size-14 text-hint"
                     [svgIcon]="'iconsmind:folder'"></mat-icon>
             </ng-container>
-            <ng-container *ngIf="item.type !== 'folder'">
+            <ng-container *ngIf="item.type !== 'carpeta'">
                 <mat-icon
                     class="icon-size-14 text-hint"
                     [svgIcon]="'iconsmind:file'"></mat-icon>

@@ -13,7 +13,6 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from './home-contractor.service';
-import { UploadDataContractoDataComponent } from './data-viability/upload-data-contractor.component';
 
 @Component({
     selector       : 'home-contractor',
@@ -71,25 +70,23 @@ export class HomeContractorComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
       this.userName = this.auth.accessName
-      this.id = this.router.snapshot.paramMap.get('id') || 'null';
-      this.getDataContractor(this.id);
     }
     openDialog(route: any,data: any) {
         //this.validateDinamycKey();
         switch(route){
             case 'registerData':
-              const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
-                autoFocus: false,
-                data     : {
-                    idUser: this.auth.accessId,
-                    data
-                }
-              });
-              dialogRef.afterClosed().subscribe((result) => {
-                if(result){
-                  this.getDataContractor(this.id);
-                }
-              }); 
+              // const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
+              //   autoFocus: false,
+              //   data     : {
+              //       idUser: this.auth.accessId,
+              //       data
+              //   }
+              // });
+              // dialogRef.afterClosed().subscribe((result) => {
+              //   if(result){
+              //     this.getDataContractor(this.id);
+              //   }
+              // }); 
             break
         //     case 'resultadosQr':
         //         this._router.navigate(['lista/resultados/qr'], { skipLocationChange: true });
@@ -136,18 +133,18 @@ export class HomeContractorComponent implements OnInit, OnDestroy
       }
       selectRowFull(data: any) { 
         
-        const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
-            autoFocus: false,
-            data     : {
-                idUser: this.auth.accessId,
-                data
-            }
-          });
-          dialogRef.afterClosed().subscribe((result) => {
-            if(result){
-              this.getDataContractor(this.id);
-            }
-        }); 
+        // const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
+        //     autoFocus: false,
+        //     data     : {
+        //         idUser: this.auth.accessId,
+        //         data
+        //     }
+        //   });
+        //   dialogRef.afterClosed().subscribe((result) => {
+        //     if(result){
+        //       this.getDataContractor(this.id);
+        //     }
+        // }); 
     }
    
       /**
@@ -162,14 +159,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy
       }
    
 
-    async getDataContractor(id: any) {
-      (await this._contractorService.getByIdFile(id)).subscribe((Response) => {
-        this.dataSource= new MatTableDataSource(Response);
-        this.dataSource.sort= this.sort;
-        this.dataSource.data = Response;  
-      });
-
-    }
 
 
 }

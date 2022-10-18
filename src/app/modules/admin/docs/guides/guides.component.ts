@@ -30,83 +30,27 @@ export class GuidesComponent implements OnInit, OnDestroy
         this.menuData = [
             {
                 id      : 'getting-started',
-                title   : 'Getting started',
+                title   : 'Opción Planeación',
                 type    : 'group',
                 children: [
                     {
-                        id   : 'getting-started.introduction',
-                        title: 'Introduction',
+                        id   : 'getting-started.contratos',
+                        title: 'Contratos Administrativos',
                         type : 'basic',
-                        link : '/docs/guides/getting-started/introduction'
+                        link : '/docs/guides/getting-started/contratos'
                     },
                     {
                         id   : 'getting-started.prerequisites',
-                        title: 'Prerequisites',
+                        title: 'Estudio contratación',
                         type : 'basic',
                         link : '/docs/guides/getting-started/prerequisites'
                     },
-                    {
-                        id   : 'getting-started.installation',
-                        title: 'Installation',
-                        type : 'basic',
-                        link : '/docs/guides/getting-started/installation'
-                    },
-                    {
-                        id   : 'getting-started.serving',
-                        title: 'Serving',
-                        type : 'basic',
-                        link : '/docs/guides/getting-started/serving'
-                    }
-                ]
-            },
-            {
-                id      : 'development',
-                title   : 'Development',
-                type    : 'group',
-                children: [
-                    {
-                        id   : 'development.directory-structure',
-                        title: 'Directory structure',
-                        type : 'basic',
-                        link : '/docs/guides/development/directory-structure'
-                    },
-                    {
-                        id   : 'development.component-structure',
-                        title: 'Component structure',
-                        type : 'basic',
-                        link : '/docs/guides/development/component-structure'
-                    },
-                    {
-                        id   : 'development.starter-kit',
-                        title: 'Starter kit',
-                        type : 'basic',
-                        link : '/docs/guides/development/starter-kit'
-                    },
-                    {
-                        id   : 'development.deployment',
-                        title: 'Deployment',
-                        type : 'basic',
-                        link : '/docs/guides/development/deployment'
-                    },
-                    {
-                        id   : 'development.updating',
-                        title: 'Updating',
-                        type : 'basic',
-                        link : '/docs/guides/development/updating'
-                    }
-                ]
-            },
-            {
-                id      : 'authentication',
-                title   : 'Authentication',
-                type    : 'group',
-                children: [
-                    {
-                        id   : 'authentication.jwt',
-                        title: 'JWT',
-                        type : 'basic',
-                        link : '/docs/guides/authentication/jwt'
-                    }
+                    // {
+                    //     id   : 'getting-started.serving',
+                    //     title: 'Serving',
+                    //     type : 'basic',
+                    //     link : '/docs/guides/getting-started/serving'
+                    // }
                 ]
             }
         ];

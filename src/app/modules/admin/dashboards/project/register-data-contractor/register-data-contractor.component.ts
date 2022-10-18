@@ -33,6 +33,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   entidadesB: any = GlobalCont.entidadesB;
   entidadesEps: any = GlobalCont.eps;
   entidadesP: any = GlobalCont.pensiones;
+  requierePoliza: any = GlobalCont.requierePoliza
   entidadesdArl: any = GlobalCont.arl; 
   comunas: any = GlobalCont.comunas;
   tipoCuenta: any = GlobalCont.tipoCuenta;
@@ -61,10 +62,10 @@ export class ContractorDataRegisterComponent implements OnInit {
         actividad: new FormControl(null, Validators.required),
         encabezado: new FormControl(null, Validators.required),
         ejecucion: new FormControl(null, Validators.required),
-        obligacionesGenerales: new FormControl(null, Validators.required),
-        obligacionesEspecificas: new FormControl(null, Validators.required),
-        profesional: new FormControl(null, Validators.required),
-        laboral: new FormControl(null, Validators.required),
+        // obligacionesGenerales: new FormControl(null, Validators.required),
+        // obligacionesEspecificas: new FormControl(null, Validators.required),
+        // profesional: new FormControl(null, Validators.required),
+        // laboral: new FormControl(null, Validators.required),
         fechaComite: new FormControl(null, Validators.required),
         requierePoliza: new FormControl(null, Validators.required),
         noPoliza: new FormControl(null, Validators.required),
@@ -79,7 +80,7 @@ export class ContractorDataRegisterComponent implements OnInit {
         noAdicion: new FormControl(null, Validators.required),
         fechaInicioAplicacion: new FormControl(null, Validators.required),
         fechaterminacionAplicacion: new FormControl(null, Validators.required),
-        duracionTotal: new FormControl(null, Validators.required),
+        // duracionTotal: new FormControl(null, Validators.required),
         eps: new FormControl(null, Validators.required),
         pension: new FormControl(null, Validators.required),
         arl: new FormControl(null, Validators.required),
@@ -93,46 +94,57 @@ export class ContractorDataRegisterComponent implements OnInit {
     }
 
     async addContractor() {
+        if(this.formContractor.value.requierePoliza == 'si'){
+          this.formContractor.value.requierePoliza = true;
+        }else{
+          this.formContractor.value.requierePoliza = false;
+
+        }
+
         const registerContractor: IContractor={
-          consecutivo: this.formContractor.value.consecutivo,
           cpc: this.formContractor.value.cpc,
           nombreCpc: this.formContractor.value.nombreCpc,
           contrato: this.formContractor.value.contrato.toString(),
-          compromiso: this.formContractor.value.compromiso,
-          fechaContrato: this.formContractor.value.fechaContrato,
-          fechaInicioProyectado: this.formContractor.value.fechaInicioProyectado,
-          fechaInicioReal: this.formContractor.value.fechaInicioReal,
+          compromiso: this.formContractor.value.compromiso.toString(),
+          fechaDeContrato: this.formContractor.value.fechaContrato.toString(),
+          fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
+          fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
           fechaFinalizacion: this.formContractor.value.fechaFinalizacion,
-          honorariosMensuales: this.formContractor.value.honorariosMensuales,
+          // honorariosMensuales: this.formContractor.value.honorariosMensuales,
           actividad: this.formContractor.value.actividad,
           encabezado: this.formContractor.value.encabezado,
           ejecucion: this.formContractor.value.ejecucion,
-          obligacionesGenerales: this.formContractor.value.obligacionesGenerales,
-          obligacionesEspecificas: this.formContractor.value.obligacionesEspecificas,
-          profesional: this.formContractor.value.profesional,
-          laboral: this.formContractor.value.laboral,
-          fechaComite: this.formContractor.value.fechaComite,
+          // obligacionesGenerales: this.formContractor.value.obligacionesGenerales,
+          // obligacionesEspecificas: this.formContractor.value.obligacionesEspecificas,
+          // profesional: this.formContractor.value.profesional,
+          // laboral: this.formContractor.value.laboral,
+          fechaDeComite: this.formContractor.value.fechaComite,
           requierePoliza: this.formContractor.value.requierePoliza,
           noPoliza: this.formContractor.value.noPoliza,
           vigenciaInicial: this.formContractor.value.vigenciaInicial,
           vigenciaFinal: this.formContractor.value.vigenciaFinal,
-          fechaExPedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
-          valorAsegurado: this.formContractor.value.valorAsegurado,
+          fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
+          valorAsegurado: Number(this.formContractor.value.valorAsegurado),
           fechaExaPreocupacional: this.formContractor.value.fechaExaPreocupacional,
-          nivel: this.formContractor.value.nivel,
-          interventor: this.formContractor.value.interventor,
-          cargoInterventor: this.formContractor.value.cargoInterventor,
-          noAdicion: this.formContractor.value.cargoInterventor,
-          fechaInicioAplicacion: this.formContractor.value.fechaInicioAplicacion,
-          fechaterminacionAplicacion: this.formContractor.value.fechaterminacionAplicacion,
-          duracionTotal: this.formContractor.value.duracionTotal,
+          nivel: Number(this.formContractor.value.nivel),
+          interventorItm: this.formContractor.value.interventor,
+          cargoInterventorItm: this.formContractor.value.cargoInterventor,
+          noAdicion: this.formContractor.value.noAdicion,
+          fechaInicioAmpliacion: this.formContractor.value.fechaInicioAplicacion,
+          fechaDeTerminacionAmpliacion: this.formContractor.value.fechaterminacionAplicacion,
+          // duracionTotal: this.formContractor.value.duracionTotal,
           eps: this.formContractor.value.eps,
           pension: this.formContractor.value.pension,
           arl: this.formContractor.value.arl,
-          cuentabancaria: this.formContractor.value.cuentabancaria.toString(),
-          tipodecuenta: this.formContractor.value.tipodecuenta,
-          entidadcuentabancaria: this.formContractor.value.entidadcuentabancaria,
+          cuentaBancaria: this.formContractor.value.cuentabancaria.toString(),
+          tipoCuenta: this.formContractor.value.tipodecuenta,
+          entidadCuentaBancaria: this.formContractor.value.entidadcuentabancaria,
+          fechaFinalizacionConvenio: this.formContractor.value.fechaterminacionAplicacion,
+          actaComite: 'vacio',
+          rubroPresupuestal: '',
+          nombreDelRubro: ''
         };  
+      debugger
       this._upload
       .addContractor(registerContractor)
       .subscribe((res) => {   

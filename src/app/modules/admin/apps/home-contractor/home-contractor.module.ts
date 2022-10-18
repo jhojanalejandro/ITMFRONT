@@ -10,24 +10,21 @@ import { MatTableModule } from '@angular/material/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { HomeContractorComponent } from './home-contractor.component';
-import { UploadDataContractoDataComponent } from './data-viability/upload-data-contractor.component';
 import { contractorRoutes } from './home-contractor.routing';
+import { FuseCardModule } from '@fuse/components/card';
 
 
 @NgModule({
     declarations: [
-        HomeContractorComponent,
-        UploadDataContractoDataComponent
+        HomeContractorComponent
     ],
     imports     : [
         RouterModule.forChild(contractorRoutes),
-        MatButtonModule,
         MatDividerModule,
-        MatIconModule,
         MatMenuModule,
         MatProgressBarModule,
         MatSortModule,
-        MatTableModule,
+        FuseCardModule,
         NgApexchartsModule,
         SharedModule
     ]

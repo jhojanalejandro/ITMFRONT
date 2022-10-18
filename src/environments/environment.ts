@@ -18,9 +18,11 @@ export const environment = {
     validateTokenEndpoint: 'User/ValidateTokens/',
 
     addContractorEndpoint: 'Contractor/Add',
+    addExcelContractorEndpoint: 'Contractor/AddExcel',
     UpdateContractorEndpoint: 'Contractor/Update',
     GetByIdFolderContractorEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
+    DeleteContractorByIdEndpoint: 'Contractor/Delete/',
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -35,12 +37,12 @@ export const environment = {
 
 
 
-    addFileEndpoint: 'Files/Add',
+    addFileEndpoint: 'Files/AddFileContractor',
     UpdateFileEndpoint: 'Files/Update',
-    GetAllFileByIdEndpoint: 'Files/GetAllFileById/',
+    GetAllFileByIdEndpoint: 'Files/GetAllFileById',
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete',
-    AuthContractor: 'Files/Autenticate',
+    AuthContractor: 'Contractor/Authenticate',
 
 
     addHiringEndpoint: 'HiringData/Add',

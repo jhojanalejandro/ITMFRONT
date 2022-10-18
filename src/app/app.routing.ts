@@ -60,6 +60,7 @@ export const appRoutes: Route[] = [
             layout: 'empty'
         },
         children   : [
+            {path: 'inicio', loadChildren: () => import('app/modules/admin/apps/home-contractor/home-contractor.module').then(m => m.HomeContractorModule)},
             {path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)},
         ]
     },
@@ -89,9 +90,7 @@ export const appRoutes: Route[] = [
             {path: 'dashboards', children: [
                 {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/project/upload-data.module').then(m => m.UploadModule)},
                 {path: 'lista-contratistas/:id', loadChildren: () => import('app/modules/admin/dashboards/project/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
-                {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)},
-                {path: 'viabilidad', loadChildren: () => import('app/modules/admin/dashboards/viability/viability.module').then(m => m.ViabilityModule)},
-
+                {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)}
             ]},
 
             // Apps
@@ -101,7 +100,6 @@ export const appRoutes: Route[] = [
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
                 {path: 'archivo/:id', loadChildren: () => import('app/modules/admin/apps/file-manager/show-file/show-file.module').then(m => m.ShowFileModule)},
                 {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)},
-                {path: 'inicio', loadChildren: () => import('app/modules/admin/apps/home-contractor/home-contractor.module').then(m => m.HomeContractorModule)},
 
             ]},
 

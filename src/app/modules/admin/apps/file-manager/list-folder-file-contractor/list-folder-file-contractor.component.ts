@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
-import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { Item, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderContractorComponent } from './register-folder-contractor/register-folder-contractor.component';
+import { ListFolderFileContractorService } from './list-folder-file-contractor.service';
 
 
 
@@ -36,7 +36,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _fileManagerService: FileManagerService,
+        private _fileManagerService: ListFolderFileContractorService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private router: ActivatedRoute,
         private _matDialog: MatDialog,
@@ -45,7 +45,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {   
-        this.folderId = this.router.snapshot.paramMap.get('folderId') || 'null';
+        this.folderId = this.router.snapshot.paramMap.get('contractorId') || 'null';
         
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
@@ -62,7 +62,10 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: ItemsC) => {
                 this.items = items;
-                this.ruta = this.items.folders[0].idContractor + '/'+ this.folderId;
+                debugger
+                if(items.folders.length > 0){
+                    this.ruta = this.items.folders[0].contractorId + '/';
+                }
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -153,4 +156,11 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
           });         
     }
 
+    onChange(event) {
+        debugger
+        // reader.onload = () => {
+        //     this.file = reader.result;
+        //     console.log('base 64', this.file);   
+        // };
+      }
 }

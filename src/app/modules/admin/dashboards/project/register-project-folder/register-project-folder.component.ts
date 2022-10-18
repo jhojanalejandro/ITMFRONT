@@ -6,6 +6,7 @@ import { UploadDataService } from '../upload-data.service';
 import swal from 'sweetalert2';
 import { IProjectFolder } from 'app/layout/common/models/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
+import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 
 
 @Component({
@@ -25,13 +26,15 @@ export class ProjectFolderComponent implements OnInit {
   showAlert: boolean = false;
   registerDate = new Date();
   formProject: FormGroup; 
+  ejecucion: any = GlobalCont.ejecucionContrato;
   editData: boolean = false;
   projectName: any = null;
+  descript: any = null;
   companyName: any = null;
   constructor(
     private _upload: UploadDataService,
     private _formBuilder: FormBuilder,
-    private ref: ChangeDetectorRef,
+      private ref: ChangeDetectorRef,
     private authService: AuthService,
     public matDialogRef: MatDialogRef<ProjectFolderComponent>,
     @Inject(MAT_DIALOG_DATA) private _data: { data: any }
@@ -51,12 +54,14 @@ export class ProjectFolderComponent implements OnInit {
       this.editData = true;
       this.companyName = this._data.data.companyName;
       this.projectName = this._data.data.projectName;
+      this.descript = this._data.data.descriptionProject;
     }
       // this.getDepartamento();
     this.formProject = this._formBuilder.group({
     projectName: new FormControl(this.projectName, Validators.required),
-    companyName: new FormControl(this.companyName, Validators.required),      
-    description: new FormControl(null, Validators.required), 
+    companyName: new FormControl(this.companyName, Validators.required),
+    ejecucion: new FormControl(null, Validators.required),       
+    description: new FormControl(this.descript, Validators.required), 
     });
 
   }
@@ -64,8 +69,13 @@ export class ProjectFolderComponent implements OnInit {
     this.ref.detectChanges();
   }
   async addProjectFolder() {
+    if(this.formProject.value.ejecucion == 'Ejecutar Contrato'){
+      this.formProject.value.ejecucion = true; 
+    }else{
+      this.formProject.value.ejecucion = false; 
+    }
     const registerProject: IProjectFolder={
-      idUser: this.authService.accessId,
+      userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,
@@ -95,7 +105,7 @@ export class ProjectFolderComponent implements OnInit {
   async editProjectFolder(){
     const registerProject: IProjectFolder={
       id: this._data.data.id,
-      idUser: this.authService.accessId,
+      userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,

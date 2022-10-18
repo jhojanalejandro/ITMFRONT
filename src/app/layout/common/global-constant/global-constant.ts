@@ -61,6 +61,10 @@ export class GlobalCont {
         { viewValue: 'Corriente'}, 
     ] 
 
+    public static requierePoliza: TypeSelectString[]=[
+        { viewValue: 'Si'},
+        { viewValue: 'No'}, 
+    ] 
     public static entidadesB: TypeSelectString[]=[
         { viewValue: 'Bancolombia'},
         { viewValue: 'Banco caja social'}, 
@@ -73,6 +77,14 @@ export class GlobalCont {
         { viewValue: 'Banco AV Villas'}
     ] 
 
+    public static tipoArchivo: TypeSelectString[]=[
+        { viewValue: 'PDF'},
+        { viewValue: 'PNG'}, 
+        { viewValue: 'JPG'}, 
+        { viewValue: 'DOCX'}, 
+        { viewValue: 'XLSX'}, 
+
+    ] 
     public static comunas: TypeSelectString[]=[
         { viewValue: '1'},
         { viewValue: '2'}, 
@@ -103,7 +115,10 @@ export class GlobalCont {
         { viewValue: '4'}
     ] 
 
-
+    public static ejecucionContrato: TypeSelectString[]=[
+        { viewValue: 'Ejecutar Contrato'},
+        { viewValue: 'En Proceso'}, 
+    ] 
     public static eps: TypeSelectString[]=[
         { viewValue: 'SURA E.P.S.'},
         { viewValue: 'SALUD TOTAL S.A.  E.P.S.'},

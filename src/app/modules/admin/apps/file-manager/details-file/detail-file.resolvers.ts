@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { FileListManagerService } from '../list-file/list-file.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class FileManagerItemResolver implements Resolve<any>
+export class DetailFileManagerItemResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
-    constructor(private _fileManagerService: FileManagerService)
+    constructor(private _fileManagerService: FileListManagerService)
     {
     }
 
@@ -28,7 +28,7 @@ export class FileManagerItemResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getItemById();
+        return this._fileManagerService.getItemByIdDetail();
     }
 }
 
@@ -36,14 +36,14 @@ export class FileManagerItemResolver implements Resolve<any>
 @Injectable({
     providedIn: 'root'
 })
-export class FileManagerItemFResolver implements Resolve<any>
+export class DetailFileManagerItemFResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
     constructor(
         private _router: Router,
-        private _fileManagerService: FileManagerService
+        private _fileManagerService: FileListManagerService
     )
     {
     }
@@ -60,7 +60,7 @@ export class FileManagerItemFResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getItemById(route.paramMap.get('contractorId'))
+        return this._fileManagerService.getItemByIdDetail(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
@@ -72,7 +72,7 @@ export class FileManagerItemFResolver implements Resolve<any>
                            const parentUrl = state.url.split('/').slice(0, -1).join('/');
 
                            // Navigate to there
-                           this._router.navigateByUrl('/apps/file-manager/file/contractor/');
+                           this._router.navigateByUrl(parentUrl);
 
                            // Throw an error
                            return throwError(error);

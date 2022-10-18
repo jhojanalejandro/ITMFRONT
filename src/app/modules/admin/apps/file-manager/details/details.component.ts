@@ -39,16 +39,15 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
         this._fileManagerListComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.item$
+        this._fileManagerService.itemDF$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 // Open the drawer in case it is closed
                 this._fileManagerListComponent.matDrawer.open();
-
                 // Get the item
                 this.item = item;
                 this.item.type = 'carpeta'; 
-                this.getUserById(this.item.idUser);
+                this.item.userId = this.getUserById(this.item.userId);
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -92,8 +91,10 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
 
 
     async getUserById(id: any) {
+        
         (await this._authService.getUserById(id)).subscribe((Response) => {
         return this.userName = Response.userName
+        debugger
         //   this.lastName = Response.lastName
         //   this.identificationCard = Response.identificationCard
         });

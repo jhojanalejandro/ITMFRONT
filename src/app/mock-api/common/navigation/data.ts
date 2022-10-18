@@ -24,11 +24,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/nomina'
             },
             {
-                id   : 'dashboards.viabilidad',
-                title: 'viabilidad',
+                id   : 'documentation.guides',
+                title: 'Planeacion',
                 type : 'basic',
-                icon : 'heroicons_outline:clipboard-list',
-                link : '/dashboards/viabilidad'
+                icon : 'heroicons_outline:book-open',
+                link : '/docs/guides'
             }
         ]
     },

@@ -20,6 +20,5 @@ export interface Item
     modifiedAt?: string;
     size?: string;
     type?: string;
-    contents?: string | null;
     description?: string | null;
 }

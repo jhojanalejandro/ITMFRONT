@@ -42,7 +42,7 @@ export class UploadDataService
         return await this._httpClient.get<any>(urlEndPoint + id);
     }  
     addContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
+        let urlEndpointGenerate = this.apiUrl+ environment.addHiringEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

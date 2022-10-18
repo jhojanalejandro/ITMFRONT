@@ -24,10 +24,19 @@ mat-form-field{
     width: 500px !important;
 }
 ::-webkit-file-upload-button {
-    background: rgb(53, 164, 96);
+    background: rgb(132, 151, 139);
     padding: 0.5em;
     border-radius: 25px;
 }
 .modal-body{
     margin-bottom: 15px;
+}
+.folder{
+    text-align: center;
+}
+.hiringD{
+    padding-left: 15px;
+    margin-right: 10px;
+    width: 600PX !important;
+    max-width: 500px;
 }

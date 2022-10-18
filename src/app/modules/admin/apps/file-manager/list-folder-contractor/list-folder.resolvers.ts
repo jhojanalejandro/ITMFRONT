@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { ListFolderContractorService } from './list-folder-contractor.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,7 @@ export class FileManagerItemsCResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _fileManagerService: FileManagerService)
+    constructor(private _fileManagerService: ListFolderContractorService)
     {
     }
 
@@ -42,7 +42,7 @@ export class FileManagerFolderCResolver implements Resolve<any>
      */
     constructor(
         private _router: Router,
-        private _fileManagerService: FileManagerService
+        private _fileManagerService: ListFolderContractorService
     )
     {
     }
