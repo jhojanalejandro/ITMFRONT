@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from './list-folder-contractor.service';
+import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
 
 
 
@@ -21,6 +22,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
     @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     item: any;
+    data: any;
     items: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -37,7 +39,8 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         private _router: Router,
         private _fileManagerService: ListFolderContractorService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private router: ActivatedRoute
+        private router: ActivatedRoute,
+        private _matDialog: MatDialog,
     ){}
 
     ngOnInit(): void
@@ -57,8 +60,9 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         // Get the items
         this._fileManagerService.itemsC$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items : ItemsC) => {
+            .subscribe((items : any) => {
                 this.items = items;
+                this.data = items.folders[0].contractId
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -134,6 +138,23 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         // let studentObj =  this.dataRandom.find(t=>t.fullname ===event);
         this.items.filter = filterValue;
         // return this.dataRandom.number.find(number => number === event)
+    }
+
+    openDialog()
+    {
+        debugger
+        const dialogRef =  this._matDialog.open(UploadFileComponent, {
+            autoFocus: false,
+            data     : {
+                show: false,
+                contractId: this.data,
+                contractorId: 0
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if(result){
+            }
+        });               
     }
 
 }

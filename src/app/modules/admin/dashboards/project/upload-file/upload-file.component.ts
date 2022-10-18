@@ -40,7 +40,7 @@ export class UploadFileComponent implements OnInit {
     private _router: ActivatedRoute,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any }
+    @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any,contractId: any }
     ) {
 
       setInterval(() => {
@@ -101,10 +101,39 @@ export class UploadFileComponent implements OnInit {
   
   addFileContractor(event) {
     let arr = this._data.contractorId.split('/');
-    const registerProject: IFileContractor={
+    const registerFile: IFileContractor={
       userId: this._auth.accessId,
       contractorId: arr[0],
       folderId: arr[1],
+      filesName: this.formFile.value.filesName,
+      typeFile: this.formFile.value.typeFile,
+      descriptionFile: this.formFile.value.description,
+      registerDate: this.registerDate, 
+      fildata: event       
+    };  
+    this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
+        if(res){
+          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();   
+        }
+
+    },
+    (response) => {
+      this.formFile.enable();
+      console.log('error',response);    
+      // Set the alert
+      swal.fire('Error al Registrar la informacion!', '', 'error');
+      // Show the alert
+      this.showAlert = true;
+    });
+  }
+
+  addFileContract(event) {
+    const registerProject: any={
+      userId: this._auth.accessId,
+      folderId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
@@ -166,9 +195,12 @@ export class UploadFileComponent implements OnInit {
       // Show the alert
       this.showAlert = true;
     });
-    }else{
+    }else if(this._data.contractorId >0){
       this.addFileContractor(this.base64Output);
 
+    }else{
+      debugger
+      this.addFileContract(this.base64Output);
     }
    
 
@@ -180,7 +212,5 @@ export class UploadFileComponent implements OnInit {
     reader.onload = (event) => result.next(btoa(event.target.result.toString()));
     return result;
   }
-
-
 
 }
