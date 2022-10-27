@@ -109,9 +109,10 @@ export const appRoutes: Route[] = [
 
             // Documentation
             {path: 'docs', children: [
+                {path: 'ecommerce', loadChildren: () => import('app/modules/admin/docs/ecommerce/ecommerce.module').then(m => m.ECommerceModule)},
 
                 // Guides
-                {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}
+                // {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}
             ]},
 
             // 404 & Catch all

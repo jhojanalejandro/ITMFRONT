@@ -8,21 +8,23 @@
             <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
             <span class="ml-2">Volver</span>
         </a>
+        
     </div>
     <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
         <div class="w-full max-w-screen-xl mx-auto">
             <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="p-6">
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
-                    <div class="text-secondary font-medium">puedes buscar usuarios</div>
                 </div>
                 <div class="inputsearch" >
                     <mat-form-field appearance="outline">
-                      <mat-label><mat-icon >
-                        search</mat-icon></mat-label>   
+                      <mat-label>
+                        <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+                    </mat-label>   
                       <input   matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
                     </mat-form-field>
                 </div>
+                
                 <div class="overflow-x-auto mx-6">
                     <table
                         class="w-full bg-transparent"
@@ -63,14 +65,14 @@
                         <th mat-header-cell class="centre" cdkDrag mat-sort-header   *matHeaderCellDef> {{columna.title}} </th>
                         <td mat-cell [class.selected]="element.selected"
                         (click)="element.selected = !element.selected;"  *matCellDef="let element" >
-                            <p *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.fechanacimiento"> {{element[columna.name]}}</p>
-                            <p *ngIf="element[columna.name]== element.fechanacimiento">{{element[columna.name] | date}} </p> 
+                            <p *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.fechaNacimiento"> {{element[columna.name]}}</p>
+                            <p *ngIf="element[columna.name]== element.fechaNacimiento">{{element[columna.name] | date}} </p> 
                             <p *ngIf="element[columna.name]== element.acciones" >                   
-                                <button class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData',element)" mat-flat-button [color]="'primary'">
-                                    <mat-icon> <span class="material-symbols-outlined"> edit</span> </mat-icon>
+                                <button [matTooltip]="'Agregar datos'" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData',element)" mat-flat-button [color]="'primary'">
+                                    <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
                                 </button>              
-                                <button style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openConfirmationDelete(element)" mat-flat-button [color]="'warn'">
-                                    <mat-icon>  <span class="material-symbols-outlined">delete</span></mat-icon>
+                                <button [matTooltip]="'Eliminar Contratista'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openConfirmationDelete(element)" mat-flat-button [color]="'warn'">
+                                    <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
                                 </button>
                             </p> 
                         </td>

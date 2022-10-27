@@ -195,11 +195,9 @@ export class UploadFileComponent implements OnInit {
       // Show the alert
       this.showAlert = true;
     });
-    }else if(this._data.contractorId >0){
+    }else if(this._data.contractorId != null){
       this.addFileContractor(this.base64Output);
-
     }else{
-      debugger
       this.addFileContract(this.base64Output);
     }
    

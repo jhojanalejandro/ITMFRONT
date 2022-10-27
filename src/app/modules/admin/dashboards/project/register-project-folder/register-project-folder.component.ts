@@ -80,7 +80,9 @@ export class ProjectFolderComponent implements OnInit {
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
-      modifyDate: this.registerDate,        
+      modifyDate: this.registerDate, 
+      execution:  this.formProject.value.ejecucion,
+      activate: false   
     };  
     this._upload.addProjectFolder(registerProject).subscribe((res) => {   
         if(res){
@@ -110,7 +112,9 @@ export class ProjectFolderComponent implements OnInit {
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 
-      modifyDate: this.registerDate,        
+      modifyDate: this.registerDate,   
+      execution:  this.formProject.value.ejecucion,
+      activate: false        
     };  
     this._upload.UpdateProjectFolder(registerProject).subscribe((res) => {   
         if(res){

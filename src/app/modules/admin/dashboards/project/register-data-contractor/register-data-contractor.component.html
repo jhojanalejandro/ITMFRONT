@@ -56,7 +56,7 @@
         <div class="nationality">
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Contrato</mat-label>
-                <input type="number"  id="contrato" formControlName="contrato" autocomplete="off" matInput placeholder="Contrato" >
+                <input type="text"  id="contrato" formControlName="contrato" autocomplete="off" matInput placeholder="Contrato" >
                 <mat-icon
                 class="icon-size-5"
                 matSuffix
@@ -122,7 +122,7 @@
             </mat-form-field>
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Ejecucion</mat-label>
-                <input type="text"  id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput placeholder="Actividad" >
+                <input type="text"  id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput placeholder="Ejecucion" >
                 <mat-icon
                 class="icon-size-5"
                 matSuffix
@@ -239,6 +239,15 @@
                     Este Campo es requerido
                  </mat-error>
             </mat-form-field>
+            <mat-form-field (click)="pickerFCo.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha Finalización Convenio</mat-label>
+                <input matInput id="fechaComite" autocomplete="off" formControlName="fechaFinalizacionConvenio" [matDatepicker]="pickerFCo">
+                <mat-datepicker #pickerFCo></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerFC"></mat-datepicker-toggle>
+                <mat-error *ngIf="formContractor.get('fechaComite').hasError('required')">
+                    Este Campo es requerido
+                 </mat-error>
+            </mat-form-field>
         </div>  
         <br>
         <div class="nationality">
@@ -278,6 +287,15 @@
                  </mat-error>
             </mat-form-field>
             <div>
+                <mat-form-field (click)="pickerEX.open()" class="hiring" appearance="outline">
+                    <mat-label>Fecha ExaPreocupacional</mat-label>
+                    <input matInput id="fechaExaPreocupacional" autocomplete="off" formControlName="fechaExaPreocupacional" [matDatepicker]="pickerEX">
+                    <mat-datepicker #pickerEX></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEX"></mat-datepicker-toggle>
+                    <mat-error *ngIf="formContractor.get('fechaExaPreocupacional').hasError('required')">
+                        Este Campo es requerido
+                     </mat-error>
+                </mat-form-field> 
                 <mat-form-field (click)="pickerVF.open()" class="hiring" appearance="outline">
                     <mat-label>Vigencia Final</mat-label>
                     <input matInput id="vigenciaFinal" autocomplete="off" formControlName="vigenciaFinal" [matDatepicker]="pickerVF">
@@ -301,30 +319,10 @@
         </div>
         <br>
         <div class="nationality">
-            <mat-form-field class="hiring" appearance="outline">
-                <mat-label>valor Asegurado</mat-label>
-                <input type="text"  id="valorAsegurado" formControlName="valorAsegurado" autocomplete="off" matInput placeholder="valor Asegurado" >
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                <mat-error *ngIf="formContractor.get('valorAsegurado').hasError('required')">
-                    El Campo valorAsegurado es requerido
-                </mat-error>
-            </mat-form-field>
-
-            <mat-form-field (click)="pickerEX.open()" class="hiring" appearance="outline">
-                <mat-label>Fecha ExaPreocupacional</mat-label>
-                <input matInput id="fechaExaPreocupacional" autocomplete="off" formControlName="fechaExaPreocupacional" [matDatepicker]="pickerEX">
-                <mat-datepicker #pickerEX></mat-datepicker>
-                <mat-datepicker-toggle matSuffix [for]="pickerEX"></mat-datepicker-toggle>
-                <mat-error *ngIf="formContractor.get('fechaExaPreocupacional').hasError('required')">
-                    Este Campo es requerido
-                 </mat-error>
-            </mat-form-field> 
-            <mat-form-field class="hiring" appearance="outline">
+ 
+            <!-- <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Requiere poliza</mat-label>
-                <mat-select [formControlName]="'nivel'" name="nivel">
+                <mat-select [formControlName]="'arl'" name="arl">
                     <mat-option *ngFor="let arl of entidadesdArl" [value]="arl.viewValue">
                         {{arl.viewValue}}
                     </mat-option>
@@ -336,7 +334,7 @@
                 <mat-error *ngIf="formContractor.get('requierePoliza').hasError('required')">
                     El Campo poliza es requerido
                 </mat-error>
-            </mat-form-field> 
+            </mat-form-field>  -->
             
 
         </div>
@@ -374,7 +372,7 @@
                 <mat-icon
                 class="icon-size-5"
                 matSuffix
-                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                [svgIcon]="'heroicons_outline:link'"></mat-icon>
                 <mat-error *ngIf="formContractor.get('noAdicion').hasError('required')">
                     El Campo no Adicion es requerido
                 </mat-error>
@@ -491,6 +489,30 @@
                     El Campo arl es requerido
                 </mat-error>
             </mat-form-field> 
+        </div>
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>valor Asegurado</mat-label>
+                <input type="text"  id="valorAsegurado" formControlName="valorAsegurado" autocomplete="off" matInput placeholder="valor Asegurado" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('valorAsegurado').hasError('required')">
+                    El Campo valorAsegurado es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Nivel</mat-label>
+                <input type="text"  id="valorAsegurado" formControlName="nivel" autocomplete="off" matInput placeholder="Nivel" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_outline:chart-bar'"></mat-icon>
+                <mat-error *ngIf="formContractor.get('nivel').hasError('required')">
+                    El Campo valorAsegurado es requerido
+                </mat-error>
+            </mat-form-field>
         </div>
 
   </form>

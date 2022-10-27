@@ -94,7 +94,6 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
         
         (await this._authService.getUserById(id)).subscribe((Response) => {
         return this.userName = Response.userName
-        debugger
         //   this.lastName = Response.lastName
         //   this.identificationCard = Response.identificationCard
         });

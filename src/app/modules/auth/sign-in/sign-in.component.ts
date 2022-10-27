@@ -68,40 +68,39 @@ export class AuthSignInComponent implements OnInit
 
           };
 
-        if(this.signInForm.value.userType == 'Profesional'){
-                   // Disable the form
-        this.signInForm.disable();
+        if(this.signInForm.value.userType == 'Contractual'){
+            this.signInForm.disable();
 
-        // Hide the alert
+            // Hide the alert
 
-        // Sign in
-        this._authService.signIn(useraLogin)
-            .subscribe(
-                () => {
-                    const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+            // Sign in
+            this._authService.signIn(useraLogin)
+                .subscribe(
+                    () => {
+                        const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
-                    // Navigate to the redirect url
-                    this._router.navigateByUrl(redirectURL);
+                        // Navigate to the redirect url
+                        this._router.navigateByUrl(redirectURL);
 
-                },
-                (response) => {
+                    },
+                    (response) => {
 
-                    // Re-enable the form
-                    this.signInForm.enable();
+                        // Re-enable the form
+                        this.signInForm.enable();
 
-                    // Reset the form
-                    this.signInNgForm.resetForm();
+                        // Reset the form
+                        this.signInNgForm.resetForm();
 
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
-                    };
+                        // Set the alert
+                        this.alert = {
+                            type   : 'error',
+                            message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
+                        };
 
-                    // Show the alert
-                    this.showAlert = true;
-                }
-        );
+                        // Show the alert
+                        this.showAlert = true;
+                    }
+            );
         }else{
                     // Sign in
         this._authService.signInContractor(useraLogin)

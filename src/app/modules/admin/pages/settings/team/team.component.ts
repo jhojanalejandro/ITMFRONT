@@ -11,7 +11,7 @@ import swal from 'sweetalert2';
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsTeamComponent implements OnInit,OnChanges
+export class SettingsTeamComponent implements OnInit
 {
     members: any[];
     roles: any = GlobalCont.roles;
@@ -20,12 +20,10 @@ export class SettingsTeamComponent implements OnInit,OnChanges
     /**
      * Constructor
      */
-    constructor(private _authService: AuthService)
+    constructor(private _authService: AuthService,
+        private _changeDetectorRef: ChangeDetectorRef,
+        )
     {
-    }
-    ngOnChanges(changes: SimpleChanges): void {
-        debugger
-        throw new Error('Method not implemented.');
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -41,14 +39,35 @@ export class SettingsTeamComponent implements OnInit,OnChanges
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((teams: any) => {
             // Mark for check
+            debugger
             for (let index = 0; index < teams.length; index++) {
                 if(teams[index].avatar == 'vacio'){
                     teams[index].avatar = 'assets/images/avatars/male-07.jpg';
                 }  
+                switch (teams[index].idRoll) {
+                    case 1:
+                        teams[index].idRoll = 'admin' 
+                    break;
+                    case 2:
+                        teams[index].idRoll = 'encargado' 
+                    break;
+                    case 3:
+                        teams[index].idRoll = 'leer, escribir' 
+                    break;
+                    case 4:
+                        teams[index].idRoll = 'leer' 
+                    break;
+                    case 5:
+                        teams[index].idRoll = 'escribir' 
+                    break;
+                    case 7:
+                        teams[index].idRoll = 'inactivo' 
+                    break;
+                }
                 
             }
             this.members = teams;
-            //this._changeDetectorRef.markForCheck();
+            this._changeDetectorRef.markForCheck();
         });
     }
 
@@ -64,15 +83,18 @@ export class SettingsTeamComponent implements OnInit,OnChanges
     }
 
 
-    onChange(user: any) {
+    onChange(rol:any,user: any) {
         debugger
+        console.log(rol.value);
+        
+        user.idRoll = rol.value;
         // user.rollName = event
         this._authService
         .updateUser(user)
         .subscribe((res) => {   
           if(res){
+            debugger
             swal.fire('Usuario Actualizado Exitosamente!', '', 'success');
-
           }
   
         },
