@@ -78,6 +78,8 @@ export class ContractorListComponent implements OnInit, OnDestroy
     {
       this.userName = this.auth.accessName
       this.id = this.router.snapshot.paramMap.get('id') || 'null';
+      console.log(this.id);
+      
       this.getDataContractor(this.id);
       this.configForm = this._formBuilder.group({
         title      : 'Remove contact',
@@ -106,7 +108,7 @@ export class ContractorListComponent implements OnInit, OnDestroy
         switch(route){
             case 'registerData':
               const dialogRef =  this._matDialog.open(ContractorDataRegisterComponent, {
-                width: '90%',
+                width: '900px',
                 autoFocus: false,
                 data     : {
                     idUser: this.auth.accessId,
