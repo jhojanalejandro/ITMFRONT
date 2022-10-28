@@ -43,7 +43,6 @@ export class ListFolderFileContractorService
         for (let index = 0; index < response.length; index++) {
             response[index].type = 'folder';
         }
-        debugger
         let items = cloneDeep(response);
         // See if a folder id exist
         let folderId;

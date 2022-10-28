@@ -65,6 +65,16 @@ export const appRoutes: Route[] = [
         ]
     },
 
+    {
+        path: '',
+        data: {
+            layout: 'empty'
+        },
+        children   : [
+            {path: 'file', loadChildren: () => import('app/modules/acta-comite/acta-comite.module').then(m => m.ActaComiteModule)},
+        ]
+    },
+
     // Admin routes
     {
         path       : '',
@@ -109,9 +119,10 @@ export const appRoutes: Route[] = [
 
             // Documentation
             {path: 'docs', children: [
+                {path: 'ecommerce', loadChildren: () => import('app/modules/admin/docs/ecommerce/ecommerce.module').then(m => m.ECommerceModule)},
 
                 // Guides
-                {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}
+                // {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}
             ]},
 
             // 404 & Catch all

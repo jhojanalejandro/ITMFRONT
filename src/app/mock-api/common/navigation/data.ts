@@ -22,13 +22,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type : 'basic',
                 icon : 'heroicons_outline:cash',
                 link : '/dashboards/nomina'
-            },
-            {
-                id   : 'documentation.guides',
-                title: 'Planeacion',
-                type : 'basic',
-                icon : 'heroicons_outline:book-open',
-                link : '/docs/guides'
             }
         ]
     },
@@ -53,7 +46,27 @@ export const defaultNavigation: FuseNavigationItem[] = [
             //     icon : 'heroicons_outline:user-group',
             //     link : '/apps/contacts'
             // },
-    
+            {
+                id      : 'docs.ecommerce',
+                title   : 'Planeación',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:shopping-cart',
+                children: [
+                    {
+                        id   : 'docs.ecommerce.cuadroEconomico',
+                        title: 'Cuadro Economico',
+                        type : 'basic',
+                        link : '/docs/ecommerce/cuadroEconomico'
+                    },
+                    {
+                        id   : 'docs.ecommerce.contratos',
+                        title: 'Contratos Interadministrativos',
+                        type : 'basic',
+                        link : '/docs/ecommerce/contratos'
+                    }
+
+                ]
+            },
             {
                 id   : 'apps.file-manager',
                 title: 'Contratación',

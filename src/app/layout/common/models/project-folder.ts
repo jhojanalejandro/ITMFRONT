@@ -6,4 +6,6 @@ export interface IProjectFolder{
     descriptionProject: string;
     registerDate: Date;
     modifyDate: Date;
+    execution: boolean;
+    activate: boolean;
 }

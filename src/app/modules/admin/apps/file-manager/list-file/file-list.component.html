@@ -89,12 +89,19 @@
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <a
-                                            class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
-                                            [routerLink]="['./details/file/', file.id]">
+                                            class="flex flex-col w-50 h-50 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+                                            >
+                                            <section class="example-section">
+                                                <mat-radio-group [disabled]="false">
+                                                  <mat-radio-button (change)="onChange($event)" class="example-margin" value="after">APROBADO</mat-radio-button>
+                                                  <mat-radio-button (change)="onChange($event)" class="example-margin" value="before" aprobado>NO APROBADO</mat-radio-button>
+                                                </mat-radio-group>
+                                              </section>
+
                                             <div class="aspect-w-9 aspect-h-6">
                                                 <div class="flex items-center justify-center">
                                                     <!-- Icons -->
-                                                    <div class="relative">
+                                                    <div class="relative" [routerLink]="['./details/file/', file.id]">
                                                         <mat-icon
                                                             class="icon-size-14 text-hint"
                                                             [svgIcon]="'iconsmind:file'"></mat-icon>

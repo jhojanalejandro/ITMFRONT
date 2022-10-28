@@ -45,43 +45,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {   
-        this.folderId = this.router.snapshot.paramMap.get('contractorId') || 'null';
-        
-        this.filteredStreets = this.searchInputControl.valueChanges.pipe(
-            startWith(''),
-            map(value => (typeof value === 'number' ? value : value.numbers)),
-            map(numbers => (numbers ? this._filter(numbers) : this.items)),
-            );
-
-          this.filteredStreets = this.searchInputControl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter2(value)),
-          );
-        // Get the items
-        this._fileManagerService.itemsFC$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items: ItemsC) => {
-                this.items = items;
-                debugger
-                if(items.folders.length > 0){
-                    this.ruta = this.items.folders[0].contractorId + '/';
-                }
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
-
-        // Subscribe to media query change
-        this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((state) => {
-                // Calculate the drawer mode
-                this.drawerMode = state.matches ? 'side' : 'over';
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-         
+        this.getData();
     }
 
     /**
@@ -150,17 +114,55 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy
             }
           });
           dialogRef.afterClosed().subscribe((result) => {
+            debugger
             if(result){
-            //   this.getFolders();
+            this.getData();
             }
           });         
     }
 
     onChange(event) {
-        debugger
         // reader.onload = () => {
         //     this.file = reader.result;
         //     console.log('base 64', this.file);   
         // };
       }
+    getData(){
+        this.folderId = this.router.snapshot.paramMap.get('contractorId') || 'null';
+        
+        this.filteredStreets = this.searchInputControl.valueChanges.pipe(
+            startWith(''),
+            map(value => (typeof value === 'number' ? value : value.numbers)),
+            map(numbers => (numbers ? this._filter(numbers) : this.items)),
+            );
+
+          this.filteredStreets = this.searchInputControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter2(value)),
+          );
+        // Get the items
+        this._fileManagerService.itemsFC$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((items: ItemsC) => {
+                this.items = items;
+                if(items.folders.length > 0){
+                    this.ruta = this.items.folders[0].contractorId + '/';
+                }
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+
+        // Subscribe to media query change
+        this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((state) => {
+                // Calculate the drawer mode
+                this.drawerMode = state.matches ? 'side' : 'over';
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+         
+    }
 }

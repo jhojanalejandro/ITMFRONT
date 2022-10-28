@@ -15,12 +15,12 @@ import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { UploadDataService } from 'app/modules/admin/dashboards/project/upload-data.service';
 import { ProjectFolderComponent } from 'app/modules/admin/dashboards/project/register-project-folder/register-project-folder.component';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
-import { GuidesComponent } from '../../guides.component';
 @Component({
-    selector   : 'prerequisites',
-    templateUrl: './prerequisites.html'
+    selector   : 'contracts',
+    styleUrls: ['./contracts.component.css'],
+    templateUrl: './contracts.component.html'
 })
-export class PrerequisitesComponent implements OnInit, OnDestroy
+export class ContrtactsComponent implements OnInit, OnDestroy
 {
     selectContract: any;
     data: any;
@@ -47,7 +47,7 @@ export class PrerequisitesComponent implements OnInit, OnDestroy
         private cdref: ChangeDetectorRef,
         private _liveAnnouncer: LiveAnnouncer,   
         private _router:  Router,
-        private _guidesComponent: GuidesComponent
+        // private _guidesComponent: GuidesComponent
     )
     {
     }
@@ -186,10 +186,10 @@ export class PrerequisitesComponent implements OnInit, OnDestroy
           return item.id || index;
       }
    
-      toggleDrawer(): void
-      {
-          // Toggle the drawer
-          this._guidesComponent.matDrawer.toggle();
-      }
+      // toggleDrawer(): void
+      // {
+      //     // Toggle the drawer
+      //     this._guidesComponent.matDrawer.toggle();
+      // }
 
 } 

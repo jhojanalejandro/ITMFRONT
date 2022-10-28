@@ -2,6 +2,8 @@ import { DecimalPipe } from "@angular/common";
 
 export interface IContractor{
     id?: any;
+    contractorId: any;
+    userId: any;
     cpc: string;
     nombreCpc: string;
     contrato: string;
@@ -41,7 +43,7 @@ export interface IContractor{
     tipoCuenta: string;
     entidadCuentaBancaria: string;
     rubroPresupuestal: string;
-    nombreDelRubro: string,
+    nombreDelRubro: string,    
     // "entidadAseguradora": "string",
     // "fechaExpedicionPoliza": "2022-10-14T00:44:38.250Z",
   

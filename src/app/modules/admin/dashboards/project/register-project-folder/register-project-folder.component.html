@@ -53,7 +53,7 @@
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label >Estado contrato</mat-label>
                 <mat-select [formControlName]="'ejecucion'" name="ejecucion">
-                    <mat-option *ngFor="let exe of ejecucion" [value]="exe.viewValue">
+                    <mat-option *ngFor="let exe of ejecucion" [value]="exe.value">
                         {{exe.viewValue}}
                     </mat-option>
                 </mat-select>

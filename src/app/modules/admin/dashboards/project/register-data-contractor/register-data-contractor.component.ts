@@ -9,6 +9,7 @@ import { IContractor } from 'app/layout/common/models/contractor';
 import { UploadDataService } from '../upload-data.service';
 import swal from 'sweetalert2';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { AuthService } from 'app/core/auth/auth.service';
 
 
 @Component({
@@ -42,12 +43,15 @@ export class ContractorDataRegisterComponent implements OnInit {
 
     constructor(private _upload: UploadDataService,
       private ref: ChangeDetectorRef,
+      private _auth: AuthService,
       public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
       @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
       ) {}
 
     ngOnInit(): void {
       // this.ref.detectChanges();
+      console.log('id',this.datos.data.id);
+      
       this.formContractor = this._formBuilder.group({
         consecutivo: new FormControl(null, Validators.required),
         cpc: new FormControl(null, Validators.required),
@@ -81,6 +85,7 @@ export class ContractorDataRegisterComponent implements OnInit {
         fechaInicioAplicacion: new FormControl(null, Validators.required),
         fechaterminacionAplicacion: new FormControl(null, Validators.required),
         // duracionTotal: new FormControl(null, Validators.required),
+        fechaFinalizacionConvenio: new FormControl(null, Validators.required),
         eps: new FormControl(null, Validators.required),
         pension: new FormControl(null, Validators.required),
         arl: new FormControl(null, Validators.required),
@@ -101,12 +106,20 @@ export class ContractorDataRegisterComponent implements OnInit {
 
         }
 
+        if(this.formContractor.value.cuentabancaria == null){
+          this.formContractor.value.cuentabancaria = '0'
+        }
+        if(this.formContractor.value.nivel == null){
+          this.formContractor.value.nivel = '0'
+        }
         const registerContractor: IContractor={
           cpc: this.formContractor.value.cpc,
+          userId: this._auth.accessId,
+          contractorId: this.datos.data.id,
           nombreCpc: this.formContractor.value.nombreCpc,
-          contrato: this.formContractor.value.contrato.toString(),
+          contrato: this.formContractor.value.contrato,
           compromiso: this.formContractor.value.compromiso.toString(),
-          fechaDeContrato: this.formContractor.value.fechaContrato.toString(),
+          fechaDeContrato: this.formContractor.value.fechaContrato,
           fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
           fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
           fechaFinalizacion: this.formContractor.value.fechaFinalizacion,
@@ -139,10 +152,10 @@ export class ContractorDataRegisterComponent implements OnInit {
           cuentaBancaria: this.formContractor.value.cuentabancaria.toString(),
           tipoCuenta: this.formContractor.value.tipodecuenta,
           entidadCuentaBancaria: this.formContractor.value.entidadcuentabancaria,
-          fechaFinalizacionConvenio: this.formContractor.value.fechaterminacionAplicacion,
+          fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
-          rubroPresupuestal: '',
-          nombreDelRubro: ''
+          rubroPresupuestal: 'vacio',
+          nombreDelRubro: 'vacio'
         };  
       debugger
       this._upload

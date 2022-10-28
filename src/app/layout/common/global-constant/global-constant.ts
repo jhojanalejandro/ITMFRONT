@@ -1,4 +1,4 @@
-import { TypeSelect, TypeSelectString } from "../models/TypeSelect";
+import { TypeSelect, TypeSelectBool, TypeSelectString } from "../models/TypeSelect";
 
 export class GlobalCont {
     public static encryptSecretKey = '576cf17b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae451f5a65ed1' 
@@ -21,32 +21,32 @@ export class GlobalCont {
     public static roles = [
         {
             label      : 'Admin',
-            value      : 'Admin',
+            value      : 1,
             description: 'Administrador de la cuenta'
         },
         {
             label      : 'Leer, Escribir, y Eliminar',
-            value      : 'Leer, Escribir, y Eliminar',
+            value      : 2,
             description: 'jefe de personal.'
         },
         {
             label      : 'Leer y Escribir',
-            value      : 'Leer y Escribir',
+            value      : 3,
             description: 'Solo puede leer y escribir'
         },
         {
             label      : 'Leer',
-            value      : 'Leer',
+            value      : 4,
             description: 'Solo puede leer datos.'
         },
         {
             label      : 'Escribir',
-            value      : 'Escribir',
+            value      : 5,
             description: 'Solo puede escribir datos.'
         },
         {
             label      : 'Desactivar',
-            value      : 'desactivada',
+            value      : 7,
             description: 'Usuarios innactivos.'
         }
 
@@ -115,9 +115,9 @@ export class GlobalCont {
         { viewValue: '4'}
     ] 
 
-    public static ejecucionContrato: TypeSelectString[]=[
-        { viewValue: 'Ejecutar Contrato'},
-        { viewValue: 'En Proceso'}, 
+    public static ejecucionContrato: TypeSelectBool[]=[
+        { value: true, viewValue: 'Ejecutar Contrato'},
+        { value: false,viewValue: 'En Proceso'}, 
     ] 
     public static eps: TypeSelectString[]=[
         { viewValue: 'SURA E.P.S.'},
@@ -168,7 +168,7 @@ export class GlobalCont {
         { viewValue: 'nomina'}, 
     ] 
     public static TipoUsuario: TypeSelectString[]=[
-        { viewValue: 'Profesional'},
+        { viewValue: 'Contractual'},
         { viewValue: 'Contratista'}, 
     ] 
 

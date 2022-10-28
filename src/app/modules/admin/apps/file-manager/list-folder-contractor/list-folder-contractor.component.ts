@@ -45,45 +45,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {   
-        this.idFolder = this.router.snapshot.paramMap.get('folderId') || 'null';
-
-        this.filteredStreets = this.searchInputControl.valueChanges.pipe(
-            startWith(''),
-            map(value => (typeof value === 'number' ? value : value.numbers)),
-            map(numbers => (numbers ? this._filter(numbers) : this.items)),
-            );
-
-          this.filteredStreets = this.searchInputControl.valueChanges.pipe(
-            startWith(''),
-            map(value => this._filter2(value)),
-          );
-        // Get the items
-        this._fileManagerService.itemsC$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items : any) => {
-                this.items = items;
-                this.data = items.folders[0].contractId
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
-            this._fileManagerService.item$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
-                this.item = item;
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-        // Subscribe to media query change
-        this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((state) => {
-                // Calculate the drawer mode
-                this.drawerMode = state.matches ? 'side' : 'over';
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+        this.getData();
     }
 
     /**
@@ -142,7 +104,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
 
     openDialog()
     {
-        debugger
         const dialogRef =  this._matDialog.open(UploadFileComponent, {
             autoFocus: false,
             data     : {
@@ -153,8 +114,49 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         });
         dialogRef.afterClosed().subscribe((result) => {
             if(result){
+                this.getData();
             }
         });               
     }
+    getData(){
+        this.idFolder = this.router.snapshot.paramMap.get('folderId') || 'null';
 
+        this.filteredStreets = this.searchInputControl.valueChanges.pipe(
+            startWith(''),
+            map(value => (typeof value === 'number' ? value : value.numbers)),
+            map(numbers => (numbers ? this._filter(numbers) : this.items)),
+            );
+
+          this.filteredStreets = this.searchInputControl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filter2(value)),
+          );
+        // Get the items
+        this._fileManagerService.itemsC$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((items : any) => {
+                this.items = items;
+                this.data = items.folders[0].contractId
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
+            this._fileManagerService.item$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((item: Item) => {
+                this.item = item;
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+        // Subscribe to media query change
+        this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((state) => {
+                // Calculate the drawer mode
+                this.drawerMode = state.matches ? 'side' : 'over';
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+    }
 }

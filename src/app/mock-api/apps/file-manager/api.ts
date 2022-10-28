@@ -58,7 +58,6 @@ export class FileManagerMockApi
                 // Prepare the empty paths array
                 const pathItems = cloneDeep(this._items);
                 const path = [];
-                debugger
                 // Prepare the current folder
                 let currentFolder = null;
 
