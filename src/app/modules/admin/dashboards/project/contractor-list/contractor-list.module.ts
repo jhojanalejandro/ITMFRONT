@@ -17,13 +17,13 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ContractorListComponent } from './contractor-list.component';
 import { ContractorDataRegisterComponent } from '../register-data-contractor/register-data-contractor.component';
 import { contractorListRoutes } from './contractor-list.routing';
+import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
 
 
 @NgModule({
     declarations: [
         ContractorListComponent,
         ContractorDataRegisterComponent,
-
     ],
     imports     : [
         RouterModule.forChild(contractorListRoutes),
@@ -40,7 +40,8 @@ import { contractorListRoutes } from './contractor-list.routing';
         MatTabsModule,
         NgApexchartsModule,
         TranslocoModule,
-        SharedModule
+        SharedModule,
+        ButtonsExportModule
     ]
 })
 export class ContractorListModule

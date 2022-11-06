@@ -23,6 +23,8 @@
                     </mat-label>   
                       <input   matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
                     </mat-form-field>
+
+                    <app-buttons-export [idContrato]="id"></app-buttons-export>
                 </div>
                 
                 <div class="overflow-x-auto mx-6">

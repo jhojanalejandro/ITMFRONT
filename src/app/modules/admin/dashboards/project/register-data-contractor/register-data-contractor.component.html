@@ -1,4 +1,5 @@
 <div class="flex-col max-w-250 md:min-w-120 -m-6">
+<div class="flex-col max-w-240 md:min-w-160 -m-6">
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Rgistro datos contratista</div>
         <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
@@ -15,6 +16,29 @@
         </div>
         <br>
         <form [formGroup]="formContractor" class="example-form overflow-y-auto">
+            <div class="nationality">
+
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>CPC</mat-label>
+                    <input type="text" id="cpc" formControlName="cpc" autocomplete="off" matInput placeholder="CPC">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                    <mat-error *ngIf="formContractor.get('cpc').hasError('required')">
+                        El Campo cpc es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Nombre Cpc</mat-label>
+                    <input type="mail" id="nombreCpc" formControlName="nombreCpc" autocomplete="off" matInput
+                        placeholder="Nombre Cpc">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                    <mat-error *ngIf="formContractor.get('nombreCpc').hasError('required')">
+                        El Campo nombre cpc es requerido
+                    </mat-error>
+                </mat-form-field>
+
+
+            </div>
+            <br>
             <div class="nationality">
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Contrato</mat-label>
@@ -35,6 +59,9 @@
                         El Campo cedula es requerido
                     </mat-error>
                 </mat-form-field>
+            </div>
+            <br>
+            <div class="nationality">
                 <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
                     <mat-label>Fecha Contrato</mat-label>
                     <input matInput id="fechaContrato" autocomplete="off" formControlName="fechaContrato"
@@ -45,8 +72,6 @@
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
-            </div>
-            <div class="nationality">
                 <mat-form-field (click)="pickerIP.open()" class="hiring" appearance="outline">
                     <mat-label>Fecha Inicio Proyectado</mat-label>
                     <input matInput id="fechaInicioProyectado" autocomplete="off"
@@ -67,6 +92,10 @@
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
+
+            </div>
+            <br>
+            <div class="nationality">
                 <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
                     <mat-label>Fecha de Finalizacion</mat-label>
                     <input matInput id="fechaFinalizacion" autocomplete="off" formControlName="fechaFinalizacion"
@@ -77,7 +106,17 @@
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Ejecucion</mat-label>
+                    <input type="text" id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput
+                        placeholder="Ejecucion">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:menu-alt-1'"></mat-icon>
+                    <mat-error *ngIf="formContractor.get('ejecucion').hasError('required')">
+                        El Campo ejecucion Mensuales es requerido
+                    </mat-error>
+                </mat-form-field>
             </div>
+            <br>
             <!-- <p class="nationality"> OBLIGACIONES GENERALES  </p>
                     <br>
     
@@ -111,7 +150,7 @@
                         </mat-form-field>
                     </div> -->
             <div class="flex">
-                <mat-form-field class="m-4 w-full" appearance="outline">
+                <mat-form-field class="m-4 fuse-mat-textarea fuse-mat-no-subscript w-full" appearance="outline">
                     <mat-label>Actividad</mat-label>
                     <input matInput id="actividad" formControlName="actividad" autocomplete="off" matInput
                         placeholder="Actividad">
@@ -121,6 +160,19 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+            <div class="flex">
+                <mat-form-field class="m-4 fuse-mat-textarea fuse-mat-no-subscript w-full" appearance="outline">
+                    <mat-label>Encabezado</mat-label>
+                    <input matInput id="encabezado" formControlName="encabezado" autocomplete="off" matInput
+                        placeholder="Encabezado">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+
+                    <mat-error *ngIf="formContractor.get('actividad').hasError('required')">
+                        El Campo actividad es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <br>
             <div class="nationality">
                 <!-- <mat-form-field class="hiring" appearance="outline">
                             <mat-label>Honorarios Mensuales</mat-label>
@@ -135,6 +187,10 @@
                         </mat-form-field> -->
 
             </div>
+<<<<<<< HEAD
+=======
+            <br>
+>>>>>>> 0675d89990d3a8b4891a03319b1664aeb91e1bb9
             <div class="nationality">
                 <!-- <mat-form-field class="hiring" appearance="outline">
                             <mat-label>profesional</mat-label>
@@ -178,16 +234,8 @@
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field class="hiring" appearance="outline">
-                    <mat-label>Ejecucion</mat-label>
-                    <input type="text" id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput
-                        placeholder="Ejecucion">
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:menu-alt-1'"></mat-icon>
-                    <mat-error *ngIf="formContractor.get('ejecucion').hasError('required')">
-                        El Campo ejecucion Mensuales es requerido
-                    </mat-error>
-                </mat-form-field>
             </div>
+            <br>
             <div class="nationality">
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Requiere poliza Arl</mat-label>
@@ -254,6 +302,7 @@
                 </div>
 
             </div>
+            <br>
             <div class="nationality">
 
                 <!-- <mat-form-field class="hiring" appearance="outline">
@@ -416,24 +465,18 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="outline">
-                    <mat-label >Nivel</mat-label>
-                    <mat-select [formControlName]="'requierePoliza'" name="requierePoliza">
-                        <mat-option *ngFor="let nivel of niveles" [value]="nivel.viewValue">
-                            {{nivel.viewValue}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-icon
-                    class="icon-size-5"
-                    matSuffix
-                    [svgIcon]="'heroicons_outline:chart-bar'"></mat-icon>
+                    <mat-label>Nivel</mat-label>
+                    <input type="text" id="valorAsegurado" formControlName="nivel" autocomplete="off" matInput
+                        placeholder="Nivel">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:chart-bar'"></mat-icon>
                     <mat-error *ngIf="formContractor.get('nivel').hasError('required')">
-                        El Campo arl es requerido
+                        El Campo valorAsegurado es requerido
                     </mat-error>
-                </mat-form-field> 
+                </mat-form-field>
             </div>
         </form>
     </mat-dialog-content>
-    <mat-dialog-actions class="mr-4" align="end">
+    <mat-dialog-actions align="end">
         <button mat-stroked-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
         <button mat-flat-button [color]="'primary'" type="submit" [mat-dialog-close]="true"
             [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled"
