@@ -94,7 +94,7 @@ export class FileListManagerService
         );
     }
 
-    
+
     UpdateProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);

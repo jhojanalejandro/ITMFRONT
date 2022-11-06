@@ -4,9 +4,11 @@ export interface IFileContractor{
     contractorId: any;
     folderId: any;
     filesName: string;
-    fildata: any;
+    filedata: any;
     typeFile: any;
     descriptionFile: any;
     registerDate: Date;
-    // modifyDate: Date;
+    modifyDate: Date;
+    passed: boolean;
 }
+

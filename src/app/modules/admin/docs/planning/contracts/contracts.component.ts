@@ -12,17 +12,15 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
-import { UploadDataService } from '../project/upload-data.service';
-import { ProjectFolderComponent } from '../project/register-project-folder/register-project-folder.component';
-import { UploadFileComponent } from '../project/upload-file/upload-file.component';
+import { UploadDataService } from 'app/modules/admin/dashboards/project/upload-data.service';
+import { ProjectFolderComponent } from 'app/modules/admin/dashboards/project/register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
 @Component({
-    selector       : 'nomina',
-    styleUrls: ['./nomina.component.css'],
-    templateUrl    : './nomina.component.html',
-    encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector   : 'contracts',
+    styleUrls: ['./contracts.component.css'],
+    templateUrl: './contracts.component.html'
 })
-export class NominaComponent implements OnInit, OnDestroy
+export class ContrtactsComponent implements OnInit, OnDestroy
 {
     selectContract: any;
     data: any;
@@ -36,7 +34,7 @@ export class NominaComponent implements OnInit, OnDestroy
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['id','companyName','projectName','registerDate','action'];
+    displayedColumns: string[] = ['companyName','projectName','registerDate','budget','contractCant','action'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
 
     /**
@@ -48,16 +46,17 @@ export class NominaComponent implements OnInit, OnDestroy
         private auth: AuthService,
         private cdref: ChangeDetectorRef,
         private _liveAnnouncer: LiveAnnouncer,   
-        private _router:  Router
+        private _router:  Router,
+        // private _guidesComponent: GuidesComponent
     )
     {
     }
     columnas = [ 
-        {title: 'secuencia', name: 'id'},
         {title: 'NOMBRE EMPRESA', name: 'companyName'},
         {title: 'NOMBRE PROYECTO', name: 'projectName'},
         {title: 'FECHA REGISTRO', name: 'registerDate'},
-        // {title: 'FECHA MODIFICACION', name: 'modifyDate'},
+        {title: 'PRESUPUESTO', name: 'budget'},
+        {title: 'CANTIDAD CONTRATISTA', name: 'contractCant'},
         {title: '', name: 'action'},    
     ]
     ngOnInit(): void
@@ -163,6 +162,15 @@ export class NominaComponent implements OnInit, OnDestroy
       this._uploadData.getAllContract().pipe(takeUntil(this._unsubscribeAll))
         .subscribe((Response) => {
           this.dataSource= new MatTableDataSource(Response);
+          for (let index = 0; index < Response.length; index++) {
+            if(Response[index].budget <0 || Response[index].budget == null){
+                Response[index].budget = 0;
+            }
+            if(Response[index].contractCant < 0 || Response[index].contractCant == null){
+                Response[index].contractCant = 0;
+            }
+            
+          }
           this.dataSource.sort= this.sort;
           this.dataSource.data = Response;  
       });
@@ -178,6 +186,10 @@ export class NominaComponent implements OnInit, OnDestroy
           return item.id || index;
       }
    
+      // toggleDrawer(): void
+      // {
+      //     // Toggle the drawer
+      //     this._guidesComponent.matDrawer.toggle();
+      // }
 
-
-}
+} 
