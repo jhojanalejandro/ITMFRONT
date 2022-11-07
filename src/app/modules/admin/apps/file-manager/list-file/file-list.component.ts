@@ -67,7 +67,6 @@ export class FileListComponent implements OnInit, OnDestroy
     }
 
     getId(id: any){
-            console.log('id folder', id);
             this.data = id;
     }
     /**
@@ -134,7 +133,6 @@ export class FileListComponent implements OnInit, OnDestroy
         debugger
         // reader.onload = () => {
         //     this.file = reader.result;
-        //     console.log('base 64', this.file);   
         // };
       }
       isAllSelected() {
