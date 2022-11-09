@@ -22,4 +22,25 @@ export class ButtonsExportService {
       };
       return this._httpClient.get<any>( urlEndPoint, httpOptions);
     }
+    getReportDap(): Observable<Blob> {
+      let urlEndPoint = this.apiUrl + environment.exportarDap;
+      const httpOptions = {
+        responseType: 'blob' as 'json'
+      };
+      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+    }
+    getReportPpa(): Observable<Blob> {
+      let urlEndPoint = this.apiUrl + environment.exportarPpa;
+      const httpOptions = {
+        responseType: 'blob' as 'json'
+      };
+      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+    }
+    getReportCdp(): Observable<Blob> {
+      let urlEndPoint = this.apiUrl + environment.exportarCdp;
+      const httpOptions = {
+        responseType: 'blob' as 'json'
+      };
+      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+    }
 }

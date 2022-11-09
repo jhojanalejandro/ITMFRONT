@@ -16,7 +16,10 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
-    exportarViabilidad: 'Api/ExportToExcel',
+    exportarViabilidad: 'Api/ExportToExcel/GetViabilidadExcel',
+    exportarDap: 'Api/ExportToExcel/GetSolicitudContratacionDap',
+    exportarCdp: 'Api/ExportToExcel/GetSolicitudCdp',
+    exportarPpa: 'Api/ExportToExcel/GetSolicitudPpa',
 
     addContractorEndpoint: 'Contractor/Add',
     addExcelContractorEndpoint: 'Contractor/AddExcel',
