@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { interval, Subject,takeUntil } from 'rxjs';
-import { UploadDataService } from 'app/modules/admin/dashboards/project/upload-data.service';
+import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
 import { ActivatedRoute } from '@angular/router';
 import { Item } from '../file-manager.types';
 import { FileListManagerService } from '../list-file/list-file.service';
@@ -40,8 +40,6 @@ export class ShowFileComponent implements OnInit {
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((item: any) => {
         this.id = item.id;
-        console.log('archivo', item);
-        debugger
         // Open the drawer in case it is closed
         // Get the item
         this.getFile = item.filedata;
@@ -56,7 +54,8 @@ export class ShowFileComponent implements OnInit {
     // link.href = this.getFile;
     // link.download = `${this.getFile}.pdf`
     // link.click();
-
+    console.log(this.PathReportString);
+    
   }
 
   // downloadPdf(base64String, fileName) {

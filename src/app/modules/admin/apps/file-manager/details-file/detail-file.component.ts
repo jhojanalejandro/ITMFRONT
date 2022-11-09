@@ -44,7 +44,6 @@ export class DetailFileComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: Item) => {
                 this.id = item.id;
-                console.log('archivo', item);
                 // Open the drawer in case it is closed
                 this._listComponent.matDrawer.open();
 

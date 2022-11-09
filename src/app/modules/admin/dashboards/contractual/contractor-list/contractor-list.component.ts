@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContractorDataRegisterComponent } from '../register-data-contractor/register-data-contractor.component';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 
 
 @Component({
@@ -77,9 +78,7 @@ export class ContractorListComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
       this.userName = this.auth.accessName
-      this.id = this.router.snapshot.paramMap.get('id') || 'null';
-      console.log(this.id);
-      
+      this.id = this.router.snapshot.paramMap.get('id') || 'null';      
       this.getDataContractor(this.id);
       this.configForm = this._formBuilder.group({
         title      : 'Remove contact',
@@ -121,10 +120,21 @@ export class ContractorListComponent implements OnInit, OnDestroy
                 }
               }); 
             break
-        //     case 'resultadosQr':
-        //         this._router.navigate(['lista/resultados/qr'], { skipLocationChange: true });
-
-        //    break
+            case 'contractorPayment':
+              const dialogRefPayment =  this._matDialog.open(ContractorPaymentRegisterComponent, {
+                width: '900px',
+                autoFocus: false,
+                data     : {
+                    idUser: this.auth.accessId,
+                    data
+                }
+              });
+              dialogRefPayment.afterClosed().subscribe((result) => {
+                if(result){
+                  this.getDataContractor(this.id);
+                }
+              }); 
+           break
 
         }
     }
@@ -202,9 +212,7 @@ export class ContractorListComponent implements OnInit, OnDestroy
     }
     isAllSelected() {
       const numSelected = this.selection.selected.length;
-      const numRows = this.dataSource.data.length;
-      console.log(this.selection.selected);
-      
+      const numRows = this.dataSource.data.length;      
      //esta validacion nos permite mostrar y ocltar los detalles de una operacion
       return numSelected === numRows;
       
@@ -256,7 +264,6 @@ export class ContractorListComponent implements OnInit, OnDestroy
               swal.fire('Error al Registrar la informacion!', '', 'error');
             });
             }
-              console.log("resultado",result);
           });
       }
 

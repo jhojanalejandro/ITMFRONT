@@ -92,7 +92,6 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
             reserved         : [''],
             cost             : [''],
             percentage:   new FormControl('8', Validators.required),
-            taxPercent       : [''],
             price            : [''],
             subTotal         : [''],
             thumbnail        : [''],
@@ -296,12 +295,6 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
         }
 
     }
-
-    /**
-     * Delete the tag
-     *
-     * @param tag
-     */
     deleteComponent(tag: any): void
     {
         // Delete the tag from the server

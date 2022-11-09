@@ -77,9 +77,7 @@ export class SettingsTeamComponent implements OnInit
 
 
     onChange(rol:any,user: any) {
-        debugger
-        console.log(rol.value);
-        
+        debugger        
         user.idRoll = rol.value;
         // user.rollName = event
         this._authService

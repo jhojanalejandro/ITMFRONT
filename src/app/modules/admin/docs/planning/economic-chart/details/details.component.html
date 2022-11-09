@@ -1,5 +1,4 @@
-<div class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-160 -m-6 overflow-y-auto">
-
+<div class="flex-col max-w-250 md:min-w-120 -m-6">
     <!-- Header -->
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Registro Componente</div>
@@ -22,7 +21,7 @@
         <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
             <mat-label>Nombre Componente</mat-label>
             <input
-            matInput id="componentName" formControlName="componentName" autocomplete="off" matInput placeholder="componentName">
+            matInput id="componentName" formControlName="componentName" autocomplete="off" matInput placeholder="Nombre Componente">
             <mat-icon  class="icon-size-5"
             matSuffix
             [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
@@ -81,7 +80,7 @@
             </mat-form-field>
         </div>
         <div class="nationality">
-            <mat-form-field class="hiring" appearance="outline">
+            <mat-form-field disable class="hiring" appearance="outline">
                 <mat-label>Valor Por dia</mat-label>
                 <input type="number" [value]="unitValueDay" id="unitValue" formControlName="unitValue" autocomplete="off" matInput placeholder="Valor Unidad" >
                 <mat-icon
@@ -92,7 +91,18 @@
                     El Campo Valor Por Día es requerido
                 </mat-error>
             </mat-form-field>
-            <h1 class="text">los calculos coinciden</h1>
+            <mat-form-field [hidden]="totalCalculate" class="hiring" appearance="outline">
+                <mat-label>Valor Exacto</mat-label>
+                <input type="number" [value]="totalCost" id="calculateValue" formControlName="calculateValue" autocomplete="off" matInput placeholder="Valor Unidad" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                <mat-error *ngIf="componentForm.get('calculateValue').hasError('required')">
+                    El Campo Valor Exacto es requerido
+                </mat-error>
+            </mat-form-field>
+            <span **ngIf="calculo" class="text">los calculos No coinciden</span>
             <div>
                 <mat-icon
                 class="icon-size-12 ml-8 "
@@ -110,7 +120,8 @@
     </form>
     <div class="btn">
         <button mat-stroked-button type="button" [mat-dialog-close]="false" class="text-warn-500">Cancelar</button>
-        <button class="m-5" mat-flat-button *ngIf="!update" [color]="'primary'" type="submit" (click)="calculate()" [mat-dialog-close]="true"  (click)="addContractor()">Aceptar</button>
+        <button class="m-5 bg-green-600" mat-flat-button *ngIf="!update" type="submit" (click)="calculate()">Calcular</button>
+        <button class="m-2" mat-flat-button *ngIf="!update" [color]="'primary'" type="submit" (click)="calculate()" [mat-dialog-close]="true"  (click)="addContractor()">Aceptar</button>
         <button class="m-5" mat-flat-button *ngIf="update" [color]="'primary'" type="submit" (click)="calculate()" [mat-dialog-close]="true"  (click)="addContractor()">Actualizar</button>
 
     </div>

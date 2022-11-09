@@ -74,7 +74,6 @@ export class SettingsSecurityComponent implements OnInit
                 },
             (response) => {
               this.securityForm.enable();
-              console.log('error',response);    
               // Set the alert
               swal.fire('Error al Actualizar la informacion! intente mas tarde', '', 'error');
               // Show the alert

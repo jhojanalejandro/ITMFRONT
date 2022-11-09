@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    //apiURL: 'https://localhost:44353/',
-    apiURL: 'https://localhost:7163/',
+    apiURL: 'https://localhost:44353/',
+    // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -36,6 +36,17 @@ export const environment = {
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
 
+    addContractorPaymentsEndpoint: 'ContractorPayments/Add',
+    UpdateContractorPaymentsEndpoint: 'ContractorPayments/Update',
+    GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
+    GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
+    DeleteContractorPaymentsEndpoint: 'ContractorPayments/Delete',
+
+    addEconomicDataContractorEndpoint: 'EconomicDataContractor/Add',
+    UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/Update',
+    GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
+    GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetById/',
+    DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
 
 
     addFileEndpoint: 'Files/AddFileContractor',

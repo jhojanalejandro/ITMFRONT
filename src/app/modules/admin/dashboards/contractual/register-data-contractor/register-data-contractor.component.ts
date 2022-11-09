@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { IContractor } from 'app/layout/common/models/contractor';
-import { UploadDataService } from '../upload-data.service';
+import { UploadDataService } from '../contracts-list/upload-data.service';
 import swal from 'sweetalert2';
 import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -48,9 +48,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       ) {}
 
     ngOnInit(): void {
-      // this.ref.detectChanges();
-      console.log('id',this.datos.data.id);
-      
       this.formContractor = this._formBuilder.group({
         contrato: new FormControl(null, Validators.required),
         compromiso: new FormControl(null, Validators.required),
@@ -89,8 +86,6 @@ export class ContractorDataRegisterComponent implements OnInit {
         entidadcuentabancaria: new FormControl(null, Validators.required),
 
       });
-      console.log('llega dialog',this.datos);
-
     }
 
     async addContractor() {

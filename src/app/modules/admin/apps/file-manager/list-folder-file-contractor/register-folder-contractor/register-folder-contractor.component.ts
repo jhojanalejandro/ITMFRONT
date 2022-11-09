@@ -7,7 +7,7 @@ import { IProjectFolder } from 'app/layout/common/models/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IFolderContractor } from 'app/layout/common/models/folder-contractor';
 import { ActivatedRoute } from '@angular/router';
-import { UploadDataService } from 'app/modules/admin/dashboards/project/upload-data.service';
+import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
 import { FileManagerService } from '../../file-manager.service';
 
 
@@ -85,7 +85,6 @@ export class FolderContractorComponent implements OnInit {
 
     },(response) => {
       this.formProject.enable();
-      console.log('error',response);    
       // Set the alert
       swal.fire('Error al Registrar la informacion!', '', 'error');
       // Show the alert

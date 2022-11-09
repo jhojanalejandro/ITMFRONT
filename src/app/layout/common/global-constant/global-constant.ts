@@ -41,11 +41,10 @@ export class GlobalCont {
         }
 
     ];
-    public static genero: TypeSelectString[]=[
-        { viewValue: 'masculino'},
-        { viewValue: 'femanino'}, 
+    public static nomina: TypeSelectString[]=[
+        { viewValue: 'pago efectivo'},
+        { viewValue: 'no pagado'}, 
     ] 
-
     public static tipoCuenta: TypeSelectString[]=[
         { viewValue: 'Ahorros'},
         { viewValue: 'Corriente'}, 

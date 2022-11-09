@@ -11,12 +11,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ProjectFolderComponent } from './register-project-folder/register-project-folder.component';
-import { UploadFileComponent } from './upload-file/upload-file.component';
+import { ProjectFolderComponent } from '../register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 @Component({
-    selector       : 'upload',
+    selector       : 'app-upload',
     styleUrls: ['./upload-data.component.scss'],
     templateUrl    : './upload-data.component.html',
     encapsulation  : ViewEncapsulation.None,
@@ -63,9 +62,7 @@ export class UploadDataComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         this.getContractsData();
-        this.userName = this.auth.accessName.toUpperCase();
-        console.log(GlobalCont.numeroALetras(58225,'PESOS'));
-        
+        this.userName = this.auth.accessName.toUpperCase();        
         
     }
 
@@ -77,7 +74,6 @@ export class UploadDataComponent implements OnInit, OnDestroy
             dialogRefPrroject.afterClosed().subscribe(datos => {
               if(datos){      
                 this.getContractsData();
-                // console.log('datos ',datos);               
               }               
             });
             break

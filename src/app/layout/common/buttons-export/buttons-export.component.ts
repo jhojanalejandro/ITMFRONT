@@ -14,6 +14,7 @@ export class ButtonsExportComponent implements OnInit {
     ngOnInit() {}
 
     exportar() {
+        debugger
         this._service.getReport().subscribe(
             (res) => {
               var downloadURL = window.URL.createObjectURL(res);

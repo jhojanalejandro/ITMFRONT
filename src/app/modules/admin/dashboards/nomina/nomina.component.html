@@ -23,19 +23,6 @@
                         </div> -->
                     </div>
                 </div>
-                <!-- Actions -->
-                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
-                    <button [matTooltip]="'Cargar Excel'"
-                    (click)="openDialog('upload','vacio')"
-                        class="fuse-mat-button-rounded bg-primary-700"
-                        mat-flat-button
-                        [color]="'primary'">
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_outline:upload'"></mat-icon>
-                        <span class="ml-2">Cargar datos Gmas</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -73,7 +60,6 @@
                             <p *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.registerDate"> {{element[columna.name]}}</p>
                             <p *ngIf="element[columna.name]== element.registerDate">{{element[columna.name] | date}} </p> 
                             <!-- <p *ngIf="element[columna.name]!= element.registerDate && element[columna.name]== element.modifyDate">{{element[columna.name] | date}} </p>  -->
-
                             <p *ngIf="element[columna.name]== element.acciones" >                                                           
                                 <button [matTooltip]="'Mostrar Contratistas'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData', element)" mat-flat-button [color]="'accent'">
                                     <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
