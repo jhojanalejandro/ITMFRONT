@@ -37,7 +37,6 @@ export class UploadFileComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private _upload: UploadFileDataService,
     private _auth: AuthService,
-    private _router: ActivatedRoute,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any,contractId: any }
@@ -109,7 +108,9 @@ export class UploadFileComponent implements OnInit {
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate, 
-      fildata: event       
+      modifyDate: this.registerDate,
+      filedata: event,
+      passed: true     
     };  
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
         if(res){

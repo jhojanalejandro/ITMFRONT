@@ -1,10 +1,10 @@
 import { Route } from '@angular/router';
-import { InventoryComponent } from './inventory/inventory.component';
-import { InventoryBrandsResolver, InventoryCategoriesResolver, InventoryProductsResolver, InventoryTagsResolver, InventoryVendorsResolver } from './inventory/inventory.resolvers';
-import { InventoryListComponent } from './inventory/list/inventory.component';
+import { EconomicChartComponent } from './economic-chart/economic-chart.component';
 import { ContrtactsComponent } from './contracts/contracts.component';
+import { InventoryProductsResolver } from './economic-chart/economic-chart.resolvers';
+import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
 
-export const ecommerceRoutes: Route[] = [
+export const PlaningRoutes: Route[] = [
     {
         path      : '',
         pathMatch : 'full',
@@ -12,17 +12,13 @@ export const ecommerceRoutes: Route[] = [
     },
     {
         path     : 'cuadroEconomico',
-        component: InventoryComponent,
+        component: EconomicChartComponent,
         children : [
             {
                 path     : '',
-                component: InventoryListComponent,
+                component: EconomicChartListComponent,
                 resolve  : {
-                    brands    : InventoryBrandsResolver,
-                    categories: InventoryCategoriesResolver,
-                    products  : InventoryProductsResolver,
-                    tags      : InventoryTagsResolver,
-                    vendors   : InventoryVendorsResolver
+                    products  : InventoryProductsResolver
                 }
             },
  

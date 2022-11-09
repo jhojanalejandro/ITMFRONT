@@ -12,6 +12,8 @@ import { FileManagerFolderCFResolver } from './list-folder-file-contractor/list-
 import { FileManagerItemFResolver } from './list-file/file-list.resolvers';
 import { DetailFileComponent } from './details-file/detail-file.component';
 import { DetailFileManagerItemFResolver } from './details-file/detail-file.resolvers';
+import { DetailsFolderFileContractorComponent } from './details-folder-contractor/details-folder-contractor.component';
+import { DetailFolderContractorItemFResolver } from './details-folder-contractor/detail-folder-contractor.resolvers';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -58,6 +60,16 @@ export const fileManagerRoutes: Route[] = [
                 resolve  : {
                     item: FileManagerFolderCFResolver
                 },
+                children : [
+                    {
+                        path         : 'folder/details/:id',
+                        component    : DetailsFolderFileContractorComponent,
+                        resolve      : {
+                            item: DetailFolderContractorItemFResolver
+                        },
+                        canDeactivate: [CanDeactivateFileManagerDetails]
+                    }
+                ]
             },
             {
                 path     : 'folders/contractor/:folderId',

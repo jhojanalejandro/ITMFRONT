@@ -4,8 +4,6 @@ export interface IContractor{
     id?: any;
     contractorId: any;
     userId: any;
-    cpc: string;
-    nombreCpc: string;
     contrato: string;
     compromiso: string;
     fechaDeContrato: Date;
@@ -14,7 +12,6 @@ export interface IContractor{
     fechaFinalizacion: Date;
     fechaFinalizacionConvenio: Date;
     actividad: string;
-    encabezado: string;
     ejecucion: string;
     actaComite: any;
     // obligacionesGenerales: string;

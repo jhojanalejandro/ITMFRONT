@@ -45,8 +45,7 @@
         <div class="w-full max-w-screen-xl mx-auto">
             <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="p-6">
-                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">CONTRATOS</div>
-                    <div class="text-secondary font-medium">Puedes Buscar Contratos</div>
+                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">LISTA CONTRATOS</div>
                 </div>
                 <div class="inputsearch" >
                     <mat-form-field appearance="outline">
@@ -75,22 +74,17 @@
                             <p *ngIf="element[columna.name]== element.registerDate">{{element[columna.name] | date}} </p> 
                             <!-- <p *ngIf="element[columna.name]!= element.registerDate && element[columna.name]== element.modifyDate">{{element[columna.name] | date}} </p>  -->
 
-                            <p *ngIf="element[columna.name]== element.acciones" >                                               
-                                <button [matTooltip]="'Editar Contrato'" style="text-align: center !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('editData',element)" mat-flat-button [color]="'primary'">
-                                    <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
-                                </button>              
+                            <p *ngIf="element[columna.name]== element.acciones" >                                                           
                                 <button [matTooltip]="'Mostrar Contratistas'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData', element)" mat-flat-button [color]="'accent'">
                                     <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
                                 </button>
-                                <button [matTooltip]="'Eliminar Contrato'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData', element)" mat-flat-button [color]="'warn'">
-                                    <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
-                                </button>
+
                             </p> 
                         </td>
                         </ng-container>
                                         
                         <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                            <td class="mat-cell" colspan="4">No hay datos para filtrar "{{input.value}}"</td>
                         </tr>
                 
                         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

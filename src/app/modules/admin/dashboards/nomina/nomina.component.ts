@@ -17,6 +17,7 @@ import { ProjectFolderComponent } from '../project/register-project-folder/regis
 import { UploadFileComponent } from '../project/upload-file/upload-file.component';
 @Component({
     selector       : 'nomina',
+    styleUrls: ['./nomina.component.css'],
     templateUrl    : './nomina.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -14,20 +14,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
-import { InventoryComponent } from './inventory/inventory.component';
-import { InventoryListComponent } from './inventory/list/inventory.component';
-import { ecommerceRoutes } from './ecommerce.routing';
+import { PlaningRoutes } from './planing.routing';
+import { AddCardComponent } from './economic-chart/details/details.component';
 import { ContrtactsComponent } from './contracts/contracts.component';
+import { EconomicChartComponent } from './economic-chart/economic-chart.component';
+import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
 
 
 @NgModule({
     declarations: [
-        InventoryComponent,
-        InventoryListComponent,
-        ContrtactsComponent
+        EconomicChartComponent,
+        EconomicChartListComponent,
+        ContrtactsComponent,
+        AddCardComponent
     ],
     imports     : [
-        RouterModule.forChild(ecommerceRoutes),
+        RouterModule.forChild(PlaningRoutes),
         MatButtonModule,
         MatCheckboxModule,
         MatFormFieldModule,
@@ -44,6 +46,6 @@ import { ContrtactsComponent } from './contracts/contracts.component';
         SharedModule
     ]
 })
-export class ECommerceModule
+export class PlaningModule
 {
 }

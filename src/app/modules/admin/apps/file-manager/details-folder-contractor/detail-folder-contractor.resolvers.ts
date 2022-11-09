@@ -3,16 +3,17 @@ import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@a
 import { catchError, Observable, throwError } from 'rxjs';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FileListManagerService } from '../list-file/list-file.service';
+import { ListFolderFileContractorService } from '../list-folder-file-contractor/list-folder-file-contractor.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class DetailFileManagerItemResolver implements Resolve<any>
+export class DetailFolderContractorManagerItemResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
-    constructor(private _fileManagerService: FileListManagerService)
+    constructor(private _fileManagerService: ListFolderFileContractorService)
     {
     }
 
@@ -28,7 +29,7 @@ export class DetailFileManagerItemResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getItemByIdDetail();
+        return this._fileManagerService.getItemByIdDetailFolderContractor();
     }
 }
 
@@ -36,14 +37,14 @@ export class DetailFileManagerItemResolver implements Resolve<any>
 @Injectable({
     providedIn: 'root'
 })
-export class    DetailFileManagerItemFResolver implements Resolve<any>
+export class DetailFolderContractorItemFResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
     constructor(
         private _router: Router,
-        private _fileManagerService: FileListManagerService
+        private _fileManagerService: ListFolderFileContractorService
     )
     {
     }
@@ -60,8 +61,9 @@ export class    DetailFileManagerItemFResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getItemByIdDetail(route.paramMap.get('id'))
+        return this._fileManagerService.getItemByIdDetailFolderContractor(route.paramMap.get('id'))
                    .pipe(
+                    
                        // Error here means the requested task is not available
                        catchError((error) => {
 

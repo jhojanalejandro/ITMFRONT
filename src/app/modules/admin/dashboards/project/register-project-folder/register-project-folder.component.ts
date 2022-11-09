@@ -59,6 +59,8 @@ export class ProjectFolderComponent implements OnInit {
       // this.getDepartamento();
     this.formProject = this._formBuilder.group({
     projectName: new FormControl(this.projectName, Validators.required),
+    cpc: new FormControl(null),
+    nombreCpc: new FormControl(null),
     companyName: new FormControl(this.companyName, Validators.required),
     ejecucion: new FormControl(null, Validators.required),       
     description: new FormControl(this.descript, Validators.required), 
@@ -74,6 +76,7 @@ export class ProjectFolderComponent implements OnInit {
     }else{
       this.formProject.value.ejecucion = false; 
     }
+    debugger
     const registerProject: IProjectFolder={
       userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
@@ -82,7 +85,11 @@ export class ProjectFolderComponent implements OnInit {
       registerDate: this.registerDate, 
       modifyDate: this.registerDate, 
       execution:  this.formProject.value.ejecucion,
-      activate: false   
+      budget:0,
+      contractCant:0,
+      cpc: '',
+      nombreCpc: '',
+      activate: false 
     };  
     this._upload.addProjectFolder(registerProject).subscribe((res) => {   
         if(res){
@@ -114,6 +121,10 @@ export class ProjectFolderComponent implements OnInit {
       registerDate: this._data.data.registerDate, 
       modifyDate: this.registerDate,   
       execution:  this.formProject.value.ejecucion,
+      budget:0,
+      contractCant:0,
+      cpc: '',
+      nombreCpc: '',
       activate: false        
     };  
     this._upload.UpdateProjectFolder(registerProject).subscribe((res) => {   

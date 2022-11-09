@@ -14,6 +14,7 @@ export class ListFolderFileContractorService
     // Private
 
     private _itemsFC: BehaviorSubject<ItemsC | null> = new BehaviorSubject(null);
+    private _itemD: BehaviorSubject<Item | null> = new BehaviorSubject(null);
 
     apiUrl: any = environment.apiURL;
 
@@ -33,6 +34,11 @@ export class ListFolderFileContractorService
         return this._itemsFC.asObservable();
     }
 
+
+    get itemD$(): Observable<Item>
+    {
+        return this._itemD.asObservable();
+    }
 
     getAllFolderFileContractor(id: string | null = null): Observable<Item[]>
     {
@@ -100,6 +106,29 @@ export class ListFolderFileContractorService
     
     }
 
+    getItemByIdDetailFolderContractor(id: any | null = null): Observable<Item>
+    {    
+        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
+        let urlEndPoint = this.apiUrl+ environment.GetByIdFolderFileContractorEndpoint;
+        return this._httpClient.get<any>(urlEndPoint + id).pipe(
+            tap((items) => {
+                // Update the item
+                const item = items.files = items || null;
+                this._itemD.next(item);
+                
+            }),
+            switchMap((item) => {
+
+                if ( !item )
+                {
+                    return throwError('Could not found the item with id of ' + id + '!');
+                }
+
+                return of(item);
+            })
+        );
+    }
+    
     addFolderContractor(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addFolderFileContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);

@@ -41,9 +41,10 @@ export class ShowFileComponent implements OnInit {
     .subscribe((item: any) => {
         this.id = item.id;
         console.log('archivo', item);
+        debugger
         // Open the drawer in case it is closed
         // Get the item
-        this.getFile = item.fildata;
+        this.getFile = item.filedata;
         // this.getFile = this.sanitizer.bypassSecurityTrustResourceUrl('data:application/pdf;base64,'+this.getFile);
     });
 

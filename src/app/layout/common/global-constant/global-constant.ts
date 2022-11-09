@@ -35,19 +35,9 @@ export class GlobalCont {
             description: 'Solo puede leer y escribir'
         },
         {
-            label      : 'Leer',
+            label      : 'inactivo',
             value      : 4,
             description: 'Solo puede leer datos.'
-        },
-        {
-            label      : 'Escribir',
-            value      : 5,
-            description: 'Solo puede escribir datos.'
-        },
-        {
-            label      : 'Desactivar',
-            value      : 7,
-            description: 'Usuarios innactivos.'
         }
 
     ];
@@ -64,6 +54,15 @@ export class GlobalCont {
     public static requierePoliza: TypeSelectString[]=[
         { viewValue: 'Si'},
         { viewValue: 'No'}, 
+    ] 
+
+    public static Nivel: TypeSelectString[]=[
+        { viewValue: '1'},
+        { viewValue: '2'}, 
+        { viewValue: '3'}, 
+        { viewValue: '4'}, 
+        { viewValue: '5'}, 
+
     ] 
     public static entidadesB: TypeSelectString[]=[
         { viewValue: 'Bancolombia'},

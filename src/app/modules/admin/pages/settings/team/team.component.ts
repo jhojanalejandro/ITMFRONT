@@ -39,7 +39,6 @@ export class SettingsTeamComponent implements OnInit
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((teams: any) => {
             // Mark for check
-            debugger
             for (let index = 0; index < teams.length; index++) {
                 if(teams[index].avatar == 'vacio'){
                     teams[index].avatar = 'assets/images/avatars/male-07.jpg';
@@ -55,12 +54,6 @@ export class SettingsTeamComponent implements OnInit
                         teams[index].idRoll = 'leer, escribir' 
                     break;
                     case 4:
-                        teams[index].idRoll = 'leer' 
-                    break;
-                    case 5:
-                        teams[index].idRoll = 'escribir' 
-                    break;
-                    case 7:
                         teams[index].idRoll = 'inactivo' 
                     break;
                 }
