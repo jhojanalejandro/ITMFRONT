@@ -20,17 +20,26 @@
 }
 
 mat-form-field{
-    width: 240px !important;
+    width: 250px !important;
 }
 .nationality{
     text-align: center;
 }
+.direction{
+    width: 500px !important;
+}
 
+textarea{
+    height: 250px !important;
+}
+.btn{
+    text-align: start !important;
+    margin: 20px;
+}
+button{
+    margin: 10px;
+}
 .text{
     font-weight: bold;
-    font-size: 30px;
-}
-.actividad{
-    margin-left: 15px !important;
-    margin-right: 15px !important;
+    font-size: 20px;
 }

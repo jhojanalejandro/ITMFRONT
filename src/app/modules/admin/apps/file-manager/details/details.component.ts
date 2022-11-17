@@ -6,7 +6,7 @@ import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-man
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
@@ -83,7 +83,7 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     }
     encryptData(data) {
         try {
-            return CryptoJS.AES.encrypt(JSON.stringify(data), GlobalCont.encryptSecretKey).toString();
+            return CryptoJS.AES.encrypt(JSON.stringify(data), GlobalConst.encryptSecretKey).toString();
         } catch (e) {
             console.log(e);
         }

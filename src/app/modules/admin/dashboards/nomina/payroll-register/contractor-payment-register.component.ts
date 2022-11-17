@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { IContractor } from 'app/layout/common/models/contractor';
 import swal from 'sweetalert2';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 import { NominaService } from '../nomina.service';
 import { IContractorPayments } from 'app/layout/common/models/contractor-payments';
@@ -31,10 +31,10 @@ export class  ContractorPaymentRegisterComponent implements OnInit {
   };
   showAlert: boolean = false;
   registerDate = new Date();
-  entidadesB: any = GlobalCont.entidadesB;
-  entidadesEps: any = GlobalCont.eps;
+  entidadesB: any = GlobalConst.entidadesB;
+  entidadesEps: any = GlobalConst.eps;
   formContractorPayment: FormGroup; 
-  pagos: any = GlobalCont.nomina;
+  pagos: any = GlobalConst.nomina;
 
     constructor(private _nominaService: NominaService,
       private ref: ChangeDetectorRef,

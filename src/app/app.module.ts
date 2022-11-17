@@ -13,6 +13,8 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { CreatePdfComponent } from './modules/admin/pages/create-pdf/create-pdf.component';
+import { CollectionAccountsListComponent } from './modules/admin/dashboards/nomina/collection-accounts-list/collection-accounts-list.component';
+import { UploadFileComponent } from './modules/admin/apps/home-contractor/upload-file-contractor/upload-file.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -21,7 +23,7 @@ const routerConfig: ExtraOptions = {
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
     ],
     imports     : [
         BrowserModule,

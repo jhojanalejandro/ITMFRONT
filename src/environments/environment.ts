@@ -55,6 +55,8 @@ export const environment = {
     addFileEndpoint: 'Files/AddFileContractor',
     UpdateFileEndpoint: 'Files/Update',
     GetAllFileByIdEndpoint: 'Files/GetAllFileById',
+    GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
+
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete',
     AuthContractor: 'Contractor/Authenticate',

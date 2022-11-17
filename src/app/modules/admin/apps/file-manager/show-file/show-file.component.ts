@@ -1,9 +1,6 @@
 import { Component, OnInit,Inject, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
 import { interval, Subject,takeUntil } from 'rxjs';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
 import { ActivatedRoute } from '@angular/router';

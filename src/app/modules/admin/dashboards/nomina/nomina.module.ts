@@ -12,11 +12,13 @@ import { SharedModule } from 'app/shared/shared.module';
 import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.component';
 import { nominaRoutes } from 'app/modules/admin/dashboards/nomina/nomina.routing';
 import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
+import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
 
 @NgModule({
     declarations: [
         NominaComponent,
-        ContractorPaymentRegisterComponent
+        ContractorPaymentRegisterComponent,
+        CollectionAccountsListComponent
     ],
     imports     : [
         RouterModule.forChild(nominaRoutes),

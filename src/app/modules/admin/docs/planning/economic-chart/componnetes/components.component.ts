@@ -1,25 +1,34 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
-    selector       : 'scrumboard-card-details',
-    styleUrls: ['./details.component.scss'],
-    templateUrl    : './details.component.html',
+    selector       : 'components-card',
+    styleUrls: ['./components.component.scss'],
+    templateUrl    : './components.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddCardComponent implements OnInit, OnDestroy
+export class AddComponentsComponent implements OnInit, OnDestroy
 {
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+    fruitCtrl = new FormControl('');
+    filteredFruits: Observable<string[]>;
+    fruits: string[] = [];
+    allFruits: string[] = ['Profesional En Sistemas'];
+    @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+
     numberOfTicks = 0;
     data: any;
     componentName: string = null;
     contractorCant: any = null;
-    cantDay: number = 0;
+    cantDay: number = null;
     unitValue: any= null;
     unitValueDay: number= null;
     update: boolean;
@@ -39,12 +48,11 @@ export class AddCardComponent implements OnInit, OnDestroy
      * Constructor
      */
     constructor(
-        public matDialogRef: MatDialogRef<AddCardComponent>,
+        public matDialogRef: MatDialogRef<AddComponentsComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) private _data: { data: any, show: boolean },
         private _fuseConfirmationService: FuseConfirmationService,
-
     )
     {
         setInterval(() => {
@@ -53,12 +61,11 @@ export class AddCardComponent implements OnInit, OnDestroy
             this._changeDetectorRef.detectChanges();
             this._changeDetectorRef.markForCheck();
           }, 1000);
+          this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+            startWith(null),
+            map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice())),
+          );
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * On init
      */
@@ -66,24 +73,11 @@ export class AddCardComponent implements OnInit, OnDestroy
     {        
         if(this._data.show){
             this.componentName = this._data.data.componentName;
-            this.contractorCant = this._data.data.contractorCant;
-            this.cantDay = this._data.data.cantDay;
-            this.unitValue = this._data.data.unitValue;
-            this.cantDay = this._data.data.cantDay;
-            this.totalValue = this._data.data.totalValue;
-            this.id = this._data.data.id;
         }
         this.update = this._data.show;
         // Get the board
         this.componentForm = this._formBuilder.group({
             componentName: new FormControl(this.componentName, Validators.required),
-            contractorCant: new FormControl(this.contractorCant, Validators.required),
-            cantDay: new FormControl(this.cantDay, Validators.required),
-            unitValue: new FormControl(this.unitValue, Validators.required),
-            totalValue: new FormControl(this.totalValue, Validators.required),
-            id: new FormControl(this.id, Validators.required),
-            unitValueDay: new FormControl(0, Validators.required),
-            calculateValue: new FormControl(this.totalCost, Validators.required),
         });
 
         this.configForm = this._formBuilder.group({
@@ -139,33 +133,9 @@ export class AddCardComponent implements OnInit, OnDestroy
         return item.id || index;
     }
 
-    close(){
+    addContractor(){
         this.data = this.componentForm.value;
         this.matDialogRef.close(this.data);   
-    }
-    calculate =() => {
-        debugger
-        this.totalCalculate= false;
-        // this.unitValueDay =  this.componentForm.value.totalValue / this.componentForm.value.cantDay;
-        this.unitValueDay =  Number(this.componentForm.value.unitValue * this.componentForm.value.contractorCant);
-        this.unitValueDay = Number(this.unitValueDay /30);
-        this.totalCost = Number(this.unitValueDay * this.componentForm.value.cantDay);
-        let totalValueMonth = this.componentForm.value.unitValue * this.componentForm.value.contractorCant;
-        let paymentDayContractor = this.unitValueDay/Number(this.componentForm.value.contractorCant);
-
-        // this.unitValueMonth = paymentMonth/this.componentForm.value.cantDay;
-
-        if(this.componentForm.value.cantDay >= '30'){
-            // let paymentMonth = paymentDay/Number(this.componentForm.value.contractorCant);
-
-        }else{
-
-        }
-        let paymentMonth =  this.componentForm.value.unitValue * this.componentForm.value.contractorCant;
-
-        //this.openConfirmationDialog();
-
-
     }
     openConfirmationDialog(): void
     {
@@ -179,4 +149,39 @@ export class AddCardComponent implements OnInit, OnDestroy
             }
         });
     }
+
+    
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.fruits.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+
+    this.fruitCtrl.setValue(null);
+  }
+
+  remove(fruit: string): void {
+    const index = this.fruits.indexOf(fruit);
+
+    if (index >= 0) {
+      this.fruits.splice(index, 1);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.fruits.push(event.option.viewValue);
+    this.fruitInput.nativeElement.value = '';
+    this.fruitCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
+  }
 }

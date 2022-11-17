@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUser } from 'app/layout/common/models/userAuthenticate';
 
 @Component({
@@ -17,7 +17,7 @@ import { IUser } from 'app/layout/common/models/userAuthenticate';
 export class AuthSignInComponent implements OnInit
 {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
-    tipoUsuario: any =GlobalCont.TipoUsuario
+    tipoUsuario: any =GlobalConst.TipoUsuario
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',
         message: ''

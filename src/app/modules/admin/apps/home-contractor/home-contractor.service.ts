@@ -80,4 +80,10 @@ export class HomeContractorService
             })
         );
     }
+
+    UploadFileContractor(formdata: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addFileEndpoint;
+         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
+
 }

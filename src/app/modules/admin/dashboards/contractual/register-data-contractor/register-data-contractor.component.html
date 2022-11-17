@@ -93,10 +93,7 @@
                             El Campo ejecucion Mensuales es requerido
                         </mat-error>
                     </mat-form-field>
-                </div>
-                <br>
-                <div class="w-full">
-                    <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full" appearance="outline">
+                    <mat-form-field class="actividad" appearance="outline">
                         <mat-label>Actividad</mat-label>
                         <input matInput id="actividad" formControlName="actividad" autocomplete="off" matInput
                             placeholder="Actividad">
@@ -106,6 +103,18 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
+                <!-- <br> -->
+                <!-- <div class="nationality">
+                    <mat-form-field class="actividad" appearance="outline">
+                        <mat-label>Actividad</mat-label>
+                        <input matInput id="actividad" formControlName="actividad" autocomplete="off" matInput
+                            placeholder="Actividad">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                        <mat-error *ngIf="formContractor.get('actividad').hasError('required')">
+                            El Campo actividad es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div> -->
                 <br>
                 <div class="nationality">
                     <mat-form-field (click)="pickerFC.open()" class="hiring" appearance="outline">

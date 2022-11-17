@@ -29,6 +29,7 @@ export interface Components
     contractorCant: number;
     totalValue: number;
     unitValue: number;
+    listElements: any[];
 }
 export interface InventoryCategory
 {
@@ -39,9 +40,4 @@ export interface InventoryCategory
 }
 
 
-export interface InventoryTag
-{
-    id?: string;
-    title?: string;
-}
 

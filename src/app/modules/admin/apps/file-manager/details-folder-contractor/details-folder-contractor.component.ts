@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, takeUntil } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { Router } from '@angular/router';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ListFolderFileContractorService } from '../list-folder-file-contractor/list-folder-file-contractor.service';
 import { ListFolderFileContractorComponent } from '../list-folder-file-contractor/list-folder-file-contractor.component';
@@ -82,7 +82,7 @@ export class DetailsFolderFileContractorComponent implements OnInit, OnDestroy
     }
     encryptData(data) {
         try {
-            return CryptoJS.AES.encrypt(JSON.stringify(data), GlobalCont.encryptSecretKey).toString();
+            return CryptoJS.AES.encrypt(JSON.stringify(data), GlobalConst.encryptSecretKey).toString();
         } catch (e) {
             console.log(e);
         }

@@ -9,18 +9,18 @@ import swal from 'sweetalert2';
 })
 export class ButtonsExportComponent implements OnInit {
     @Input() idContrato: number;
-    constructor(private _service: ButtonsExportService) {}
+    constructor(private _service: ButtonsExportService) { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     exportarViabilidad() {
         this._service.getReport().subscribe(
             (res) => {
-              var downloadURL = window.URL.createObjectURL(res);
-              var link = document.createElement('a');
-              link.href = downloadURL;
-              link.download = "Viabilidad";
-              link.click();
+                var downloadURL = window.URL.createObjectURL(res);
+                var link = document.createElement('a');
+                link.href = downloadURL;
+                link.download = "Viabilidad";
+                link.click();
                 if (res) {
                     swal.fire(
                         'Descarga realizada Exitosamente!',
@@ -38,11 +38,11 @@ export class ButtonsExportComponent implements OnInit {
     exportarCdp() {
         this._service.getReportCdp().subscribe(
             (res) => {
-              var downloadURL = window.URL.createObjectURL(res);
-              var link = document.createElement('a');
-              link.href = downloadURL;
-              link.download = "SOLICITUD CDP- DAP";
-              link.click();
+                var downloadURL = window.URL.createObjectURL(res);
+                var link = document.createElement('a');
+                link.href = downloadURL;
+                link.download = "SOLICITUD CDP- DAP";
+                link.click();
                 if (res) {
                     swal.fire(
                         'Descarga realizada Exitosamente!',
@@ -60,11 +60,11 @@ export class ButtonsExportComponent implements OnInit {
     exportarPpa() {
         this._service.getReportPpa().subscribe(
             (res) => {
-              var downloadURL = window.URL.createObjectURL(res);
-              var link = document.createElement('a');
-              link.href = downloadURL;
-              link.download = "SOLICITUD PAA";
-              link.click();
+                var downloadURL = window.URL.createObjectURL(res);
+                var link = document.createElement('a');
+                link.href = downloadURL;
+                link.download = "SOLICITUD PAA";
+                link.click();
                 if (res) {
                     swal.fire(
                         'Descarga realizada Exitosamente!',
@@ -82,11 +82,11 @@ export class ButtonsExportComponent implements OnInit {
     exportarDap() {
         this._service.getReportDap().subscribe(
             (res) => {
-              var downloadURL = window.URL.createObjectURL(res);
-              var link = document.createElement('a');
-              link.href = downloadURL;
-              link.download = "SOLICITUD CONTRATACIÓN DAP";
-              link.click();
+                var downloadURL = window.URL.createObjectURL(res);
+                var link = document.createElement('a');
+                link.href = downloadURL;
+                link.download = "SOLICITUD CONTRATACIÓN DAP";
+                link.click();
                 if (res) {
                     swal.fire(
                         'Descarga realizada Exitosamente!',

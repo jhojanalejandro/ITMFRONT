@@ -12,11 +12,14 @@ import { SharedModule } from 'app/shared/shared.module';
 import { HomeContractorComponent } from './home-contractor.component';
 import { contractorRoutes } from './home-contractor.routing';
 import { FuseCardModule } from '@fuse/components/card';
+import { UploadFileComponent } from './upload-file-contractor/upload-file.component';
 
 
 @NgModule({
     declarations: [
-        HomeContractorComponent
+        HomeContractorComponent,
+        UploadFileComponent
+
     ],
     imports     : [
         RouterModule.forChild(contractorRoutes),

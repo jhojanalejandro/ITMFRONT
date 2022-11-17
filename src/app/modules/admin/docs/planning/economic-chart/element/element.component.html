@@ -1,0 +1,119 @@
+<div class="flex-col max-w-250 md:min-w-120 -m-6">
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Registro Componente</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Card form -->
+    <form class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
+        [formGroup]="elementForm">
+        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full" appearance="fill">
+            <mat-label>Elementos</mat-label>
+            <mat-chip-list #chipList aria-label="Fruit selection">
+                <mat-chip class="m-2" *ngFor="let element of elementos" (click)="showElemewnt(element)"
+                    (removed)="remove(element)">
+                    {{element.elemento}}
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+                <input placeholder="Nuevo  Elemento..." #fruitInput [formControl]="fruitCtrl" [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                    {{fruit}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Cantidad Contratista</mat-label>
+                <input type="number" [value]="contractorCant" id="contractorCant" formControlName="contractorCant"
+                    autocomplete="off" matInput placeholder="Cantidad Contratista">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:duplicate'"></mat-icon>
+                <mat-error *ngIf="elementForm.get('contractorCant').hasError('required')">
+                    El Campo noPoliza es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Cantidad Días</mat-label>
+                <input type="number" [value]="cantDay" id="cantDay" formControlName="cantDay" autocomplete="off"
+                    matInput placeholder="Cantidad Días">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                <mat-error *ngIf="elementForm.get('cantDay').hasError('required')">
+                    El Campo noPoliza es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="nationality">
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Valor Unidad</mat-label>
+                <input type="number" [value]="unitValue" id="unitValue" formControlName="unitValue" autocomplete="off"
+                    matInput placeholder="Valor Unidad">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                <mat-error *ngIf="elementForm.get('unitValue').hasError('required')">
+                    El Campo Valor Unidad es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Valor Total</mat-label>
+                <input type="number" [value]="totalValue" id="totalValue" formControlName="totalValue"
+                    autocomplete="off" matInput placeholder="Valor Total">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                <mat-error *ngIf="elementForm.get('totalValue').hasError('required')">
+                    El Campo noPoliza es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="nationality">
+            <mat-form-field disable class="hiring" appearance="outline">
+                <mat-label>Valor Por dia</mat-label>
+                <input type="number" [value]="unitValueDay" id="unitValue" formControlName="unitValue"
+                    autocomplete="off" matInput placeholder="Valor Unidad">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                <mat-error *ngIf="elementForm.get('unitValue').hasError('required')">
+                    El Campo Valor Por Día es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field [hidden]="totalCalculate" class="hiring" appearance="outline">
+                <mat-label>Valor Exacto</mat-label>
+                <input type="number" [value]="totalCost" id="calculateValue" formControlName="calculateValue"
+                    autocomplete="off" matInput placeholder="Valor Unidad">
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                <mat-error *ngIf="elementForm.get('calculateValue').hasError('required')">
+                    El Campo Valor Exacto es requerido
+                </mat-error>
+            </mat-form-field>
+            <!-- <span *ngIf="calculo" class="text">los calculos No coinciden</span> -->
+            <!-- <div>
+                <mat-icon
+                class="icon-size-12 ml-8 "
+                [color]="'warn'"
+                matSuffix
+                [svgIcon]="'heroicons_outline:exclamation'"></mat-icon>
+                <mat-icon
+                class="icon-size-12 ml-8 "
+                [color]="'success'"
+                matSuffix
+                [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+            </div> -->
+        </div>
+
+    </form>
+    <div class="btn">
+        <button mat-flat-button type="button" [color]="'warn'" [mat-dialog-close]="false">Cancelar</button>
+        <button class="m-5 bg-green-600" mat-flat-button *ngIf="update" type="submit"
+            (click)="calculate()">Calcular</button>
+        <button class="m-2" mat-flat-button *ngIf="update" [color]="'primary'" type="submit" (click)="asign()">Asignar
+            Elemento</button>
+        <button class="m-2" mat-flat-button *ngIf="update" [color]="'primary'" type="submit" [mat-dialog-close]="true"
+            (click)="addContractor()">Aceptar</button>
+        <button class="m-5" mat-flat-button *ngIf="!update" [color]="'primary'" type="submit" [mat-dialog-close]="true"
+            (click)="addContractor()">Actualizar</button>
+    </div>
+</div>
