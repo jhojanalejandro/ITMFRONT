@@ -16,167 +16,124 @@ import { UploadDataService } from '../contractual/contracts-list/upload-data.ser
 import { ProjectFolderComponent } from '../contractual/register-project-folder/register-project-folder.component';
 import { UploadFileComponent } from '../contractual/upload-file/upload-file.component';
 @Component({
-    selector       : 'nomina',
-    styleUrls: ['./nomina.component.css'],
-    templateUrl    : './nomina.component.html',
-    encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'nomina',
+  styleUrls: ['./nomina.component.css'],
+  templateUrl: './nomina.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NominaComponent implements OnInit, OnDestroy
-{
-    selectContract: any;
-    data: any;
-    userName: any;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-    @ViewChild('recentTransactionsTable', {read: MatSort}) recentTransactionsTableMatSort: MatSort;
-    @ViewChild(MatSort, { static: true }) sort!: MatSort;
-    @ViewChild(MatTable) table!: MatTable<any>;
-    horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-    verticalPosition: MatSnackBarVerticalPosition = 'top';
-    accountBalanceOptions: ApexOptions;
-    dataSource = new MatTableDataSource<any>();
-    selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['id','companyName','projectName','registerDate','action'];
-    columnsToDisplay: string[] = this.displayedColumns.slice();
+export class NominaComponent implements OnInit, OnDestroy {
+  selectContract: any;
+  data: any;
+  userName: any;
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
+  @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatTable) table!: MatTable<any>;
+  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  accountBalanceOptions: ApexOptions;
+  dataSource = new MatTableDataSource<any>();
+  selection = new SelectionModel<any>(true, []);
+  displayedColumns: string[] = ['companyName', 'projectName', 'registerDate','contractorCant', 'action'];
+  columnsToDisplay: string[] = this.displayedColumns.slice();
 
-    /**
-     * Constructor
-     */
-    constructor(
-        private _uploadData: UploadDataService,
-        private _matDialog: MatDialog,
-        private auth: AuthService,
-        private cdref: ChangeDetectorRef,
-        private _liveAnnouncer: LiveAnnouncer,   
-        private _router:  Router
-    )
-    {
+  /**
+   * Constructor
+   */
+  constructor(
+    private _uploadData: UploadDataService,
+    private _matDialog: MatDialog,
+    private auth: AuthService,
+    private cdref: ChangeDetectorRef,
+    private _liveAnnouncer: LiveAnnouncer,
+    private _router: Router
+  ) {
+  }
+  columnas = [
+    { title: 'NOMBRE EMPRESA', name: 'companyName' },
+    { title: 'NOMBRE PROYECTO', name: 'projectName' },
+    { title: 'FECHA REGISTRO', name: 'registerDate' },
+    { title: 'Cantidad', name: 'contractorCant' },
+    // {title: 'REVISADO', name: 'done'},
+    { title: '', name: 'action' },
+  ]
+  ngOnInit(): void {
+    this.getContractsData();
+    this.userName = this.auth.accessName.toUpperCase();
+    console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
+
+
+  }
+
+  openDialog(route: any, data: any) {
+    debugger
+    this._router.navigate(['/dashboards/nomina/' + route + '/' + data.id]);
+  }
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
     }
-    columnas = [ 
-        {title: 'secuencia', name: 'id'},
-        {title: 'NOMBRE EMPRESA', name: 'companyName'},
-        {title: 'NOMBRE PROYECTO', name: 'projectName'},
-        {title: 'FECHA REGISTRO', name: 'registerDate'},
-        // {title: 'REVISADO', name: 'done'},
-        {title: '', name: 'action'},    
-    ]
-    ngOnInit(): void
-    {
-        this.getContractsData();
-        this.userName = this.auth.accessName.toUpperCase();
-        console.log(GlobalConst.numeroALetras(58225,'PESOS'));
-        
-        
+  }
+  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
+  }
+
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+  }
+
+  /**
+   * On init
+   */
+
+  //metodo de filtrar los datos de las columnas
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  ngAfterViewInit(): void {
+    // Make the data source sortable
+    this.dataSource.sort = this.recentTransactionsTableMatSort;
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
+  }
+  selectRowFull(data: any, type: any) {
+    if (type === 'register') {
     }
 
-    openDialog(route: any,data: any) {
-        //this.validateDinamycKey();
-        switch(route){
-            case 'registerFolder':
-            const dialogRefPrroject = this._matDialog.open(ProjectFolderComponent);
-            dialogRefPrroject.afterClosed().subscribe(datos => {
-              if(datos){      
-                this.getContractsData();
-              }               
-            });
-            break
-            case 'editData':
-              const dialogRef =  this._matDialog.open(ProjectFolderComponent, {
-                autoFocus: false,
-                data     : {
-                    data
-                }
-              });
-              dialogRef.afterClosed().subscribe((result) => {
-                if(result){
-                  this.getContractsData();
-                }
-              }); 
-            break
-            case 'upload':
-              const dialogUpload =  this._matDialog.open(UploadFileComponent, {
-                autoFocus: false,
-                data     : {
-                    show: true
-                }
-              });
-              dialogUpload.afterClosed().subscribe((result) => {
-                if(result){
-                    
-                }
-              });   
-            break
-            case 'registerData':
-              this._router.navigate(['/dashboards/nomina/cuentasDeCobro/'+ data.id]);
+  }
 
-          break
-
-        }
-    }
-    announceSortChange(sortState: Sort) {
-        if (sortState.direction) {
-          this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-        } else {
-          this._liveAnnouncer.announce('Sorting cleared');
-        }
-      }
-      //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
-        drop(event: CdkDragDrop<string[]>){
-            moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
-        }
-  
-      ngAfterContentChecked() {
-        this.cdref.detectChanges();
-       }
-  
-      /**
-       * On init
-       */
-  
-        //metodo de filtrar los datos de las columnas
-        applyFilter(event: Event) {
-            const filterValue = (event.target as HTMLInputElement).value;
-            this.dataSource.filter = filterValue.trim().toLowerCase();  
-          }
-  
-      ngAfterViewInit(): void
-      {
-          // Make the data source sortable
-          this.dataSource.sort = this.recentTransactionsTableMatSort;
-      }
-  
-      ngOnDestroy(): void
-      {
-          // Unsubscribe from all subscriptions
-          this._unsubscribeAll.next(null);
-          this._unsubscribeAll.complete();
-      }
-      selectRowFull(data: any, type: any) { 
-      if(type === 'register'){
-      }
-
-    }
-   
-    getContractsData(){
-              // Get the data
-      this._uploadData.getAllContract().pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((Response) => {
-          this.dataSource= new MatTableDataSource(Response);
-          this.dataSource.sort= this.sort;
-          this.dataSource.data = Response;  
+  getContractsData() {
+    // Get the data
+    this._uploadData.getAllContract().pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((Response) => {
+        this.dataSource = new MatTableDataSource(Response);
+        Response.forEach(element => {
+          element.contractorCant =0;
+        });
+        this.dataSource.sort = this.sort;
+        this.dataSource.data = Response;
       });
-    }
-      /**
-       * Track by function for ngFor loops
-       *
-       * @param index
-       * @param item
-       */
-      trackByFn(index: number, item: any): any
-      {
-          return item.id || index;
-      }
-   
+  }
+  /**
+   * Track by function for ngFor loops
+   *
+   * @param index
+   * @param item
+   */
+  trackByFn(index: number, item: any): any {
+    return item.id || index;
+  }
+
 
 
 }

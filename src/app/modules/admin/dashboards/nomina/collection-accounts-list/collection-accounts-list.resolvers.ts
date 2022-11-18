@@ -57,7 +57,8 @@ export class CollectionAccountsItemFResolver implements Resolve<any>
      * @param state
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item> {
-        return this._fileManagerService.getItemById(route.paramMap.get('contractId'))
+        debugger
+        return this._fileManagerService.getItemById(route.paramMap.get('type'),route.paramMap.get('contractId'))
             .pipe(
                 // Error here means the requested task is not available
                 catchError((error) => {

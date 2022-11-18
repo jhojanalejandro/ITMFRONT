@@ -4,11 +4,14 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
-import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CollectionAccountsService } from './collection-accounts-list.service';
+import { IGetFilesPayments } from './models/GetFilesPaymentDto';
+import swal from 'sweetalert2';
+
 @Component({
   selector: 'app-collection-accounts-list',
   templateUrl: './collection-accounts-list.component.html',
@@ -26,7 +29,8 @@ export class CollectionAccountsListComponent implements OnInit {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    data: any;
+    type: any;
+    contractId: any;
     dateSearch: any = new Date()
     /**
      * Constructor
@@ -42,7 +46,9 @@ export class CollectionAccountsListComponent implements OnInit {
 
     ngOnInit(): void
     {   
-        this.data = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
+        this.type = this._activatedRoute.snapshot.paramMap.get('type') || 'null';
+
         this.getData();
          
     }
@@ -55,10 +61,6 @@ export class CollectionAccountsListComponent implements OnInit {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
-    }
-
-    getId(id: any){
-            this.data = id;
     }
     /**
      * On backdrop clicked
@@ -110,7 +112,7 @@ export class CollectionAccountsListComponent implements OnInit {
             autoFocus: false,
             data     : {
                 show: false,
-                contractorId: this.data
+                contractorId: this.contractId
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -195,9 +197,17 @@ export class CollectionAccountsListComponent implements OnInit {
     }
     searchByDate =() =>{
       debugger
-      this.dateSearch;
-      console.log(this.dateSearch);
-      
+      let search: IGetFilesPayments= {contractId: this.contractId, registerDate: this.dateSearch, type: this.type}
+      console.log(search);
+      this._collectionAccounts.searchByDate(search).subscribe((res) => {   
+        this.items = res;
+        this._changeDetectorRef.detectChanges();
+        this._changeDetectorRef.markForCheck();   
+
+    },
+    (response) => {
+      swal.fire('Error al Mostrar la informacion!', response, 'error');
+    });
     }
 
 }

@@ -5,3 +5,13 @@
 .hiring{
     margin-left: 30px !important;
 }
+mat-cell,.mat-column-contractorCant,.mat-column-registerDate,.mat-column-imageUrl,.mat-column-id,.mat-column-Group,.mat-column-availableQty,.mat-column-finishedQty,.mat-column-salesOrder,.mat-column-operationsGroupId,.mat-column-requiredQty,.mat-column-prodOrder {
+    text-align: center !important;
+  }
+  p{
+    text-align: left !important;
+  }
+  table {
+    margin: 10px !important;
+}
+    

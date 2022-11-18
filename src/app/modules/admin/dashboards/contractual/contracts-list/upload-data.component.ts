@@ -35,7 +35,7 @@ export class UploadDataComponent implements OnInit, OnDestroy
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['id','companyName','projectName','registerDate','action'];
+    displayedColumns: string[] = ['companyName','projectName','registerDate','action'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
 
     /**
@@ -52,7 +52,6 @@ export class UploadDataComponent implements OnInit, OnDestroy
     {
     }
     columnas = [ 
-        {title: 'secuencia', name: 'id'},
         {title: 'NOMBRE EMPRESA', name: 'companyName'},
         {title: 'NOMBRE PROYECTO', name: 'projectName'},
         {title: 'FECHA REGISTRO', name: 'registerDate'},

@@ -12,7 +12,7 @@ export const nominaRoutes: Route[] = [
         // }
     },
     {
-        path     : 'cuentasDeCobro/:contractId',
+        path     : ':type/:contractId',
         component: CollectionAccountsListComponent,
         resolve  : {
             data: CollectionAccountsItemFResolver

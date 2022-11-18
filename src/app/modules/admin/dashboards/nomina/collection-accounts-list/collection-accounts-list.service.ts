@@ -44,9 +44,10 @@ export class CollectionAccountsService
     /**
      * Get item by id
      */
-    getItemById(id: any | null = null): Observable<Item>
+    getItemById(type: any | null = null,id: any | null = null): Observable<Item>
     {
-        let GetFilesPaymentDto: IGetFilesPayments = {contractId: id, registerDate: new Date()};
+        debugger
+        let GetFilesPaymentDto: IGetFilesPayments = {contractId: id, registerDate: new Date(), type: type};
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileByDatePayment;
         return this._httpClient.post<any>(urlEndPoint,GetFilesPaymentDto).pipe(
@@ -93,7 +94,7 @@ export class CollectionAccountsService
 
     searchByDate(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.GetAllFileByDatePayment;
-        return this._httpClient.get<any>(urlEndpointGenerate+ data);
+        return this._httpClient.get<any>(urlEndpointGenerate+data);
     }
     UpdateProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
