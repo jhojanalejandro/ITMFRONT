@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    apiURL: 'https://localhost:44353/',
-    // apiURL: 'https://localhost:7163/',
+    //apiURL: 'https://localhost:44353/',
+    apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -51,7 +51,6 @@ export const environment = {
     GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetById/',
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
 
-
     addFileEndpoint: 'Files/AddFileContractor',
     UpdateFileEndpoint: 'Files/Update',
     GetAllFileByIdEndpoint: 'Files/GetAllFileById',
@@ -61,18 +60,17 @@ export const environment = {
     DeleteFileEndpoint: 'Files/Delete',
     AuthContractor: 'Contractor/Authenticate',
 
-
     addHiringEndpoint: 'HiringData/Add',
     UpdateHiringEndpoint: 'HiringData/Update',
     GetAllHiringEndpoint: 'HiringData/GetAll',
     GetByIdHiringEndpoint: 'HiringData/GetById/',
     DeleteHiringEndpoint: 'HiringData/Delete',
 
+    addComponent: 'Api/Componente',
+    addElementosComponent: 'Api/ElementosComponente',
 
-
-    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
-
-
+    getDepartmentsColombia:
+        'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 };
 
 /*

@@ -336,10 +336,10 @@
                                                 <ng-container *ngIf="!tagsEditMode">
                                                     <div class="p-4 space-y-2">
                                                         <ng-container *ngFor="let component of componentList; trackBy: trackByFn">
-                                                            <mat-form-field *ngIf="!component.componentName == ''" class="fuse-mat-dense fuse-mat-no-subscript w-full">
+                                                            <mat-form-field *ngIf="!component.nombreComponente == ''" class="fuse-mat-dense fuse-mat-no-subscript w-full">
                                                                 <input
                                                                 matInput disabled
-                                                                [value]="component.componentName"
+                                                                [value]="component.nombreComponente"
                                                                 (input)="updateTagTitle(component, $event)">
                                                                 <button
                                                                     mat-icon-button
@@ -364,7 +364,7 @@
                                                 </ng-container>
                                                 <div class="p-4 space-y-2">
                                                     <button [matTooltip]="'Registro Componente'"
-                                                    (click)="openDialog('add')"
+                                                    (click)="openDialog('add', product)"
                                                         class="fuse-mat-button-rounded bg-primary-700"
                                                         mat-flat-button
                                                         [color]="'primary'">
