@@ -1,8 +1,9 @@
 export interface Elements{
     id: any;
-    elemento: string;
-    contractorCant: number;
-    cantDay: number;
-    totalValue: number;
-    unitValue: number;
+    idComponente: string;
+    cantidadContratistas: number;
+    cantidadDias: number;
+    valorUnidad: number;
+    valorTotal: number;
+    valorPorDia: number;
 }

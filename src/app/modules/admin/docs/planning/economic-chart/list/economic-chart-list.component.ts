@@ -1,13 +1,40 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
+import {
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+} from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { debounceTime, map, merge, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import {
+    debounceTime,
+    map,
+    merge,
+    Observable,
+    Subject,
+    switchMap,
+    takeUntil,
+} from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { EconomicChartService } from '../economic-chart.service';
-import { InventoryCategory, InventoryPagination, EconomicChart, Components } from '../economic-chart.types';
+import {
+    InventoryCategory,
+    InventoryPagination,
+    EconomicChart,
+    Components,
+} from '../economic-chart.types';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { TypeSelectString } from 'app/layout/common/models/TypeSelect';
 import swal from 'sweetalert2';
@@ -22,23 +49,35 @@ import { AddComponentsComponent } from '../componnetes/components.component';
     styleUrls: ['./economic-chart-list.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: fuseAnimations
+    animations: fuseAnimations,
 })
-export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class EconomicChartListComponent
+    implements OnInit, AfterViewInit, OnDestroy
+{
     registerDate = new Date();
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
     projectData$: Observable<EconomicChart[]>;
     requiere: TypeSelectString[] = GlobalConst.requierePoliza;
-    componentList: Components[] = [{
-        id: '0',
-        cantDay: 0,
-        componentName: '',
-        contractorCant: 0,
-        totalValue: 0,
-        unitValue: 0, 
-        listElements: [{id: 0, elemento: '', contractorCant: 0, cantDay: 0, totalValue: 0, unitValue: 0}]
-    }
+    componentList: Components[] = [
+        {
+            id: '0',
+            cantDay: 0,
+            componentName: '',
+            contractorCant: 0,
+            totalValue: 0,
+            unitValue: 0,
+            listElements: [
+                {
+                    id: 0,
+                    elemento: '',
+                    contractorCant: 0,
+                    cantDay: 0,
+                    totalValue: 0,
+                    unitValue: 0,
+                },
+            ],
+        },
     ];
     TotalCost: any;
     SubTotal: number;
@@ -61,8 +100,8 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
         private _formBuilder: FormBuilder,
         private _inventoryService: EconomicChartService,
         private authService: AuthService,
-        private _matDialog: MatDialog) {
-    }
+        private _matDialog: MatDialog
+    ) {}
 
     /**
      * On init
@@ -85,9 +124,8 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
             thumbnail: [''],
             images: [[]],
             currentImageIndex: [0], // Image index that is currently being viewed
-            active: [false]
+            active: [false],
         });
-
 
         // Get the pagination
         this._inventoryService.pagination$
@@ -99,6 +137,7 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+        debugger;
         // Get the projectData
         this.projectData$ = this._inventoryService._economicsChart$;
 
@@ -110,7 +149,13 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
                 switchMap((query) => {
                     this.closeDetails();
                     this.isLoading = true;
-                    return this._inventoryService.getProjectData(0, 10, 'name', 'asc', query);
+                    return this._inventoryService.getProjectData(
+                        0,
+                        10,
+                        'name',
+                        'asc',
+                        query
+                    );
                 }),
                 map(() => {
                     this.isLoading = false;
@@ -128,7 +173,7 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
             this._sort.sort({
                 id: 'name',
                 start: 'asc',
-                disableClear: true
+                disableClear: true,
             });
 
             // Mark for check
@@ -146,22 +191,21 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
                 });
 
             // Get projectData if sort or page changes
-            merge(this._sort.sortChange, this._paginator.page).pipe(
-                switchMap(() => {
-                    this.closeDetails();
-                    this.isLoading = true;
-                    return this._inventoryService.getProjectData();
-                }),
-                map(() => {
-                    this.isLoading = false;
-                })
-            ).subscribe();
+            merge(this._sort.sortChange, this._paginator.page)
+                .pipe(
+                    switchMap(() => {
+                        this.closeDetails();
+                        this.isLoading = true;
+                        return this._inventoryService.getProjectData();
+                    }),
+                    map(() => {
+                        this.isLoading = false;
+                    })
+                )
+                .subscribe();
         }
     }
 
-    /**
-     * On destroy
-     */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
@@ -181,10 +225,15 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
             return;
         }
 
-        // Get the product by id
-        this._inventoryService.getProductById(productId)
-            .subscribe((product) => {
+        this._inventoryService.getComponent(productId).subscribe((response) => {
+            this.componentList = response;
+            this._changeDetectorRef.markForCheck();
+        });
 
+        // Get the product by id
+        this._inventoryService
+            .getProductById(productId)
+            .subscribe((product) => {
                 // Set the selected product
                 this.selectedProduct = product;
 
@@ -209,7 +258,8 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
     cycleImages(forward: boolean = true): void {
         // Get the image count and current image index
         const count = this.economicChartForm.get('images').value.length;
-        const currentIndex = this.economicChartForm.get('currentImageIndex').value;
+        const currentIndex =
+            this.economicChartForm.get('currentImageIndex').value;
 
         // Calculate the next and previous index
         const nextIndex = currentIndex + 1 === count ? 0 : currentIndex + 1;
@@ -232,34 +282,39 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
         this.tagsEditMode = !this.tagsEditMode;
     }
 
-
     openDialog(route: any, data: any) {
         switch (route) {
             case 'addElement':
-                debugger
-                const listElement = this.componentList.find(e => e.listElements = data.componentName);
+                const listElement = this.componentList.find(
+                    (e) => (e.listElements = data.nombreComponente)
+                );
                 const dialogRef = this._matDialog.open(ElementCardComponent, {
                     autoFocus: false,
                     data: {
-                        listElement,
-                        show: true
-                    }
+                        data,
+                        show: true,
+                    },
                 });
                 dialogRef.afterClosed().subscribe((result) => {
-                    debugger
                     if (result) {
-                        this.componentList[result.id].listElements.push(result.listElements);
+                        this.componentList[result.id].listElements.push(
+                            result.listElements
+                        );
                     }
                 });
-                break
+                break;
             case 'add':
-                const dialogRefPrroject = this._matDialog.open(AddComponentsComponent, {
-                    autoFocus: false,
-                    data: {
-                        show: false
+                const dialogRefPrroject = this._matDialog.open(
+                    AddComponentsComponent,
+                    {
+                        autoFocus: false,
+                        data: {
+                            show: false,
+                            data,
+                        },
                     }
-                });
-                dialogRefPrroject.afterClosed().subscribe(datos => {
+                );
+                dialogRefPrroject.afterClosed().subscribe((datos) => {
                     if (datos) {
                         if (this.componentList[0].componentName == '') {
                             this.componentList.splice(i, 1);
@@ -270,9 +325,8 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
                         this.componentList.push(datos);
                     }
                 });
-                break
+                break;
         }
-
     }
     deleteComponent(tag: any): void {
         // Delete the tag from the server
@@ -287,7 +341,6 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
-
 
     /**
      * Update the selected product using the form data
@@ -314,20 +367,19 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
         //Open the confirmation dialog
         const confirmation = this._fuseConfirmationService.open({
             title: 'Delete product',
-            message: 'Are you sure you want to remove this product? This action cannot be undone!',
+            message:
+                'Are you sure you want to remove this product? This action cannot be undone!',
             actions: {
                 confirm: {
-                    label: 'Delete'
-                }
-            }
+                    label: 'Delete',
+                },
+            },
         });
 
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
-
             // If the confirm button pressed...
             if (result === 'confirmed') {
-
                 // Get the product object
                 const product = this.economicChartForm.getRawValue();
 
@@ -353,7 +405,6 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
 
         // Hide it after 3 seconds
         setTimeout(() => {
-
             this.flashMessage = null;
 
             // Mark for check
@@ -373,31 +424,31 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
         switch (this.economicChartForm.value.percentage) {
             case '1':
                 porcentaje = 0.01;
-                break
+                break;
             case '2':
                 porcentaje = 0.02;
-                break
+                break;
             case '3':
                 porcentaje = 0.03;
-                break
+                break;
             case '4':
                 porcentaje = 0.04;
-                break
+                break;
             case '5':
                 porcentaje = 0.05;
-                break
+                break;
             case '6':
                 porcentaje = 0.06;
-                break
+                break;
             case '7':
                 porcentaje = 0.07;
-                break
+                break;
             case '8':
                 porcentaje = 0.08;
-                break
+                break;
             case '9':
                 porcentaje = 0.09;
-                break
+                break;
         }
         this.operatingExpenses = porcentaje * this.SubTotal;
 
@@ -431,22 +482,29 @@ export class EconomicChartListComponent implements OnInit, AfterViewInit, OnDest
             contractCant: 0,
             cpc: '',
             nombreCpc: '',
-            activate: false
+            activate: false,
         };
-        this._inventoryService.addEconomicChart(registerProject).subscribe((res) => {
-            if (res) {
-                swal.fire('informacion Registrada Exitosamente!', '', 'success');
-                //this.matDialogRef.close();  
-                this._changeDetectorRef.detectChanges();
-                this._changeDetectorRef.markForCheck();
-            }
-
-        },
+        this._inventoryService.addEconomicChart(registerProject).subscribe(
+            (res) => {
+                if (res) {
+                    swal.fire(
+                        'informacion Registrada Exitosamente!',
+                        '',
+                        'success'
+                    );
+                    //this.matDialogRef.close();
+                    this._changeDetectorRef.detectChanges();
+                    this._changeDetectorRef.markForCheck();
+                }
+            },
             (response) => {
                 this.economicChartForm.enable();
                 // Set the alert
                 swal.fire('Error al Registrar la informacion!', '', 'error');
                 // Show the alert
-            });
+            }
+        );
     }
+
+    getComponentes(e: any) {}
 }

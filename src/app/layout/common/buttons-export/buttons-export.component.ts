@@ -14,7 +14,7 @@ export class ButtonsExportComponent implements OnInit {
     ngOnInit() { }
 
     exportarViabilidad() {
-        this._service.getReport().subscribe(
+        this._service.getReport(this.idContrato).subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
@@ -36,7 +36,7 @@ export class ButtonsExportComponent implements OnInit {
     }
 
     exportarCdp() {
-        this._service.getReportCdp().subscribe(
+        this._service.getReportCdp(this.idContrato).subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
@@ -58,7 +58,7 @@ export class ButtonsExportComponent implements OnInit {
     }
 
     exportarPpa() {
-        this._service.getReportPpa().subscribe(
+        this._service.getReportPpa(this.idContrato).subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
