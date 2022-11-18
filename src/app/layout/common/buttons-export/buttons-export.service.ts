@@ -15,32 +15,32 @@ export class ButtonsExportService {
         return this._httpClient.get<any>(urlEndPoint);
     }
 
-    getReport(): Observable<Blob> {
+    getReport(idContrato: number): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarViabilidad;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };
-      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+      return this._httpClient.get<any>( urlEndPoint + idContrato, httpOptions);
     }
     getReportDap(): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarDap;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };
-      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+      return this._httpClient.get<any>( urlEndPoint , httpOptions);
     }
-    getReportPpa(): Observable<Blob> {
+    getReportPpa(idContrato: number): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarPpa;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };
-      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+      return this._httpClient.get<any>( urlEndPoint+ idContrato, httpOptions);
     }
-    getReportCdp(): Observable<Blob> {
+    getReportCdp(idContrato: number): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarCdp;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };
-      return this._httpClient.get<any>( urlEndPoint, httpOptions);
+      return this._httpClient.get<any>( urlEndPoint + idContrato, httpOptions);
     }
 }
