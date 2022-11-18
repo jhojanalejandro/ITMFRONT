@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.component';
-import { NominaResolver } from 'app/modules/admin/dashboards/nomina/nomina.resolvers';
+import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
+import { CollectionAccountsItemFResolver } from './collection-accounts-list/collection-accounts-list.resolvers';
 
 export const nominaRoutes: Route[] = [
     {
@@ -9,5 +10,12 @@ export const nominaRoutes: Route[] = [
         // resolve  : {
         //     data: NominaResolver
         // }
+    },
+    {
+        path     : 'cuentasDeCobro/:contractId',
+        component: CollectionAccountsListComponent,
+        resolve  : {
+            data: CollectionAccountsItemFResolver
+        }
     }
 ];

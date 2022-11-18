@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from 'app/layout/common/models/user-model';
 
 @Component({
@@ -22,7 +22,7 @@ export class AuthSignUpComponent implements OnInit
         type   : 'success',
         message: ''
     };
-    profesionales: any = GlobalCont.profesional;
+    profesionales: any = GlobalConst.profesional;
     signUpForm: FormGroup;
     showAlert: boolean = false;
 
@@ -97,7 +97,6 @@ export class AuthSignUpComponent implements OnInit
                     this._router.navigateByUrl('/confirmation-required');
                 },
                 (response) => {
-                    console.log('error',response);             
                     // Re-enable the form
                     this.signUpForm.enable();
                     // Reset the form

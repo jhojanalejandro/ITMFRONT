@@ -5,9 +5,7 @@
 
         <!-- Cover image -->
         <div>
-            <img
-                class="h-40 lg:h-120 object-cover"
-                src="../../../../../assets/images/flags/firmarPaper.jpg"
+            <img class="h-40 lg:h-120 object-cover" src="../../../../../assets/images/flags/firmarPaper.jpg"
                 alt="Cover image">
         </div>
 
@@ -16,9 +14,7 @@
 
             <!-- Avatar -->
             <div class="-mt-26 lg:-mt-22 rounded-full">
-                <img
-                    class="w-32 h-32 rounded-full ring-4 ring-bg-card"
-                    src="assets/images/flags/user.png"
+                <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/flags/user.png"
                     alt="User avatar">
             </div>
 
@@ -75,28 +71,18 @@
                 <div class="text-xl font-semibold">Archivos Subidos</div>
                 <div class="flex flex-col sm:flex-row items-start mt-8">
                     <div class="flex items-center mb-6 sm:mb-0">
-     
+
                     </div>
                 </div>
                 <div class="flex items-center mt-6 sm:mt-8 -mx-3">
-                    <button
-                        class="px-3 mr-1"
-                        mat-flat-button
-                        [color]="'primary'"
+                    <button (click)="openDialog()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
                         [routerLink]="['./']">
-                        <mat-icon
-                            class="icon-size-5 mr-2"
-                            [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
                         <span>Subir Documento</span>
                     </button>
-                    <button
-                        class="px-3 mr-1 hidden sm:inline-flex"
-                        mat-flat-button
-                        [routerLink]="['./']"
+                    <button class="px-3 mr-1 hidden sm:inline-flex" mat-flat-button [routerLink]="['./']"
                         [color]="'warn'">
-                        <mat-icon
-                            class="icon-size-5 mr-2"
-                            [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>Eliminar</span>
                     </button>
 
@@ -117,22 +103,17 @@
                                 <div class="flex items-center justify-center">
                                     <!-- Icons -->
                                     <div class="relative">
-                                        <mat-icon
-                                            class="icon-size-14 text-hint"
-                                            [svgIcon]="'iconsmind:file'">
+                                        <mat-icon class="icon-size-14 text-hint" [svgIcon]="'iconsmind:file'">
                                         </mat-icon>
-                                    <div
-                                        class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                        [class.bg-red-600]="'PDF'">
-                                        PDF
+                                        <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                            [class.bg-red-600]="'PDF'">
+                                            PDF
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            </div>
                             <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                <div
-                                    class="truncate"
-                                    [matTooltip]="'CUENTS DE COBRO'">CUENTA DE COBRO
+                                <div class="truncate" [matTooltip]="'CUENTS DE COBRO'">CUENTA DE COBRO
                                 </div>
                             </div>
                         </a>
@@ -141,36 +122,25 @@
                                 <div class="flex items-center justify-center">
                                     <!-- Icons -->
                                     <div class="relative">
-                                        <mat-icon
-                                            class="icon-size-14 text-hint"
-                                            [svgIcon]="'iconsmind:file'">
+                                        <mat-icon class="icon-size-14 text-hint" [svgIcon]="'iconsmind:file'">
                                         </mat-icon>
-                                    <div
-                                        class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                        [class.bg-red-600]="'PDF'">
-                                        PDF
+                                        <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                            [class.bg-red-600]="'PDF'">
+                                            PDF
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            </div>
                             <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                <div
-                                    class="truncate"
-                                    [matTooltip]="'CUENTS DE COBRO'">ACTA
+                                <div class="truncate" [matTooltip]="'CUENTS DE COBRO'">ACTA
                                 </div>
                             </div>
                         </a>
                     </div>
                 </div>
                 <div class="flex items-center mt-6 sm:mt-8 -mx-3">
-                    <button
-                        class="px-3 mr-1"
-                        mat-flat-button
-                        [color]="'primary'"
-                        [routerLink]="['./']">
-                        <mat-icon
-                            class="icon-size-5 mr-2"
-                            [svgIcon]="'heroicons_outline:document-download'"></mat-icon>
+                    <button class="px-3 mr-1" mat-flat-button [color]="'primary'" [routerLink]="['./']">
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:document-download'"></mat-icon>
                         <span>Descargar documentos</span>
                     </button>
                 </div>

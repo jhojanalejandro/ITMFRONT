@@ -2,11 +2,11 @@ import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef } from '
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
-import { UploadDataService } from '../upload-data.service';
+import { UploadDataService } from '../contracts-list/upload-data.service';
 import swal from 'sweetalert2';
 import { IProjectFolder } from 'app/layout/common/models/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class ProjectFolderComponent implements OnInit {
   showAlert: boolean = false;
   registerDate = new Date();
   formProject: FormGroup; 
-  ejecucion: any = GlobalCont.ejecucionContrato;
+  ejecucion: any = GlobalConst.ejecucionContrato;
   editData: boolean = false;
   projectName: any = null;
   descript: any = null;
@@ -48,8 +48,6 @@ export class ProjectFolderComponent implements OnInit {
      }
 
   ngOnInit(): void {
-        // this.getRaffle();
-    console.log('llega',this._data);
     if(this._data != null){
       this.editData = true;
       this.companyName = this._data.data.companyName;
@@ -70,7 +68,7 @@ export class ProjectFolderComponent implements OnInit {
   ngAfterContentChecked() {
     this.ref.detectChanges();
   }
-  async addProjectFolder() {
+  addProjectFolder() {
     if(this.formProject.value.ejecucion == 'Ejecutar Contrato'){
       this.formProject.value.ejecucion = true; 
     }else{
@@ -102,7 +100,6 @@ export class ProjectFolderComponent implements OnInit {
     },
     (response) => {
       this.formProject.enable();
-      console.log('error',response);    
       // Set the alert
       swal.fire('Error al Registrar la informacion!', '', 'error');
       // Show the alert
@@ -138,7 +135,6 @@ export class ProjectFolderComponent implements OnInit {
     },
     (response) => {
       this.formProject.enable();
-      console.log('error',response);    
       // Set the alert
       swal.fire('Error al Registrar la informacion!', '', 'error');
       // Show the alert

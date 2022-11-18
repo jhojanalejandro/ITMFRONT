@@ -14,10 +14,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
-import { UploadDataComponent } from 'app/modules/admin/dashboards/project/upload-data.component';
-import { uploadDataRoutes } from 'app/modules/admin/dashboards/project/upload-data.routing';
-import { ProjectFolderComponent } from './register-project-folder/register-project-folder.component';
-import { UploadFileComponent } from './upload-file/upload-file.component';
+import { UploadDataComponent } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.component';
+import { uploadDataRoutes } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.routing';
+import { ProjectFolderComponent } from '../register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from '../upload-file/upload-file.component';
 
 @NgModule({
     declarations: [

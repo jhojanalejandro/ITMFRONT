@@ -7,8 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
 import { UploadFileDataService } from './upload-file.service';
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
-import { ActivatedRoute } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 @Component({
     selector: 'app-register-contractor',
@@ -23,7 +22,7 @@ export class UploadFileComponent implements OnInit {
   file: any = null; // Variable to store file
   indeterminate = false;
   showAlert: boolean = false;
-  tipoArchivos: any = GlobalCont.tipoArchivo;
+  tipoArchivos: any = GlobalConst.tipoArchivo;
   registerDate = new Date();
   selectContract: any;
   contratos: any;
@@ -51,7 +50,6 @@ export class UploadFileComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    console.log('llega id', this._data);
     if(this._data.show){      
       this.mostrarContrato = true;
     }
@@ -75,7 +73,6 @@ export class UploadFileComponent implements OnInit {
     });
     // reader.onload = () => {
     //     this.file = reader.result;
-    //     console.log('base 64', this.file);   
     // };
   }
 
@@ -85,7 +82,6 @@ export class UploadFileComponent implements OnInit {
   } 
   onUpload() {
     this.loading = !this.loading;
-    console.log(this.file);
     // this.fileUploadService.upload(this.file).subscribe(
     //     (event: any) => {
     //         if (typeof (event) === 'object') {
@@ -123,7 +119,6 @@ export class UploadFileComponent implements OnInit {
     },
     (response) => {
       this.formFile.enable();
-      console.log('error',response);    
       // Set the alert
       swal.fire('Error al Registrar la informacion!', '', 'error');
       // Show the alert
@@ -152,7 +147,6 @@ export class UploadFileComponent implements OnInit {
     },
     (response) => {
       this.formFile.enable();
-      console.log('error',response);    
       // Set the alert
       swal.fire('Error al Registrar la informacion!', '', 'error');
       // Show the alert
@@ -176,7 +170,6 @@ export class UploadFileComponent implements OnInit {
     formData.append('excel', fileToUpload, fileToUpload.name);
     formData.append('userId', this._auth.accessId.toString());
     formData.append('contractId', this.formFile.value.IdProject);
-    console.log(formData);
     if(this._data.show){
     // Should match the parameter name in backend
       this._upload.UploadFileExcel(formData).subscribe((res) => {   
@@ -190,7 +183,6 @@ export class UploadFileComponent implements OnInit {
     },
     (response) => {
       this.formFile.enable();
-      console.log('error',response);    
       // Set the alert
       swal.fire('Error al Registrar la informacion!', '', 'error');
       // Show the alert

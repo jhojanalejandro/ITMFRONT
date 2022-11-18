@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { InventoryPagination, EconomicChart } from './economic-chart.types';
 import { environment } from 'environments/environment';
+import { IResponse } from 'app/layout/common/models/Response';
 
 @Injectable({
     providedIn: 'root'
@@ -21,11 +22,6 @@ export class EconomicChartService
     constructor(private _httpClient: HttpClient)
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
 
     /**
      * Getter for pagination
@@ -80,7 +76,6 @@ export class EconomicChartService
         return this._economicsChart.pipe(
             take(1),
             map((products) => {
-                
                 // Find the product
                 const product = products.find(item => item.id === id) || null;
 
@@ -102,80 +97,10 @@ export class EconomicChartService
         );
     }
 
-
-
-    // /**
-    //  * Update product
-    //  *
-    //  * @param id
-    //  * @param product
-    //  */
-    // updateProduct(id: string, product: EconomicChart): Observable<EconomicChart>
-    // {
-    //     return this.products$.pipe(
-    //         take(1),
-    //         switchMap(products => this._httpClient.patch<EconomicChart>('api/apps/ecommerce/inventory/product', {
-    //             id,
-    //             product
-    //         }).pipe(
-    //             map((updatedProduct) => {
-
-    //                 // Find the index of the updated product
-    //                 const index = products.findIndex(item => item.id === id);
-
-    //                 // Update the product
-    //                 products[index] = updatedProduct;
-
-    //                 // Update the products
-    //                 this._economicsChart.next(products);
-
-    //                 // Return the updated product
-    //                 return updatedProduct;
-    //             }),
-    //             switchMap(updatedProduct => this.product$.pipe(
-    //                 take(1),
-    //                 filter(item => item && item.id === id),
-    //                 tap(() => {
-
-    //                     // Update the product if it's selected
-    //                     this._economicChart.next(updatedProduct);
-
-    //                     // Return the updated product
-    //                     return updatedProduct;
-    //                 })
-    //             ))
-    //         ))
-    //     );
-    // }
-
-    // /**
-    //  * Delete the product
-    //  *
-    //  * @param id
-    //  */
-    // deleteProduct(id: string): Observable<boolean>
-    // {
-    //     return this._economicsChart$.pipe(
-    //         take(1),
-    //         switchMap(products => this._httpClient.delete('api/apps/ecommerce/inventory/product', {params: {id}}).pipe(
-    //             map((isDeleted: boolean) => {
-
-    //                 // Find the index of the deleted product
-    //                 const index = products.findIndex(item => item.id === id);
-
-    //                 // Delete the product
-    //                 products.splice(index, 1);
-
-    //                 // Update the products
-    //                 this._economicsChart.next(products);
-
-    //                 // Return the deleted status
-    //                 return isDeleted;
-    //             })
-    //         ))
-    //     );
-    // }
-
+    addEconomicChart(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
 
 
 }

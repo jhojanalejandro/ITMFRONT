@@ -179,11 +179,7 @@ export class AuthService
         // let plainText:string;
         // let encrypt:string;
         // encrypt= crypto.AES.encrypt(plainText, this.accessId).toString();
-        // console.log('encrypt', encrypt);
-        // let plainText2:string;
-  
-        // console.log('descrypt',  crypto.AES.decrypt(encrypt, encrypt).toString(crypto.enc.Utf8));
-        
+        // let plainText2:string;        
         return this._httpClient.get<IResponse>(this.apiUrl + environment.getByIdUserEndpoint + this.accessId).pipe(
             switchMap((response: any) => {
                 // Store the user on the user service

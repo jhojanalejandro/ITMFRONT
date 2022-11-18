@@ -55,7 +55,9 @@ export const appRoutes: Route[] = [
     // Landing routes
     {
         path: '',
-        component  : LayoutComponent,
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
         data: {
             layout: 'empty'
         },
@@ -88,8 +90,8 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/project/upload-data.module').then(m => m.UploadModule)},
-                {path: 'lista-contratistas/:id', loadChildren: () => import('app/modules/admin/dashboards/project/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/contractual/contracts-list/upload-data.module').then(m => m.UploadModule)},
+                {path: 'lista-contratistas/:id', loadChildren: () => import('app/modules/admin/dashboards/contractual/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
                 {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)}
             ]},
 
@@ -105,6 +107,7 @@ export const appRoutes: Route[] = [
 
             // Pages
             {path: 'paginas', children: [
+                {path: 'crear/pdf', loadChildren: () => import('app/modules/admin/pages/create-pdf/create-pdf.module').then(m => m.CreatePdfModule)},
 
                 // Error
                 {path: 'error', children: [

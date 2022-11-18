@@ -11,10 +11,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
-import { UploadDataService } from '../project/upload-data.service';
-import { ProjectFolderComponent } from '../project/register-project-folder/register-project-folder.component';
-import { UploadFileComponent } from '../project/upload-file/upload-file.component';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { UploadDataService } from '../contractual/contracts-list/upload-data.service';
+import { ProjectFolderComponent } from '../contractual/register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from '../contractual/upload-file/upload-file.component';
 @Component({
     selector       : 'nomina',
     styleUrls: ['./nomina.component.css'],
@@ -57,14 +57,14 @@ export class NominaComponent implements OnInit, OnDestroy
         {title: 'NOMBRE EMPRESA', name: 'companyName'},
         {title: 'NOMBRE PROYECTO', name: 'projectName'},
         {title: 'FECHA REGISTRO', name: 'registerDate'},
-        // {title: 'FECHA MODIFICACION', name: 'modifyDate'},
+        // {title: 'REVISADO', name: 'done'},
         {title: '', name: 'action'},    
     ]
     ngOnInit(): void
     {
         this.getContractsData();
         this.userName = this.auth.accessName.toUpperCase();
-        console.log(GlobalCont.numeroALetras(58225,'PESOS'));
+        console.log(GlobalConst.numeroALetras(58225,'PESOS'));
         
         
     }
@@ -77,7 +77,6 @@ export class NominaComponent implements OnInit, OnDestroy
             dialogRefPrroject.afterClosed().subscribe(datos => {
               if(datos){      
                 this.getContractsData();
-                // console.log('datos ',datos);               
               }               
             });
             break
@@ -108,7 +107,7 @@ export class NominaComponent implements OnInit, OnDestroy
               });   
             break
             case 'registerData':
-              this._router.navigate(['/dashboards/lista-contratistas/'+ data.id]);
+              this._router.navigate(['/dashboards/nomina/cuentasDeCobro/'+ data.id]);
 
           break
 

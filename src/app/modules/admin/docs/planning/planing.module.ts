@@ -15,10 +15,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 import { PlaningRoutes } from './planing.routing';
-import { AddCardComponent } from './economic-chart/details/details.component';
 import { ContrtactsComponent } from './contracts/contracts.component';
 import { EconomicChartComponent } from './economic-chart/economic-chart.component';
 import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
+import { ElementCardComponent } from './economic-chart/element/element.component';
+import { AddComponentsComponent } from './economic-chart/componnetes/components.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { EconomicChartListComponent } from './economic-chart/list/economic-chart
         EconomicChartComponent,
         EconomicChartListComponent,
         ContrtactsComponent,
-        AddCardComponent
+        AddComponentsComponent,
+        ElementCardComponent
     ],
     imports     : [
         RouterModule.forChild(PlaningRoutes),

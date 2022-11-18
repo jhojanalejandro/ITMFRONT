@@ -11,10 +11,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
-import { UploadDataService } from 'app/modules/admin/dashboards/project/upload-data.service';
-import { ProjectFolderComponent } from 'app/modules/admin/dashboards/project/register-project-folder/register-project-folder.component';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/project/upload-file/upload-file.component';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
+import { ProjectFolderComponent } from 'app/modules/admin/dashboards/contractual/register-project-folder/register-project-folder.component';
+import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 @Component({
     selector   : 'contracts',
     styleUrls: ['./contracts.component.css'],
@@ -63,7 +63,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy
     {
         this.getContractsData();
         this.userName = this.auth.accessName.toUpperCase();
-        console.log(GlobalCont.numeroALetras(58225,'PESOS'));
+        console.log(GlobalConst.numeroALetras(58225,'PESOS'));
         
         
     }
@@ -76,7 +76,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy
             dialogRefPrroject.afterClosed().subscribe(datos => {
               if(datos){      
                 this.getContractsData();
-                // console.log('datos ',datos);               
               }               
             });
             break

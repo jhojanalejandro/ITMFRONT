@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ViabilityService } from 'app/modules/admin/dashboards/viability/viability.service';
+import { HomeContractorService } from './home-contractor.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +11,7 @@ export class HomeContractorResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _financeService: ViabilityService)
+    constructor(private _financeService: HomeContractorService)
     {
     }
 

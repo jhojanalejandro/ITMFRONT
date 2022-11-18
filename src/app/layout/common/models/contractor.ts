@@ -4,6 +4,8 @@ export interface IContractor{
     id?: any;
     contractorId: any;
     userId: any;
+    cpc: any;
+    nombreCpc: string;
     contrato: string;
     compromiso: string;
     fechaDeContrato: Date;
@@ -41,7 +43,5 @@ export interface IContractor{
     entidadCuentaBancaria: string;
     rubroPresupuestal: string;
     nombreDelRubro: string,    
-    // "entidadAseguradora": "string",
-    // "fechaExpedicionPoliza": "2022-10-14T00:44:38.250Z",
-  
+    // "entidadAseguradora": "string",  
 }

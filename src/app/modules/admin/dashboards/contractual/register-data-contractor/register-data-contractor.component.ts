@@ -4,9 +4,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { IContractor } from 'app/layout/common/models/contractor';
-import { UploadDataService } from '../upload-data.service';
+import { UploadDataService } from '../contracts-list/upload-data.service';
 import swal from 'sweetalert2';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 
 
@@ -29,16 +29,16 @@ export class ContractorDataRegisterComponent implements OnInit {
   };
   showAlert: boolean = false;
   registerDate = new Date();
-  entidadesB: any = GlobalCont.entidadesB;
-  entidadesEps: any = GlobalCont.eps;
-  entidadesP: any = GlobalCont.pensiones;
-  requierePoliza: any = GlobalCont.requierePoliza
-  entidadesdArl: any = GlobalCont.arl;
-  niveles: any = GlobalCont.Nivel;  
-  comunas: any = GlobalCont.comunas;
-  tipoCuenta: any = GlobalCont.tipoCuenta;
+  entidadesB: any = GlobalConst.entidadesB;
+  entidadesEps: any = GlobalConst.eps;
+  entidadesP: any = GlobalConst.pensiones;
+  requierePoliza: any = GlobalConst.requierePoliza
+  entidadesdArl: any = GlobalConst.arl;
+  niveles: any = GlobalConst.Nivel;  
+  comunas: any = GlobalConst.comunas;
+  tipoCuenta: any = GlobalConst.tipoCuenta;
   formContractor: FormGroup; 
-  nacionalidades: any = GlobalCont.nacionalidad;
+  nacionalidades: any = GlobalConst.nacionalidad;
 
     constructor(private _upload: UploadDataService,
       private ref: ChangeDetectorRef,
@@ -48,37 +48,32 @@ export class ContractorDataRegisterComponent implements OnInit {
       ) {}
 
     ngOnInit(): void {
-      // this.ref.detectChanges();
-      console.log('id',this.datos.data.id);
-      
       this.formContractor = this._formBuilder.group({
-        contrato: new FormControl(null, Validators.required),
-        compromiso: new FormControl(null, Validators.required),
-        fechaContrato: new FormControl(null, Validators.required),
-        fechaInicioProyectado: new FormControl(null, Validators.required),
-        fechaInicioReal: new FormControl(null, Validators.required),
-        fechaFinalizacion: new FormControl(null, Validators.required),
-        honorariosMensuales: new FormControl(null, Validators.required),
-        actividad: new FormControl(null, Validators.required),
-        ejecucion: new FormControl(null, Validators.required),
-        // obligacionesGenerales: new FormControl(null, Validators.required),
-        // obligacionesEspecificas: new FormControl(null, Validators.required),
+        contrato: new FormControl(null),
+        compromiso: new FormControl(null),
+        fechaContrato: new FormControl(null),
+        fechaInicioProyectado: new FormControl(null),
+        fechaInicioReal: new FormControl(null),
+        fechaFinalizacion: new FormControl(null),
+        honorariosMensuales: new FormControl(null),
+        actividad: new FormControl(null),
+        ejecucion: new FormControl(null),
         // profesional: new FormControl(null, Validators.required),
         // laboral: new FormControl(null, Validators.required),
-        fechaComite: new FormControl(null, Validators.required),
-        requierePoliza: new FormControl(null, Validators.required),
-        noPoliza: new FormControl(null, Validators.required),
-        vigenciaInicial: new FormControl(null, Validators.required),
-        vigenciaFinal: new FormControl(null, Validators.required),
-        fechaExPedicionPoliza: new FormControl(null, Validators.required),
-        valorAsegurado: new FormControl(null, Validators.required),
-        fechaExaPreocupacional: new FormControl(null, Validators.required),
-        nivel: new FormControl(null, Validators.required),
-        interventor: new FormControl(null, Validators.required),
-        cargoInterventor: new FormControl(null, Validators.required),
-        noAdicion: new FormControl(null, Validators.required),
-        fechaInicioAplicacion: new FormControl(null, Validators.required),
-        fechaterminacionAplicacion: new FormControl(null, Validators.required),
+        fechaComite: new FormControl(null),
+        requierePoliza: new FormControl(null),
+        noPoliza: new FormControl(null),
+        vigenciaInicial: new FormControl(null),
+        vigenciaFinal: new FormControl(null),
+        fechaExPedicionPoliza: new FormControl(null),
+        valorAsegurado: new FormControl(null),
+        fechaExaPreocupacional: new FormControl(null),
+        nivel: new FormControl(null),
+        interventor: new FormControl(null),
+        cargoInterventor: new FormControl(null),
+        noAdicion: new FormControl(null),
+        fechaInicioAplicacion: new FormControl(null),
+        fechaterminacionAplicacion: new FormControl(null),
         // duracionTotal: new FormControl(null, Validators.required),
         fechaFinalizacionConvenio: new FormControl(null, Validators.required),
         eps: new FormControl(null, Validators.required),
@@ -89,8 +84,6 @@ export class ContractorDataRegisterComponent implements OnInit {
         entidadcuentabancaria: new FormControl(null, Validators.required),
 
       });
-      console.log('llega dialog',this.datos);
-
     }
 
     async addContractor() {
@@ -141,7 +134,9 @@ export class ContractorDataRegisterComponent implements OnInit {
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
           rubroPresupuestal: 'vacio',
-          nombreDelRubro: 'vacio'
+          nombreDelRubro: 'vacio',
+          cpc: 'vacio',
+          nombreCpc: 'vacio',
         };  
       debugger
       this._upload
@@ -183,6 +178,6 @@ export class ContractorDataRegisterComponent implements OnInit {
 
     // async getMunicipio(){
     //   // this.municipio = this.departamentos[this.formContractor.value.departamento].ciudades;   
-    //    this.municipio = GlobalCont.departamentos[this.formContractor.value.departamento].ciudades;            
+    //    this.municipio = GlobalConst.departamentos[this.formContractor.value.departamento].ciudades;            
     // }
 }

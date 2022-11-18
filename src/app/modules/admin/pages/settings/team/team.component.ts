@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from 'app/layout/common/models/user-model';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import swal from 'sweetalert2';
@@ -14,7 +14,7 @@ import swal from 'sweetalert2';
 export class SettingsTeamComponent implements OnInit
 {
     members: any[];
-    roles: any = GlobalCont.roles;
+    roles: any = GlobalConst.roles;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -77,9 +77,7 @@ export class SettingsTeamComponent implements OnInit
 
 
     onChange(rol:any,user: any) {
-        debugger
-        console.log(rol.value);
-        
+        debugger        
         user.idRoll = rol.value;
         // user.rollName = event
         this._authService
