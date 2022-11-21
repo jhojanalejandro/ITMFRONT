@@ -4,7 +4,7 @@ export interface IUserModel{
     avatar: any;
     Professionalposition: string;
     userPassword?: string;
-    idRoll?: any;
+    rollId?: any;
     userEmail: string;
     permission?: boolean;
     phoneNumber?: string;

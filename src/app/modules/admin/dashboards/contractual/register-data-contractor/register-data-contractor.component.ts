@@ -3,11 +3,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
-import { IContractor } from 'app/layout/common/models/contractor';
 import { UploadDataService } from '../contracts-list/upload-data.service';
 import swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
+import { IHiringData } from './models/hiring-data';
 
 
 @Component({
@@ -51,15 +51,11 @@ export class ContractorDataRegisterComponent implements OnInit {
       this.formContractor = this._formBuilder.group({
         contrato: new FormControl(null),
         compromiso: new FormControl(null),
-        fechaContrato: new FormControl(null),
-        fechaInicioProyectado: new FormControl(null),
-        fechaInicioReal: new FormControl(null),
-        fechaFinalizacion: new FormControl(null),
-        honorariosMensuales: new FormControl(null),
+        fechaInicioProyectado: new FormControl(null, Validators.required),
+        fechaInicioReal: new FormControl(null, Validators.required),
+        honorariosMensuales: new FormControl(null,Validators.required),
         actividad: new FormControl(null),
         ejecucion: new FormControl(null),
-        // profesional: new FormControl(null, Validators.required),
-        // laboral: new FormControl(null, Validators.required),
         fechaComite: new FormControl(null),
         requierePoliza: new FormControl(null),
         noPoliza: new FormControl(null),
@@ -73,16 +69,8 @@ export class ContractorDataRegisterComponent implements OnInit {
         cargoInterventor: new FormControl(null),
         noAdicion: new FormControl(null),
         fechaInicioAplicacion: new FormControl(null),
-        fechaterminacionAplicacion: new FormControl(null),
-        // duracionTotal: new FormControl(null, Validators.required),
+        fechaterminacionAplicacion: new FormControl(null, Validators.required),
         fechaFinalizacionConvenio: new FormControl(null, Validators.required),
-        eps: new FormControl(null, Validators.required),
-        pension: new FormControl(null, Validators.required),
-        arl: new FormControl(null, Validators.required),
-        cuentabancaria: new FormControl(null, Validators.required),
-        tipodecuenta: new FormControl(null, Validators.required),
-        entidadcuentabancaria: new FormControl(null, Validators.required),
-
       });
     }
 
@@ -100,15 +88,13 @@ export class ContractorDataRegisterComponent implements OnInit {
         if(this.formContractor.value.nivel == null){
           this.formContractor.value.nivel = '0'
         }
-        const registerContractor: IContractor={
+        const registerContractor: IHiringData={
           userId: this._auth.accessId,
           contractorId: this.datos.data.id,
           contrato: this.formContractor.value.contrato,
           compromiso: this.formContractor.value.compromiso.toString(),
-          fechaDeContrato: this.formContractor.value.fechaContrato,
           fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
           fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
-          fechaFinalizacion: this.formContractor.value.fechaFinalizacion,
           actividad: this.formContractor.value.actividad,
           ejecucion: this.formContractor.value.ejecucion,
           fechaDeComite: this.formContractor.value.fechaComite,
@@ -125,20 +111,9 @@ export class ContractorDataRegisterComponent implements OnInit {
           noAdicion: this.formContractor.value.noAdicion,
           fechaInicioAmpliacion: this.formContractor.value.fechaInicioAplicacion,
           fechaDeTerminacionAmpliacion: this.formContractor.value.fechaterminacionAplicacion,
-          eps: this.formContractor.value.eps,
-          pension: this.formContractor.value.pension,
-          arl: this.formContractor.value.arl,
-          cuentaBancaria: this.formContractor.value.cuentabancaria.toString(),
-          tipoCuenta: this.formContractor.value.tipodecuenta,
-          entidadCuentaBancaria: this.formContractor.value.entidadcuentabancaria,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
-          rubroPresupuestal: 'vacio',
-          nombreDelRubro: 'vacio',
-          cpc: 'vacio',
-          nombreCpc: 'vacio',
         };  
-      debugger
       this._upload
       .addContractor(registerContractor)
       .subscribe((res) => {   

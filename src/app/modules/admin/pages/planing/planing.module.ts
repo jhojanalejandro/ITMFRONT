@@ -19,7 +19,7 @@ import { ContrtactsComponent } from './contracts/contracts.component';
 import { EconomicChartComponent } from './economic-chart/economic-chart.component';
 import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
 import { ElementCardComponent } from './economic-chart/element/element.component';
-import { AddComponentsComponent } from './economic-chart/componnetes/components.component';
+import { AddComponentsComponent } from './economic-chart/componentes/components.component';
 
 
 @NgModule({

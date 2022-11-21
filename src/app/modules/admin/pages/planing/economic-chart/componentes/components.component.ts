@@ -31,6 +31,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { EconomicChartService } from '../economic-chart.service';
+import { IComponente } from '../models/componente';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'components-card',
@@ -50,16 +52,9 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
     numberOfTicks = 0;
     data: any;
     componentName: string = null;
-    contractorCant: any = null;
-    cantDay: number = null;
-    unitValue: any = null;
-    unitValueDay: number = null;
+    rubro: string = null;
+    nombreRubro: string = null;
     update: boolean;
-    calculo: boolean = true;
-    totalCalculate: boolean = true;
-    totalValue: any = null;
-    unitValueMonth: any = null;
-    totalCost: any = null;
     id: string = null;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
@@ -76,7 +71,7 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) private _data: { data: any; show: boolean },
         private _fuseConfirmationService: FuseConfirmationService,
-        private _service: EconomicChartService
+        private _Economicservice: EconomicChartService
     ) {
         setInterval(() => {
             this.numberOfTicks++;
@@ -103,6 +98,14 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
         this.componentForm = this._formBuilder.group({
             componentName: new FormControl(
                 this.componentName,
+                Validators.required
+            ),
+            rubro: new FormControl(
+                this.rubro,
+                Validators.required
+            ),
+            nombreRubro: new FormControl(
+                this.nombreRubro,
                 Validators.required
             ),
         });
@@ -157,15 +160,19 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
-    addContractor() {
+    addComponent() {
         this.data = this.componentForm.value;
-        let model = {
+        let model: IComponente = {
             idContrato: this._data.data.id,
-            nombreComponente: this.data.componentName,
+            nombreComponente: this.componentForm.value.componentName,
             id: 0,
+            rubro: this.componentForm.value.rubro,
+            nombreRubro: this.componentForm.value.nombreRubro,
         };
-        this._service.addComponent(model).subscribe((response) => {
-            
+        this._Economicservice.addComponent(model).subscribe((response) => {
+            if (response) {
+                swal.fire('informacion Eliminada Exitosamente!', '', 'success');
+            }
         });
         this.matDialogRef.close(this.data);
     }

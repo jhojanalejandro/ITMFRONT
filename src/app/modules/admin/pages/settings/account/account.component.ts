@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
-import { IUserModel } from 'app/layout/common/models/user-model';
+import { IUserModel } from 'app/modules/auth/sign-up/user-model';
 import {  Subject, takeUntil } from 'rxjs';
 @Component({
     selector       : 'settings-account',
@@ -64,7 +64,7 @@ export class SettingsAccountComponent implements OnInit
             avatar: 'avatar',
             Professionalposition: 'profesional',
             phoneNumber: this.accountForm.value.phoneNumber,
-            idRoll: this.roll,
+            rollId: this.roll,
             userEmail: this.accountForm.value.email,
   
             };                  

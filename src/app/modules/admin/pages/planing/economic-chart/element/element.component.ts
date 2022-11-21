@@ -23,10 +23,11 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Elements } from '../models/element';
+import { IElements } from '../models/element';
 import { ListElements } from '../models/list-elements';
 import Swal from 'sweetalert2';
 import { EconomicChartService } from '../economic-chart.service';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 @Component({
     selector: 'app-alement',
@@ -38,23 +39,25 @@ import { EconomicChartService } from '../economic-chart.service';
 export class ElementCardComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     separatorKeysCodes: number[] = [ENTER, COMMA];
-    fruitCtrl = new FormControl('');
-    filteredFruits: Observable<string[]>;
-    elementos: Elements[] = [];
-    allFruits: string[] = [
+    elementoCtrl = new FormControl('');
+    filteredelementos: Observable<string[]>;
+    elementos: IElements[] = [];
+    allelementos: string[] = [
         'Profesional En Sistemas',
         'Profesional en areas de derecho',
         'Profesional Especializado',
         'Tecnologo',
     ];
-    @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+    tipoElementos: any =GlobalConst.tipoElemento;
+    @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     element: string = null;
     numberOfTicks = 0;
     componentName: string = null;
     contractorCant: any = null;
     cantDay: number = null;
+    nombreElemento: string;
     unitValue: any = null;
-    unitValueDay: number = null;
+    unitValueDay: any = null;
     update: boolean;
     calculo: boolean = true;
     totalCalculate: boolean = true;
@@ -88,10 +91,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.detectChanges();
             this._changeDetectorRef.markForCheck();
         }, 1000);
-        this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+        this.filteredelementos = this.elementoCtrl.valueChanges.pipe(
             startWith(null),
-            map((fruit: string | null) =>
-                fruit ? this._filter(fruit) : this.allFruits.slice()
+            map((elemento: string | null) =>
+                elemento ? this._filter(elemento) : this.allelementos.slice()
             )
         );
     }
@@ -105,12 +108,16 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 this.contractorCant,
                 Validators.required
             ),
+            nombreElemento: new FormControl(this.nombreElemento),
             cantDay: new FormControl(this.cantDay),
             unitValue: new FormControl(this.unitValue, Validators.required),
             totalValue: new FormControl(this.totalValue),
             id: new FormControl(this.id),
             unitValueDay: new FormControl(this.unitValueDay),
             calculateValue: new FormControl(this.totalCost),
+            cpc: new FormControl(null),
+            nombreCpc: new FormControl(null),
+            tipoElemento: new FormControl(null, Validators.required)
         });
 
         this.configForm = this._formBuilder.group({
@@ -158,16 +165,19 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             });
     }
 
-    addContractor() {
-        let model: any[] = [];
-        let item = {
+    addElement() {
+        let model: IElements[] = [];
+        let item: IElements = {
             id: 0,
-            idComponenete: this._data.data.id,
+            idComponente: this._data.data.id,
+            nombreElemento: null,
             cantidadContratistas: 0,
             cantidadDias: 0,
             valorUnidad: 0,
             valorTotal: 0,
             valorPorDia: 0,
+            cpc: null,
+            nombreCpc: null
         };
         this.elementos.forEach((e) => {
             (item.cantidadContratistas = e.cantidadContratistas),
@@ -182,13 +192,13 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this.matDialogRef.close(this.listElements);
     }
 
-    calculate = (element: any) => {
+    calculate = () => {
         debugger;
-        const findEl = this.elementos.find((e) => e.id == element);
+        const findEl = this.elementos.find((e) => e.nombreElemento == this.element);
         this.totalCalculate = false;
-        this.unitValueDay = Number(findEl.valorUnidad / 30);
-        this.totalCost = Number(
-          findEl.valorUnidad * findEl.cantidadContratistas
+        this.unitValueDay = Number(this.elementForm.value.unitValue / 30 * this.elementForm.value.contractorCant);
+        this.totalValue = Number(
+            this.unitValueDay * this.elementForm.value.cantDay
         );
         let paymentDayContractor =
             this.unitValueDay / Number(this.elementForm.value.cantDay);
@@ -214,17 +224,21 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     add(event: MatChipInputEvent): void {
+        debugger
         const value = (event.value || '').trim();
         this.element = value;
         let idElement = this.elementos.length;
-        let elet: Elements = {
+        let elet: IElements = {
             id: idElement + 1,
-            idComponente: event.value,
-            cantidadContratistas: 0,
-            cantidadDias: 0,
-            valorPorDia: 0,
-            valorTotal: 0,
-            valorUnidad: 0,
+            idComponente: this._data.data.id,
+            nombreElemento: event.value,
+            cantidadContratistas: null,
+            cantidadDias: null,
+            valorPorDia: null,
+            valorTotal: null,
+            valorUnidad: null,
+            cpc: null,
+            nombreCpc: null
         };
         if (value) {
             this.elementos.push(elet);
@@ -233,19 +247,19 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         // Clear the input value
         event.chipInput!.clear();
 
-        this.fruitCtrl.setValue(null);
+        this.elementoCtrl.setValue(null);
         this.elementForm.reset();
     }
 
-    remove(element: Elements, id: any): void {
+    remove(element: IElements, id: any): void {
         const index = this.elementos.indexOf(element);
         if (index >= 0) {
             this.elementos.splice(index, 1);
         }
     }
 
-    showElemewnt = (element: Elements) => {
-        this.element = element.id;
+    showElemewnt = (element: IElements) => {
+        this.element = element.nombreElemento;
         this.cantDay = element.cantidadDias;
         this.totalValue = element.valorTotal;
         this.contractorCant = element.cantidadContratistas;
@@ -255,19 +269,22 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     selected(event: MatAutocompleteSelectedEvent): void {
         let idElement = this.elementos.length;
-        let elet: Elements = {
+        let elet: IElements = {
             id: idElement,
-            idComponente: event.option.viewValue,
-            cantidadContratistas: 0,
-            cantidadDias: 0,
-            valorTotal: 0,
-            valorPorDia: 0,
-            valorUnidad: 0,
+            idComponente: this._data.data.id,
+            nombreElemento: event.option.viewValue,
+            cantidadContratistas: null,
+            cantidadDias: null,
+            valorTotal: null,
+            valorPorDia: null,
+            valorUnidad: null,
+            cpc: null,
+            nombreCpc: null
         };
         this.element = event.option.viewValue;
         this.elementos.push(elet);
-        this.fruitInput.nativeElement.value = '';
-        this.fruitCtrl.setValue(null);
+        this.elementoInput.nativeElement.value = '';
+        this.elementoCtrl.setValue(null);
         Swal.fire(
             'Buen trabajo!',
             'Recuerda seleccionar el elemento para asignar los valores!',
@@ -275,12 +292,14 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         );
         this.elementForm.reset();
     }
-    asign = (item: any) => {
-        const findEl = this.elementos.find((e) => e.id == item);
+    asign = () => {
+        debugger
+        const findEl = this.elementos.find((e) => e.nombreElemento === this.element);
         const index = this.elementos.indexOf(findEl);
-        let elet: Elements = {
+        let elet: IElements = {
+            idComponente: this._data.data.id,
             id: findEl.id,
-            idComponente: this.element,
+            nombreElemento: this.element,
             cantidadContratistas: this.elementForm.value.contractorCant
                 ? this.elementForm.value.contractorCant
                 : 0,
@@ -288,14 +307,16 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 ? this.elementForm.value.cantDay
                 : 0,
             valorTotal: this.elementForm.value.totalValue
-                ? this.elementForm.value.totalValue
+                ? this.totalValue
                 : 0,
             valorUnidad: this.elementForm.value.unitValue
                 ? this.elementForm.value.unitValue
                 : 0,
             valorPorDia: this.elementForm.value.unitValueDay
-                ? this.elementForm.value.unitValueDay
+                ? this.unitValueDay
                 : 0,
+                cpc: this.elementForm.value.cpc,
+                nombreCpc: this.elementForm.value.nombreCpc
         };
         this.elementos.splice(index, 1, elet);
         this.addElementos(this.elementos);
@@ -308,8 +329,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();
 
-        return this.allFruits.filter((fruit) =>
-            fruit.toLowerCase().includes(filterValue)
+        return this.allelementos.filter((elemento) =>
+            elemento.toLowerCase().includes(filterValue)
         );
     }
 }

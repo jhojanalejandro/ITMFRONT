@@ -50,6 +50,10 @@ export class GlobalConst {
         { viewValue: 'Corriente'}, 
     ] 
 
+    public static tipoElemento: TypeSelectString[]=[
+        { viewValue: 'Docente'},
+        { viewValue: 'Corriente'}, 
+    ] 
     public static requierePoliza: TypeSelectString[]=[
         { viewValue: 'Si'},
         { viewValue: 'No'}, 
@@ -165,10 +169,10 @@ export class GlobalConst {
         { viewValue: 'Doctorado'}, 
     ] 
     public static profesional: TypeSelectString[]=[
-        { viewValue: 'contratacion'},
-        { viewValue: 'administrativo'}, 
-        { viewValue: 'viabilidad'}, 
-        { viewValue: 'nomina'}, 
+        { viewValue: 'Contractual'},
+        { viewValue: 'Supervisor'}, 
+        { viewValue: 'Nomina'}, 
+        { viewValue: 'Planeación'}, 
     ] 
     public static TipoUsuario: TypeSelectString[]=[
         { viewValue: 'Contractual'},

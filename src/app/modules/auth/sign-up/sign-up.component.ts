@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { IUserModel } from 'app/layout/common/models/user-model';
+import { IUserModel } from './user-model';
 
 @Component({
     selector     : 'auth-sign-up',
@@ -71,7 +71,7 @@ export class AuthSignUpComponent implements OnInit
         const userRegister: IUserModel={
             userName: this.signUpForm.value.name,
             userPassword: this.signUpForm.value.password,
-            idRoll: 4,
+            rollId: 7,
             avatar: 'vacio',
             Professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,

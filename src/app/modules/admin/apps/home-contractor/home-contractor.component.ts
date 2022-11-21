@@ -13,6 +13,8 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HomeContractorService } from './home-contractor.service';
 import { UploadFileComponent } from './upload-file-contractor/upload-file.component';
+import { saveAs } from "file-saver";
+import JSZip from 'jszip';
 
 @Component({
   selector: 'home-contractor',
@@ -126,6 +128,25 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   }
 
 
-
+  getFilesFolder = async (id: any)=> {
+    this._contractorService.getFileById(id).pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((Response: any) => {
+        const jszip = new JSZip();
+        Response.filedata = 'data:application/pdf;base64,'+Response.filedata
+        var binary = atob(Response.filedata.split(',')[1]);
+        var array = [];
+        for (let j = 0; j < binary.length; j++) {
+            array.push(binary.charCodeAt(j));
+        }
+        let pdf = new Blob([new Uint8Array(array)], {
+            type: 'application/pdf'
+        });
+        jszip.folder("pruebaCarpeta").file(`${Response.filesName}.pdf`, pdf);
+        jszip.generateAsync({ type: 'blob' }).then(function (content) {
+          // see FileSaver.js
+          saveAs(content, 'pruebaDescarga.zip');
+      });
+  })
+}
 
 }

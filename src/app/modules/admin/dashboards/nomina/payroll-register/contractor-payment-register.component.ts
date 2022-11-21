@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
-import { IContractor } from 'app/layout/common/models/contractor';
 import swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -63,7 +62,6 @@ export class  ContractorPaymentRegisterComponent implements OnInit {
           registerDate: this.registerDate,
           modifyDate: this.registerDate
         };  
-      debugger
       this._nominaService
       .addContractorPayments(registerPayment)
       .subscribe((res) => {   

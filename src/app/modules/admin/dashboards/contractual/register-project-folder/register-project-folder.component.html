@@ -65,33 +65,31 @@
                     El Campo Entidad bancaria es requerido
                 </mat-error>
             </mat-form-field> 
-            <mat-form-field class="hiring" appearance="outline">
-                <mat-label>CPC</mat-label>
-                <input type="text"  id="cpc" formControlName="cpc" autocomplete="off" matInput placeholder="CPC" >
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                <mat-error *ngIf="formProject.get('cpc').hasError('required')">
-                    El Campo cpc es requerido
+        </div>
+        <div class="folder">
+            <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha Contrato</mat-label>
+                <input matInput id="fechaContrato" (change)="dateChange()" [min]="registerDate" autocomplete="off" formControlName="fechaContrato"
+                    [matDatepicker]="pickerContrato">
+                <mat-datepicker #pickerContrato></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>
+                <mat-error *ngIf="formProject.get('fechaContrato').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha de Finalizacion</mat-label>
+                <input matInput id="fechaFinalizacion" [min]="registerDate" autocomplete="off" formControlName="fechaFinalizacion"
+                    [matDatepicker]="pickerF">
+                <mat-datepicker #pickerF></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
+                <mat-error *ngIf="formProject.get('fechaFinalizacion').hasError('required')">
+                    Este Campo es requerido
                 </mat-error>
             </mat-form-field>
         </div>
-        <div class="folder pt-2">
-            <mat-form-field class="hiringD w-full" appearance="outline">
-                <mat-label>Nombre Cpc</mat-label>
-                <input type="mail"  id="nombreCpc" formControlName="nombreCpc" autocomplete="off" matInput placeholder="Nombre Cpc" >
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                <mat-error *ngIf="formProject.get('nombreCpc').hasError('required')">
-                    El Campo nombre cpc es requerido
-                </mat-error>
-            </mat-form-field>
-            
 
-        </div>
+
         <div class="folder">
             <mat-form-field class="hiringD" appearance="outline">
                 <mat-label>Descripcion</mat-label>

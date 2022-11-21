@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 
@@ -47,10 +47,6 @@ export class HomeContractorService
         );
     }
 
-    async getByIdFile(id: any){
-        let urlEndPoint = this.apiUrl+ environment.GetByIdFileEndpoint;
-        return await this._httpClient.get<any>(urlEndPoint + id);
-    }  
     addContractor(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -86,4 +82,34 @@ export class HomeContractorService
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
+    getFileById(idC: any | null = null): Observable<any>
+    {
+        let arr = idC.split('/');
+        const GetFile: any={ 
+            contractorId: arr[0],
+            folderId: arr[1]
+        }
+        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
+        let urlEndPoint = this.apiUrl+ environment.GetAllFileByIdEndpoint;
+        return this._httpClient.post<any>(urlEndPoint,GetFile).pipe(
+            tap((items) => {
+                // Update the item
+                const item = [...items.files] = items || null;
+                return item;
+                
+            }),
+            switchMap((item) => {
+
+                if ( !item )
+                {
+                    return throwError('Could not found the item with id of ' + idC + '!');
+                }
+
+                return of(item);
+            })
+        );
+    }
+
+
 }
+

@@ -74,7 +74,6 @@ export class EconomicChartService {
         pagination: InventoryPagination;
         economicChart: EconomicChart[];
     }> {
-        debugger;
         let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
         return this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
@@ -125,11 +124,12 @@ export class EconomicChartService {
 
     getComponent(id: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.addComponent + '/Get/';
+            this.apiUrl + environment.getComponent;
         return this._httpClient.get<any>(urlEndpointGenerate + id);
     }
 
     addElementoComponente(data: any) {
+        debugger
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
@@ -139,5 +139,16 @@ export class EconomicChartService {
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent + '/Get/';
         return this._httpClient.get<any>(urlEndpointGenerate + id);
+    }
+
+    getElementoComponenteByContract(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.addElementosComponentByContract;
+        return this._httpClient.get<any>(urlEndpointGenerate + id);
+    }
+
+    DeleteComponent(id: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 }

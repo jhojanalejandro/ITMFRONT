@@ -7,9 +7,8 @@ export interface IProjectFolder{
     registerDate: Date;
     modifyDate: Date;
     budget: number;
-    contractCant: number;
-    cpc: string;
-    nombreCpc: string;
     execution: boolean;
     activate: boolean;
+    fechaContrato: Date;
+    fechaFinalizacion: Date;
 }

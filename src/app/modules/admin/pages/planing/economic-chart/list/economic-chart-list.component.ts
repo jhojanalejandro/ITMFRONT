@@ -41,7 +41,7 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ChartComponent } from 'ng-apexcharts';
 import { ElementCardComponent } from '../element/element.component';
-import { AddComponentsComponent } from '../componnetes/components.component';
+import { AddComponentsComponent } from '../componentes/components.component';
 
 @Component({
     selector: 'economic-chart-list',
@@ -52,8 +52,7 @@ import { AddComponentsComponent } from '../componnetes/components.component';
     animations: fuseAnimations,
 })
 export class EconomicChartListComponent
-    implements OnInit, AfterViewInit, OnDestroy
-{
+    implements OnInit, AfterViewInit, OnDestroy {
     registerDate = new Date();
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
     @ViewChild(MatSort) private _sort: MatSort;
@@ -98,10 +97,10 @@ export class EconomicChartListComponent
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
         private _formBuilder: FormBuilder,
-        private _inventoryService: EconomicChartService,
+        private _economicService: EconomicChartService,
         private authService: AuthService,
         private _matDialog: MatDialog
-    ) {}
+    ) { }
 
     /**
      * On init
@@ -112,23 +111,19 @@ export class EconomicChartListComponent
             id: [''],
             empresa: new FormControl(null, Validators.required),
             requiere: [''],
-            name: ['', [Validators.required]],
-            Programa: [''],
             operatingExpenses: [''],
             contrctorsCant: [''],
-            reserved: [''],
             cost: [''],
             percentage: new FormControl('8', Validators.required),
             price: [''],
             subTotal: [''],
             thumbnail: [''],
             images: [[]],
-            currentImageIndex: [0], // Image index that is currently being viewed
             active: [false],
         });
 
         // Get the pagination
-        this._inventoryService.pagination$
+        this._economicService.pagination$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((pagination: InventoryPagination) => {
                 // Update the pagination
@@ -137,9 +132,8 @@ export class EconomicChartListComponent
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-        debugger;
         // Get the projectData
-        this.projectData$ = this._inventoryService._economicsChart$;
+        this.projectData$ = this._economicService._economicsChart$;
 
         // Subscribe to search input field value changes
         this.searchInputControl.valueChanges
@@ -149,7 +143,7 @@ export class EconomicChartListComponent
                 switchMap((query) => {
                     this.closeDetails();
                     this.isLoading = true;
-                    return this._inventoryService.getProjectData(
+                    return this._economicService.getProjectData(
                         0,
                         10,
                         'name',
@@ -196,7 +190,7 @@ export class EconomicChartListComponent
                     switchMap(() => {
                         this.closeDetails();
                         this.isLoading = true;
-                        return this._inventoryService.getProjectData();
+                        return this._economicService.getProjectData();
                     }),
                     map(() => {
                         this.isLoading = false;
@@ -225,13 +219,13 @@ export class EconomicChartListComponent
             return;
         }
 
-        this._inventoryService.getComponent(productId).subscribe((response) => {
+        this._economicService.getComponent(productId).subscribe((response) => {
             this.componentList = response;
             this._changeDetectorRef.markForCheck();
         });
 
         // Get the product by id
-        this._inventoryService
+        this._economicService
             .getProductById(productId)
             .subscribe((product) => {
                 // Set the selected product
@@ -328,19 +322,6 @@ export class EconomicChartListComponent
                 break;
         }
     }
-    deleteComponent(tag: any): void {
-        // Delete the tag from the server
-        this.componentList.splice(tag.id, 1);
-
-        for (var i = 0; i < this.componentList.length; i++) {
-            if (this.componentList[i].componentName == '') {
-                this.componentList.splice(i, 1);
-            }
-            this.componentList[i].id = i;
-        }
-        // Mark for check
-        this._changeDetectorRef.markForCheck();
-    }
 
     /**
      * Update the selected product using the form data
@@ -353,7 +334,7 @@ export class EconomicChartListComponent
         delete product.currentImageIndex;
 
         // Update the product on the server
-        /* this._inventoryService.updateProduct(product.id, product).subscribe(() => {
+        /* this._economicService.updateProduct(product.id, product).subscribe(() => {
 
             // Show a success message
             this.showFlashMessage('success');
@@ -384,7 +365,7 @@ export class EconomicChartListComponent
                 const product = this.economicChartForm.getRawValue();
 
                 // Delete the product on the server
-                /* this._inventoryService.deleteProduct(product.id).subscribe(() => {
+                /* this._economicService.deleteProduct(product.id).subscribe(() => {
 
                     // Close the details
                     this.closeDetails();
@@ -484,7 +465,7 @@ export class EconomicChartListComponent
             nombreCpc: '',
             activate: false,
         };
-        this._inventoryService.addEconomicChart(registerProject).subscribe(
+        this._economicService.addEconomicChart(registerProject).subscribe(
             (res) => {
                 if (res) {
                     swal.fire(
@@ -506,5 +487,17 @@ export class EconomicChartListComponent
         );
     }
 
-    getComponentes(e: any) {}
+    deleteComponent(componente: any) {
+        debugger
+        this._economicService.DeleteComponent(componente.id).subscribe((res) => {
+            if (res) {
+                swal.fire('informacion Eliminada Exitosamente!', '', 'success');
+            }
+            this._changeDetectorRef.detectChanges();
+        },
+            (response) => {
+                // Set the alert
+                swal.fire('Error al Eliminar la informacion!', '', 'error');
+            });
+    }
 }

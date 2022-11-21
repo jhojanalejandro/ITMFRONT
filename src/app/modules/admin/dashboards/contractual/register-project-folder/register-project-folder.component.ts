@@ -1,10 +1,10 @@
-import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import { UploadDataService } from '../contracts-list/upload-data.service';
 import swal from 'sweetalert2';
-import { IProjectFolder } from 'app/layout/common/models/project-folder';
+import { IProjectFolder } from 'app/modules/admin/dashboards/contractual/register-project-folder/model/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
@@ -14,6 +14,7 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
     templateUrl: './register-project-folder.component.html',
     styleUrls: ['./register-project-folder.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations   : fuseAnimations
 })
 export class ProjectFolderComponent implements OnInit {
@@ -25,12 +26,16 @@ export class ProjectFolderComponent implements OnInit {
   numberOfTicks = 0;
   showAlert: boolean = false;
   registerDate = new Date();
+  minDate: any;
   formProject: FormGroup; 
   ejecucion: any = GlobalConst.ejecucionContrato;
   editData: boolean = false;
   projectName: any = null;
   descript: any = null;
+  fechaContrato: any = null;
+  fechaFinalizacion: any = null;
   companyName: any = null;
+  execution: any = null;
   constructor(
     private _upload: UploadDataService,
     private _formBuilder: FormBuilder,
@@ -48,20 +53,30 @@ export class ProjectFolderComponent implements OnInit {
      }
 
   ngOnInit(): void {
+    debugger
     if(this._data != null){
+      if(this.projectName = this._data.data.execution){
+        this.execution = 'Ejecutar Contrato';
+      }else{
+        this.execution = 'En Proceso';
+
+      }
       this.editData = true;
       this.companyName = this._data.data.companyName;
       this.projectName = this._data.data.projectName;
       this.descript = this._data.data.descriptionProject;
+      this.fechaContrato = this._data.data.fechaContrato;
+      this.fechaFinalizacion = this._data.data.fechaFinalizacion;
     }
       // this.getDepartamento();
     this.formProject = this._formBuilder.group({
     projectName: new FormControl(this.projectName, Validators.required),
-    cpc: new FormControl(null),
-    nombreCpc: new FormControl(null),
     companyName: new FormControl(this.companyName, Validators.required),
-    ejecucion: new FormControl(null, Validators.required),       
+    ejecucion: new FormControl(this.execution, Validators.required),       
     description: new FormControl(this.descript, Validators.required), 
+    fechaContrato: new FormControl(this.fechaContrato, Validators.required), 
+    fechaFinalizacion: new FormControl(this.fechaFinalizacion, Validators.required) 
+
     });
 
   }
@@ -74,7 +89,6 @@ export class ProjectFolderComponent implements OnInit {
     }else{
       this.formProject.value.ejecucion = false; 
     }
-    debugger
     const registerProject: IProjectFolder={
       userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
@@ -84,9 +98,8 @@ export class ProjectFolderComponent implements OnInit {
       modifyDate: this.registerDate, 
       execution:  this.formProject.value.ejecucion,
       budget:0,
-      contractCant:0,
-      cpc: '',
-      nombreCpc: '',
+      fechaContrato: this.formProject.value.fechaContrato,
+      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       activate: false 
     };  
     this._upload.addProjectFolder(registerProject).subscribe((res) => {   
@@ -119,9 +132,8 @@ export class ProjectFolderComponent implements OnInit {
       modifyDate: this.registerDate,   
       execution:  this.formProject.value.ejecucion,
       budget:0,
-      contractCant:0,
-      cpc: '',
-      nombreCpc: '',
+      fechaContrato: this.formProject.value.fechaContrato,
+      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       activate: false        
     };  
     this._upload.UpdateProjectFolder(registerProject).subscribe((res) => {   
@@ -146,4 +158,10 @@ export class ProjectFolderComponent implements OnInit {
     this.matDialogRef.close();
   } 
 
+  dateChange(){
+    debugger
+      this.minDate = new Date(this.formProject.value.fechaContrato);
+      this.ref.markForCheck();
+
+  }
 }

@@ -16,6 +16,8 @@ import { ContractorDataRegisterComponent } from '../register-data-contractor/reg
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
+import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
+import { IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
 
 
 @Component({
@@ -35,7 +37,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
   contratos: any;
-  elements: any[] = [{ Element: 'elementos' }];
+  elements: IElements[];
   configForm: FormGroup;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
@@ -56,6 +58,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private router: ActivatedRoute,
+    private _service: EconomicChartService,
     private _formBuilder: FormBuilder,
     private _fuseConfirmationService: FuseConfirmationService
 
@@ -79,6 +82,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.userName = this.auth.accessName
     this.id = this.router.snapshot.paramMap.get('id') || 'null';
     this.getDataContractor(this.id);
+    this.getElements();
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -271,5 +275,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
 
   }
+  getElements() {
+    debugger
+    this._service
+        .getElementoComponenteByContract(this.id)
+        .subscribe((response) => {
+          debugger
+            this.elements = response;
+        });
+}
 
 }

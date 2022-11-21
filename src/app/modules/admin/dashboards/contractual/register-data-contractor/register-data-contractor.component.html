@@ -15,7 +15,7 @@
                 </fuse-alert>
             </div>
             <br>
-            <form [formGroup]="formContractor" class="example-form overflow-y-auto">
+            <form [formGroup]="formContractor" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
                 <!-- <div class="nationality">
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Contrato</mat-label>
@@ -39,16 +39,6 @@
                 </div> -->
                 <br>
                 <div class="nationality">
-                    <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
-                        <mat-label>Fecha Contrato</mat-label>
-                        <input matInput id="fechaContrato" autocomplete="off" formControlName="fechaContrato"
-                            [matDatepicker]="pickerContrato">
-                        <mat-datepicker #pickerContrato></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>
-                        <mat-error *ngIf="formContractor.get('fechaContrato').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
-                    </mat-form-field>
                     <mat-form-field (click)="pickerIP.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Inicio Proyectado</mat-label>
                         <input matInput id="fechaInicioProyectado" autocomplete="off"
@@ -73,16 +63,7 @@
                 </div>
                 <br>
                 <div class="nationality">
-                    <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
-                        <mat-label>Fecha de Finalizacion</mat-label>
-                        <input matInput id="fechaFinalizacion" autocomplete="off" formControlName="fechaFinalizacion"
-                            [matDatepicker]="pickerF">
-                        <mat-datepicker #pickerF></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
-                        <mat-error *ngIf="formContractor.get('fechaFinalizacion').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
-                    </mat-form-field>
+
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Ejecucion</mat-label>
                         <input type="text" id="ejecucion" formControlName="ejecucion" autocomplete="off" matInput
@@ -269,3 +250,5 @@
                 (click)="addContractor()">Aceptar</button>
         </mat-dialog-actions>
     </div>
+</div>
+   

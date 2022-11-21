@@ -122,7 +122,7 @@ export const appRoutes: Route[] = [
 
             // Documentation
             {path: 'docs', children: [
-                {path: 'ecommerce', loadChildren: () => import('app/modules/admin/docs/planning/planing.module').then(m => m.PlaningModule)},
+                {path: 'ecommerce', loadChildren: () => import('app/modules/admin/pages/planing/planing.module').then(m => m.PlaningModule)},
 
                 // Guides
                 // {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}

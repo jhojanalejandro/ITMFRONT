@@ -1,0 +1,131 @@
+<div class="flex-col max-w-250 md:min-w-120 -m-6">
+    <div class="flex-col max-w-240 md:min-w-160">
+        <!-- Header -->
+        <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+            <div class="text-lg font-medium">Registro Componente</div>
+            <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+                <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+            </button>
+        </div>
+        <mat-dialog-content style="margin: 0px; padding: 0px;">
+
+        <!-- Card form -->
+        <form class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
+            [formGroup]="elementForm">
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full" appearance="fill">
+                <mat-label>Elementos</mat-label>
+                <mat-chip-list #chipList aria-label="elemento selection">
+                    <mat-chip class="m-2" *ngFor="let element of elementos" (click)="showElemewnt(element)"
+                        (removed)="remove(element)">
+                        {{element.nombreElemento}}
+                        <button matChipRemove>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip>
+                    <input placeholder="Nuevo  Elemento..." #elementoInput [formControl]="elementoCtrl"
+                        [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    <mat-option *ngFor="let elemento of filteredelementos | async" [value]="elemento">
+                        {{elemento}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field  class="fuse-mat-textarea fuse-mat-no-subscript w-full" appearance="outline">
+                <mat-label>Tipo Elemento</mat-label>
+                <mat-select [formControlName]="'tipoElemento'" name="tipoElemento">
+                    <mat-option *ngFor="let tipo of tipoElementos" [value]="tipo.viewValue">
+                        {{tipo.viewValue}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                </mat-icon>
+            </mat-form-field>
+            <div *ngIf="this.elementos.length != 0">
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>CPC</mat-label>
+                    <input type="text" id="cpc" formControlName="cpc" autocomplete="off" matInput placeholder="CPC">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                    <mat-error *ngIf="elementForm.get('cpc').hasError('required')">
+                        El Campo cpc es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiringD w-full" appearance="outline">
+                    <mat-label>Nombre Cpc</mat-label>
+                    <input type="mail" id="nombreCpc" formControlName="nombreCpc" autocomplete="off" matInput
+                        placeholder="Nombre Cpc">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                    <mat-error *ngIf="elementForm.get('nombreCpc').hasError('required')">
+                        El Campo nombre cpc es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="nationality" *ngIf="this.elementos.length != 0">
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Cantidad Contratista</mat-label>
+                    <input type="number" [value]="contractorCant" id="contractorCant" formControlName="contractorCant"
+                        autocomplete="off" matInput placeholder="Cantidad Contratista">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:duplicate'"></mat-icon>
+                    <mat-error *ngIf="elementForm.get('contractorCant').hasError('required')">
+                        El Campo Cantidad Contratista es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Cantidad Días</mat-label>
+                    <input type="number" [value]="cantDay" id="cantDay" formControlName="cantDay" autocomplete="off"
+                        matInput placeholder="Cantidad Días">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                    <mat-error *ngIf="elementForm.get('cantDay').hasError('required')">
+                        El Campo Cantidad Días es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Valor Unidad</mat-label>
+                    <input type="text" value="{{unitValue | number :'1.2-2'}}" id="unitValue" formControlName="unitValue"
+                        autocomplete="off" matInput placeholder="Valor Unidad">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="elementForm.get('unitValue').hasError('required')">
+                        El Campo Valor Unidad es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="nationality" *ngIf="this.elementos.length != 0">
+
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Valor Total</mat-label>
+                    <input type="text" value="{{totalValue | number :'1.2-2'}}" id="totalValue" formControlName="totalValue"
+                        autocomplete="off" matInput placeholder="Valor Total">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                </mat-form-field>
+                <mat-form-field disable class="hiring" appearance="outline">
+                    <mat-label>Valor Por dia</mat-label>
+                    <input type="text" [value]="unitValueDay | number:'1.2-2'" formControlName="unitValueDay" autocomplete="off"
+                        matInput placeholder="Valor por Día">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                </mat-form-field>
+                <mat-form-field [hidden]="totalCalculate" class="hiring" appearance="outline">
+                    <mat-label>Valor Exacto</mat-label>
+                    <input type="number" [value]="totalCost | number:'1.2-2'" id="calculateValue"
+                        formControlName="calculateValue" autocomplete="off" matInput placeholder="Valor Unidad">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                </mat-form-field>
+            </div>
+
+            <div class="btn">
+                <button mat-flat-button type="button" [color]="'warn'" [mat-dialog-close]="false">Cancelar</button>
+                <button class="m-5 bg-green-600" mat-flat-button *ngIf="update" type="button"
+                    (click)="calculate()">Calcular</button>
+                <button class="m-2" mat-flat-button *ngIf="update" [color]="'primary'" type="submit"
+                    (click)="asign()">Asignar
+                    Elemento</button>
+                <button class="m-2" mat-flat-button *ngIf="update" [color]="'primary'" type="submit"
+                    [mat-dialog-close]="true" (click)="addElement()">Aceptar</button>
+                <button class="m-5" mat-flat-button *ngIf="!update" [color]="'primary'" type="submit"
+                    [mat-dialog-close]="true" (click)="addElement()">Actualizar</button>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    </div>
+</div>

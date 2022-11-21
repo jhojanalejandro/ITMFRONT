@@ -196,7 +196,6 @@ export class CollectionAccountsListComponent implements OnInit {
             });
     }
     searchByDate =() =>{
-      debugger
       let search: IGetFilesPayments= {contractId: this.contractId, registerDate: this.dateSearch, type: this.type}
       console.log(search);
       this._collectionAccounts.searchByDate(search).subscribe((res) => {   
