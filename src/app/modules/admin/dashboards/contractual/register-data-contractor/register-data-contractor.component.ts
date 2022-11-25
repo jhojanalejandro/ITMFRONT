@@ -51,6 +51,8 @@ export class ContractorDataRegisterComponent implements OnInit {
       this.formContractor = this._formBuilder.group({
         contrato: new FormControl(null),
         compromiso: new FormControl(null),
+        rubro: new FormControl(null),
+        nombreRubro: new FormControl(null),
         fechaInicioProyectado: new FormControl(null, Validators.required),
         fechaInicioReal: new FormControl(null, Validators.required),
         honorariosMensuales: new FormControl(null,Validators.required),

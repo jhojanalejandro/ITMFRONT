@@ -113,9 +113,14 @@
                                                 (click)="openConfirmationDelete(element)" [color]="'primary'"
                                                 mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-
                                                 Eliminar
                                             </button>
+                                            <button [matTooltip]="'Agregar adicion'"
+                                            (click)="openConfirmationDelete(element)" [color]="'primary'"
+                                            mat-menu-item>
+                                            <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
+                                            Agregar Adicion
+                                        </button>
                                         </mat-menu>
                                     </p>
 
