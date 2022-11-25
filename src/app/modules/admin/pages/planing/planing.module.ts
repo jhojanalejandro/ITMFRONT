@@ -20,6 +20,7 @@ import { EconomicChartComponent } from './economic-chart/economic-chart.componen
 import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
 import { ElementCardComponent } from './economic-chart/element/element.component';
 import { AddComponentsComponent } from './economic-chart/componentes/components.component';
+import { ComponentesFormComponent } from './economic-chart/componentes/componentes-form/componentes-form.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { AddComponentsComponent } from './economic-chart/componentes/components.
         EconomicChartListComponent,
         ContrtactsComponent,
         AddComponentsComponent,
-        ElementCardComponent
+        ElementCardComponent,
+        ComponentesFormComponent
     ],
     imports     : [
         RouterModule.forChild(PlaningRoutes),

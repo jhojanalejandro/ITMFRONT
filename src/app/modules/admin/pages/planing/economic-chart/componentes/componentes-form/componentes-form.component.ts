@@ -1,13 +1,11 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
-    OnDestroy,
+    Inject,
     OnInit,
     ViewChild,
-    ViewEncapsulation,
 } from '@angular/core';
 import {
     FormBuilder,
@@ -17,36 +15,32 @@ import {
 } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
+import {
+    MatDialog,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
-import swal from 'sweetalert2';
-import { EconomicChartService } from '../economic-chart.service';
-import { ElementCardComponent } from '../element/element.component';
-import { IComponente } from '../models/componente';
-import { CookieService } from 'ngx-cookie-service';
-import { ActivatedRoute } from '@angular/router';
-import { ComponentesFormComponent } from './componentes-form/componentes-form.component';
+import Swal from 'sweetalert2';
+import { EconomicChartService } from '../../economic-chart.service';
+import { ElementCardComponent } from '../../element/element.component';
+import { IComponente } from '../../models/componente';
 
 @Component({
-    selector: 'components-card',
-    styleUrls: ['./components.component.scss'],
-    templateUrl: './components.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-componentes-form',
+    templateUrl: './componentes-form.component.html',
+    styleUrls: ['./componentes-form.component.scss'],
 })
-export class AddComponentsComponent implements OnInit, OnDestroy {
+export class ComponentesFormComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
-    dataComponente: any;
-    dataElemento: any;
     fruitCtrl = new FormControl('');
     filteredFruits: Observable<string[]>;
     fruits: string[] = [];
     allFruits: string[] = ['Profesional En Sistemas'];
     @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
-    abrirDivComponente: boolean = false;
-    abrirDivElemento: boolean = false;
+    abrirDiv: boolean = false;
     numberOfTicks = 0;
     data: any;
     componentName: string = null;
@@ -64,18 +58,14 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
      * Constructor
      */
     constructor(
-        private route: ActivatedRoute,
+        public matDialogRef: MatDialogRef<ComponentesFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
+        @Inject(MAT_DIALOG_DATA) private _data: any,
         private _fuseConfirmationService: FuseConfirmationService,
         private _Economicservice: EconomicChartService,
         private _matDialog: MatDialog
     ) {
-        this.id = this.route.snapshot.params.id;
-        this._Economicservice.getComponent(this.id).subscribe((response) => {
-            this.data = response;
-        });
-        // this.data = _data.data.componentes;
         setInterval(() => {
             this.numberOfTicks++;
             // require view to be updated
@@ -90,21 +80,15 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
         );
     }
 
-    abrirDivComponent(e: any) {
+    abrirDivHtml() {
         debugger;
-        this.abrirDivElemento = false;
-        this.dataComponente = e;
-        this.abrirDivComponente = true;
+        this.abrirDiv = true;
     }
-
-    abrirDivElement(e: any) {
-        this.abrirDivComponente = false;
-        this.dataElemento = e;
-        console.log(this.dataElemento);
-        this.abrirDivElemento = true;
-    }
-
+    /**
+     * On init
+     */
     ngOnInit(): void {
+        // Get the board
         this.componentForm = this._formBuilder.group({
             componentName: new FormControl(
                 this.componentName,
@@ -115,12 +99,18 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * On destroy
+     */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
+    /**
+     * Check if the given date is overdue
+     */
     isOverdue(date: string): boolean {
         return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
     }
@@ -136,27 +126,34 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
     }
 
     addComponent() {
-        let e = this.data[0].idContrato;
-        const dialogRef = this._matDialog.open(ComponentesFormComponent, {
+        this.data = this.componentForm.value;
+        let model: IComponente = {
+            idContrato: this._data.e,
+            nombreComponente: this.componentForm.value.componentName,
+            id: 0,
+            rubro: this.componentForm.value.rubro,
+            nombreRubro: this.componentForm.value.nombreRubro,
+            elementos: [],
+        };
+        this._Economicservice.addComponent(model).subscribe((response) => {
+            if (response) {
+                Swal.fire(
+                    'Buen Trabajo!',
+                    'Se guardó la información!',
+                    'success'
+                );
+            }
+        });
+        this.matDialogRef.close(this.data);
+    }
+
+    addElements(e: any) {
+        const dialogRef = this._matDialog.open(ElementCardComponent, {
             autoFocus: false,
             data: {
                 e,
                 show: true,
             },
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            this._Economicservice
-                .getComponent(this.data[0].idContrato)
-                .subscribe((response) => {
-                    this.data = response;
-                });
-        });
-    }
-
-    addElements() {
-        const dialogRef = this._matDialog.open(ElementCardComponent, {
-            autoFocus: false,
-            data: this.dataComponente.id,
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {

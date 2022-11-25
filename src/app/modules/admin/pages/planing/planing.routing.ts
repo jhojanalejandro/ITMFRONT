@@ -3,6 +3,7 @@ import { EconomicChartComponent } from './economic-chart/economic-chart.componen
 import { ContrtactsComponent } from './contracts/contracts.component';
 import { InventoryProductsResolver } from './economic-chart/economic-chart.resolvers';
 import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
+import { AddComponentsComponent } from './economic-chart/componentes/components.component';
 
 export const PlaningRoutes: Route[] = [
     {
@@ -48,5 +49,9 @@ export const PlaningRoutes: Route[] = [
     {
         path      : 'contratos',
         component: ContrtactsComponent
+    },
+    {
+        path      : 'Componentes/:id',
+        component: AddComponentsComponent
     },
 ];

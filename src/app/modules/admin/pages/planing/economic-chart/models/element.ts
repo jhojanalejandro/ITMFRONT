@@ -1,6 +1,5 @@
 export interface IElements{
     id: any;
-    nombreElemento: string;
     idComponente: string;
     cantidadContratistas: number;
     cantidadDias: number;
