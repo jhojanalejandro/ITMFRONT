@@ -4,4 +4,5 @@ export interface IComponente{
     idContrato: number;
     rubro: string;
     nombreRubro: string;
+    elementos : []
 }

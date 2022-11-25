@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    apiURL: 'https://localhost:44353/',
-    // apiURL: 'https://localhost:7163/',
+    //apiURL: 'https://localhost:44353/',
+    apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -66,7 +66,7 @@ export const environment = {
     GetByIdHiringEndpoint: 'HiringData/GetById/',
     DeleteHiringEndpoint: 'HiringData/Delete',
 
-    addComponent: 'Componente',
+    addComponent: 'Componente/Add/',
     getComponent: 'Componente/Get/',
     deleteComponent: 'Componente/Delete/',
     addElementosComponent: 'Api/ElementosComponente',

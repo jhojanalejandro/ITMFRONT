@@ -42,6 +42,9 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { ChartComponent } from 'ng-apexcharts';
 import { ElementCardComponent } from '../element/element.component';
 import { AddComponentsComponent } from '../componentes/components.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
     selector: 'economic-chart-list',
@@ -52,12 +55,22 @@ import { AddComponentsComponent } from '../componentes/components.component';
     animations: fuseAnimations,
 })
 export class EconomicChartListComponent
-    implements OnInit, AfterViewInit, OnDestroy {
+    implements OnInit, AfterViewInit, OnDestroy
+{
     registerDate = new Date();
-    @ViewChild(MatPaginator) private _paginator: MatPaginator;
-    @ViewChild(MatSort) private _sort: MatSort;
-    projectData$: Observable<EconomicChart[]>;
-    requiere: TypeSelectString[] = GlobalConst.requierePoliza;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    projectData$: any;
+    displayedColumns: string[] = [
+        'actions',
+        'companyName',
+        'projectName',
+        'descriptionProject',
+        'fechaContrato',
+        'fechaFinalizacion',
+    ];
+    dataSource: MatTableDataSource<any>;
+
     componentList: Components[] = [
         {
             id: '0',
@@ -90,23 +103,24 @@ export class EconomicChartListComponent
     tagsEditMode: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
         private _formBuilder: FormBuilder,
         private _economicService: EconomicChartService,
         private authService: AuthService,
-        private _matDialog: MatDialog
-    ) { }
+        private _matDialog: MatDialog,
+        private _activatedRoute: ActivatedRoute,
+        private _router: Router,
+        private coockie: CookieService
+    ) {
+        this.projectData$ = this._economicService._economicsChart$;
+        this.dataSource = new MatTableDataSource(
+            this.projectData$.source._value
+        );
+    }
 
-    /**
-     * On init
-     */
     ngOnInit(): void {
-        // Create the selected product form
         this.economicChartForm = this._formBuilder.group({
             id: [''],
             empresa: new FormControl(null, Validators.required),
@@ -121,82 +135,19 @@ export class EconomicChartListComponent
             images: [[]],
             active: [false],
         });
-
-        // Get the pagination
-        this._economicService.pagination$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((pagination: InventoryPagination) => {
-                // Update the pagination
-                this.pagination = pagination;
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-        // Get the projectData
-        this.projectData$ = this._economicService._economicsChart$;
-
-        // Subscribe to search input field value changes
-        this.searchInputControl.valueChanges
-            .pipe(
-                takeUntil(this._unsubscribeAll),
-                debounceTime(300),
-                switchMap((query) => {
-                    this.closeDetails();
-                    this.isLoading = true;
-                    return this._economicService.getProjectData(
-                        0,
-                        10,
-                        'name',
-                        'asc',
-                        query
-                    );
-                }),
-                map(() => {
-                    this.isLoading = false;
-                })
-            )
-            .subscribe();
     }
 
-    /**
-     * After view init
-     */
     ngAfterViewInit(): void {
-        if (this._sort && this._paginator) {
-            // Set the initial sort
-            this._sort.sort({
-                id: 'name',
-                start: 'asc',
-                disableClear: true,
-            });
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
 
-            // Mark for check
-            this._changeDetectorRef.markForCheck();
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
 
-            // If the user changes the sort order...
-            this._sort.sortChange
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe(() => {
-                    // Reset back to the first page
-                    this._paginator.pageIndex = 0;
-
-                    // Close the details
-                    this.closeDetails();
-                });
-
-            // Get projectData if sort or page changes
-            merge(this._sort.sortChange, this._paginator.page)
-                .pipe(
-                    switchMap(() => {
-                        this.closeDetails();
-                        this.isLoading = true;
-                        return this._economicService.getProjectData();
-                    }),
-                    map(() => {
-                        this.isLoading = false;
-                    })
-                )
-                .subscribe();
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
         }
     }
 
@@ -206,172 +157,8 @@ export class EconomicChartListComponent
         this._unsubscribeAll.complete();
     }
 
-    /**
-     * Toggle product details
-     *
-     * @param productId
-     */
-    toggleDetails(productId: string): void {
-        // If the product is already selected...
-        if (this.selectedProduct && this.selectedProduct.id === productId) {
-            // Close the details
-            this.closeDetails();
-            return;
-        }
-
-        this._economicService.getComponent(productId).subscribe((response) => {
-            this.componentList = response;
-            this._changeDetectorRef.markForCheck();
-        });
-
-        // Get the product by id
-        this._economicService
-            .getProductById(productId)
-            .subscribe((product) => {
-                // Set the selected product
-                this.selectedProduct = product;
-
-                // Fill the form
-                this.economicChartForm.patchValue(product);
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-    }
-
-    /**
-     * Close the details
-     */
-    closeDetails(): void {
-        this.selectedProduct = null;
-    }
-
-    /**
-     * Cycle through images of selected product
-     */
-    cycleImages(forward: boolean = true): void {
-        // Get the image count and current image index
-        const count = this.economicChartForm.get('images').value.length;
-        const currentIndex =
-            this.economicChartForm.get('currentImageIndex').value;
-
-        // Calculate the next and previous index
-        const nextIndex = currentIndex + 1 === count ? 0 : currentIndex + 1;
-        const prevIndex = currentIndex - 1 < 0 ? count - 1 : currentIndex - 1;
-
-        // If cycling forward...
-        if (forward) {
-            this.economicChartForm.get('currentImageIndex').setValue(nextIndex);
-        }
-        // If cycling backwards...
-        else {
-            this.economicChartForm.get('currentImageIndex').setValue(prevIndex);
-        }
-    }
-
-    /**
-     * Toggle the tags edit mode
-     */
-    toggleTagsEditMode(): void {
-        this.tagsEditMode = !this.tagsEditMode;
-    }
-
-    openDialog(route: any, data: any) {
-        switch (route) {
-            case 'addElement':
-                const listElement = this.componentList.find(
-                    (e) => (e.listElements = data.nombreComponente)
-                );
-                const dialogRef = this._matDialog.open(ElementCardComponent, {
-                    autoFocus: false,
-                    data: {
-                        data,
-                        show: true,
-                    },
-                });
-                dialogRef.afterClosed().subscribe((result) => {
-                    if (result) {
-                        this.componentList[result.id].listElements.push(
-                            result.listElements
-                        );
-                    }
-                });
-                break;
-            case 'add':
-                const dialogRefPrroject = this._matDialog.open(
-                    AddComponentsComponent,
-                    {
-                        autoFocus: false,
-                        data: {
-                            show: false,
-                            data,
-                        },
-                    }
-                );
-                dialogRefPrroject.afterClosed().subscribe((datos) => {
-                    if (datos) {
-                        if (this.componentList[0].componentName == '') {
-                            this.componentList.splice(i, 1);
-                        }
-                        for (var i = 0; i < this.componentList.length; i++) {
-                            this.componentList[i].id = i;
-                        }
-                        this.componentList.push(datos);
-                    }
-                });
-                break;
-        }
-    }
-
-    /**
-     * Update the selected product using the form data
-     */
-    updateSelectedProduct(): void {
-        // Get the product object
-        const product = this.economicChartForm.getRawValue();
-
-        // Remove the currentImageIndex field
-        delete product.currentImageIndex;
-
-        // Update the product on the server
-        /* this._economicService.updateProduct(product.id, product).subscribe(() => {
-
-            // Show a success message
-            this.showFlashMessage('success');
-        }); */
-    }
-
-    /**
-     * Delete the selected product using the form data
-     */
-    deleteSelectedProduct(): void {
-        //Open the confirmation dialog
-        const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete product',
-            message:
-                'Are you sure you want to remove this product? This action cannot be undone!',
-            actions: {
-                confirm: {
-                    label: 'Delete',
-                },
-            },
-        });
-
-        // Subscribe to the confirmation dialog closed action
-        confirmation.afterClosed().subscribe((result) => {
-            // If the confirm button pressed...
-            if (result === 'confirmed') {
-                // Get the product object
-                const product = this.economicChartForm.getRawValue();
-
-                // Delete the product on the server
-                /* this._economicService.deleteProduct(product.id).subscribe(() => {
-
-                    // Close the details
-                    this.closeDetails();
-                }); */
-            }
-        });
+    addComponent(data: any) {
+        this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id);
     }
 
     /**
@@ -436,15 +223,6 @@ export class EconomicChartListComponent
         this.TotalCost = this.SubTotal + this.operatingExpenses;
         this._changeDetectorRef.markForCheck();
     }
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
     async addProjectFolder() {
         if (this.economicChartForm.value.ejecucion == 'Ejecutar Contrato') {
             this.economicChartForm.value.ejecucion = true;
@@ -488,16 +266,22 @@ export class EconomicChartListComponent
     }
 
     deleteComponent(componente: any) {
-        debugger
-        this._economicService.DeleteComponent(componente.id).subscribe((res) => {
-            if (res) {
-                swal.fire('informacion Eliminada Exitosamente!', '', 'success');
-            }
-            this._changeDetectorRef.detectChanges();
-        },
+        debugger;
+        this._economicService.DeleteComponent(componente.id).subscribe(
+            (res) => {
+                if (res) {
+                    swal.fire(
+                        'informacion Eliminada Exitosamente!',
+                        '',
+                        'success'
+                    );
+                }
+                this._changeDetectorRef.detectChanges();
+            },
             (response) => {
                 // Set the alert
                 swal.fire('Error al Eliminar la informacion!', '', 'error');
-            });
+            }
+        );
     }
 }
