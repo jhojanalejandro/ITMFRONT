@@ -26,8 +26,10 @@ import { EconomicChartService } from '../economic-chart.service';
 import { ElementCardComponent } from '../element/element.component';
 import { IComponente } from '../models/componente';
 import { CookieService } from 'ngx-cookie-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentesFormComponent } from './componentes-form/componentes-form.component';
+import Swal from 'sweetalert2';
+import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 
 @Component({
     selector: 'components-card',
@@ -36,103 +38,92 @@ import { ComponentesFormComponent } from './componentes-form/componentes-form.co
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddComponentsComponent implements OnInit, OnDestroy {
-    separatorKeysCodes: number[] = [ENTER, COMMA];
+export class AddComponentsComponent implements OnInit {
+    tittle = 'Información';
     dataComponente: any;
     dataElemento: any;
-    fruitCtrl = new FormControl('');
-    filteredFruits: Observable<string[]>;
-    fruits: string[] = [];
-    allFruits: string[] = ['Profesional En Sistemas'];
-    @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
     abrirDivComponente: boolean = false;
     abrirDivElemento: boolean = false;
-    numberOfTicks = 0;
     data: any;
-    componentName: string = null;
-    rubro: string = null;
-    nombreRubro: string = null;
-    update: boolean;
     id: string = null;
     configForm: FormGroup;
-    @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
-    componentForm: FormGroup;
-    // Private
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    /**
-     * Constructor
-     */
+    subTotal: number = 0;
+    porcentajeCalculo: number = 8;
+    nuevoPorcentage: number = 0;
     constructor(
         private route: ActivatedRoute,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _changeDetectorRef: ChangeDetectorRef,
         private _Economicservice: EconomicChartService,
-        private _matDialog: MatDialog
+        private _matDialog: MatDialog,
+        private _router: Router
     ) {
         this.id = this.route.snapshot.params.id;
-        this._Economicservice.getComponent(this.id).subscribe((response) => {
-            this.data = response;
-        });
-        // this.data = _data.data.componentes;
-        setInterval(() => {
-            this.numberOfTicks++;
-            // require view to be updated
-            this._changeDetectorRef.detectChanges();
-            this._changeDetectorRef.markForCheck();
-        }, 1000);
-        this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-            startWith(null),
-            map((fruit: string | null) =>
-                fruit ? this._filter(fruit) : this.allFruits.slice()
-            )
-        );
+        if (this.id) {
+            this.chargeData();
+        }
     }
 
     abrirDivComponent(e: any) {
-        debugger;
+        this.tittle = 'Información Componente';
         this.abrirDivElemento = false;
         this.dataComponente = e;
         this.abrirDivComponente = true;
     }
 
     abrirDivElement(e: any) {
+        this.tittle = 'Información Elemento';
         this.abrirDivComponente = false;
         this.dataElemento = e;
         console.log(this.dataElemento);
         this.abrirDivElemento = true;
     }
 
-    ngOnInit(): void {
-        this.componentForm = this._formBuilder.group({
-            componentName: new FormControl(
-                this.componentName,
-                Validators.required
-            ),
-            rubro: new FormControl(this.rubro, Validators.required),
-            nombreRubro: new FormControl(this.nombreRubro, Validators.required),
+    ngOnInit(): void {}
+
+    chargeData() {
+        debugger;
+        this._Economicservice.getComponent(this.id).subscribe((response) => {
+            if (response.length != 0) {
+                this.data = response;
+                this.totalesPlaneacion();
+                this._changeDetectorRef.detectChanges();
+            } else {
+                Swal.fire(
+                    'Sin Información para mostrar',
+                    'Primero Agregue componentes para poder visualizar información',
+                    'question'
+                );
+                this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
+            }
         });
     }
 
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
+    totalesPlaneacion() {
+        this.data.forEach((element) => {
+            if (element.elementos.length >= 1) {
+                element.elementos.forEach((item) => {
+                    this.subTotal = this.subTotal + item.valorTotal;
+                });
+            }
+        });
+        this.subTotal = this.subTotal * 0.08;
     }
 
-    isOverdue(date: string): boolean {
-        return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
+    openDialog(): void {
+        const dialogRef = this._matDialog.open(DialogChangePercentajeComponent);
+        dialogRef.afterClosed().subscribe((result) => {
+            const newLocal = result === undefined || +result === 0;
+            if (!newLocal) {
+                this.porcentajeCalculo = +result;
+                this.changePorcentaje();
+                this._changeDetectorRef.detectChanges();
+            }
+        });
     }
 
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
+    changePorcentaje() {
+        this.subTotal = (this.subTotal * this.porcentajeCalculo) / 100;
     }
 
     addComponent() {
@@ -175,41 +166,5 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
             if (result == 'confirmed') {
             }
         });
-    }
-
-    add(event: MatChipInputEvent): void {
-        const value = (event.value || '').trim();
-
-        // Add our fruit
-        if (value) {
-            this.fruits.push(value);
-        }
-
-        // Clear the input value
-        event.chipInput!.clear();
-
-        this.fruitCtrl.setValue(null);
-    }
-
-    remove(fruit: string): void {
-        const index = this.fruits.indexOf(fruit);
-
-        if (index >= 0) {
-            this.fruits.splice(index, 1);
-        }
-    }
-
-    selected(event: MatAutocompleteSelectedEvent): void {
-        this.fruits.push(event.option.viewValue);
-        this.fruitInput.nativeElement.value = '';
-        this.fruitCtrl.setValue(null);
-    }
-
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-
-        return this.allFruits.filter((fruit) =>
-            fruit.toLowerCase().includes(filterValue)
-        );
     }
 }

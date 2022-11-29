@@ -1,0 +1,12 @@
+<span mat-dialog-title>Cambiar porcentaje de cálculo</span>
+<div mat-dialog-content>
+  <p>Cuál será el nuevo porcentage?</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Nuevo porcentage</mat-label>
+    <input matInput [(ngModel)]="data">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button class="m-2" mat-flat-button [color]="'primary'" [mat-dialog-close]="true" (click)="onNoClick()">Cancelar</button>
+  <button class="m-2" mat-flat-button [color]="'primary'" [mat-dialog-close]="true"[mat-dialog-close]="data" cdkFocusInitial>Calcular</button>
+</div>
