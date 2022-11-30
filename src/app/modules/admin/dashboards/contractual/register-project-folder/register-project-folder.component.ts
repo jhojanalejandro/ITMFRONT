@@ -84,6 +84,7 @@ export class ProjectFolderComponent implements OnInit {
     this.ref.detectChanges();
   }
   addProjectFolder() {
+    debugger
     if(this.formProject.value.ejecucion == 'Ejecutar Contrato'){
       this.formProject.value.ejecucion = true; 
     }else{
@@ -100,7 +101,9 @@ export class ProjectFolderComponent implements OnInit {
       budget:0,
       fechaContrato: this.formProject.value.fechaContrato,
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
-      activate: false 
+      activate: false,
+      contractorsCant: 0,
+      componentes: []
     };  
     this._upload.addProjectFolder(registerProject).subscribe((res) => {   
         if(res){
@@ -134,7 +137,9 @@ export class ProjectFolderComponent implements OnInit {
       budget:0,
       fechaContrato: this.formProject.value.fechaContrato,
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
-      activate: false        
+      activate: false,
+      contractorsCant: 0,
+      componentes: []
     };  
     this._upload.UpdateProjectFolder(registerProject).subscribe((res) => {   
         if(res){

@@ -81,9 +81,9 @@
     width: 20px;
 }
 
-.container {
-    padding: 2rem 0rem;
-  }
+// .container {
+//     padding: 2rem 0rem;
+//   }
   
   h4 {
     margin: 2rem 0rem 1rem;
@@ -106,5 +106,7 @@
     font-size: large;
   }
   p{
+    padding-left: 25px !important;
+    padding-right: 25px !important;
     font-size: large;
   }

@@ -13,20 +13,31 @@
             <form class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
                 [formGroup]="elementForm">
                 <div>
-                    <mat-form-field  appearance="outline">
+                    <mat-form-field class="w-full" appearance="outline">
+                        <mat-label>Adicion</mat-label>
+                        <mat-select [formControlName]="'adicion'" name="adicion">
+                            <mat-option *ngFor="let adicion of adiciones" [value]="adicion.viewValue">
+                                {{adicion.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                        <mat-error *ngIf="elementForm.get('adicion').hasError('required')">
+                            El Campo arl es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline">
                         <mat-label>Nombre del Elemento</mat-label>
-                        <input type="text"
-                               placeholder="Seleccione o Digite"
-                               aria-label="Nombre del Elemento"
-                               matInput
-                               [formControlName]="'nombreElemento'"
-                               [matAutocomplete]="auto">
+                        <input type="text" placeholder="Seleccione o Digite" aria-label="Nombre del Elemento" matInput
+                            [formControlName]="'nombreElemento'" [matAutocomplete]="auto">
                         <mat-autocomplete #auto="matAutocomplete">
-                          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-                            {{option}}
-                          </mat-option>
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                                {{option}}
+                            </mat-option>
                         </mat-autocomplete>
-                      </mat-form-field>
+                    </mat-form-field>
                     <mat-form-field appearance="outline">
                         <mat-label>Tipo Elemento</mat-label>
                         <mat-select [formControlName]="'tipoElemento'" name="tipoElemento">
@@ -79,6 +90,16 @@
                 </div>
                 <div>
                     <mat-form-field appearance="outline">
+                        <mat-label>Valor Unidad</mat-label>
+                        <input type="text" value="{{unitValue | number :'1.2-2'}}" id="unitValue"
+                            formControlName="unitValue" autocomplete="off" matInput placeholder="Valor Unidad">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
+                        </mat-icon>
+                        <mat-error *ngIf="elementForm.get('unitValue').hasError('required')">
+                            El Campo Valor Unidad es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>Valor Total</mat-label>
                         <input type="text" value="{{totalValue | number :'1.2-2'}}" id="totalValue"
                             formControlName="totalValue" autocomplete="off" matInput placeholder="Valor Total">
@@ -92,16 +113,7 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Valor Unidad</mat-label>
-                        <input type="text" value="{{unitValue | number :'1.2-2'}}" id="unitValue"
-                            formControlName="unitValue" autocomplete="off" matInput placeholder="Valor Unidad">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
-                        </mat-icon>
-                        <mat-error *ngIf="elementForm.get('unitValue').hasError('required')">
-                            El Campo Valor Unidad es requerido
-                        </mat-error>
-                    </mat-form-field>
+
                 </div>
                 <div>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">

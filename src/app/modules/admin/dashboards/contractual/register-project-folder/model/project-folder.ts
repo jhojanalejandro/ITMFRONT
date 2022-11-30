@@ -9,6 +9,8 @@ export interface IProjectFolder{
     budget: number;
     execution: boolean;
     activate: boolean;
+    contractorsCant: number;
     fechaContrato: Date;
     fechaFinalizacion: Date;
+    componentes: any[];
 }

@@ -106,7 +106,8 @@ export class UploadFileComponent implements OnInit {
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
       filedata: event,
-      passed: true     
+      passed: true,
+      typeFilePayment: 'execel Contratista'    
     };  
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
         if(res){

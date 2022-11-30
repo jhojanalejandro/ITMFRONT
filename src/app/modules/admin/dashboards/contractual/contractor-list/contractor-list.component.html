@@ -79,23 +79,10 @@
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
                                     <p
-                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.fechaNacimiento">
+                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento">
                                         {{element[columna.name]}}</p>
                                     <p *ngIf="element[columna.name]== element.fechaNacimiento">{{element[columna.name] |
                                         date}} </p>
-                                    <p *ngIf="columna.name=='Element'">
-                                        <mat-form-field class="hiring" appearance="outline">
-                                            <mat-label>Elemento</mat-label>
-                                            <mat-select name="arl">
-                                                <mat-option *ngFor="let element of elements" [value]="element.Element">
-                                                    {{element.Element}}
-                                                </mat-option>
-                                            </mat-select>
-                                            <mat-icon class="icon-size-5" matSuffix
-                                                [svgIcon]="'heroicons_solid:office-building'">
-                                            </mat-icon>
-                                        </mat-form-field>
-                                    </p>
                                     <p *ngIf="columna.name=='acciones'">
 
                                         <button [matTooltip]="'Opciones Documentos'" mat-icon-button

@@ -4,11 +4,11 @@ export interface IHiringData{
     id?: any;
     contractorId: any;
     userId: any;
+    fechaFinalizacionConvenio: Date;
     contrato: string;
     compromiso: string;
     fechaDeInicioProyectado: Date;
     fechaRealDeInicio: Date;
-    fechaFinalizacionConvenio: Date;
     actividad: string;
     ejecucion: string;
     actaComite: any;
@@ -26,6 +26,6 @@ export interface IHiringData{
     noAdicion: string;
     fechaInicioAmpliacion: Date;
     fechaDeTerminacionAmpliacion: Date;
+    rubro: string;
+    nombreRubro: string;
 }
-
-

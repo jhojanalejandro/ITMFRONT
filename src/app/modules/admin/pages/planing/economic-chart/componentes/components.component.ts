@@ -136,7 +136,8 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
     }
 
     addComponent() {
-        let e = this.data[0].idContrato;
+        debugger
+        let e = this.id;
         const dialogRef = this._matDialog.open(ComponentesFormComponent, {
             autoFocus: false,
             data: {
@@ -146,7 +147,7 @@ export class AddComponentsComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe((result) => {
             this._Economicservice
-                .getComponent(this.data[0].idContrato)
+                .getComponent(this.id)
                 .subscribe((response) => {
                     this.data = response;
                 });

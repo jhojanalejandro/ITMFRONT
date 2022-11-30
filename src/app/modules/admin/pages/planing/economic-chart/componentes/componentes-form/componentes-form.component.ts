@@ -131,8 +131,6 @@ export class ComponentesFormComponent implements OnInit {
             idContrato: this._data.e,
             nombreComponente: this.componentForm.value.componentName,
             id: 0,
-            rubro: this.componentForm.value.rubro,
-            nombreRubro: this.componentForm.value.nombreRubro,
             elementos: [],
         };
         this._Economicservice.addComponent(model).subscribe((response) => {

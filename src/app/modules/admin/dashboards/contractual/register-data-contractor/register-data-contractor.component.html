@@ -15,9 +15,34 @@
                 </fuse-alert>
             </div>
             <br>
-            <form [formGroup]="formContractor" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
+            <form [formGroup]="formContractor"
+                class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
                 <div class="nationality">
-                    <mat-form-field  appearance="outline">
+                    <mat-form-field class="hiring" appearance="outline">
+                        <mat-label>{{elemento}}</mat-label>
+                        <mat-select  formControlName="elemento" [(ngModel)]="componentselectId" (selectionChange)="getElements()"
+                            name="componente">
+                            <mat-option *ngFor="let componente of componentes" [value]="componente.id">
+                                {{componente.nombreComponente}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                    </mat-form-field>
+                    <mat-form-field class="hiring" appearance="outline">
+                        <mat-label>{{elemento}}</mat-label>
+                        <mat-select formControlName="componente" [(ngModel)]="elementselectId" (selectionChange)="asignElement()"
+                            name="elemento">
+                            <mat-option *ngFor="let element of elements" [value]="element.id">
+                                {{element.nombreElemento}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="nationality">
+                    <mat-form-field appearance="outline">
                         <mat-label>Rubro</mat-label>
                         <input type="text" id="rubro" formControlName="rubro" autocomplete="off" matInput
                             placeholder="rubro">
@@ -171,7 +196,7 @@
 
                 </div>
                 <div class="nationality">
-                    <mat-form-field  appearance="outline">
+                    <mat-form-field appearance="outline">
                         <mat-label>Numero Adicion</mat-label>
                         <input type="text" id="noAdicion" formControlName="noAdicion" autocomplete="off" matInput
                             placeholder="no Adicion">
@@ -234,11 +259,10 @@
             </form>
         </mat-dialog-content>
         <mat-dialog-actions class="action" align="end">
-            <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="true" >Cancelar</button>
+            <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="true">Cancelar</button>
             <button mat-flat-button [color]="'primary'" type="submit" [mat-dialog-close]="true"
                 [disabled]="formContractor .disabled" *ngIf="!formContractor.disabled"
                 (click)="addContractor()">Aceptar</button>
         </mat-dialog-actions>
     </div>
 </div>
-   

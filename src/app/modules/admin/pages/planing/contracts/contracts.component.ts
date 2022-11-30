@@ -34,7 +34,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['companyName','projectName','registerDate','budget','contractCant','action'];
+    displayedColumns: string[] = ['companyName','projectName','budget','contractCant','action'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
 
     /**
@@ -54,7 +54,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy
     columnas = [ 
         {title: 'NOMBRE EMPRESA', name: 'companyName'},
         {title: 'NOMBRE PROYECTO', name: 'projectName'},
-        {title: 'FECHA REGISTRO', name: 'registerDate'},
         {title: 'PRESUPUESTO', name: 'budget'},
         {title: 'CANTIDAD CONTRATISTA', name: 'contractCant'},
         {title: '', name: 'action'},    

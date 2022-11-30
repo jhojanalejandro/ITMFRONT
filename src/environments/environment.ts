@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    //apiURL: 'https://localhost:44353/',
-    apiURL: 'https://localhost:7163/',
+    apiURL: 'https://localhost:44353/',
+    // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -27,6 +27,7 @@ export const environment = {
     GetByIdFolderContractorEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
+    asignmentData: 'Contractor/UpdateAsignment',
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -68,8 +69,14 @@ export const environment = {
 
     addComponent: 'Componente/Add/',
     getComponent: 'Componente/Get/',
+    getComponentById: 'Componente/GetById/',
+
     deleteComponent: 'Componente/Delete/',
     addElementosComponent: 'Api/ElementosComponente',
+    geElementoById: 'Api/ElementosComponente/GetById/',
+
+
+
     addElementosComponentByContract: 'Api/ElementosComponente/GetByContractId/',
 
     getDepartmentsColombia:

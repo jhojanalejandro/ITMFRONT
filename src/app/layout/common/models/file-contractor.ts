@@ -10,5 +10,6 @@ export interface IFileContractor{
     registerDate: Date;
     modifyDate: Date;
     passed: boolean;
+    typeFilePayment: string;
 }
 

@@ -35,13 +35,8 @@ import {
     EconomicChart,
     Components,
 } from '../economic-chart.types';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { TypeSelectString } from 'app/layout/common/models/TypeSelect';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { ChartComponent } from 'ng-apexcharts';
-import { ElementCardComponent } from '../element/element.component';
-import { AddComponentsComponent } from '../componentes/components.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -105,14 +100,10 @@ export class EconomicChartListComponent
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseConfirmationService: FuseConfirmationService,
         private _formBuilder: FormBuilder,
         private _economicService: EconomicChartService,
         private authService: AuthService,
-        private _matDialog: MatDialog,
-        private _activatedRoute: ActivatedRoute,
         private _router: Router,
-        private coockie: CookieService
     ) {
         this.projectData$ = this._economicService._economicsChart$;
         this.dataSource = new MatTableDataSource(

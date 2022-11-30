@@ -14,6 +14,7 @@ import {
 import { InventoryPagination, EconomicChart } from './economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
 
 @Injectable({
     providedIn: 'root',
@@ -125,11 +126,10 @@ export class EconomicChartService {
     getComponent(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.getComponent;
-        return this._httpClient.get<any>(urlEndpointGenerate + id);
+        return this._httpClient.get<Componente[]>(urlEndpointGenerate + id);
     }
 
     addElementoComponente(data: any) {
-        debugger
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
@@ -138,15 +138,26 @@ export class EconomicChartService {
     getElementoComponente(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent + '/Get/';
-        return this._httpClient.get<any>(urlEndpointGenerate + id);
+        return this._httpClient.get<IElements[]>(urlEndpointGenerate + id);
     }
 
-    getElementoComponenteByContract(id: any) {
+    getComponentById(id: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.addElementosComponentByContract;
-        return this._httpClient.get<any>(urlEndpointGenerate + id);
+            this.apiUrl + environment.getComponentById;
+        return this._httpClient.get<Componente>(urlEndpointGenerate + id);
     }
 
+    
+    getElementoById(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.geElementoById;
+        return this._httpClient.get<IElements>(urlEndpointGenerate + id);
+    }
+    asignmentData(data: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.asignmentData;
+        return this._httpClient.post<any>(urlEndpointGenerate, data);
+    }
     DeleteComponent(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);

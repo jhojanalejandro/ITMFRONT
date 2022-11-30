@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import swal from 'sweetalert2';
@@ -17,7 +17,8 @@ import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
-import { IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
+import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
+import { AsignmentData } from '../models/asignment-data';
 
 
 @Component({
@@ -32,19 +33,23 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   data: any;
   userName: any;
   value: any;
+  disableElement: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
-  contratos: any;
   elements: IElements[];
+  componentes: Componente[];
   configForm: FormGroup;
+  componentselectId: any;
+  elementselectId: any;
+
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombreCompleto', 'documentoDeIdentificacion', 'correo', 'telefono', 'nacionalidad', 'fechaNacimiento', 'Element', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'componenteId', 'elementId', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
@@ -65,13 +70,13 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   ) {
   }
   columnas = [
-    { title: 'NOMBRE', name: 'nombreCompleto' },
-    { title: 'CEDULA', name: 'documentoDeIdentificacion' },
+    { title: 'NOMBRE', name: 'nombre' },
+    { title: 'CEDULA', name: 'identificacion' },
     { title: 'CORREO', name: 'correo' },
     { title: 'TELEFONO', name: 'telefono' },
-    { title: 'NACIONALIDAD', name: 'nacionalidad' },
     { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
-    { title: '', name: 'Element' },
+    { title: '', name: 'componenteId' },
+    { title: '', name: 'elementId' },
     { title: '', name: 'acciones' }
   ]
 
@@ -82,7 +87,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.userName = this.auth.accessName
     this.id = this.router.snapshot.paramMap.get('id') || 'null';
     this.getDataContractor(this.id);
-    this.getElements();
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -114,8 +118,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
           autoFocus: false,
           data: {
             idUser: this.auth.accessId,
-            data
-          }
+            data          }
         });
         dialogRef.afterClosed().subscribe((result) => {
           if (result) {
@@ -208,6 +211,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(Response);
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;
+
+
     });
 
   }
@@ -215,7 +220,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     //esta validacion nos permite mostrar y ocltar los detalles de una operacion
-    console.log('data',this.selection.selected );
+    //console.log('data', this.selection.selected);
 
     return numSelected === numRows;
 
@@ -275,14 +280,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
 
   }
-  getElements() {
-    debugger
-    this._service
-        .getElementoComponenteByContract(this.id)
-        .subscribe((response) => {
-          debugger
-            this.elements = response;
-        });
-}
+
 
 }
