@@ -21,6 +21,7 @@ import { EconomicChartListComponent } from './economic-chart/list/economic-chart
 import { ElementCardComponent } from './economic-chart/element/element.component';
 import { AddComponentsComponent } from './economic-chart/componentes/components.component';
 import { ComponentesFormComponent } from './economic-chart/componentes/componentes-form/componentes-form.component';
+import { DialogChangePercentajeComponent } from './economic-chart/componentes/DialogChangePercentaje/DialogChangePercentaje.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ComponentesFormComponent } from './economic-chart/componentes/component
         ContrtactsComponent,
         AddComponentsComponent,
         ElementCardComponent,
-        ComponentesFormComponent
+        ComponentesFormComponent,
+        DialogChangePercentajeComponent
     ],
     imports     : [
         RouterModule.forChild(PlaningRoutes),
