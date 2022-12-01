@@ -57,7 +57,7 @@ export class ListFolderFileContractorService
         }else{
             folderId = 0;
         }
-    
+        debugger
         // Filter the items by folder id. If folder id is null,
         // that means we want to root items which have folder id
         // of null

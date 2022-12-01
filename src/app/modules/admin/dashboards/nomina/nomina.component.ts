@@ -35,7 +35,7 @@ export class NominaComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['companyName', 'projectName', 'registerDate','contractorCant', 'action'];
+  displayedColumns: string[] = ['companyName', 'projectName','contractorCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
 
   /**
@@ -53,8 +53,7 @@ export class NominaComponent implements OnInit, OnDestroy {
   columnas = [
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
-    { title: 'FECHA REGISTRO', name: 'registerDate' },
-    { title: 'Cantidad', name: 'contractorCant' },
+    { title: 'CANTIDAD CONTRATISTAS', name: 'contractorCant' },
     // {title: 'REVISADO', name: 'done'},
     { title: '', name: 'action' },
   ]

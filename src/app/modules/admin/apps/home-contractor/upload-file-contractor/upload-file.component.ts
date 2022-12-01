@@ -88,7 +88,6 @@ export class UploadFileComponent implements OnInit {
   }
   
   addFileContractor(event) {
-    let arr = this._data.contractorId.split('/');
     const registerFile: any={
       userId: this._auth.accessId,
       contractorId: this._auth.accessId,

@@ -82,7 +82,6 @@ export class AddComponentsComponent implements OnInit {
     ngOnInit(): void {}
 
     chargeData() {
-        debugger;
         this._Economicservice.getComponent(this.id).subscribe((response) => {
             if (response.length != 0) {
                 this.data = response;
@@ -94,7 +93,7 @@ export class AddComponentsComponent implements OnInit {
                     'Primero Agregue componentes para poder visualizar información',
                     'question'
                 );
-                this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
+                //this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
             }
         });
     }
@@ -127,7 +126,6 @@ export class AddComponentsComponent implements OnInit {
     }
 
     addComponent() {
-        debugger
         let e = this.id;
         const dialogRef = this._matDialog.open(ComponentesFormComponent, {
             autoFocus: false,
@@ -137,11 +135,14 @@ export class AddComponentsComponent implements OnInit {
             },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            this._Economicservice
+            if(result){
+                this._Economicservice
                 .getComponent(this.id)
                 .subscribe((response) => {
                     this.data = response;
                 });
+            }
+
         });
     }
 

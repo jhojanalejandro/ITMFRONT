@@ -63,7 +63,6 @@ export class UploadDataService
         let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
         return  this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
-                debugger
                 this._data.next(response);
             })
         );

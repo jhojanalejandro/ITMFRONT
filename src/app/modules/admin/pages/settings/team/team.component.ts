@@ -82,7 +82,6 @@ export class SettingsTeamComponent implements OnInit
         .updateUser(user)
         .subscribe((res) => {   
           if(res){
-            debugger
             swal.fire('Usuario Actualizado Exitosamente!', '', 'success');
           }
   

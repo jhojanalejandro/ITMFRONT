@@ -136,7 +136,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       rubro:  this.formContractor.value.rubro,
       nombreRubro:  this.formContractor.value.nombreRubro
     };
-    debugger
     this._upload
       .addContractor(registerContractor)
       .subscribe((res) => {

@@ -81,7 +81,6 @@ export class ComponentesFormComponent implements OnInit {
     }
 
     abrirDivHtml() {
-        debugger;
         this.abrirDiv = true;
     }
     /**

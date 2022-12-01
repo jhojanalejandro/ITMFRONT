@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
-import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from './list-folder-contractor.service';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
@@ -115,6 +115,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
         dialogRef.afterClosed().subscribe((result) => {
             if(result){
                 this.getData();
+                this.getItems();
             }
         });               
     }
@@ -140,14 +141,9 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+        this.getItems();
 
-            this._fileManagerService.item$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
-                this.item = item;
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
             .pipe(takeUntil(this._unsubscribeAll))
@@ -158,5 +154,15 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+    }
+    getItems(){
+        this._fileManagerService.getItemById(this.idFolder)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((item: Item) => {
+            this.item = item;
+            // Mark for check
+            
+            this._changeDetectorRef.markForCheck();
+        });
     }
 }

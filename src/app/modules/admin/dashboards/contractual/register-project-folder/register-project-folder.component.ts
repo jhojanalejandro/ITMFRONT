@@ -7,6 +7,7 @@ import swal from 'sweetalert2';
 import { IProjectFolder } from 'app/modules/admin/dashboards/contractual/register-project-folder/model/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { IDetailProjectFolder } from "./model/detail-project";
 
 
 @Component({
@@ -53,7 +54,6 @@ export class ProjectFolderComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    debugger
     if(this._data != null){
       if(this.projectName = this._data.data.execution){
         this.execution = 'Ejecutar Contrato';
@@ -84,26 +84,27 @@ export class ProjectFolderComponent implements OnInit {
     this.ref.detectChanges();
   }
   addProjectFolder() {
-    debugger
     if(this.formProject.value.ejecucion == 'Ejecutar Contrato'){
       this.formProject.value.ejecucion = true; 
     }else{
       this.formProject.value.ejecucion = false; 
+    }
+    const detalle: IDetailProjectFolder = {
+      fechaContrato: this.formProject.value.fechaContrato,
+      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
+      adicion: false,
+      tipoContrato: '',
+      idContrato: 0
     }
     const registerProject: IProjectFolder={
       userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,
-      registerDate: this.registerDate, 
-      modifyDate: this.registerDate, 
       execution:  this.formProject.value.ejecucion,
-      budget:0,
-      fechaContrato: this.formProject.value.fechaContrato,
-      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       activate: false,
       contractorsCant: 0,
-      componentes: []
+      detalleContratoDto: detalle
     };  
     this._upload.addProjectFolder(registerProject).subscribe((res) => {   
         if(res){
@@ -123,23 +124,28 @@ export class ProjectFolderComponent implements OnInit {
     });
   }
 
-
   async editProjectFolder(){
+    let adicion: boolean = false;
+    if(this._data.data.fechaFinalizacion != this.formProject.value.fechaFinalizacion){
+      adicion = true;
+    }
+    const detalle: IDetailProjectFolder = {
+      fechaContrato: this.formProject.value.fechaContrato,
+      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
+      adicion: adicion,
+      tipoContrato: '',
+      idContrato: this._data.data.id
+    }
     const registerProject: IProjectFolder={
       id: this._data.data.id,
       userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
       descriptionProject: this.formProject.value.description,
-      registerDate: this._data.data.registerDate, 
-      modifyDate: this.registerDate,   
       execution:  this.formProject.value.ejecucion,
-      budget:0,
-      fechaContrato: this.formProject.value.fechaContrato,
-      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       activate: false,
       contractorsCant: 0,
-      componentes: []
+      detalleContratoDto: detalle
     };  
     this._upload.UpdateProjectFolder(registerProject).subscribe((res) => {   
         if(res){
@@ -164,7 +170,6 @@ export class ProjectFolderComponent implements OnInit {
   } 
 
   dateChange(){
-    debugger
       this.minDate = new Date(this.formProject.value.fechaContrato);
       this.ref.markForCheck();
 
