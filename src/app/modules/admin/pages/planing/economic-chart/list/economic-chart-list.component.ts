@@ -40,6 +40,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
     selector: 'economic-chart-list',
@@ -102,12 +103,14 @@ export class EconomicChartListComponent
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         private _economicService: EconomicChartService,
+        private _genericService: GenericService,
         private authService: AuthService,
         private _router: Router,
     ) {
         this.projectData$ = this._economicService._economicsChart$;
         this.dataSource = new MatTableDataSource(
             this.projectData$.source._value
+
         );
     }
 
@@ -126,6 +129,7 @@ export class EconomicChartListComponent
             images: [[]],
             active: [false],
         });
+        this.getDetailContract();
     }
 
     ngAfterViewInit(): void {
@@ -257,7 +261,6 @@ export class EconomicChartListComponent
     }
 
     deleteComponent(componente: any) {
-        debugger;
         this._economicService.DeleteComponent(componente.id).subscribe(
             (res) => {
                 if (res) {
@@ -274,5 +277,19 @@ export class EconomicChartListComponent
                 swal.fire('Error al Eliminar la informacion!', '', 'error');
             }
         );
+    }
+
+    getDetailContract(){
+        for (let index = 0; index < this.projectData$.source._value.length; index++) {
+            this._genericService.getDetalleContrato(this.projectData$.source._value[index].id, false).subscribe((resp: any) => {
+                debugger
+                this.projectData$.source._value[index].fechaContrato = resp.fechaContrato;
+                this.projectData$.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;
+
+                console.log(resp);
+                
+            })
+        }
+
     }
 }

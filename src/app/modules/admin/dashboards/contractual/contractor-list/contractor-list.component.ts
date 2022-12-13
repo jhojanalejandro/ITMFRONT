@@ -12,13 +12,14 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ContractorListService } from './contractor-list.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ContractorDataRegisterComponent } from '../register-data-contractor/register-data-contractor.component';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
 import { AsignmentData } from '../models/asignment-data';
+import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
+import { AdicionFormComponent } from './adicion-form/adicion-form.component';
 
 
 @Component({
@@ -110,7 +111,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
   }
   openDialog(route: any, data: any) {
-    //this.validateDinamycKey();
     switch (route) {
       case 'registerData':
         const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
@@ -118,7 +118,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
           autoFocus: false,
           data: {
             idUser: this.auth.accessId,
-            data          }
+            data
+          }
         });
         dialogRef.afterClosed().subscribe((result) => {
           if (result) {
@@ -126,8 +127,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
           }
         });
         break
-      case 'contractorPayment':
-        const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
+      case 'Adicion':
+        const dialogAdicion = this._matDialog.open(AdicionFormComponent, {
           width: '900px',
           autoFocus: false,
           data: {
@@ -135,7 +136,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
             data
           }
         });
-        dialogRefPayment.afterClosed().subscribe((result) => {
+        dialogAdicion.afterClosed().subscribe((result) => {
           if (result) {
             this.getDataContractor(this.id);
           }
@@ -272,11 +273,15 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
   }
-  async SendMailsAccounts(id: any) {
-    (await this._contractorList.getByIdProject(id)).subscribe((Response) => {
-      this.dataSource = new MatTableDataSource(Response);
-      this.dataSource.sort = this.sort;
-      this.dataSource.data = Response;
+  SendMailsAccounts() {
+
+    // this.selection.selected.forEach(element => {
+
+    // });
+    let ids: any = { 'idContrato': this.id, 'idContratistas': this.selection.selected }
+    this._contractorList.sendmailsAccounts(ids).subscribe((Response) => {
+      console.log(Response);
+
     });
 
   }

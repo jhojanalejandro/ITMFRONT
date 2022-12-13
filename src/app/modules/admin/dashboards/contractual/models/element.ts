@@ -1,5 +1,5 @@
 export interface IElements{
-    id: any;
+    id?: any;
     nombreElemento: string;
     idComponente: string;
     cantidadContratistas: number;
@@ -11,6 +11,7 @@ export interface IElements{
     nombreCpc: string;
     adicion: boolean;
     tipoElemento: string;
+    recursos: number; 
 }
 
 

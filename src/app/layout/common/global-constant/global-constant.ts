@@ -52,6 +52,7 @@ export class GlobalConst {
 
     public static tipoElemento: TypeSelectString[]=[
         { viewValue: 'Docente'},
+        { viewValue: 'Suministro'},
         { viewValue: 'Corriente'}, 
     ] 
     public static requierePoliza: TypeSelectString[]=[

@@ -78,5 +78,55 @@ export class FileManagerFolderCResolver implements Resolve<any>
 
 
 
+@Injectable({
+    providedIn: 'root'
+})
+export class FileManagerItemResolverFile implements Resolve<any>
+{
+    /**
+     * Constructor
+     */
+    constructor(
+        private _router: Router,
+        private _fileManagerService: ListFolderContractorService
+    )
+    {
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Resolver
+     *
+     * @param route
+     * @param state
+     */
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
+    {
+        return this._fileManagerService.getItemById(route.paramMap.get('folderId'))
+                   .pipe(
+                       // Error here means the requested task is not available
+                       catchError((error) => {
+
+                           // Log the error
+                           console.error(error);
+
+                           // Get the parent url
+                           const parentUrl = state.url.split('/').slice(0, -1).join('/');
+
+                           // Navigate to there
+                           this._router.navigateByUrl(parentUrl);
+
+                           // Throw an error
+                           return throwError(error);
+                       })
+                   );
+    }
+}
+
+
+
 
 

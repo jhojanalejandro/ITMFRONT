@@ -13,12 +13,14 @@ import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.comp
 import { nominaRoutes } from 'app/modules/admin/dashboards/nomina/nomina.routing';
 import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
 import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
+import { ContractorListComponent } from './contractor-list/contractor-list.component';
 
 @NgModule({
     declarations: [
         NominaComponent,
         ContractorPaymentRegisterComponent,
-        CollectionAccountsListComponent
+        CollectionAccountsListComponent,
+        ContractorListComponent
     ],
     imports     : [
         RouterModule.forChild(nominaRoutes),

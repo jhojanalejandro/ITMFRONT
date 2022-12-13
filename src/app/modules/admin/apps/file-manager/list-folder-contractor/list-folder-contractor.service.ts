@@ -47,7 +47,6 @@ export class ListFolderContractorService
 
     getItemById(idC: any): Observable<Item>
     {
-
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileContractByIdEndpoint;
         return this._httpClient.get<any>(urlEndPoint+ idC).pipe(

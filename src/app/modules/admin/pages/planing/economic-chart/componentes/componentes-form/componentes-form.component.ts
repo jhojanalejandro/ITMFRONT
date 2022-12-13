@@ -44,8 +44,6 @@ export class ComponentesFormComponent implements OnInit {
     numberOfTicks = 0;
     data: any;
     componentName: string = null;
-    rubro: string = null;
-    nombreRubro: string = null;
     update: boolean;
     id: string = null;
     configForm: FormGroup;
@@ -93,8 +91,6 @@ export class ComponentesFormComponent implements OnInit {
                 this.componentName,
                 Validators.required
             ),
-            rubro: new FormControl(this.rubro, Validators.required),
-            nombreRubro: new FormControl(this.nombreRubro, Validators.required),
         });
     }
 

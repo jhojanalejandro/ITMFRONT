@@ -28,6 +28,7 @@ export const environment = {
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
+    sendMails: 'Contractor/SendContractorAccount',
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -36,10 +37,10 @@ export const environment = {
 
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/Update',
-    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
+    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll/',
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
-
+    GetByIdDetailEndpoint: 'ProjectFolder/GetByIdDetail',
     addContractorPaymentsEndpoint: 'ContractorPayments/Add',
     UpdateContractorPaymentsEndpoint: 'ContractorPayments/Update',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
@@ -72,13 +73,13 @@ export const environment = {
     getComponent: 'Componente/Get/',
     getComponentById: 'Componente/GetById/',
 
+    addElement: 'ElementosComponente/Add/',
+    getElementosById: 'ElementosComponente/GetByIdComponente',
+
     deleteComponent: 'Componente/Delete/',
-    addElementosComponent: 'Api/ElementosComponente',
-    geElementoById: 'Api/ElementosComponente/GetById/',
+    addElementosComponent: 'ElementosComponente',
+    geElementoById: 'ElementosComponente/GetById/',
 
-
-
-    addElementosComponentByContract: 'Api/ElementosComponente/GetByContractId/',
 
     getDepartmentsColombia:
         'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

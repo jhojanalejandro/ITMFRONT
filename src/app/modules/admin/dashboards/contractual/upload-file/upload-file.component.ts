@@ -8,6 +8,7 @@ import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from './upload-file.service';
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
   selector: 'app-register-contractor',
@@ -35,6 +36,8 @@ export class UploadFileComponent implements OnInit {
   constructor(
     private ref: ChangeDetectorRef,
     private _upload: UploadFileDataService,
+    private _gerenicService: GenericService,
+
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
     private _formBuilder: FormBuilder,
@@ -164,7 +167,7 @@ export class UploadFileComponent implements OnInit {
   }
   getContractsData() {
     // Get the data
-    this._upload.getAllContract()
+    this._gerenicService.getAllContract(true)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((data) => {
         this.contratos = data;

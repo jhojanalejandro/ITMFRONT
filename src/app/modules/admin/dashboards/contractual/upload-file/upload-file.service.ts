@@ -35,13 +35,4 @@ export class UploadFileDataService
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
-    getAllContract(): Observable<any>
-    {
-        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
-        return  this._httpClient.get(urlEndPoint).pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
-    }
 }

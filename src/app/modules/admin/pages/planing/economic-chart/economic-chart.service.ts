@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
     BehaviorSubject,
     filter,
@@ -15,6 +15,8 @@ import { InventoryPagination, EconomicChart } from './economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
+import { DetalleContrato } from './models/detalle-contrato';
+import { EconomicContractor } from 'app/modules/admin/dashboards/contractual/contractor-list/models/economic-data-contractor';
 
 @Injectable({
     providedIn: 'root',
@@ -32,7 +34,7 @@ export class EconomicChartService {
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient) {}
+    constructor(private _httpClient: HttpClient) { }
 
     /**
      * Getter for pagination
@@ -75,7 +77,7 @@ export class EconomicChartService {
         pagination: InventoryPagination;
         economicChart: EconomicChart[];
     }> {
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint + false;
         return this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
                 this._economicsChart.next(response);
@@ -147,7 +149,7 @@ export class EconomicChartService {
         return this._httpClient.get<Componente>(urlEndpointGenerate + id);
     }
 
-    
+
     getElementoById(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.geElementoById;
@@ -162,4 +164,12 @@ export class EconomicChartService {
         let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
+
+    sendEconomicdataContractor(model: EconomicContractor) {
+        let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
+    }
+
+
+
 }

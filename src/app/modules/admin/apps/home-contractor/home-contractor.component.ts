@@ -7,12 +7,10 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ActivatedRoute, Router } from '@angular/router';
 import { HomeContractorService } from './home-contractor.service';
-import { UploadFileComponent } from './upload-file-contractor/upload-file.component';
+import { UploadFileContractorComponent } from './upload-file-contractor/upload-file.component';
 import { saveAs } from "file-saver";
 import JSZip from 'jszip';
 
@@ -58,7 +56,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     this.userName = this.auth.accessName
   }
   openDialog() {
-    const dialogRef = this._matDialog.open(UploadFileComponent, {
+    const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
       autoFocus: false,
       data: {
         idUser: this.auth.accessId,

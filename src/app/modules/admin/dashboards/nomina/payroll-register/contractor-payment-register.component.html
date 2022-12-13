@@ -17,12 +17,8 @@
         <!-- <h1>Nombre Contratista</h1> -->
         <form [formGroup]="formContractorPayment" class="example-form overflow-y-auto">
             <div>
-                <mat-form-field class="p-6 fuse-mat-textarea fuse-mat-no-subscript w-full">
-                    <textarea
-                        matInput
-                        [formControlName]="'contractorName'"
-                        [rows]="1"
-                        cdkTextareaAutosize
+                <mat-form-field class="p-6 fuse-mat-textarea fuse-mat-no-subscript w-full hiringD">
+                    <textarea matInput  [formControlName]="'contractorName'" [rows]="1" cdkTextareaAutosize
                         [cdkAutosizeMinRows]="1">
                     </textarea>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user'"></mat-icon>
@@ -32,25 +28,25 @@
             <div class="nationality">
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Cantidad A pagar</mat-label>
-                    <input type="number" id="compromiso" formControlName="paymentcant" autocomplete="off" matInput
-                        placeholder="Compromiso">
+                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.unitValue" formControlName="cashPayment"
+                        autocomplete="off" matInput placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                    <mat-error *ngIf="formContractorPayment.get('paymentcant').hasError('required')">
+                    <mat-error *ngIf="formContractorPayment.get('cashPayment').hasError('required')">
                         El Campo pago es requerido
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Total Se debe</mat-label>
-                    <input type="number" id="compromiso" formControlName="paymentcant" autocomplete="off" matInput
-                        placeholder="Compromiso">
+                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.debt" formControlName="totalDebt"
+                        autocomplete="off" matInput placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                    <mat-error *ngIf="formContractorPayment.get('paymentcant').hasError('required')">
+                    <mat-error *ngIf="formContractorPayment.get('totalDebt').hasError('required')">
                         El Campo cedula es requerido
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Valor Contrato</mat-label>
-                    <input type="number" id="compromiso" formControlName="paymentcant" autocomplete="off" matInput
+                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.totalValue" formControlName="paymentcant" autocomplete="off" matInput
                         placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     <mat-error *ngIf="formContractorPayment.get('paymentcant').hasError('required')">
@@ -71,7 +67,7 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="outline">
-                    <mat-label>Entidad bancaria</mat-label>
+                    <mat-label>Tipo Pago</mat-label>
                     <mat-select [formControlName]="'cashPayment'" name="cashPayment">
                         <mat-option *ngFor="let pago of pagos" [value]="pago.viewValue">
                             {{pago.viewValue}}

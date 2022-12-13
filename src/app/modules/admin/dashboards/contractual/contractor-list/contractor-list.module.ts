@@ -15,15 +15,17 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { ContractorListComponent } from './contractor-list.component';
-import { ContractorDataRegisterComponent } from '../register-data-contractor/register-data-contractor.component';
 import { contractorListRoutes } from './contractor-list.routing';
 import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
+import { AdicionFormComponent } from './adicion-form/adicion-form.component';
+import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
 
 
 @NgModule({
     declarations: [
         ContractorListComponent,
         ContractorDataRegisterComponent,
+        AdicionFormComponent
     ],
     imports     : [
         RouterModule.forChild(contractorListRoutes),

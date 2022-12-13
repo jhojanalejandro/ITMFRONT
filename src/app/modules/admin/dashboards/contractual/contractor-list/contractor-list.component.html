@@ -10,7 +10,7 @@
         </div>
         <div class="mt-4 sm:mt-0">
             <!-- Add section button -->
-            <button mat-flat-button [color]="'accent'" [matTooltip]="'Shortcut: Ctrl + .'">
+            <button mat-flat-button [color]="'accent'" (click)="SendMailsAccounts()" [matTooltip]="'Shortcut: Ctrl + .'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
@@ -103,7 +103,7 @@
                                                 Eliminar
                                             </button>
                                             <button [matTooltip]="'Agregar adicion'"
-                                            (click)="openConfirmationDelete(element)" [color]="'primary'"
+                                            (click)="openDialog('Adicion',element)" [color]="'primary'"
                                             mat-menu-item>
                                             <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
                                             Agregar Adicion

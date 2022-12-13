@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { IElements } from '../contractual/models/element';
+import { EconomicContractor } from '../contractual/contractor-list/models/economic-data-contractor';
 
 @Injectable({
     providedIn: 'root'
@@ -34,11 +36,6 @@ export class NominaService {
     }
 
 
-    UpdateContractorPayment(formdata: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.UpdateContractorPaymentsEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
-    }
-
     DeleteContractorPayment(id: any) {
         let urlEndPoint = this.apiUrl + environment.DeleteContractorPaymentsEndpoint;
         return this._httpClient.get<any>(urlEndPoint + id);
@@ -56,10 +53,7 @@ export class NominaService {
         let urlEndPoint = this.apiUrl+ environment.GetByIdContractorPaymentsEndpoint;
         return this._httpClient.get<any>(urlEndPoint + id);
     }  
-    getByIdEconomicDataContractor(id: any){
-        let urlEndPoint = this.apiUrl+ environment.GetByIdEconomicDataContractorEndpoint;
-        return this._httpClient.get<any>(urlEndPoint + id);
-    }  
+
     getAllContractPayments(): Observable<any> {
         let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
         return this._httpClient.get(urlEndPoint).pipe(
@@ -68,21 +62,15 @@ export class NominaService {
             })
         );
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Get data
-     */
-    getData(): Observable<any> {
-        return this._httpClient.get('api/dashboards/finance').pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
+    getByIdEconomicDataContractor(id: any) {
+        let urlEndPoint = this.apiUrl + environment.GetByIdEconomicDataContractorEndpoint;
+        return this._httpClient.get<EconomicContractor>(urlEndPoint + id);
     }
-
+    
+    
+    UpdateEconomicContractorPayment(formdata: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.UpdateEconomicDataContractorEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
     
 }

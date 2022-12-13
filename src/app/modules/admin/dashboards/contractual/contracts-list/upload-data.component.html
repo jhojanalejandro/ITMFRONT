@@ -74,13 +74,9 @@
                             <p *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.registerDate"> {{element[columna.name]}}</p>
                             <p *ngIf="element[columna.name]== element.registerDate">{{element[columna.name] | date}} </p> 
                             <!-- <p *ngIf="element[columna.name]!= element.registerDate && element[columna.name]== element.modifyDate">{{element[columna.name] | date}} </p>  -->
-
                             <p *ngIf="element[columna.name]== element.acciones" >                                                      
                                 <button [matTooltip]="'Mostrar Contratistas'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData', element)" mat-flat-button [color]="'accent'">
                                     <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
-                                </button>
-                                <button [matTooltip]="'Eliminar Contrato'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData', element)" mat-flat-button [color]="'warn'">
-                                    <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
                                 </button>
                             </p> 
                         </td>

@@ -77,10 +77,10 @@
 
                             <p *ngIf="element[columna.name]== element.acciones" >                                               
                                 <button [matTooltip]="'Editar Contrato'" style="text-align: center !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('editData',element)" mat-flat-button [color]="'primary'">
-                                    <mat-icon> <span class="material-symbols-outlined">edit</span> </mat-icon>
+                                    <mat-icon> <span class="material-symbols-outlined">editar</span> </mat-icon>
                                 </button>              
 
-                                <button [matTooltip]="'Eliminar Contrato'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('registerData', element)" mat-flat-button [color]="'warn'">
+                                <button [matTooltip]="'Eliminar Contrato'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openConfirmationDelete(element)" mat-flat-button [color]="'warn'">
                                     <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
                                 </button>
                             </p> 
