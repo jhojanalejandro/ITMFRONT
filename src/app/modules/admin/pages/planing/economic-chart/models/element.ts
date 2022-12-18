@@ -12,6 +12,8 @@ export interface IElements{
     adicion: boolean;
     tipoElemento: string;
     recursos: number; 
+    consecutivo: string;
+
 }
 
 

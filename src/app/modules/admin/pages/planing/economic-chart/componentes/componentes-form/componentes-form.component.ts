@@ -91,6 +91,10 @@ export class ComponentesFormComponent implements OnInit {
                 this.componentName,
                 Validators.required
             ),
+            consecutivo: new FormControl(
+                this.componentName,
+                Validators.required
+            ),
         });
     }
 

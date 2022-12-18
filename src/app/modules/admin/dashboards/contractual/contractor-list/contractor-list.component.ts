@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
-import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
 import { AsignmentData } from '../models/asignment-data';
 import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
 import { AdicionFormComponent } from './adicion-form/adicion-form.component';
@@ -34,6 +34,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   data: any;
   userName: any;
   value: any;
+  minuta: boolean;
+  estudioPrevio: boolean;
+  cuentaCobro: boolean;
+  minutaAdicion: boolean;
   disableElement: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
@@ -58,13 +62,12 @@ export class ContractorListComponent implements OnInit, OnDestroy {
    * Constructor
    */
   constructor(
-    private _contractorList: ContractorListService,
+    private _contractorListService: ContractorListService,
     private _matDialog: MatDialog,
     private auth: AuthService,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private router: ActivatedRoute,
-    private _service: EconomicChartService,
     private _formBuilder: FormBuilder,
     private _fuseConfirmationService: FuseConfirmationService
 
@@ -208,12 +211,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
 
   async getDataContractor(id: any) {
-    (await this._contractorList.getByIdProject(id)).subscribe((Response) => {
+    (await this._contractorListService.getContractorByIdProject(id)).subscribe((Response) => {
       this.dataSource = new MatTableDataSource(Response);
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;
-
-
     });
 
   }
@@ -222,9 +223,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     const numRows = this.dataSource.data.length;
     //esta validacion nos permite mostrar y ocltar los detalles de una operacion
     //console.log('data', this.selection.selected);
-
     return numSelected === numRows;
-
   }
   masterToggle() {
     if (this.isAllSelected()) {
@@ -232,7 +231,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       this.selection.clear();
       return;
     }
-
     this.selection.select(...this.dataSource.data);
   }
 
@@ -240,9 +238,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Id + 1}`;
-
   }
   //metodo que obtiene las columnas seleccionadas de la grid
   selectRow($event: any, dataSource: any) {
@@ -258,7 +254,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     // Subscribe to afterClosed from the dialog reference
     dialogRef.afterClosed().subscribe((result) => {
       if (result == 'confirmed') {
-        this._contractorList.DeleteContractor(element.id).subscribe((res) => {
+        this._contractorListService.DeleteContractor(element.id).subscribe((res) => {
           if (res) {
             swal.fire('informacion Eliminada Exitosamente!', '', 'success');
 
@@ -274,12 +270,11 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
   }
   SendMailsAccounts() {
-
     // this.selection.selected.forEach(element => {
 
     // });
     let ids: any = { 'idContrato': this.id, 'idContratistas': this.selection.selected }
-    this._contractorList.sendmailsAccounts(ids).subscribe((Response) => {
+    this._contractorListService.sendmailsAccounts(ids).subscribe((Response) => {
       console.log(Response);
 
     });

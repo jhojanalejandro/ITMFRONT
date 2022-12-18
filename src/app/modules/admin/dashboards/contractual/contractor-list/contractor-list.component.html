@@ -33,10 +33,9 @@
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #summaryMenu="matMenu">
-                                <button mat-menu-item>Yesterday</button>
-                                <button mat-menu-item>2 days ago</button>
-                                <button mat-menu-item>3 days ago</button>
-                                <button mat-menu-item>4 days ago</button>
+                                <button mat-menu-item>Generar Minuta</button>
+                                <button mat-menu-item>Gnerar Acta de inicio</button>
+
                             </mat-menu>
                         </div>
                     </div>
@@ -102,11 +101,11 @@
                                                 <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
                                                 Eliminar
                                             </button>
-                                            <button [matTooltip]="'Agregar adicion'"
+                                            <button [matTooltip]="'Agregar Modificacion'"
                                             (click)="openDialog('Adicion',element)" [color]="'primary'"
                                             mat-menu-item>
                                             <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
-                                            Agregar Adicion
+                                            Agregar Modificacion
                                         </button>
                                         </mat-menu>
                                     </p>
@@ -129,3 +128,6 @@
         </div>
 
     </div>
+    <app-minuta-contrato *ngIf="minuta"></app-minuta-contrato>
+<app-estudio-previo *ngIf="estudioPrevio"></app-estudio-previo>
+<app-minuta-adicion *ngIf="minutaAdicion"></app-minuta-adicion>

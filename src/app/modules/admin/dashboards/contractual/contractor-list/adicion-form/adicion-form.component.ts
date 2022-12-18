@@ -25,7 +25,7 @@ import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-c
 import { DetalleContrato } from 'app/modules/admin/pages/planing/economic-chart/models/detalle-contrato';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
-import { IElements } from '../../models/element';
+import { IElements } from '../../../../pages/planing/economic-chart/models/element';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
@@ -42,7 +42,7 @@ export class AdicionFormComponent implements OnInit {
     adiciones: any = GlobalConst.requierePoliza;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: 0};
+    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: 0,consecutivo:null};
     disableField:boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     elementos: IElements[] = [];
@@ -181,8 +181,8 @@ export class AdicionFormComponent implements OnInit {
             nombreCpc: this.elementForm.value.nombreCpc,
             adicion: adicion,
             tipoElemento: this.elementForm.value.tipoElemento,
-            recursos: this.elementForm.value.recursos
-
+            recursos: this.elementForm.value.recursos,
+            consecutivo: this.elementForm.value.consecutivo
         };
 
         this._economicService.addElementoComponente(item).subscribe((response) => {

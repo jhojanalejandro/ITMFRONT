@@ -12,12 +12,14 @@ import { HomeContractorComponent } from './home-contractor.component';
 import { contractorRoutes } from './home-contractor.routing';
 import { FuseCardModule } from '@fuse/components/card';
 import { UploadFileContractorComponent } from './upload-file-contractor/upload-file.component';
+import { CuentaCobroComponent } from './cuenta-cobro/cuenta-cobro.component';
 
 
 @NgModule({
     declarations: [
         HomeContractorComponent,
-        UploadFileContractorComponent
+        UploadFileContractorComponent,
+        CuentaCobroComponent
 
     ],
     imports     : [

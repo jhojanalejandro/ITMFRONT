@@ -14,9 +14,10 @@ import {
 import { InventoryPagination, EconomicChart } from './economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
 import { DetalleContrato } from './models/detalle-contrato';
 import { EconomicContractor } from 'app/modules/admin/dashboards/contractual/contractor-list/models/economic-data-contractor';
+import { IHiringData } from 'app/modules/admin/dashboards/contractual/contractor-list/models/hiring-data';
 
 @Injectable({
     providedIn: 'root',
@@ -168,6 +169,13 @@ export class EconomicChartService {
     sendEconomicdataContractor(model: EconomicContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
+    }
+
+
+    getHiringDataById(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetByIdHiringEndpoint;
+        return this._httpClient.get<IHiringData>(urlEndpointGenerate + id);
     }
 
 

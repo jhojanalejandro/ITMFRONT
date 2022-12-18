@@ -21,7 +21,7 @@ import { map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { IElements } from '../../../../dashboards/contractual/models/element';
+import { IElements } from '../models/element';
 import { ListElements } from '../models/list-elements';
 import swal from 'sweetalert2';
 import { EconomicChartService } from '../economic-chart.service';
@@ -54,7 +54,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: null }
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: null, consecutivo: null }
     recursos: number;
     totalExacto: number;
     update: boolean;
@@ -85,7 +85,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _genericService: GenericService,
         private _economicService: EconomicChartService
     ) {
-        if(this._data != null){
+        if(this._data.elemento != null){
+            debugger
             this.showDate = false;
             this.elemento = this._data.elemento;
             this.totalValue = this._data.elemento.valorTotal;
@@ -111,6 +112,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             adicion: new FormControl(null, Validators.required),
             recursos: new FormControl(this.elemento.recursos, Validators.required),
             fechaAdicion: new FormControl(null, Validators.required),
+            consecutivo: new FormControl(null, Validators.required),
 
         });
         this.filteredOptions =
@@ -178,7 +180,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             nombreCpc: this.elementForm.value.nombreCpc,
             adicion: adicion,
             tipoElemento: this.elementForm.value.tipoElemento,
-            recursos: this.elementForm.value.recursos
+            recursos: this.elementForm.value.recursos,
+            consecutivo: this.elementForm.value.consecutivo
+
         };
 
         this._economicService.addElementoComponente(item).subscribe((response) => {

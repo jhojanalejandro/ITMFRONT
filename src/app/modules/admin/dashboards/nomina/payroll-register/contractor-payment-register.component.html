@@ -28,7 +28,7 @@
             <div class="nationality">
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Cantidad A pagar</mat-label>
-                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.unitValue" formControlName="cashPayment"
+                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.unitValue" formControlName="cashPaymentTotal"
                         autocomplete="off" matInput placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     <mat-error *ngIf="formContractorPayment.get('cashPayment').hasError('required')">
@@ -56,13 +56,23 @@
             </div>
             <br>
             <div class="nationality">
-                <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
-                    <mat-label>Fecha a pagar</mat-label>
-                    <input matInput id="fechaContrato" autocomplete="off" formControlName="monthPayment"
-                        [matDatepicker]="pickerContrato">
-                    <mat-datepicker #pickerContrato></mat-datepicker>
-                    <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>
-                    <mat-error *ngIf="formContractorPayment.get('monthPayment').hasError('required')">
+                <mat-form-field (click)="pickerFrom.open()" class="hiring" appearance="outline">
+                    <mat-label>Desde</mat-label>
+                    <input matInput id="from" autocomplete="off" formControlName="from"
+                        [matDatepicker]="pickerFrom">
+                    <mat-datepicker #pickerFrom></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                    <mat-error *ngIf="formContractorPayment.get('from').hasError('required')">
+                        Este Campo es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field (click)="pickerTo.open()" class="hiring" appearance="outline">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput id="to" autocomplete="off" formControlName="to"
+                        [matDatepicker]="pickerTo">
+                    <mat-datepicker #pickerTo></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                    <mat-error *ngIf="formContractorPayment.get('to').hasError('required')">
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
@@ -80,7 +90,14 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-
+            <div class="folder">
+                <mat-form-field class="p-6 fuse-mat-textarea fuse-mat-no-subscript w-full hiringD" appearance="outline">
+                    <textarea type="text"  class="example-full-width" id="description" formControlName="description" autocomplete="off" matInput placeholder="Descripcion"></textarea>
+                    <mat-error *ngIf="formContractorPayment.get('description').hasError('required')">
+                        El Campo Descripcion es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">

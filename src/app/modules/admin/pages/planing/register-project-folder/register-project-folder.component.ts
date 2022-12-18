@@ -54,7 +54,7 @@ export class RegisterProjectFolderComponent implements OnInit {
 
   ngOnInit(): void {
     if (this._data != null) {
-      if (this.projectName = this._data.data.execution) {
+      if (this._data.data.execution) {
         this.execution = 'Ejecutar Contrato';
       } else {
         this.execution = 'En Proceso';

@@ -49,30 +49,41 @@ export class ContractorPaymentRegisterComponent implements OnInit {
   ngOnInit(): void {
     this.getEconomicContractorPayment();
     this.formContractorPayment = this._formBuilder.group({
-      monthPayment: new FormControl(this.registerDate, Validators.required),
+      from: new FormControl(null, Validators.required),
+      to: new FormControl(null, Validators.required),
       paymentcant: new FormControl(null, Validators.required),
+      cashPaymentTotal: new FormControl(null, Validators.required),
       cashPayment: new FormControl(null, Validators.required),
       totalDebt: new FormControl(null, Validators.required),
       registerDate: new FormControl(null, Validators.required),
       contractorName: new FormControl({ value: this.datos.data.nombre, disabled: true }, Validators.required),
+      description: new FormControl(null, Validators.required),
     });
   }
 
   async addContractor() {
+    if(this.formContractorPayment.value.cashPayment ==='pago efectivo'){
+      this.formContractorPayment.value.cashPayment = true
+    }else{
+      this.formContractorPayment.value.cashPayment = false
+    }
     const registerPayment: IContractorPayments = {
       userId: this._auth.accessId,
       contractorId: this.datos.data.id,
-      monthPayment: this.formContractorPayment.value.monthPayment,
-      paymentcant: this.formContractorPayment.value.paymentcant,
+      monthPayment: this.formContractorPayment.value.cashPaymentTotal,
+      paymentcant: this.formContractorPayment.value.cashPaymentTotal,
       cashPayment: this.formContractorPayment.value.cashPayment,
-      registerDate: this.registerDate,
-      modifyDate: this.registerDate
+      registerDate: this.formContractorPayment.value.from,
+      modifyDate: this.formContractorPayment.value.to,
+      descriptionPayment: this.formContractorPayment.value.description
     };
+    debugger
     this._nominaService
       .addContractorPayments(registerPayment)
       .subscribe((res) => {
         if (res) {
           swal.fire('Pago Registrado Exitosamente!', '', 'success');
+          this.updateEconomicContractorPayment();
           this.ref.detectChanges();
           this.ref.markForCheck();
         }

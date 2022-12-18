@@ -10,14 +10,13 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ContractorListService } from './contractor-list.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
-import { Componente, IElements } from 'app/modules/admin/dashboards/contractual/models/element';
-import { EconomicContractor } from '../../contractual/contractor-list/models/economic-data-contractor';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
+import { ContractorListService } from '../../contractual/contractor-list/contractor-list.service';
 
 
 
@@ -190,7 +189,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
 
   async getDataContractor(id: any) {
-    (await this._contractorList.getByIdProject(id)).subscribe((Response) => {
+    (await this._contractorList.getContractorByIdProject(id)).subscribe((Response) => {
       this.dataSource = new MatTableDataSource(Response);
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;

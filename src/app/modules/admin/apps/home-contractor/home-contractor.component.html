@@ -1,5 +1,4 @@
 <div class="flex flex-col flex-auto min-w-0">
-
     <!-- Header -->
     <div class="flex flex-col shadow bg-card">
 
@@ -25,37 +24,6 @@
 
             <!-- Separator -->
             <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
-
-            <!-- Stats -->
-            <!-- <div class="flex items-center mt-6 lg:mt-0 space-x-6">
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">200k</span>
-                    <span class="text-sm font-medium text-secondary">FOLLOWERS</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">1.2k</span>
-                    <span class="text-sm font-medium text-secondary">FOLLOWING</span>
-                </div>
-            </div> -->
-
-            <!-- Menu -->
-            <!-- <div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
-                <a
-                    class="font-medium"
-                    [routerLink]="['./']">
-                    Home
-                </a>
-                <a
-                    class="text-secondary"
-                    [routerLink]="['./']">
-                    About
-                </a>
-                <a
-                    class="text-secondary"
-                    [routerLink]="['./']">
-                    Gallery
-                </a>
-            </div> -->
 
         </div>
 
@@ -151,3 +119,4 @@
     </div>
 
 </div>
+<app-cuenta-cobro *ngIf="cuentaCobro"></app-cuenta-cobro>

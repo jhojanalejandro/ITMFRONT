@@ -14,7 +14,7 @@
                 [formGroup]="elementForm">
                 <div >
                     <mat-form-field [hidden]="showDate" appearance="outline">
-                        <mat-label>Adicion</mat-label>
+                        <mat-label>Modificacion</mat-label>
                         <mat-select [formControlName]="'adicion'" [(ngModel)]="elementselectId" (selectionChange)="selectAdicion()" name="adicion">
                             <mat-option *ngFor="let adicion of adiciones" [value]="adicion.viewValue">
                                 {{adicion.viewValue}}
@@ -37,6 +37,16 @@
                         </mat-icon>
                         <mat-error *ngIf="elementForm.get('adicion').hasError('required')">
                             El Campo arl es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                        <mat-label>Consecutivo</mat-label>
+                        <input matInput id="consecutivo" type="number" formControlName="consecutivo" autocomplete="off" matInput
+                            placeholder="Consecutivo">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                
+                        <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
+                            El Campo actividad es requerido
                         </mat-error>
                     </mat-form-field>
                 </div>

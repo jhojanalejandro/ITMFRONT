@@ -3,7 +3,7 @@ import { DecimalPipe } from "@angular/common";
 export interface IHiringData{
     id?: any;
     contractorId: any;
-    userId: any;
+    userId?: any;
     fechaFinalizacionConvenio: Date;
     contrato: string;
     compromiso: string;
@@ -13,7 +13,7 @@ export interface IHiringData{
     ejecucion: string;
     actaComite: any;
     fechaDeComite: Date;
-    requierePoliza: string;
+    requierePoliza: boolean;
     noPoliza: string;
     vigenciaInicial: Date;
     vigenciaFinal: Date;
@@ -28,4 +28,5 @@ export interface IHiringData{
     fechaDeTerminacionAmpliacion: Date;
     rubro: string;
     nombreRubro: string;
+    cdp: string;
 }

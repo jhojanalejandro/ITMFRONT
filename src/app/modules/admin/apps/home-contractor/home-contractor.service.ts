@@ -47,11 +47,6 @@ export class HomeContractorService
         );
     }
 
-    addContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
-    }
-
     async getDepartments(){
         let urlEndPoint = environment.getDepartmentsColombia;
         return await this._httpClient.get<any>(urlEndPoint);

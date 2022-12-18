@@ -71,7 +71,7 @@ export class ListFolderContractorService
 
     getAllFolderContractor(folderIds: string | null = null): Observable<Item[]>
     {
-        let urlEndPoint = this.apiUrl+ environment.GetByIdFolderContractorEndpoint;
+        let urlEndPoint = this.apiUrl+ environment.GetByContractorIdFolderEndpoint;
         return  this._httpClient.get<ItemsC>(urlEndPoint+folderIds).pipe(
             tap((response: any) => {
         // Clone the items

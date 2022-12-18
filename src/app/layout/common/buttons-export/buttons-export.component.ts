@@ -30,7 +30,7 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al Registrar la informacion!', '', 'error');
+                swal.fire('Error al descargar la informacion!', '', 'error');
             }
         );
     }
@@ -52,7 +52,7 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al Registrar la informacion!', '', 'error');
+                swal.fire('Error al descargar la informacion!', '', 'error');
             }
         );
     }
@@ -74,7 +74,7 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al Registrar la informacion!', '', 'error');
+                swal.fire('Error al descargar la informacion!', '', 'error');
             }
         );
     }
@@ -96,7 +96,7 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al Registrar la informacion!', '', 'error');
+                swal.fire('Error al descargar la informacion!', '', 'error');
             }
         );
     }

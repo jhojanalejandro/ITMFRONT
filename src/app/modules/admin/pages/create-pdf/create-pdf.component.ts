@@ -22,6 +22,10 @@ export class CreatePdfComponent implements OnInit {
   file: any;
   docDefinition: any;
   base64Output: any;
+  minuta: boolean;
+  estudioPrevio: boolean;
+  cuentaCobro: boolean;
+  minutaAdicion: boolean;
   constructor() { }
 
   ngOnInit(): void {

@@ -29,22 +29,6 @@ export class ContractorListService {
         return this._data.asObservable();
     }
 
-
-    // async addContractor(data: any ): Promise<Observable<IResponse>>{
-    //     let urlEndpointupdate = this.apiUrl + environment.addContractorEndpoint;
-    // }
-
-
-    async getByIdProject(id: any) {
-        let urlEndPoint = this.apiUrl + environment.GetByIdFolderContractorEndpoint;
-        return await this._httpClient.get<any>(urlEndPoint + id);
-    }
-
-    addContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addContractorEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
-    }
-
     sendmailsAccounts(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.sendMails;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);

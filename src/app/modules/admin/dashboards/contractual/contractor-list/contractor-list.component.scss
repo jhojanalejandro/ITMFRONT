@@ -13,6 +13,8 @@
     // }
   
     .mat-column-name,.mat-column-priority,.mat-column-item,.mat-column-imageUrl,.mat-column-id,.mat-column-Group,.mat-column-availableQty,.mat-column-finishedQty,.mat-column-salesOrder,.mat-column-operationsGroupId,.mat-column-requiredQty,.mat-column-prodOrder {
-      text-align: center !important;
+        justify-content: center !important;
     }
-   
+    mat-header-cell, mat-cell {
+        justify-content: center !important;
+      }
