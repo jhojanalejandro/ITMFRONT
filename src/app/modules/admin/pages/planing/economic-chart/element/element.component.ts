@@ -152,7 +152,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         let model: IElements[] = [];
         let item: IElements = {
             id: 0,
-            idComponente: this._data.data.id,
+            idComponente: this._data,
             cantidadContratistas: 0,
             cantidadDias: 0,
             valorUnidad: 0,

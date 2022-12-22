@@ -50,6 +50,8 @@ export class AddComponentsComponent implements OnInit {
     subTotal: number = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
+    totalCalculado: number = 0;
+    gastosOperativos: number = 0;
     constructor(
         private route: ActivatedRoute,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -82,7 +84,6 @@ export class AddComponentsComponent implements OnInit {
     ngOnInit(): void {}
 
     chargeData() {
-        debugger;
         this._Economicservice.getComponent(this.id).subscribe((response) => {
             if (response.length != 0) {
                 this.data = response;
@@ -107,7 +108,9 @@ export class AddComponentsComponent implements OnInit {
                 });
             }
         });
-        this.subTotal = this.subTotal * 0.08;
+        this.subTotal = this.subTotal;
+        this.gastosOperativos = (this.subTotal * this.porcentajeCalculo) / 100;
+        this.totalCalculado = this.gastosOperativos + this.gastosOperativos;
     }
 
     openDialog(): void {
@@ -123,7 +126,8 @@ export class AddComponentsComponent implements OnInit {
     }
 
     changePorcentaje() {
-        this.subTotal = (this.subTotal * this.porcentajeCalculo) / 100;
+        this.gastosOperativos = (this.subTotal * this.porcentajeCalculo) / 100;
+        this.totalCalculado = this.gastosOperativos + this.subTotal;
     }
 
     addComponent() {
@@ -140,6 +144,7 @@ export class AddComponentsComponent implements OnInit {
                 .getComponent(this.data[0].idContrato)
                 .subscribe((response) => {
                     this.data = response;
+                    this._changeDetectorRef.detectChanges();
                 });
         });
     }
@@ -150,6 +155,7 @@ export class AddComponentsComponent implements OnInit {
             data: this.dataComponente.id,
         });
         dialogRef.afterClosed().subscribe((result) => {
+            this._changeDetectorRef.detectChanges();
             if (result) {
             }
         });

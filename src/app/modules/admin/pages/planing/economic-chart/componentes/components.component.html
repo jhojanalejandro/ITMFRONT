@@ -43,14 +43,14 @@
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <button class="fuse-mat-button-rounded" mat-stroked-button color="accent" (click)="openDialog()">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog'"></mat-icon>
-                <span class="ml-2">Cambiar Porcentaje de cálculo</span>
+                <span class="ml-2">Cambiar Porcentaje de Cálculo</span>
             </button>
             <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addComponent()">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                 </svg>
-                Agregar Nuevo
+               Nuevo Componente
             </button>
         </div>
     </div>
@@ -151,13 +151,13 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{this.subTotal | currency:'COP '}}
+                                    {{subTotal | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
                                     <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                        Suma de los totales de los elementos de todos los componentes.
                                     </div>
                                 </div>
                             </div>
@@ -165,18 +165,18 @@
                     </div>
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Sub Total</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos operativos</div>
                         </div>
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{this.subTotal | currency:'COP '}}
+                                    {{gastosOperativos | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
                                     <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                        Sub total * <span class="text-green-500">{{porcentajeCalculo}}%.</span>
                                     </div>
                                 </div>
                             </div>
@@ -184,37 +184,18 @@
                     </div>
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos Operativos</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Total</div>
                         </div>
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{'20000' | currency:'COP '}}
+                                    {{totalCalculado | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
                                     <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Costo Contrato</div>
-                        </div>
-                        <div class="flex items-center mt-1">
-                            <div class="flex flex-col">
-                                <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{'20000' | currency:'COP '}}
-                                </div>
-                                <div class="flex items-center">
-                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
-                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
-                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                        Suma del sub total y gastos operativos.
                                     </div>
                                 </div>
                             </div>
