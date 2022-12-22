@@ -29,22 +29,15 @@ export class ContractorListService {
         return this._data.asObservable();
     }
 
-
-    // async addContractor(data: any ): Promise<Observable<IResponse>>{
-    //     let urlEndpointupdate = this.apiUrl + environment.addContractorEndpoint;
-    // }
-
-
-    async getByIdProject(id: any) {
-        let urlEndPoint = this.apiUrl + environment.GetByIdFolderContractorEndpoint;
+    async getContractorByIdProject(id: any) {
+        let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
         return await this._httpClient.get<any>(urlEndPoint + id);
     }
 
-    addContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addContractorEndpoint;
+    sendmailsAccounts(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.sendMails;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
-
     DeleteContractor(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.DeleteContractorByIdEndpoint;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
@@ -60,12 +53,9 @@ export class ContractorListService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    getAllContract(): Observable<any> {
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
-        return this._httpClient.get(urlEndPoint).pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
+    async getContractorById(id: any) {
+        let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
+        return await this._httpClient.get<any>(urlEndPoint + id);
     }
+
 }

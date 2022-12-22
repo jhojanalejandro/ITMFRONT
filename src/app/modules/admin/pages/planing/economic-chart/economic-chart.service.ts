@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
     BehaviorSubject,
     filter,
@@ -14,6 +14,10 @@ import {
 import { InventoryPagination, EconomicChart } from './economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
+import { DetalleContrato } from './models/detalle-contrato';
+import { EconomicContractor } from 'app/modules/admin/dashboards/contractual/contractor-list/models/economic-data-contractor';
+import { IHiringData } from 'app/modules/admin/dashboards/contractual/contractor-list/models/hiring-data';
 
 @Injectable({
     providedIn: 'root',
@@ -31,7 +35,7 @@ export class EconomicChartService {
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient) {}
+    constructor(private _httpClient: HttpClient) { }
 
     /**
      * Getter for pagination
@@ -74,7 +78,7 @@ export class EconomicChartService {
         pagination: InventoryPagination;
         economicChart: EconomicChart[];
     }> {
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint + false;
         return this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
                 this._economicsChart.next(response);
@@ -125,11 +129,10 @@ export class EconomicChartService {
     getComponent(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.getComponent;
-        return this._httpClient.get<any>(urlEndpointGenerate + id);
+        return this._httpClient.get<Componente[]>(urlEndpointGenerate + id);
     }
 
     addElementoComponente(data: any) {
-        debugger
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
@@ -138,17 +141,43 @@ export class EconomicChartService {
     getElementoComponente(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent + '/Get/';
-        return this._httpClient.get<any>(urlEndpointGenerate + id);
+        return this._httpClient.get<IElements[]>(urlEndpointGenerate + id);
     }
 
-    getElementoComponenteByContract(id: any) {
+    getComponentById(id: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.addElementosComponentByContract;
-        return this._httpClient.get<any>(urlEndpointGenerate + id);
+            this.apiUrl + environment.getComponentById;
+        return this._httpClient.get<Componente>(urlEndpointGenerate + id);
     }
 
+
+    getElementoById(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.geElementoById;
+        return this._httpClient.get<IElements>(urlEndpointGenerate + id);
+    }
+    asignmentData(data: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.asignmentData;
+        return this._httpClient.post<any>(urlEndpointGenerate, data);
+    }
     DeleteComponent(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
+
+    sendEconomicdataContractor(model: EconomicContractor) {
+        let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
+    }
+
+
+    getHiringDataById(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetByIdHiringEndpoint;
+        return this._httpClient.get<IHiringData>(urlEndpointGenerate + id);
+    }
+
+
+
 }

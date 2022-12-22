@@ -86,18 +86,23 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #listCard07Menu="matMenu">
-                                            <button mat-menu-item (click)="addElements()">Agregar Elemento</button>
-                                            <button mat-menu-item>Editar</button>
+                                            <button mat-menu-item (click)="addElements()">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Elemento
+                                            </button>
+                                            <button mat-menu-item>
+                                                <mat-icon svgIcon="edit"></mat-icon>Editar
+                                            </button>
                                         </mat-menu>
                                     </div>
                                 </div>
                                 <div class="flex flex-col my-2">
-                                    <div class="my-2">
+                                    <!-- <div class="my-2">
                                         <div>Rubro: {{dataComponente.rubro}}</div>
                                     </div>
                                     <div class="my-2">
                                         <div>Nombre Rubro: {{dataComponente.nombreRubro}}</div>
-                                    </div>
+                                    </div> -->
                                     <div class="my-2">
                                         <div>Cantidad de Elementos: {{dataComponente.elementos.length}} </div>
                                     </div>
@@ -115,11 +120,16 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #listCard07Menu="matMenu">
-                                            <button mat-menu-item>Editar</button>
+                                            <button (click)="editElemento(dataElemento)" mat-menu-item>
+                                                <mat-icon svgIcon="edit"></mat-icon>Editar
+                                            </button>
                                         </mat-menu>
                                     </div>
                                 </div>
                                 <div class="flex flex-col my-2">
+                                    <div class="my-2">
+                                        <div>consecutivo: {{dataElemento.consecutivo}}</div>
+                                    </div>
                                     <div class="my-2">
                                         <div>CPC: {{dataElemento.cpc}}</div>
                                     </div>
@@ -163,7 +173,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <!-- <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
                             <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos operativos</div>
                         </div>
@@ -181,7 +191,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
                             <div class="text-lg font-medium tracking-tight leading-6 truncate">Total</div>
@@ -189,13 +199,32 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{totalCalculado | currency:'COP '}}
+                                    {{gastosOperativos | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
                                     <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Suma del sub total y gastos operativos.
+                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Costo Contrato</div>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    {{'20000' | currency:'COP '}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
                                     </div>
                                 </div>
                             </div>

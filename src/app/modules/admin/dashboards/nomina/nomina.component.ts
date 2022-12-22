@@ -10,11 +10,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadDataService } from '../contractual/contracts-list/upload-data.service';
-import { ProjectFolderComponent } from '../contractual/register-project-folder/register-project-folder.component';
-import { UploadFileComponent } from '../contractual/upload-file/upload-file.component';
+import { GenericService } from '../../generic/generic.services';
 @Component({
   selector: 'nomina',
   styleUrls: ['./nomina.component.css'],
@@ -35,15 +34,14 @@ export class NominaComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['companyName', 'projectName', 'registerDate','contractorCant', 'action'];
+  displayedColumns: string[] = ['companyName', 'projectName','contractorCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
 
   /**
    * Constructor
    */
   constructor(
-    private _uploadData: UploadDataService,
-    private _matDialog: MatDialog,
+    private _genericService: GenericService,
     private auth: AuthService,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
@@ -53,8 +51,7 @@ export class NominaComponent implements OnInit, OnDestroy {
   columnas = [
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
-    { title: 'FECHA REGISTRO', name: 'registerDate' },
-    { title: 'Cantidad', name: 'contractorCant' },
+    { title: 'CANTIDAD CONTRATISTAS', name: 'contractorCant' },
     // {title: 'REVISADO', name: 'done'},
     { title: '', name: 'action' },
   ]
@@ -67,8 +64,12 @@ export class NominaComponent implements OnInit, OnDestroy {
   }
 
   openDialog(route: any, data: any) {
-    debugger
-    this._router.navigate(['/dashboards/nomina/' + route + '/' + data.id]);
+    if(route === 'contratistas'){
+      debugger
+     return  this._router.navigate(['/dashboards/nomina/lista/contratistas/' + data.id]);
+    }else{
+      return this._router.navigate(['/dashboards/nomina/' + route + '/' + data.id]);
+    }
   }
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -114,7 +115,7 @@ export class NominaComponent implements OnInit, OnDestroy {
 
   getContractsData() {
     // Get the data
-    this._uploadData.getAllContract().pipe(takeUntil(this._unsubscribeAll))
+    this._genericService.getAllContract(false).pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         Response.forEach(element => {

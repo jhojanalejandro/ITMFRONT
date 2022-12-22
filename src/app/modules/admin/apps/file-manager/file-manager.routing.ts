@@ -6,7 +6,7 @@ import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager
 import { FileManagerFolderResolver, FileManagerItemResolver, FileManagerItemsResolver } from 'app/modules/admin/apps/file-manager/file-manager.resolvers';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
-import { FileManagerFolderCResolver } from './list-folder-contractor/list-folder.resolvers';
+import { FileManagerFolderCResolver, FileManagerItemResolverFile } from './list-folder-contractor/list-folder.resolvers';
 import { FileListComponent } from './list-file/file-list.component';
 import { FileManagerFolderCFResolver } from './list-folder-file-contractor/list-folder-file.resolvers';
 import { FileManagerItemFResolver } from './list-file/file-list.resolvers';
@@ -14,6 +14,7 @@ import { DetailFileComponent } from './details-file/detail-file.component';
 import { DetailFileManagerItemFResolver } from './details-file/detail-file.resolvers';
 import { DetailsFolderFileContractorComponent } from './details-folder-contractor/details-folder-contractor.component';
 import { DetailFolderContractorItemFResolver } from './details-folder-contractor/detail-folder-contractor.resolvers';
+import { DetailFileContractComponent } from './details-file-contract/detail-file-contract.component';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -75,8 +76,18 @@ export const fileManagerRoutes: Route[] = [
                 path     : 'folders/contractor/:folderId',
                 component: ListFolderContractorComponent,
                 resolve  : {
-                    item: FileManagerFolderCResolver
+                    item: FileManagerFolderCResolver, FileManagerItemResolverFile
                 },
+                children : [
+                    {
+                        path         : 'details/file/:id',
+                        component    : DetailFileContractComponent,
+                        resolve      : {
+                            item: DetailFileManagerItemFResolver
+                        },
+                        canDeactivate: [CanDeactivateFileManagerDetails]
+                    }
+                ]
             },
             {
                 path     : 'file/contractor/:contractorId',
@@ -94,15 +105,7 @@ export const fileManagerRoutes: Route[] = [
                         canDeactivate: [CanDeactivateFileManagerDetails]
                     }
                 ]
-            },
-            // {
-            //     path     : '/detail/:id',
-            //     component: DetailFileComponent,
-            //     resolve      : {
-            //         item: DetailFileManagerItemFResolver
-            //     },
-            //     // canDeactivate: [CanDeactivateFileManagerDetails]
-            // }
+            }
         ]
     }
 ];

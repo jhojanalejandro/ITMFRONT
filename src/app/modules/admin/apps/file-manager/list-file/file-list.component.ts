@@ -119,6 +119,7 @@ export class FileListComponent implements OnInit, OnDestroy
             autoFocus: false,
             data     : {
                 show: false,
+                split: true,
                 contractorId: this.data
             }
         });
@@ -130,7 +131,6 @@ export class FileListComponent implements OnInit, OnDestroy
     }
 
     onChange(event) {
-        debugger
         // reader.onload = () => {
         //     this.file = reader.result;
         // };

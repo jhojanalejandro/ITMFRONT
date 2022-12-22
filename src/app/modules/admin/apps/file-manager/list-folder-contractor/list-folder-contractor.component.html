@@ -26,9 +26,6 @@
                     <div>
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratistas</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
-                            <ng-container *ngIf="!items.path.length">
-                                {{items.folders.length}} carpetas
-                            </ng-container>
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
@@ -41,10 +38,10 @@
                                         <ng-container *ngIf="!last">
                                             <a
                                                 class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/contractor/', path.id]">{{path.nombreCompleto}}</a>
+                                                [routerLink]="['/apps/file-manager/folders/contractor/', path.id]">{{path.nombre}}</a>
                                         </ng-container>
                                         <ng-container *ngIf="last">
-                                            <div>{{path.nombreCompleto}}</div>
+                                            <div>{{path.nombre}}</div>
                                         </ng-container>
                                         <ng-container *ngIf="!last">
                                             <div class="">/</div>
@@ -125,44 +122,7 @@
                                 </ng-container>
                             </div>
                         </ng-container>
-                        <!-- Folders -->
-                        <ng-container *ngIf="items.folders.length > 0">
-                            <div>
-                                <div class="font-medium">Carpetas</div>
-                                <div
-                                    class="flex flex-wrap -m-2 mt-2">
-                                    <ng-container *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
-                                        <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
-                                            <a
-                                                class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/file/', folder.id]">
-                                                <div class="aspect-w-9 aspect-h-6">
-                                                    <div class="flex items-center justify-center">
-                                                        <!-- Icon -->
-                                                        <mat-icon
-                                                            class="icon-size-14 text-hint"
-                                                            [svgIcon]="'iconsmind:folder'"></mat-icon>
-                                                    </div>
-                                                </div>
-                                                <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                                    <div
-                                                        class="truncate"
-                                                        [matTooltip]="folder.nombreCompleto">{{folder.nombreCompleto}}
-                                                    </div>
-                                                    <div
-                                                        class="truncate"
-                                                        [matTooltip]="folder.documentoDeIdentificacion">{{folder.documentoDeIdentificacion}}
-                                                    </div>
-                                                    <ng-container *ngIf="folder.contents">
-                                                        <div class="text-secondary truncate">{{folder.contents}}</div>
-                                                    </ng-container>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </div>
-                        </ng-container>
+
                     </div>
                 </ng-container>
                 <!-- Items list -->
@@ -190,11 +150,11 @@
                                                 <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.nombreCompleto">{{folder.nombreCompleto}}
+                                                        [matTooltip]="folder.nombre">{{folder.nombre}}
                                                     </div>
                                                     <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.documentoDeIdentificacion">{{folder.documentoDeIdentificacion}}
+                                                        [matTooltip]="folder.documentoDeIdentificacion">{{folder.identificacion}}
                                                     </div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>

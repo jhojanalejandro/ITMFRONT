@@ -12,8 +12,7 @@ export class FileManagerItemsCResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _fileManagerService: ListFolderContractorService)
-    {
+    constructor(private _fileManagerService: ListFolderContractorService) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -26,8 +25,7 @@ export class FileManagerItemsCResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
-    {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]> {
         return this._fileManagerService.getAllFolderContractor();
     }
 }
@@ -36,6 +34,54 @@ export class FileManagerItemsCResolver implements Resolve<any>
     providedIn: 'root'
 })
 export class FileManagerFolderCResolver implements Resolve<any>
+{
+    /**
+     * Constructor
+     */
+    constructor(
+        private _router: Router,
+        private _fileManagerService: ListFolderContractorService
+    ) {
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Resolver
+     *
+     * @param route
+     * @param state
+     */
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]> {
+        return this._fileManagerService.getAllFolderContractor(route.paramMap.get('folderId'))
+            .pipe(
+                // Error here means the requested task is not available
+                catchError((error) => {
+
+                    // Log the error
+                    console.error(error);
+
+                    // Get the parent url
+                    const parentUrl = state.url.split('/').slice(0, -1).join('/');
+
+                    // Navigate to there
+                    this._router.navigateByUrl(parentUrl);
+
+                    // Throw an error
+                    return throwError(error);
+                })
+            );
+    }
+}
+
+
+
+@Injectable({
+    providedIn: 'root'
+})
+export class FileManagerItemResolverFile implements Resolve<any>
 {
     /**
      * Constructor
@@ -57,9 +103,9 @@ export class FileManagerFolderCResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getAllFolderContractor(route.paramMap.get('folderId'))
+        return this._fileManagerService.getItemById(route.paramMap.get('folderId'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {

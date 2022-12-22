@@ -73,7 +73,7 @@ export class FileManagerService
   
     getAllFolder(folderIds: string | null = null): Observable<Item[]>
     {
-        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
+        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint + true;
         return  this._httpClient.get<Items>(urlEndPoint).pipe(
             tap((response: any) => {
         // this._items.next(response);

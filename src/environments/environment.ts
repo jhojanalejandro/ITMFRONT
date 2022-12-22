@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    //apiURL: 'https://localhost:44353/',
-    apiURL: 'https://localhost:7163/',
+    apiURL: 'https://localhost:44353/',
+    // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -20,13 +20,14 @@ export const environment = {
     exportarDap: 'ExportToExcel/GetSolicitudContratacionDap',
     exportarCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarPpa: 'ExportToExcel/GetSolicitudPpa/',
-
-    addContractorEndpoint: 'Contractor/Add',
     addExcelContractorEndpoint: 'Contractor/AddExcel',
     UpdateContractorEndpoint: 'Contractor/Update',
-    GetByIdFolderContractorEndpoint: 'Contractor/GetAllByFolder/',
+    GetByContractorIdFolderEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
+    GetContractorByIdEndpoint: 'Contractor/GetById/',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
+    asignmentData: 'Contractor/UpdateAsignment',
+    sendMails: 'Contractor/SendContractorAccount',
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -35,10 +36,10 @@ export const environment = {
 
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/Update',
-    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
+    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll/',
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
-
+    GetByIdDetailEndpoint: 'ProjectFolder/GetByIdDetail',
     addContractorPaymentsEndpoint: 'ContractorPayments/Add',
     UpdateContractorPaymentsEndpoint: 'ContractorPayments/Update',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
@@ -54,6 +55,7 @@ export const environment = {
     addFileEndpoint: 'Files/AddFileContractor',
     UpdateFileEndpoint: 'Files/Update',
     GetAllFileByIdEndpoint: 'Files/GetAllFileById',
+    GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
 
     GetByIdFileEndpoint: 'Files/GetById/',
@@ -68,9 +70,15 @@ export const environment = {
 
     addComponent: 'Componente/Add/',
     getComponent: 'Componente/Get/',
+    getComponentById: 'Componente/GetById/',
+
+    addElement: 'ElementosComponente/Add/',
+    getElementosById: 'ElementosComponente/GetByIdComponente',
+
     deleteComponent: 'Componente/Delete/',
-    addElementosComponent: 'Api/ElementosComponente',
-    addElementosComponentByContract: 'Api/ElementosComponente/GetByContractId/',
+    addElementosComponent: 'ElementosComponente',
+    geElementoById: 'ElementosComponente/GetById/',
+
 
     getDepartmentsColombia:
         'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

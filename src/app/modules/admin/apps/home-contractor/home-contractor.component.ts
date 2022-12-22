@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -6,15 +6,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatSort, Sort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ActivatedRoute, Router } from '@angular/router';
 import { HomeContractorService } from './home-contractor.service';
-import { UploadFileComponent } from './upload-file-contractor/upload-file.component';
+import { UploadFileContractorComponent } from './upload-file-contractor/upload-file.component';
 import { saveAs } from "file-saver";
 import JSZip from 'jszip';
+
+import html2canvas from 'html2canvas';
+import htmlToPdfmake from 'html-to-pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import jspdf from 'jspdf';
+import { ContractorListService } from '../../dashboards/contractual/contractor-list/contractor-list.service';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'home-contractor',
@@ -26,18 +29,15 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   id: any;
   data: any;
   userName: any;
+  cuentaCobro: boolean;
+  @ViewChild('pdfTable') pdfTable: ElementRef;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-  @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<any>;
   raffleName: any;
   contratos: any;
   configForm: FormGroup;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
-  dataSource = new MatTableDataSource<any>();
-  selection = new SelectionModel<any>(true, []);
 
   /**
    * Constructor
@@ -45,9 +45,8 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   constructor(
     private _contractorService: HomeContractorService,
     private _matDialog: MatDialog,
-    private auth: AuthService,
-    private cdref: ChangeDetectorRef,
-    private _liveAnnouncer: LiveAnnouncer,
+    private _auth: AuthService,
+    private _contractorListService: ContractorListService,
   ) {
   }
 
@@ -55,13 +54,14 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 * On init
 */
   ngOnInit(): void {
-    this.userName = this.auth.accessName
+    this.userName = this._auth.accessName
+    this.getDataContractor();
   }
   openDialog() {
-    const dialogRef = this._matDialog.open(UploadFileComponent, {
+    const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
       autoFocus: false,
       data: {
-        idUser: this.auth.accessId,
+        idUser: this._auth.accessId,
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -72,59 +72,10 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   }
 
 
-  announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
-  }
-
-
-  //metodo de filtrar los datos de las columnas
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  ngAfterViewInit(): void {
-    // Make the data source sortable
-    this.dataSource.sort = this.recentTransactionsTableMatSort;
-  }
-
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
-  }
-  selectRowFull(data: any) {
-
-    // const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
-    //     autoFocus: false,
-    //     data     : {
-    //         idUser: this.auth.accessId,
-    //         data
-    //     }
-    //   });
-    //   dialogRef.afterClosed().subscribe((result) => {
-    //     if(result){
-    //       this.getDataContractor(this.id);
-    //     }
-    // }); 
-  }
-
-  /**
-   * Track by function for ngFor loops
-   *
-   * @param index
-   * @param item
-   */
-  trackByFn(index: number, item: any): any {
-    return item.id || index;
   }
 
 
@@ -149,4 +100,23 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   })
 }
 
+
+public downloadAsPDFs() {
+
+  let data = document.getElementById('htmlData');
+
+  const pdfTable = this.pdfTable.nativeElement;
+
+  var html = htmlToPdfmake(pdfTable.innerHTML);
+
+  const documentDefinition = { content: html };
+  pdfMake.createPdf(documentDefinition).download();
+
+}
+
+async getDataContractor() {
+  (await this._contractorListService.getContractorById(this._auth.accessId)).subscribe((Response) => {
+    this.data = Response;
+  });
+}
 }

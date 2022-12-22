@@ -1,20 +1,21 @@
-import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from './upload-file.service';
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
-    selector: 'app-register-contractor',
-    templateUrl: './upload-file.component.html',
-    styleUrls: ['./upload-file.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+  selector: 'app-register-contractor',
+  templateUrl: './upload-file.component.html',
+  styleUrls: ['./upload-file.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class UploadFileComponent implements OnInit {
   shortLink: string = "";
@@ -29,36 +30,39 @@ export class UploadFileComponent implements OnInit {
   base64Output: any;
   mostrarContrato = false;
   numberOfTicks = 0;
-  formFile: FormGroup; 
+  formFile: FormGroup;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private ref: ChangeDetectorRef,
     private _upload: UploadFileDataService,
+    private _gerenicService: GenericService,
+
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any,contractId: any }
-    ) {
+    @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any, contractId: any, split: boolean }
+  ) {
 
-      setInterval(() => {
-        this.numberOfTicks++;
-        // require view to be updated
-        this.ref.detectChanges();
-        this.ref.markForCheck();
-      }, 1000);
-    }
+    setInterval(() => {
+      this.numberOfTicks++;
+      // require view to be updated
+      this.ref.detectChanges();
+      this.ref.markForCheck();
+    }, 1000);
+  }
 
   ngOnInit(): void {
-    if(this._data.show){      
+    debugger
+    if (this._data.show) {
       this.mostrarContrato = true;
     }
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
-      filesName: new FormControl(null, Validators.required),      
-      IdProject: new FormControl(null, Validators.required), 
-      typeFile: new FormControl(null, Validators.required), 
-      description: new FormControl(null, Validators.required), 
+      filesName: new FormControl(null, Validators.required),
+      IdProject: new FormControl(null, Validators.required),
+      typeFile: new FormControl(null, Validators.required),
+      description: new FormControl(null, Validators.required),
     });
     this.getContractsData();
 
@@ -79,7 +83,7 @@ export class UploadFileComponent implements OnInit {
 
   cerrar(): void {
     this.matDialogRef.close();
-  } 
+  }
   onUpload() {
     this.loading = !this.loading;
     // this.fileUploadService.upload(this.file).subscribe(
@@ -93,110 +97,118 @@ export class UploadFileComponent implements OnInit {
     //     }
     // );
   }
-  
+
   addFileContractor(event) {
-    let arr = this._data.contractorId.split('/');
-    const registerFile: IFileContractor={
+    debugger
+    if (this._data.split) {
+      let arr = this._data.contractorId.split('/');
+      this._data.contractId = arr[1];
+      this._data.contractorId = arr[0];
+    }
+
+    let contractId = this._data.contractId;
+    const registerFile: IFileContractor = {
       userId: this._auth.accessId,
-      contractorId: arr[0],
-      folderId: arr[1],
+      contractorId: this._data.contractorId,
+      folderId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
-      registerDate: this.registerDate, 
+      registerDate: this.registerDate,
       modifyDate: this.registerDate,
       filedata: event,
-      passed: true     
-    };  
-    this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
-        if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
-          //this.matDialogRef.close();  
-          this.ref.detectChanges();
-          this.ref.markForCheck();   
-        }
+      passed: true,
+      typeFilePayment: 'execel Contratista'
+    };
+    this._upload.UploadFileContractor(registerFile).subscribe((res) => {
+      if (res) {
+        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        //this.matDialogRef.close();  
+        this.ref.detectChanges();
+        this.ref.markForCheck();
+      }
 
     },
-    (response) => {
-      this.formFile.enable();
-      // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
-      // Show the alert
-      this.showAlert = true;
-    });
+      (response) => {
+        this.formFile.enable();
+        // Set the alert
+        swal.fire('Error al Registrar la informacion!', '', 'error');
+        // Show the alert
+        this.showAlert = true;
+      });
   }
 
   addFileContract(event) {
-    const registerProject: any={
+    const registerProject: any = {
       userId: this._auth.accessId,
       folderId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
-      registerDate: this.registerDate, 
-      fildata: event       
-    };  
-    this._upload.UploadFileContractor(registerProject).subscribe((res) => {   
-        if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
-          //this.matDialogRef.close();  
-          this.ref.detectChanges();
-          this.ref.markForCheck();   
-        }
+      registerDate: this.registerDate,
+      fildata: event
+    };
+    this._upload.UploadFileContractor(registerProject).subscribe((res) => {
+      if (res) {
+        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        //this.matDialogRef.close();  
+        this.ref.detectChanges();
+        this.ref.markForCheck();
+      }
 
     },
-    (response) => {
-      this.formFile.enable();
-      // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
-      // Show the alert
-      this.showAlert = true;
-    });
+      (response) => {
+        this.formFile.enable();
+        // Set the alert
+        swal.fire('Error al Registrar la informacion!', '', 'error');
+        // Show the alert
+        this.showAlert = true;
+      });
   }
-  getContractsData(){
+  getContractsData() {
     // Get the data
-    this._upload.getAllContract()
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((data) => {
-      this.contratos = data;
+    this._gerenicService.getAllContract(true)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((data) => {
+        this.contratos = data;
 
-    });
+      });
   }
 
   uploadPdfFile(event) {
-    
+
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('excel', fileToUpload, fileToUpload.name);
     formData.append('userId', this._auth.accessId.toString());
     formData.append('contractId', this.formFile.value.IdProject);
-    if(this._data.show){
-    // Should match the parameter name in backend
-      this._upload.UploadFileExcel(formData).subscribe((res) => {   
-        if(res){
+    if (this._data.show) {
+      // Should match the parameter name in backend
+      this._upload.UploadFileExcel(formData).subscribe((res) => {
+        if (res) {
           swal.fire('informacion Registrada Exitosamente!', '', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
-          this.ref.markForCheck();   
+          this.ref.markForCheck();
         }
-  
-    },
-    (response) => {
-      this.formFile.enable();
-      // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
-      // Show the alert
-      this.showAlert = true;
-    });
-    }else if(this._data.contractorId != null){
+
+      },
+        (response) => {
+          this.formFile.enable();
+          // Set the alert
+          swal.fire('Error al Registrar la informacion!', '', 'error');
+          // Show the alert
+          this.showAlert = true;
+        });
+    } else if (this._data.contractorId != null) {
       this.addFileContractor(this.base64Output);
-    }else{
+    } else {
       this.addFileContract(this.base64Output);
     }
-   
+
 
   }
-  convertFile(file : File) : Observable<string> {
+  convertFile(file: File): Observable<string> {
     const result = new ReplaySubject<string>(1);
     const reader = new FileReader();
     reader.readAsBinaryString(file);

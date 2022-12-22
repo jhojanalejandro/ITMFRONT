@@ -8,16 +8,10 @@ import { HomeContractorService } from './home-contractor.service';
 })
 export class HomeContractorResolver implements Resolve<any>
 {
-    /**
-     * Constructor
-     */
+
     constructor(private _financeService: HomeContractorService)
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Resolver

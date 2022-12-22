@@ -22,27 +22,7 @@
               El Campo actividad es requerido
           </mat-error>
       </mat-form-field>
-      <div class="folder pt-2">
-          <mat-form-field class="hiring" appearance="outline">
-              <mat-label>Rubro</mat-label>
-              <input type="text" id="cpc" formControlName="rubro" autocomplete="off" matInput placeholder="Rubro">
-              <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-              <mat-error *ngIf="componentForm.get('rubro').hasError('required')">
-                  El Campo cpc es requerido
-              </mat-error>
-          </mat-form-field>
-          <mat-form-field class="hiringD w-full" appearance="outline">
-              <mat-label>Nombre Rubro</mat-label>
-              <input type="mail" id="nombreRubro" formControlName="nombreRubro" autocomplete="off" matInput
-                  placeholder="Nombre Rubro">
-              <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-              <mat-error *ngIf="componentForm.get('nombreRubro').hasError('required')">
-                  El Campo nombre cpc es requerido
-              </mat-error>
-          </mat-form-field>
 
-
-      </div>
   </form>
   <div class="btn">
       <button mat-flat-button mat-stroked-button [color]="'warn'" type="button"

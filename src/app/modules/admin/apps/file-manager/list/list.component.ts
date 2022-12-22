@@ -7,10 +7,6 @@ import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.ty
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
-import { DetailFileComponent } from '../details-file/detail-file.component';
-
-
 
 @Component({
     selector       : 'file-manager-list',

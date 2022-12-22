@@ -3,11 +3,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
-import { IProjectFolder } from 'app/modules/admin/dashboards/contractual/register-project-folder/model/project-folder';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IFolderContractor } from 'app/layout/common/models/folder-contractor';
 import { ActivatedRoute } from '@angular/router';
-import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
 import { FileManagerService } from '../../file-manager.service';
 
 

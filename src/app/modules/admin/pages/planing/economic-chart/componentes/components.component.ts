@@ -15,17 +15,10 @@ import {
     FormGroup,
     Validators,
 } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import * as moment from 'moment';
-import { map, Observable, startWith, Subject } from 'rxjs';
-import swal from 'sweetalert2';
 import { EconomicChartService } from '../economic-chart.service';
 import { ElementCardComponent } from '../element/element.component';
-import { IComponente } from '../models/componente';
-import { CookieService } from 'ngx-cookie-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentesFormComponent } from './componentes-form/componentes-form.component';
 import Swal from 'sweetalert2';
@@ -48,6 +41,8 @@ export class AddComponentsComponent implements OnInit {
     id: string = null;
     configForm: FormGroup;
     subTotal: number = 0;
+    total: number = 0;
+    gastosOperativos: number = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
     totalCalculado: number = 0;
@@ -58,7 +53,6 @@ export class AddComponentsComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _Economicservice: EconomicChartService,
         private _matDialog: MatDialog,
-        private _router: Router
     ) {
         this.id = this.route.snapshot.params.id;
         if (this.id) {
@@ -95,7 +89,7 @@ export class AddComponentsComponent implements OnInit {
                     'Primero Agregue componentes para poder visualizar información',
                     'question'
                 );
-                this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
+                // this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
             }
         });
     }
@@ -108,9 +102,7 @@ export class AddComponentsComponent implements OnInit {
                 });
             }
         });
-        this.subTotal = this.subTotal;
-        this.gastosOperativos = (this.subTotal * this.porcentajeCalculo) / 100;
-        this.totalCalculado = this.gastosOperativos + this.gastosOperativos;
+        this.subTotal = this.subTotal * 0.08;
     }
 
     openDialog(): void {
@@ -126,12 +118,11 @@ export class AddComponentsComponent implements OnInit {
     }
 
     changePorcentaje() {
-        this.gastosOperativos = (this.subTotal * this.porcentajeCalculo) / 100;
-        this.totalCalculado = this.gastosOperativos + this.subTotal;
+        this.subTotal = (this.subTotal * this.porcentajeCalculo) / 100;
     }
 
     addComponent() {
-        let e = this.data[0].idContrato;
+        let e = this.id;
         const dialogRef = this._matDialog.open(ComponentesFormComponent, {
             autoFocus: false,
             data: {
@@ -140,23 +131,38 @@ export class AddComponentsComponent implements OnInit {
             },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            this._Economicservice
-                .getComponent(this.data[0].idContrato)
+            if(result){
+                this._Economicservice
+                .getComponent(this.id)
                 .subscribe((response) => {
                     this.data = response;
                     this._changeDetectorRef.detectChanges();
                 });
+            }
+
         });
     }
 
     addElements() {
+        let ids : any = {'idComponente': this.dataComponente.id, 'idContrato': this.id}
         const dialogRef = this._matDialog.open(ElementCardComponent, {
             autoFocus: false,
-            data: this.dataComponente.id,
+            data: ids,
         });
         dialogRef.afterClosed().subscribe((result) => {
             this._changeDetectorRef.detectChanges();
             if (result) {
+            }
+        });
+    }
+    editElemento(elemento: any){
+        const dialogRef = this._matDialog.open(ElementCardComponent, {
+            data: {elemento,
+                idContrato: this.id}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                
             }
         });
     }

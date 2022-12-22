@@ -7,12 +7,13 @@ import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from '../home-contractor.service';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss']
 })
-export class UploadFileComponent implements OnInit {
+export class UploadFileContractorComponent implements OnInit {
 
   shortLink: string = "";
   loading: boolean = false; // Flag variable
@@ -32,7 +33,7 @@ export class UploadFileComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private _upload: HomeContractorService,
     private _auth: AuthService,
-    public matDialogRef: MatDialogRef<UploadFileComponent>,
+    public matDialogRef: MatDialogRef<UploadFileContractorComponent>,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any,contractId: any }
     ) {
@@ -88,7 +89,6 @@ export class UploadFileComponent implements OnInit {
   }
   
   addFileContractor(event) {
-    let arr = this._data.contractorId.split('/');
     const registerFile: any={
       userId: this._auth.accessId,
       contractorId: this._auth.accessId,
@@ -146,15 +146,7 @@ export class UploadFileComponent implements OnInit {
       this.showAlert = true;
     });
   }
-  getContractsData(){
-    // Get the data
-    this._upload.getAllContract()
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((data) => {
-      // this.contratos = data;
 
-    });
-  }
   convertFile(file : File) : Observable<string> {
     const result = new ReplaySubject<string>(1);
     const reader = new FileReader();

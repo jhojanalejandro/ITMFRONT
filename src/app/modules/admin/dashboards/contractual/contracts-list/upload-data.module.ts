@@ -16,13 +16,11 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { UploadDataComponent } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.component';
 import { uploadDataRoutes } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.routing';
-import { ProjectFolderComponent } from '../register-project-folder/register-project-folder.component';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
 
 @NgModule({
     declarations: [
         UploadDataComponent,
-        ProjectFolderComponent,
         UploadFileComponent
     ],
     imports     : [

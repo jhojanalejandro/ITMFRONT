@@ -20,12 +20,6 @@ export class UploadFileDataService
     }
 
 
-    addContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addContractorEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
-    }
-
-
     UploadFileExcel(formdata: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addExcelContractorEndpoint;
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
@@ -35,13 +29,4 @@ export class UploadFileDataService
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
-    getAllContract(): Observable<any>
-    {
-        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
-        return  this._httpClient.get(urlEndPoint).pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
-    }
 }

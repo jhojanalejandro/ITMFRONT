@@ -20,14 +20,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { IElements } from '../models/element';
 import { ListElements } from '../models/list-elements';
-import Swal from 'sweetalert2';
+import swal from 'sweetalert2';
 import { EconomicChartService } from '../economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { DetalleContrato } from '../models/detalle-contrato';
 
 @Component({
     selector: 'app-alement',
@@ -39,9 +39,10 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 export class ElementCardComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
-
+    adiciones: any = GlobalConst.requierePoliza;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
+    dateAdiction$: Observable<DetalleContrato[]>;
     filteredelementos: Observable<string[]>;
     elementos: IElements[] = [];
     allelementos: string[] = [
@@ -52,21 +53,17 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     ];
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
-    element: string = null;
     numberOfTicks = 0;
-    contractorCant: any = null;
-    nombreCpc = '';
-    cantDay: number = null;
-    nombreElemento: string;
-    unitValue: any = null;
-    unitValueDay: any = null;
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: null, consecutivo: null }
+    recursos: number;
+    totalExacto: number;
     update: boolean;
+    showDate: boolean = true;
     calculo: boolean = true;
     totalCalculate: boolean = true;
     totalValue: any = null;
     unitValueMonth: any = null;
-    totalCost: any = null;
-    cpc = '';
+    elementselectId: any;
     id: string = null;
     listElements: ListElements;
     configForm: FormGroup;
@@ -83,32 +80,40 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA)
-        private _data: any,
+        private _data,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _service: EconomicChartService
+        private _genericService: GenericService,
+        private _economicService: EconomicChartService
     ) {
+        if(this._data.elemento != null){
+            debugger
+            this.showDate = false;
+            this.elemento = this._data.elemento;
+            this.totalValue = this._data.elemento.valorTotal;
+        }
         setInterval(() => {
             this.numberOfTicks++;
-            // require view to be updated
             this._changeDetectorRef.detectChanges();
             this._changeDetectorRef.markForCheck();
         }, 1000);
 
         this.elementForm = this._formBuilder.group({
-            contractorCant: new FormControl(
-                this.contractorCant,
-                Validators.required
-            ),
-            cantDay: new FormControl(this.cantDay),
-            unitValue: new FormControl(this.unitValue, Validators.required),
-            totalValue: new FormControl(this.totalValue),
+            contractorCant: new FormControl(this.elemento.cantidadContratistas, Validators.required),
+            cantDay: new FormControl(this.elemento.cantidadDias, Validators.required),
+            unitValue: new FormControl(this.elemento.valorUnidad, Validators.required),
+            totalValue: new FormControl(this.totalValue, Validators.required),
             id: new FormControl(this.id),
-            unitValueDay: new FormControl(this.unitValueDay),
-            calculateValue: new FormControl(this.totalCost),
-            cpc: new FormControl(this.cpc),
-            nombreCpc: new FormControl(this.nombreCpc),
-            tipoElemento: new FormControl(null, Validators.required),
-            nombreElemento: new FormControl(null, Validators.required),
+            unitValueDay: new FormControl(this.elemento.valorPorDia, Validators.required),
+            totalExacto: new FormControl(this.totalExacto, Validators.required),
+            cpc: new FormControl(this.elemento.cpc, Validators.required),
+            nombreCpc: new FormControl(this.elemento.nombreCpc, Validators.required),
+            tipoElemento: new FormControl(this.elemento.tipoElemento, Validators.required),
+            nombreElemento: new FormControl(this.elemento.nombreElemento, Validators.required),
+            adicion: new FormControl(null, Validators.required),
+            recursos: new FormControl(this.elemento.recursos, Validators.required),
+            fechaAdicion: new FormControl(null, Validators.required),
+            consecutivo: new FormControl(null, Validators.required),
+
         });
         this.filteredOptions =
             this.elementForm.controls.nombreElemento.valueChanges.pipe(
@@ -116,8 +121,14 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 map((value) => this._filter(value || ''))
             );
     }
-  
-    ngOnInit(): void {}
+
+    ngOnInit(): void {
+        debugger;
+        console.log(this._data);
+
+        this.getDateAdiction();
+
+    }
 
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();
@@ -141,7 +152,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getElements() {
-        this._service
+        this._economicService
             .getElementoComponente(this._data)
             .subscribe((response) => {
                 this.elementos = response;
@@ -149,56 +160,74 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement() {
-        let model: IElements[] = [];
+        let adicion: any;
+        if (this.elementForm.value.adicion === 'Si') {
+            adicion = true;
+        } else {
+            adicion = true;
+        }
+        debugger
         let item: IElements = {
             id: 0,
-            idComponente: this._data,
-            cantidadContratistas: 0,
-            cantidadDias: 0,
-            valorUnidad: 0,
-            valorTotal: 0,
-            valorPorDia: 0,
-            cpc: null,
-            nombreCpc: null,
+            nombreElemento: this.elementForm.value.nombreElemento,
+            idComponente: this._data.idComponente,
+            cantidadContratistas: this.elementForm.value.contractorCant,
+            cantidadDias: this.elementForm.value.cantDay,
+            valorUnidad: this.elementForm.value.unitValue,
+            valorTotal: this.elementForm.value.totalValue,
+            valorPorDia: this.elementForm.value.unitValueDay,
+            cpc: this.elementForm.value.cpc,
+            nombreCpc: this.elementForm.value.nombreCpc,
+            adicion: adicion,
+            tipoElemento: this.elementForm.value.tipoElemento,
+            recursos: this.elementForm.value.recursos,
+            consecutivo: this.elementForm.value.consecutivo
+
         };
-        this.elementos.forEach((e) => {
-            (item.cantidadContratistas = e.cantidadContratistas),
-                (item.cantidadDias = e.cantidadDias),
-                (item.valorTotal = e.valorTotal),
-                (item.valorUnidad = e.valorUnidad),
-                (item.valorPorDia = e.valorPorDia),
-                (item.cpc = e.cpc),
-                (item.nombreCpc = e.nombreCpc),
-                (item.id = e.id),
-                model.push(item);
-        });
-        this._service.addElementoComponente(model).subscribe((response) => {
+
+        this._economicService.addElementoComponente(item).subscribe((response) => {
+            if (response) {
+                swal.fire('Registrado Exitoso!', '', 'success');
+            }
             this._changeDetectorRef.detectChanges();
+        }, (response) => {
+            // Set the alert
+            swal.fire('Error en el registro!', '', 'error');
         });
         this.matDialogRef.close(this.listElements);
     }
 
     calculate = () => {
-        const findEl = this.elementos.find((e) => e.nombreCpc == this.element);
         this.totalCalculate = false;
-        this.unitValueDay = Number(
+        this.elementForm.value.unitValueDay = Number(
             (this.elementForm.value.unitValue / 30) *
-                this.elementForm.value.contractorCant
+            this.elementForm.value.contractorCant
         );
-        this.totalValue = Number(
-            this.unitValueDay * this.elementForm.value.cantDay
-        );
-        let paymentDayContractor =
-            this.unitValueDay / Number(this.elementForm.value.cantDay);
-        if (this.elementForm.value.cantDay >= '30') {
-            //   Swal.fire(
-            //     'Advertencia!',
-            //     'La cantidad de días!',
-            //     'info'
-            // );
+        this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
+        debugger
+        if (this.elementForm.value.totalValue == null) {
+            this.totalValue = this.elementForm.value.totalValue;
+            this.totalValue = Number(
+                this.elemento.valorPorDia * this.elementForm.value.cantDay
+            );
+        } else {
+            this.totalExacto = this.elementForm.value.totalValue;
+            this.totalExacto = Number(
+                this.elemento.valorPorDia * this.elementForm.value.cantDay
+            );
+            this.recursos = this.totalExacto - this.elementForm.value.totalValue;
         }
+
     };
 
+    selectAdicion() {
+        if (this.elementselectId === 'Si') {
+            this.showDate = false;
+        } else {
+            this.showDate = true;
+        }
+
+    }
     openConfirmationDialog(): void {
         // Open the dialog and save the reference of it
         const dialogRef = this._fuseConfirmationService.open(
@@ -209,5 +238,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             if (result == 'confirmed') {
             }
         });
+    }
+    getDateAdiction() {
+        this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.idContrato, true);
     }
 }

@@ -35,16 +35,12 @@ import {
     EconomicChart,
     Components,
 } from '../economic-chart.types';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { TypeSelectString } from 'app/layout/common/models/TypeSelect';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { ChartComponent } from 'ng-apexcharts';
-import { ElementCardComponent } from '../element/element.component';
-import { AddComponentsComponent } from '../componentes/components.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
     selector: 'economic-chart-list',
@@ -105,18 +101,16 @@ export class EconomicChartListComponent
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseConfirmationService: FuseConfirmationService,
         private _formBuilder: FormBuilder,
         private _economicService: EconomicChartService,
+        private _genericService: GenericService,
         private authService: AuthService,
-        private _matDialog: MatDialog,
-        private _activatedRoute: ActivatedRoute,
         private _router: Router,
-        private coockie: CookieService
     ) {
         this.projectData$ = this._economicService._economicsChart$;
         this.dataSource = new MatTableDataSource(
             this.projectData$.source._value
+
         );
     }
 
@@ -135,6 +129,7 @@ export class EconomicChartListComponent
             images: [[]],
             active: [false],
         });
+        this.getDetailContract();
     }
 
     ngAfterViewInit(): void {
@@ -266,7 +261,6 @@ export class EconomicChartListComponent
     }
 
     deleteComponent(componente: any) {
-        debugger;
         this._economicService.DeleteComponent(componente.id).subscribe(
             (res) => {
                 if (res) {
@@ -283,5 +277,19 @@ export class EconomicChartListComponent
                 swal.fire('Error al Eliminar la informacion!', '', 'error');
             }
         );
+    }
+
+    getDetailContract(){
+        for (let index = 0; index < this.projectData$.source._value.length; index++) {
+            this._genericService.getDetalleContrato(this.projectData$.source._value[index].id, false).subscribe((resp: any) => {
+                debugger
+                this.projectData$.source._value[index].fechaContrato = resp.fechaContrato;
+                this.projectData$.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;
+
+                console.log(resp);
+                
+            })
+        }
+
     }
 }

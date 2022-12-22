@@ -44,8 +44,6 @@ export class ComponentesFormComponent implements OnInit {
     numberOfTicks = 0;
     data: any;
     componentName: string = null;
-    rubro: string = null;
-    nombreRubro: string = null;
     update: boolean;
     id: string = null;
     configForm: FormGroup;
@@ -81,7 +79,6 @@ export class ComponentesFormComponent implements OnInit {
     }
 
     abrirDivHtml() {
-        debugger;
         this.abrirDiv = true;
     }
     /**
@@ -94,8 +91,10 @@ export class ComponentesFormComponent implements OnInit {
                 this.componentName,
                 Validators.required
             ),
-            rubro: new FormControl(this.rubro, Validators.required),
-            nombreRubro: new FormControl(this.nombreRubro, Validators.required),
+            consecutivo: new FormControl(
+                this.componentName,
+                Validators.required
+            ),
         });
     }
 
@@ -131,8 +130,6 @@ export class ComponentesFormComponent implements OnInit {
             idContrato: this._data.e,
             nombreComponente: this.componentForm.value.componentName,
             id: 0,
-            rubro: this.componentForm.value.rubro,
-            nombreRubro: this.componentForm.value.nombreRubro,
             elementos: [],
         };
         this._Economicservice.addComponent(model).subscribe((response) => {
