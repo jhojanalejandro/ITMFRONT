@@ -3,6 +3,6 @@ export interface DetalleContrato{
 	idcontrato: any,
 	fechaContrato: Date,
 	fechaFinalizacion: Date,
-	adicion: boolean,
+	modificacion: boolean,
 	tipoContrato: string  
 }

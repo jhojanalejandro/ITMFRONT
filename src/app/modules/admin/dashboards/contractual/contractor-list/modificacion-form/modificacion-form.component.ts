@@ -22,27 +22,29 @@ import {
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
-import { DetalleContrato } from 'app/modules/admin/pages/planing/economic-chart/models/detalle-contrato';
+import { DetalleContrato } from 'app/modules/admin/pages/planing/models/detalle-contrato';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
-import { IElements } from '../../../../pages/planing/economic-chart/models/element';
+import { IElements } from '../../../../pages/planing/models/element';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 
 @Component({
-    selector: 'app-componentes-form',
-    templateUrl: './adicion-form.component.html',
-    styleUrls: ['./adicion-form.component.scss'],
+    selector: 'app-modificacion-form',
+    templateUrl: './modificacion-form.component.html',
+    styleUrls: ['./modificacion-form.component.scss'],
 })
-export class AdicionFormComponent implements OnInit {
+export class ModificacionFormComponent implements OnInit {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
-    adiciones: any = GlobalConst.requierePoliza;
+    modificaciones: any = GlobalConst.requierePoliza;
+    tipoModificacion: any = GlobalConst.tipoModificacion;
+
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: 0,consecutivo:null};
+    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0,consecutivo:null};
     disableField:boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     elementos: IElements[] = [];
@@ -69,11 +71,8 @@ export class AdicionFormComponent implements OnInit {
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
-        public matDialogRef: MatDialogRef<AdicionFormComponent>,
+        public matDialogRef: MatDialogRef<ModificacionFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA)
@@ -119,10 +118,10 @@ export class AdicionFormComponent implements OnInit {
             nombreCpc: new FormControl(this.data.nombreCpc, Validators.required),
             tipoElemento: new FormControl(null, Validators.required),
             nombreElemento: new FormControl(null, Validators.required),
-            adicion: new FormControl(null, Validators.required),
+            modificacion: new FormControl(null, Validators.required),
             recursos: new FormControl(null, Validators.required),
-            fechaAdicion: new FormControl(null, Validators.required),
-
+            fechaModificacion: new FormControl(null, Validators.required),
+            tipoModificacion: new FormControl(null, Validators.required),
         });
         this.filteredOptions =
             this.elementForm.controls.nombreElemento.valueChanges.pipe(
@@ -162,11 +161,11 @@ export class AdicionFormComponent implements OnInit {
     }
 
     addElement() {
-        let adicion: any;
-        if (this.elementForm.value.adicion === 'Si') {
-            adicion = true;
+        let modificacion: any;
+        if (this.elementForm.value.modificacion === 'Si') {
+            modificacion = true;
         } else {
-            adicion = true;
+            modificacion = true;
         }
         let item: IElements = {
             id: 0,
@@ -179,7 +178,7 @@ export class AdicionFormComponent implements OnInit {
             valorPorDia: this.elementForm.value.unitValueDay,
             cpc: this.elementForm.value.cpc,
             nombreCpc: this.elementForm.value.nombreCpc,
-            adicion: adicion,
+            modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.elementForm.value.recursos,
             consecutivo: this.elementForm.value.consecutivo
@@ -220,7 +219,7 @@ export class AdicionFormComponent implements OnInit {
         }
     };
 
-    selectAdicion() {
+    selectmodificacion() {
         if(this.elementselectId === 'Si'){
             this.showDate = false;
         }else{

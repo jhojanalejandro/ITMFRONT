@@ -29,6 +29,8 @@ export class RegisterProjectFolderComponent implements OnInit {
   minDate: any;
   formProject: FormGroup;
   ejecucion: any = GlobalConst.ejecucionContrato;
+  tipoModificacion= GlobalConst.tipoModificacion;
+  editarData= GlobalConst.editarData;
   editData: boolean = false;
   projectName: any = null;
   descript: any = null;
@@ -54,15 +56,14 @@ export class RegisterProjectFolderComponent implements OnInit {
 
   ngOnInit(): void {
     if (this._data != null) {
+      this.editData = true;
       if (this._data.data.execution) {
         this.execution = 'Ejecutar Contrato';
       } else {
         this.execution = 'En Proceso';
 
       }
-      debugger
       this.fechaContrato = this._data.data.fechaContrato
-      this.fechaFinalizacion = this._data.data.fechaFinalizacion
       this.editData = true;
       this.companyName = this._data.data.companyName;
       this.projectName = this._data.data.projectName;
@@ -78,8 +79,9 @@ export class RegisterProjectFolderComponent implements OnInit {
       ejecucion: new FormControl(this.execution, Validators.required),
       description: new FormControl(this.descript, Validators.required),
       fechaContrato: new FormControl(this.fechaContrato, Validators.required),
-      fechaFinalizacion: new FormControl(this.fechaFinalizacion, Validators.required)
-
+      fechaFinalizacion: new FormControl(this.fechaFinalizacion, Validators.required),
+      tipoModificacion: new FormControl(this.fechaFinalizacion, Validators.required),
+      updateData: new FormControl(this.fechaFinalizacion, Validators.required)
     });
 
   }
@@ -92,12 +94,20 @@ export class RegisterProjectFolderComponent implements OnInit {
     } else {
       this.formProject.value.ejecucion = false;
     }
+    if(this.formProject.value.updateData === 'Solo Editar'){
+      this.formProject.value.updateData = true;
+
+    }else{
+      this.formProject.value.updateData = false;
+
+    }
     const detalle: IDetailProjectFolder = {
       fechaContrato: this.formProject.value.fechaContrato,
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       adicion: false,
       tipoContrato: '',
-      idContrato: 0
+      idContrato: 0,
+      update: this.formProject.value.updateData
     }
     const registerProject: IProjectFolder = {
       userId: this.authService.accessId,
@@ -138,12 +148,21 @@ export class RegisterProjectFolderComponent implements OnInit {
     } else {
       this.formProject.value.ejecucion = false;
     } 
+    if(this.formProject.value.updateData === 'Solo Editar'){
+      this.formProject.value.updateData = true;
+
+    }else{
+      this.formProject.value.updateData = false;
+
+    }
     const detalle: IDetailProjectFolder = {
       fechaContrato: this.formProject.value.fechaContrato,
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       adicion: adicion,
       tipoContrato: '',
-      idContrato: this._data.data.id
+      idContrato: this._data.data.id,
+      update: this.formProject.value.updateData
+
     }
     const registerProject: IProjectFolder = {
       id: this._data.data.id,

@@ -77,7 +77,6 @@ export class ContractorPaymentRegisterComponent implements OnInit {
       modifyDate: this.formContractorPayment.value.to,
       descriptionPayment: this.formContractorPayment.value.description
     };
-    debugger
     this._nominaService
       .addContractorPayments(registerPayment)
       .subscribe((res) => {

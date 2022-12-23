@@ -46,11 +46,6 @@ export class HomeContractorService
             })
         );
     }
-
-    async getDepartments(){
-        let urlEndPoint = environment.getDepartmentsColombia;
-        return await this._httpClient.get<any>(urlEndPoint);
-    }
     
     addProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;

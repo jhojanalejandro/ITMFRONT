@@ -12,19 +12,35 @@
             <!-- Card form -->
             <form class="flex flex-col flex-0 items-start w-full p-4 sm:p-4 space-y-3 overflow-y-auto"
                 [formGroup]="elementForm">
-                <mat-form-field class="w-full" appearance="outline">
-                    <mat-label>Fecha Modificación</mat-label>
-                    <mat-select [formControlName]="'fechaAdicion'" name="adicion">
-                        <mat-option *ngFor="let adicion of dateAdiction$ | async" [value]="adicion.fechaFinalizacion">
-                            {{adicion.fechaFinalizacion | date}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                    </mat-icon>
-                    <mat-error *ngIf="elementForm.get('adicion').hasError('required')">
-                        El Campo arl es requerido
-                    </mat-error>
-                </mat-form-field>
+                <div>
+                    <mat-form-field class="field" appearance="outline">
+                        <mat-label>Fecha Modificación</mat-label>
+                        <mat-select [formControlName]="'fechaModificacion'" name="adicion">
+                            <mat-option *ngFor="let adicion of dateAdiction$ | async" [value]="adicion.fechaFinalizacion">
+                                {{adicion.fechaFinalizacion | date}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                        <mat-error *ngIf="elementForm.get('fechaModificacion').hasError('required')">
+                            El Campo arl es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="field" appearance="outline">
+                        <mat-label>Tipo Modidicacion</mat-label>
+                        <mat-select [formControlName]="'fechaModificacion'" name="modificacion">
+                            <mat-option *ngFor="let tipo of tipoModificacion" [value]="tipo.viewValue">
+                                {{tipo.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                        <mat-error *ngIf="elementForm.get('fechaModificacion').hasError('required')">
+                            El Campo arl es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
                 <div>
                     <mat-form-field disable class="field" appearance="outline">
                         <mat-label>Nombre Elemento</mat-label>

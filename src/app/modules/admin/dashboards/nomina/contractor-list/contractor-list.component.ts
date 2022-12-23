@@ -15,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
-import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { ContractorListService } from '../../contractual/contractor-list/contractor-list.service';
 
 

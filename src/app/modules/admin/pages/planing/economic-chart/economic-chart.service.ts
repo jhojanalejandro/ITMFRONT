@@ -14,8 +14,7 @@ import {
 import { InventoryPagination, EconomicChart } from './economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
-import { DetalleContrato } from './models/detalle-contrato';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { EconomicContractor } from 'app/modules/admin/dashboards/contractual/contractor-list/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/contractor-list/models/hiring-data';
 
@@ -81,6 +80,14 @@ export class EconomicChartService {
         let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint + false;
         return this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
+                response.forEach(element => {
+                    if(element.activate){
+                        element.activate = "EN Ejecución"
+                    }else{
+                        element.activate = "EN Proceso"
+                    }
+                    
+                });
                 this._economicsChart.next(response);
             })
         );

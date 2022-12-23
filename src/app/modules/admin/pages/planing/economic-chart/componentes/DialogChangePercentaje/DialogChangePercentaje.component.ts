@@ -12,6 +12,7 @@ export class DialogChangePercentajeComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {}
     ngOnInit(): void {
+        this.data = '0.0';
     }
 
     onNoClick(): void {

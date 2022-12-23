@@ -65,7 +65,6 @@ export class NominaComponent implements OnInit, OnDestroy {
 
   openDialog(route: any, data: any) {
     if(route === 'contratistas'){
-      debugger
      return  this._router.navigate(['/dashboards/nomina/lista/contratistas/' + data.id]);
     }else{
       return this._router.navigate(['/dashboards/nomina/' + route + '/' + data.id]);

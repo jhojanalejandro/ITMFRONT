@@ -15,7 +15,7 @@
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
-            <button class="ml-3" mat-flat-button [color]="'primary'" [matTooltip]="'Shortcut: Ctrl + /'">
+            <button (click)="registerShareData()" class="ml-3" mat-flat-button [color]="'primary'" [matTooltip]="'Shortcut: Ctrl + /'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Agregar Datos</span>
             </button>
@@ -91,7 +91,7 @@
                                         </button>
                                         <mat-menu #summaryMenu="matMenu">
                                             <button [matTooltip]="'Agregar datos'"
-                                                (click)="openDialog('registerData',element)" mat-menu-item>
+                                                (click)="registrarInfo(element)" mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
                                                 Agregar datos
                                             </button>
@@ -102,7 +102,7 @@
                                                 Eliminar
                                             </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
-                                            (click)="openDialog('Adicion',element)" [color]="'primary'"
+                                            (click)="modificacionContrato(element)" [color]="'primary'"
                                             mat-menu-item>
                                             <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
                                             Agregar Modificacion

@@ -46,7 +46,6 @@ export class AddComponentsComponent implements OnInit {
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
     totalCalculado: number = 0;
-    gastosOperativos: number = 0;
     constructor(
         private route: ActivatedRoute,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -119,6 +118,8 @@ export class AddComponentsComponent implements OnInit {
 
     changePorcentaje() {
         this.subTotal = (this.subTotal * this.porcentajeCalculo) / 100;
+        this.gastosOperativos = this.subTotal * this.porcentajeCalculo;
+        this.total = this.gastosOperativos + this.subTotal;
     }
 
     addComponent() {

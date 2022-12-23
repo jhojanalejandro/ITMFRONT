@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ButtonsExportService } from './buttons-export.service';
 import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-buttons-export',
@@ -22,11 +23,13 @@ export class ButtonsExportComponent implements OnInit {
                 link.download = "Viabilidad";
                 link.click();
                 if (res) {
-                    swal.fire(
-                        'Descarga realizada Exitosamente!',
-                        '',
-                        'success'
-                    );
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Documento descargado.',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
                 }
             },
             (response) => {
@@ -44,11 +47,13 @@ export class ButtonsExportComponent implements OnInit {
                 link.download = "SOLICITUD CDP- DAP";
                 link.click();
                 if (res) {
-                    swal.fire(
-                        'Descarga realizada Exitosamente!',
-                        '',
-                        'success'
-                    );
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Documento descargado.',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
                 }
             },
             (response) => {
@@ -66,11 +71,13 @@ export class ButtonsExportComponent implements OnInit {
                 link.download = "SOLICITUD PAA";
                 link.click();
                 if (res) {
-                    swal.fire(
-                        'Descarga realizada Exitosamente!',
-                        '',
-                        'success'
-                    );
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Documento descargado.',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
                 }
             },
             (response) => {
@@ -88,11 +95,13 @@ export class ButtonsExportComponent implements OnInit {
                 link.download = "SOLICITUD CONTRATACIÓN DAP";
                 link.click();
                 if (res) {
-                    swal.fire(
-                        'Descarga realizada Exitosamente!',
-                        '',
-                        'success'
-                    );
+                   Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Documento descargado.',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
                 }
             },
             (response) => {

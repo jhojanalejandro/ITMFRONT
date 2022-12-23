@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    apiURL: 'https://localhost:44353/',
-    // apiURL: 'https://localhost:7163/',
+    //apiURL: 'https://localhost:44353/',
+    apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -76,12 +76,8 @@ export const environment = {
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',
-    addElementosComponent: 'ElementosComponente',
+    addElementosComponent: 'ElementosComponente/Add',
     geElementoById: 'ElementosComponente/GetById/',
-
-
-    getDepartmentsColombia:
-        'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 };
 
 /*

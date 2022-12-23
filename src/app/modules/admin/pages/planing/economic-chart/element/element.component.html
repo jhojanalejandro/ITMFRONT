@@ -15,33 +15,33 @@
                 <div >
                     <mat-form-field [hidden]="showDate" appearance="outline">
                         <mat-label>Modificacion</mat-label>
-                        <mat-select [formControlName]="'adicion'" [(ngModel)]="elementselectId" (selectionChange)="selectAdicion()" name="adicion">
-                            <mat-option *ngFor="let adicion of adiciones" [value]="adicion.viewValue">
-                                {{adicion.viewValue}}
+                        <mat-select [formControlName]="'modificacion'" [(ngModel)]="elementselectId" (selectionChange)="selectmodificacion()" name="modificacion">
+                            <mat-option *ngFor="let modificacion of modificaciones" [value]="modificacion.viewValue">
+                                {{modificacion.viewValue}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
-                        <mat-error *ngIf="elementForm.get('adicion').hasError('required')">
+                        <mat-error *ngIf="elementForm.get('modificacion').hasError('required')">
                             El Campo arl es requerido
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field [hidden]="showDate" appearance="outline">
-                        <mat-label>Fecha Adicion</mat-label>
-                        <mat-select [formControlName]="'fechaAdicion'" name="adicion">
-                            <mat-option *ngFor="let adicion of dateAdiction$ | async" [value]="adicion.fechaFinalizacion">
-                                {{adicion.fechaFinalizacion | date}}
+                        <mat-label>Fecha modificacion</mat-label>
+                        <mat-select [formControlName]="'fechamodificacion'" name="modificacion">
+                            <mat-option *ngFor="let modificacion of dateAdiction$ | async" [value]="modificacion.fechaFinalizacion">
+                                {{modificacion.fechaFinalizacion | date}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
-                        <mat-error *ngIf="elementForm.get('adicion').hasError('required')">
+                        <mat-error *ngIf="elementForm.get('modificacion').hasError('required')">
                             El Campo arl es requerido
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                         <mat-label>Consecutivo</mat-label>
-                        <input matInput id="consecutivo" type="number" formControlName="consecutivo" autocomplete="off" matInput
+                        <input matInput id="consecutivo" type="text" formControlName="consecutivo" autocomplete="off" matInput
                             placeholder="Consecutivo">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
                 
@@ -123,7 +123,7 @@
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field disable appearance="outline">
-                        <mat-label>Valor Por dia</mat-label>
+                        <mat-label>Valor Por dia contratistas</mat-label>
                         <input type="text" [value]="elemento.valorPorDia | number:'1.2-2'" formControlName="unitValueDay"
                             autocomplete="off" matInput placeholder="Valor por Día">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
@@ -139,6 +139,13 @@
                 </div>
                 <div>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
+                        <mat-label>Valor por dia contratista</mat-label>
+                        <input type="number" [value]="valorDiaContratista | number:'1.2-2'" id="valorDiaContratista"
+                            formControlName="valordiaContratista" autocomplete="off" matInput placeholder="valor Dia Contratista">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
+                        </mat-icon>
+                    </mat-form-field>
+                    <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Total Exacto</mat-label>
                         <input type="number" [value]="totalExacto | number:'1.2-2'" id="totalExacto"
                             formControlName="totalExacto" autocomplete="off" matInput placeholder="Valor Exacto">
@@ -146,7 +153,7 @@
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
-                        <mat-label>Recursos Adicionales</mat-label>
+                        <mat-label>Recursos </mat-label>
                         <input type="number" [value]="recursos | number:'1.2-2'" id="recursos"
                             formControlName="recursos" autocomplete="off" matInput placeholder="Recuros">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
