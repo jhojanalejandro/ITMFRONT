@@ -76,12 +76,8 @@ export const environment = {
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',
-    addElementosComponent: 'ElementosComponente',
+    addElementosComponent: 'ElementosComponente/Add',
     geElementoById: 'ElementosComponente/GetById/',
-
-
-    getDepartmentsColombia:
-        'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 };
 
 /*

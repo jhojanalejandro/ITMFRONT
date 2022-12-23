@@ -29,4 +29,5 @@ export interface IHiringData{
     rubro: string;
     nombreRubro: string;
     cdp: string;
+    idsContractors: number[];
 }

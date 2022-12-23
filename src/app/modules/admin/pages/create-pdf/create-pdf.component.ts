@@ -172,8 +172,6 @@ export class CreatePdfComponent implements OnInit {
       ]
     }
     this.file = this.docDefinition.content[0].image;
-    console.log(this.docDefinition.content[0].image);
-    debugger
   }
   getBase64ImageFromURL(url) {
     return new Promise((resolve, reject) => {

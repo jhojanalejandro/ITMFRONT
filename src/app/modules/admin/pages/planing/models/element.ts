@@ -9,12 +9,13 @@ export interface IElements{
     valorPorDia: number;
     cpc: string;
     nombreCpc: string;
-    adicion: boolean;
+    modificacion: boolean;
     tipoElemento: string;
     recursos: number; 
     consecutivo: string;
 
 }
+
 
 
 

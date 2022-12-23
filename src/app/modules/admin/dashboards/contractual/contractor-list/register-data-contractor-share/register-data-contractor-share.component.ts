@@ -15,19 +15,15 @@ import { IElements } from '../../../../pages/planing/models/element';
 
 
 @Component({
-  selector: 'app-register-contractor',
-  templateUrl: './register-data-contractor.component.html',
-  styleUrls: ['./register-data-contractor.component.scss'],
+  selector: 'app-register-contractor-share',
+  templateUrl: './register-data-contractor-share.component.html',
+  styleUrls: ['./register-data-contractor-share.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class ContractorDataRegisterComponent implements OnInit {
+export class ContractorDataRegisterShareComponent implements OnInit {
   checked = false;
   indeterminate = false;
-  elemento: any = 'elemento';
-  componente: any = 'compoente';
-  elements: any;
-  componentes: any;
   componentselectId: any;
   elementselectId: any;
   formFieldHelpers: string[] = [''];
@@ -55,19 +51,14 @@ export class ContractorDataRegisterComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private _economicService: EconomicChartService,
     private _auth: AuthService,
-    public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
-    @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
-  ) {
-    if (this.datos.data != null) {
-      this.getHiring();
-      this.getElementById(this.datos.data.elementId);
-      this.getComponentById(this.datos.data.componenteId);
-    }
-  }
+    public matDialogRef: MatDialogRef<ContractorDataRegisterShareComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any, private _formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    debugger
+    console.log(this.data.idContractors[0]);
 
-    this.getComponent();
     this.formContractor = this._formBuilder.group({
       contrato: new FormControl(this.hinringData.contrato),
       compromiso: new FormControl(this.hinringData.compromiso),
@@ -84,7 +75,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       vigenciaFinal: new FormControl(this.hinringData.vigenciaFinal),
       fechaExPedicionPoliza: new FormControl(this.hinringData.fechaExpedicionPoliza),
       valorAsegurado: new FormControl(this.hinringData.valorAsegurado),
-      fechaExaPreocupacional: new FormControl(this.hinringData.fechaExaPreocupacional),
+      fechaExamenPreocupacional: new FormControl(this.hinringData.fechaExaPreocupacional),
       nivel: new FormControl(this.hinringData.nivel),
       interventor: new FormControl(this.hinringData.interventorItm),
       cargoInterventor: new FormControl(this.hinringData.cargoInterventorItm),
@@ -92,9 +83,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       fechaInicioAmpliacion: new FormControl(this.hinringData.fechaInicioAmpliacion),
       fechaDeTerminacionAmpliacion: new FormControl(this.hinringData.fechaDeTerminacionAmpliacion, Validators.required),
       fechaFinalizacionConvenio: new FormControl(this.hinringData.fechaFinalizacionConvenio, Validators.required),
-      elemento: new FormControl(null, Validators.required),
-      componente: new FormControl(null, Validators.required),
-      cdp: new FormControl(null),
     });
   }
 
@@ -115,7 +103,7 @@ export class ContractorDataRegisterComponent implements OnInit {
 
     const registerContractor: IHiringData = {
       userId: this._auth.accessId,
-      contractorId: this.datos.data.id,
+      contractorId: this.data.data.id,
       contrato: 'vacio',
       compromiso: 'vacio',
       fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
@@ -129,7 +117,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       vigenciaFinal: this.formContractor.value.vigenciaFinal,
       fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
       valorAsegurado: Number(this.formContractor.value.valorAsegurado),
-      fechaExaPreocupacional: this.formContractor.value.fechaExaPreocupacional,
+      fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
       nivel: Number(this.formContractor.value.nivel),
       interventorItm: this.formContractor.value.interventor,
       cargoInterventorItm: this.formContractor.value.cargoInterventor,
@@ -141,8 +129,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       rubro: this.formContractor.value.rubro,
       nombreRubro: this.formContractor.value.nombreRubro,
       cdp: this.formContractor.value.cdp,
-      idsContractors: []
-
+      idsContractors: this.data.idContractors
     };
     this._upload
       .addHiringContractor(registerContractor)
@@ -184,7 +171,7 @@ export class ContractorDataRegisterComponent implements OnInit {
 
     const registerContractor: IHiringData = {
       userId: this._auth.accessId,
-      contractorId: this.datos.data.id,
+      contractorId: this.data.data.id,
       contrato: 'vacio',
       compromiso: 'vacio',
       fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
@@ -198,7 +185,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       vigenciaFinal: this.formContractor.value.vigenciaFinal,
       fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
       valorAsegurado: Number(this.formContractor.value.valorAsegurado),
-      fechaExaPreocupacional: this.formContractor.value.fechaExaPreocupacional,
+      fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
       nivel: Number(this.formContractor.value.nivel),
       interventorItm: this.formContractor.value.interventor,
       cargoInterventorItm: this.formContractor.value.cargoInterventor,
@@ -210,7 +197,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       rubro: this.formContractor.value.rubro,
       nombreRubro: this.formContractor.value.nombreRubro,
       cdp: this.formContractor.value.cdp,
-      idsContractors: []
+      idsContractors: this.data.idContractors
     };
     this._upload
       .addHiringContractor(registerContractor)
@@ -239,92 +226,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.matDialogRef.close();
   }
 
-  private getComponent() {
-    this._economicService
-      .getComponent(this.datos.data.contractId)
-      .subscribe((response) => {
-        this.componentes = response;
-      });
-  }
 
-  private getComponentById(id: any) {
-    this._economicService
-      .getComponentById(id)
-      .subscribe((response) => {
-        this.componente = response.nombreComponente;
-
-      });
-  }
-
-  private getElementById(id: any) {
-    this._economicService
-      .getElementoById(id)
-      .subscribe((response) => {
-        this.elemento = response.nombreElemento
-
-      });
-  }
-  getElements = () => {
-    this._economicService
-      .getElementoComponente(this.componentselectId)
-      .subscribe((response) => {
-        this.elements = response;
-      });
-    let asignar: AsignmentData = {
-      id: this.componentselectId,
-      type: 'Componente',
-      idContractor: this.datos.data.id
-    }
-    this._economicService.asignmentData(asignar).subscribe((response) => {
-      if (response) {
-
-      }
-    })
-  }
-
-  asignElement = () => {
-    let asignar: AsignmentData = {
-      id: this.elementselectId,
-      type: 'Elemento',
-      idContractor: this.datos.data.id
-    }
-    this._economicService.asignmentData(asignar).subscribe((response) => {
-      if (response) {
-        this.sendEconomicdataContractor();
-      }
-    })
-
-  }
-
-  sendEconomicdataContractor() {
-    let element: IElements = this.elements.find(item => item.id === this.elementselectId);
-    let economicData: EconomicContractor = {
-      contractorId: this.datos.data.id,
-      userId: this._auth.accessId,
-      registerDate: this.registerDate,
-      totalValue: element.valorTotal,
-      unitValue: element.valorUnidad,
-      totalPaidMonth: element.valorUnidad,
-      cashPayment: false,
-      missing: 0,
-      debt: element.valorTotal,
-      modifyDate: this.registerDate,
-      freed: 0
-    }
-    this._economicService.sendEconomicdataContractor(economicData).subscribe((response) => {
-      if (response) {
-
-      }
-    })
-  }
-
-  private getHiring() {
-    this._economicService
-      .getHiringDataById(this.datos.data.contractId)
-      .subscribe((response: IHiringData) => {
-        this.hinringData = response;
-      });
-  }
 
 
 }

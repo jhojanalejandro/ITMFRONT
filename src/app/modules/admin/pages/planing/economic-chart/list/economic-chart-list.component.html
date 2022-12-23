@@ -110,6 +110,12 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Finalización </th>
                     <td mat-cell *matCellDef="let row"> {{row.fechaFinalizacion | date}} </td>
                 </ng-container>
+
+                
+                <ng-container matColumnDef="activate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado Contrato </th>
+                    <td mat-cell *matCellDef="let row"> {{row.activate}} </td>
+                </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 

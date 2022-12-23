@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { DetalleContrato } from '../pages/planing/economic-chart/models/detalle-contrato';
+import { DetalleContrato } from '../pages/planing/models/detalle-contrato';
 
 @Injectable({
     providedIn: 'root'

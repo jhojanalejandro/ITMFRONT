@@ -117,7 +117,8 @@ export class AddComponentsComponent implements OnInit {
     }
 
     changePorcentaje() {
-        this.subTotal = (this.subTotal * 0.0+this.porcentajeCalculo);
+        this.gastosOperativos = this.subTotal * this.porcentajeCalculo;
+        this.total = this.gastosOperativos + this.subTotal;
     }
 
     addComponent() {

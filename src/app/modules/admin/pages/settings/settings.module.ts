@@ -15,13 +15,15 @@ import { SettingsAccountComponent } from 'app/modules/admin/pages/settings/accou
 import { SettingsSecurityComponent } from 'app/modules/admin/pages/settings/security/security.component';
 import { SettingsTeamComponent } from 'app/modules/admin/pages/settings/team/team.component';
 import { settingsRoutes } from 'app/modules/admin/pages/settings/settings.routing';
+import { UploadFirmComponent } from './team/upload-firm/upload-firm.component';
 
 @NgModule({
     declarations: [
         SettingsComponent,
         SettingsAccountComponent,
         SettingsSecurityComponent,
-        SettingsTeamComponent
+        SettingsTeamComponent,
+        UploadFirmComponent
     ],
     imports     : [
         RouterModule.forChild(settingsRoutes),

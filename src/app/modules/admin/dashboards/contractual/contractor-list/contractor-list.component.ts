@@ -16,10 +16,11 @@ import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
-import { Componente, IElements } from 'app/modules/admin/pages/planing/economic-chart/models/element';
+import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { AsignmentData } from '../models/asignment-data';
 import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
-import { AdicionFormComponent } from './adicion-form/adicion-form.component';
+import { ModificacionFormComponent } from './modificacion-form/modificacion-form.component';
+import { ContractorDataRegisterShareComponent } from './register-data-contractor-share/register-data-contractor-share.component';
 
 
 @Component({
@@ -113,41 +114,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       dismissible: true
     });
   }
-  openDialog(route: any, data: any) {
-    switch (route) {
-      case 'registerData':
-        const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
-          width: '900px',
-          autoFocus: false,
-          data: {
-            idUser: this.auth.accessId,
-            data
-          }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-          if (result) {
-            this.getDataContractor(this.id);
-          }
-        });
-        break
-      case 'Adicion':
-        const dialogAdicion = this._matDialog.open(AdicionFormComponent, {
-          width: '900px',
-          autoFocus: false,
-          data: {
-            idUser: this.auth.accessId,
-            data
-          }
-        });
-        dialogAdicion.afterClosed().subscribe((result) => {
-          if (result) {
-            this.getDataContractor(this.id);
-          }
-        });
-        break
 
-    }
-  }
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -232,14 +199,16 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       return;
     }
     this.selection.select(...this.dataSource.data);
+
   }
 
   checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }
+    }        
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Id + 1}`;
   }
+  
   //metodo que obtiene las columnas seleccionadas de la grid
   selectRow($event: any, dataSource: any) {
     if ($event.checked) {
@@ -281,5 +250,57 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
 
+  modificacionContrato(data: any){
+    const dialogModificacion = this._matDialog.open(ModificacionFormComponent, {
+      width: '900px',
+      autoFocus: false,
+      data: {
+        idUser: this.auth.accessId,
+        data
+      }
+    });
+    dialogModificacion.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getDataContractor(this.id);
+      }
+    });
+  }
+  registrarInfo(data: any){
+    const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
+      width: '900px',
+      autoFocus: false,
+      data: {
+        idUser: this.auth.accessId,
+        data
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getDataContractor(this.id);
+      }
+    });
 
+  }
+  registerShareData(){
+    debugger
+    if(this.selection.selected.length > 0 ){
+      const dialogRef = this._matDialog.open(ContractorDataRegisterShareComponent, {
+        width: '900px',
+        autoFocus: false,
+        data: {
+          idUser: this.auth.accessId,
+          idContractors: this.selection.selected
+        }
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.getDataContractor(this.id);
+        }
+      });
+    }else{
+      swal.fire('Precaución', 'Debes seleccionar uno varios contratistas!', 'warning');
+
+    }
+
+  }
 }

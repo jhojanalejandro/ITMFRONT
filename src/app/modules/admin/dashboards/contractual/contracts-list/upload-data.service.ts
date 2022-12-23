@@ -36,11 +36,6 @@ export class UploadDataService
         let urlEndpointGenerate = this.apiUrl+ environment.addHiringEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
-
-    async getDepartments(){
-        let urlEndPoint = environment.getDepartmentsColombia;
-        return await this._httpClient.get<any>(urlEndPoint);
-    }
     
     addProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;

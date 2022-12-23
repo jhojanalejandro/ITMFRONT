@@ -21,13 +21,13 @@ import { map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { IElements } from '../models/element';
-import { ListElements } from '../models/list-elements';
+import { IElements } from '../../models/element';
+import { ListElements } from '../../models/list-elements';
 import swal from 'sweetalert2';
 import { EconomicChartService } from '../economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DetalleContrato } from '../models/detalle-contrato';
+import { DetalleContrato } from '../../models/detalle-contrato';
 
 @Component({
     selector: 'app-alement',
@@ -39,9 +39,10 @@ import { DetalleContrato } from '../models/detalle-contrato';
 export class ElementCardComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
-    adiciones: any = GlobalConst.requierePoliza;
+    modificaciones: any = GlobalConst.requierePoliza;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
+    valorDiaContratista: number = 0;
     dateAdiction$: Observable<DetalleContrato[]>;
     filteredelementos: Observable<string[]>;
     elementos: IElements[] = [];
@@ -54,7 +55,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, adicion: false, tipoElemento: null, recursos: null, consecutivo: null }
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: null, consecutivo: null }
     recursos: number;
     totalExacto: number;
     update: boolean;
@@ -86,7 +87,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _economicService: EconomicChartService
     ) {
         if(this._data.elemento != null){
-            debugger
             this.showDate = false;
             this.elemento = this._data.elemento;
             this.totalValue = this._data.elemento.valorTotal;
@@ -109,10 +109,11 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             nombreCpc: new FormControl(this.elemento.nombreCpc, Validators.required),
             tipoElemento: new FormControl(this.elemento.tipoElemento, Validators.required),
             nombreElemento: new FormControl(this.elemento.nombreElemento, Validators.required),
-            adicion: new FormControl(null, Validators.required),
+            modificacion: new FormControl(null, Validators.required),
             recursos: new FormControl(this.elemento.recursos, Validators.required),
-            fechaAdicion: new FormControl(null, Validators.required),
+            fechamodificacion: new FormControl(null, Validators.required),
             consecutivo: new FormControl(null, Validators.required),
+            valordiaContratista: new FormControl(null, Validators.required),
 
         });
         this.filteredOptions =
@@ -123,11 +124,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        debugger;
-        console.log(this._data);
-
         this.getDateAdiction();
-
     }
 
     private _filter(value: string): string[] {
@@ -160,13 +157,13 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement() {
-        let adicion: any;
-        if (this.elementForm.value.adicion === 'Si') {
-            adicion = true;
-        } else {
-            adicion = true;
-        }
         debugger
+        let modificacion: any;
+        if (this.elementForm.value.modificacion === 'Si') {
+            modificacion = true;
+        } else {
+            modificacion = true;
+        }
         let item: IElements = {
             id: 0,
             nombreElemento: this.elementForm.value.nombreElemento,
@@ -174,11 +171,11 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             cantidadContratistas: this.elementForm.value.contractorCant,
             cantidadDias: this.elementForm.value.cantDay,
             valorUnidad: this.elementForm.value.unitValue,
-            valorTotal: this.elementForm.value.totalValue,
+            valorTotal: this.totalValue,
             valorPorDia: this.elementForm.value.unitValueDay,
             cpc: this.elementForm.value.cpc,
             nombreCpc: this.elementForm.value.nombreCpc,
-            adicion: adicion,
+            modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.elementForm.value.recursos,
             consecutivo: this.elementForm.value.consecutivo
@@ -187,40 +184,47 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
-                swal.fire('Registrado Exitoso!', '', 'success');
+                swal.fire('Exitoso', 'Registrado Exitosamente!', 'success');
             }
             this._changeDetectorRef.detectChanges();
         }, (response) => {
             // Set the alert
-            swal.fire('Error en el registro!', '', 'error');
+            console.log(response);
+            
+            swal.fire('error', 'Error en el registro!', 'error');
         });
         this.matDialogRef.close(this.listElements);
     }
 
     calculate = () => {
-        this.totalCalculate = false;
-        this.elementForm.value.unitValueDay = Number(
-            (this.elementForm.value.unitValue / 30) *
-            this.elementForm.value.contractorCant
-        );
-        this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
-        debugger
-        if (this.elementForm.value.totalValue == null) {
-            this.totalValue = this.elementForm.value.totalValue;
-            this.totalValue = Number(
-                this.elemento.valorPorDia * this.elementForm.value.cantDay
+        if(this.elementForm.value.unitValue === null){
+            swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
+        }else{
+            this.totalCalculate = false;
+            this.elementForm.value.valorDiaContratista = this.elementForm.value.unitValue / 30;
+            this.elementForm.value.unitValueDay = Number(
+                (this.elementForm.value.unitValue / 30) *
+                this.elementForm.value.contractorCant
             );
-        } else {
-            this.totalExacto = this.elementForm.value.totalValue;
-            this.totalExacto = Number(
-                this.elemento.valorPorDia * this.elementForm.value.cantDay
-            );
-            this.recursos = this.totalExacto - this.elementForm.value.totalValue;
+            this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
+            if (this.elementForm.value.totalValue == null) {
+                this.totalValue = this.elementForm.value.totalValue;
+                this.totalValue = Number(
+                    this.elemento.valorPorDia * this.elementForm.value.cantDay
+                );
+            } else {
+                this.totalExacto = this.elementForm.value.totalValue;
+                this.totalExacto = Number(
+                    this.elemento.valorPorDia * this.elementForm.value.cantDay
+                );
+                this.recursos = this.totalExacto - this.elementForm.value.totalValue;
+            }
+    
         }
-
+      
     };
 
-    selectAdicion() {
+    selectmodificacion() {
         if (this.elementselectId === 'Si') {
             this.showDate = false;
         } else {

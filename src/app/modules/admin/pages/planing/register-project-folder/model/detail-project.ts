@@ -5,4 +5,5 @@ export interface IDetailProjectFolder{
     adicion: boolean;
     tipoContrato: string;
     idContrato?: any;
+    update: boolean;
 }

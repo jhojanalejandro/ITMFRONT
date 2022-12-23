@@ -60,6 +60,17 @@ export class GlobalConst {
         { viewValue: 'No'}, 
     ] 
 
+    public static tipoModificacion: TypeSelectString[]=[
+        { viewValue: 'Adición'},
+        { viewValue: 'Ampliación'}, 
+        { viewValue: 'Otro'} 
+    ] 
+    
+    public static editarData: TypeSelectString[]=[
+        { viewValue: 'Solo Editar'},
+        { viewValue: 'Agregar Modificación'}, 
+    ] 
+
     public static Nivel: TypeSelectString[]=[
         { viewValue: '1'},
         { viewValue: '2'}, 

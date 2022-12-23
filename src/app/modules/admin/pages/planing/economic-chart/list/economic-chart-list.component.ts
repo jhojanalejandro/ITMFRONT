@@ -64,6 +64,7 @@ export class EconomicChartListComponent
         'descriptionProject',
         'fechaContrato',
         'fechaFinalizacion',
+        'activate',
     ];
     dataSource: MatTableDataSource<any>;
 
@@ -175,49 +176,6 @@ export class EconomicChartListComponent
         }, 3000);
     }
 
-    private calculateCost() {
-        this.SubTotal = 0;
-        this.TotalCost = 0;
-        this.operatingExpenses = 0;
-        for (var i = 0; i < this.componentList.length; i++) {
-            let subt = this.componentList[i].totalValue + this.SubTotal;
-            this.SubTotal = subt;
-        }
-        let porcentaje = 0;
-        switch (this.economicChartForm.value.percentage) {
-            case '1':
-                porcentaje = 0.01;
-                break;
-            case '2':
-                porcentaje = 0.02;
-                break;
-            case '3':
-                porcentaje = 0.03;
-                break;
-            case '4':
-                porcentaje = 0.04;
-                break;
-            case '5':
-                porcentaje = 0.05;
-                break;
-            case '6':
-                porcentaje = 0.06;
-                break;
-            case '7':
-                porcentaje = 0.07;
-                break;
-            case '8':
-                porcentaje = 0.08;
-                break;
-            case '9':
-                porcentaje = 0.09;
-                break;
-        }
-        this.operatingExpenses = porcentaje * this.SubTotal;
-
-        this.TotalCost = this.SubTotal + this.operatingExpenses;
-        this._changeDetectorRef.markForCheck();
-    }
     async addProjectFolder() {
         if (this.economicChartForm.value.ejecucion == 'Ejecutar Contrato') {
             this.economicChartForm.value.ejecucion = true;
@@ -282,12 +240,8 @@ export class EconomicChartListComponent
     getDetailContract(){
         for (let index = 0; index < this.projectData$.source._value.length; index++) {
             this._genericService.getDetalleContrato(this.projectData$.source._value[index].id, false).subscribe((resp: any) => {
-                debugger
                 this.projectData$.source._value[index].fechaContrato = resp.fechaContrato;
-                this.projectData$.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;
-
-                console.log(resp);
-                
+                this.projectData$.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;                
             })
         }
 

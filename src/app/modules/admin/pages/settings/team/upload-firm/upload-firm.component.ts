@@ -5,19 +5,19 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { UploadFileDataService } from './upload-file.service';
+import { UploadFileDataService } from './upload-firm.service';
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
-  selector: 'app-register-contractor',
-  templateUrl: './upload-file.component.html',
-  styleUrls: ['./upload-file.component.scss'],
+  selector: 'app-upload-firm',
+  templateUrl: './upload-firm.component.html',
+  styleUrls: ['./upload-firm.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class UploadFileComponent implements OnInit {
+export class UploadFirmComponent implements OnInit {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file: any = null; // Variable to store file
@@ -39,7 +39,7 @@ export class UploadFileComponent implements OnInit {
     private _gerenicService: GenericService,
 
     private _auth: AuthService,
-    public matDialogRef: MatDialogRef<UploadFileComponent>,
+    public matDialogRef: MatDialogRef<UploadFirmComponent>,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any, contractId: any, split: boolean }
   ) {
@@ -53,6 +53,7 @@ export class UploadFileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger
     if (this._data.show) {
       this.mostrarContrato = true;
     }
