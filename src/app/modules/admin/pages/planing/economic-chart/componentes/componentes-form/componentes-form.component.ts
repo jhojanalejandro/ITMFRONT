@@ -43,7 +43,7 @@ export class ComponentesFormComponent implements OnInit {
     abrirDiv: boolean = false;
     numberOfTicks = 0;
     data: any;
-    componentName: string = null;
+    nombreComponente: string = null;
     update: boolean;
     id: string = null;
     configForm: FormGroup;
@@ -76,31 +76,25 @@ export class ComponentesFormComponent implements OnInit {
                 fruit ? this._filter(fruit) : this.allFruits.slice()
             )
         );
-    }
 
-    abrirDivHtml() {
-        this.abrirDiv = true;
-    }
-    /**
-     * On init
-     */
-    ngOnInit(): void {
-        // Get the board
         this.componentForm = this._formBuilder.group({
             componentName: new FormControl(
-                this.componentName,
+                this.nombreComponente,
                 Validators.required
             ),
             consecutivo: new FormControl(
-                this.componentName,
+                this.nombreComponente,
                 Validators.required
             ),
         });
     }
 
-    /**
-     * On destroy
-     */
+    abrirDivHtml() {
+        this.abrirDiv = true;
+    }
+
+    ngOnInit(): void {}
+
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
@@ -125,23 +119,26 @@ export class ComponentesFormComponent implements OnInit {
     }
 
     addComponent() {
-        this.data = this.componentForm.value;
-        let model: IComponente = {
-            idContrato: this._data.e,
-            nombreComponente: this.componentForm.value.componentName,
-            id: 0,
-            elementos: [],
-        };
-        this._Economicservice.addComponent(model).subscribe((response) => {
-            if (response) {
-                Swal.fire(
-                    'Buen Trabajo!',
-                    'Se guardó la información!',
-                    'success'
-                );
-            }
-        });
-        this.matDialogRef.close(this.data);
+        debugger;
+        if (!this.componentForm.invalid) {
+            this.data = this.componentForm.value;
+            let model: IComponente = {
+                idContrato: this._data.e,
+                nombreComponente: this.componentForm.value.componentName,
+                id: 0,
+                elementos: [],
+            };
+            this._Economicservice.addComponent(model).subscribe((response) => {
+                if (response) {
+                    Swal.fire(
+                        'Buen Trabajo!',
+                        'Se guardó la información!',
+                        'success'
+                    );
+                }
+            });
+            this.matDialogRef.close(this.data);
+        }
     }
 
     addElements(e: any) {
