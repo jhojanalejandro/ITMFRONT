@@ -28,6 +28,7 @@ export class UploadFileComponent implements OnInit {
   selectContract: any;
   contratos: any;
   base64Output: any;
+  disableButton: boolean = true; 
   mostrarContrato = false;
   numberOfTicks = 0;
   formFile: FormGroup;
@@ -68,6 +69,7 @@ export class UploadFileComponent implements OnInit {
   }
 
   onChange(event) {
+    this.disableButton = false;
     this.file = event.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(this.file);

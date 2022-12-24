@@ -21,9 +21,9 @@ import { ModificacionFormComponent } from './modificacion-form/modificacion-form
 import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
 import { MinutaContratoComponent } from './create-pdf/minuta-contrato/minuta-contrato.component';
 import { CuentaCobroComponent, } from '../../../apps/home-contractor/cuenta-cobro/cuenta-cobro.component';
-import { MinutaAdicion1Component } from './create-pdf/minuta-adicion1/minuta-adicion1.component';
-import { MinutaAdicion2Component } from './create-pdf/minuta-adicion2/minuta-adicion2.component';
 import { MinutaAdicionComponent } from './create-pdf/minuta-adicion/minuta-adicion.component';
+import { MinutaAdicion2Component } from './create-pdf/minuta-adicion-ampliacion/minuta-adicion-ampliacion.component';
+import { MinutaAmpliacionComponent } from './create-pdf/minuta-ampliacion/minuta-adicion.component';
 import { EstudioPrevioComponent } from './create-pdf/estudio-previo/estudio-previo.component';
 import { ContractorDataRegisterShareComponent } from './register-data-contractor-share/register-data-contractor-share.component';
 
@@ -35,8 +35,8 @@ import { ContractorDataRegisterShareComponent } from './register-data-contractor
         ContractorDataRegisterShareComponent,
         ModificacionFormComponent,
         MinutaContratoComponent, 
-        MinutaAdicion1Component, MinutaAdicion2Component,
-         MinutaAdicionComponent, EstudioPrevioComponent
+        MinutaAdicionComponent, MinutaAdicion2Component,
+         MinutaAmpliacionComponent, EstudioPrevioComponent
     ],
     imports     : [
         RouterModule.forChild(contractorListRoutes),
