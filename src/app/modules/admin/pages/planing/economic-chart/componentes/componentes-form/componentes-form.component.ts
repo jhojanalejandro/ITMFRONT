@@ -81,11 +81,7 @@ export class ComponentesFormComponent implements OnInit {
             componentName: new FormControl(
                 this.nombreComponente,
                 Validators.required
-            ),
-            consecutivo: new FormControl(
-                this.nombreComponente,
-                Validators.required
-            ),
+            )
         });
     }
 
@@ -93,7 +89,7 @@ export class ComponentesFormComponent implements OnInit {
         this.abrirDiv = true;
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions

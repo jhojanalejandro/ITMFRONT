@@ -44,7 +44,7 @@ export class ModificacionFormComponent implements OnInit {
 
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0,consecutivo:null};
+    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0,consecutivo:null, obligacionesEspecificas: null, obligacionesGenerales: null};
     disableField:boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     elementos: IElements[] = [];
@@ -181,7 +181,9 @@ export class ModificacionFormComponent implements OnInit {
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.elementForm.value.recursos,
-            consecutivo: this.elementForm.value.consecutivo
+            consecutivo: this.elementForm.value.consecutivo,
+            obligacionesEspecificas: this._data.data.obligacionesEspecificas,
+            obligacionesGenerales: this._data.data.obligacionesGenerales
         };
 
         this._economicService.addElementoComponente(item).subscribe((response) => {
@@ -244,7 +246,7 @@ export class ModificacionFormComponent implements OnInit {
     getDataElemento(){
             this._economicService.getElementoById(this._data.data.elementId).subscribe((resp) => {
                 if(resp.recursos == 0){
-                    swal.fire('Error', 'Error los recursos deben  ser mayores a 0!', 'error');
+                    swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
                     this.matDialogRef.close();
                 }else{
                     this.data = resp;

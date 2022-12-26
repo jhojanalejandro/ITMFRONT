@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
-import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from '../home-contractor.service';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
@@ -122,7 +121,7 @@ export class UploadFileContractorComponent implements OnInit {
   addFileContract(event) {
     const registerProject: any={
       userId: this._auth.accessId,
-      folderId: this._data.contractId,
+      contractId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,

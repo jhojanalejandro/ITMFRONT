@@ -71,7 +71,7 @@
                                 Componente : {{ type.nombreComponente }}
                                 <igx-tree-node *ngFor="let value of type.elementos">
                                     <mat-icon (click)="abrirDivElement(value)">visibility</mat-icon>
-                                    Elemento : {{ value.nombreCpc }}
+                                    Elemento : {{ value.nombreElemento }}
                                 </igx-tree-node>
                             </igx-tree-node>
                         </igx-tree>
@@ -148,6 +148,9 @@
                                     <div class="my-2">
                                         <div>Valor Total: {{dataElemento.valorTotal | currency:'COP '}}</div>
                                     </div>
+                                    <div class="my-2">
+                                        <div>Recursos: {{dataElemento.recursos | currency:'COP '}}</div>
+                                    </div>
                                 </div>
                             </fuse-card>
                         </div>
@@ -194,7 +197,7 @@
                     </div> -->
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Total</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos Operativos</div>
                         </div>
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
@@ -218,7 +221,7 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{'20000' | currency:'COP '}}
+                                    {{total | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
@@ -229,6 +232,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                        <button class="ml-3" mat-flat-button [color]="'primary'" (click)="guardarCalculo()">
+                            <mat-icon svgIcon="mat_outline:save"></mat-icon>
+                           Guardar Calculos
+                        </button>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
-import { IUserModel } from 'app/modules/auth/sign-up/user-model';
+import { IUserModel } from 'app/modules/auth/model/user-model';
 import {  Subject, takeUntil } from 'rxjs';
 @Component({
     selector       : 'settings-account',
@@ -17,6 +17,7 @@ export class SettingsAccountComponent implements OnInit
     permission: string;
     email: string;
     phoneNumber: any;
+    identification: any;
     alert: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -46,11 +47,13 @@ export class SettingsAccountComponent implements OnInit
             this.userName = data.userName
             this.email = data.userEmail
             this.roll = data.idRoll;
+            this.identification = data.identification
             this.accountForm = this._formBuilder.group({
                 name    : [this.userName],
                 email   : [this.email, Validators.email],
                 phone   : [this.phoneNumber],
-                title   :[this.roll]
+                title   :[this.roll],
+                identification : [this.identification]
             });
         });
         // Create the form
@@ -66,7 +69,7 @@ export class SettingsAccountComponent implements OnInit
             phoneNumber: this.accountForm.value.phoneNumber,
             rollId: this.roll,
             userEmail: this.accountForm.value.email,
-  
+            identification: this.accountForm.value.identification
             };                  
                 // Sign in
                 this._authService.updateUser(updateUser)

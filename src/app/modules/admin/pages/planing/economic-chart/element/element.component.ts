@@ -55,7 +55,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: null, consecutivo: null }
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null }
     recursos: number;
     totalExacto: number;
     update: boolean;
@@ -114,7 +114,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             fechamodificacion: new FormControl(null, Validators.required),
             consecutivo: new FormControl(null, Validators.required),
             valordiaContratista: new FormControl(null, Validators.required),
-
+            obligacionesEspecificas: new FormControl(null),
+            obligacionesGenerales: new FormControl(null)
         });
         this.filteredOptions =
             this.elementForm.controls.nombreElemento.valueChanges.pipe(
@@ -178,8 +179,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.elementForm.value.recursos,
-            consecutivo: this.elementForm.value.consecutivo
-
+            consecutivo: this.elementForm.value.consecutivo,
+            obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
+            obligacionesGenerales: this.elementForm.value.obligacionesGenerales
         };
 
         this._economicService.addElementoComponente(item).subscribe((response) => {

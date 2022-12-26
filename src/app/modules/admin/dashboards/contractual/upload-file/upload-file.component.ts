@@ -106,11 +106,10 @@ export class UploadFileComponent implements OnInit {
       this._data.contractorId = arr[0];
     }
 
-    let contractId = this._data.contractId;
     const registerFile: IFileContractor = {
       userId: this._auth.accessId,
       contractorId: this._data.contractorId,
-      folderId: this._data.contractId,
+      contractId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
@@ -118,11 +117,12 @@ export class UploadFileComponent implements OnInit {
       modifyDate: this.registerDate,
       filedata: event,
       passed: true,
-      typeFilePayment: 'execel Contratista'
+      typeFilePayment: 'execel Contratista',
+      mont: null  
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
-        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -132,7 +132,7 @@ export class UploadFileComponent implements OnInit {
       (response) => {
         this.formFile.enable();
         // Set the alert
-        swal.fire('Error al Registrar la informacion!', '', 'error');
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
       });
@@ -150,7 +150,7 @@ export class UploadFileComponent implements OnInit {
     };
     this._upload.UploadFileContractor(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -160,7 +160,7 @@ export class UploadFileComponent implements OnInit {
       (response) => {
         this.formFile.enable();
         // Set the alert
-        swal.fire('Error al Registrar la informacion!', '', 'error');
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
       });
@@ -186,7 +186,7 @@ export class UploadFileComponent implements OnInit {
       // Should match the parameter name in backend
       this._upload.UploadFileExcel(formData).subscribe((res) => {
         if (res) {
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();
@@ -196,7 +196,7 @@ export class UploadFileComponent implements OnInit {
         (response) => {
           this.formFile.enable();
           // Set the alert
-          swal.fire('Error al Registrar la informacion!', '', 'error');
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
           // Show the alert
           this.showAlert = true;
         });

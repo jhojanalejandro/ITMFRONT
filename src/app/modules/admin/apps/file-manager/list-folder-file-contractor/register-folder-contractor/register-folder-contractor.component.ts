@@ -95,7 +95,7 @@ export class FolderContractorComponent implements OnInit {
     const registerProject: IFolderContractor={
       id: this._data.data.id,
       userId: this.authService.accessId,
-      contractorId: this._data.folderId,
+      contractorId: this._data.contractId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 

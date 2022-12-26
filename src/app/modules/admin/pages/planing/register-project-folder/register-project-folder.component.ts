@@ -5,9 +5,9 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { IDetailProjectFolder } from "./model/detail-project";
+import { IDetailProjectFolder } from "../models/detail-project";
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
-import { IProjectFolder } from './model/project-folder';
+import { IProjectFolder } from '../models/project-folder';
 
 @Component({
   selector: 'app-register-contractor',
@@ -117,6 +117,9 @@ export class RegisterProjectFolderComponent implements OnInit {
       execution: this.formProject.value.ejecucion,
       activate: false,
       contractorsCant: 0,
+      valorContrato: 0,
+      valorSubTotal: 0,
+      gastosOperativos: 0,
       detalleContratoDto: detalle
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
@@ -159,7 +162,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaContrato: this.formProject.value.fechaContrato,
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       adicion: adicion,
-      tipoContrato: '',
+      tipoContrato: this.formProject.value.tipoModificacion,
       idContrato: this._data.data.id,
       update: this.formProject.value.updateData
 
@@ -173,11 +176,14 @@ export class RegisterProjectFolderComponent implements OnInit {
       execution: this.formProject.value.ejecucion,
       activate: false,
       contractorsCant: 0,
-      detalleContratoDto: detalle
+      detalleContratoDto: detalle,
+      valorContrato: 0,
+      valorSubTotal: 0,
+      gastosOperativos: 0,
     };
-    this._upload.UpdateProjectFolder(registerProject).subscribe((res) => {
+    this._upload.addProjectFolder(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -187,7 +193,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       (response) => {
         this.formProject.enable();
         // Set the alert
-        swal.fire('Error al Registrar la informacion!', '', 'error');
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
       });

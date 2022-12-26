@@ -9,5 +9,8 @@ export interface IProjectFolder{
     execution: boolean;
     activate: boolean;
     contractorsCant: number;
+    valorContrato: number;
+    gastosOperativos: number;
+    valorSubTotal: number;
     detalleContratoDto: IDetailProjectFolder;
 }

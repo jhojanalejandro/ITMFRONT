@@ -35,7 +35,7 @@ export class UploadFirmComponent implements OnInit {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private _upload: UploadFileDataService,
+    private _uploadService: UploadFileDataService,
     private _gerenicService: GenericService,
 
     private _auth: AuthService,
@@ -105,11 +105,10 @@ export class UploadFirmComponent implements OnInit {
       this._data.contractorId = arr[0];
     }
 
-    let contractId = this._data.contractId;
     const registerFile: IFileContractor = {
       userId: this._auth.accessId,
       contractorId: this._data.contractorId,
-      folderId: this._data.contractId,
+      contractId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
@@ -117,11 +116,12 @@ export class UploadFirmComponent implements OnInit {
       modifyDate: this.registerDate,
       filedata: event,
       passed: true,
-      typeFilePayment: 'execel Contratista'
+      typeFilePayment: 'execel Contratista',
+      mont: null,
     };
-    this._upload.UploadFileContractor(registerFile).subscribe((res) => {
+    this._uploadService.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
-        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -131,7 +131,7 @@ export class UploadFirmComponent implements OnInit {
       (response) => {
         this.formFile.enable();
         // Set the alert
-        swal.fire('Error al Registrar la informacion!', '', 'error');
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
       });
@@ -140,14 +140,14 @@ export class UploadFirmComponent implements OnInit {
   addFileContract(event) {
     const registerProject: any = {
       userId: this._auth.accessId,
-      folderId: this._data.contractId,
+      contractId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate,
       fildata: event
     };
-    this._upload.UploadFileContractor(registerProject).subscribe((res) => {
+    this._uploadService.UploadFileContractor(registerProject).subscribe((res) => {
       if (res) {
         swal.fire('informacion Registrada Exitosamente!', '', 'success');
         //this.matDialogRef.close();  
@@ -183,7 +183,7 @@ export class UploadFirmComponent implements OnInit {
     formData.append('contractId', this.formFile.value.IdProject);
     if (this._data.show) {
       // Should match the parameter name in backend
-      this._upload.UploadFileExcel(formData).subscribe((res) => {
+      this._uploadService.UploadFileExcel(formData).subscribe((res) => {
         if (res) {
           swal.fire('informacion Registrada Exitosamente!', '', 'success');
           //this.matDialogRef.close();  

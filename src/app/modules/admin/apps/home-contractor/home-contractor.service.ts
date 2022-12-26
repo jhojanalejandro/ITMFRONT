@@ -68,7 +68,7 @@ export class HomeContractorService
         let arr = idC.split('/');
         const GetFile: any={ 
             contractorId: arr[0],
-            folderId: arr[1]
+            contractId: arr[1]
         }
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileByIdEndpoint;

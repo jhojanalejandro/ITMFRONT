@@ -42,7 +42,7 @@ export class UploadDataService
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    UpdateProjectFolder(data: any) {
+    UpdateCostProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }

@@ -2,14 +2,22 @@ export interface IFileContractor{
     id?: any;
     userId: any;
     contractorId: any;
-    folderId: any;
+    contractId: any;
     filesName: string;
-    filedata: any;
-    typeFile: any;
-    descriptionFile: any;
+    filedata: string;
+    typeFile: string;
+    descriptionFile: string;
     registerDate: Date;
     modifyDate: Date;
     passed: boolean;
     typeFilePayment: string;
+    mont: string;
+}
+
+export interface IDetailFile{
+    id?: any;
+    fileId: any;
+    observation: string;
+    motivo: string;
 }
 

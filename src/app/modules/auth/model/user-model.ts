@@ -8,4 +8,5 @@ export interface IUserModel{
     userEmail: string;
     permission?: boolean;
     phoneNumber?: string;
+    identification: string;
 }

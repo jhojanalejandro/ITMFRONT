@@ -92,13 +92,14 @@
                                             class="flex flex-col w-50 h-60 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
                                             >
                                             <section class="example-section">
-                                                <mat-radio-group [disabled]="false">
-                                                  <mat-radio-button (change)="onChange($event)" class="example-margin" value="after">APROBADO</mat-radio-button>
-                                                  <mat-radio-button (change)="onChange($event)" class="example-margin" value="before" aprobado>NO APROBADO</mat-radio-button>
+                                                <mat-radio-group [(ngModel)]="file.passed" [disabled]="false">
+                                                  <mat-radio-button (change)="onChange($event,file)" class="example-margin" value="aprobado">APROBADO</mat-radio-button>
+                                                  <mat-radio-button (change)="onChange($event, file)" class="example-margin" value="rechazado">RECHAZADO</mat-radio-button>
+                                                  <mat-radio-button  class="example-margin" value="revisar">POR REVISAR</mat-radio-button>
                                                 </mat-radio-group>
                                               </section>
 
-                                            <div class="aspect-w-9 aspect-h-6">
+                                            <div class="aspect-w-9 aspect-h-4">
                                                 <div class="flex items-center justify-center">
                                                     <!-- Icons -->
                                                     <div class="relative" [routerLink]="['./details/file/', file.id]">

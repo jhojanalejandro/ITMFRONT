@@ -43,11 +43,8 @@
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>CDP</mat-label>
                         <input type="text" id="cdp" [(ngModel)]="hinringData.cdp" formControlName="cdp" autocomplete="off" matInput
-                            placeholder="rubro">
+                            placeholder="CDP">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('cdp').hasError('required')">
-                            El Campo rubro es requerido
-                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="nationality">
@@ -56,9 +53,6 @@
                         <input type="text" id="rubro" [(ngModel)]="hinringData.rubro" formControlName="rubro" autocomplete="off" matInput
                             placeholder="rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('rubro').hasError('required')">
-                            El Campo rubro es requerido
-                        </mat-error>
                     </mat-form-field>
 
                     <mat-form-field class="hiring" appearance="outline">
@@ -245,7 +239,7 @@
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>cargo Supervisor</mat-label>
                         <input type="text" id="cargoInterventor" [(ngModel)]="hinringData.cargoInterventorItm" formControlName="cargoInterventor" autocomplete="off"
-                            matInput placeholder="cargo Interventor">
+                            matInput placeholder="cargo Supervisor">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                         <mat-error *ngIf="formContractor.get('cargoInterventor').hasError('required')">
                             El Campo cargo Interventor es requerido

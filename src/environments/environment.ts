@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    //apiURL: 'https://localhost:44353/',
-    apiURL: 'https://localhost:7163/',
+    apiURL: 'https://localhost:44353/',
+    // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -35,7 +35,7 @@ export const environment = {
     GetFolderFileContractorEndpoint: 'FolderContractor/GetAll/',
 
     addProjectFolderEndpoint: 'ProjectFolder/Add',
-    UpdateProjectFolderEndpoint: 'ProjectFolder/Update',
+    UpdateProjectFolderEndpoint: 'ProjectFolder/UpdateCost',
     GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll/',
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
@@ -53,7 +53,7 @@ export const environment = {
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
 
     addFileEndpoint: 'Files/AddFileContractor',
-    UpdateFileEndpoint: 'Files/Update',
+    addDetailFileEndpoint: 'Files/AddDetailFile',
     GetAllFileByIdEndpoint: 'Files/GetAllFileById',
     GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
@@ -73,6 +73,7 @@ export const environment = {
     getComponentById: 'Componente/GetById/',
 
     addElement: 'ElementosComponente/Add/',
+    getElements: 'ElementosComponente/Get/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',

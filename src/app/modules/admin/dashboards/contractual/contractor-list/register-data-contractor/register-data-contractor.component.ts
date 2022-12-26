@@ -60,13 +60,14 @@ export class ContractorDataRegisterComponent implements OnInit {
   ) {
     if (this.datos.data != null) {
       this.getHiring();
-      this.getElementById(this.datos.data.elementId);
-      this.getComponentById(this.datos.data.componenteId);
+      if (this.datos.data.elementId != null && this.datos.data.elementId != 0) {
+        this.getElementById(this.datos.data.elementId);
+        this.getComponentById(this.datos.data.componenteId);
+      }
     }
   }
 
   ngOnInit(): void {
-
     this.getComponent();
     this.formContractor = this._formBuilder.group({
       contrato: new FormControl(this.hinringData.contrato),
@@ -148,7 +149,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       .addHiringContractor(registerContractor)
       .subscribe((res) => {
         if (res) {
-          swal.fire('Contratista Registrado Exitosamente!', '', 'success');
+          swal.fire('Bien', 'Contratista Registrado Exitosamente!', 'success');
           this.ref.detectChanges();
           this.ref.markForCheck();
         }
@@ -216,7 +217,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       .addHiringContractor(registerContractor)
       .subscribe((res) => {
         if (res) {
-          swal.fire('Contratista Registrado Exitosamente!', '', 'success');
+          swal.fire('Bien', 'Contratista Registrado Exitosamente!', 'success');
           this.ref.detectChanges();
           this.ref.markForCheck();
         }
@@ -261,7 +262,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       .getElementoById(id)
       .subscribe((response) => {
         this.elemento = response.nombreElemento
-
       });
   }
   getElements = () => {
@@ -293,7 +293,6 @@ export class ContractorDataRegisterComponent implements OnInit {
         this.sendEconomicdataContractor();
       }
     })
-
   }
 
   sendEconomicdataContractor() {
@@ -322,7 +321,9 @@ export class ContractorDataRegisterComponent implements OnInit {
     this._economicService
       .getHiringDataById(this.datos.data.contractId)
       .subscribe((response: IHiringData) => {
-        this.hinringData = response;
+        if (response != null) {
+          this.hinringData = response;
+        }
       });
   }
 

@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { IUserModel } from './user-model';
+import { IUserModel } from '../model/user-model';
 
 @Component({
     selector     : 'auth-sign-up',
@@ -53,7 +53,8 @@ export class AuthSignUpComponent implements OnInit
                 password  : ['', Validators.required],
                 confirmPassword : ['', Validators.required],
                 professional : ['', Validators.required],
-                phoneNumber : ['', Validators.required]
+                phoneNumber : ['', Validators.required],
+                identification: ['',Validators.required]
             }
         );
     }
@@ -75,7 +76,8 @@ export class AuthSignUpComponent implements OnInit
             avatar: 'vacio',
             Professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
-            phoneNumber: this.signUpForm.value.phoneNumber.toString()
+            phoneNumber: this.signUpForm.value.phoneNumber.toString(),
+            identification: this.signUpForm.value.identification
 
         };
         // Do nothing if the form is invalid

@@ -1,19 +1,12 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
-    OnDestroy,
     OnInit,
-    ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
 import {
-    FormBuilder,
-    FormControl,
     FormGroup,
-    Validators,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -23,6 +16,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentesFormComponent } from './componentes-form/componentes-form.component';
 import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
+import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
+import swal from 'sweetalert2';
 
 @Component({
     selector: 'components-card',
@@ -52,6 +47,7 @@ export class AddComponentsComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _Economicservice: EconomicChartService,
         private _matDialog: MatDialog,
+        private _contrtactService: UploadDataService,
     ) {
         this.id = this.route.snapshot.params.id;
         if (this.id) {
@@ -74,7 +70,7 @@ export class AddComponentsComponent implements OnInit {
         this.abrirDivElemento = true;
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     chargeData() {
         this._Economicservice.getComponent(this.id).subscribe((response) => {
@@ -101,7 +97,8 @@ export class AddComponentsComponent implements OnInit {
                 });
             }
         });
-        this.subTotal = this.subTotal * 0.08;
+        this.gastosOperativos = this.subTotal * 0.08;
+        this.total = this.gastosOperativos + this.subTotal;
     }
 
     openDialog(): void {
@@ -117,7 +114,6 @@ export class AddComponentsComponent implements OnInit {
     }
 
     changePorcentaje() {
-        this.subTotal = (this.subTotal * this.porcentajeCalculo) / 100;
         this.gastosOperativos = this.subTotal * this.porcentajeCalculo;
         this.total = this.gastosOperativos + this.subTotal;
     }
@@ -132,20 +128,20 @@ export class AddComponentsComponent implements OnInit {
             },
         });
         dialogRef.afterClosed().subscribe((result) => {
-            if(result){
+            if (result) {
                 this._Economicservice
-                .getComponent(this.id)
-                .subscribe((response) => {
-                    this.data = response;
-                    this._changeDetectorRef.detectChanges();
-                });
+                    .getComponent(this.id)
+                    .subscribe((response) => {
+                        this.data = response;
+                        this._changeDetectorRef.detectChanges();
+                    });
+                    this.chargeData();
             }
-
         });
     }
 
     addElements() {
-        let ids : any = {'idComponente': this.dataComponente.id, 'idContrato': this.id}
+        let ids: any = { 'idComponente': this.dataComponente.id, 'idContrato': this.id }
         const dialogRef = this._matDialog.open(ElementCardComponent, {
             autoFocus: false,
             data: ids,
@@ -153,17 +149,20 @@ export class AddComponentsComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             this._changeDetectorRef.detectChanges();
             if (result) {
+                this.chargeData();
             }
         });
     }
-    editElemento(elemento: any){
+    editElemento(elemento: any) {
         const dialogRef = this._matDialog.open(ElementCardComponent, {
-            data: {elemento,
-                idContrato: this.id}
+            data: {
+                elemento,
+                idContrato: this.id
+            }
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                
+                this.chargeData();
             }
         });
     }
@@ -178,6 +177,23 @@ export class AddComponentsComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
             }
+        });
+    }
+    guardarCalculo() {
+        const registerProject: any = {
+            id: this.id,
+            contractorsCant: 0,
+            valorContrato: this.total,
+            valorSubTotal: this.subTotal,
+            gastosOperativos: this.gastosOperativos,
+        };
+        this._contrtactService.UpdateCostProjectFolder(registerProject).subscribe((res) => {
+            if (res) {
+                swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+            }
+
+        }, (response) => {
+            swal.fire('Error', 'Error al Registrar la informacion', 'error');
         });
     }
 }

@@ -67,6 +67,7 @@
                 [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
         </button>
     </div>
+    
     <div class="flex mt-2 border-t">
         <div class="py-3">
             <ng-container *ngIf="item.descriptionFile">
@@ -77,7 +78,25 @@
             </ng-container>
         </div>
     </div>
-
+    <div class="flex items-center justify-between mt-8">
+        <div class="text-lg font-medium">Observaciones</div>
+        <button mat-icon-button>
+            <mat-icon
+                class="icon-size-5"
+                [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+        </button>
+    </div>
+    
+    <div class="flex mt-2 border-t">
+        <div class="py-3">
+            <ng-container *ngIf="item.descriptionFile">
+                <div>{{item.observation}}</div>
+            </ng-container>
+            <ng-container *ngIf="!item.observation">
+                <div class="italic text-secondary">Click here to add a description</div>
+            </ng-container>
+        </div>
+    </div>
     <!-- Actions -->
     <div class="grid grid-cols-2 gap-4 w-full mt-8">
         <!-- <button

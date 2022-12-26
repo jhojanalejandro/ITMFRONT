@@ -147,7 +147,7 @@ export class EconomicChartService {
 
     getElementoComponente(id: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.addElementosComponent + '/Get/';
+            this.apiUrl + environment.getElements;
         return this._httpClient.get<IElements[]>(urlEndpointGenerate + id);
     }
 

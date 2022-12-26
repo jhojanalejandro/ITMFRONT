@@ -13,7 +13,8 @@ export interface IElements{
     tipoElemento: string;
     recursos: number; 
     consecutivo: string;
-
+    obligacionesEspecificas: string;
+    obligacionesGenerales: string;
 }
 
 
