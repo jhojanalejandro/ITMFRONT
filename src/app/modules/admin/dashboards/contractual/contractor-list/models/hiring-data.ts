@@ -23,11 +23,8 @@ export interface IHiringData{
     nivel: any;
     interventorItm: string;
     cargoInterventorItm: string;
-    noAdicion: string;
-    fechaInicioAmpliacion: Date;
-    fechaDeTerminacionAmpliacion: Date;
     rubro: string;
     nombreRubro: string;
     cdp: string;
-    idsContractors: number[];
+    idsContractors?: number[];
 }

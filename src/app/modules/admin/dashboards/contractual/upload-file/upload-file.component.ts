@@ -28,7 +28,7 @@ export class UploadFileComponent implements OnInit {
   selectContract: any;
   contratos: any;
   base64Output: any;
-  disableButton: boolean = true; 
+  disableButton: boolean = true;
   mostrarContrato = false;
   numberOfTicks = 0;
   formFile: FormGroup;
@@ -118,12 +118,11 @@ export class UploadFileComponent implements OnInit {
       filedata: event,
       passed: true,
       typeFilePayment: 'execel Contratista',
-      mont: null  
+      mont: null
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
         swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
-        //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
       }
@@ -132,6 +131,7 @@ export class UploadFileComponent implements OnInit {
       (response) => {
         this.formFile.enable();
         // Set the alert
+        console.log(response);
         swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
@@ -160,6 +160,7 @@ export class UploadFileComponent implements OnInit {
       (response) => {
         this.formFile.enable();
         // Set the alert
+        console.log(response);
         swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
@@ -194,6 +195,8 @@ export class UploadFileComponent implements OnInit {
 
       },
         (response) => {
+          console.log(response);
+          
           this.formFile.enable();
           // Set the alert
           swal.fire('Error', 'Error al Registrar la informacion!', 'error');

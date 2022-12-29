@@ -10,12 +10,14 @@
         </div>
         <div class="mt-4 sm:mt-0">
             <!-- Add section button -->
-            <button mat-flat-button [color]="'accent'" (click)="SendMailsAccounts()" [matTooltip]="'Shortcut: Ctrl + .'">
+            <button mat-flat-button [color]="'accent'" (click)="SendMailsAccounts()"
+                [matTooltip]="'Shortcut: Ctrl + .'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
-            <button (click)="registerShareData()" class="ml-3" mat-flat-button [color]="'primary'" [matTooltip]="'Shortcut: Ctrl + /'">
+            <button (click)="registerShareData()" class="ml-3" mat-flat-button [color]="'primary'"
+                [matTooltip]="'Shortcut: Ctrl + /'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Agregar Datos</span>
             </button>
@@ -33,9 +35,11 @@
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #summaryMenu="matMenu">
-                                <button mat-menu-item>Generar Minuta</button>
+                                <button mat-menu-item (click)="generarMinuta()">Generar Minuta</button>
                                 <button mat-menu-item>Gnerar Acta de inicio</button>
-
+                                <button mat-menu-item (click)="generarEstudiosPrevios()">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Generar Estudios Previos</button>
                             </mat-menu>
                         </div>
                     </div>
@@ -90,8 +94,8 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #summaryMenu="matMenu">
-                                            <button [matTooltip]="'Agregar datos'"
-                                                (click)="registrarInfo(element)" mat-menu-item>
+                                            <button [matTooltip]="'Agregar datos'" (click)="registrarInfo(element)"
+                                                mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
                                                 Agregar datos
                                             </button>
@@ -102,11 +106,21 @@
                                                 Eliminar
                                             </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
-                                            (click)="modificacionContrato(element)" [color]="'primary'"
-                                            mat-menu-item>
-                                            <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
-                                            Agregar Modificacion
-                                        </button>
+                                                (click)="modificacionContrato(element)" [color]="'primary'"
+                                                mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
+                                                Agregar Modificacion
+                                            </button>
+                                            <button [matTooltip]="'Agregar Modificacion'"
+                                                (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
+                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                                Generar Minuta
+                                            </button>
+                                            <button [matTooltip]="'Agregar Modificacion'"
+                                                (click)="generarEstudiosPrevio(element)" [color]="'primary'" mat-menu-item>
+                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                                Generar Estudios Previos
+                                            </button>
                                         </mat-menu>
                                     </p>
 
@@ -128,6 +142,6 @@
         </div>
 
     </div>
-    <app-minuta-contrato *ngIf="minuta"></app-minuta-contrato>
-<app-estudio-previo *ngIf="estudioPrevio"></app-estudio-previo>
-<app-minuta-adicion *ngIf="minutaAdicion"></app-minuta-adicion>
+    <app-minuta-contrato [contractors]="contractors" *ngIf="contractors != null && minuta"></app-minuta-contrato>
+    <app-estudio-previo [contractors]="contractors" *ngIf="contractors != null && estudioPrevio"></app-estudio-previo>
+    <app-minuta-adicion *ngIf="minutaAdicion"></app-minuta-adicion>

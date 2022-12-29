@@ -68,14 +68,14 @@ export class SettingsSecurityComponent implements OnInit
                     if(data){
                         this.securityForm.enable();
                         // Set the alert
-                        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+                        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
 
                     }
                 },
             (response) => {
               this.securityForm.enable();
               // Set the alert
-              swal.fire('Error al Actualizar la informacion! intente mas tarde', '', 'error');
+              swal.fire('Error', 'Error al Actualizar la informacion! intente mas tarde', 'error');
               // Show the alert
             });
     }

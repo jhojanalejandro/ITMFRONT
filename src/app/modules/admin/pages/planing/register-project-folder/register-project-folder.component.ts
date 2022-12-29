@@ -24,7 +24,6 @@ export class RegisterProjectFolderComponent implements OnInit {
   indeterminate = false;
   disabled = false;
   numberOfTicks = 0;
-  showAlert: boolean = false;
   registerDate = new Date();
   minDate: any;
   formProject: FormGroup;
@@ -81,7 +80,10 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaContrato: new FormControl(this.fechaContrato, Validators.required),
       fechaFinalizacion: new FormControl(this.fechaFinalizacion, Validators.required),
       tipoModificacion: new FormControl(this.fechaFinalizacion, Validators.required),
-      updateData: new FormControl(this.fechaFinalizacion, Validators.required)
+      updateData: new FormControl(this.fechaFinalizacion, Validators.required),
+      noAdicion: new FormControl(null),
+      fechaInicioAmpliacion: new FormControl(null),
+      fechaDeTerminacionAmpliacion: new FormControl(null, Validators.required),
     });
 
   }
@@ -120,11 +122,14 @@ export class RegisterProjectFolderComponent implements OnInit {
       valorContrato: 0,
       valorSubTotal: 0,
       gastosOperativos: 0,
+      noAdicion: this.formProject.value.noAdicion,
+      fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
+      fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
       detalleContratoDto: detalle
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -134,9 +139,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       (response) => {
         this.formProject.enable();
         // Set the alert
-        swal.fire('Error al Registrar la informacion!', '', 'error');
-        // Show the alert
-        this.showAlert = true;
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       });
   }
 
@@ -180,10 +183,13 @@ export class RegisterProjectFolderComponent implements OnInit {
       valorContrato: 0,
       valorSubTotal: 0,
       gastosOperativos: 0,
+      noAdicion: this.formProject.value.noAdicion,
+      fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
+      fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+        swal.fire('Bien', 'informacion Editada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -195,12 +201,11 @@ export class RegisterProjectFolderComponent implements OnInit {
         // Set the alert
         swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
-        this.showAlert = true;
       });
 
   }
   cerrar(): void {
-    this.matDialogRef.close();
+    this.matDialogRef.close(true);
   }
 
   dateChange() {

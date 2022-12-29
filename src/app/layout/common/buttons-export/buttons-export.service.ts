@@ -22,12 +22,12 @@ export class ButtonsExportService {
       };
       return this._httpClient.get<any>( urlEndPoint + idContrato, httpOptions);
     }
-    getReportDap(): Observable<Blob> {
+    getReportDap(idContrato: number): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarDap;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };
-      return this._httpClient.get<any>( urlEndPoint , httpOptions);
+      return this._httpClient.get<any>( urlEndPoint + idContrato, httpOptions);
     }
     getReportPpa(idContrato: number): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarPpa;

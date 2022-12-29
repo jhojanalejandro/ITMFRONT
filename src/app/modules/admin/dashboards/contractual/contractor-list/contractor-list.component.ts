@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -43,13 +43,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
+
   @ViewChild(MatTable) table!: MatTable<any>;
   elements: IElements[];
   componentes: Componente[];
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
-
+  contractors: any[];
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
@@ -71,7 +72,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private router: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _fuseConfirmationService: FuseConfirmationService
-
   ) {
   }
   columnas = [
@@ -182,6 +182,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(Response);
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;
+      this.contractors = Response;
     });
 
   }
@@ -282,7 +283,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
   registerShareData(){
-    debugger
     if(this.selection.selected.length > 0 ){
       const dialogRef = this._matDialog.open(ContractorDataRegisterShareComponent, {
         width: '900px',
@@ -299,8 +299,16 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       });
     }else{
       swal.fire('Precaución', 'Debes seleccionar uno varios contratistas!', 'warning');
-
     }
-
   }
+
+  generarMinuta(data: any = null){
+      this.contractors = [data];
+      this.minuta = true;
+  }
+  generarEstudiosPrevios(data: any = null){
+    this.contractors = [data];
+    this.estudioPrevio = true;
+}
+
 }

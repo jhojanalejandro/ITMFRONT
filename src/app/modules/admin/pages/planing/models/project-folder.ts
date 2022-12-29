@@ -12,5 +12,8 @@ export interface IProjectFolder{
     valorContrato: number;
     gastosOperativos: number;
     valorSubTotal: number;
+    noAdicion: string;
+    fechaInicioAmpliacion: Date;
+    fechaDeTerminacionAmpliacion: Date;
     detalleContratoDto: IDetailProjectFolder;
 }

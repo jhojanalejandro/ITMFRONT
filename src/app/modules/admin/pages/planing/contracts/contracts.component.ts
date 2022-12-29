@@ -67,7 +67,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
-    console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -220,14 +219,13 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
       if (result == 'confirmed') {
         this._uploadData.DeleteContract(element.id).subscribe((res) => {
           if (res) {
-            swal.fire('informacion Eliminada Exitosamente!', '', 'success');
-
+            swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
           }
           this.getContractsData();
-
         },
           (response) => {
-            swal.fire('Error al Registrar la informacion!' + response, '', 'error');
+            console.log(response);
+            swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
           });
       }
     });

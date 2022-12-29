@@ -170,37 +170,6 @@
                 </div>
                 <div class="nationality">
                     <mat-form-field class="hiring" appearance="outline">
-                        <mat-label>Numero Adicion</mat-label>
-                        <input type="text" id="noAdicion" [(ngModel)]="hinringData.noAdicion" formControlName="noAdicion" autocomplete="off" matInput
-                            placeholder="no Adicion">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:link'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('noAdicion').hasError('required')">
-                            El Campo no Adicion es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field (click)="pickerIA.open()" class="hiring" appearance="outline">
-                        <mat-label>Fecha Inicio Ampliacion</mat-label>
-                        <input matInput id="fechaInicioAmpliacion" autocomplete="off"
-                        [(ngModel)]="hinringData.fechaInicioAmpliacion" formControlName="fechaInicioAmpliacion" [matDatepicker]="pickerIA">
-                        <mat-datepicker #pickerIA></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerIA"></mat-datepicker-toggle>
-                        <mat-error *ngIf="formContractor.get('fechaInicioAmpliacion').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field (click)="pickerTA.open()" class="hiring" appearance="outline">
-                        <mat-label>Fecha terminacion Ampliacion</mat-label>
-                        <input matInput id="fechaDeTerminacionAmpliacion" autocomplete="off"
-                        [(ngModel)]="hinringData.fechaDeTerminacionAmpliacion" formControlName="fechaDeTerminacionAmpliacion" [matDatepicker]="pickerTA">
-                        <mat-datepicker #pickerTA></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerTA"></mat-datepicker-toggle>
-                        <mat-error *ngIf="formContractor.get('fechaDeTerminacionAmpliacion').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="nationality">
-                    <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Supervisor</mat-label>
                         <input type="text" id="supervisor" [(ngModel)]="hinringData.interventorItm" formControlName="interventor" autocomplete="off" matInput
                             placeholder="supervisor">

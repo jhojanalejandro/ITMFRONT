@@ -200,8 +200,8 @@ export class EconomicChartListComponent
             (res) => {
                 if (res) {
                     swal.fire(
+                        'Bien',
                         'informacion Registrada Exitosamente!',
-                        '',
                         'success'
                     );
                     //this.matDialogRef.close();
@@ -212,7 +212,7 @@ export class EconomicChartListComponent
             (response) => {
                 this.economicChartForm.enable();
                 // Set the alert
-                swal.fire('Error al Registrar la informacion!', '', 'error');
+                swal.fire('Error', 'Error al Registrar la informacion!', 'error');
                 // Show the alert
             }
         );
@@ -223,8 +223,8 @@ export class EconomicChartListComponent
             (res) => {
                 if (res) {
                     swal.fire(
+                        'Bien',
                         'informacion Eliminada Exitosamente!',
-                        '',
                         'success'
                     );
                 }
@@ -232,7 +232,7 @@ export class EconomicChartListComponent
             },
             (response) => {
                 // Set the alert
-                swal.fire('Error al Eliminar la informacion!', '', 'error');
+                swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
             }
         );
     }

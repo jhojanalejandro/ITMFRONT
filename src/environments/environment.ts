@@ -17,7 +17,7 @@ export const environment = {
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
     exportarViabilidad: 'ExportToExcel/GetViabilidadExcel/',
-    exportarDap: 'ExportToExcel/GetSolicitudContratacionDap',
+    exportarDap: 'ExportToExcel/GetSolicitudContratacionDap/',
     exportarCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarPpa: 'ExportToExcel/GetSolicitudPpa/',
     addExcelContractorEndpoint: 'Contractor/AddExcel',
@@ -67,6 +67,7 @@ export const environment = {
     GetAllHiringEndpoint: 'HiringData/GetAll',
     GetByIdHiringEndpoint: 'HiringData/GetById/',
     DeleteHiringEndpoint: 'HiringData/Delete',
+    GetDataMinutaHiringEndpoint: 'HiringData/GetByIdMinuta',
 
     addComponent: 'Componente/Add/',
     getComponent: 'Componente/Get/',

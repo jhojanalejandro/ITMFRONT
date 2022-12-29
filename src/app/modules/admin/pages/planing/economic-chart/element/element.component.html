@@ -114,7 +114,7 @@
                 <div>
                     <mat-form-field appearance="outline">
                         <mat-label>Valor Unidad</mat-label>
-                        <input type="text" value="{{elemento.valorUnidad | number :'1.2-2'}}" id="unitValue"
+                        <input type="text" value="{{elemento.valorUnidad | number :'1.0-0'}}" id="unitValue"
                             formControlName="unitValue" autocomplete="off" matInput placeholder="Valor Unidad">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
@@ -124,14 +124,14 @@
                     </mat-form-field>
                     <mat-form-field disable appearance="outline">
                         <mat-label>Valor Por dia contratistas</mat-label>
-                        <input type="text" [value]="elemento.valorPorDia | number:'1.2-2'" formControlName="unitValueDay"
+                        <input type="text" [value]="elemento.valorPorDia | number:'1.0-0'" formControlName="unitValueDay"
                             autocomplete="off" matInput placeholder="Valor por Día">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field appearance="outline">
                         <mat-label>Valor Total</mat-label>
-                        <input type="text" value="{{totalValue | number :'1.2-2'}}" id="totalValue"
+                        <input type="text" value="{{totalValue | number :'1.0-0'}}" id="totalValue"
                             formControlName="totalValue" autocomplete="off" matInput placeholder="Valor Total">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
@@ -140,21 +140,21 @@
                 <div>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Valor por dia contratista</mat-label>
-                        <input type="number" [value]="valorDiaContratista | number:'1.2-2'" id="valorDiaContratista"
+                        <input type="number" [value]="valorDiaContratista | number:'1.0-0'" id="valorDiaContratista"
                             formControlName="valordiaContratista" autocomplete="off" matInput placeholder="valor Dia Contratista">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Total Exacto</mat-label>
-                        <input type="number" [value]="totalExacto | number:'1.2-2'" id="totalExacto"
+                        <input type="number" [value]="totalExacto | number:'1.0-0'" id="totalExacto"
                             formControlName="totalExacto" autocomplete="off" matInput placeholder="Valor Exacto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Recursos </mat-label>
-                        <input type="number" [value]="recursos | number:'1.2-2'" id="recursos"
+                        <input type="number" [value]="recursos | number:'1.0-0'" id="recursos"
                             formControlName="recursos" autocomplete="off" matInput placeholder="Recuros">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>

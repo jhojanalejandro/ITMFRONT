@@ -87,7 +87,8 @@ export class ButtonsExportComponent implements OnInit {
     }
 
     exportarDap() {
-        this._service.getReportDap().subscribe(
+        debugger
+        this._service.getReportDap(this.idContrato).subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');

@@ -241,7 +241,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       if (result == 'confirmed') {
         this._contractorList.DeleteContractor(element.id).subscribe((res) => {
           if (res) {
-            swal.fire('informacion Eliminada Exitosamente!', '', 'success');
+            swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
 
           }
           this.getDataContractor(this.id);
@@ -249,7 +249,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         },
           (response) => {
             // Set the alert
-            swal.fire('Error al Registrar la informacion!', '', 'error');
+            swal.fire('Error', 'Error al Registrar la informacion!', 'error');
           });
       }
     });

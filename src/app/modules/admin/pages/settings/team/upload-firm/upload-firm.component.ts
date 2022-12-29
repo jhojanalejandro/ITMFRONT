@@ -149,7 +149,7 @@ export class UploadFirmComponent implements OnInit {
     };
     this._uploadService.UploadFileContractor(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('informacion Registrada Exitosamente!', '', 'success');
+        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -159,7 +159,7 @@ export class UploadFirmComponent implements OnInit {
       (response) => {
         this.formFile.enable();
         // Set the alert
-        swal.fire('Error al Registrar la informacion!', '', 'error');
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
         // Show the alert
         this.showAlert = true;
       });
@@ -185,7 +185,7 @@ export class UploadFirmComponent implements OnInit {
       // Should match the parameter name in backend
       this._uploadService.UploadFileExcel(formData).subscribe((res) => {
         if (res) {
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();
@@ -195,7 +195,7 @@ export class UploadFirmComponent implements OnInit {
         (response) => {
           this.formFile.enable();
           // Set the alert
-          swal.fire('Error al Registrar la informacion!', '', 'error');
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
           // Show the alert
           this.showAlert = true;
         });

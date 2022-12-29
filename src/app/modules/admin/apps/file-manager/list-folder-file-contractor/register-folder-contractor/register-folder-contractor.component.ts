@@ -75,7 +75,7 @@ export class FolderContractorComponent implements OnInit {
     };  
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
@@ -84,7 +84,7 @@ export class FolderContractorComponent implements OnInit {
     },(response) => {
       this.formProject.enable();
       // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
+      swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
       this.showAlert = true;
     });
@@ -103,7 +103,7 @@ export class FolderContractorComponent implements OnInit {
     };  
     this._uploadService.UpdateProjectFolder(registerProject).subscribe((res) => {   
         if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
@@ -114,7 +114,7 @@ export class FolderContractorComponent implements OnInit {
       this.formProject.enable();
       console.log('error',response);    
       // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
+      swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
       this.showAlert = true;
     });

@@ -6,9 +6,6 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import jspdf from 'jspdf';
 
-import domToImage from 'dom-to-image';
-import moment from 'moment';
-import { Observable, ReplaySubject } from 'rxjs';
 @Component({
   selector: 'app-minuta-contrato',
   templateUrl: './minuta-contrato.component.html',
@@ -19,6 +16,7 @@ export class MinutaContratoComponent implements OnInit {
   file: any;
   docDefinition: any;
   base64Output: any;
+  year = new Date('yyyy')
   constructor() { }
 
   ngOnInit(): void {

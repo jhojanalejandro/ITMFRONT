@@ -102,7 +102,7 @@ export class UploadFileContractorComponent implements OnInit {
     };  
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
         if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
@@ -112,7 +112,7 @@ export class UploadFileContractorComponent implements OnInit {
     (response) => {
       this.formFile.enable();
       // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
+      swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
       this.showAlert = true;
     });
@@ -130,7 +130,7 @@ export class UploadFileContractorComponent implements OnInit {
     };  
     this._upload.UploadFileContractor(registerProject).subscribe((res) => {   
         if(res){
-          swal.fire('informacion Registrada Exitosamente!', '', 'success');
+          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
@@ -140,7 +140,7 @@ export class UploadFileContractorComponent implements OnInit {
     (response) => {
       this.formFile.enable();
       // Set the alert
-      swal.fire('Error al Registrar la informacion!', '', 'error');
+      swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
       this.showAlert = true;
     });

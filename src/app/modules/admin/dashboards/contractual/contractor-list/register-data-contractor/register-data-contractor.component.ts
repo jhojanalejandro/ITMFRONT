@@ -27,6 +27,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   elemento: any = 'elemento';
   componente: any = 'compoente';
   elements: any;
+  update: boolean = false;
   componentes: any;
   componentselectId: any;
   elementselectId: any;
@@ -49,9 +50,9 @@ export class ContractorDataRegisterComponent implements OnInit {
   tipoCuenta: any = GlobalConst.tipoCuenta;
   formContractor: FormGroup;
   nacionalidades: any = GlobalConst.nacionalidad;
-  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaDeInicioProyectado: null, fechaRealDeInicio: null, actividad: null, ejecucion: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, interventorItm: null, cargoInterventorItm: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, rubro: null, nombreRubro: null, cdp: null, idsContractors: [] }
+  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaDeInicioProyectado: null, fechaRealDeInicio: null, actividad: null, ejecucion: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, interventorItm: null, cargoInterventorItm: null, rubro: null, nombreRubro: null, cdp: null, idsContractors: [] }
   constructor(
-    private _upload: UploadDataService,
+    private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
     private _economicService: EconomicChartService,
     private _auth: AuthService,
@@ -59,6 +60,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
     if (this.datos.data != null) {
+      this.update = true;
       this.getHiring();
       if (this.datos.data.elementId != null && this.datos.data.elementId != 0) {
         this.getElementById(this.datos.data.elementId);
@@ -89,9 +91,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       nivel: new FormControl(this.hinringData.nivel),
       interventor: new FormControl(this.hinringData.interventorItm),
       cargoInterventor: new FormControl(this.hinringData.cargoInterventorItm),
-      noAdicion: new FormControl(this.hinringData.noAdicion),
-      fechaInicioAmpliacion: new FormControl(this.hinringData.fechaInicioAmpliacion),
-      fechaDeTerminacionAmpliacion: new FormControl(this.hinringData.fechaDeTerminacionAmpliacion, Validators.required),
+
       fechaFinalizacionConvenio: new FormControl(this.hinringData.fechaFinalizacionConvenio, Validators.required),
       elemento: new FormControl(null, Validators.required),
       componente: new FormControl(null, Validators.required),
@@ -134,9 +134,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       nivel: Number(this.formContractor.value.nivel),
       interventorItm: this.formContractor.value.interventor,
       cargoInterventorItm: this.formContractor.value.cargoInterventor,
-      noAdicion: this.formContractor.value.noAdicion,
-      fechaInicioAmpliacion: this.formContractor.value.fechaInicioAplicacion,
-      fechaDeTerminacionAmpliacion: this.formContractor.value.fechaterminacionAplicacion,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       rubro: this.formContractor.value.rubro,
@@ -145,7 +142,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       idsContractors: []
 
     };
-    this._upload
+    this._uploadService
       .addHiringContractor(registerContractor)
       .subscribe((res) => {
         if (res) {
@@ -173,7 +170,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       this.formContractor.value.requierePoliza = true;
     } else {
       this.formContractor.value.requierePoliza = false;
-
     }
 
     if (this.formContractor.value.cuentabancaria == null) {
@@ -199,13 +195,10 @@ export class ContractorDataRegisterComponent implements OnInit {
       vigenciaFinal: this.formContractor.value.vigenciaFinal,
       fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
       valorAsegurado: Number(this.formContractor.value.valorAsegurado),
-      fechaExaPreocupacional: this.formContractor.value.fechaExaPreocupacional,
+      fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
       nivel: Number(this.formContractor.value.nivel),
       interventorItm: this.formContractor.value.interventor,
       cargoInterventorItm: this.formContractor.value.cargoInterventor,
-      noAdicion: this.formContractor.value.noAdicion,
-      fechaInicioAmpliacion: this.formContractor.value.fechaInicioAplicacion,
-      fechaDeTerminacionAmpliacion: this.formContractor.value.fechaterminacionAplicacion,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       rubro: this.formContractor.value.rubro,
@@ -213,7 +206,8 @@ export class ContractorDataRegisterComponent implements OnInit {
       cdp: this.formContractor.value.cdp,
       idsContractors: []
     };
-    this._upload
+    debugger
+    this._uploadService
       .addHiringContractor(registerContractor)
       .subscribe((res) => {
         if (res) {
@@ -226,10 +220,9 @@ export class ContractorDataRegisterComponent implements OnInit {
         (response) => {
           this.formContractor.enable();
           // Set the alert
-          this.alert = {
-            type: 'error',
-            message: 'ERROR EN LA INFORMACION'
-          };
+          console.log(response);
+          
+          swal.fire('Error', 'Información no Actualizada!', 'error');
 
           // Show the alert
           this.showAlert = true;
@@ -297,25 +290,27 @@ export class ContractorDataRegisterComponent implements OnInit {
 
   sendEconomicdataContractor() {
     let element: IElements = this.elements.find(item => item.id === this.elementselectId);
+    debugger
+    const total = element.valorTotal / element.cantidadContratistas;
     let economicData: EconomicContractor = {
       contractorId: this.datos.data.id,
       userId: this._auth.accessId,
       registerDate: this.registerDate,
-      totalValue: element.valorTotal,
+      totalValue: total,
       unitValue: element.valorUnidad,
       totalPaidMonth: element.valorUnidad,
       cashPayment: false,
       missing: 0,
-      debt: element.valorTotal,
+      debt: total,
       modifyDate: this.registerDate,
       freed: 0
     }
     this._economicService.sendEconomicdataContractor(economicData).subscribe((response) => {
       if (response) {
-
       }
     })
   }
+
 
   private getHiring() {
     this._economicService

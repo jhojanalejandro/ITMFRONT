@@ -195,7 +195,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             
             swal.fire('error', 'Error en el registro!', 'error');
         });
-        this.matDialogRef.close(this.listElements);
+        this.matDialogRef.close(true);
     }
 
     calculate = () => {

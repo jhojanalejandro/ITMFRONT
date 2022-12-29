@@ -45,7 +45,7 @@ export class ContractorDataRegisterShareComponent implements OnInit {
   tipoCuenta: any = GlobalConst.tipoCuenta;
   formContractor: FormGroup;
   nacionalidades: any = GlobalConst.nacionalidad;
-  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaDeInicioProyectado: null, fechaRealDeInicio: null, actividad: null, ejecucion: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, interventorItm: null, cargoInterventorItm: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, rubro: null, nombreRubro: null, cdp: null, idsContractors: [] }
+  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaDeInicioProyectado: null, fechaRealDeInicio: null, actividad: null, ejecucion: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, interventorItm: null, cargoInterventorItm: null, rubro: null, nombreRubro: null, cdp: null, idsContractors: [] }
   constructor(
     private _upload: UploadDataService,
     private ref: ChangeDetectorRef,
@@ -79,9 +79,6 @@ export class ContractorDataRegisterShareComponent implements OnInit {
       nivel: new FormControl(this.hinringData.nivel),
       interventor: new FormControl(this.hinringData.interventorItm),
       cargoInterventor: new FormControl(this.hinringData.cargoInterventorItm),
-      noAdicion: new FormControl(this.hinringData.noAdicion),
-      fechaInicioAmpliacion: new FormControl(this.hinringData.fechaInicioAmpliacion),
-      fechaDeTerminacionAmpliacion: new FormControl(this.hinringData.fechaDeTerminacionAmpliacion, Validators.required),
       fechaFinalizacionConvenio: new FormControl(this.hinringData.fechaFinalizacionConvenio, Validators.required),
     });
   }
@@ -121,9 +118,6 @@ export class ContractorDataRegisterShareComponent implements OnInit {
       nivel: Number(this.formContractor.value.nivel),
       interventorItm: this.formContractor.value.interventor,
       cargoInterventorItm: this.formContractor.value.cargoInterventor,
-      noAdicion: this.formContractor.value.noAdicion,
-      fechaInicioAmpliacion: this.formContractor.value.fechaInicioAplicacion,
-      fechaDeTerminacionAmpliacion: this.formContractor.value.fechaterminacionAplicacion,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       rubro: this.formContractor.value.rubro,
@@ -189,9 +183,6 @@ export class ContractorDataRegisterShareComponent implements OnInit {
       nivel: Number(this.formContractor.value.nivel),
       interventorItm: this.formContractor.value.interventor,
       cargoInterventorItm: this.formContractor.value.cargoInterventor,
-      noAdicion: this.formContractor.value.noAdicion,
-      fechaInicioAmpliacion: this.formContractor.value.fechaInicioAplicacion,
-      fechaDeTerminacionAmpliacion: this.formContractor.value.fechaterminacionAplicacion,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       rubro: this.formContractor.value.rubro,

@@ -11,5 +11,5 @@ export interface EconomicContractor{
     debt: any;
     freed?: any;
     modifyDate: Date;
-
 }
+

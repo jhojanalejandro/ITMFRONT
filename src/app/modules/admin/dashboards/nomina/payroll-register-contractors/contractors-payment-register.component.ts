@@ -10,18 +10,17 @@ import { NominaService } from '../nomina.service';
 import { IContractorPayments } from 'app/layout/common/models/contractor-payments';
 import { EconomicContractor } from '../../contractual/contractor-list/models/economic-data-contractor';
 import { Router } from '@angular/router';
-import { ThisReceiver } from '@angular/compiler';
 
 
 @Component({
-  selector: 'app-contractor-payment',
-  templateUrl: './contractor-payment-register.component.html',
-  styleUrls: ['./contractor-payment-register.component.scss'],
+  selector: 'app-contractors-payment',
+  templateUrl: './contractors-payment-register.component.html',
+  styleUrls: ['./contractors-payment-register.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 
-export class ContractorPaymentRegisterComponent implements OnInit {
+export class ContractorsPaymentRegisterComponent implements OnInit {
   indeterminate = true;
   paymentContractor: EconomicContractor = { contractorId : 0, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date()};
   formFieldHelpers: string[] = [''];
@@ -42,7 +41,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private _auth: AuthService,
     private _router: Router,
-    public matDialogRef: MatDialogRef<ContractorPaymentRegisterComponent>,
+    public matDialogRef: MatDialogRef<ContractorsPaymentRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) { }
 

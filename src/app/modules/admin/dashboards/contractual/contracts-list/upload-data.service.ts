@@ -49,7 +49,7 @@ export class UploadDataService
 
     DeleteContract(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.DeleteProjectFolderEndpoint;
-        return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate, id);
     }
 
 }

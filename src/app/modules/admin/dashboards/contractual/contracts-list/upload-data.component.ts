@@ -85,25 +85,26 @@ export class UploadDataComponent implements OnInit, OnDestroy {
           }
         });
         break
-      case 'upload':
-        const dialogUpload = this._matDialog.open(UploadFileComponent, {
-          autoFocus: false,
-          data: {
-            show: true
-          }
-        });
-        dialogUpload.afterClosed().subscribe((result) => {
-          if (result) {
-
-          }
-        });
-        break
       case 'registerData':
         this._router.navigate(['/dashboards/lista-contratistas/' + data.id]);
 
         break
 
     }
+  }
+
+  uploadExcel(){
+    const dialogUpload = this._matDialog.open(UploadFileComponent, {
+      autoFocus: false,
+      data: {
+        show: true
+      }
+    });
+    dialogUpload.afterClosed().subscribe((result) => {
+      if (result) {
+
+      }
+    });
   }
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {

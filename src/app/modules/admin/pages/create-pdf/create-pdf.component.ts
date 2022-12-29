@@ -32,54 +32,8 @@ export class CreatePdfComponent implements OnInit {
     ngOnInit(): void {
         this.createPdf();
     }
-    public openPDF(): void {
-        let DATA: any = document.getElementById('pdfTable');
-        html2canvas(DATA).then((canvas) => {
-            let fileWidth = 20;
-            let fileHeight = (canvas.height * fileWidth) / canvas.width;
-            const FILEURI = canvas.toDataURL('image/png');
-            let PDF = new jsPDF('p', 'mm', 'a4');
-            let position = 0;
-            PDF.addImage(FILEURI, 'PNG', 0, position, fileWidth, fileHeight);
-            PDF.save('angular-demo.pdf');
-        });
-    }
 
-    downloadPDF() {
-        // Extraemos el
-        const DATA = document.getElementById('pdfTable');
-        const doc = new jsPDF('p', 'pt', 'a4');
-        const options = {
-            background: 'white',
-            scale: 3,
-        };
-        html2canvas(DATA, options)
-            .then((canvas) => {
-                const img = canvas.toDataURL('application/pdf ');
-
-                // Add image Canvas to PDF
-                const bufferX = 15;
-                const bufferY = 15;
-                const imgProps = (doc as any).getImageProperties(img);
-                const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                doc.addImage(
-                    img,
-                    'pdf',
-                    bufferX,
-                    bufferY,
-                    pdfWidth,
-                    pdfHeight,
-                    undefined,
-                    'FAST'
-                );
-                return doc;
-            })
-            .then((docResult) => {
-                docResult.save(`${new Date().toISOString()}_tutorial.pdf`);
-            });
-    }
-    public downloadAsPDFs() {
+    public downloadPDF() {
         let data = document.getElementById('pdfTable');
 
         html2canvas(data).then((canvas) => {
@@ -115,40 +69,6 @@ export class CreatePdfComponent implements OnInit {
         });
     }
 
-    public downloadAsPdf(): void {
-        const width = this.dataToExport.nativeElement.clientWidth;
-        const height = this.dataToExport.nativeElement.clientHeight + 40;
-        let orientation = '';
-        let imageUnit = 'pt';
-        if (width > height) {
-            orientation = 'l';
-        } else {
-            orientation = 'p';
-        }
-        domToImage
-            .toPng(this.dataToExport.nativeElement, {
-                width: width,
-                height: height,
-            })
-            .then((result) => {
-                let jsPdfOptions: any = {
-                    orientation: orientation,
-                    unit: imageUnit,
-                    format: [width + 50, height + 220],
-                };
-                const pdf = new jsPDF(jsPdfOptions);
-                pdf.setFontSize(12);
-                pdf.setTextColor('#2585fe');
-                // pdf.text(this.pdfName.value ? this.pdfName.value.toUpperCase() : ''.toUpperCase(), 25, 75);
-                pdf.setFontSize(12);
-                pdf.setTextColor('#131523');
-                pdf.text('Report date: ' + moment().format('ll'), 25, 115);
-                pdf.addImage(result, 'PNG', 25, 185, width, height);
-                pdf.save('nombrepdf' + '.pdf');
-            })
-            .catch((error) => {});
-    }
-
     exportAsPDF() {
         let data = document.getElementById('divId');
         html2canvas(data).then((canvas) => {
@@ -160,16 +80,6 @@ export class CreatePdfComponent implements OnInit {
             pdf.addImage(contentDataURL, 'PNG', 0, 0, 29.7, 21.0);
             pdf.save('Filename.pdf');
         });
-    }
-    public downloadAsPDF() {
-        const doc = new jsPDF();
-        //get table html
-        const pdfTable = this.pdfTable.nativeElement;
-        //html to pdf format
-        var html = htmlToPdfmake(pdfTable.innerHTML);
-
-        const documentDefinition = { content: html };
-        pdfMake.createPdf(documentDefinition).open();
     }
 
     convertFile(): Observable<string> {
@@ -218,4 +128,6 @@ export class CreatePdfComponent implements OnInit {
             img.src = url;
         });
     }
+
+    get
 }
