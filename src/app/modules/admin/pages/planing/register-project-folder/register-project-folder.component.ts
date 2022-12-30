@@ -8,6 +8,7 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IDetailProjectFolder } from "../models/detail-project";
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
 import { IProjectFolder } from '../models/project-folder';
+import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
   selector: 'app-register-contractor',
@@ -18,6 +19,11 @@ import { IProjectFolder } from '../models/project-folder';
   animations: fuseAnimations
 })
 export class RegisterProjectFolderComponent implements OnInit {
+  alert: { type: FuseAlertType; message: string } = {
+    type: 'warn',
+    message: ''
+  };
+  showAlert: boolean = false;
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file: File = null; // Variable to store file
@@ -28,8 +34,8 @@ export class RegisterProjectFolderComponent implements OnInit {
   minDate: any;
   formProject: FormGroup;
   ejecucion: any = GlobalConst.ejecucionContrato;
-  tipoModificacion= GlobalConst.tipoModificacion;
-  editarData= GlobalConst.editarData;
+  tipoModificacion = GlobalConst.tipoModificacion;
+  editarData = GlobalConst.editarData;
   editData: boolean = false;
   projectName: any = null;
   descript: any = null;
@@ -79,11 +85,11 @@ export class RegisterProjectFolderComponent implements OnInit {
       description: new FormControl(this.descript, Validators.required),
       fechaContrato: new FormControl(this.fechaContrato, Validators.required),
       fechaFinalizacion: new FormControl(this.fechaFinalizacion, Validators.required),
-      tipoModificacion: new FormControl(this.fechaFinalizacion, Validators.required),
-      updateData: new FormControl(this.fechaFinalizacion, Validators.required),
+      tipoModificacion: new FormControl(this.fechaFinalizacion),
+      updateData: new FormControl(this.fechaFinalizacion),
       noAdicion: new FormControl(null),
       fechaInicioAmpliacion: new FormControl(null),
-      fechaDeTerminacionAmpliacion: new FormControl(null, Validators.required),
+      fechaDeTerminacionAmpliacion: new FormControl(null),
     });
 
   }
@@ -96,10 +102,10 @@ export class RegisterProjectFolderComponent implements OnInit {
     } else {
       this.formProject.value.ejecucion = false;
     }
-    if(this.formProject.value.updateData === 'Solo Editar'){
+    if (this.formProject.value.updateData === 'Solo Editar') {
       this.formProject.value.updateData = true;
 
-    }else{
+    } else {
       this.formProject.value.updateData = false;
 
     }
@@ -127,23 +133,41 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
       detalleContratoDto: detalle
     };
-    this._upload.addProjectFolder(registerProject).subscribe((res) => {
-      if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
-        //this.matDialogRef.close();  
-        this.ref.detectChanges();
-        this.ref.markForCheck();
-      }
+    if (this.formProject.invalid) {
+      this.formProject.enable();
+         
+      // Set the alert
+      this.alert = {
+          type   : 'error',
+          message: 'ERROR EN LA INFORMACION'
+      };
 
-    },
-      (response) => {
-        this.formProject.enable();
-        // Set the alert
-        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-      });
+      // Show the alert
+      this.showAlert = true;
+    } else {
+
+
+      this._upload.addProjectFolder(registerProject).subscribe((res) => {
+        if (res) {
+          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();
+          this.cerrar();
+        }
+
+      },
+        (response) => {
+          this.formProject.enable();
+          // Set the alert
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+        });
+    }
+
   }
 
   async editProjectFolder() {
+
     let adicion: boolean = false;
     if (this._data.data.fechaFinalizacion != this.formProject.value.fechaFinalizacion) {
       adicion = true;
@@ -153,11 +177,11 @@ export class RegisterProjectFolderComponent implements OnInit {
       this.formProject.value.ejecucion = true;
     } else {
       this.formProject.value.ejecucion = false;
-    } 
-    if(this.formProject.value.updateData === 'Solo Editar'){
+    }
+    if (this.formProject.value.updateData === 'Solo Editar') {
       this.formProject.value.updateData = true;
 
-    }else{
+    } else {
       this.formProject.value.updateData = false;
 
     }
@@ -188,6 +212,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
+      debugger
       if (res) {
         swal.fire('Bien', 'informacion Editada Exitosamente!', 'success');
         //this.matDialogRef.close();  

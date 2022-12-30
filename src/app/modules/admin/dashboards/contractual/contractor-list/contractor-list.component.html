@@ -16,7 +16,7 @@
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
-            <button (click)="registerShareData()" class="ml-3" mat-flat-button [color]="'primary'"
+            <button (click)="registrarDatosContratacion(null)" class="ml-3" mat-flat-button [color]="'primary'"
                 [matTooltip]="'Shortcut: Ctrl + /'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Agregar Datos</span>
@@ -94,16 +94,16 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #summaryMenu="matMenu">
-                                            <button [matTooltip]="'Agregar datos'" (click)="registrarInfo(element)"
+                                            <button [matTooltip]="'Agregar datos'" (click)="registrarDatosContratacion(element)"
                                                 mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
                                                 Agregar datos
                                             </button>
-                                            <button [matTooltip]="'Eliminar Contratista'"
+                                            <button [matTooltip]="'Desabilitar Contratista'"
                                                 (click)="openConfirmationDelete(element)" [color]="'primary'"
                                                 mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-                                                Eliminar
+                                                Desabilitar
                                             </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
                                                 (click)="modificacionContrato(element)" [color]="'primary'"

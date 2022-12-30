@@ -11,7 +11,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         children: [
             {
                 id   : 'dashboards.inicio',
-                title: 'Cargar datos',
+                title: 'Modulo Contractual',
                 type : 'basic',
                 icon : 'heroicons_outline:clipboard-check',
                 link : '/dashboards/inicio'

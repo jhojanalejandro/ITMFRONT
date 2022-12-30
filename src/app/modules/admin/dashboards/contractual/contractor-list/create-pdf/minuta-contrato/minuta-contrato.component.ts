@@ -8,8 +8,8 @@ import swal from 'sweetalert2';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
 import { UploadDataService } from '../../../contracts-list/upload-data.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { IHiringData } from '../../models/hiring-data';
 import { IElements } from 'app/modules/admin/pages/planing/models/element';
+import { IHiringData } from '../../models/hiring-data';
 
 @Component({
   selector: 'app-minuta-contrato',
@@ -41,8 +41,8 @@ export class MinutaContratoComponent implements OnInit {
     valorAsegurado: '',
     fechaExaPreocupacional: new Date(),
     nivel: '',
-    interventorItm: '',
-    cargoInterventorItm: '',
+    supervisorItm: '',
+    cargoSupervisorItm: '',
     rubro: '',
     nombreRubro: '',
     cdp: ''};
@@ -78,7 +78,12 @@ export class MinutaContratoComponent implements OnInit {
         this.hiringData = Response.hiringDataDto;
         this.elementData = Response.elementosComponenteDto;
         console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
-
+        if(this.hiringData == null || this.elementData == null){
+          swal.fire('Ups', 'Imposible Generar minuta a este contratista!', 'warning');
+        }else{
+          this.downloadAsPDF();
+          console.log('data',this.dataMinuta );  
+        }
       });
     },
     (response) => {
@@ -86,10 +91,7 @@ export class MinutaContratoComponent implements OnInit {
       console.log(response);
       swal.fire('Error', 'Información no Actualizada!', 'error');
     });
-   
-    this.downloadAsPDF();
-    console.log('data',this.dataMinuta );
-    
+
   }
 
 
@@ -127,6 +129,7 @@ export class MinutaContratoComponent implements OnInit {
         };
         pdfMake.createPdf(documentDefinition).download();
     });
+    return
 }
 
 

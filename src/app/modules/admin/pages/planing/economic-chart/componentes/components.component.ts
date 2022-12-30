@@ -17,7 +17,6 @@ import { ComponentesFormComponent } from './componentes-form/componentes-form.co
 import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
-import swal from 'sweetalert2';
 
 @Component({
     selector: 'components-card',
@@ -80,8 +79,8 @@ export class AddComponentsComponent implements OnInit {
                 this._changeDetectorRef.detectChanges();
             } else {
                 Swal.fire(
+                    'Ei',
                     'Sin Información para mostrar',
-                    'Primero Agregue componentes para poder visualizar información',
                     'question'
                 );
                 // this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
@@ -190,11 +189,11 @@ export class AddComponentsComponent implements OnInit {
         };
         this._contrtactService.UpdateCostProjectFolder(registerProject).subscribe((res) => {
             if (res) {
-                swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+                Swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
             }
 
         }, (response) => {
-            swal.fire('Error', 'Error al Registrar la informacion', 'error');
+            Swal.fire('Error', 'Error al Registrar la informacion', 'error');
         });
     }
 }

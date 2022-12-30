@@ -32,8 +32,6 @@ export class ContractorsPaymentRegisterComponent implements OnInit {
   };
   showAlert: boolean = false;
   registerDate = new Date();
-  entidadesB: any = GlobalConst.entidadesB;
-  entidadesEps: any = GlobalConst.eps;
   formContractorPayment: FormGroup;
   pagos: any = GlobalConst.nomina;
 
@@ -114,7 +112,7 @@ export class ContractorsPaymentRegisterComponent implements OnInit {
   getEconomicContractorPayment() {
     this._nominaService.getByIdEconomicDataContractor(this.datos.data.id).subscribe((Response: EconomicContractor) => {
       if(Response == null){
-        swal.fire('Error', 'No se puede ingresar a esta vista debido a que los valores estan en cero', 'error');
+        swal.fire('ups', 'No se puede ingresar a esta vista debido a que los valores estan en cero', 'warning');
         this.matDialogRef.close();
       }else{
         return this.paymentContractor = Response;

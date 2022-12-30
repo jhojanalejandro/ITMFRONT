@@ -41,8 +41,8 @@ export class EstudioPrevioComponent implements OnInit {
     valorAsegurado: '',
     fechaExaPreocupacional: new Date(),
     nivel: '',
-    interventorItm: '',
-    cargoInterventorItm: '',
+    supervisorItm: '',
+    cargoSupervisorItm: '',
     rubro: '',
     nombreRubro: '',
     cdp: ''};

@@ -21,10 +21,9 @@ export interface IHiringData{
     valorAsegurado: any;
     fechaExaPreocupacional: Date;
     nivel: any;
-    interventorItm: string;
-    cargoInterventorItm: string;
+    supervisorItm: string;
+    cargoSupervisorItm: string;
     rubro: string;
     nombreRubro: string;
     cdp: string;
-    idsContractors?: number[];
 }

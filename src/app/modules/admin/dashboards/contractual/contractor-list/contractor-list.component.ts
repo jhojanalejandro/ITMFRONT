@@ -20,7 +20,6 @@ import { Componente, IElements } from 'app/modules/admin/pages/planing/models/el
 import { AsignmentData } from '../models/asignment-data';
 import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
 import { ModificacionFormComponent } from './modificacion-form/modificacion-form.component';
-import { ContractorDataRegisterShareComponent } from './register-data-contractor-share/register-data-contractor-share.component';
 
 
 @Component({
@@ -47,6 +46,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table!: MatTable<any>;
   elements: IElements[];
   componentes: Componente[];
+  listId: any[] = [];
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
@@ -266,13 +266,23 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
   }
-  registrarInfo(data: any){
+  registrarDatosContratacion(data: any){
+    if(data == null){
+      data = {id: 0, contractId: 0, componenteId: 0, elementId: 0}
+      this.selection.selected.forEach(element => {
+        this.listId.push(element.id);
+      });
+    }
     const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
       width: '900px',
       autoFocus: false,
       data: {
         idUser: this.auth.accessId,
-        data
+        contractId: data.contractId,
+        id: data.id ,
+        componenteId: data.componenteId,
+        elementId: data.elementId,
+        idContractors: this.listId.length
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -281,25 +291,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
 
-  }
-  registerShareData(){
-    if(this.selection.selected.length > 0 ){
-      const dialogRef = this._matDialog.open(ContractorDataRegisterShareComponent, {
-        width: '900px',
-        autoFocus: false,
-        data: {
-          idUser: this.auth.accessId,
-          idContractors: this.selection.selected
-        }
-      });
-      dialogRef.afterClosed().subscribe((result) => {
-        if (result) {
-          this.getDataContractor(this.id);
-        }
-      });
-    }else{
-      swal.fire('Precaución', 'Debes seleccionar uno varios contratistas!', 'warning');
-    }
   }
 
   generarMinuta(data: any = null){

@@ -25,20 +25,18 @@ import { MinutaAdicionComponent } from './create-pdf/minuta-adicion/minuta-adici
 import { MinutaAdicion2Component } from './create-pdf/minuta-adicion-ampliacion/minuta-adicion-ampliacion.component';
 import { MinutaAmpliacionComponent } from './create-pdf/minuta-ampliacion/minuta-adicion.component';
 import { EstudioPrevioComponent } from './create-pdf/estudio-previo/estudio-previo.component';
-import { ContractorDataRegisterShareComponent } from './register-data-contractor-share/register-data-contractor-share.component';
 
 
 @NgModule({
     declarations: [
         ContractorListComponent,
         ContractorDataRegisterComponent,
-        ContractorDataRegisterShareComponent,
         ModificacionFormComponent,
-        MinutaContratoComponent, 
+        MinutaContratoComponent,
         MinutaAdicionComponent, MinutaAdicion2Component,
-         MinutaAmpliacionComponent, EstudioPrevioComponent
+        MinutaAmpliacionComponent, EstudioPrevioComponent
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(contractorListRoutes),
         MatButtonModule,
         MatButtonToggleModule,
@@ -57,6 +55,5 @@ import { ContractorDataRegisterShareComponent } from './register-data-contractor
         ButtonsExportModule
     ]
 })
-export class ContractorListModule
-{
+export class ContractorListModule {
 }
