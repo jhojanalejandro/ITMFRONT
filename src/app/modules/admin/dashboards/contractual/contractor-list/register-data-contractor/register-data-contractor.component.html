@@ -176,7 +176,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field (click)="pickerVF.open()" *ngIf="showDataPoliza" class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="showDataPoliza" (click)="pickerVF.open()"  class="hiring" appearance="outline">
                         <mat-label>Vigencia Final</mat-label>
                         <input matInput id="vigenciaFinal" autocomplete="off" [(ngModel)]="hinringData.vigenciaFinal"
                             formControlName="vigenciaFinal" [matDatepicker]="pickerVF">

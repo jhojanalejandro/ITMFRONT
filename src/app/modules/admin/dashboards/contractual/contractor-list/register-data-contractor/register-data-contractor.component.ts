@@ -12,6 +12,7 @@ import { UploadDataService } from '../../contracts-list/upload-data.service';
 import { AsignmentData } from '../../models/asignment-data';
 import { EconomicContractor } from '../models/economic-data-contractor';
 import { IElements } from '../../../../pages/planing/models/element';
+import { F } from '@angular/cdk/keycodes';
 
 
 @Component({
@@ -51,6 +52,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
+    debugger
     if (this.datos.id != null && this.datos.id >0 ) {
       this.getHiring();
       if (this.datos.elementId != null && this.datos.elementId != 0 && this.datos.idContractors.length == 0) {
@@ -59,11 +61,18 @@ export class ContractorDataRegisterComponent implements OnInit {
       }else if( this.datos.idContractors.length > 0){
         this.shareData = true;
       }
-    }else if(this.datos.idContractors.length > 0){
+    }else if(this.datos.idContractors.length == 0){
       Swal.fire(
         'Ei!',
         'Si quires agregar información compartida debes seleccionar regisrtos',
         'question'
+    );
+    this.matDialogRef.close(true);
+    }else if(this.datos.idContractors.length == 0 && this.datos.id == 0){
+      Swal.fire(
+        'Ei!',
+        'Hay un error al ingresar, intenta de nuevo',
+        'warning'
     );
     this.matDialogRef.close(true);
     }
@@ -141,11 +150,12 @@ export class ContractorDataRegisterComponent implements OnInit {
         nombreRubro: this.formContractor.value.nombreRubro,
         cdp: this.formContractor.value.cdp,
       };
-      for (let index = 0; index < this.datos.idContractors.length; index++) {
-        debugger
-        this.hiringDataList[index].contractorId = this.datos.idContractors[index];
-        this.hiringDataList.push(this.registerContractor)
-      }
+      debugger
+      this.datos.idContractors.forEach(element => {
+        this.registerContractor.contractorId = element;
+        this.hiringDataList.push(this.registerContractor);
+        //this.hiringDataList[this.hiringDataList.findIndex(el => el.id === this.datos.idContractors[element])] = this.registerContractor;
+      });
     }else{
       this.hiringDataList = [{
         userId: this._auth.accessId,

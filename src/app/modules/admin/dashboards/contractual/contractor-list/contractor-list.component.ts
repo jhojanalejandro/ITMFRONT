@@ -282,7 +282,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         id: data.id ,
         componenteId: data.componenteId,
         elementId: data.elementId,
-        idContractors: this.listId.length
+        idContractors: this.listId
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
