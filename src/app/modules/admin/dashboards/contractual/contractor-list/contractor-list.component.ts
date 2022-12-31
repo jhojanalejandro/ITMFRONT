@@ -14,7 +14,7 @@ import { ContractorListService } from './contractor-list.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
+import { ContractorPaymentRegisterComponent } from '../../nomina/contractor-list/payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { AsignmentData } from '../models/asignment-data';
@@ -226,7 +226,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       if (result == 'confirmed') {
         this._contractorListService.DeleteContractor(element.id).subscribe((res) => {
           if (res) {
-            swal.fire('informacion Eliminada Exitosamente!', '', 'success');
+            swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
 
           }
           this.getDataContractor(this.id);
@@ -234,7 +234,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         },
           (response) => {
             // Set the alert
-            swal.fire('Error al Registrar la informacion!', '', 'error');
+            swal.fire('Error', 'Error al Registrar la informacion!', 'error');
           });
       }
     });
@@ -288,6 +288,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.getDataContractor(this.id);
+        this.listId = [];
       }
     });
 

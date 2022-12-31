@@ -38,11 +38,6 @@ export class ContractorListService {
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 
-    async getDepartments() {
-        let urlEndPoint = environment.getDepartmentsColombia;
-        return await this._httpClient.get<any>(urlEndPoint);
-    }
-
     addProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);

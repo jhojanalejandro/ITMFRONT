@@ -64,7 +64,8 @@ export class NominaService {
     }
     getByIdEconomicDataContractor(id: any) {
         let urlEndPoint = this.apiUrl + environment.GetByIdEconomicDataContractorEndpoint;
-        return this._httpClient.get<EconomicContractor>(urlEndPoint + id);
+        debugger
+        return this._httpClient.post<EconomicContractor[]>(urlEndPoint, id);
     }
     
     

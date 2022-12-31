@@ -1,12 +1,12 @@
-export interface IContractorPayments{
+export interface ContractorPayments{
     id?: any;
     userId: any;
     contractorId: any;
     cashPayment: boolean;
     monthPayment: any;
     paymentcant: any;
-    registerDate: Date;
-    modifyDate: Date;
+    fromDate: Date;
+    toDate: Date;
     descriptionPayment: string
 
 }

@@ -155,7 +155,7 @@
                             El Campo noPoliza es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field (click)="pickerVI.open()" class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="showDataPoliza" (click)="pickerVI.open()" class="hiring" appearance="outline">
                         <mat-label>Vigencia Inicial</mat-label>
                         <input matInput id="vigenciaInicial" [(ngModel)]="hinringData.vigenciaInicial"
                             autocomplete="off" formControlName="vigenciaInicial" [matDatepicker]="pickerVI">
@@ -201,21 +201,14 @@
                 <div class="nationality">
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Supervisor</mat-label>
-                        <input type="text" id="supervisor" [(ngModel)]="hinringData.supervisorItm"
-                            formControlName="supervisorItm" autocomplete="off" matInput placeholder="supervisor">
+                        <mat-select  [(ngModel)]="hinringData.supervisorItm" [formControlName]="'supervisorItm'" name="supervisorItm">
+                            <mat-option *ngFor="let admin of userAdmins" [value]="admin.id">
+                                {{admin.userName}}
+                            </mat-option>
+                        </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
                         <mat-error *ngIf="formContractor.get('supervisorItm').hasError('required')">
-                            El Campo Supervisor es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="hiring" appearance="outline">
-                        <mat-label>cargo Supervisor</mat-label>
-                        <input type="text" id="cargoSupervisorItm" [(ngModel)]="hinringData.cargoSupervisorItm"
-                            formControlName="cargoSupervisorItm" autocomplete="off" matInput
-                            placeholder="cargo Supervisor">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('cargoSupervisorItm').hasError('required')">
-                            El Campo cargo Interventor es requerido
+                            El Campo nivel es requerido
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="hiring" appearance="outline">

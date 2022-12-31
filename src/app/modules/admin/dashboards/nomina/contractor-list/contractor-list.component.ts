@@ -13,7 +13,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { ContractorPaymentRegisterComponent } from '../../nomina/payroll-register/contractor-payment-register.component';
+import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { ContractorListService } from '../../contractual/contractor-list/contractor-list.service';
@@ -32,6 +32,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   data: any;
   userName: any;
   value: any;
+  listId: any[] = []; 
   disableElement: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
@@ -109,18 +110,28 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
   }
   registerPayment(data: any) {
+    if(data == null){
+      data = {id: 0, contractId: 0, componenteId: 0, elementId: 0}
+      this.selection.selected.forEach(element => {
+        this.listId.push(element.id);
+      });
+    }
     const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
       width: '900px',
       autoFocus: false,
       data: {
         payment: this.paymentData,
         idUser: this.auth.accessId,
-        data
+        id: data.id,
+        nombre: data.nombre,
+        idContractors: this.listId
       }
     });
     dialogRefPayment.afterClosed().subscribe((result) => {
       if (result) {
         this.getDataContractor(this.id);
+        this.listId = [];
+
       }
     });
   }

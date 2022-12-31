@@ -333,4 +333,17 @@ export class AuthService
         );
     }
 
+    
+    getAdmin(): Observable<any>
+    {
+
+        return this._httpClient.get<IResponse>(this.apiUrl + environment.GetAllByRollEndpoint ).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
+    }
+
 }

@@ -37,9 +37,6 @@ export class NominaComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['companyName', 'projectName','contractorCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
 
-  /**
-   * Constructor
-   */
   constructor(
     private _genericService: GenericService,
     private auth: AuthService,
@@ -59,8 +56,6 @@ export class NominaComponent implements OnInit, OnDestroy {
     this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
     console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
-
-
   }
 
   openDialog(route: any, data: any) {
@@ -86,10 +81,6 @@ export class NominaComponent implements OnInit, OnDestroy {
     this.cdref.detectChanges();
   }
 
-  /**
-   * On init
-   */
-
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -109,7 +100,6 @@ export class NominaComponent implements OnInit, OnDestroy {
   selectRowFull(data: any, type: any) {
     if (type === 'register') {
     }
-
   }
 
   getContractsData() {

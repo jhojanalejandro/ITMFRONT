@@ -11,10 +11,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.component';
 import { nominaRoutes } from 'app/modules/admin/dashboards/nomina/nomina.routing';
-import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
+import { ContractorPaymentRegisterComponent } from './contractor-list/payroll-register/contractor-payment-register.component';
 import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
 import { ContractorListComponent } from './contractor-list/contractor-list.component';
-import { ContractorsPaymentRegisterComponent } from './payroll-register-contractors/contractors-payment-register.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +21,6 @@ import { ContractorsPaymentRegisterComponent } from './payroll-register-contract
         ContractorPaymentRegisterComponent,
         CollectionAccountsListComponent,
         ContractorListComponent,
-        ContractorsPaymentRegisterComponent
     ],
     imports     : [
         RouterModule.forChild(nominaRoutes),

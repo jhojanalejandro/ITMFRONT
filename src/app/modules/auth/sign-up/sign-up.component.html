@@ -123,14 +123,11 @@
                             Por favor, introduce una dirección de correo electrónico válida
                         </mat-error>
                     </mat-form-field>
-
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label >Cargo profesional</mat-label>
-                        <mat-select [formControlName]="'professional'" name="professional">
-                            <mat-option *ngFor="let profesional of profesionales" [value]="profesional.viewValue">
-                                {{profesional.viewValue}}
-                            </mat-option>
-                        </mat-select>
+                    <mat-form-field class="w-full">
+                        <mat-label>Descripción del cargo</mat-label>
+                        <textarea matInput  [formControlName]="'professional'" [rows]="1" cdkTextareaAutosize
+                            [cdkAutosizeMinRows]="1">
+                        </textarea>
                         <mat-icon
                         class="icon-size-5"
                         matSuffix
@@ -138,7 +135,7 @@
                         <mat-error *ngIf="signUpForm.get('professional').hasError('required')">
                             El Campo pension es requerido
                         </mat-error>
-                    </mat-form-field> 
+                    </mat-form-field>
                     <!-- Password field -->
                     <mat-form-field class="w-full">
                         <mat-label>Contraseña</mat-label>

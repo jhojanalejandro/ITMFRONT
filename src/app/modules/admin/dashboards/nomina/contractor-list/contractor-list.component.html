@@ -16,7 +16,7 @@
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
-            <button class="ml-3" mat-flat-button [color]="'primary'" [matTooltip]="'Agregar todos los pagos'">
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="registerPayment(null)" [matTooltip]="'Agregar Varios pagos'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Agregar Pagos</span>
             </button>
@@ -43,7 +43,7 @@
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
                 </div> -->
                     <div class="inputsearch">
-                        <mat-form-field appearance="outline">
+                        <mat-form-field class="search" appearance="outline">
                             <mat-label>
                                 <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
                             </mat-label>
