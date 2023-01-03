@@ -223,7 +223,6 @@ export class FileListComponent implements OnInit, OnDestroy {
             .subscribe((item: Item) => {
                 this.items = item;
                 this.items.forEach(element => {
-                    debugger
                     if (element.passed) {
                         element.passed = 'aprobado'
                     }else if(element.passed != null && element.passed === true){

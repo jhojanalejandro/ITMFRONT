@@ -12,11 +12,11 @@ import { IHiringData } from '../../models/hiring-data';
 import { IElements } from 'app/modules/admin/pages/planing/models/element';
 
 @Component({
-  selector: 'app-estudio-previo',
-  templateUrl: './estudio-previo.component.html',
-  styleUrls: ['./estudio-previo.component.scss']
+  selector: 'app-acta-supervision',
+  templateUrl: './acta-supervision.component.html',
+  styleUrls: ['./acta-supervision.component.scss']
 })
-export class EstudioPrevioComponent implements OnInit {
+export class ActaSupervisionComponent implements OnInit {
   @ViewChild('pdfTable') pdfTable: ElementRef;
   @Input('contractors') contractors: any[];
   year = new Date('YYYY');

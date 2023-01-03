@@ -57,6 +57,8 @@ export class MinutaContratoComponent implements OnInit {
     cpc: '',
     nombreCpc: '',
     modificacion: false,
+    valorPorDiaContratista: 0,
+    valorTotalContratista: 0,
     tipoElemento: '',
     recursos: 0, 
     consecutivo: '',
@@ -73,7 +75,6 @@ export class MinutaContratoComponent implements OnInit {
     this.contractors.forEach(element => {
       let id = [element.id,element.elementId]
       this._economicService.GetDataMinuta(id).subscribe((Response) => {
-        debugger
         this.dataMinuta.push(Response);
         this.hiringData = Response.hiringDataDto;
         this.elementData = Response.elementosComponenteDto;

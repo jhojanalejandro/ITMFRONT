@@ -23,11 +23,11 @@ import { find } from 'lodash';
 
 export class ContractorPaymentRegisterComponent implements OnInit {
   indeterminate = true;
-  cantidadContratistas: number;
+  cantidadContratistas: number = 0;
   paymentDataList: ContractorPayments[] = [];
   economicDataList: EconomicContractor[] = [];
 
-  paymentContractor: EconomicContractor[] = [{ contractorId: 0, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date() }];
+  economicContractor: EconomicContractor[] = [{ contractorId: 0, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date() }];
   formFieldHelpers: string[] = [''];
   shareData: boolean = false;
   labelPosition: 'before' | 'after' = 'after';
@@ -49,7 +49,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
   ) {
     if (this.datos.id != null && this.datos.id > 0 && this.datos.idContractors.length == 0) {
       this.shareData = true;
-      this.getEconomicContractorPayment(this.datos.id);
+      this.getEconomicContractorPayment([this.datos.id]);
     } else if (this.datos.idContractors.length == 0) {
       Swal.fire(
         'Ei!',
@@ -82,7 +82,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
       registerDate: new FormControl(null, Validators.required),
       contractorName: new FormControl({ value: this.datos.nombre, disabled: true }, Validators.required),
       description: new FormControl(null, Validators.required),
-      cantidadContratistas: new FormControl({ value: null, disabled: true }, Validators.required),
+      cantidadContratistas: new FormControl({ value: this.cantidadContratistas, disabled: true }),
 
     });
   }
@@ -96,17 +96,19 @@ export class ContractorPaymentRegisterComponent implements OnInit {
 
     if (this.datos.idContractors.length > 0) {
       for (let index = 0; index < this.datos.idContractors.length; index++) {
-        this.paymentDataList.push({
-          userId: this._auth.accessId,
-          contractorId: this.datos.idContractors[index],
-          monthPayment: this.formContractorPayment.value.cashPaymentTotal,
-          paymentcant: this.formContractorPayment.value.cashPaymentTotal,
-          cashPayment: this.formContractorPayment.value.cashPayment,
-          fromDate: this.formContractorPayment.value.from,
-          toDate: this.formContractorPayment.value.to,
-          descriptionPayment: this.formContractorPayment.value.description
-        });
-
+        let payment = this.economicContractor.findIndex(x => x.contractorId === this.datos.idContractors[index]);
+        if (payment != null && payment > 0) {
+          this.paymentDataList.push({
+            userId: this._auth.accessId,
+            contractorId: this.datos.idContractors[index],
+            monthPayment: this.formContractorPayment.value.cashPaymentTotal,
+            paymentcant: this.formContractorPayment.value.cashPaymentTotal,
+            cashPayment: this.formContractorPayment.value.cashPayment,
+            fromDate: this.formContractorPayment.value.from,
+            toDate: this.formContractorPayment.value.to,
+            descriptionPayment: this.formContractorPayment.value.description
+          });
+        }
       }
     } else {
       this.paymentDataList = [{
@@ -120,7 +122,6 @@ export class ContractorPaymentRegisterComponent implements OnInit {
         descriptionPayment: this.formContractorPayment.value.description
       }]
     }
-    debugger
     this._nominaService
       .addContractorPayments(this.paymentDataList)
       .subscribe((res) => {
@@ -158,42 +159,50 @@ export class ContractorPaymentRegisterComponent implements OnInit {
 
   getEconomicContractorPayment(ids: any[]) {
     this._nominaService.getByIdEconomicDataContractor(ids).subscribe((Response) => {
-      if (Response == null) {
+      if (Response === null || Response.length === 0) {
         Swal.fire('ups', 'No se puede ingresar a esta vista debido a que los valores estan en cero', 'warning');
         this.matDialogRef.close();
       } else {
-        debugger
-        return this.paymentContractor = Response;
+        return this.economicContractor = Response;
       }
     });
   }
 
   updateEconomicContractorPayment() {
-    debugger
-
     if (this.datos.idContractors.length > 0) {
       for (let index = 0; index < this.datos.idContractors.length; index++) {
-        let dataEconomic: EconomicContractor = find(x => x.contractorId == this.datos.idContractors[index]);
-        this.economicDataList.push(
-          {
-            contractorId: this.datos.idContractors[index],
-            debt: dataEconomic.debt - dataEconomic.unitValue,
-            freed: 0,
-            modifyDate: this.registerDate,
-          }
-        )
+        let dataEconomic: EconomicContractor = this.economicContractor.find(x => x.contractorId == this.datos.idContractors[index]);
+        if (dataEconomic != null) {
+          this.economicDataList.push(
+            {
+              contractorId: this.datos.idContractors[index],
+              debt: dataEconomic.debt - dataEconomic.unitValue,
+              freed: 0,
+              modifyDate: this.registerDate,
+            }
+          )
+        }
       }
     } else {
+      let dataEconomic: EconomicContractor = this.economicContractor.find(x => x.contractorId == this.datos.id);
+
       this.economicDataList = [
         {
-          contractorId: this.datos.data.id,
-          debt: this.formContractorPayment.value.totalDebt - this.formContractorPayment.value.cashPaymentTotal,
-          freed: 0,
+          id: dataEconomic.id,
+          contractorId: this.datos.id,
+          debt: dataEconomic.debt - dataEconomic.unitValue,
+          freed: dataEconomic.freed,
           modifyDate: this.registerDate,
+          registerDate: dataEconomic.registerDate,
+          totalValue: dataEconomic.totalValue,
+          totalPaidMonth: dataEconomic.totalPaidMonth,
+          userId: dataEconomic.userId,
+          missing: dataEconomic.missing,
+          cashPayment: dataEconomic.cashPayment,
+          unitValue: dataEconomic.unitValue
         }
       ]
     }
-
     this._nominaService.UpdateEconomicContractorPayment(this.economicDataList).subscribe((Response: any) => {
       if (Response) {
         Swal.fire('Exitoso', 'Pago Actualizado Exitosamente!', 'success');
@@ -201,6 +210,21 @@ export class ContractorPaymentRegisterComponent implements OnInit {
         this.ref.markForCheck();
         this.matDialogRef.close(true);
       }
+    },
+    (response) => {
+      this.formContractorPayment.enable();
+      // Set the alert
+      Swal.fire('Error', 'Pago No Registrado!', 'error');
+      console.log(response);
+
+
+      this.alert = {
+        type: 'error',
+        message: 'ERROR EN LA INFORMACION'
+      };
+
+      // Show the alert
+      this.showAlert = true;
     });
   }
 }

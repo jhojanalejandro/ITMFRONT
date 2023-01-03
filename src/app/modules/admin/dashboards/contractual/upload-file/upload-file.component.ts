@@ -117,7 +117,7 @@ export class UploadFileComponent implements OnInit {
       modifyDate: this.registerDate,
       filedata: event,
       passed: true,
-      typeFilePayment: 'execel Contratista',
+      typeFilePayment: 'contrato',
       mont: null
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
@@ -177,7 +177,6 @@ export class UploadFileComponent implements OnInit {
   }
 
   uploadPdfFile(event) {
-
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('excel', fileToUpload, fileToUpload.name);

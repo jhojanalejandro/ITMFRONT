@@ -21,7 +21,7 @@ export class MinutaAdicionComponent implements OnInit {
     
   }
 
-  public downloadAsPDFs() {
+  public downloadPDF() {
     let data = document.getElementById('pdfTable');
 
     html2canvas(data).then((canvas) => {

@@ -14,6 +14,7 @@ import { nominaRoutes } from 'app/modules/admin/dashboards/nomina/nomina.routing
 import { ContractorPaymentRegisterComponent } from './contractor-list/payroll-register/contractor-payment-register.component';
 import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
 import { ContractorListComponent } from './contractor-list/contractor-list.component';
+import { DetailFilePaymentComponent } from './collection-accounts-list/details-file-payment/detail-file-payment.component';
 
 @NgModule({
     declarations: [
@@ -21,6 +22,7 @@ import { ContractorListComponent } from './contractor-list/contractor-list.compo
         ContractorPaymentRegisterComponent,
         CollectionAccountsListComponent,
         ContractorListComponent,
+        DetailFilePaymentComponent
     ],
     imports     : [
         RouterModule.forChild(nominaRoutes),

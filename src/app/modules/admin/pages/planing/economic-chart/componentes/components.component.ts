@@ -147,7 +147,6 @@ export class AddComponentsComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe((result) => {
             this._changeDetectorRef.detectChanges();
-            debugger
             if (result) {
                 this.chargeData();
             }

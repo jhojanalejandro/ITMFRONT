@@ -44,7 +44,7 @@
                 <div>
                     <mat-form-field disable class="field" appearance="outline">
                         <mat-label>Nombre Elemento</mat-label>
-                        <input type="text" id="nombreElemento" [value]="data.nombreElemento" formControlName="nombreElemento" autocomplete="off" matInput
+                        <input type="text" id="nombreElemento" [value]="elemento.nombreElemento" formControlName="nombreElemento" autocomplete="off" matInput
                             placeholder="Nombre Elemento">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                         <mat-error *ngIf="elementForm.get('nombreElemento').hasError('required')">
@@ -53,7 +53,7 @@
                     </mat-form-field>
                     <mat-form-field disable class="field" appearance="outline">
                         <mat-label>CPC</mat-label>
-                        <input type="text" id="cpc" [value]="data.cpc" formControlName="cpc" autocomplete="off" matInput
+                        <input type="text" id="cpc" [value]="elemento.cpc" formControlName="cpc" autocomplete="off" matInput
                             placeholder="CPC">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                         <mat-error *ngIf="elementForm.get('cpc').hasError('required')">
@@ -71,7 +71,7 @@
                 <div>
                     <mat-form-field disable class="field" appearance="outline">
                         <mat-label>Nombre Cpc</mat-label>
-                        <input type="mail" id="nombreCpc" [value]="data.nombreCpc" formControlName="nombreCpc"
+                        <input type="mail" id="nombreCpc" [value]="elemento.nombreCpc" formControlName="nombreCpc"
                             autocomplete="off" matInput placeholder="Nombre Cpc">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                         <mat-error *ngIf="elementForm.get('nombreCpc').hasError('required')">
@@ -80,7 +80,7 @@
                     </mat-form-field>
                     <mat-form-field disable class="field" appearance="outline">
                         <mat-label>Cantidad Contratista</mat-label>
-                        <input type="number" [value]="data.cantidadContratistas" id="contractorCant"
+                        <input type="number" [value]="elemento.cantidadContratistas" id="contractorCant"
                             formControlName="contractorCant" autocomplete="off" matInput
                             placeholder="Cantidad Contratista">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:duplicate'"></mat-icon>
@@ -90,7 +90,7 @@
                     </mat-form-field>
                     <mat-form-field class="field" appearance="outline">
                         <mat-label>Cantidad Días</mat-label>
-                        <input type="number" [value]="data.cantidadDias" id="cantDay" formControlName="cantDay" autocomplete="off"
+                        <input type="number" [value]="elemento.cantidadDias" id="cantDay" formControlName="cantDay" autocomplete="off"
                             matInput placeholder="Cantidad Días">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                         <mat-error *ngIf="elementForm.get('cantDay').hasError('required')">
@@ -101,7 +101,7 @@
                 <div>
                     <mat-form-field class="field" appearance="outline">
                         <mat-label>Valor Unidad</mat-label>
-                        <input type="text" value="{{this.data.valorUnidad | number :'1.2-2'}}" id="unitValue"
+                        <input type="text" value="{{this.elemento.valorUnidad | number :'1.2-2'}}" id="unitValue"
                             formControlName="unitValue" autocomplete="off" matInput placeholder="Valor Unidad">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
@@ -111,14 +111,14 @@
                     </mat-form-field>
                     <mat-form-field disable class="field" appearance="outline">
                         <mat-label>Valor Por dia</mat-label>
-                        <input type="text" [value]="data.valorPorDia | number:'1.2-2'" formControlName="unitValueDay"
+                        <input type="text" [value]="elemento.valorPorDia | number:'1.2-2'" formControlName="unitValueDay"
                             autocomplete="off" matInput placeholder="Valor por Día">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field class="field" appearance="outline">
                         <mat-label>Valor Total</mat-label>
-                        <input type="text" value="{{data.valorTotal | number :'1.2-2'}}" id="totalValue"
+                        <input type="text" value="{{elemento.valorTotal | number :'1.2-2'}}" id="totalValue"
                             formControlName="totalValue" autocomplete="off" matInput placeholder="Valor Total">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>

@@ -44,7 +44,7 @@ export class ModificacionFormComponent implements OnInit {
 
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    data: IElements = {id: null, nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0,consecutivo:null, obligacionesEspecificas: null, obligacionesGenerales: null};
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null }
     disableField:boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     elementos: IElements[] = [];
@@ -107,15 +107,15 @@ export class ModificacionFormComponent implements OnInit {
 
         
         this.elementForm = this._formBuilder.group({
-            contractorCant: new FormControl(this.data.cantidadContratistas, Validators.required),
-            cantDay: new FormControl(this.data.cantidadDias, Validators.required),
-            unitValue: new FormControl(this.data.valorUnidad, Validators.required),
-            totalValue: new FormControl(this.data.valorTotal, Validators.required),
+            contractorCant: new FormControl(this.elemento.cantidadContratistas, Validators.required),
+            cantDay: new FormControl(this.elemento.cantidadDias, Validators.required),
+            unitValue: new FormControl(this.elemento.valorUnidad, Validators.required),
+            totalValue: new FormControl(this.elemento.valorTotal, Validators.required),
             id: new FormControl(this.id),
-            unitValueDay: new FormControl(this.data.valorPorDia, Validators.required),
+            unitValueDay: new FormControl(this.elemento.valorPorDia, Validators.required),
             calculateValue: new FormControl(this.totalCost, Validators.required),
-            cpc: new FormControl(this.data.cpc, Validators.required),
-            nombreCpc: new FormControl(this.data.nombreCpc, Validators.required),
+            cpc: new FormControl(this.elemento.cpc, Validators.required),
+            nombreCpc: new FormControl(this.elemento.nombreCpc, Validators.required),
             tipoElemento: new FormControl(null, Validators.required),
             nombreElemento: new FormControl(null, Validators.required),
             modificacion: new FormControl(null, Validators.required),
@@ -168,22 +168,23 @@ export class ModificacionFormComponent implements OnInit {
             modificacion = true;
         }
         let item: IElements = {
-            id: 0,
             nombreElemento: this.elementForm.value.nombreElemento,
-            idComponente: this._data.data.contractId,
+            idComponente: this._data.data.idComponente,
             cantidadContratistas: this.elementForm.value.contractorCant,
             cantidadDias: this.elementForm.value.cantDay,
             valorUnidad: this.elementForm.value.unitValue,
             valorTotal: this.elementForm.value.totalValue,
             valorPorDia: this.elementForm.value.unitValueDay,
+            valorPorDiaContratista: this.elementForm.value.valorDiaContratista,
+            valorTotalContratista: 0,
             cpc: this.elementForm.value.cpc,
             nombreCpc: this.elementForm.value.nombreCpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.elementForm.value.recursos,
             consecutivo: this.elementForm.value.consecutivo,
-            obligacionesEspecificas: this._data.data.obligacionesEspecificas,
-            obligacionesGenerales: this._data.data.obligacionesGenerales
+            obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
+            obligacionesGenerales: this.elementForm.value.obligacionesGenerales
         };
 
         this._economicService.addElementoComponente(item).subscribe((response) => {
@@ -205,10 +206,10 @@ export class ModificacionFormComponent implements OnInit {
             (this.elementForm.value.unitValue / 30) *
             this.elementForm.value.contractorCant
         );
-        this.data.valorPorDia = this.elementForm.value.unitValueDay;
-        this.data.valorTotal = this.elementForm.value.totalValue;
-        this.data.valorTotal = Number(
-            this.data.valorPorDia * this.elementForm.value.cantDay
+        this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
+        this.elemento.valorTotal = this.elementForm.value.totalValue;
+        this.elemento.valorTotal = Number(
+            this.elemento.valorPorDia * this.elementForm.value.cantDay
         );
         let paymentDayContractor =
             this.elementForm.value.unitValueDay / Number(this.elementForm.value.cantDay);
@@ -249,7 +250,7 @@ export class ModificacionFormComponent implements OnInit {
                     swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
                     this.matDialogRef.close();
                 }else{
-                    this.data = resp;
+                    this.elemento = resp;
                 }
             } )
     }

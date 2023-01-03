@@ -25,6 +25,7 @@ import { MinutaAdicionComponent } from './create-pdf/minuta-adicion/minuta-adici
 import { MinutaAdicion2Component } from './create-pdf/minuta-adicion-ampliacion/minuta-adicion-ampliacion.component';
 import { MinutaAmpliacionComponent } from './create-pdf/minuta-ampliacion/minuta-adicion.component';
 import { EstudioPrevioComponent } from './create-pdf/estudio-previo/estudio-previo.component';
+import { ActaSupervisionComponent } from './create-pdf/acta-supervision/acta-supervision.component';
 
 
 @NgModule({
@@ -34,7 +35,9 @@ import { EstudioPrevioComponent } from './create-pdf/estudio-previo/estudio-prev
         ModificacionFormComponent,
         MinutaContratoComponent,
         MinutaAdicionComponent, MinutaAdicion2Component,
-        MinutaAmpliacionComponent, EstudioPrevioComponent
+        MinutaAmpliacionComponent, 
+        EstudioPrevioComponent,
+        ActaSupervisionComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

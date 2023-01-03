@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -15,8 +15,8 @@ import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import jspdf from 'jspdf';
 import { ContractorListService } from '../../dashboards/contractual/contractor-list/contractor-list.service';
+import { Contractor } from '../../dashboards/contractual/contractor-list/models/contractort';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -26,10 +26,10 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeContractorComponent implements OnInit, OnDestroy {
+  dataCuenta: Contractor;
   id: any;
-  data: any;
   userName: any;
-  cuentaCobro: boolean;
+  cuentaCobro: boolean = false;
   @ViewChild('pdfTable') pdfTable: ElementRef;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   raffleName: any;
@@ -62,6 +62,8 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: {
         idUser: this._auth.accessId,
+        contractId: this.dataCuenta.contractId,
+        contractorId: this.dataCuenta.id,
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -79,44 +81,47 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   }
 
 
-  getFilesFolder = async (id: any)=> {
+  getFilesFolder = async (id: any) => {
     this._contractorService.getFileById(id).pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((Response: any) => {
+      .subscribe((Response: any) => {
         const jszip = new JSZip();
-        Response.filedata = 'data:application/pdf;base64,'+Response.filedata
+        Response.filedata = 'data:application/pdf;base64,' + Response.filedata
         var binary = atob(Response.filedata.split(',')[1]);
         var array = [];
         for (let j = 0; j < binary.length; j++) {
-            array.push(binary.charCodeAt(j));
+          array.push(binary.charCodeAt(j));
         }
         let pdf = new Blob([new Uint8Array(array)], {
-            type: 'application/pdf'
+          type: 'application/pdf'
         });
         jszip.folder("pruebaCarpeta").file(`${Response.filesName}.pdf`, pdf);
         jszip.generateAsync({ type: 'blob' }).then(function (content) {
           // see FileSaver.js
           saveAs(content, 'pruebaDescarga.zip');
-      });
-  })
-}
+        });
+      })
+  }
 
 
-public downloadAsPDFs() {
+  public downloadAsPDFs() {
 
-  let data = document.getElementById('htmlData');
+    let data = document.getElementById('htmlData');
 
-  const pdfTable = this.pdfTable.nativeElement;
+    const pdfTable = this.pdfTable.nativeElement;
 
-  var html = htmlToPdfmake(pdfTable.innerHTML);
+    var html = htmlToPdfmake(pdfTable.innerHTML);
 
-  const documentDefinition = { content: html };
-  pdfMake.createPdf(documentDefinition).download();
+    const documentDefinition = { content: html };
+    pdfMake.createPdf(documentDefinition).download();
 
-}
+  }
 
-async getDataContractor() {
-  (await this._contractorListService.getContractorById(this._auth.accessId)).subscribe((Response) => {
-    this.data = Response;
-  });
-}
+  async getDataContractor() {
+    (await this._contractorListService.getContractorById(this._auth.accessId)).subscribe((Response) => {
+      this.dataCuenta = Response;
+    });
+  }
+  getAccount(){
+    this.cuentaCobro = true;
+  }
 }

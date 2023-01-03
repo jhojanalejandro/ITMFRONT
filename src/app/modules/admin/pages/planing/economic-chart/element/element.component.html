@@ -1,4 +1,4 @@
-<div class="flex-col max-w-250 md:min-w-120 -m-6">
+<div class="flex-col max-w-350 md:min-w-120 -m-6">
     <div class="flex-col max-w-240 md:min-w-160">
         <!-- Header -->
         <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
@@ -39,10 +39,23 @@
                             El Campo arl es requerido
                         </mat-error>
                     </mat-form-field>
+                    <mat-form-field [hidden]="showDate" appearance="outline">
+                        <mat-label>Tipo Modificación</mat-label>
+                        <mat-select [formControlName]="'modificacion'" [(ngModel)]="elementselectId" (selectionChange)="selectmodificacion()" name="modificacion">
+                            <mat-option *ngFor="let modificacion of tipoModificaciones" [value]="modificacion.viewValue">
+                                {{modificacion.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                        <mat-error *ngIf="elementForm.get('modificacion').hasError('required')">
+                            El Campo arl es requerido
+                        </mat-error>
+                    </mat-form-field>
                     <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
                         <mat-label>Consecutivo</mat-label>
-                        <input matInput id="consecutivo" type="text" formControlName="consecutivo" autocomplete="off" matInput
-                            placeholder="Consecutivo">
+                        <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text" formControlName="consecutivo" autocomplete="off" matInput
+                            placeholder="Consecutivo"> 
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
                 
                         <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
@@ -124,7 +137,7 @@
                     </mat-form-field>
                     <mat-form-field disable appearance="outline">
                         <mat-label>Valor Por dia contratistas</mat-label>
-                        <input type="text" [value]="elemento.valorPorDia | number:'1.0-0'" formControlName="unitValueDay"
+                        <input type="text" value="{{elemento.valorPorDia | number:'1.0-0'}}" formControlName="unitValueDay"
                             autocomplete="off" matInput placeholder="Valor por Día">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
@@ -140,21 +153,21 @@
                 <div>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Valor por dia contratista</mat-label>
-                        <input type="number" [value]="valorDiaContratista | number:'1.0-0'" id="valorDiaContratista"
+                        <input type="text" value="{{elemento.valorPorDiaContratista | number:'1.0-0'}}" id="valorDiaContratista"
                             formControlName="valordiaContratista" autocomplete="off" matInput placeholder="valor Dia Contratista">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Total Exacto</mat-label>
-                        <input type="number" [value]="totalExacto | number:'1.0-0'" id="totalExacto"
+                        <input type="text"  value="{{totalExacto | number:'1.0-0'}}" id="totalExacto"
                             formControlName="totalExacto" autocomplete="off" matInput placeholder="Valor Exacto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Recursos </mat-label>
-                        <input type="number" [value]="recursos | number:'1.0-0'" id="recursos"
+                        <input type="text" value="{{recursos | number:'1.0-0'}}" id="recursos"
                             formControlName="recursos" autocomplete="off" matInput placeholder="Recuros">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
@@ -163,13 +176,13 @@
                 <div class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>obligaciones Especificas</mat-label>
-                        <textarea type="text"  class="example-full-width" id="obligacionesEspecificas" formControlName="obligaciones Especificas" autocomplete="off" matInput placeholder="Descripcion"></textarea>
+                        <textarea type="text"  class="example-full-width" id="obligacionesEspecificas" formControlName="obligacionesEspecificas" autocomplete="off" matInput placeholder="Descripcion"></textarea>
                     </mat-form-field>
                 </div>
                 <div class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>obligaciones Generales</mat-label>
-                        <textarea type="text"  class="example-full-width" id="obligacionesGenerales" formControlName="obligaciones Generales" autocomplete="off" matInput placeholder="Descripcion"></textarea>
+                        <textarea type="text"  class="example-full-width" id="obligacionesGenerales" formControlName="obligacionesGenerales" autocomplete="off" matInput placeholder="Descripcion"></textarea>
                     </mat-form-field>
                 </div>
             </form>

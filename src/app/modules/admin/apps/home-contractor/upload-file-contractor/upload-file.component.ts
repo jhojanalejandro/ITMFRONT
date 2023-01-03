@@ -7,6 +7,7 @@ import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from '../home-contractor.service';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { FileContractor } from '../models/fileContractor';
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
@@ -34,7 +35,7 @@ export class UploadFileContractorComponent implements OnInit {
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFileContractorComponent>,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any,contractId: any }
+    @Inject(MAT_DIALOG_DATA) private _data
     ) {
 
       setInterval(() => {
@@ -46,7 +47,8 @@ export class UploadFileContractorComponent implements OnInit {
     }
 
   ngOnInit(): void {
-
+    console.log(this._data.contractId);
+    
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
       filesName: new FormControl(null, Validators.required),    
@@ -88,18 +90,24 @@ export class UploadFileContractorComponent implements OnInit {
   }
   
   addFileContractor(event) {
-    const registerFile: any={
+
+    const registerFile: FileContractor={
       userId: this._auth.accessId,
       contractorId: this._auth.accessId,
-      typeDoc: this.formFile.value.typeDoc,
+      contractId: this._data.contractId,
+      typeFilePayment: this.formFile.value.typeDoc,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
-      filedata: event,
-      passed: true     
+      filedata: this.base64Output,
+      mont: new  Date('mm'),
+      passed: true,
+      DetailFileContractor: [] 
     };  
+    console.log(registerFile);
+    
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
         if(res){
           swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
@@ -111,6 +119,8 @@ export class UploadFileContractorComponent implements OnInit {
     },
     (response) => {
       this.formFile.enable();
+      console.log(response);
+
       // Set the alert
       swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
@@ -126,8 +136,10 @@ export class UploadFileContractorComponent implements OnInit {
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate, 
-      fildata: event       
+      fildata: this.file       
     };  
+    console.log(registerProject);
+    
     this._upload.UploadFileContractor(registerProject).subscribe((res) => {   
         if(res){
           swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
@@ -139,12 +151,16 @@ export class UploadFileContractorComponent implements OnInit {
     },
     (response) => {
       this.formFile.enable();
+      console.log(response);
+      
       // Set the alert
       swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
       this.showAlert = true;
     });
   }
+
+  
 
   convertFile(file : File) : Observable<string> {
     const result = new ReplaySubject<string>(1);

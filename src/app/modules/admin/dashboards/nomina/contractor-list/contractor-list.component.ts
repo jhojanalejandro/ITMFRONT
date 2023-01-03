@@ -130,9 +130,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     dialogRefPayment.afterClosed().subscribe((result) => {
       if (result) {
         this.getDataContractor(this.id);
-        this.listId = [];
-
       }
+      this.listId = [];
     });
   }
 

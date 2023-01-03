@@ -81,7 +81,6 @@ export class ListFolderContractorService
         }
         let items = cloneDeep(response);
         // See if a folder id exist
-        debugger
         const folderId = response[0].idFolder;
 
         // Filter the items by folder id. If folder id is null,

@@ -46,9 +46,8 @@ export class CollectionAccountsListComponent implements OnInit {
 
     ngOnInit(): void
     {   
-        this.contractId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
         this.type = this._activatedRoute.snapshot.paramMap.get('type') || 'null';
-
         this.getData();
          
     }
@@ -196,7 +195,7 @@ export class CollectionAccountsListComponent implements OnInit {
             });
     }
     searchByDate =() =>{
-      let search: IGetFilesPayments= {contractId: this.contractId, registerDate: this.dateSearch, type: this.type}
+      let search: IGetFilesPayments= {contractId: this.contractId, registerDate: this.dateSearch, typeFilePayment: this.type}
       console.log(search);
       this._collectionAccounts.searchByDate(search).subscribe((res) => {   
         this.items = res;
@@ -205,8 +204,9 @@ export class CollectionAccountsListComponent implements OnInit {
 
     },
     (response) => {
-      swal.fire('Error al Mostrar la informacion!', response, 'error');
+      swal.fire('Error', 'Error al Mostrar la informacion!', 'error');
     });
     }
+
 
 }

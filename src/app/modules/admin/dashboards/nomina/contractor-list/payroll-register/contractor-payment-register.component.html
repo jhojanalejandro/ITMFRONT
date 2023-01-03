@@ -18,7 +18,7 @@
         <form [formGroup]="formContractorPayment" class="example-form overflow-y-auto">
             <div *ngIf="shareData">
                 <mat-form-field class="p-6 fuse-mat-textarea fuse-mat-no-subscript w-full hiringD">
-                    <textarea matInput  [formControlName]="'contractorName'" [rows]="1" cdkTextareaAutosize
+                    <textarea disabled="true" matInput  [formControlName]="'contractorName'" [rows]="1" cdkTextareaAutosize
                         [cdkAutosizeMinRows]="1">
                     </textarea>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user'"></mat-icon>
@@ -27,7 +27,7 @@
             <div class="nationality" *ngIf="shareData">
                 <mat-form-field  class="hiring" appearance="outline">
                     <mat-label>Cantidad A pagar</mat-label>
-                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.unitValue" formControlName="cashPaymentTotal"
+                    <input type="number" id="compromiso" [(ngModel)]="economicContractor[0].unitValue" formControlName="cashPaymentTotal"
                         autocomplete="off" matInput placeholder="Cantidad A pagar">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     <mat-error *ngIf="formContractorPayment.get('cashPaymentTotal').hasError('required')">
@@ -36,7 +36,7 @@
                 </mat-form-field>
                 <mat-form-field  class="hiring" appearance="outline">
                     <mat-label>Total Se debe</mat-label>
-                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.debt" formControlName="totalDebt"
+                    <input type="number" id="compromiso" [(ngModel)]="economicContractor[0].debt" formControlName="totalDebt"
                         autocomplete="off" matInput placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     <mat-error *ngIf="formContractorPayment.get('totalDebt').hasError('required')">
@@ -45,7 +45,7 @@
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="outline">
                     <mat-label>Valor Contrato</mat-label>
-                    <input type="number" id="compromiso" [(ngModel)]="paymentContractor.totalValue" formControlName="paymentcant" autocomplete="off" matInput
+                    <input type="text" id="compromiso" [(ngModel)]="economicContractor[0].totalValue" formControlName="paymentcant" autocomplete="off" matInput
                         placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     <mat-error *ngIf="formContractorPayment.get('paymentcant').hasError('required')">
@@ -108,8 +108,8 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button mat-stroked-button type="button" [mat-dialog-close]="false" class="text-warn-500">Cancelar</button>
-        <button mat-flat-button [color]="'primary'" type="submit"
+        <button mat-flat-button [color]="'primary'" type="submit" 
             [disabled]="formContractorPayment.disabled" *ngIf="!formContractorPayment.disabled"
-            (click)="addPayment()">Aceptar</button>
+            (click)="addPayment()">Guardar</button>
     </mat-dialog-actions>
 </div>

@@ -212,7 +212,6 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
-      debugger
       if (res) {
         swal.fire('Bien', 'informacion Editada Exitosamente!', 'success');
         //this.matDialogRef.close();  

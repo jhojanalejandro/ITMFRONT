@@ -46,9 +46,12 @@ export class CollectionAccountsService
      */
     getItemById(type: any | null = null,id: any | null = null): Observable<Item>
     {
-        let GetFilesPaymentDto: IGetFilesPayments = {contractId: id, registerDate: new Date(), type: type};
+        if(type === 'cuentas'){
+            type = 'Cuenta De Cobro';
+          }
+        let GetFilesPaymentDto: IGetFilesPayments = {contractId: id, registerDate: new Date(), typeFilePayment: type};
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl+ environment.GetAllFileByDatePayment;
+        let urlEndPoint = this.apiUrl+ environment.GetAllFileByTypePayment;
         return this._httpClient.post<any>(urlEndPoint,GetFilesPaymentDto).pipe(
             tap((items) => {
                 // Update the item
@@ -98,6 +101,11 @@ export class CollectionAccountsService
     UpdateProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
+
+    searchByType(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.GetAllFileByTypePayment;
+        return this._httpClient.get<any>(urlEndpointGenerate+data);
     }
   
 }

@@ -53,7 +53,6 @@ export class UploadFirmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     if (this._data.show) {
       this.mostrarContrato = true;
     }

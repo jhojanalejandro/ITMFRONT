@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="flex items-center mt-6 sm:mt-8 -mx-3">
-                    <button class="px-3 mr-1" mat-flat-button [color]="'primary'" [routerLink]="['./']">
+                    <button (click)="getAccount()" class="px-3 mr-1" mat-flat-button [color]="'primary'" [routerLink]="['./']">
                         <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:document-download'"></mat-icon>
                         <span>Descargar documentos</span>
                     </button>
@@ -119,4 +119,4 @@
     </div>
 
 </div>
-<app-cuenta-cobro *ngIf="cuentaCobro"></app-cuenta-cobro>
+<app-cuenta-cobro [dataCuenta]="dataCuenta" *ngIf="dataCuenta != null && cuentaCobro" ></app-cuenta-cobro>

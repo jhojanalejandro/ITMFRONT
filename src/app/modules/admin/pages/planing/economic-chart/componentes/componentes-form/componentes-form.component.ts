@@ -115,7 +115,6 @@ export class ComponentesFormComponent implements OnInit {
     }
 
     addComponent() {
-        debugger;
         if (!this.componentForm.invalid) {
             this.data = this.componentForm.value;
             let model: IComponente = {

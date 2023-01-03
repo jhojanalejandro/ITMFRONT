@@ -43,7 +43,10 @@ export class GlobalConst {
     public static tipoModificacion: TypeSelectString[]=[
         { viewValue: 'Adición'},
         { viewValue: 'Ampliación'}, 
-        { viewValue: 'Otro'} 
+        { viewValue: 'Modificación'},
+        { viewValue: 'Adición y Ampliación'},
+
+
     ] 
     
     public static editarData: TypeSelectString[]=[

@@ -40,6 +40,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
     modificaciones: any = GlobalConst.requierePoliza;
+    tipoModificaciones: any = GlobalConst.tipoModificacion;
+
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     valorDiaContratista: number = 0;
@@ -55,7 +57,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null }
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null }
     recursos: number;
     totalExacto: number;
     update: boolean;
@@ -63,7 +65,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     calculo: boolean = true;
     totalCalculate: boolean = true;
     totalValue: any = null;
+    totalValueContratista: any = null;
     unitValueMonth: any = null;
+    unitValueMonthContractor: any = null;
+
     elementselectId: any;
     id: string = null;
     listElements: ListElements;
@@ -112,7 +117,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             modificacion: new FormControl(null, Validators.required),
             recursos: new FormControl(this.elemento.recursos, Validators.required),
             fechamodificacion: new FormControl(null, Validators.required),
-            consecutivo: new FormControl(null, Validators.required),
+            consecutivo: new FormControl(this.elemento.consecutivo, Validators.required),
             valordiaContratista: new FormControl(null, Validators.required),
             obligacionesEspecificas: new FormControl(null),
             obligacionesGenerales: new FormControl(null)
@@ -158,7 +163,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement() {
-        debugger
         let modificacion: any;
         if (this.elementForm.value.modificacion === 'Si') {
             modificacion = true;
@@ -174,6 +178,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             valorUnidad: this.elementForm.value.unitValue,
             valorTotal: this.totalValue,
             valorPorDia: this.elementForm.value.unitValueDay,
+            valorPorDiaContratista: this.elementForm.value.valorDiaContratista,
+            valorTotalContratista: this.totalValueContratista,
             cpc: this.elementForm.value.cpc,
             nombreCpc: this.elementForm.value.nombreCpc,
             modificacion: modificacion,
@@ -199,25 +205,34 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     calculate = () => {
-        if(this.elementForm.value.unitValue === null){
+        if(this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === ''){
             swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
         }else{
             this.totalCalculate = false;
-            this.elementForm.value.valorDiaContratista = this.elementForm.value.unitValue / 30;
+            this.elemento.valorPorDiaContratista = this.elementForm.value.unitValue / 30;
             this.elementForm.value.unitValueDay = Number(
                 (this.elementForm.value.unitValue / 30) *
                 this.elementForm.value.contractorCant
             );
             this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
-            if (this.elementForm.value.totalValue == null) {
-                this.totalValue = this.elementForm.value.totalValue;
+
+            if (this.elementForm.value.totalValue === null || this.elemento.valorTotal === this.elementForm.value.totalValue) {
                 this.totalValue = Number(
                     this.elemento.valorPorDia * this.elementForm.value.cantDay
                 );
-            } else {
-                this.totalExacto = this.elementForm.value.totalValue;
+                this.totalValueContratista = Number(
+                    this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
+                );
+            } else if(this.elemento.valorTotal != this.elementForm.value.totalValue  || this.elementForm.value.totalValue != null ){
                 this.totalExacto = Number(
                     this.elemento.valorPorDia * this.elementForm.value.cantDay
+                );
+                this.totalValueContratista = Number(
+                    this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
+                );
+                this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
+                this.totalValueContratista = Number(
+                    this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
                 );
                 this.recursos = this.totalExacto - this.elementForm.value.totalValue;
             }

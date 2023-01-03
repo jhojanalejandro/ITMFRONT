@@ -57,6 +57,7 @@ export const environment = {
     GetAllFileByIdEndpoint: 'Files/GetAllFileById',
     GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
+    GetAllFileByTypePayment: 'Files/GetAllByType/',
 
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete',

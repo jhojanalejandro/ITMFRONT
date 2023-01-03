@@ -7,6 +7,8 @@ export interface IElements{
     valorUnidad: number;
     valorTotal: number;
     valorPorDia: number;
+    valorTotalContratista: number;
+    valorPorDiaContratista: number;
     cpc: string;
     nombreCpc: string;
     modificacion: boolean;

@@ -328,20 +328,19 @@ export class ContractorDataRegisterComponent implements OnInit {
 
   sendEconomicdataContractor() {
     let element: IElements = this.elements.find(item => item.id === this.elementselectId);
-    const total = element.valorTotal / element.cantidadContratistas;
-    let economicData: EconomicContractor = {
+    let economicData: EconomicContractor[] = [{
       contractorId: this.datos.id,
       userId: this._auth.accessId,
       registerDate: this.registerDate,
-      totalValue: total,
+      totalValue: element.valorTotalContratista,
       unitValue: element.valorUnidad,
       totalPaidMonth: element.valorUnidad,
       cashPayment: false,
       missing: 0,
-      debt: total,
+      debt: element.valorTotalContratista,
       modifyDate: this.registerDate,
       freed: 0
-    }
+    }];
     this._economicService.sendEconomicdataContractor(economicData).subscribe((response) => {
       if (response) {
       }
@@ -372,7 +371,6 @@ export class ContractorDataRegisterComponent implements OnInit {
     this._auth
       .getAdmin()
       .subscribe((response) => {
-        debugger  
         this.userAdmins = response;
       });
   }

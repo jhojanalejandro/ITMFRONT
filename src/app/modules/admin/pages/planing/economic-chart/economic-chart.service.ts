@@ -179,7 +179,7 @@ export class EconomicChartService {
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 
-    sendEconomicdataContractor(model: EconomicContractor) {
+    sendEconomicdataContractor(model: EconomicContractor[]) {
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
     }

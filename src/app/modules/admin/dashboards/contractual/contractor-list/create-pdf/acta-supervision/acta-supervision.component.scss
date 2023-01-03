@@ -1,8 +1,14 @@
+.table, th, td {
+    border: 1px solid;
+  }
+.table{
+    margin-top: 50px;
+    margin-left: 90PX;
+    width: 85% !important;
+}
 
-
-.tables {
-  border-collapse: collapse;
-  border:none !important;
+.tables{
+    width: 100% !important;
 }
 
 .alinear{
@@ -34,7 +40,6 @@
 }
 .h4{
     margin-left: 140px;
-    font-size: 24px;
 }
 .text{
     margin-left: 140px;
@@ -43,7 +48,8 @@
 
 }
 .desc{
-    text-align: center !important;
+    background-color: rgb(55, 93, 244);
+    color: aliceblue;
 }
 // .container{
 //     background-color: white !important;
@@ -53,6 +59,7 @@
     font-weight: bold;
 }
 .contractorName{
+    margin-left: 95px !important;
     font-weight: bold !important;
 }
 .linea{
@@ -63,7 +70,6 @@
 }
 .container{
     background-color: white;
-    margin-top: 20px;
 }
 
 .study{
@@ -97,16 +103,17 @@
   }
   h1{
     text-align: center;
-    font-size: 15px !important;
+    font-size: large;
   }
   p{
     padding-left: 25px !important;
     padding-right: 25px !important;
     font-size: large;
-    text-align: center !important;
   }
 
-
+  p {
+    font-family: Lato;
+  }
   table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
@@ -119,7 +126,9 @@
     padding: 8px;
   }
   
-
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
   button {
     background-color: #4CAF50; /* Green */
     border: none;
@@ -135,6 +144,3 @@
     width: 350px;
     height: 250px;
   }
-
-  .tab {border-collapse:collapse;}
-  .tab .first {border-bottom:1px solid #EEE;}
