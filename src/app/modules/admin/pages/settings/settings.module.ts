@@ -11,11 +11,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { SharedModule } from 'app/shared/shared.module';
 import { SettingsComponent } from 'app/modules/admin/pages/settings/settings.component';
-import { SettingsAccountComponent } from 'app/modules/admin/pages/settings/account/account.component';
-import { SettingsSecurityComponent } from 'app/modules/admin/pages/settings/security/security.component';
-import { SettingsTeamComponent } from 'app/modules/admin/pages/settings/team/team.component';
+import { SettingsAccountComponent } from 'app/modules/admin/pages/settings/components/account/account.component';
+import { SettingsSecurityComponent } from 'app/modules/admin/pages/settings/components/security/security.component';
 import { settingsRoutes } from 'app/modules/admin/pages/settings/settings.routing';
-import { UploadFirmComponent } from './team/upload-firm/upload-firm.component';
+import { SettingsTeamComponent } from './components/team/team.component';
+import { UploadFirmComponent } from './components/upload-firm/upload-firm.component';
 
 @NgModule({
     declarations: [

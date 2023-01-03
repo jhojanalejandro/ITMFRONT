@@ -14,9 +14,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
+import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
-import { ContractorListService } from '../../contractual/contractor-list/contractor-list.service';
+import { ContractorListService } from '../../contractual/service/contractor-list.service';
 
 
 

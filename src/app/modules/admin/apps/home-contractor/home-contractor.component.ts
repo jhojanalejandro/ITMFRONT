@@ -6,8 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { HomeContractorService } from './home-contractor.service';
-import { UploadFileContractorComponent } from './upload-file-contractor/upload-file.component';
+import { HomeContractorService } from './services/home-contractor.service';
+import { UploadFileContractorComponent } from './components/upload-file-contractor/upload-file.component';
 import { saveAs } from "file-saver";
 import JSZip from 'jszip';
 
@@ -15,8 +15,8 @@ import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { ContractorListService } from '../../dashboards/contractual/contractor-list/contractor-list.service';
-import { Contractor } from '../../dashboards/contractual/contractor-list/models/contractort';
+import { ContractorListService } from '../../dashboards/contractual/service/contractor-list.service';
+import { Contractor } from '../../dashboards/contractual/models/contractort';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({

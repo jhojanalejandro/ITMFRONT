@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
-import { NominaService } from '../nomina.service';
+import { NominaService } from '../service/nomina.service';
 import { CollectionAccountsService } from './collection-accounts-list.service';
 
 @Injectable({

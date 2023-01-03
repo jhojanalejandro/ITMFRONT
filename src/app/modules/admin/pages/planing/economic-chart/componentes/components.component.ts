@@ -10,13 +10,13 @@ import {
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { EconomicChartService } from '../economic-chart.service';
+import { EconomicChartService } from '../../service/economic-chart.service';
 import { ElementCardComponent } from '../element/element.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentesFormComponent } from './componentes-form/componentes-form.component';
 import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
-import { UploadDataService } from 'app/modules/admin/dashboards/contractual/contracts-list/upload-data.service';
+import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 
 @Component({
     selector: 'components-card',

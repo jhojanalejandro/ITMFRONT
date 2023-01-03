@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { EconomicChartService } from './economic-chart.service';
+import { EconomicChartService } from '../service/economic-chart.service';
 import { InventoryPagination, EconomicChart } from './economic-chart.types';
 
 @Injectable({

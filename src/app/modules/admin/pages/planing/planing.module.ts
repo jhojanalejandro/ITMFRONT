@@ -22,7 +22,7 @@ import { ElementCardComponent } from './economic-chart/element/element.component
 import { AddComponentsComponent } from './economic-chart/componentes/components.component';
 import { ComponentesFormComponent } from './economic-chart/componentes/componentes-form/componentes-form.component';
 import { DialogChangePercentajeComponent } from './economic-chart/componentes/DialogChangePercentaje/DialogChangePercentaje.component';
-import { RegisterProjectFolderComponent } from './register-project-folder/register-project-folder.component';
+import { RegisterProjectFolderComponent } from './components/register-project-folder/register-project-folder.component';
 
 
 @NgModule({

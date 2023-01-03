@@ -17,15 +17,15 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ContractorListComponent } from './contractor-list.component';
 import { contractorListRoutes } from './contractor-list.routing';
 import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
-import { ModificacionFormComponent } from './modificacion-form/modificacion-form.component';
-import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
-import { MinutaContratoComponent } from './create-pdf/minuta-contrato/minuta-contrato.component';
-import { CuentaCobroComponent, } from '../../../apps/home-contractor/cuenta-cobro/cuenta-cobro.component';
-import { MinutaAdicionComponent } from './create-pdf/minuta-adicion/minuta-adicion.component';
-import { MinutaAdicion2Component } from './create-pdf/minuta-adicion-ampliacion/minuta-adicion-ampliacion.component';
-import { MinutaAmpliacionComponent } from './create-pdf/minuta-ampliacion/minuta-adicion.component';
-import { EstudioPrevioComponent } from './create-pdf/estudio-previo/estudio-previo.component';
-import { ActaSupervisionComponent } from './create-pdf/acta-supervision/acta-supervision.component';
+import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
+import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
+import { MinutaContratoComponent } from './components/minuta-contrato/minuta-contrato.component';
+import { CuentaCobroComponent, } from '../../../apps/home-contractor/components/cuenta-cobro/cuenta-cobro.component';
+import { MinutaAdicionComponent } from './components/minuta-adicion/minuta-adicion.component';
+import { MinutaAdicion2Component } from './components/minuta-adicion-ampliacion/minuta-adicion-ampliacion.component';
+import { MinutaAmpliacionComponent } from './components/minuta-ampliacion/minuta-adicion.component';
+import { EstudioPrevioComponent } from './components/estudio-previo/estudio-previo.component';
+import { ActaSupervisionComponent } from './components/acta-supervision/acta-supervision.component';
 
 
 @NgModule({

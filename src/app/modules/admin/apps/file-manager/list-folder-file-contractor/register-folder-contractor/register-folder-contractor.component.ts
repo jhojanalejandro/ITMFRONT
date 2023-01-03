@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IFolderContractor } from 'app/layout/common/models/folder-contractor';
 import { ActivatedRoute } from '@angular/router';
-import { FileManagerService } from '../../file-manager.service';
+import { FileManagerService } from '../../services/file-manager.service';
 
 
 @Component({

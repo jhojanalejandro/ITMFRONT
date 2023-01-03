@@ -7,10 +7,10 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FolderContractorComponent } from './register-folder-contractor/register-folder-contractor.component';
-import { ListFolderFileContractorService } from './list-folder-file-contractor.service';
+import { ListFolderFileContractorService } from '../services/list-folder-file-contractor.service';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
-import { FileListManagerService } from '../list-file/list-file.service';
+import { FileListManagerService } from '../services/list-file.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 

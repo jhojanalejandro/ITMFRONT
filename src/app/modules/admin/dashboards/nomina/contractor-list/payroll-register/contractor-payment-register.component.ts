@@ -6,9 +6,9 @@ import { FuseAlertType } from '@fuse/components/alert';
 import Swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
-import { NominaService } from '../../nomina.service';
+import { NominaService } from '../../service/nomina.service';
 import { ContractorPayments } from 'app/modules/admin/dashboards/nomina/models/contractor-payments';
-import { EconomicContractor } from '../../../contractual/contractor-list/models/economic-data-contractor';
+import { EconomicContractor } from '../../models/economic-data-contractor';
 import { find } from 'lodash';
 
 

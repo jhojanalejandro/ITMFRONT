@@ -2,7 +2,7 @@ import { Route } from '@angular/router';
 import { CanDeactivateFileManagerDetails } from 'app/modules/admin/apps/file-manager/file-manager.guards';
 import { FileManagerComponent } from 'app/modules/admin/apps/file-manager/file-manager.component';
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
-import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/details/details.component';
+import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/components/details/details.component';
 import { FileManagerFolderResolver, FileManagerItemResolver, FileManagerItemsResolver } from 'app/modules/admin/apps/file-manager/file-manager.resolvers';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
@@ -10,11 +10,11 @@ import { FileManagerFolderCResolver, FileManagerItemResolverFile } from './list-
 import { FileListComponent } from './list-file/file-list.component';
 import { FileManagerFolderCFResolver } from './list-folder-file-contractor/list-folder-file.resolvers';
 import { FileManagerItemFResolver } from './list-file/file-list.resolvers';
-import { DetailFileComponent } from './details-file/detail-file.component';
-import { DetailFileManagerItemFResolver } from './details-file/detail-file.resolvers';
-import { DetailsFolderFileContractorComponent } from './details-folder-contractor/details-folder-contractor.component';
-import { DetailFolderContractorItemFResolver } from './details-folder-contractor/detail-folder-contractor.resolvers';
-import { DetailFileContractComponent } from './details-file-contract/detail-file-contract.component';
+import { DetailFileComponent } from './components/details-file/detail-file.component';
+import { DetailFileManagerItemFResolver } from './components/details-file/detail-file.resolvers';
+import { DetailsFolderFileContractorComponent } from './components/details-folder-contractor/details-folder-contractor.component';
+import { DetailFolderContractorItemFResolver } from './components/details-folder-contractor/detail-folder-contractor.resolvers';
+import { DetailFileContractComponent } from './components/details-file-contract/detail-file-contract.component';
 
 export const fileManagerRoutes: Route[] = [
     {

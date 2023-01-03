@@ -8,7 +8,7 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
-import { FileListManagerService } from './list-file.service';
+import { FileListManagerService } from '../services/list-file.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { ObservationFileComponent } from './observation-File/observation-file.component';

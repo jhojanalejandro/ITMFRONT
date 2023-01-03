@@ -24,7 +24,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { IElements } from '../../models/element';
 import { ListElements } from '../../models/list-elements';
 import swal from 'sweetalert2';
-import { EconomicChartService } from '../economic-chart.service';
+import { EconomicChartService } from '../../service/economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato } from '../../models/detalle-contrato';
@@ -57,7 +57,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null }
+    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
     recursos: number;
     totalExacto: number;
     update: boolean;
@@ -118,9 +118,11 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             recursos: new FormControl(this.elemento.recursos, Validators.required),
             fechamodificacion: new FormControl(null, Validators.required),
             consecutivo: new FormControl(this.elemento.consecutivo, Validators.required),
-            valordiaContratista: new FormControl(null, Validators.required),
-            obligacionesEspecificas: new FormControl(null),
-            obligacionesGenerales: new FormControl(null)
+            valordiaContratista: new FormControl(this.elemento.valorPorDiaContratista, Validators.required),
+            obligacionesEspecificas: new FormControl(this.elemento.obligacionesEspecificas),
+            obligacionesGenerales: new FormControl(this.elemento.obligacionesGenerales),
+            objetoElemento: new FormControl(this.elemento.objetoElemento)
+
         });
         this.filteredOptions =
             this.elementForm.controls.nombreElemento.valueChanges.pipe(
@@ -163,6 +165,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement() {
+        debugger
         let modificacion: any;
         if (this.elementForm.value.modificacion === 'Si') {
             modificacion = true;
@@ -187,7 +190,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             recursos: this.elementForm.value.recursos,
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
-            obligacionesGenerales: this.elementForm.value.obligacionesGenerales
+            obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
+            objetoElemento: this.elementForm.value.objetoElemento
         };
 
         this._economicService.addElementoComponente(item).subscribe((response) => {

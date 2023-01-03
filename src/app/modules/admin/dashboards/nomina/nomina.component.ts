@@ -12,7 +12,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {  Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { UploadDataService } from '../contractual/contracts-list/upload-data.service';
+import { UploadDataService } from '../contractual/service/upload-data.service';
 import { GenericService } from '../../generic/generic.services';
 @Component({
   selector: 'nomina',

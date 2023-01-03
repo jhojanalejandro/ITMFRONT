@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
+import { FileManagerService } from 'app/modules/admin/apps/file-manager/services/file-manager.service';
 import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';

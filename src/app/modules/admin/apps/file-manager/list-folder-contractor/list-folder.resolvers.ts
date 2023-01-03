@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
-import { ListFolderContractorService } from './list-folder-contractor.service';
+import { ListFolderContractorService } from '../services/list-folder-contractor.service';
 
 @Injectable({
     providedIn: 'root'

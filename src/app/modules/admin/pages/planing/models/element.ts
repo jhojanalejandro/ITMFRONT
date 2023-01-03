@@ -17,6 +17,7 @@ export interface IElements{
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
+    objetoElemento: string;
 }
 
 

@@ -28,7 +28,7 @@ import {
 import { fuseAnimations } from '@fuse/animations';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
-import { EconomicChartService } from '../economic-chart.service';
+import { EconomicChartService } from '../../service/economic-chart.service';
 import {
     InventoryCategory,
     InventoryPagination,

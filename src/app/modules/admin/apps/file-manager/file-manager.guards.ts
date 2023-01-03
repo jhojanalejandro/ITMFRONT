@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/details/details.component';
+import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/components/details/details.component';
 
 @Injectable({
     providedIn: 'root'

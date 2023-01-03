@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
-import { FileListManagerService } from 'app/modules/admin/apps/file-manager/list-file/list-file.service';
+import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
 
 @Injectable({
     providedIn: 'root'

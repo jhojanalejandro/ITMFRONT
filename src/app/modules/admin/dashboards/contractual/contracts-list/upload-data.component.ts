@@ -12,7 +12,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { RegisterProjectFolderComponent } from 'app/modules/admin/pages/planing/register-project-folder/register-project-folder.component';
+import { RegisterProjectFolderComponent } from 'app/modules/admin/pages/planing/components/register-project-folder/register-project-folder.component';
 @Component({
   selector: 'app-upload',
   styleUrls: ['./upload-data.component.scss'],

@@ -6,7 +6,7 @@ import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
-import { FileListManagerService } from 'app/modules/admin/apps/file-manager/list-file/list-file.service';
+import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
 import { CollectionAccountsListComponent } from '../collection-accounts-list.component';
 
 

@@ -10,16 +10,16 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ContractorListService } from './contractor-list.service';
+import { ContractorListService } from '../service/contractor-list.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from '../../nomina/contractor-list/payroll-register/contractor-payment-register.component';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/economic-chart/economic-chart.service';
+import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { AsignmentData } from '../models/asignment-data';
-import { ContractorDataRegisterComponent } from './register-data-contractor/register-data-contractor.component';
-import { ModificacionFormComponent } from './modificacion-form/modificacion-form.component';
+import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
+import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 
 
 @Component({
