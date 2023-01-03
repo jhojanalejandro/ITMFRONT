@@ -56,6 +56,7 @@ export class AuthSignInComponent implements OnInit
 
     signIn(): void
     {
+        debugger
                 // Return if the form is invalid
         if ( this.signInForm.invalid )
         {

@@ -13,128 +13,107 @@ import { Observable, ReplaySubject } from 'rxjs';
     styleUrls: ['./create-pdf.component.scss'],
 })
 export class CreatePdfComponent implements OnInit {
-    @ViewChild('pdfTable') pdfTable: ElementRef;
-    @ViewChild('dataToExport', { static: false })
-    public dataToExport: ElementRef;
-    pdfName: any = 'prueba';
-    file: any;
-    docDefinition: any;
-    base64Output: any;
-    minuta: boolean;
-    estudioPrevio: boolean;
-    cuentaCobro: boolean;
-    minutaAdicion: boolean;
-    constructor() {}
+    //@ViewChild('pdfTable') pdfTable: ElementRef;
 
-    ngOnInit(): void {
-        this.createPdf();
-    }
-
-    public downloadPDF() {
-        let data = document.getElementById('pdfTable');
-
-        html2canvas(data).then((canvas) => {
-            const pdfTable = this.pdfTable.nativeElement;
-
-            var html = htmlToPdfmake(pdfTable.innerHTML);
-            const documentDefinition = {
-                footer: function (currentPage, pageCount) {
-                    return [
-                        {
-                            text:
-                                'Page ' +
-                                currentPage.toString() +
-                                ' of ' +
-                                pageCount,
-                            alignment: 'center',
-                        },
-                    ];
-                },
-                content: html, //pdf is all the data i use to generate pdf
-            };
-            pdfMake.createPdf(documentDefinition).download();
-        });
-    }
+    ngOnInit(): void {}
 
     public downloadAsPDFs() {
+        //const pdfTable = this.pdfTable.nativeElement;
+        //var html = htmlToPdfmake(pdfTable.innerHTML);
 
-        let data = document.getElementById('pdfTable');
-
-        html2canvas(data).then(canvas => {
-        //   let pdf = new jspdf('l', 'mm', 'a4');
-        //   pdf.setFontSize(12);
-
-          const pdfTable = this.pdfTable.nativeElement;
-    
-          var html = htmlToPdfmake(pdfTable.innerHTML);
-    
-          const documentDefinition = { content: html };
-          pdfMake.createPdf(documentDefinition).download('Filenames.pdf');
-          var data;
-          pdfMake.createPdf(documentDefinition).getDataUrl(function (dataURL) {
-            data = dataURL;
-          })
-        });
-      }
-    exportAsPDF() {
-        let data = document.getElementById('pdfTable');
-        html2canvas(data).then((canvas) => {
-            const contentDataURL = canvas.toDataURL('image/png'); // 'image/jpeg' for lower quality output.
-            let pdf = new jspdf('l', 'cm', 'a4');
-            pdf.setFontSize(12);
-            //Generates PDF in landscape mode
-            // let pdf = new jspdf('p', 'cm', 'a4'); Generates PDF in portrait mode
-            pdf.addImage(contentDataURL, 'PNG', 0, 0, 29.7, 21.0);
-            pdf.save('Filename.docx');
-        });
-    }
-
-    convertFile(): Observable<string> {
-        const result = new ReplaySubject<string>(1);
-        const reader = new FileReader();
-        reader.readAsBinaryString(this.file);
-        reader.onload = (event) =>
-            result.next(btoa(event.target.result.toString()));
-        return result;
-    }
-
-    async createPdf() {
-        this.docDefinition = {
+        const documentDefinition = {
             content: [
                 {
-                    image: await this.getBase64ImageFromURL(
-                        '../../../../assets/images/flags/LOGO_ITM.png'
-                    ),
+                    style: 'tableExample',
+                    color: '#444',
+                    table: {
+                        widths: [200, 150, '*'],
+                        body: [
+                            [
+                                {
+                                    rowSpan: 2,
+                                    text: 'CUENTA DE COBRO',
+                                    style: 'title',
+                                },
+                                {
+                                    text: 'FECHA DE COBRO',
+                                    style: 'tableHeader',
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: 'NÚMERO',
+                                    style: 'tableHeader',
+                                    alignment: 'center',
+                                },
+                            ],
+                            ['', '02/01/2023', '3'],
+                        ],
+                    },
+                },
+                {
+                    style: 'tableExample',
+                    color: '#444',
+                    table: {
+                        widths: [200, 150, '*'],
+                        body: [
+                            [
+                                {
+                                    rowSpan: 2,
+                                    text: 'CUENTA DE COBRO',
+                                    style: 'title',
+                                },
+                                {
+                                    text: 'FECHA DE COBRO',
+                                    style: 'tableHeader',
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: 'NÚMERO',
+                                    style: 'tableHeader',
+                                    alignment: 'center',
+                                },
+                            ],
+                            ['', '02/01/2023', '3'],
+                        ],
+                    },
                 },
             ],
+            styles: {
+                header: {
+                    fontSize: 18,
+                    bold: true,
+                    margin: [0, 0, 0, 10],
+                },
+                subheader: {
+                    fontSize: 16,
+                    bold: true,
+                    margin: [0, 10, 0, 5],
+                },
+                tableHeader: {
+                    bold: true,
+                    fontSize: 13,
+                    color: 'black',
+                    align: 'center',
+                    margin: [0, 0, 10, 10],
+                },
+                tableExample: {
+                    margin: [0, 5, 0, 15],
+                },
+                title: {
+                    bold: true,
+                    fontSize: 13,
+                    color: 'black',
+                    alignment: 'center',
+                    margin: [0, 10, 0, 0],
+                },
+            },
+            defaultStyle: {
+                // alignment: 'justify'
+            },
         };
-        this.file = this.docDefinition.content[0].image;
+        let test = pdfMake
+            .createPdf(documentDefinition)
+            .download('Filenames.pdf');
+        console.log(test);
     }
-    getBase64ImageFromURL(url) {
-        return new Promise((resolve, reject) => {
-            var img = new Image();
-            img.setAttribute('crossOrigin', 'anonymous');
-
-            img.onload = () => {
-                var canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                var ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-
-                var dataURL = canvas.toDataURL('image/png');
-
-                resolve(dataURL);
-            };
-
-            img.onerror = (error) => {
-                reject(error);
-            };
-
-            img.src = url;
-        });
-    }
-
-    get
 }
