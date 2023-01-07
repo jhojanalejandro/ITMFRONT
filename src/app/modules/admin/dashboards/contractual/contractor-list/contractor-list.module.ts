@@ -20,7 +20,6 @@ import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-ex
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
 import { MinutaContratoComponent } from './components/minuta-contrato/minuta-contrato.component';
-import { CuentaCobroComponent, } from '../../../apps/home-contractor/components/cuenta-cobro/cuenta-cobro.component';
 import { MinutaAdicionComponent } from './components/minuta-adicion/minuta-adicion.component';
 import { MinutaAdicion2Component } from './components/minuta-adicion-ampliacion/minuta-adicion-ampliacion.component';
 import { MinutaAmpliacionComponent } from './components/minuta-ampliacion/minuta-adicion.component';
