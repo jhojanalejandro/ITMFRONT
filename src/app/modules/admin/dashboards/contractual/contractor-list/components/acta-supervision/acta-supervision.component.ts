@@ -27,7 +27,6 @@ export class ActaSupervisionComponent implements OnInit {
     fechaFinalizacionConvenio: new Date(),
     contrato: '',
     compromiso: '',
-    fechaDeInicioProyectado: new  Date(),
     fechaRealDeInicio: new Date(),
     numeroActa: '',
     actaComite: '',

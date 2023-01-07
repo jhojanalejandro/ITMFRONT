@@ -90,19 +90,17 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/contractual/contracts-list/upload-data.module').then(m => m.UploadModule)},
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/contractual/contracts-list/contracts-lis.module').then(m => m.UploadModule)},
                 {path: 'lista-contratistas/:id', loadChildren: () => import('app/modules/admin/dashboards/contractual/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
                 {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)}
             ]},
 
             // Apps
             {path: 'apps', children: [
-                {path: 'academy', loadChildren: () => import('app/modules/admin/apps/academy/academy.module').then(m => m.AcademyModule)},
                 {path: 'contacts', loadChildren: () => import('app/modules/admin/apps/contacts/contacts.module').then(m => m.ContactsModule)},
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
                 {path: 'archivo/:id', loadChildren: () => import('app/modules/admin/apps/file-manager/components/show-file/show-file.module').then(m => m.ShowFileModule)},
-                {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)},
-
+                {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)}
             ]},
 
             // Pages

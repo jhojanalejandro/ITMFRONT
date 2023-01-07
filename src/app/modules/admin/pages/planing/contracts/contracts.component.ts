@@ -9,8 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { Router } from '@angular/router';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { RegisterProjectFolderComponent } from '../components/register-project-folder/register-project-folder.component';
@@ -38,7 +37,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['companyName', 'projectName', 'budget', 'contractCant', 'action'];
+  displayedColumns: string[] = ['companyName', 'projectName', 'valorContrato', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
 
   /**
@@ -60,8 +59,8 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   columnas = [
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
-    { title: 'PRESUPUESTO', name: 'budget' },
-    { title: 'CANTIDAD CONTRATISTA', name: 'contractCant' },
+    { title: 'VALOR CONTRATO', name: 'valorContrato' },
+    { title: 'CANTIDAD CONTRATISTA', name: 'contractorsCant' },
     { title: '', name: 'action' },
   ]
   ngOnInit(): void {
@@ -115,24 +114,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
           }
         });
         break
-      case 'upload':
-        const dialogUpload = this._matDialog.open(UploadFileComponent, {
-          autoFocus: false,
-          data: {
-            show: true
-          }
-        });
-        dialogUpload.afterClosed().subscribe((result) => {
-          if (result) {
-
-          }
-        });
-        break
-      case 'registerData':
-        this._router.navigate(['/dashboards/lista-contratistas/' + data.id]);
-
-        break
-
     }
   }
   announceSortChange(sortState: Sort) {
@@ -150,10 +131,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   ngAfterContentChecked() {
     this.cdref.detectChanges();
   }
-
-  /**
-   * On init
-   */
 
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
@@ -178,15 +155,15 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
 
   getContractsData() {
-    this._genericService.getAllContract(false).pipe(takeUntil(this._unsubscribeAll))
+    this._genericService.getAllContract(false, 'planeacion').pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         for (let index = 0; index < Response.length; index++) {
-          if (Response[index].budget < 0 || Response[index].budget == null) {
-            Response[index].budget = 0;
+          if (Response[index].valorContrato === 0 || Response[index].valorContrato === null) {
+            Response[index].valorContrato = 0;
           }
-          if (Response[index].contractCant < 0 || Response[index].contractCant == null) {
-            Response[index].contractCant = 0;
+          if (Response[index].contractorsCant === 0 || Response[index].contractorsCant === null) {
+            Response[index].contractorsCant = 0;
           }
           this._genericService.getDetalleContrato(Response[index].id, false).subscribe((response: any) => {
             if (response) {

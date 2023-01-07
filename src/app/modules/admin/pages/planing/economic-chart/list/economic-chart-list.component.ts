@@ -17,17 +17,9 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import {
-    debounceTime,
-    map,
-    merge,
-    Observable,
     Subject,
-    switchMap,
-    takeUntil,
 } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { MatDialog } from '@angular/material/dialog';
 import { EconomicChartService } from '../../service/economic-chart.service';
 import {
     InventoryCategory,
@@ -38,8 +30,7 @@ import {
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({

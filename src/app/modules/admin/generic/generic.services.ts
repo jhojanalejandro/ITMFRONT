@@ -35,11 +35,22 @@ export class GenericService
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
+    UpdateStateProjectFolder(id: number) {
+        debugger
+        const params = new HttpParams()
+        .set('id', id);
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateStateProjectFolderEndpoint;
+        return this._httpClient.post<any>(urlEndpointGenerate, {params: params});
+    }
 
-    getAllContract(inProgress: boolean): Observable<any>
+
+    getAllContract(inProgress: boolean,tipoModulo: string ): Observable<any>
     {
-        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint+inProgress;
-        return  this._httpClient.get(urlEndPoint).pipe(
+        const params = new HttpParams()
+        .set('inProgress', inProgress )
+        .set('tipoModulo', tipoModulo)
+        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
+        return  this._httpClient.get(urlEndPoint, {params: params}).pipe(
             tap((response: any) => {
                 this._data.next(response);
             })
@@ -49,7 +60,7 @@ export class GenericService
     getDetalleContrato(id: any, tipo: boolean): Observable<DetalleContrato[]> {
         const params = new HttpParams()
         .set('id', id )
-        .set('tipoConsulta', tipo)
+        .set('tipoConsulta', tipo);
   
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdDetailEndpoint;

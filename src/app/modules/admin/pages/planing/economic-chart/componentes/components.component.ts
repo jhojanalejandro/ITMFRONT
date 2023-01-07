@@ -36,6 +36,7 @@ export class AddComponentsComponent implements OnInit {
     configForm: FormGroup;
     subTotal: number = 0;
     total: number = 0;
+    contractorCant: number = 0;
     gastosOperativos: number = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
@@ -92,7 +93,9 @@ export class AddComponentsComponent implements OnInit {
         this.data.forEach((element) => {
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
-                    this.subTotal = this.subTotal + item.valorTotal;
+                    this.subTotal += item.valorTotal;
+                    debugger
+                    this.contractorCant += item.cantidadContratistas
                 });
             }
         });
@@ -165,6 +168,19 @@ export class AddComponentsComponent implements OnInit {
             }
         });
     }
+    editComponent(componente: any) {
+        const dialogRef = this._matDialog.open(ComponentesFormComponent, {
+            data: {
+                componente,
+                idContrato: this.id
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.chargeData();
+            }
+        });
+    }
 
     openConfirmationDialog(): void {
         // Open the dialog and save the reference of it
@@ -181,11 +197,12 @@ export class AddComponentsComponent implements OnInit {
     guardarCalculo() {
         const registerProject: any = {
             id: this.id,
-            contractorsCant: 0,
+            contractorsCant: this.contractorCant,
             valorContrato: this.total,
             valorSubTotal: this.subTotal,
             gastosOperativos: this.gastosOperativos,
         };
+        debugger
         this._contrtactService.UpdateCostProjectFolder(registerProject).subscribe((res) => {
             if (res) {
                 Swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');

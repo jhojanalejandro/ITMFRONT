@@ -168,7 +168,7 @@ export class UploadFileComponent implements OnInit {
   }
   getContractsData() {
     // Get the data
-    this._gerenicService.getAllContract(true)
+    this._gerenicService.getAllContract(true,'Contractual')
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((data) => {
         this.contratos = data;

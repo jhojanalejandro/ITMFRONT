@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { UploadDataComponent } from './upload-data.component';
+import { UploadDataComponent } from './contracts-list.component';
 // import { UploadDataResolver } from 'app/modules/admin/dashboards/project/upload-data.resolvers';
 // 
 

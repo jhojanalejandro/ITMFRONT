@@ -20,6 +20,7 @@ import { Componente, IElements } from 'app/modules/admin/pages/planing/models/el
 import { AsignmentData } from '../models/asignment-data';
 import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 
 @Component({
@@ -65,6 +66,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
    */
   constructor(
     private _contractorListService: ContractorListService,
+    private _genericService: GenericService,
     private _matDialog: MatDialog,
     private auth: AuthService,
     private cdref: ChangeDetectorRef,
@@ -151,19 +153,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
   selectRowFull(data: any) {
     console.log(data);
-
-    // const dialogRef =  this._matDialog.open(ContractorDataRegisterComponent, {
-    //     autoFocus: false,
-    //     data     : {
-    //         idUser: this.auth.accessId,
-    //         data
-    //     }
-    //   });
-    //   dialogRef.afterClosed().subscribe((result) => {
-    //     if(result){
-    //       this.getDataContractor(this.id);
-    //     }
-    // }); 
   }
 
   /**
@@ -206,10 +195,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   checkboxLabel(row?: any): string {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
-    }        
+    }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Id + 1}`;
   }
-  
+
   //metodo que obtiene las columnas seleccionadas de la grid
   selectRow($event: any, dataSource: any) {
     if ($event.checked) {
@@ -226,7 +215,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       if (result == 'confirmed') {
         this._contractorListService.DeleteContractor(element.id).subscribe((res) => {
           if (res) {
-            swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
+            swal.fire('Bien', 'Contratista desactivado Exitosamente!', 'success');
 
           }
           this.getDataContractor(this.id);
@@ -251,7 +240,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
 
-  modificacionContrato(data: any){
+  modificacionContrato(data: any) {
     const dialogModificacion = this._matDialog.open(ModificacionFormComponent, {
       width: '900px',
       autoFocus: false,
@@ -266,9 +255,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
   }
-  registrarDatosContratacion(data: any){
-    if(data == null){
-      data = {id: 0, contractId: 0, componenteId: 0, elementId: 0}
+  registrarDatosContratacion(data: any) {
+    if (data == null) {
+      data = { id: 0, contractId: 0, componenteId: 0, elementId: 0 }
       this.selection.selected.forEach(element => {
         this.listId.push(element.id);
       });
@@ -279,7 +268,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       data: {
         idUser: this.auth.accessId,
         contractId: data.contractId,
-        id: data.id ,
+        id: data.id,
         componenteId: data.componenteId,
         elementId: data.elementId,
         idContractors: this.listId
@@ -288,19 +277,35 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.getDataContractor(this.id);
-        this.listId = [];
       }
+      this.listId = [];
     });
 
   }
 
-  generarMinuta(data: any = null){
-      this.contractors = [data];
-      this.minuta = true;
+  generarMinuta(data: any = null) {
+    this.contractors = [data];
+    this.minuta = true;
   }
-  generarEstudiosPrevios(data: any = null){
+  generarEstudiosPrevios(data: any = null) {
     this.contractors = [data];
     this.estudioPrevio = true;
-}
+  }
+
+  activateContarct(){
+    this._genericService.UpdateStateProjectFolder(this.id).subscribe((resp) =>{
+      if(resp){
+        swal.fire('Bien', 'Contrato activado exitosamente!', 'success');
+      }else{
+        swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
+      }
+    },
+    (response) => {
+      // Set the alert
+      console.log(response);
+      
+      swal.fire('Error', 'Error al activar el contrato!', 'error');
+    })
+  }
 
 }

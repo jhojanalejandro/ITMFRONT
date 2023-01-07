@@ -45,7 +45,7 @@ export class ComponentesFormComponent implements OnInit {
     data: any;
     nombreComponente: string = null;
     update: boolean;
-    id: string = null;
+    id: number = 0;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     componentForm: FormGroup;
@@ -76,12 +76,13 @@ export class ComponentesFormComponent implements OnInit {
                 fruit ? this._filter(fruit) : this.allFruits.slice()
             )
         );
-
+        if(this._data.componente != null){
+            this.id = this._data.componente.id;
+            this.nombreComponente = this._data.componente.nombreComponente;
+            
+        }
         this.componentForm = this._formBuilder.group({
-            componentName: new FormControl(
-                this.nombreComponente,
-                Validators.required
-            )
+            componentName: new FormControl(this.nombreComponente,Validators.required)
         });
     }
 
@@ -118,9 +119,9 @@ export class ComponentesFormComponent implements OnInit {
         if (!this.componentForm.invalid) {
             this.data = this.componentForm.value;
             let model: IComponente = {
-                idContrato: this._data.e,
-                nombreComponente: this.componentForm.value.componentName,
-                id: 0,
+                idContrato: this._data.idContrato,
+                nombreComponente: this.nombreComponente,
+                id: this.id,
                 elementos: [],
             };
             this._Economicservice.addComponent(model).subscribe((response) => {
@@ -132,22 +133,8 @@ export class ComponentesFormComponent implements OnInit {
                     );
                 }
             });
-            this.matDialogRef.close(this.data);
+            this.matDialogRef.close(true);
         }
-    }
-
-    addElements(e: any) {
-        const dialogRef = this._matDialog.open(ElementCardComponent, {
-            autoFocus: false,
-            data: {
-                e,
-                show: true,
-            },
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-            }
-        });
     }
 
     openConfirmationDialog(): void {
@@ -198,4 +185,5 @@ export class ComponentesFormComponent implements OnInit {
             fruit.toLowerCase().includes(filterValue)
         );
     }
+
 }

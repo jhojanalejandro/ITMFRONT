@@ -1,13 +1,13 @@
-import { IDetailProjectFolder } from "./detail-project";
 
 export interface IProjectFolder{
     id?: any;
-    userId: any;
+    userId?: any;
     companyName: string;
     projectName: string;
     descriptionProject: string;
-    execution: boolean;
+    execution: any;
     activate: boolean;
+    enableProject: boolean;
     contractorsCant: number;
     valorContrato: number;
     gastosOperativos: number;
@@ -15,5 +15,17 @@ export interface IProjectFolder{
     noAdicion: string;
     fechaInicioAmpliacion: Date;
     fechaDeTerminacionAmpliacion: Date;
-    detalleContratoDto: IDetailProjectFolder;
+    detalleContratoDto: DetailProjectFolder;
+    numberProject: string;
 }
+
+export interface DetailProjectFolder{
+    id?: any;
+    fechaContrato: Date;
+    fechaFinalizacion: Date;
+    adicion: boolean;
+    tipoContrato: string;
+    idContrato?: any;
+    update: boolean;
+}
+

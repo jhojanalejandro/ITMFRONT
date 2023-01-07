@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    //apiURL: 'https://localhost:44353/',
-    apiURL: 'https://localhost:7163/',
+    apiURL: 'https://localhost:44353/',
+    // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/Add',
     retrieveEndpoint: 'User/retrievePassword',
@@ -38,6 +38,8 @@ export const environment = {
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/UpdateCost',
     GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll/',
+    UpdateStateProjectFolderEndpoint: 'ProjectFolder/UpdateState',
+
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
     GetByIdDetailEndpoint: 'ProjectFolder/GetByIdDetail',

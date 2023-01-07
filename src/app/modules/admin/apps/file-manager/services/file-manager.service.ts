@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
@@ -73,8 +73,11 @@ export class FileManagerService
   
     getAllFolder(folderIds: string | null = null): Observable<Item[]>
     {
-        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint + true;
-        return  this._httpClient.get<Items>(urlEndPoint).pipe(
+        const params = new HttpParams()
+        .set('inProgress', false )
+        .set('tipoModulo', 'planeacion')
+        let urlEndPoint = this.apiUrl+ environment.GetAllProjectFolderEndpoint;
+        return  this._httpClient.get<Items>(urlEndPoint, {params: params}).pipe(
             tap((response: any) => {
         // this._items.next(response);
         // Clone the items

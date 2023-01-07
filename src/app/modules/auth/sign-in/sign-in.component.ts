@@ -8,18 +8,17 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUser } from 'app/layout/common/models/userAuthenticate';
 
 @Component({
-    selector     : 'auth-sign-in',
-    templateUrl  : './sign-in.component.html',
+    selector: 'auth-sign-in',
+    templateUrl: './sign-in.component.html',
     styleUrls: ['./sign-in.component.css'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class AuthSignInComponent implements OnInit
-{
+export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
-    tipoUsuario: any =GlobalConst.TipoUsuario
+    tipoUsuario: any = GlobalConst.TipoUsuario
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
         message: ''
     };
     signInForm: FormGroup;
@@ -33,8 +32,7 @@ export class AuthSignInComponent implements OnInit
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private _router: Router
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -44,32 +42,28 @@ export class AuthSignInComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            email     : [null, [Validators.required, Validators.email]],
-            userType     : [null, Validators.required],
-            password  : [null, Validators.required]
+            email: [null, [Validators.required, Validators.email]],
+            userType: [null, Validators.required],
+            password: [null, Validators.required]
         });
     }
 
-    signIn(): void
-    {
-        debugger
-                // Return if the form is invalid
-        if ( this.signInForm.invalid )
-        {
+    signIn(): void {
+        // Return if the form is invalid
+        if (this.signInForm.invalid) {
             return;
         }
         this.showAlert = false;
-        const useraLogin: IUser={
+        const useraLogin: IUser = {
             username: this.signInForm.value.email,
             password: this.signInForm.value.password,
 
-          };
+        };
 
-        if(this.signInForm.value.userType == 'Contractual'){
+        if (this.signInForm.value.userType == 'Contractual') {
             this.signInForm.disable();
 
             // Hide the alert
@@ -94,43 +88,43 @@ export class AuthSignInComponent implements OnInit
 
                         // Set the alert
                         this.alert = {
-                            type   : 'error',
+                            type: 'error',
                             message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
                         };
 
                         // Show the alert
                         this.showAlert = true;
                     }
-            );
-        }else{
-                    // Sign in
-        this._authService.signInContractor(useraLogin)
-        .subscribe(
-            () => {
-                // Navigate to the redirect url
-                this._router.navigate(['inicio/contratista']);
+                );
+        } else {
+            // Sign in
+            this._authService.signInContractor(useraLogin)
+                .subscribe(
+                    () => {
+                        // Navigate to the redirect url
+                        this._router.navigate(['inicio/contratista']);
 
-            },
-            (response) => {
+                    },
+                    (response) => {
 
-                // Re-enable the form
-                this.signInForm.enable();
+                        // Re-enable the form
+                        this.signInForm.enable();
 
-                // Reset the form
-                this.signInNgForm.resetForm();
+                        // Reset the form
+                        this.signInNgForm.resetForm();
 
-                // Set the alert
-                this.alert = {
-                    type   : 'error',
-                    message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
-                };
+                        // Set the alert
+                        this.alert = {
+                            type: 'error',
+                            message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
+                        };
 
-                // Show the alert
-                this.showAlert = true;
-            }
-    );
+                        // Show the alert
+                        this.showAlert = true;
+                    }
+                );
         }
 
- 
+
     }
 }

@@ -104,7 +104,7 @@ export class NominaComponent implements OnInit, OnDestroy {
 
   getContractsData() {
     // Get the data
-    this._genericService.getAllContract(false).pipe(takeUntil(this._unsubscribeAll))
+    this._genericService.getAllContract(true, 'Nomina').pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         Response.forEach(element => {

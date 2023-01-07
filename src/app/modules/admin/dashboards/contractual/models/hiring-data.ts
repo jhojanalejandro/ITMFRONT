@@ -7,7 +7,6 @@ export interface IHiringData{
     fechaFinalizacionConvenio: Date;
     contrato: string;
     compromiso: string;
-    fechaDeInicioProyectado: Date;
     fechaRealDeInicio: Date;
     actaComite: any;
     numeroActa: string;    

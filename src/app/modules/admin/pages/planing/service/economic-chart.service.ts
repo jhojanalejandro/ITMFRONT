@@ -77,8 +77,11 @@ export class EconomicChartService {
         pagination: InventoryPagination;
         economicChart: EconomicChart[];
     }> {
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint + false;
-        return this._httpClient.get(urlEndPoint).pipe(
+        const params = new HttpParams()
+        .set('inProgress', false )
+        .set('tipoModulo', 'planeacion')
+        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
+        return this._httpClient.get(urlEndPoint, {params: params}).pipe(
             tap((response: any) => {
                 response.forEach(element => {
                     if(element.activate){

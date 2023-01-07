@@ -18,14 +18,16 @@ import { IElements } from '../../../../../pages/planing/models/element';
   selector: 'app-register-contractor',
   templateUrl: './register-data-contractor.component.html',
   styleUrls: ['./register-data-contractor.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: fuseAnimations
 })
 export class ContractorDataRegisterComponent implements OnInit {
   shareData: boolean = false;
+  registerDate: Date = new Date();
+  minDate: Date;
+  maxdate: Date;
   elemento: any = 'elemento';
   componente: any = 'compoente';
   elements: any;
+  cantDayContract: any;
   showDataPoliza: boolean = false;
   registerContractor: IHiringData;
   hiringDataList: IHiringData[] = [];
@@ -39,11 +41,10 @@ export class ContractorDataRegisterComponent implements OnInit {
     message: ''
   };
   showAlert: boolean = false;
-  registerDate = new Date();
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
   formContractor: FormGroup;
-  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaDeInicioProyectado: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null }
+  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null }
   constructor(
     private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
@@ -52,29 +53,29 @@ export class ContractorDataRegisterComponent implements OnInit {
     public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
-    if (this.datos.id != null && this.datos.id >0 ) {
+    if (this.datos.id != null && this.datos.id > 0) {
       this.getHiring();
+      this.shareData = true;
       if (this.datos.elementId != null && this.datos.elementId != 0 && this.datos.idContractors.length == 0) {
         this.getElementById(this.datos.elementId);
         this.getComponentById(this.datos.componenteId);
-      }else if( this.datos.idContractors.length > 0){
-        this.shareData = true;
-      }
-    }else if(this.datos.idContractors.length == 0){
+      } 
+    } else if (this.datos.idContractors.length == 0) {
       Swal.fire(
         'Ei!',
         'Si quires agregar información compartida debes seleccionar regisrtos',
         'question'
-    );
-    this.matDialogRef.close(true);
-    }else if(this.datos.idContractors.length == 0 && this.datos.id == 0){
+      );
+      this.matDialogRef.close(true);
+    } else if (this.datos.idContractors.length == 0 && this.datos.id == 0) {
       Swal.fire(
         'Ei!',
         'Hay un error al ingresar, intenta de nuevo',
         'warning'
-    );
-    this.matDialogRef.close(true);
+      );
+      this.matDialogRef.close(true);
     }
+
   }
 
   ngOnInit(): void {
@@ -84,7 +85,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       compromiso: new FormControl(this.hinringData.compromiso),
       rubro: new FormControl(this.hinringData.rubro),
       nombreRubro: new FormControl(this.hinringData.nombreRubro),
-      fechaInicioProyectado: new FormControl(this.hinringData.fechaDeInicioProyectado, Validators.required),
       fechaInicioReal: new FormControl(this.hinringData.fechaRealDeInicio, Validators.required),
       numeroActa: new FormControl(this.hinringData.numeroActa),
       fechaComite: new FormControl(this.hinringData.fechaDeComite),
@@ -111,21 +111,20 @@ export class ContractorDataRegisterComponent implements OnInit {
     } else {
       this.formContractor.value.requierePoliza = false;
     }
-    let dataAdmin =  this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
+    let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
     if (this.formContractor.value.cuentabancaria == null) {
       this.formContractor.value.cuentabancaria = '0'
     }
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    if(this.datos.idContractors.length > 0){
+    if (this.datos.idContractors.length > 0) {
       for (let index = 0; index < this.datos.idContractors.length; index++) {
         this.hiringDataList.push({
           userId: this._auth.accessId,
           contractorId: this.datos.idContractors[index],
           contrato: 'vacio',
           compromiso: 'vacio',
-          fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
           fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
           numeroActa: this.formContractor.value.numeroActa,
           fechaDeComite: this.formContractor.value.fechaComite,
@@ -144,17 +143,14 @@ export class ContractorDataRegisterComponent implements OnInit {
           rubro: this.formContractor.value.rubro,
           nombreRubro: this.formContractor.value.nombreRubro,
           cdp: this.formContractor.value.cdp,
-        });        
+        });
       }
-      console.log(this.hiringDataList);
-      
-    }else{
+    } else {
       this.hiringDataList = [{
         userId: this._auth.accessId,
         contractorId: this.datos.id,
         contrato: 'vacio',
         compromiso: 'vacio',
-        fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
         fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
         numeroActa: this.formContractor.value.numeroActa,
         fechaDeComite: this.formContractor.value.fechaComite,
@@ -194,7 +190,7 @@ export class ContractorDataRegisterComponent implements OnInit {
             message: 'ERROR EN LA INFORMACION'
           };
           console.log(response);
-          
+
           Swal.fire('Error', 'Información no Actualizada!', 'error');
           // Show the alert
           this.showAlert = true;
@@ -213,14 +209,13 @@ export class ContractorDataRegisterComponent implements OnInit {
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    let dataAdmin =  this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
+    let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
 
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
       contrato: 'vacio',
       compromiso: 'vacio',
-      fechaDeInicioProyectado: this.formContractor.value.fechaInicioProyectado,
       fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
       numeroActa: this.formContractor.value.numeroActa,
       fechaDeComite: this.formContractor.value.fechaComite,
@@ -255,7 +250,7 @@ export class ContractorDataRegisterComponent implements OnInit {
           this.formContractor.enable();
           // Set the alert
           console.log(response);
-          
+
           Swal.fire('Error', 'Información no Actualizada!', 'error');
 
           // Show the alert
@@ -289,6 +284,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       .getElementoById(id)
       .subscribe((response) => {
         this.elemento = response.nombreElemento
+        this.cantDayContract = response.cantidadDias
       });
   }
   getElements = () => {
@@ -296,6 +292,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       .getElementoComponente(this.componentselectId)
       .subscribe((response) => {
         this.elements = response;
+
       });
     let asignar: AsignmentData = {
       id: this.componentselectId,
@@ -315,6 +312,9 @@ export class ContractorDataRegisterComponent implements OnInit {
       type: 'Elemento',
       idContractor: this.datos.id
     }
+    debugger
+    let dataElement = this.elements.find(x => x.id === this.elementselectId);
+    this.cantDayContract = dataElement.cantidadDias;
     this._economicService.asignmentData(asignar).subscribe((response) => {
       if (response) {
         this.sendEconomicdataContractor();
@@ -355,10 +355,10 @@ export class ContractorDataRegisterComponent implements OnInit {
       });
   }
 
-  requiere(event){
-    if(event.value==='Si'){
+  requiere(event) {
+    if (event.value === 'Si') {
       this.showDataPoliza = true;
-    }else{
+    } else {
       this.showDataPoliza = false;
     }
   }
@@ -370,4 +370,17 @@ export class ContractorDataRegisterComponent implements OnInit {
         this.userAdmins = response;
       });
   }
+
+  dateChange(event) {
+    this.minDate = event.value;  
+    var date2:any = new Date(this.minDate);
+    let day =  this.cantDayContract * 24;
+    var numberOfMlSeconds = date2.getTime();
+    console.log(date2);
+    var addMlSeconds = (1000 * 60 * 60 * day);
+    this.maxdate = new Date(numberOfMlSeconds + addMlSeconds);
+    console.log(this.maxdate);
+    this.ref.markForCheck();
+  }
+
 }

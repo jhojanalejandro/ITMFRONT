@@ -17,9 +17,9 @@
             <br>
             <form [formGroup]="formContractor"
                 class="flex flex-col flex-0 items-start w-full p-4 sm:p-8 space-y-6 overflow-y-auto">
-                <div class="nationality" *ngIf="shareData">
+                <div class="nationality" >
                     <mat-form-field class="hiring" appearance="outline">
-                        <mat-label>{{elemento}}</mat-label>
+                        <mat-label>{{componente}}</mat-label>
                         <mat-select formControlName="elemento" [(ngModel)]="componentselectId"
                             (selectionChange)="getElements()" name="componente">
                             <mat-option *ngFor="let componente of componentes" [value]="componente.id">
@@ -29,7 +29,7 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                     </mat-form-field>
-                    <mat-form-field class="hiring" appearance="outline">
+                    <mat-form-field  class="hiring" appearance="outline">
                         <mat-label>{{elemento}}</mat-label>
                         <mat-select formControlName="componente" [(ngModel)]="elementselectId"
                             (selectionChange)="asignElement()" name="elemento">
@@ -40,63 +40,35 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                     </mat-form-field>
-                    <mat-form-field class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
                         <mat-label>CDP</mat-label>
                         <input type="text" id="cdp" [(ngModel)]="hinringData.cdp" formControlName="cdp"
                             autocomplete="off" matInput placeholder="CDP">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                     </mat-form-field>
                 </div>
-                <div class="nationality" *ngIf="shareData">
-                    <mat-form-field class="hiring" appearance="outline">
+                <div class="nationality" >
+                    <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
                         <mat-label>Rubro</mat-label>
                         <input type="text" id="rubro" [(ngModel)]="hinringData.rubro" formControlName="rubro"
                             autocomplete="off" matInput placeholder="rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
                         <mat-label>Nombre Rubro</mat-label>
                         <input type="text" id="nombreRubro" [(ngModel)]="hinringData.nombreRubro"
                             formControlName="nombreRubro" autocomplete="off" matInput placeholder="Nombre Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('nombreRubro').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
                         <mat-label>Numero Acta</mat-label>
                         <input matInput id="numeroActa" [(ngModel)]="hinringData.numeroActa" formControlName="numeroActa"
                             autocomplete="off" matInput placeholder="numeroActa">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('numeroActa').hasError('required')">
-                            El Campo Numero Acta es requerido
-                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="nationality">
-                    <mat-form-field class="hiring" (click)="pickerIP.open()" appearance="outline">
-                        <mat-label>Fecha Inicio Proyectado</mat-label>
-                        <input matInput id="fechaInicioProyectado" autocomplete="off"
-                            formControlName="fechaInicioProyectado" [(ngModel)]="hinringData.fechaDeInicioProyectado"
-                            [matDatepicker]="pickerIP">
-                        <mat-datepicker #pickerIP></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerIP"></mat-datepicker-toggle>
-                        <mat-error *ngIf="formContractor.get('fechaInicioProyectado').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field (click)="pickerIR.open()" class="hiring" appearance="outline">
-                        <mat-label>Fecha Inicio Real</mat-label>
-                        <input matInput id="fechaInicioReal" autocomplete="off"
-                            [(ngModel)]="hinringData.fechaRealDeInicio" formControlName="fechaInicioReal"
-                            [matDatepicker]="pickerIR">
-                        <mat-datepicker #pickerIR></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerIR"></mat-datepicker-toggle>
-                        <mat-error *ngIf="formContractor.get('fechaInicioReal').hasError('required')">
-                            Este Campo es requerido
-                        </mat-error>
-                    </mat-form-field>
                     <mat-form-field (click)="pickerFC.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Comite</mat-label>
                         <input matInput id="fechaComite" [(ngModel)]="hinringData.fechaDeComite" autocomplete="off"
@@ -107,11 +79,20 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                </div>
-                <div class="option">
+                    <mat-form-field (click)="pickerIR.open()" class="hiring" appearance="outline">
+                        <mat-label>Fecha Inicio Real</mat-label>
+                        <input matInput id="fechaInicioReal" [min]="registerDate" (dateChange)="dateChange($event)" autocomplete="off"
+                            [(ngModel)]="hinringData.fechaRealDeInicio" formControlName="fechaInicioReal"
+                            [matDatepicker]="pickerIR">
+                        <mat-datepicker #pickerIR></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerIR"></mat-datepicker-toggle>
+                        <mat-error *ngIf="formContractor.get('fechaInicioReal').hasError('required')">
+                            Este Campo es requerido
+                        </mat-error>
+                    </mat-form-field>
                     <mat-form-field (click)="pickerFCo.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Finalización Convenio</mat-label>
-                        <input matInput id="fechaFinalizacionConvenio" autocomplete="off"
+                        <input matInput id="fechaFinalizacionConvenio" [min]="minDate" [max]="maxdate" autocomplete="off"
                             [(ngModel)]="hinringData.fechaFinalizacionConvenio"
                             formControlName="fechaFinalizacionConvenio" [matDatepicker]="pickerFCo">
                         <mat-datepicker #pickerFCo></mat-datepicker>
@@ -121,6 +102,7 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
+    
                 <div class="nationality">
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Requiere poliza Arl</mat-label>

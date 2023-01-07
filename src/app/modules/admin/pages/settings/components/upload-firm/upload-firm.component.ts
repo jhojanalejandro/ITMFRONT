@@ -63,7 +63,6 @@ export class UploadFirmComponent implements OnInit {
       typeFile: new FormControl(null, Validators.required),
       description: new FormControl(null, Validators.required),
     });
-    this.getContractsData();
 
   }
 
@@ -163,15 +162,7 @@ export class UploadFirmComponent implements OnInit {
         this.showAlert = true;
       });
   }
-  getContractsData() {
-    // Get the data
-    this._gerenicService.getAllContract(true)
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((data) => {
-        this.contratos = data;
 
-      });
-  }
 
   uploadPdfFile(event) {
 

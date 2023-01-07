@@ -12,7 +12,19 @@
             <!-- Card form -->
             <form class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
                 [formGroup]="elementForm">
-                <div >
+                <div class="folder">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Consecutivo</mat-label>
+                        <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text" formControlName="consecutivo" autocomplete="off" matInput
+                            placeholder="Consecutivo"> 
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                
+                        <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
+                            El Campo actividad es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="folder">
                     <mat-form-field [hidden]="showDate" appearance="outline">
                         <mat-label>Modificacion</mat-label>
                         <mat-select [formControlName]="'modificacion'" [(ngModel)]="elementselectId" (selectionChange)="selectmodificacion()" name="modificacion">
@@ -49,17 +61,7 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                         <mat-error *ngIf="elementForm.get('modificacion').hasError('required')">
-                            El Campo arl es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-                        <mat-label>Consecutivo</mat-label>
-                        <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text" formControlName="consecutivo" autocomplete="off" matInput
-                            placeholder="Consecutivo"> 
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
-                
-                        <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
-                            El Campo actividad es requerido
+                            El Campo Tipo Modificación es requerido
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -94,7 +96,7 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div>
+                <div class="folder">
                     <mat-form-field appearance="outline">
                         <mat-label>Nombre Cpc</mat-label>
                         <input type="mail" id="nombreCpc" [value]="elemento.nombreCpc" formControlName="nombreCpc"
@@ -124,7 +126,7 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div>
+                <div class="folder">
                     <mat-form-field appearance="outline">
                         <mat-label>Valor Unidad</mat-label>
                         <input type="text" value="{{elemento.valorUnidad | number :'1.0-0'}}" id="unitValue"
@@ -150,7 +152,7 @@
                         </mat-icon>
                     </mat-form-field>
                 </div>
-                <div>
+                <div class="folder">
                     <mat-form-field [hidden]="totalCalculate" appearance="outline">
                         <mat-label>Valor por dia contratista</mat-label>
                         <input type="text" value="{{elemento.valorPorDiaContratista | number:'1.0-0'}}" id="valorDiaContratista"
@@ -197,7 +199,7 @@
         <mat-dialog-actions align="end">
             <button mat-flat-button type="button" [color]="'warn'" [mat-dialog-close]="false">Cancelar</button>
             <button class="m-5 bg-green-600" mat-flat-button type="button" (click)="calculate()">Calcular</button>
-            <button class="m-2" mat-flat-button [color]="'primary'" type="submit" [mat-dialog-close]="true"
+            <button class="m-2" mat-flat-button [color]="'primary'" type="submit"
                 (click)="addElement()">Aceptar</button>
         </mat-dialog-actions>
     </div>

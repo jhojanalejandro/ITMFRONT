@@ -165,7 +165,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement() {
-        debugger
         let modificacion: any;
         if (this.elementForm.value.modificacion === 'Si') {
             modificacion = true;
@@ -180,13 +179,13 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             cantidadDias: this.elementForm.value.cantDay,
             valorUnidad: this.elementForm.value.unitValue,
             valorTotal: this.totalValue,
-            valorPorDia: this.elementForm.value.unitValueDay,
-            valorPorDiaContratista: this.elementForm.value.valorDiaContratista,
+            valorPorDia: this.elemento.valorPorDia,
+            valorPorDiaContratista:  this.elemento.valorPorDiaContratista,
             valorTotalContratista: this.totalValueContratista,
             cpc: this.elementForm.value.cpc,
             nombreCpc: this.elementForm.value.nombreCpc,
             modificacion: modificacion,
-            tipoElemento: this.elementForm.value.tipoElemento,
+            tipoElemento: 'corriente',
             recursos: this.elementForm.value.recursos,
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
@@ -197,6 +196,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire('Exitoso', 'Registrado Exitosamente!', 'success');
+                this.matDialogRef.close(true);
             }
             this._changeDetectorRef.detectChanges();
         }, (response) => {
@@ -205,7 +205,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             
             swal.fire('error', 'Error en el registro!', 'error');
         });
-        this.matDialogRef.close(true);
     }
 
     calculate = () => {

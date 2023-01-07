@@ -27,7 +27,7 @@
         <div class="folder pt-8">
             <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Nombre Empresa</mat-label>
-                <input type="text"  id="companyName" formControlName="companyName" autocomplete="off" matInput placeholder="Nombre empresa" >
+                <input type="text+"  id="companyName" formControlName="companyName" autocomplete="off" matInput placeholder="Nombre empresa" >
                 <mat-icon
                 class="icon-size-5"
                 matSuffix
@@ -48,9 +48,9 @@
                     El Campo Proyecto es requerido
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="hiring" appearance="outline">
+            <mat-form-field *ngIf="editData" class="hiring" appearance="outline">
                 <mat-label >Tipo</mat-label>
-                <mat-select [formControlName]="'updateData'" name="ejecucion">
+                <mat-select [formControlName]="'updateData'" name="updateData">
                     <mat-option *ngFor="let exe of editarData" [value]="exe.viewValue">
                         {{exe.viewValue}}
                     </mat-option>
@@ -59,14 +59,62 @@
                 class="icon-size-5"
                 matSuffix
                 [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
-                <mat-error *ngIf="formProject.get('ejecucion').hasError('required')">
+                <mat-error *ngIf="formProject.get('updateData').hasError('required')">
                     Este campo es requerido
                 </mat-error>
             </mat-form-field> 
         </div>
         <div class="folder pt-2">
-
             <mat-form-field class="hiring" appearance="outline">
+                <mat-label>Numero Contrato</mat-label>
+                <input type="text"  id="numberProject" formControlName="numberProject" autocomplete="off" matInput placeholder="Numero Contrato" >
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                <mat-error *ngIf="formProject.get('numberProject').hasError('required')">
+                    Este campo es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field (click)="pickerContrato.open()"  class="hiring" appearance="outline">
+                <mat-label>Fecha Contrato</mat-label>
+                <input matInput id="fechaContrato" [min]="registerDate" (dateChange)="dateChange($event)" autocomplete="off" formControlName="fechaContrato"
+                    [matDatepicker]="pickerContrato">
+                <mat-datepicker #pickerContrato ></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>
+                <mat-error *ngIf="formProject.get('fechaContrato').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
+                <mat-label>Fecha de Finalizacion</mat-label>
+                <input matInput id="fechaFinalizacion" [min]="minDate" autocomplete="off" formControlName="fechaFinalizacion"
+                    [matDatepicker]="pickerF">
+                <mat-datepicker #pickerF></mat-datepicker>
+                <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
+                <mat-error *ngIf="formProject.get('fechaFinalizacion').hasError('required')">
+                    Este Campo es requerido
+                </mat-error>
+            </mat-form-field>
+        </div>
+ 
+        <div class="folder">
+            <mat-form-field *ngIf="editData" class="hiring" appearance="outline">
+                <mat-label >Tipo Modificacion</mat-label>
+                <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion">
+                    <mat-option *ngFor="let exe of tipoModificacion" [value]="exe.viewValue">
+                        {{exe.viewValue}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                <mat-error *ngIf="formProject.get('tipoModificacion').hasError('required')">
+                    Este campo es requerido
+                </mat-error>
+            </mat-form-field> 
+            <mat-form-field *ngIf="editData" class="hiring" appearance="outline">
                 <mat-label >Estado contrato</mat-label>
                 <mat-select [formControlName]="'ejecucion'" name="ejecucion">
                     <mat-option *ngFor="let exe of ejecucion" [value]="exe.viewValue">
@@ -82,45 +130,6 @@
                 </mat-error>
             </mat-form-field> 
             <mat-form-field *ngIf="editData" class="hiring" appearance="outline">
-                <mat-label >Tipo Modificacion</mat-label>
-                <mat-select [formControlName]="'tipoModificacion'" name="ejecucion">
-                    <mat-option *ngFor="let exe of tipoModificacion" [value]="exe.viewValue">
-                        {{exe.viewValue}}
-                    </mat-option>
-                </mat-select>
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
-                <mat-error *ngIf="formProject.get('ejecucion').hasError('required')">
-                    Este campo es requerido
-                </mat-error>
-            </mat-form-field> 
-            <mat-form-field (click)="pickerContrato.open()" class="hiring" appearance="outline">
-                <mat-label>Fecha Contrato</mat-label>
-                <input matInput id="fechaContrato" (change)="dateChange()" [min]="registerDate" autocomplete="off" formControlName="fechaContrato"
-                    [matDatepicker]="pickerContrato">
-                <mat-datepicker #pickerContrato></mat-datepicker>
-                <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>
-                <mat-error *ngIf="formProject.get('fechaContrato').hasError('required')">
-                    Este Campo es requerido
-                </mat-error>
-            </mat-form-field>
-        </div>
- 
-        <div class="folder">
-
-            <mat-form-field (click)="pickerF.open()" class="hiring" appearance="outline">
-                <mat-label>Fecha de Finalizacion</mat-label>
-                <input matInput id="fechaFinalizacion" [min]="registerDate" autocomplete="off" formControlName="fechaFinalizacion"
-                    [matDatepicker]="pickerF">
-                <mat-datepicker #pickerF></mat-datepicker>
-                <mat-datepicker-toggle matSuffix [for]="pickerF"></mat-datepicker-toggle>
-                <mat-error *ngIf="formProject.get('fechaFinalizacion').hasError('required')">
-                    Este Campo es requerido
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field class="hiring" appearance="outline">
                 <mat-label>Numero Adicion</mat-label>
                 <input type="text" id="noAdicion" 
                     formControlName="noAdicion" autocomplete="off" matInput placeholder="no Adicion">
@@ -129,7 +138,11 @@
                     El Campo no Adicion es requerido
                 </mat-error>
             </mat-form-field>
-            <mat-form-field (click)="pickerIA.open()" class="hiring" appearance="outline">
+
+        </div>
+  
+        <div class="folder">
+            <mat-form-field *ngIf="editData" (click)="pickerIA.open()" class="hiring" appearance="outline">
                 <mat-label>Fecha Inicio Ampliacion</mat-label>
                 <input matInput id="fechaInicioAmpliacion" autocomplete="off"
                     formControlName="fechaInicioAmpliacion"
@@ -140,10 +153,7 @@
                     Este Campo es requerido
                 </mat-error>
             </mat-form-field>
-        </div>
-  
-        <div class="folder">
-            <mat-form-field (click)="pickerTA.open()" class="hiring" appearance="outline">
+            <mat-form-field *ngIf="editData" (click)="pickerTA.open()" class="hiring" appearance="outline">
                 <mat-label>Fecha terminacion Ampliacion</mat-label>
                 <input matInput id="fechaDeTerminacionAmpliacion" autocomplete="off"
                     formControlName="fechaDeTerminacionAmpliacion" [matDatepicker]="pickerTA">
@@ -172,6 +182,6 @@
 </div>
   <mat-dialog-actions align="end">
     <button mat-stroked-button type="button" [mat-dialog-close]="true" class="text-warn-500">Cancelar</button>
-    <button mat-flat-button [color]="'primary'" color="primary" [mat-dialog-close]="true" *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
+    <button mat-flat-button [color]="'primary'" color="primary"  *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
     <button mat-flat-button [color]="'primary'" type="submit"  [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Aceptar</button>
   </mat-dialog-actions>

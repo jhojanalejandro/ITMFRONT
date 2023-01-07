@@ -14,9 +14,9 @@ import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { RegisterProjectFolderComponent } from 'app/modules/admin/pages/planing/components/register-project-folder/register-project-folder.component';
 @Component({
-  selector: 'app-upload',
-  styleUrls: ['./upload-data.component.scss'],
-  templateUrl: './upload-data.component.html',
+  selector: 'app-contracts-list-contarctual',
+  styleUrls: ['./contracts-list.component.scss'],
+  templateUrl: './contracts-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -122,10 +122,6 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     this.cdref.detectChanges();
   }
 
-  /**
-   * On init
-   */
-
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -149,7 +145,7 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   }
 
   getContractsData() {
-    this._gerenicService.getAllContract(true).pipe(takeUntil(this._unsubscribeAll))
+    this._gerenicService.getAllContract(true, 'Contractual').pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         this.dataSource.sort = this.sort;

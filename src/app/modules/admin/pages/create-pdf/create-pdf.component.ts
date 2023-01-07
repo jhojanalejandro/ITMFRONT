@@ -15,7 +15,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 export class CreatePdfComponent implements OnInit {
     //@ViewChild('pdfTable') pdfTable: ElementRef;
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 
     public downloadAsPDFs() {
         //const pdfTable = this.pdfTable.nativeElement;
@@ -73,7 +73,7 @@ export class CreatePdfComponent implements OnInit {
                                     alignment: 'center',
                                 },
                             ],
-                            ['', '02/01/2023', '3'],
+                            ['', '02/01/2023', '3'],/*  */
                         ],
                     },
                 },
