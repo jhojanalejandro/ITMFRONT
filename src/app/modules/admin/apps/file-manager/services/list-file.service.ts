@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
@@ -43,16 +43,15 @@ export class FileListManagerService
     /**
      * Get item by id
      */
-    getItemById(idC: any | null = null): Observable<Item>
+    getItemById(contractId: string | null = null,contractorId: any | null = null, folderId: string| null = null): Observable<Item>
     {
-        let arr = idC.split('/');
-        const GetFile: any={ 
-            contractorId: arr[0],
-            folderId: arr[1]
-        }
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('folderId', folderId)
+        .set('contractId', contractId);
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl+ environment.GetAllFileByIdEndpoint;
-        return this._httpClient.post<any>(urlEndPoint,GetFile).pipe(
+        let urlEndPoint = this.apiUrl+ environment.GetAllFileByFolderEndpoint;
+        return this._httpClient.get<any>(urlEndPoint, {params: params}).pipe(
             tap((items) => {
                 // Update the item
                 const item = [...items.files] = items || null;
@@ -63,7 +62,7 @@ export class FileListManagerService
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + idC + '!');
+                    return throwError('Could not found the item with id of ' + contractorId + '!');
                 }
 
                 return of(item);

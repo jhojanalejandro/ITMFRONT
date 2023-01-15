@@ -26,7 +26,6 @@
                                 <div class="flex items-center space-x-2">
                                     <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">Inicio
                                     </a>
-                                    <div class="">/</div>
                                     <ng-container *ngFor="let path of items.files; let last = last; trackBy: trackByFn">
                                         <ng-container *ngIf="!last">
                                             <a class="text-primary cursor-pointer"
@@ -54,13 +53,25 @@
                     </div>
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0">
-                        <mat-form-field  class="full-width" (click)="picker.open()" appearance="outline">
-                            <mat-label>Selecciona La Fecha</mat-label>
-                            <input matInput [value]="dateSearch" (dateInput)="searchByDate()" [matDatepicker]="picker">
-                            <mat-hint>MM/DD/YYYY</mat-hint>
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker startView="year"></mat-datepicker>
+                        <mat-form-field  class="hiring" appearance="outline">
+                            <mat-label >Tipo Documento</mat-label>
+                            <mat-select (selectionChange)="tipoSeleeccionado($event)" name="typeFile">
+                                <mat-option  *ngFor="let docuemnto of tipoDocumentos" [value]="docuemnto.viewValue">
+                                    {{docuemnto.viewValue}}
+                                </mat-option>
+                            </mat-select>
                         </mat-form-field>
+                        <mat-form-field (click)="dp.open()" class="full-width" appearance="outline">
+                            <mat-label>Selecciona La Fecha</mat-label>
+                            <input matInput [matDatepicker]="dp" placeholder="Month and Year" [formControl]="date">
+                            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                            <mat-datepicker #dp
+                                            startView="multi-year"
+                                            (yearSelected)="chosenYearHandler($event)"
+                                            (monthSelected)="chosenMonthHandler($event, dp)"
+                                            panelClass="example-month-picker">
+                            </mat-datepicker>
+                          </mat-form-field>
                         <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>

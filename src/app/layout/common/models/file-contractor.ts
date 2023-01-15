@@ -11,7 +11,8 @@ export interface IFileContractor{
     modifyDate: Date;
     passed: boolean;
     typeFilePayment: string;
-    mont: string;
+    monthPayment: string;
+    FolderId: string;
 }
 
 export interface IDetailFile{

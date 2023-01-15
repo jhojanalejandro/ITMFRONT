@@ -6,15 +6,44 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from '../../services/home-contractor.service';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+import * as _moment from 'moment';
+import {default as _rollupMoment, Moment} from 'moment';
 import { FileContractor } from '../../models/fileContractor';
+import { MatDatepicker } from '@angular/material/datepicker';
+
+const moment = _rollupMoment || _moment;
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
-  styleUrls: ['./upload-file.component.scss']
+  styleUrls: ['./upload-file.component.scss'],
+  providers: [
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    },
+
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ],
 })
 export class UploadFileContractorComponent implements OnInit {
-
+  date = new FormControl(moment());
+  monthYear: any; 
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file: any = null; // Variable to store file
@@ -54,7 +83,8 @@ export class UploadFileContractorComponent implements OnInit {
       filesName: new FormControl(null, Validators.required),    
       typeDoc: new FormControl(null, Validators.required), 
       typeFile: new FormControl(null, Validators.required), 
-      description: new FormControl(null, Validators.required), 
+      description: new FormControl(null, Validators.required),
+       
     });
 
   }
@@ -90,7 +120,6 @@ export class UploadFileContractorComponent implements OnInit {
   }
   
   addFileContractor(event) {
-
     const registerFile: FileContractor={
       userId: this._auth.accessId,
       contractorId: this._auth.accessId,
@@ -102,7 +131,7 @@ export class UploadFileContractorComponent implements OnInit {
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
       filedata: this.base64Output,
-      mont: new  Date('mm'),
+      mont: this.monthYear,
       passed: true,
       DetailFileContractor: [] 
     };  
@@ -170,5 +199,20 @@ export class UploadFileContractorComponent implements OnInit {
     return result;
   }
 
+  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value;
+    let month = normalizedMonth.month() + 1;
+    ctrlValue.month(normalizedMonth.month());
+    this.monthYear += '/'+month;
+    this.date.setValue(ctrlValue);
+    datepicker.close();
+  }
+
+  chosenYearHandler(normalizedYear: Moment) {
+    const ctrlValue = this.date.value;
+    this.monthYear = normalizedYear.year();
+    ctrlValue.year(normalizedYear.year());
+    this.date.setValue(ctrlValue);
+  }
 
 }

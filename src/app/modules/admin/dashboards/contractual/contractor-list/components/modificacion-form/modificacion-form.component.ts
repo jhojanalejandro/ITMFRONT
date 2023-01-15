@@ -45,7 +45,7 @@ export class ModificacionFormComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
-    disableField:boolean = true;
+    disableField: boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     elementos: IElements[] = [];
     allelementos: string[] = [
@@ -93,19 +93,19 @@ export class ModificacionFormComponent implements OnInit {
 
     ngOnInit(): void {
         console.log(this._data.data.elementId);
-        if(this._data.data.elementId != 0){
+        if (this._data.data.elementId != 0) {
             this.getDataElemento();
             this.getDateAdiction();
-        }else{
+        } else {
             swal.fire(
-                'error',
-                'Debes Asignar un elemento al contratista', 'error'
+                'precaución',
+                'El contratista debe tener un elemento asignado', 'warning'
             );
-        this._router.navigateByUrl('dashboards/lista-contratistas/'+this._data.data.contractId);
-        this.matDialogRef.close();
-    }
+            this._router.navigateByUrl('dashboards/lista-contratistas/' + this._data.data.contractId);
+            this.matDialogRef.close();
+        }
 
-        
+
         this.elementForm = this._formBuilder.group({
             contractorCant: new FormControl(this.elemento.cantidadContratistas, Validators.required),
             cantDay: new FormControl(this.elemento.cantidadDias, Validators.required),
@@ -227,9 +227,9 @@ export class ModificacionFormComponent implements OnInit {
     };
 
     selectmodificacion() {
-        if(this.elementselectId === 'Si'){
+        if (this.elementselectId === 'Si') {
             this.showDate = false;
-        }else{
+        } else {
             this.showDate = true;
         }
 
@@ -248,14 +248,15 @@ export class ModificacionFormComponent implements OnInit {
     getDateAdiction() {
         this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.data.contractId, true);
     }
-    getDataElemento(){
-            this._economicService.getElementoById(this._data.data.elementId).subscribe((resp) => {
-                if(resp.recursos == 0){
-                    swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
-                    this.matDialogRef.close();
-                }else{
-                    this.elemento = resp;
-                }
-            } )
+    getDataElemento() {
+        debugger
+        this._economicService.getElementoById(this._data.data.elementId).subscribe((resp) => {
+            if (resp.recursos == 0) {
+                swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
+                this.matDialogRef.close();
+            } else {
+                this.elemento = resp;
+            }
+        })
     }
 }

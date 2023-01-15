@@ -112,14 +112,15 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.items.filter = filterValue;
         // return this.dataRandom.number.find(number => number === event)
     }
-    openDialog() {
+    uploadFile() {
         //this.validateDinamycKey();
         const dialogRef = this._matDialog.open(UploadFileComponent, {
             autoFocus: false,
             data: {
                 show: false,
                 split: true,
-                contractorId: this.data
+                contractorId: this.data,
+                folderId: '1'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {

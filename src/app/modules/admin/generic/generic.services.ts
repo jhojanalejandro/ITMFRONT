@@ -36,11 +36,10 @@ export class GenericService
     }
 
     UpdateStateProjectFolder(id: number) {
-        debugger
         const params = new HttpParams()
         .set('id', id);
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateStateProjectFolderEndpoint;
-        return this._httpClient.post<any>(urlEndpointGenerate, {params: params});
+        return this._httpClient.get<any>(urlEndpointGenerate, {params: params});
     }
 
 

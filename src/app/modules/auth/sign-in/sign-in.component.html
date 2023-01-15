@@ -64,7 +64,7 @@
                     [formGroup]="signInForm"
                     #signInNgForm="ngForm">
 
-                    <mat-form-field  class="hiring" appearance="outline">
+                    <mat-form-field  class="w-full" appearance="outline">
                         <mat-label >Tipo de usuario</mat-label>
                         <mat-select formControlName="userType"   name="contrato">
                             <mat-option *ngFor="let usuario of tipoUsuario" [value]="usuario.viewValue">

@@ -31,7 +31,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorListComponent implements OnInit, OnDestroy {
-  id: any;
+  contractId: any;
   data: any;
   userName: any;
   value: any;
@@ -92,8 +92,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 */
   ngOnInit(): void {
     this.userName = this.auth.accessName
-    this.id = this.router.snapshot.paramMap.get('id') || 'null';
-    this.getDataContractor(this.id);
+    this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
+    this.getDataContractor(this.contractId);
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -172,7 +172,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;
       this.contractors = Response;
-    });
+    },(resp =>{
+      console.log(resp);
+      
+    }));
 
   }
   isAllSelected() {
@@ -184,7 +187,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
   masterToggle() {
     if (this.isAllSelected()) {
-
       this.selection.clear();
       return;
     }
@@ -218,7 +220,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
             swal.fire('Bien', 'Contratista desactivado Exitosamente!', 'success');
 
           }
-          this.getDataContractor(this.id);
+          this.getDataContractor(this.contractId);
 
         },
           (response) => {
@@ -232,7 +234,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     // this.selection.selected.forEach(element => {
 
     // });
-    let ids: any = { 'idContrato': this.id, 'idContratistas': this.selection.selected }
+    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.selection.selected }
     this._contractorListService.sendmailsAccounts(ids).subscribe((Response) => {
       console.log(Response);
 
@@ -251,7 +253,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
     dialogModificacion.afterClosed().subscribe((result) => {
       if (result) {
-        this.getDataContractor(this.id);
+        this.getDataContractor(this.contractId);
       }
     });
   }
@@ -263,11 +265,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       });
     }
     const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
-      width: '900px',
       autoFocus: false,
       data: {
         idUser: this.auth.accessId,
-        contractId: data.contractId,
+        contractId: this.contractId,
         id: data.id,
         componenteId: data.componenteId,
         elementId: data.elementId,
@@ -276,8 +277,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getDataContractor(this.id);
+        this.getDataContractor(this.contractId);
       }
+      this.selection.clear();
       this.listId = [];
     });
 
@@ -293,7 +295,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   activateContarct(){
-    this._genericService.UpdateStateProjectFolder(this.id).subscribe((resp) =>{
+    this._genericService.UpdateStateProjectFolder(this.contractId).subscribe((resp) =>{
       if(resp){
         swal.fire('Bien', 'Contrato activado exitosamente!', 'success');
       }else{

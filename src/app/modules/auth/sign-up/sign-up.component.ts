@@ -70,7 +70,7 @@ export class AuthSignUpComponent implements OnInit
             userPassword: this.signUpForm.value.password,
             rollId: 7,
             avatar: 'vacio',
-            Professionalposition: this.signUpForm.value.professional,
+            professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
             phoneNumber: this.signUpForm.value.phoneNumber.toString(),
             identification: this.signUpForm.value.identification

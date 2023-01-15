@@ -1,5 +1,6 @@
 export interface AsignmentData{
+    contractId: string;
     id: any;
-    idContractor: string;
+    idContractor: string[];
     type: string;   
 }

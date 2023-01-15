@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
@@ -66,13 +66,12 @@ export class HomeContractorService
     getFileById(idC: any | null = null): Observable<any>
     {
         let arr = idC.split('/');
-        const GetFile: any={ 
-            contractorId: arr[0],
-            contractId: arr[1]
-        }
+        const params = new HttpParams()
+        .set('contractorId', arr[0] )
+        .set('contractId', arr[1]);
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl+ environment.GetAllFileByIdEndpoint;
-        return this._httpClient.post<any>(urlEndPoint,GetFile).pipe(
+        let urlEndPoint = this.apiUrl+ environment.GetAllFileByContractEndpoint;
+        return this._httpClient.get<any>(urlEndPoint, {params: params}).pipe(
             tap((items) => {
                 // Update the item
                 const item = [...items.files] = items || null;

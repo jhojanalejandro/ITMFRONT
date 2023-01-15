@@ -1,17 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import { Subject, takeUntil} from 'rxjs';
 import swal from 'sweetalert2';
 
 @Component({
-    selector       : 'settings-team',
-    templateUrl    : './team.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'settings-team',
+    templateUrl: './team.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsTeamComponent implements OnInit
-{
+export class SettingsTeamComponent implements OnInit {
+    durationInSeconds = 5;
+
     members: any[];
     roles: any = GlobalConst.roles;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -21,46 +23,41 @@ export class SettingsTeamComponent implements OnInit
      */
     constructor(private _authService: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
-        )
-    {
+        private _snackBar: MatSnackBar,
+    ) {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this._authService.teams$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((teams: any) => {
-            // Mark for check
-            for (let index = 0; index < teams.length; index++) {
-                if(teams[index].avatar == 'vacio'){
-                    teams[index].avatar = 'assets/images/avatars/male-07.jpg';
-                }  
-                switch (teams[index].idRoll) {
-                    case 1:
-                        teams[index].idRoll = 'admin' 
-                    break;
-                    case 2:
-                        teams[index].idRoll = 'encargado' 
-                    break;
-                    case 3:
-                        teams[index].idRoll = 'leer, escribir' 
-                    break;
-                    case 4:
-                        teams[index].idRoll = 'inactivo' 
-                    break;
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((teams: any) => {
+                // Mark for check
+                for (let index = 0; index < teams.length; index++) {
+                    if (teams[index].avatar == 'vacio') {
+                        teams[index].avatar = 'assets/images/avatars/brian-hughes.png';
+                    }
+                    switch (teams[index].idRoll) {
+                        case 1:
+                            teams[index].idRoll = 'admin'
+                            break;
+                        case 2:
+                            teams[index].idRoll = 'encargado'
+                            break;
+                        case 3:
+                            teams[index].idRoll = 'leer, escribir'
+                            break;
+                        case 4:
+                            teams[index].idRoll = 'inactivo'
+                            break;
+                    }
+
                 }
-                
-            }
-            this.members = teams;
-            this._changeDetectorRef.markForCheck();
-        });
+                this.members = teams;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     /**
@@ -69,27 +66,28 @@ export class SettingsTeamComponent implements OnInit
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
-
-    onChange(rol:any,user: any) {        
+    onChange(rol: any, user: any) {
         user.idRoll = rol.value;
         // user.rollName = event
         this._authService
-        .updateUser(user)
-        .subscribe((res) => {   
-          if(res){
-            swal.fire('Usuario Actualizado Exitosamente!', '', 'success');
-          }
-  
-        },
-        (response) => {
-            swal.fire('Error al actualizar!', '', 'success');
+            .updateUser(user)
+            .subscribe((res) => {
+                if (res) {
+                    this.openSnackBar(user.userName);
+                }
 
-
+            },
+                (response) => {
+                    swal.fire('Error', 'No se pudo actualizar!', 'success');
+                });
+    }
+    openSnackBar(user: string) {
+        this._snackBar.open('  Rol Asignado al usuario ' + user, 'echo', {
+            duration: this.durationInSeconds * 1000,
         });
     }
 }

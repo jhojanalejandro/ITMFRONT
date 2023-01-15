@@ -22,7 +22,7 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Cedula</mat-label>
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                    <input [formControlName]="'identification'" [type]="'number'" placeholder="Cedula" matInput>
+                    <input [formControlName]="'identification'" [(ngModel)]="dataUser.identification" [type]="'text'" placeholder="Cedula" matInput>
                 </mat-form-field>
             </div>
 
@@ -31,7 +31,7 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Telefono</mat-label>
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
-                    <input [formControlName]="'phone'" matInput>
+                    <input [formControlName]="'phone'" [(ngModel)]="dataUser.phoneNumber" matInput>
                 </mat-form-field>
             </div>
             <!-- Title -->
@@ -39,7 +39,7 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Cargo</mat-label>
                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:briefcase'" matPrefix></mat-icon>
-                    <input [formControlName]="'title'" matInput>
+                    <input [formControlName]="'profesionalPosistion'" [(ngModel)]="dataUser.professionalposition" matInput>
                 </mat-form-field>
             </div>
         </div>

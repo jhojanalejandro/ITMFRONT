@@ -58,12 +58,12 @@ export class NominaComponent implements OnInit, OnDestroy {
     console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
   }
 
-  openDialog(route: any, data: any) {
-    if(route === 'contratistas'){
-     return  this._router.navigate(['/dashboards/nomina/lista/contratistas/' + data.id]);
-    }else{
-      return this._router.navigate(['/dashboards/nomina/' + route + '/' + data.id]);
-    }
+  showFiles(data: any) {
+    return this._router.navigate(['/dashboards/nomina/documentos/'+ data.id]);
+  }
+  contractorList( data: any){
+    return  this._router.navigate(['/dashboards/nomina/lista/contratistas/' + data.id]);
+
   }
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {

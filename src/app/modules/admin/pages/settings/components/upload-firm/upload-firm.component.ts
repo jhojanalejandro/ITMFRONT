@@ -115,7 +115,8 @@ export class UploadFirmComponent implements OnInit {
       filedata: event,
       passed: true,
       typeFilePayment: 'execel Contratista',
-      mont: null,
+      monthPayment: null,
+      FolderId: null
     };
     this._uploadService.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {

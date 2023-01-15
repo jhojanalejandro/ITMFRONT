@@ -13,7 +13,7 @@
             <!-- Main -->
             <div class="flex flex-col flex-auto">
                 <div class="ml-8 sm:mt-4">
-                    <a mat-flat-button [routerLink]="['../']" [color]="'primary'">
+                    <a mat-flat-button [routerLink]="['../../']" [color]="'primary'">
                         <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                         <span class="ml-2">Volver</span>
                     </a>
@@ -57,7 +57,7 @@
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0">
                         <!-- Upload button -->
-                        <button mat-flat-button [color]="'primary'" (click)="openDialog()">
+                        <button mat-flat-button [color]="'primary'" (click)="crearCarpeta()">
                             <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
                             <span class="ml-2 mr-1">Crear Carpeta</span>
                         </button>
@@ -87,7 +87,7 @@
                                                     [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
                                             </a>
                                             <a class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/file/contractor/',ruta + folder.id]">
+                                                [routerLink]="['/apps/file-manager/file/contractor/'+contractId +'/'+contractorId +'/'+ folder.id]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->

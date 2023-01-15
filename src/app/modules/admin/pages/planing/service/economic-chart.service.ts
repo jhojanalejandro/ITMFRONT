@@ -84,10 +84,10 @@ export class EconomicChartService {
         return this._httpClient.get(urlEndPoint, {params: params}).pipe(
             tap((response: any) => {
                 response.forEach(element => {
-                    if(element.activate){
-                        element.activate = "EN Ejecución"
+                    if(element.execution){
+                        element.execution = "EN Ejecución"
                     }else{
-                        element.activate = "EN Proceso"
+                        element.execution = "EN Proceso"
                     }
                     
                 });
@@ -136,6 +136,12 @@ export class EconomicChartService {
         return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
 
+    
+    addActivity(data: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.addActivity;
+        return this._httpClient.post<any>(urlEndpointGenerate, data);
+    }
     getComponent(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.getComponent;
@@ -149,6 +155,9 @@ export class EconomicChartService {
     }
 
     getElementoComponente(id: any) {
+        // const params = new HttpParams()
+        // .set('contractorId', contractorId)
+        // .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.getElements;
         return this._httpClient.get<IElements[]>(urlEndpointGenerate + id);
@@ -183,17 +192,17 @@ export class EconomicChartService {
     }
 
     sendEconomicdataContractor(model: EconomicContractor[]) {
+        
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
     }
 
-
-    getHiringDataById(id: any) {
+    getHiringDataById(contractorId: any, contractId) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdHiringEndpoint;
-        return this._httpClient.get<IHiringData>(urlEndpointGenerate + id);
+        return this._httpClient.get<IHiringData>(urlEndpointGenerate, {params: params});
     }
-
-
-
 }

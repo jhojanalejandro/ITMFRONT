@@ -9,8 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 
-
-
 @Component({
     selector: 'list-folder-contractor',
     templateUrl: './list-folder-contractor.component.html',
@@ -21,13 +19,12 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     item: any;
-    data: any;
     items: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    idFolder: any;
+    contractId: any;
 
     /**
      * Constructor
@@ -38,7 +35,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _fileManagerService: ListFolderContractorService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private router: ActivatedRoute,
         private _matDialog: MatDialog,
     ) { }
 
@@ -72,7 +68,9 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
      * @param item
      */
     trackByFn(index: number, item: any): any {
-        return item.id || index;
+        if(item  > 0){
+            return item.id || index;
+        }
     }
 
     private _normalizeValue(value: string): string {
@@ -97,12 +95,12 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         // return this.dataRandom.number.find(number => number === event)
     }
 
-    openDialog() {
+    uploadFileContract() {
         const dialogRef = this._matDialog.open(UploadFileComponent, {
             autoFocus: false,
             data: {
                 show: false,
-                contractId: this.data,
+                contractId: this.contractId,
                 contractorId: 0
             }
         });
@@ -113,7 +111,8 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         });
     }
     getData() {
-        this.idFolder = this.router.snapshot.paramMap.get('folderId') || 'null';
+        debugger
+        this.contractId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
 
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
@@ -129,9 +128,10 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         this._fileManagerService.itemsC$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: any) => {
-                this.items = items;
-                this.data = items.folders[0].contractId
-                // Mark for check
+                if(items.folders.length > 0){
+                    this.items = items;
+                    // Mark for check
+                }
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -139,7 +139,9 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: Item) => {
-                this.item = item;
+                if(item != null){
+                    this.item = item;
+                }
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });

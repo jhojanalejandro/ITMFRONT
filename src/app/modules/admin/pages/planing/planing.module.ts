@@ -23,6 +23,7 @@ import { AddComponentsComponent } from './economic-chart/componentes/components.
 import { ComponentesFormComponent } from './economic-chart/componentes/componentes-form/componentes-form.component';
 import { DialogChangePercentajeComponent } from './economic-chart/componentes/DialogChangePercentaje/DialogChangePercentaje.component';
 import { RegisterProjectFolderComponent } from './components/register-project-folder/register-project-folder.component';
+import { ActividadFormComponent } from './economic-chart/componentes/actividad-form/actividad-form.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { RegisterProjectFolderComponent } from './components/register-project-fo
         AddComponentsComponent,
         ElementCardComponent,
         ComponentesFormComponent,
+        ActividadFormComponent,
         DialogChangePercentajeComponent,
         RegisterProjectFolderComponent
     ],

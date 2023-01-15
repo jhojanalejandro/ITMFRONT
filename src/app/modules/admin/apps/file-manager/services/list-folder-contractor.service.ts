@@ -77,16 +77,10 @@ export class ListFolderContractorService
         // Clone the items
         for (let index = 0; index < response.length; index++) {
             response[index].type = 'folder';
-
         }
         let items = cloneDeep(response);
-        // See if a folder id exist
-        const folderId = response[0].idFolder;
 
-        // Filter the items by folder id. If folder id is null,
-        // that means we want to root items which have folder id
-        // of null
-        items = items.filter(item => item.idFolder === folderId);
+        items = items.filter(item => item.contractId === Number(folderIds));
         
         // Separate the items by folders and files
         const folders = items.filter(item => item.type === 'folder');
@@ -102,17 +96,17 @@ export class ListFolderContractorService
         let currentFolder = null;
 
         // Get the current folder and add it as the first entry
-        if ( folderId )
+        if ( folderIds )
         {
-            currentFolder = pathItems.find(item => item.idFolder === folderId);
+            currentFolder = pathItems.find(item => item.contractId === Number(folderIds));
             path.push(currentFolder);
         }
 
         // Start traversing and storing the folders as a path array
         // until we hit null on the folder id
-        while ( currentFolder?.folderId )
+        while ( currentFolder?.contractId )
         {
-            currentFolder = pathItems.find(item => item.idFolder === currentFolder.folderId);
+            currentFolder = pathItems.find(item => item.contractId === currentFolder.folderId);
             if ( currentFolder )
             {
                 path.unshift(currentFolder);
@@ -120,6 +114,7 @@ export class ListFolderContractorService
         }
         const data = 
             {
+                folderIds,
                 folders,
                 path
             }

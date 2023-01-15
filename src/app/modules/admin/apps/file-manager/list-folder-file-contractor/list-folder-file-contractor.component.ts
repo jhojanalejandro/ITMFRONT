@@ -6,14 +6,12 @@ import { Item, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.t
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { FolderContractorComponent } from './register-folder-contractor/register-folder-contractor.component';
+import { RegisterFolderContractorComponent } from './register-folder-contractor/register-folder-contractor.component';
 import { ListFolderFileContractorService } from '../services/list-folder-file-contractor.service';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { FileListManagerService } from '../services/list-file.service';
 import { DomSanitizer } from '@angular/platform-browser';
-
-
 
 @Component({
     selector: 'list-folder-file-contractor',
@@ -31,8 +29,9 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    folderId: any;
-    ruta: any;
+    contractId: string;
+    contractorId: string;
+
     /**
      * Constructor
      */
@@ -45,8 +44,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
         private router: ActivatedRoute,
         private _matDialog: MatDialog,
         private _fileService: FileListManagerService,
-        private sanitizer: DomSanitizer
-
     ) { }
 
     ngOnInit(): void {
@@ -107,11 +104,11 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
         // return this.dataRandom.number.find(number => number === event)
     }
 
-    openDialog() {
-        const dialogRef = this._matDialog.open(FolderContractorComponent, {
+    crearCarpeta() {
+        const dialogRef = this._matDialog.open(RegisterFolderContractorComponent, {
             autoFocus: false,
             data: {
-                contractorId: this.folderId,
+                contractorId: this.contractorId,
                 folderName: 'vacio'
             }
         });
@@ -128,7 +125,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
         // };
     }
     getData() {
-        this.folderId = this.router.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractId = this.router.snapshot.paramMap.get('contractId') || 'null';
 
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
@@ -146,7 +144,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             .subscribe((items: ItemsC) => {
                 this.items = items;
                 if (items.folders.length > 0) {
-                    this.ruta = this.items.folders[0].contractorId + '/';
+                    this.contractorId = this.items.folders[0].contractorId + '/';
                 }
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -165,29 +163,29 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
 
     }
 
-    getFilesFolder = async (id: any)=> {
+    getFilesFolder = async (id: any) => {
         this._fileService.getItemById(id).pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((Response: any) => {
-            const jszip = new JSZip();
-            for (let i = 0; i < Response.length; i++) {
-                Response[i].filedata = 'data:application/pdf;base64,'+Response[i].filedata
-                var binary = atob(Response[i].filedata.split(',')[1]);
-                var array = [];
-                for (let j = 0; j < binary.length; j++) {
-                    array.push(binary.charCodeAt(j));
-                }
-                let pdf = new Blob([new Uint8Array(array)], {
-                    type: 'application/pdf'
-                });
-                jszip.folder("pruebaCarpeta").file(`${Response[i].filesName}.pdf`, pdf);
-                if (i === (Response.length - 1)) {
-                    jszip.generateAsync({ type: 'blob' }).then(function (content) {
-                        // see FileSaver.js
-                        saveAs(content, 'pruebaDescarga.zip');
+            .subscribe((Response: any) => {
+                const jszip = new JSZip();
+                for (let i = 0; i < Response.length; i++) {
+                    Response[i].filedata = 'data:application/pdf;base64,' + Response[i].filedata
+                    var binary = atob(Response[i].filedata.split(',')[1]);
+                    var array = [];
+                    for (let j = 0; j < binary.length; j++) {
+                        array.push(binary.charCodeAt(j));
+                    }
+                    let pdf = new Blob([new Uint8Array(array)], {
+                        type: 'application/pdf'
                     });
+                    jszip.folder("pruebaCarpeta").file(`${Response[i].filesName}.pdf`, pdf);
+                    if (i === (Response.length - 1)) {
+                        jszip.generateAsync({ type: 'blob' }).then(function (content) {
+                            // see FileSaver.js
+                            saveAs(content, 'pruebaDescarga.zip');
+                        });
+                    }
                 }
-            }
-      })
+            })
     }
 
     download = async () => {

@@ -47,7 +47,7 @@ export class EconomicChartListComponent
     registerDate = new Date();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    projectData$: any;
+    projectData: any;
     displayedColumns: string[] = [
         'actions',
         'companyName',
@@ -55,7 +55,7 @@ export class EconomicChartListComponent
         'descriptionProject',
         'fechaContrato',
         'fechaFinalizacion',
-        'activate',
+        'execution',
     ];
     dataSource: MatTableDataSource<any>;
 
@@ -99,9 +99,9 @@ export class EconomicChartListComponent
         private authService: AuthService,
         private _router: Router,
     ) {
-        this.projectData$ = this._economicService._economicsChart$;
+        this.projectData = this._economicService._economicsChart$;
         this.dataSource = new MatTableDataSource(
-            this.projectData$.source._value
+            this.projectData.source._value
 
         );
     }
@@ -229,10 +229,10 @@ export class EconomicChartListComponent
     }
 
     getDetailContract(){
-        for (let index = 0; index < this.projectData$.source._value.length; index++) {
-            this._genericService.getDetalleContrato(this.projectData$.source._value[index].id, false).subscribe((resp: any) => {
-                this.projectData$.source._value[index].fechaContrato = resp.fechaContrato;
-                this.projectData$.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;                
+        for (let index = 0; index < this.projectData.source._value.length; index++) {
+            this._genericService.getDetalleContrato(this.projectData.source._value[index].id, false).subscribe((resp: any) => {
+                this.projectData.source._value[index].fechaContrato = resp.fechaContrato;
+                this.projectData.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;                
             })
         }
 

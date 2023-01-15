@@ -59,6 +59,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     numberOfTicks = 0;
     elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
     recursos: number;
+    totalV: any;
     totalExacto: number;
     update: boolean;
     showDate: boolean = true;
@@ -91,7 +92,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _genericService: GenericService,
         private _economicService: EconomicChartService
     ) {
-        if(this._data.elemento != null){
+        if (this._data.edit === true) {
             this.showDate = false;
             this.elemento = this._data.elemento;
             this.totalValue = this._data.elemento.valorTotal;
@@ -133,6 +134,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getDateAdiction();
+        debugger
+        console.log(this._data);
+
     }
 
     private _filter(value: string): string[] {
@@ -171,8 +175,17 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         } else {
             modificacion = true;
         }
+        if (this.totalValue === null) {
+            this.totalValue = this.elementForm.value.totalValue
+        }
+        if (this.elementForm.value.tipoElemento === null) {
+            this.elementForm.value.tipoElemento = 'corriente'
+        }
+        if (this.totalValueContratista === null) {
+            this.totalValueContratista = this.totalValue / this.elementForm.value.contractorCant;
+        }
         let item: IElements = {
-            id: 0,
+            id: this._data.idElemento,
             nombreElemento: this.elementForm.value.nombreElemento,
             idComponente: this._data.idComponente,
             cantidadContratistas: this.elementForm.value.contractorCant,
@@ -180,19 +193,19 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             valorUnidad: this.elementForm.value.unitValue,
             valorTotal: this.totalValue,
             valorPorDia: this.elemento.valorPorDia,
-            valorPorDiaContratista:  this.elemento.valorPorDiaContratista,
+            valorPorDiaContratista: this.elemento.valorPorDiaContratista,
             valorTotalContratista: this.totalValueContratista,
             cpc: this.elementForm.value.cpc,
             nombreCpc: this.elementForm.value.nombreCpc,
             modificacion: modificacion,
-            tipoElemento: 'corriente',
+            tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.elementForm.value.recursos,
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento
         };
-
+        debugger
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire('Exitoso', 'Registrado Exitosamente!', 'success');
@@ -202,15 +215,15 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         }, (response) => {
             // Set the alert
             console.log(response);
-            
+
             swal.fire('error', 'Error en el registro!', 'error');
         });
     }
 
     calculate = () => {
-        if(this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === ''){
+        if (this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === '') {
             swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
-        }else{
+        } else {
             this.totalCalculate = false;
             this.elemento.valorPorDiaContratista = this.elementForm.value.unitValue / 30;
             this.elementForm.value.unitValueDay = Number(
@@ -226,7 +239,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 this.totalValueContratista = Number(
                     this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
                 );
-            } else if(this.elemento.valorTotal != this.elementForm.value.totalValue  || this.elementForm.value.totalValue != null ){
+            } else if (this.elemento.valorTotal != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
                 this.totalExacto = Number(
                     this.elemento.valorPorDia * this.elementForm.value.cantDay
                 );
@@ -239,9 +252,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 );
                 this.recursos = this.totalExacto - this.elementForm.value.totalValue;
             }
-    
+
         }
-      
+
     };
 
     selectmodificacion() {
@@ -265,5 +278,21 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
     getDateAdiction() {
         this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.idContrato, true);
+    }
+    onChange(event) {
+        debugger
+        if(this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0){
+            this.totalV = parseFloat(this.elementForm.value.totalValue).toFixed(6);
+            this.totalV = Math.round(this.totalV * 100) 
+            if(this.totalValue != this.elementForm.value.totalValue){
+                if(this.totalValue < this.totalV){
+                    this.recursos = Number(this.totalValue) - Number(this.elementForm.value.totalValue)
+                }
+            }
+            this.totalValue = this.elementForm.value.totalValue
+        } else{
+            this.totalValue = this.elementForm.value.totalValue
+        }       
+
     }
 }

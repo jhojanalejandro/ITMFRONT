@@ -476,7 +476,6 @@ export class PdfPaymentComponent implements OnInit {
 
             ]
         }
-        debugger
         console.log(this.listaData);
         
         const documentDefinition = {

@@ -38,7 +38,7 @@ export const environment = {
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/UpdateCost',
     GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll/',
-    UpdateStateProjectFolderEndpoint: 'ProjectFolder/UpdateState',
+    UpdateStateProjectFolderEndpoint: 'ProjectFolder/UpdateState/',
 
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
@@ -56,7 +56,8 @@ export const environment = {
 
     addFileEndpoint: 'Files/AddFileContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
-    GetAllFileByIdEndpoint: 'Files/GetAllFileById',
+    GetAllFileByFolderEndpoint: 'Files/GetFileContractorByFolder',
+    GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
     GetAllFileByTypePayment: 'Files/GetAllByType/',
@@ -73,6 +74,7 @@ export const environment = {
     GetDataMinutaHiringEndpoint: 'HiringData/GetByIdMinuta',
 
     addComponent: 'Componente/Add/',
+    addActivity: 'Componente/AddActivity/',
     getComponent: 'Componente/Get/',
     getComponentById: 'Componente/GetById/',
 

@@ -118,7 +118,8 @@ export class UploadFileComponent implements OnInit {
       filedata: event,
       passed: true,
       typeFilePayment: 'contrato',
-      mont: null
+      monthPayment: null,
+      FolderId: null
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
@@ -168,7 +169,7 @@ export class UploadFileComponent implements OnInit {
   }
   getContractsData() {
     // Get the data
-    this._gerenicService.getAllContract(true,'Contractual')
+    this._gerenicService.getAllContract(true, 'Contractual')
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((data) => {
         this.contratos = data;
@@ -195,7 +196,7 @@ export class UploadFileComponent implements OnInit {
       },
         (response) => {
           console.log(response);
-          
+
           this.formFile.enable();
           // Set the alert
           swal.fire('Error', 'Error al Registrar la informacion!', 'error');

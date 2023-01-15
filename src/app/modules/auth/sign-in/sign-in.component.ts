@@ -65,18 +65,11 @@ export class AuthSignInComponent implements OnInit {
 
         if (this.signInForm.value.userType == 'Contractual') {
             this.signInForm.disable();
-
-            // Hide the alert
-
             // Sign in
             this._authService.signIn(useraLogin)
                 .subscribe(
                     () => {
-                        const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
-
-                        // Navigate to the redirect url
-                        this._router.navigateByUrl(redirectURL);
-
+                        this._router.navigate(['dashboards/inicio']);
                     },
                     (response) => {
 

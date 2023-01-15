@@ -16,7 +16,7 @@ import { FileManagerService } from '../../services/file-manager.service';
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class FolderContractorComponent implements OnInit {
+export class RegisterFolderContractorComponent implements OnInit {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   indeterminate = false;
@@ -34,7 +34,7 @@ export class FolderContractorComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private authService: AuthService,
     private router: ActivatedRoute,
-    public matDialogRef: MatDialogRef<FolderContractorComponent>,
+    public matDialogRef: MatDialogRef<RegisterFolderContractorComponent>,
     @Inject(MAT_DIALOG_DATA) private _data
     ) {
       setInterval(() => {

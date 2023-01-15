@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
@@ -40,10 +40,13 @@ export class ListFolderFileContractorService
         return this._itemD.asObservable();
     }
 
-    getAllFolderFileContractor(id: string | null = null): Observable<Item[]>
+    getAllFolderFileContractor(contractId: string | null = null,contractorId: string | null = null): Observable<Item[]>
     {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('contractId', contractId);
         let urlEndPoint = this.apiUrl+ environment.GetFolderFileContractorEndpoint;
-        return  this._httpClient.get<Items>(urlEndPoint+id).pipe(
+        return  this._httpClient.get<Items>(urlEndPoint, {params: params}).pipe(
             tap((response: any) => {
         // Clone the items
         for (let index = 0; index < response.length; index++) {

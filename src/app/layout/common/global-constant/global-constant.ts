@@ -74,7 +74,7 @@ export class GlobalConst {
     public static tipoDocumento: TypeSelectString[]=[
         { viewValue: 'Planilla'},
         { viewValue: 'Cuenta De Cobro'},
-        { viewValue: 'acta'},
+        { viewValue: 'Informe De Ejecucion'},
     ] 
 
     public static nivelSeguridad: TypeSelectString[]=[

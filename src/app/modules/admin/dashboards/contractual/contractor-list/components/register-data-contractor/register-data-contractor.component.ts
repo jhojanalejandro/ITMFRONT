@@ -12,6 +12,7 @@ import { UploadDataService } from '../../../service/upload-data.service';
 import { AsignmentData } from '../../../models/asignment-data';
 import { EconomicContractor } from '../../../../nomina/models/economic-data-contractor';
 import { IElements } from '../../../../../pages/planing/models/element';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -21,6 +22,7 @@ import { IElements } from '../../../../../pages/planing/models/element';
 })
 export class ContractorDataRegisterComponent implements OnInit {
   shareData: boolean = false;
+  durationInSeconds = 5;
   registerDate: Date = new Date();
   minDate: Date;
   maxdate: Date;
@@ -31,6 +33,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   showDataPoliza: boolean = false;
   registerContractor: IHiringData;
   hiringDataList: IHiringData[] = [];
+  economicDataList: EconomicContractor[] = [];
   update: boolean = false;
   componentes: any;
   userAdmins: any;
@@ -50,6 +53,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private _economicService: EconomicChartService,
     private _auth: AuthService,
+    private _snackBar: MatSnackBar,
     public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
@@ -59,7 +63,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       if (this.datos.elementId != null && this.datos.elementId != 0 && this.datos.idContractors.length == 0) {
         this.getElementById(this.datos.elementId);
         this.getComponentById(this.datos.componenteId);
-      } 
+      }
     } else if (this.datos.idContractors.length == 0) {
       Swal.fire(
         'Ei!',
@@ -180,21 +184,19 @@ export class ContractorDataRegisterComponent implements OnInit {
           this.ref.markForCheck();
           this.matDialogRef.close(true);
         }
+      }, (response) => {
+        this.formContractor.enable();
+        // Set the alert
+        this.alert = {
+          type: 'error',
+          message: 'ERROR EN LA INFORMACION'
+        };
+        console.log(response);
 
-      },
-        (response) => {
-          this.formContractor.enable();
-          // Set the alert
-          this.alert = {
-            type: 'error',
-            message: 'ERROR EN LA INFORMACION'
-          };
-          console.log(response);
-
-          Swal.fire('Error', 'Información no Actualizada!', 'error');
-          // Show the alert
-          this.showAlert = true;
-        });
+        Swal.fire('Error', 'Información no Actualizada!', 'error');
+        this.showAlert = true;
+      });
+    this.hiringDataList = [];
   }
 
   async updateContractor() {
@@ -210,7 +212,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       this.formContractor.value.nivel = '0'
     }
     let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
-
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
@@ -228,7 +229,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
       nivel: Number(this.formContractor.value.nivel),
       supervisorItm: dataAdmin.userName,
-      cargoSupervisorItm: dataAdmin.Professionalposition,
+      cargoSupervisorItm: dataAdmin.professionalposition,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       rubro: this.formContractor.value.rubro,
@@ -252,7 +253,6 @@ export class ContractorDataRegisterComponent implements OnInit {
           console.log(response);
 
           Swal.fire('Error', 'Información no Actualizada!', 'error');
-
           // Show the alert
           this.showAlert = true;
         });
@@ -275,7 +275,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       .getComponentById(id)
       .subscribe((response) => {
         this.componente = response.nombreComponente;
-
       });
   }
 
@@ -288,31 +287,37 @@ export class ContractorDataRegisterComponent implements OnInit {
       });
   }
   getElements = () => {
+    if (this.datos.idContractors.length == 0) {
+      this.datos.idContractors[0] = this.datos.id
+    }
     this._economicService
       .getElementoComponente(this.componentselectId)
       .subscribe((response) => {
         this.elements = response;
-
       });
     let asignar: AsignmentData = {
+      contractId: this.datos.contractId,
       id: this.componentselectId,
       type: 'Componente',
-      idContractor: this.datos.id
+      idContractor: this.datos.idContractors
     }
     this._economicService.asignmentData(asignar).subscribe((response) => {
       if (response) {
-
+        this.openSnackBar('Componente asignado al contartista', "Exitoso")
       }
     })
   }
 
   asignElement = () => {
+    if (this.datos.idContractors.length == 0) {
+      this.datos.idContractors[0] = this.datos.id
+    }
     let asignar: AsignmentData = {
+      contractId: this.datos.contractId,
       id: this.elementselectId,
       type: 'Elemento',
-      idContractor: this.datos.id
+      idContractor: this.datos.idContractors
     }
-    debugger
     let dataElement = this.elements.find(x => x.id === this.elementselectId);
     this.cantDayContract = dataElement.cantidadDias;
     this._economicService.asignmentData(asignar).subscribe((response) => {
@@ -324,29 +329,34 @@ export class ContractorDataRegisterComponent implements OnInit {
 
   sendEconomicdataContractor() {
     let element: IElements = this.elements.find(item => item.id === this.elementselectId);
-    let economicData: EconomicContractor[] = [{
-      contractorId: this.datos.id,
-      userId: this._auth.accessId,
-      registerDate: this.registerDate,
-      totalValue: element.valorTotalContratista,
-      unitValue: element.valorUnidad,
-      totalPaidMonth: element.valorUnidad,
-      cashPayment: false,
-      missing: 0,
-      debt: element.valorTotalContratista,
-      modifyDate: this.registerDate,
-      freed: 0
-    }];
-    this._economicService.sendEconomicdataContractor(economicData).subscribe((response) => {
+
+    for (let index = 0; index < this.datos.idContractors.length; index++) {
+      let economicData: EconomicContractor = {
+        contractorId: this.datos.idContractors[index],
+        userId: this._auth.accessId,
+        registerDate: this.registerDate,
+        totalValue: element.valorTotalContratista,
+        unitValue: element.valorUnidad,
+        totalPaidMonth: element.valorUnidad,
+        cashPayment: false,
+        missing: 0,
+        debt: element.valorTotalContratista,
+        modifyDate: this.registerDate,
+        freed: 0,
+      };
+      this.economicDataList.push(economicData);
+    }
+    this._economicService.sendEconomicdataContractor(this.economicDataList).subscribe((response) => {
       if (response) {
+        this.openSnackBar('Elemento asignado al contartista', "Exitoso")
       }
     })
+    this.economicDataList = [];
   }
-
 
   private getHiring() {
     this._economicService
-      .getHiringDataById(this.datos.contractId)
+      .getHiringDataById(this.datos.id,this.datos.contractId)
       .subscribe((response: IHiringData) => {
         if (response != null) {
           this.update = true;
@@ -372,9 +382,9 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   dateChange(event) {
-    this.minDate = event.value;  
-    var date2:any = new Date(this.minDate);
-    let day =  this.cantDayContract * 24;
+    this.minDate = event.value;
+    var date2: any = new Date(this.minDate);
+    let day = this.cantDayContract * 24;
     var numberOfMlSeconds = date2.getTime();
     console.log(date2);
     var addMlSeconds = (1000 * 60 * 60 * day);
@@ -382,5 +392,9 @@ export class ContractorDataRegisterComponent implements OnInit {
     console.log(this.maxdate);
     this.ref.markForCheck();
   }
-
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: this.durationInSeconds * 1000,
+    });
+  }
 }

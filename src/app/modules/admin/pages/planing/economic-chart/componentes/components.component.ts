@@ -17,6 +17,7 @@ import { ComponentesFormComponent } from './componentes-form/componentes-form.co
 import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
+import { ActividadFormComponent } from './actividad-form/actividad-form.component';
 
 @Component({
     selector: 'components-card',
@@ -27,7 +28,7 @@ import { UploadDataService } from 'app/modules/admin/dashboards/contractual/serv
 })
 export class AddComponentsComponent implements OnInit {
     tittle = 'Información';
-    dataComponente: any;
+    dataComponente: any = null;
     dataElemento: any;
     abrirDivComponente: boolean = false;
     abrirDivElemento: boolean = false;
@@ -37,6 +38,7 @@ export class AddComponentsComponent implements OnInit {
     subTotal: number = 0;
     total: number = 0;
     contractorCant: number = 0;
+    elementosCant: number = 0;
     gastosOperativos: number = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
@@ -90,11 +92,13 @@ export class AddComponentsComponent implements OnInit {
     }
 
     totalesPlaneacion() {
+        this.subTotal = 0;
+        this.elementosCant = 0;
         this.data.forEach((element) => {
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
+                    this.elementosCant ++;
                     this.subTotal += item.valorTotal;
-                    debugger
                     this.contractorCant += item.cantidadContratistas
                 });
             }
@@ -121,11 +125,10 @@ export class AddComponentsComponent implements OnInit {
     }
 
     addComponent() {
-        let e = this.id;
         const dialogRef = this._matDialog.open(ComponentesFormComponent, {
             autoFocus: false,
             data: {
-                e,
+                idContrato: this.id,
                 show: true,
             },
         });
@@ -137,16 +140,54 @@ export class AddComponentsComponent implements OnInit {
                         this.data = response;
                         this._changeDetectorRef.detectChanges();
                     });
-                    this.chargeData();
+                this.chargeData();
             }
         });
     }
 
+    addActividad() {
+        if (this.dataComponente === null) {
+
+            Swal.fire(
+                'Ei',
+                'Debes seleccionar un componente',
+                'question'
+            );
+        } else {
+            const dialogRef = this._matDialog.open(ActividadFormComponent, {
+                autoFocus: false,
+                data: {
+                    idContrato: this.id,
+                    idComponente: this.dataComponente.id,
+                    show: true,
+                },
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this._Economicservice
+                        .getComponent(this.id)
+                        .subscribe((response) => {
+                            this.data = response;
+                            this._changeDetectorRef.detectChanges();
+                        });
+                    this.chargeData();
+                }
+            });
+        }
+
+    }
+
     addElements() {
-        let ids: any = { 'idComponente': this.dataComponente.id, 'idContrato': this.id }
+        let elemento = { valorTotal: 0 }
         const dialogRef = this._matDialog.open(ElementCardComponent, {
             autoFocus: false,
-            data: ids,
+            data: {
+                elemento,
+                idComponente: this.dataComponente.id,
+                idElemento: 0,
+                idContrato: this.id,
+                edit: false
+            },
         });
         dialogRef.afterClosed().subscribe((result) => {
             this._changeDetectorRef.detectChanges();
@@ -159,7 +200,10 @@ export class AddComponentsComponent implements OnInit {
         const dialogRef = this._matDialog.open(ElementCardComponent, {
             data: {
                 elemento,
-                idContrato: this.id
+                idComponente: elemento.idComponente,
+                idElemento: elemento.id,
+                idContrato: this.id,
+                edit: true
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -202,7 +246,6 @@ export class AddComponentsComponent implements OnInit {
             valorSubTotal: this.subTotal,
             gastosOperativos: this.gastosOperativos,
         };
-        debugger
         this._contrtactService.UpdateCostProjectFolder(registerProject).subscribe((res) => {
             if (res) {
                 Swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');

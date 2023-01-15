@@ -25,15 +25,15 @@ import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EconomicChartService } from '../../../service/economic-chart.service';
-import { ElementCardComponent } from '../../element/element.component';
 import { IComponente } from '../../../models/componente';
+import { Activity } from '../../../models/activity';
 
 @Component({
     selector: 'app-componentes-form',
-    templateUrl: './componentes-form.component.html',
-    styleUrls: ['./componentes-form.component.scss'],
+    templateUrl: './actividad-form.component.html',
+    styleUrls: ['./actividad-form.component.scss'],
 })
-export class ComponentesFormComponent implements OnInit {
+export class ActividadFormComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     fruitCtrl = new FormControl('');
     filteredFruits: Observable<string[]>;
@@ -43,7 +43,7 @@ export class ComponentesFormComponent implements OnInit {
     abrirDiv: boolean = false;
     numberOfTicks = 0;
     data: any;
-    nombreComponente: string = null;
+    nombreActivivdad: string = null;
     update: boolean;
     id: number = 0;
     configForm: FormGroup;
@@ -56,7 +56,7 @@ export class ComponentesFormComponent implements OnInit {
      * Constructor
      */
     constructor(
-        public matDialogRef: MatDialogRef<ComponentesFormComponent>,
+        public matDialogRef: MatDialogRef<ActividadFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) private _data: any,
@@ -77,11 +77,11 @@ export class ComponentesFormComponent implements OnInit {
         );
         if(this._data.componente != null){
             this.id = this._data.componente.id;
-            this.nombreComponente = this._data.componente.nombreComponente;
+            this.nombreActivivdad = this._data.componente.nombreComponente;
             
         }
         this.componentForm = this._formBuilder.group({
-            componentName: new FormControl(this.nombreComponente,Validators.required)
+            activityName: new FormControl(this.nombreActivivdad,Validators.required)
         });
     }
 
@@ -116,17 +116,19 @@ export class ComponentesFormComponent implements OnInit {
         return item.id || index;
     }
 
-    addComponent() {
+    addActivity() {
         if (!this.componentForm.invalid) {
-            this.nombreComponente = this.componentForm.value.componentName
+            if( this.nombreActivivdad === null){
+                this.nombreActivivdad = this.componentForm.value.activityName
+            }
             this.data = this.componentForm.value;
-            let model: IComponente = {
+            let model: Activity = {
                 idContrato: this._data.idContrato,
-                nombreComponente: this.nombreComponente,
+                idComponente: this._data.idComponente,
+                nombreActividad: this.nombreActivivdad,
                 id: this.id,
-                elementos: [],
             };
-            this._Economicservice.addComponent(model).subscribe((response) => {
+            this._Economicservice.addActivity(model).subscribe((response) => {
                 if (response) {
                     Swal.fire(
                         'Buen Trabajo!',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
@@ -46,9 +46,9 @@ export class CollectionAccountsService
      */
     getItemById(type: any | null = null,id: any | null = null): Observable<Item>
     {
-        if(type === 'cuentas'){
+        if(type === 'documentos'){
             type = 'Cuenta De Cobro';
-          }
+        }
         let GetFilesPaymentDto: IGetFilesPayments = {contractId: id, registerDate: new Date(), typeFilePayment: type};
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileByTypePayment;
@@ -94,9 +94,13 @@ export class CollectionAccountsService
         );
     }
 
-    searchByDate(data: any) {
+    searchByDate(contractId: any, type:string, date: string) {
+        const params = new HttpParams()
+        .set('contractId', contractId )
+        .set('type', type)
+        .set('date', date);
         let urlEndpointGenerate = this.apiUrl+ environment.GetAllFileByDatePayment;
-        return this._httpClient.get<any>(urlEndpointGenerate+data);
+        return this._httpClient.get<any>(urlEndpointGenerate, {params: params});
     }
     UpdateProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;

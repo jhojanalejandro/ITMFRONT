@@ -16,10 +16,6 @@ export class FileManagerItemsCFResolver implements Resolve<any>
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Resolver
      *
@@ -59,7 +55,7 @@ export class FileManagerFolderCFResolver implements Resolve<any>
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
     {
-        return this._fileManagerService.getAllFolderFileContractor(route.paramMap.get('contractorId'))
+        return this._fileManagerService.getAllFolderFileContractor(route.paramMap.get('contractId'),route.paramMap.get('contractorId'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
