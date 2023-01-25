@@ -24,6 +24,7 @@ import { ComponentesFormComponent } from './economic-chart/componentes/component
 import { DialogChangePercentajeComponent } from './economic-chart/componentes/DialogChangePercentaje/DialogChangePercentaje.component';
 import { RegisterProjectFolderComponent } from './components/register-project-folder/register-project-folder.component';
 import { ActividadFormComponent } from './economic-chart/componentes/actividad-form/actividad-form.component';
+import { AngularmaterialModule } from 'app/layout/common/angular material/angularmaterial.module';
 
 
 @NgModule({
@@ -40,19 +41,7 @@ import { ActividadFormComponent } from './economic-chart/componentes/actividad-f
     ],
     imports     : [
         RouterModule.forChild(PlaningRoutes),
-        MatButtonModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatMenuModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatRippleModule,
-        MatSortModule,
-        MatSelectModule,
-        MatSlideToggleModule,
-        MatTooltipModule,
+        AngularmaterialModule,
         SharedModule
     ]
 })

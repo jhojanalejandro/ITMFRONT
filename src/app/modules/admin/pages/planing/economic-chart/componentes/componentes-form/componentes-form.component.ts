@@ -42,10 +42,9 @@ export class ComponentesFormComponent implements OnInit {
     @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
     abrirDiv: boolean = false;
     numberOfTicks = 0;
-    data: any;
     nombreComponente: string = null;
     update: boolean;
-    id: number = 0;
+    id: string = null;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     componentForm: FormGroup;
@@ -119,7 +118,6 @@ export class ComponentesFormComponent implements OnInit {
     addComponent() {
         if (!this.componentForm.invalid) {
             this.nombreComponente = this.componentForm.value.componentName
-            this.data = this.componentForm.value;
             let model: IComponente = {
                 idContrato: this._data.idContrato,
                 nombreComponente: this.nombreComponente,
@@ -133,9 +131,16 @@ export class ComponentesFormComponent implements OnInit {
                         'Se guardó la información!',
                         'success'
                     );
+                    this.matDialogRef.close(true);
                 }
-            });
-            this.matDialogRef.close(true);
+            },(error => {
+                console.log(error);
+                Swal.fire(
+                    'EI!',
+                    'Ha sucedido un error!, vuelve a intentarlo',
+                    'error'
+                );
+            }));
         }
     }
 

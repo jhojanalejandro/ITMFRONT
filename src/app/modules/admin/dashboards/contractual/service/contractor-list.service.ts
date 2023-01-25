@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { PaymentAccount } from '../models/paymentAccount';
 
 @Injectable({
     providedIn: 'root'
@@ -48,9 +49,12 @@ export class ContractorListService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    async getContractorById(id: any) {
+    async getContractorById(contractorId: string, contractId: string) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId )
+        .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
-        return await this._httpClient.get<any>(urlEndPoint + id);
+        return await this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
     }
 
 }

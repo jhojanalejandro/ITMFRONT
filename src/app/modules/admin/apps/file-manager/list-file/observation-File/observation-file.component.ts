@@ -64,14 +64,17 @@ export class ObservationFileComponent implements OnInit {
     let detailFile: IDetailFile = {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
-        motivo: this.formFile.value.motivo
+        motivo: this.formFile.value.motivo,
+        files: null
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
       if (res) {
         swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
+        this.matDialogRef.close(true);
       }
     },
       (response) => {
+        console.log(response);
         swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
       });
   }
@@ -95,7 +98,8 @@ export class ObservationFileComponent implements OnInit {
     let detailFile: IDetailFile = {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
-        motivo: this.formFile.value.motivo
+        motivo: this.formFile.value.motivo,
+        files: null
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
       if (res) {

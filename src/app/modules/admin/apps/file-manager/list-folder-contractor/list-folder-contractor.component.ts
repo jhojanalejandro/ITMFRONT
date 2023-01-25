@@ -24,7 +24,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    contractId: any;
+    contractId: String = null;
 
     /**
      * Constructor
@@ -101,7 +101,8 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             data: {
                 show: false,
                 contractId: this.contractId,
-                contractorId: 0
+                contractorId: null,
+                typeFilePayment: 'contrato'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -111,7 +112,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         });
     }
     getData() {
-        debugger
         this.contractId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
 
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
@@ -159,4 +159,8 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             });
     }
 
+    route(route: any){
+        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId +'/contratista/' + route]);
+
+    }
 }

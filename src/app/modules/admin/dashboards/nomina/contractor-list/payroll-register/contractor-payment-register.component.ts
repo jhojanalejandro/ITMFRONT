@@ -23,11 +23,11 @@ import { find } from 'lodash';
 
 export class ContractorPaymentRegisterComponent implements OnInit {
   indeterminate = true;
-  cantidadContratistas: number = 0;
+  cantidadContratistas: number = 1;
   paymentDataList: ContractorPayments[] = [];
   economicDataList: EconomicContractor[] = [];
 
-  economicContractor: EconomicContractor[] = [{ contractorId: 0, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date() }];
+  economicContractor: EconomicContractor[] = [{ contractId: null, contractorId: null, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date() }];
   formFieldHelpers: string[] = [''];
   shareData: boolean = false;
   labelPosition: 'before' | 'after' = 'after';
@@ -47,7 +47,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
     public matDialogRef: MatDialogRef<ContractorPaymentRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
-    if (this.datos.id != null && this.datos.id > 0 && this.datos.idContractors.length == 0) {
+    if (this.datos.id != null  && this.datos.idContractors.length == 0) {
       this.shareData = true;
       this.getEconomicContractorPayment([this.datos.id]);
     } else if (this.datos.idContractors.length == 0) {
@@ -93,6 +93,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
     } else {
       this.formContractorPayment.value.cashPayment = false
     }
+    this.formContractorPayment.value.cashPaymentTotal = Number(this.formContractorPayment.value.cashPaymentTotal.replace(/,/g, ""));
 
     if (this.datos.idContractors.length > 0) {
       for (let index = 0; index < this.datos.idContractors.length; index++) {
@@ -101,6 +102,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
           this.paymentDataList.push({
             userId: this._auth.accessId,
             contractorId: this.datos.idContractors[index],
+            contractId: this.datos.contractId,
             monthPayment: this.formContractorPayment.value.cashPaymentTotal,
             paymentcant: this.formContractorPayment.value.cashPaymentTotal,
             cashPayment: this.formContractorPayment.value.cashPayment,
@@ -114,6 +116,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
       this.paymentDataList = [{
         userId: this._auth.accessId,
         contractorId: this.datos.id,
+        contractId: this.datos.contractId,
         monthPayment: this.formContractorPayment.value.cashPaymentTotal,
         paymentcant: this.formContractorPayment.value.cashPaymentTotal,
         cashPayment: this.formContractorPayment.value.cashPayment,
@@ -176,6 +179,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
           this.economicDataList.push(
             {
               contractorId: this.datos.idContractors[index],
+              contractId: this.datos.contractId,
               debt: dataEconomic.debt - dataEconomic.unitValue,
               freed: 0,
               modifyDate: this.registerDate,
@@ -190,6 +194,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
         {
           id: dataEconomic.id,
           contractorId: this.datos.id,
+          contractId: this.datos.contractId,
           debt: dataEconomic.debt - dataEconomic.unitValue,
           freed: dataEconomic.freed,
           modifyDate: this.registerDate,

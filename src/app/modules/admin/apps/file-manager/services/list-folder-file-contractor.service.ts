@@ -83,7 +83,6 @@ export class ListFolderFileContractorService
             currentFolder = pathItems.find(item => item.contractorId === folderId);
             path.push(currentFolder);
         }
-
         // Start traversing and storing the folders as a path array
         // until we hit null on the folder id
         while ( currentFolder?.folderId )

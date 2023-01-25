@@ -1,5 +1,5 @@
 export interface IGetFilesPayments{
     contractId: any;
-    registerDate: Date;
+    registerDate: any;
     typeFilePayment: any;
 }

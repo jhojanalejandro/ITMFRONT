@@ -218,7 +218,6 @@ export class CollectionAccountsListComponent implements OnInit {
   }
 
   tipoSeleeccionado(event) {
-    debugger
     if(this.dateSearch === null || this.dateSearch === undefined ){
       let year = new Date().getFullYear();
       let month = new Date().getMonth() + 1; 

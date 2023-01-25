@@ -24,6 +24,7 @@ export class MinutaContratoComponent implements OnInit {
   docDefinition: any;
   base64Output: any;
   hiringData: IHiringData = { contractorId: '',
+    contractId: '',
     fechaFinalizacionConvenio: new Date(),
     contrato: '',
     compromiso: '',

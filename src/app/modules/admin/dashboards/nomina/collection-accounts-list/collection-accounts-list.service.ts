@@ -44,15 +44,20 @@ export class CollectionAccountsService
     /**
      * Get item by id
      */
-    getItemById(type: any | null = null,id: any | null = null): Observable<Item>
+    getItemById(type: any | null = null,contractId: any | null = null): Observable<Item>
     {
         if(type === 'documentos'){
             type = 'Cuenta De Cobro';
         }
-        let GetFilesPaymentDto: IGetFilesPayments = {contractId: id, registerDate: new Date(), typeFilePayment: type};
+        let month = new Date().getMonth() + 1;
+        let year = new Date().getFullYear();
+        const params = new HttpParams()
+        .set('contractId', contractId )
+        .set('type', type)
+        .set('date', year + '/' + month);
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl+ environment.GetAllFileByTypePayment;
-        return this._httpClient.post<any>(urlEndPoint,GetFilesPaymentDto).pipe(
+        let urlEndPoint = this.apiUrl+ environment.GetAllFileByDatePayment;
+        return this._httpClient.get<any>(urlEndPoint,{params: params}).pipe(
             tap((items) => {
                 // Update the item
                 const item = [...items.files] = items || null;
@@ -63,7 +68,7 @@ export class CollectionAccountsService
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + id + '!');
+                    return throwError(' No se pudo encontrar el información con id de' + contractId + '!');
                 }
 
                 return of(item);
@@ -105,11 +110,6 @@ export class CollectionAccountsService
     UpdateProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
-    }
-
-    searchByType(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.GetAllFileByTypePayment;
-        return this._httpClient.get<any>(urlEndpointGenerate+data);
     }
   
 }

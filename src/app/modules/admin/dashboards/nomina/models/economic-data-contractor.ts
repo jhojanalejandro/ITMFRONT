@@ -1,7 +1,7 @@
 export interface EconomicContractor{
-    // contractId: string;
     id?: any;
-    contractorId: any;
+    contractorId: string;
+    contractId: string;
     userId?: any;
     registerDate?: Date;
     totalValue?: any;

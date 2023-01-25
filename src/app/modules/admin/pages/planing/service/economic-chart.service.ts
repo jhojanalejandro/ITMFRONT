@@ -17,6 +17,7 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
+import { Activity } from '../models/activity';
 
 @Injectable({
     providedIn: 'root',
@@ -147,6 +148,13 @@ export class EconomicChartService {
             this.apiUrl + environment.getComponent;
         return this._httpClient.get<Componente[]>(urlEndpointGenerate + id);
     }
+
+    getActivity(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.getActivity;
+        return this._httpClient.get<Activity[]>(urlEndpointGenerate + id);
+    }
+
 
     addElementoComponente(data: any) {
         let urlEndpointGenerate =

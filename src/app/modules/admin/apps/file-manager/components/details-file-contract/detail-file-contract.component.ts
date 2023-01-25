@@ -6,7 +6,6 @@ import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
-import { FileListComponent } from '../../list-file/file-list.component';
 import { FileListManagerService } from '../../services/list-file.service';
 import { ListFolderContractorComponent } from '../../list-folder-contractor/list-folder-contractor.component';
 
@@ -36,8 +35,6 @@ export class DetailFileContractComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
-        //this.numberWin = this.router.snapshot.paramMap.get('number') || 'null';
-        // Open the drawer
         this._listComponent.matDrawer.open();
 
         // Get the item

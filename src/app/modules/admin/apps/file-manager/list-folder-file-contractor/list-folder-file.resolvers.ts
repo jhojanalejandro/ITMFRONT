@@ -59,7 +59,6 @@ export class FileManagerFolderCFResolver implements Resolve<any>
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
-                        
                            // Log the error
                            console.error(error);
                            // Get the parent url

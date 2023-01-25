@@ -60,7 +60,6 @@ export const environment = {
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
-    GetAllFileByTypePayment: 'Files/GetAllByType/',
 
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete',
@@ -75,7 +74,9 @@ export const environment = {
 
     addComponent: 'Componente/Add/',
     addActivity: 'Componente/AddActivity/',
-    getComponent: 'Componente/Get/',
+    getActivity: 'Componente/GetActivity/',
+    getComponent: 'Componente/GetComponent/',
+
     getComponentById: 'Componente/GetById/',
 
     addElement: 'ElementosComponente/Add/',

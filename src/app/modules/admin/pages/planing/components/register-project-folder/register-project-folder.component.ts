@@ -99,7 +99,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       adicion: false,
       tipoContrato: '',
-      idContrato: 0,
+      idContrato: null,
       update: this.formProject.value.updateData
     }
     const registerProject: IProjectFolder = {

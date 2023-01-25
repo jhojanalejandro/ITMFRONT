@@ -6,7 +6,6 @@ import { FileManagerService } from 'app/modules/admin/apps/file-manager/services
 import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector       : 'file-manager-list',
@@ -35,7 +34,6 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         private _router: Router,
         private _fileManagerService: FileManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _matDialog: MatDialog,
     ){}
 
     ngOnInit(): void

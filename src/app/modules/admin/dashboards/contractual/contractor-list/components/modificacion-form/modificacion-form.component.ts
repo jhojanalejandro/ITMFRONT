@@ -249,7 +249,6 @@ export class ModificacionFormComponent implements OnInit {
         this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.data.contractId, true);
     }
     getDataElemento() {
-        debugger
         this._economicService.getElementoById(this._data.data.elementId).subscribe((resp) => {
             if (resp.recursos == 0) {
                 swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');

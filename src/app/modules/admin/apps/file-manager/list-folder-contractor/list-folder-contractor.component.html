@@ -137,7 +137,7 @@
                                         <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/file/',contractId+'/', folder.id]">
+                                                (click)="route(folder.id)">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->

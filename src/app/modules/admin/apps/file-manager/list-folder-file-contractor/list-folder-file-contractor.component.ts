@@ -109,6 +109,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             autoFocus: false,
             data: {
                 contractorId: this.contractorId,
+                contractId: this.contractId,
                 folderName: 'vacio'
             }
         });
@@ -144,7 +145,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             .subscribe((items: ItemsC) => {
                 this.items = items;
                 if (items.folders.length > 0) {
-                    this.contractorId = this.items.folders[0].contractorId + '/';
+                    this.contractorId = this.items.folders[0].contractorId;
                 }
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -164,7 +165,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     }
 
     getFilesFolder = async (id: any) => {
-        this._fileService.getItemById(id).pipe(takeUntil(this._unsubscribeAll))
+        this._fileService.getItemById(this.contractId, this.contractorId, id).pipe(takeUntil(this._unsubscribeAll))
             .subscribe((Response: any) => {
                 const jszip = new JSZip();
                 for (let i = 0; i < Response.length; i++) {

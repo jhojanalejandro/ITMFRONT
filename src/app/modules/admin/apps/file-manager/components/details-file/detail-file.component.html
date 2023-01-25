@@ -89,11 +89,18 @@
     
     <div class="flex mt-2 border-t">
         <div class="py-3">
-            <ng-container *ngIf="item.descriptionFile">
-                <div>{{item.observation}}</div>
+            <ng-container *ngIf="item.detailFile">
+                <div>1: {{item.detailFile.observation}}</div>
             </ng-container>
-            <ng-container *ngIf="!item.observation">
-                <div class="italic text-secondary">Click here to add a description</div>
+        </div>
+    </div>
+    <div class="flex items-center justify-between mt-8">
+        <div class="text-lg font-medium">Motivo rechazo documento</div>
+    </div>
+    <div class="flex mt-2 border-t">
+        <div class="py-3">
+            <ng-container *ngIf="item.detailFile">
+                <div>{{item.detailFile.motivo}}</div>
             </ng-container>
         </div>
     </div>

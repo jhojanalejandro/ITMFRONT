@@ -52,7 +52,7 @@
                 </svg>
                Nuevo Componente
             </button>
-            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addActividad()">
+            <button *ngIf="dataComponente != null" class="ml-3" mat-flat-button [color]="'primary'" (click)="addActividad()">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
@@ -86,7 +86,8 @@
                             <fuse-card class="flex flex-col w-full p-8 pt-6 filter-list border">
                                 <div class="flex items-center justify-between">
                                     <div class="text-2xl font-semibold leading-tight">Nombre:
-                                        {{dataComponente.nombreComponente}}</div>
+                                        {{dataComponente.nombreComponente}}
+                                    </div>
                                     <div class="-mr-4">
                                         <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
@@ -96,10 +97,6 @@
                                             <button mat-menu-item (click)="addElements()">
                                                 <mat-icon svgIcon="add_circle"></mat-icon>
                                                 Agregar Elemento
-                                            </button>
-                                            <button mat-menu-item (click)="addElements()">
-                                                <mat-icon svgIcon="add_circle"></mat-icon>
-                                                Agregar Actividad
                                             </button>
                                             <button (click)="editComponent(dataComponente)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar Componente
@@ -118,6 +115,13 @@
                                         <div>Cantidad de Elementos: {{dataComponente.elementos.length}} </div>
                                     </div>
                                 </div>
+                                <div class="flex flex-col my-2">
+                                    <span>Actividades:</span>
+                                    <div *ngFor="let item of activities" class="text-2xl font-semibold leading-tight">
+                                       Actividad: {{item.nombreActividad}}
+                                    </div>
+                                </div>
+
                             </fuse-card>
                         </div>
                         <div *ngIf="abrirDivElemento" style="width: 50%;">

@@ -3,7 +3,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { HomeContractorService } from './services/home-contractor.service';
@@ -17,6 +16,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContractorListService } from '../../dashboards/contractual/service/contractor-list.service';
 import { Contractor } from '../../dashboards/contractual/models/contractort';
+import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -26,7 +26,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeContractorComponent implements OnInit, OnDestroy {
-  dataCuenta: Contractor;
+  dataCuenta: PaymentAccount;
   id: any;
   userName: any;
   cuentaCobro: boolean = false;
@@ -117,7 +117,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   }
 
   async getDataContractor() {
-    (await this._contractorListService.getContractorById(this._auth.accessId)).subscribe((Response) => {
+    (await this._contractorListService.getContractorById(this._auth.accessId, this._auth.codeC)).subscribe((Response) => {
       this.dataCuenta = Response;
     });
   }

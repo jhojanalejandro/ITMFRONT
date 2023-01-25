@@ -259,7 +259,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
   registrarDatosContratacion(data: any) {
     if (data == null) {
-      data = { id: 0, contractId: 0, componenteId: 0, elementId: 0 }
+      data = { id: null, contractId: null, componenteId: null, elementId: null }
       this.selection.selected.forEach(element => {
         this.listId.push(element.id);
       });

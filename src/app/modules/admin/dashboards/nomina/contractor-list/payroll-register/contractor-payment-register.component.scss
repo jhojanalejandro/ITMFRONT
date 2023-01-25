@@ -4,8 +4,6 @@
     //background-color: black;
 }
 .hiring{
-    padding-left: 15px;
-    margin-right: 10px;
     width: 170px;
 }
 
@@ -17,13 +15,22 @@
 mat-form-field{
     width: 240px !important;
 }
-.nationality{
-    text-align: center;
-}
 
 .text{
     font-weight: bold;
     font-size: 30px;
+}
+
+.action{
+    margin-right: 10px !important;
+}
+
+
+.hiringD{
+    padding-left: 8px;
+    margin-right: 8px;
+    width: 810PX !important;
+    max-width: 810px !important;
 }
 .folder{
     text-align: center;

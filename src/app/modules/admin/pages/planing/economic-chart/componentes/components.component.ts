@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { ActividadFormComponent } from './actividad-form/actividad-form.component';
+import { Activity } from '../../models/activity';
 
 @Component({
     selector: 'components-card',
@@ -33,6 +34,7 @@ export class AddComponentsComponent implements OnInit {
     abrirDivComponente: boolean = false;
     abrirDivElemento: boolean = false;
     data: any;
+    activities: Activity[] = [];
     id: string = null;
     configForm: FormGroup;
     subTotal: number = 0;
@@ -62,6 +64,7 @@ export class AddComponentsComponent implements OnInit {
         this.abrirDivElemento = false;
         this.dataComponente = e;
         this.abrirDivComponente = true;
+        this.getActivity();
     }
 
     abrirDivElement(e: any) {
@@ -89,6 +92,8 @@ export class AddComponentsComponent implements OnInit {
                 // this._router.navigateByUrl('docs/ecommerce/cuadroEconomico');
             }
         });
+
+
     }
 
     totalesPlaneacion() {
@@ -97,7 +102,7 @@ export class AddComponentsComponent implements OnInit {
         this.data.forEach((element) => {
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
-                    this.elementosCant ++;
+                    this.elementosCant++;
                     this.subTotal += item.valorTotal;
                     this.contractorCant += item.cantidadContratistas
                 });
@@ -184,7 +189,7 @@ export class AddComponentsComponent implements OnInit {
             data: {
                 elemento,
                 idComponente: this.dataComponente.id,
-                idElemento: 0,
+                idElemento: null,
                 idContrato: this.id,
                 edit: false
             },
@@ -253,6 +258,15 @@ export class AddComponentsComponent implements OnInit {
 
         }, (response) => {
             Swal.fire('Error', 'Error al Registrar la informacion', 'error');
+        });
+    }
+
+    private getActivity(){
+        this._Economicservice.getActivity(this.dataComponente.id).subscribe((response) => {
+            if (response.length != 0) {
+                this.activities = response;
+                this._changeDetectorRef.detectChanges();
+            }
         });
     }
 }

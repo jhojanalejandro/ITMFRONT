@@ -28,11 +28,11 @@ import { ContractorListService } from '../../contractual/service/contractor-list
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorListComponent implements OnInit, OnDestroy {
-  id: any;
+  contractId: string;
   data: any;
   userName: any;
   value: any;
-  listId: any[] = []; 
+  listId: any[] = [];
   disableElement: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
@@ -85,8 +85,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 */
   ngOnInit(): void {
     this.userName = this.auth.accessName
-    this.id = this.router.snapshot.paramMap.get('id') || 'null';
-    this.getDataContractor(this.id);
+    this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
+    this.getDataContractor(this.contractId);
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -110,8 +110,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
   }
   registerPayment(data: any) {
-    if(data == null){
-      data = {id: 0, contractId: 0, componenteId: 0, elementId: 0}
+    if (data == null) {
+      data = { id: 0, contractId: null, componenteId: null, elementId: null }
       this.selection.selected.forEach(element => {
         this.listId.push(element.id);
       });
@@ -124,12 +124,13 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         idUser: this.auth.accessId,
         id: data.id,
         nombre: data.nombre,
-        idContractors: this.listId
+        idContractors: this.listId,
+        contractId: this.contractId
       }
     });
     dialogRefPayment.afterClosed().subscribe((result) => {
       if (result) {
-        this.getDataContractor(this.id);
+        this.getDataContractor(this.contractId);
       }
       this.listId = [];
     });
@@ -254,7 +255,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
             swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
 
           }
-          this.getDataContractor(this.id);
+          this.getDataContractor(this.contractId);
 
         },
           (response) => {
@@ -269,7 +270,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     // this.selection.selected.forEach(element => {
 
     // });
-    let ids: any = { 'idContrato': this.id, 'idContratistas': this.selection.selected }
+    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.selection.selected }
     this._contractorList.sendmailsAccounts(ids).subscribe((Response) => {
       console.log(Response);
 

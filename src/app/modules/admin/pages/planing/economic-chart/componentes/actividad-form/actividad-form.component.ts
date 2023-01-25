@@ -45,7 +45,7 @@ export class ActividadFormComponent implements OnInit {
     data: any;
     nombreActivivdad: string = null;
     update: boolean;
-    id: number = 0;
+    id: any = 0;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     componentForm: FormGroup;
@@ -135,8 +135,17 @@ export class ActividadFormComponent implements OnInit {
                         'Se guardó la información!',
                         'success'
                     );
+                }else{
+                    Swal.fire(
+                        'Ei!',
+                        'Algo sucedio, vuelve a intentarlo!',
+                        'error'
+                    );
                 }
-            });
+            },(error => {
+                console.log(error);
+                
+            }));
             this.matDialogRef.close(true);
         }
     }

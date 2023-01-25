@@ -42,7 +42,7 @@ export class UploadFileComponent implements OnInit {
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) private _data: { show: any, contractorId: any, contractId: any, split: boolean }
+    @Inject(MAT_DIALOG_DATA) private _data
   ) {
 
     setInterval(() => {
@@ -82,30 +82,7 @@ export class UploadFileComponent implements OnInit {
   }
 
 
-  cerrar(): void {
-    this.matDialogRef.close();
-  }
-  onUpload() {
-    this.loading = !this.loading;
-    // this.fileUploadService.upload(this.file).subscribe(
-    //     (event: any) => {
-    //         if (typeof (event) === 'object') {
-
-    //           // Short link via api response
-    //           this.shortLink = event.link;
-    //           this.loading = false; // Flag variable 
-    //         }
-    //     }
-    // );
-  }
-
   addFileContractor(event) {
-    if (this._data.split) {
-      let arr = this._data.contractorId.split('/');
-      this._data.contractId = arr[1];
-      this._data.contractorId = arr[0];
-    }
-
     const registerFile: IFileContractor = {
       userId: this._auth.accessId,
       contractorId: this._data.contractorId,
@@ -116,16 +93,17 @@ export class UploadFileComponent implements OnInit {
       registerDate: this.registerDate,
       modifyDate: this.registerDate,
       filedata: event,
-      passed: true,
-      typeFilePayment: 'contrato',
+      passed: null,
+      typeFilePayment: this._data.typeFilePayment,
       monthPayment: null,
-      FolderId: null
+      FolderId: this._data.folderId
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
         swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
         this.ref.detectChanges();
         this.ref.markForCheck();
+        this.closeModal();
       }
 
     },
@@ -142,12 +120,14 @@ export class UploadFileComponent implements OnInit {
   addFileContract(event) {
     const registerProject: any = {
       userId: this._auth.accessId,
-      folderId: this._data.contractId,
+      FolderId: null,
+      contractId: this._data.contractId,
       filesName: this.formFile.value.filesName,
       typeFile: this.formFile.value.typeFile,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate,
-      fildata: event
+      fildata: event,
+      typeFilePayment: this._data.typeFilePayment,
     };
     this._upload.UploadFileContractor(registerProject).subscribe((res) => {
       if (res) {
@@ -155,6 +135,7 @@ export class UploadFileComponent implements OnInit {
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
+        this.closeModal();
       }
 
     },
@@ -191,6 +172,7 @@ export class UploadFileComponent implements OnInit {
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();
+          this.closeModal();
         }
 
       },
@@ -217,6 +199,10 @@ export class UploadFileComponent implements OnInit {
     reader.readAsBinaryString(file);
     reader.onload = (event) => result.next(btoa(event.target.result.toString()));
     return result;
+  }
+  
+  closeModal(): void{
+    this.matDialogRef.close(true);
   }
 
 }

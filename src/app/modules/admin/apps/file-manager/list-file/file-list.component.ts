@@ -15,7 +15,6 @@ import { ObservationFileComponent } from './observation-File/observation-file.co
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
 
 
-
 @Component({
     selector: 'file-list',
     templateUrl: './file-list.component.html',
@@ -39,7 +38,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    data: any;
+    contractorId: string;
+    contractId: string;
+    folderId: string;
     /**
      * Constructor
      */
@@ -54,9 +55,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.data = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
+        this.folderId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
         this.getData();
-
     }
 
     /**
@@ -69,7 +71,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     getId(id: any) {
-        this.data = id;
+        this.contractorId = id;
     }
     /**
      * On backdrop clicked
@@ -119,13 +121,15 @@ export class FileListComponent implements OnInit, OnDestroy {
             data: {
                 show: false,
                 split: true,
-                contractorId: this.data,
-                folderId: '1'
+                contractorId: this.contractorId,
+                contractId: this.contractId,
+                folderId: this.folderId,
+                typeFilePayment: 'contratista'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                this.getData();
+                window.location.reload();
             }
         });
     }
@@ -138,19 +142,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
-                    file.passed = false;
-                    let updateFile: IFileContractor = file;
-        
-                    this._uploadService.UploadFileContractor(updateFile).subscribe((res) => {
-                        if (res) {
-                            swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
-                        }
-                    },
-                        (response) => {
-                            console.log(response);
-        
-                            swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-                    });
+                    swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
                 }
             });
         } else {
@@ -226,7 +218,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this.items.forEach(element => {
                     if (element.passed) {
                         element.passed = 'aprobado'
-                    }else if(element.passed != null && element.passed === true){
+                    }else if(element.passed != null && element.passed === false){
                         element.passed = 'rechazado'
                     }else{
                         element.passed = 'revisar'

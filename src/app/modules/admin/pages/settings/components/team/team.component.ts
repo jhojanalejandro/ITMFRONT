@@ -37,7 +37,7 @@ export class SettingsTeamComponent implements OnInit {
                 // Mark for check
                 for (let index = 0; index < teams.length; index++) {
                     if (teams[index].avatar == 'vacio') {
-                        teams[index].avatar = 'assets/images/avatars/brian-hughes.png';
+                        teams[index].avatar = 'assets/images/avatars/usercircle.png';
                     }
                     switch (teams[index].idRoll) {
                         case 1:

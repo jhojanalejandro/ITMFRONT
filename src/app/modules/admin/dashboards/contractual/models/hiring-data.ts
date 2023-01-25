@@ -2,7 +2,8 @@ import { DecimalPipe } from "@angular/common";
 
 export interface IHiringData{
     id?: any;
-    contractorId: any;
+    contractorId: string;
+    contractId: string;
     userId?: any;
     fechaFinalizacionConvenio: Date;
     contrato: string;

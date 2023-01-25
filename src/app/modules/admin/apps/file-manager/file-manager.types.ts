@@ -21,4 +21,5 @@ export interface Item
     size?: string;
     type?: string;
     description?: string | null;
+    detailFile?: any
 }

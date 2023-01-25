@@ -56,7 +56,7 @@ export const fileManagerRoutes: Route[] = [
                 ]
             },
             {
-                path     : 'folders/file/:contractId/:contractorId',
+                path     : 'folders/files/:contractId/contratista/:contractorId',
                 component: ListFolderFileContractorComponent,
                 resolve  : {
                     item: FileManagerFolderCFResolver
@@ -98,7 +98,7 @@ export const fileManagerRoutes: Route[] = [
                 },
                 children : [
                     {
-                        path         : 'details/file/:id',
+                        path         : 'details/fileContractor/:id',
                         component    : DetailFileComponent,
                         resolve      : {
                             item: DetailFileManagerItemFResolver

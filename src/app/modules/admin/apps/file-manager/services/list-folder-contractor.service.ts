@@ -77,11 +77,10 @@ export class ListFolderContractorService
         // Clone the items
         for (let index = 0; index < response.length; index++) {
             response[index].type = 'folder';
+            response[index].contractId = folderIds;
         }
-        let items = cloneDeep(response);
 
-        items = items.filter(item => item.contractId === Number(folderIds));
-        
+        let items = cloneDeep(response);        
         // Separate the items by folders and files
         const folders = items.filter(item => item.type === 'folder');
 
@@ -93,14 +92,7 @@ export class ListFolderContractorService
         const path = [];
 
         // Prepare the current folder
-        let currentFolder = null;
-
-        // Get the current folder and add it as the first entry
-        if ( folderIds )
-        {
-            currentFolder = pathItems.find(item => item.contractId === Number(folderIds));
-            path.push(currentFolder);
-        }
+        let currentFolder = pathItems;
 
         // Start traversing and storing the folders as a path array
         // until we hit null on the folder id

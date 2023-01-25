@@ -1,8 +1,8 @@
 export interface IFileContractor{
     id?: any;
     userId: any;
-    contractorId: any;
-    contractId: any;
+    contractorId: string;
+    contractId: string;
     filesName: string;
     filedata: string;
     typeFile: string;
@@ -11,7 +11,7 @@ export interface IFileContractor{
     modifyDate: Date;
     passed: boolean;
     typeFilePayment: string;
-    monthPayment: string;
+    monthPayment?: string;
     FolderId: string;
 }
 
@@ -20,5 +20,6 @@ export interface IDetailFile{
     fileId: any;
     observation: string;
     motivo: string;
+    files: IFileContractor
 }
 

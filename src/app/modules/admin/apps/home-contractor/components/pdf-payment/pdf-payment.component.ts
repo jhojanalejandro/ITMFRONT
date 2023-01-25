@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { Contractor } from 'app/modules/admin/dashboards/contractual/models/contractort';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IElements } from 'app/modules/admin/pages/planing/models/element';
+import { PaymentAccount } from 'app/modules/admin/dashboards/contractual/models/paymentAccount';
+import { DatePipe } from '@angular/common';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -16,11 +16,13 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class PdfPaymentComponent implements OnInit {
     @ViewChild('pdfTable') pdfTable: ElementRef;
-    @Input('dataCuenta') dataCuenta: Contractor;
+    @Input('dataCuenta') dataCuenta: PaymentAccount;
     date: Date = new Date();
     valueLetter: any;
     contrato: string = '0654651';
     listaData: any[] = [];
+    contador: number = 0;
+
     data: any[] = [];
     fechaInicio: Date = new Date();
     listaObligaciones: IElements[] = [{
@@ -89,11 +91,12 @@ export class PdfPaymentComponent implements OnInit {
     ];
     // dataCuenta: Contractor = { tipoContratacion: '', codigo: '', convenio: '', fechaInicio: '', fechaFin: '', nombre: '', apellido: '', identificacion: '', lugarExpedicion: '', fechaNacimiento: new Date(), direccion: '', departamento: '', municipio: '', telefono: '', celular: '', correo: '', cuentaBancaria: '', tipoCuenta: '', entidadCuentaBancaria: '', from: new Date(), to: new Date(),uniTValue: 0, company: ''}
 
-    constructor() { }
+    constructor(private datepipe: DatePipe) {
+    }
 
     ngOnInit(): void {
-        this.downloadPDF();
-        this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.unitValue, 'PESOS')
+        this.downloadPDFInforme();
+        this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
 
     }
 
@@ -133,9 +136,8 @@ export class PdfPaymentComponent implements OnInit {
         });
     }
     public downloadPDFCuentaCobro() {
-        //const pdfTable = this.pdfTable.nativeElement;
-        //var html = htmlToPdfmake(pdfTable.innerHTML);
-
+        let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
+        this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
         const documentDefinition = {
             content: [
                 {
@@ -165,7 +167,7 @@ export class PdfPaymentComponent implements OnInit {
                                 text: '',
                                 alignment: 'center',
                             }, {
-                                text: '02/01/2023',
+                                text: latest_date,
                                 alignment: 'center',
                             }, {
                                 text: '3',
@@ -246,7 +248,7 @@ export class PdfPaymentComponent implements OnInit {
                                 },
                                 {
                                     colSpan: 5,
-                                    text: this.dataCuenta.nombre + ' ' + this.dataCuenta.apellido,
+                                    text: this.dataCuenta.nombre,
                                     style: 'tableHeader',
                                     alignment: 'center',
                                 },
@@ -306,7 +308,7 @@ export class PdfPaymentComponent implements OnInit {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: 'Medellín',
+                                    text: this.dataCuenta.lugarExpedicion,
                                     alignment: 'center'
                                 },
                             ],
@@ -363,12 +365,12 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'CONTRATO:',
                                 },
                                 {
-                                    text: this.contrato,
+                                    text: 'N° - ' + this.contrato,
                                     style: 'tableHeader',
                                     alignment: 'center',
                                 },
                                 {
-                                    text: 'No. 4600094924 de 2022',
+                                    text: this.dataCuenta.convenio,
                                     alignment: 'center',
                                 },
                             ],
@@ -387,11 +389,25 @@ export class PdfPaymentComponent implements OnInit {
                             ],
                             [
                                 {
+                                    text: 'VALOR:',
+                                },
+                                {
+                                    colSpan: 2,
+                                    text: this.dataCuenta.paymentcant,
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: '',
+                                    alignment: 'center',
+                                },
+                            ],
+                            [
+                                {
                                     text: 'EN LETRAS:',
                                 },
                                 {
                                     colSpan: 2,
-                                    text: 'Doscientos treinta y tres mil trecientos treinta y tres pesos M/L',
+                                    text: this.valueLetter,
                                     alignment: 'center',
                                 },
                                 {
@@ -402,7 +418,7 @@ export class PdfPaymentComponent implements OnInit {
                             [
                                 {
                                     colSpan: 3,
-                                    text: 'Favor consignar en la cuenta de AHORROS BANCOLOMBIA N° 21800002474',
+                                    text: 'Favor consignar en la cuenta de ' + this.dataCuenta.tipoCuenta + this.dataCuenta.entidadCuentaBancaria + ' N° ' + this.dataCuenta.cuentaBancaria,
                                 },
                                 {
                                     text: '',
@@ -415,7 +431,7 @@ export class PdfPaymentComponent implements OnInit {
                     },
                 },
                 { text: '\n\nFIRMA: ' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
-                { text: this.dataCuenta.nombre + ' ' + this.dataCuenta.apellido }, { text: 'CEDULA N: \t' + this.dataCuenta.identificacion }
+                { text: this.dataCuenta.nombre }, { text: 'CEDULA N: \t' + this.dataCuenta.identificacion }
             ],
             styles: {
                 header: {
@@ -457,10 +473,9 @@ export class PdfPaymentComponent implements OnInit {
     }
 
     public downloadPDFInforme() {
-        //const pdfTable = this.pdfTable.nativeElement;
-        //var html = htmlToPdfmake(pdfTable.innerHTML);
+        let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
         for (let index = 0; index < this.listaObligaciones.length; index++) {
-            this.listaData[index] = [ [
+            this.listaData[index] = [
                 {
                     text: this.listaObligaciones[index].obligacionesEspecificas,
                 },
@@ -473,11 +488,9 @@ export class PdfPaymentComponent implements OnInit {
                     alignment: 'center',
                 }
             ]
-
-            ]
         }
         console.log(this.listaData);
-        
+
         const documentDefinition = {
             content: [
                 {
@@ -502,7 +515,7 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'NOMBRE DEL CONTRATISTA',
                                     style: 'tableHeader',
                                 }, {
-                                    text: this.dataCuenta.nombre + ' ' + this.dataCuenta.apellido,
+                                    text: this.dataCuenta.nombre,
                                 }
                             ],
                             [
@@ -518,7 +531,7 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'FECHA DE INICIO',
                                     style: 'tableHeader',
                                 }, {
-                                    text: new Date(),
+                                    text: latest_date,
                                 }
                             ],
                             [
@@ -587,10 +600,7 @@ export class PdfPaymentComponent implements OnInit {
                                     style: 'tableHeader',
                                 },
                             ],
-                            this.listaData,
-
-
-                        ],
+                        ].concat(this.listaData),
                     },
                 },
                 {
@@ -736,12 +746,12 @@ export class PdfPaymentComponent implements OnInit {
                     },
                 },
                 { text: '\n\n PERIODO EJECUTADO: \t\t\t del 29 de agosto al 30 de agosto: ' },
-                { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t VALOR'},
-                { text: '\n\n Para constancia se firma en Medellín a los 23 días del mes de septiembre del año 2022'},
-                {text: '\n\n' },{canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350-2*40, y2: 1, lineWidth: 1, margin: [5,0] }]} ,
-                {text:  ' JHOJAN ALEJANDRO HERNANDEZ YEPES\n' }, 
-                {text: 'CEDULA N: \t' + '\n'},
-                {text: 'Contratista ITM' }
+                { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t VALOR' },
+                { text: '\n\n Para constancia se firma en Medellín a los 23 días del mes de septiembre del año 2022' },
+                { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
+                { text: ' JHOJAN ALEJANDRO HERNANDEZ YEPES\n' },
+                { text: 'CEDULA N: \t' + '\n' },
+                { text: 'Contratista ITM' }
 
             ],
             styles: {

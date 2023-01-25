@@ -64,10 +64,10 @@ export class RegisterFolderContractorComponent implements OnInit {
     this.ref.detectChanges();
   }
   async addProjectFolder() {
-    
     const registerGFolder: IFolderContractor={
       userId: Number(this.authService.accessId),
-      contractorId: Number(this._data.contractorId),
+      contractorId: this._data.contractorId,
+      contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
@@ -78,7 +78,8 @@ export class RegisterFolderContractorComponent implements OnInit {
           swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
           //this.matDialogRef.close();  
           this.ref.detectChanges();
-          this.ref.markForCheck();   
+          this.ref.markForCheck();  
+          this.cerrar();  
         }
 
     },(response) => {
@@ -96,6 +97,7 @@ export class RegisterFolderContractorComponent implements OnInit {
       id: this._data.data.id,
       userId: this.authService.accessId,
       contractorId: this._data.contractId,
+      contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 
@@ -104,9 +106,9 @@ export class RegisterFolderContractorComponent implements OnInit {
     this._uploadService.UpdateProjectFolder(registerProject).subscribe((res) => {   
         if(res){
           swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
-          //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
+          this.cerrar();  
         }
 
     },
@@ -121,7 +123,7 @@ export class RegisterFolderContractorComponent implements OnInit {
 
   }
   cerrar(): void {
-    this.matDialogRef.close();
+    this.matDialogRef.close(true);
   } 
 
 }

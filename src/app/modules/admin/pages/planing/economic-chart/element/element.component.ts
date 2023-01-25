@@ -28,6 +28,7 @@ import { EconomicChartService } from '../../service/economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato } from '../../models/detalle-contrato';
+import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
     selector: 'app-alement',
@@ -37,11 +38,10 @@ import { DetalleContrato } from '../../models/detalle-contrato';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ElementCardComponent implements OnInit, OnDestroy {
-    @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
     modificaciones: any = GlobalConst.requierePoliza;
     tipoModificaciones: any = GlobalConst.tipoModificacion;
-
+    btnOpcion: string = 'Guardar';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     valorDiaContratista: number = 0;
@@ -51,15 +51,17 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     allelementos: string[] = [
         'Profesional En Sistemas',
         'Profesional en areas de derecho',
-        'Profesional Especializad',
+        'Profesional Especializado',
+        'Profesional Docente',
         'Tecnologo',
+        'Tecnico',
     ];
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
     elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
-    recursos: number;
-    totalV: any;
+    recursos: number = 0;
+    totalV: number;
     totalExacto: number;
     update: boolean;
     showDate: boolean = true;
@@ -93,6 +95,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _economicService: EconomicChartService
     ) {
         if (this._data.edit === true) {
+            this.btnOpcion ='Actualizar';
             this.showDate = false;
             this.elemento = this._data.elemento;
             this.totalValue = this._data.elemento.valorTotal;
@@ -104,25 +107,25 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         }, 1000);
 
         this.elementForm = this._formBuilder.group({
-            contractorCant: new FormControl(this.elemento.cantidadContratistas, Validators.required),
-            cantDay: new FormControl(this.elemento.cantidadDias, Validators.required),
-            unitValue: new FormControl(this.elemento.valorUnidad, Validators.required),
-            totalValue: new FormControl(this.totalValue, Validators.required),
-            id: new FormControl(this.id),
-            unitValueDay: new FormControl(this.elemento.valorPorDia, Validators.required),
-            totalExacto: new FormControl(this.totalExacto, Validators.required),
-            cpc: new FormControl(this.elemento.cpc, Validators.required),
-            nombreCpc: new FormControl(this.elemento.nombreCpc, Validators.required),
-            tipoElemento: new FormControl(this.elemento.tipoElemento, Validators.required),
-            nombreElemento: new FormControl(this.elemento.nombreElemento, Validators.required),
-            modificacion: new FormControl(null, Validators.required),
-            recursos: new FormControl(this.elemento.recursos, Validators.required),
-            fechamodificacion: new FormControl(null, Validators.required),
-            consecutivo: new FormControl(this.elemento.consecutivo, Validators.required),
-            valordiaContratista: new FormControl(this.elemento.valorPorDiaContratista, Validators.required),
-            obligacionesEspecificas: new FormControl(this.elemento.obligacionesEspecificas),
-            obligacionesGenerales: new FormControl(this.elemento.obligacionesGenerales),
-            objetoElemento: new FormControl(this.elemento.objetoElemento)
+            contractorCant: [this.elemento.cantidadContratistas, Validators.required],
+            cantDay: [this.elemento.cantidadDias, Validators.required],
+            unitValue: [this.elemento.valorUnidad, Validators.required],
+            totalValue: [this.totalValue, Validators.required],
+            id: [this.id],
+            unitValueDay: [this.elemento.valorPorDia, Validators.required],
+            totalExacto: [this.totalExacto, Validators.required],
+            cpc: [this.elemento.cpc],
+            nombreCpc: [this.elemento.nombreCpc],
+            tipoElemento: [this.elemento.tipoElemento],
+            nombreElemento: [this.elemento.nombreElemento, Validators.required],
+            modificacion: [null],
+            recursos: [this.elemento.recursos],
+            fechamodificacion: [null],
+            consecutivo: [this.elemento.consecutivo, Validators.required],
+            valordiaContratista: [this.elemento.valorPorDiaContratista, Validators.required],
+            obligacionesEspecificas: [this.elemento.obligacionesEspecificas],
+            obligacionesGenerales: [this.elemento.obligacionesGenerales],
+            objetoElemento: [this.elemento.objetoElemento]
 
         });
         this.filteredOptions =
@@ -134,7 +137,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getDateAdiction();
-        debugger
         console.log(this._data);
 
     }
@@ -168,7 +170,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             });
     }
 
-    addElement() {
+    addElement(): void {
         let modificacion: any;
         if (this.elementForm.value.modificacion === 'Si') {
             modificacion = true;
@@ -199,13 +201,12 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             nombreCpc: this.elementForm.value.nombreCpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
-            recursos: this.elementForm.value.recursos,
+            recursos: this.recursos,
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento
         };
-        debugger
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire('Exitoso', 'Registrado Exitosamente!', 'success');
@@ -239,6 +240,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 this.totalValueContratista = Number(
                     this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
                 );
+                this.totalExacto = this.totalValue;
             } else if (this.elemento.valorTotal != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
                 this.totalExacto = Number(
                     this.elemento.valorPorDia * this.elementForm.value.cantDay
@@ -250,7 +252,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 this.totalValueContratista = Number(
                     this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
                 );
-                this.recursos = this.totalExacto - this.elementForm.value.totalValue;
+                this.recursos =  this.elementForm.value.totalValue - this.totalExacto;
             }
 
         }
@@ -280,19 +282,20 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.idContrato, true);
     }
     onChange(event) {
-        debugger
         if(this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0){
-            this.totalV = parseFloat(this.elementForm.value.totalValue).toFixed(6);
-            this.totalV = Math.round(this.totalV * 100) 
+            this.totalV = Number(this.elementForm.value.totalValue.replace(/,/g, ""));
             if(this.totalValue != this.elementForm.value.totalValue){
                 if(this.totalValue < this.totalV){
-                    this.recursos = Number(this.totalValue) - Number(this.elementForm.value.totalValue)
+                    this.recursos = this.totalV -Number(this.totalValue);
+                }else if(this.totalValue > this.totalV){
+                    this.recursos =  Number(this.totalValue) - this.totalV;
                 }
             }
-            this.totalValue = this.elementForm.value.totalValue
+            this.totalValue = this.totalV
         } else{
-            this.totalValue = this.elementForm.value.totalValue
+            this.totalValue = this.totalV
         }       
 
     }
+    
 }

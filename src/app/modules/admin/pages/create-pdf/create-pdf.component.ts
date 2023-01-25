@@ -107,7 +107,6 @@ export class CreatePdfComponent implements OnInit {
 
     //         ]
     //     }
-    //     debugger
     //     console.log(this.listaData);
 
     //     const documentDefinition = {
@@ -435,7 +434,6 @@ export class CreatePdfComponent implements OnInit {
 
             ]
         }
-        debugger
         console.log(this.listaData);
 
         const documentDefinition = {

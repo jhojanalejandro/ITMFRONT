@@ -172,7 +172,7 @@
                 </div>
                 <div class="nationality">
                     <mat-form-field class="hiring" appearance="outline">
-                        <mat-label>Supervisor</mat-label>
+                        <mat-label>{{supervisor}}</mat-label>
                         <mat-select  [(ngModel)]="hinringData.supervisorItm" [formControlName]="'supervisorItm'" name="supervisorItm">
                             <mat-option *ngFor="let admin of userAdmins" [value]="admin.id">
                                 {{admin.userName}}
@@ -184,7 +184,7 @@
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="hiring" appearance="outline">
-                        <mat-label>Nivel</mat-label>
+                        <mat-label>{{nivel}}</mat-label>
                         <mat-select [(ngModel)]="hinringData.nivel" [formControlName]="'nivel'" name="nivel">
                             <mat-option *ngFor="let nivel of niveles" [value]="nivel.viewValue">
                                 {{nivel.viewValue}}
@@ -201,9 +201,9 @@
         </mat-dialog-content>
         <mat-dialog-actions class="action" align="end">
             <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
-            <button mat-flat-button [color]="'primary'" [disabled]="formContractor .disabled"
+            <button mat-flat-button [color]="'primary'" [disabled]="formContractor.disabled"
                 *ngIf="!update" (click)="addContractor()">Guardar</button>
-                <button mat-flat-button *ngIf="update"  [color]="'primary'"  [disabled]="formContractor .disabled"
+                <button mat-flat-button *ngIf="update"  [color]="'primary'"  [disabled]="formContractor.disabled"
                 (click)="updateContractor()">Actualizar</button> 
         </mat-dialog-actions>
     </div>

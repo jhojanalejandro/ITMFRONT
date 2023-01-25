@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ContractorDataRegisterComponent implements OnInit {
   shareData: boolean = false;
-  durationInSeconds = 5;
+  durationInSeconds = 3;
   registerDate: Date = new Date();
   minDate: Date;
   maxdate: Date;
@@ -43,11 +43,13 @@ export class ContractorDataRegisterComponent implements OnInit {
     type: 'warn',
     message: ''
   };
+  nivel: string = 'Nivel';
+  supervisor: string = 'Supervisor';
   showAlert: boolean = false;
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
   formContractor: FormGroup;
-  hinringData: IHiringData = { contractorId: '0', fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null }
+  hinringData: IHiringData = {      contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null }
   constructor(
     private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
@@ -57,10 +59,10 @@ export class ContractorDataRegisterComponent implements OnInit {
     public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
-    if (this.datos.id != null && this.datos.id > 0) {
+    if (this.datos.id != null) {
       this.getHiring();
       this.shareData = true;
-      if (this.datos.elementId != null && this.datos.elementId != 0 && this.datos.idContractors.length == 0) {
+      if (this.datos.elementId != null && this.datos.elementId != null && this.datos.idContractors.length == 0) {
         this.getElementById(this.datos.elementId);
         this.getComponentById(this.datos.componenteId);
       }
@@ -71,7 +73,7 @@ export class ContractorDataRegisterComponent implements OnInit {
         'question'
       );
       this.matDialogRef.close(true);
-    } else if (this.datos.idContractors.length == 0 && this.datos.id == 0) {
+    } else if (this.datos.idContractors.length == 0 && this.datos.id == null) {
       Swal.fire(
         'Ei!',
         'Hay un error al ingresar, intenta de nuevo',
@@ -127,6 +129,7 @@ export class ContractorDataRegisterComponent implements OnInit {
         this.hiringDataList.push({
           userId: this._auth.accessId,
           contractorId: this.datos.idContractors[index],
+          contractId: this.datos.contractId,
           contrato: 'vacio',
           compromiso: 'vacio',
           fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
@@ -153,6 +156,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       this.hiringDataList = [{
         userId: this._auth.accessId,
         contractorId: this.datos.id,
+        contractId: this.datos.contractId,
         contrato: 'vacio',
         compromiso: 'vacio',
         fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
@@ -211,10 +215,11 @@ export class ContractorDataRegisterComponent implements OnInit {
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
+    let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
+      contractId: this.datos.contractId,
       contrato: 'vacio',
       compromiso: 'vacio',
       fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
@@ -333,6 +338,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     for (let index = 0; index < this.datos.idContractors.length; index++) {
       let economicData: EconomicContractor = {
         contractorId: this.datos.idContractors[index],
+        contractId: this.datos.contractId,
         userId: this._auth.accessId,
         registerDate: this.registerDate,
         totalValue: element.valorTotalContratista,
@@ -361,6 +367,8 @@ export class ContractorDataRegisterComponent implements OnInit {
         if (response != null) {
           this.update = true;
           this.hinringData = response;
+          this.supervisor = response.supervisorItm;
+          this.nivel = response.nivel;
         }
       });
   }

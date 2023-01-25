@@ -40,6 +40,11 @@ export class AuthService
     /**
      * Setter & getter for access token
      */
+    set codeC(codeC: string)
+    {
+        localStorage.setItem('codeC', codeC);
+    }
+
     set accessToken(token: string)
     {
         localStorage.setItem('accessToken', token);
@@ -47,61 +52,47 @@ export class AuthService
 
     set accessId(id: string)
     {
-        localStorage.setItem('accessId', id);
+        sessionStorage.setItem('accessId', id);
     }
 
     set accessName(name: string)
     {
-        localStorage.setItem('accessName', name);
+        sessionStorage.setItem('accessName', name);
     }
     get accessToken(): string
     {
         return localStorage.getItem('accessToken') ?? '';
     }
 
+    get codeC(): string
+    {
+        return localStorage.getItem('codeC') ?? '';
+    }
     set accessEmail(name: string)
     {
-        localStorage.setItem('accessEmail', name);
+        sessionStorage.setItem('accessEmail', name);
     }
     get accessEmail(): string
     {
-        return localStorage.getItem('accessEmail') ?? '';
+        return sessionStorage.getItem('accessEmail') ?? '';
     }
     set accessAvatar(name: string)
     {
-        localStorage.setItem('accessAvatar', name);
+        sessionStorage.setItem('accessAvatar', name);
     }
     get accessAvatar(): string
     {
-        return localStorage.getItem('accessAvatar') ?? '';
+        return sessionStorage.getItem('accessAvatar') ?? '';
     }
     get accessId(): string
     {
-        return localStorage.getItem('accessId') ?? '';
+        return sessionStorage.getItem('accessId') ?? '';
     }
     get accessName(): string
     {
-        return localStorage.getItem('accessName') ?? '';
+        return sessionStorage.getItem('accessName') ?? '';
     }
 
-    
-    set accessIdQr(accessIdQr: any)
-    {
-        localStorage.setItem('accessIdQr', accessIdQr);
-    }
-    get accessIdQr(): any
-    {
-        return localStorage.getItem('accessIdQr') ?? '';
-    }
-
-    set accessNumberQr(accessNumberQr: any)
-    {
-        localStorage.setItem('accessNumberQr', accessNumberQr);
-    }
-    get accessNumberQr(): any
-    {
-        return localStorage.getItem('accessNumberQr') ?? '';
-    }
     /**
      * Forgot password
      *
@@ -127,7 +118,6 @@ export class AuthService
 
         return this._httpClient.post<IResponse>(this.apiUrl  + environment.authenticateEndpoint, credentials).pipe(
             switchMap((response: any) => {
-
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
                 this.accessId = response.id;
@@ -156,9 +146,8 @@ export class AuthService
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
-                this.accessId = response.id;
-                this.accessName = response.userName
-                this.accessEmail = response.userEmail 
+                this.codeC = response.contractId;
+                this.accessId = response.contractorId;
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true
