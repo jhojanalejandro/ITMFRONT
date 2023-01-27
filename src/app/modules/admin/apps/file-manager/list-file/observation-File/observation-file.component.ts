@@ -5,10 +5,11 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { map, Observable, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs';
-import { IDetailFile, IFileContractor } from 'app/layout/common/models/file-contractor';
+import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
+import { DetailFileContractor } from '../../../home-contractor/models/fileContractor';
 
 @Component({
   selector: 'app-observation-file',
@@ -61,10 +62,10 @@ export class ObservationFileComponent implements OnInit {
   }
 
   AddDetailFile() {
-    let detailFile: IDetailFile = {
+    let detailFile: DetailFileContractor = {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
-        motivo: this.formFile.value.motivo,
+        reason: this.formFile.value.motivo,
         files: null
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
@@ -95,10 +96,10 @@ export class ObservationFileComponent implements OnInit {
   }
 
   UpdateDetailFile() {
-    let detailFile: IDetailFile = {
+    let detailFile: DetailFileContractor = {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
-        motivo: this.formFile.value.motivo,
+        reason: this.formFile.value.motivo,
         files: null
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {

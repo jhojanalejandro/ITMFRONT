@@ -16,33 +16,15 @@ import { MatDatepicker } from '@angular/material/datepicker';
 
 const moment = _rollupMoment || _moment;
 
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
+
 @Component({
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-  ],
 })
 export class UploadFileContractorComponent implements OnInit {
-  date = new FormControl(moment());
+  date = new FormControl();
   monthYear: any; 
   shortLink: string = "";
   loading: boolean = false; // Flag variable
@@ -120,8 +102,11 @@ export class UploadFileContractorComponent implements OnInit {
   }
   
   addFileContractor(event) {
+
+    if(!this.formFile.valid){
+      return
+    }
     const registerFile: FileContractor={
-      userId: this._auth.accessId,
       contractorId: this._auth.accessId,
       contractId: this._data.contractId,
       typeFilePayment: this.formFile.value.typeDoc,
@@ -131,7 +116,7 @@ export class UploadFileContractorComponent implements OnInit {
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
       filedata: this.base64Output,
-      mont: this.monthYear,
+      monthPayment: this.monthYear,
       passed: true,
       DetailFileContractor: [] 
     };  
@@ -175,6 +160,7 @@ export class UploadFileContractorComponent implements OnInit {
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
+          this.matDialogRef.close();
         }
 
     },

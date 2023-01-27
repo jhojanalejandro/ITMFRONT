@@ -225,7 +225,7 @@ export class CollectionAccountsListComponent implements OnInit {
 
     }
     this.type = event.value
-    this._collectionAccounts.searchByDate(this.contractId, this.type, this.dateSearch).subscribe((res) => {
+    this._collectionAccounts.getItemByTypeAndDate( this.type,this.contractId, this.dateSearch).subscribe((res) => {
       if (res != null) {
         this.items.files = res;
       } else {
@@ -246,7 +246,7 @@ export class CollectionAccountsListComponent implements OnInit {
     let month = normalizedMonth.month() + 1;
     datepicker.close();
     this.dateSearch += '/' + month;
-    this._collectionAccounts.searchByDate(this.contractId, this.type, this.dateSearch).subscribe((res) => {
+    this._collectionAccounts.getItemByTypeAndDate(this.type,this.contractId, this.dateSearch).subscribe((res) => {
       if (res != null) {
         this.items.files = res;
       } else {

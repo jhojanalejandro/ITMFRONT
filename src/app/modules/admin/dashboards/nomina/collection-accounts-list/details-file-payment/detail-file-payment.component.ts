@@ -3,7 +3,7 @@ import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, takeUntil } from 'rxjs';
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import * as CryptoJS from 'crypto-js';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
@@ -31,7 +31,6 @@ export class DetailFilePaymentComponent implements OnInit, OnDestroy
         private _listComponent: CollectionAccountsListComponent,
         private _fileManagerService: FileListManagerService,
         private _router: Router,
-        private _authService: AuthService
     ){}
 
     ngOnInit(): void
@@ -50,7 +49,6 @@ export class DetailFilePaymentComponent implements OnInit, OnDestroy
 
                 // Get the item
                 this.item = item;
-                this.getUserById(this.item.userId);
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -89,13 +87,6 @@ export class DetailFilePaymentComponent implements OnInit, OnDestroy
         } catch (e) {
             console.log(e);
         }
-    }
-
-
-    async getUserById(id: any) {
-        (await this._authService.getUserById(id)).subscribe((Response) => {
-          this.userName = Response.userName
-        });
     }
 
 }

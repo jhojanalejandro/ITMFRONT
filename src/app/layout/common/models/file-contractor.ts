@@ -15,11 +15,4 @@ export interface IFileContractor{
     FolderId: string;
 }
 
-export interface IDetailFile{
-    id?: any;
-    fileId: any;
-    observation: string;
-    motivo: string;
-    files: IFileContractor
-}
 

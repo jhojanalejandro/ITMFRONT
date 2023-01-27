@@ -6,19 +6,19 @@ export interface FileContractor{
     filedata: string;
     typeFile: string;
     descriptionFile: string;
-    userId: any;
+    userId?: any;
     registerDate: Date;
     modifyDate: Date;
     typeFilePayment: string;
-    mont: any;
+    monthPayment: any;
     passed: true;
     DetailFileContractor: DetailFileContractor[];
 }
 
 export interface DetailFileContractor{
-    id: any;
+    id?: any;
     fileId: any;
-    motivo: string;
+    reason: string;
     observation: string;
     files: string[]
 }

@@ -44,17 +44,20 @@ export class CollectionAccountsService
     /**
      * Get item by id
      */
-    getItemById(type: any | null = null,contractId: any | null = null): Observable<Item>
+    getItemByTypeAndDate(type: any | null = null,contractId: any | null = null, date : any | null = null): Observable<Item>
     {
         if(type === 'documentos'){
             type = 'Cuenta De Cobro';
         }
-        let month = new Date().getMonth() + 1;
-        let year = new Date().getFullYear();
+        if(date === null){
+            let month = new Date().getMonth() + 1;
+            let year = new Date().getFullYear();
+            date = year + '/' + month;
+        }
         const params = new HttpParams()
         .set('contractId', contractId )
         .set('type', type)
-        .set('date', year + '/' + month);
+        .set('date',date);
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileByDatePayment;
         return this._httpClient.get<any>(urlEndPoint,{params: params}).pipe(
@@ -99,14 +102,6 @@ export class CollectionAccountsService
         );
     }
 
-    searchByDate(contractId: any, type:string, date: string) {
-        const params = new HttpParams()
-        .set('contractId', contractId )
-        .set('type', type)
-        .set('date', date);
-        let urlEndpointGenerate = this.apiUrl+ environment.GetAllFileByDatePayment;
-        return this._httpClient.get<any>(urlEndpointGenerate, {params: params});
-    }
     UpdateProjectFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
