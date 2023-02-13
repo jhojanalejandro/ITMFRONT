@@ -100,6 +100,7 @@ export class AddComponentsComponent implements OnInit {
         this.subTotal = 0;
         this.elementosCant = 0;
         this.data.forEach((element) => {
+            debugger
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
                     this.elementosCant++;

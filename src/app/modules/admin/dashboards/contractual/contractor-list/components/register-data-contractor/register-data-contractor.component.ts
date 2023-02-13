@@ -49,7 +49,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
   formContractor: FormGroup;
-  hinringData: IHiringData = {      contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null }
+  hinringData: IHiringData = {      contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null, identificacionSupervisor: null }
   constructor(
     private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
@@ -110,7 +110,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     });
     this.getAdmins();
   }
-  async addContractor() {
+  async addDataContractor() {
 
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
@@ -145,6 +145,7 @@ export class ContractorDataRegisterComponent implements OnInit {
           nivel: Number(this.formContractor.value.nivel),
           supervisorItm: dataAdmin.userName,
           cargoSupervisorItm: dataAdmin.professionalposition,
+          identificacionSupervisor: dataAdmin.identificacionSupervisor,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
           rubro: this.formContractor.value.rubro,
@@ -172,6 +173,7 @@ export class ContractorDataRegisterComponent implements OnInit {
         nivel: Number(this.formContractor.value.nivel),
         supervisorItm: dataAdmin.userName,
         cargoSupervisorItm: dataAdmin.Professionalposition,
+        identificacionSupervisor: dataAdmin.identificacionSupervisor,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         actaComite: 'vacio',
         rubro: this.formContractor.value.rubro,
@@ -235,6 +237,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       nivel: Number(this.formContractor.value.nivel),
       supervisorItm: dataAdmin.userName,
       cargoSupervisorItm: dataAdmin.professionalposition,
+      identificacionSupervisor: dataAdmin.identificacionSupervisor,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       rubro: this.formContractor.value.rubro,

@@ -152,6 +152,6 @@
         </div>
 
     </div>
-    <app-minuta-contrato [contractors]="contractors" *ngIf="contractors != null && minuta"></app-minuta-contrato>
-    <app-estudio-previo [contractors]="contractors" *ngIf="contractors != null && estudioPrevio"></app-estudio-previo>
+    <app-minuta-contrato [contractContractors]="contractContractors" *ngIf="contractContractors != null && minuta"></app-minuta-contrato>
+    <app-estudio-previo [contractContractors]="contractContractors" *ngIf="contractContractors != null && estudioPrevio"></app-estudio-previo>
     <app-minuta-adicion *ngIf="minutaAdicion"></app-minuta-adicion>

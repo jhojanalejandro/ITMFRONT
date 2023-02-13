@@ -10,17 +10,15 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ContractorListService } from '../service/contractor-list.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { ContractorPaymentRegisterComponent } from '../../nomina/contractor-list/payroll-register/contractor-payment-register.component';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
-import { AsignmentData } from '../models/asignment-data';
 import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { ContractorService } from '../service/contractor.service';
+import { ContractContractors } from '../models/contract-contractors';
 
 
 @Component({
@@ -31,7 +29,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractorListComponent implements OnInit, OnDestroy {
-  contractId: any;
+  contractId: string;
   data: any;
   userName: any;
   value: any;
@@ -51,7 +49,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
-  contractors: any[];
+  contractContractors: ContractContractors = {contractId: null, contractors: []};
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
@@ -65,7 +63,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
    * Constructor
    */
   constructor(
-    private _contractorListService: ContractorListService,
+    private _contractorListService: ContractorService,
     private _genericService: GenericService,
     private _matDialog: MatDialog,
     private auth: AuthService,
@@ -171,7 +169,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(Response);
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;
-      this.contractors = Response;
+
     },(resp =>{
       console.log(resp);
       
@@ -286,11 +284,20 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   generarMinuta(data: any = null) {
-    this.contractors = [data];
+    if(data != null){
+      this.contractContractors.contractors = [data.id];
+    }else{
+      this.selection.selected.forEach(element => {
+        this.contractContractors.contractors.push(element.id);
+      });
+    }
+    this.contractContractors.contractId = this.contractId
     this.minuta = true;
+
   }
   generarEstudiosPrevios(data: any = null) {
-    this.contractors = [data];
+    this.contractContractors.contractors = [data.id];
+    this.contractContractors.contractId = this.contractId
     this.estudioPrevio = true;
   }
 

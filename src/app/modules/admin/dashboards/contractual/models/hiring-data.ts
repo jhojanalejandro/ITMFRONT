@@ -22,6 +22,7 @@ export interface IHiringData{
     nivel: any;
     supervisorItm: string;
     cargoSupervisorItm: string;
+    identificacionSupervisor: string;
     rubro: string;
     nombreRubro: string;
     cdp: string;

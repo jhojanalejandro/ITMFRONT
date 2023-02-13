@@ -4,11 +4,13 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { PaymentAccount } from '../models/paymentAccount';
+import { Minuta } from '../models/minuta';
+import { ContractContractors } from '../models/contract-contractors';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ContractorListService {
+export class ContractorService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
@@ -55,6 +57,11 @@ export class ContractorListService {
         .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
         return await this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+    }
+
+    getDataMinute(contractId: ContractContractors) {
+        let urlEndPoint = this.apiUrl + environment.GetBillByContractIdEndpoint;
+        return this._httpClient.post<any>(urlEndPoint, contractId);
     }
 
 }

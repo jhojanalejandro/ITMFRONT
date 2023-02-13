@@ -282,8 +282,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.idContrato, true);
     }
     onChange(event) {
+        this.totalV = Number(this.elementForm.value.totalValue.replace(/,/g, ""));
         if(this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0){
-            this.totalV = Number(this.elementForm.value.totalValue.replace(/,/g, ""));
             if(this.totalValue != this.elementForm.value.totalValue){
                 if(this.totalValue < this.totalV){
                     this.recursos = this.totalV -Number(this.totalValue);

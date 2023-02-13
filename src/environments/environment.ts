@@ -26,6 +26,7 @@ export const environment = {
     GetByContractorIdFolderEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
     GetContractorByIdEndpoint: 'Contractor/GetById/',
+    GetBillByContractIdEndpoint: 'Contractor/GetDataBill',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
     sendMails: 'Contractor/SendContractorAccount',

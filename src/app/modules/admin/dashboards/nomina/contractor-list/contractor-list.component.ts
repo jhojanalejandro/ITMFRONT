@@ -16,9 +16,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
-import { ContractorListService } from '../../contractual/service/contractor-list.service';
-
-
+import { ContractorService } from '../../contractual/service/contractor.service';
 
 @Component({
   selector: 'contractor-list',
@@ -53,11 +51,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
-  /**
-   * Constructor
-   */
+
   constructor(
-    private _contractorList: ContractorListService,
+    private _contractorList: ContractorService,
     private _matDialog: MatDialog,
     private auth: AuthService,
     private cdref: ChangeDetectorRef,

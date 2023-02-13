@@ -14,9 +14,8 @@ import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { ContractorListService } from '../../dashboards/contractual/service/contractor-list.service';
-import { Contractor } from '../../dashboards/contractual/models/contractort';
 import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
+import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -46,7 +45,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     private _contractorService: HomeContractorService,
     private _matDialog: MatDialog,
     private _auth: AuthService,
-    private _contractorListService: ContractorListService,
+    private _contractorListService: ContractorService,
   ) {
   }
 
@@ -101,7 +100,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         });
       })
   }
-
 
   public downloadAsPDFs() {
 

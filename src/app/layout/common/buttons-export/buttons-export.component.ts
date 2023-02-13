@@ -33,7 +33,8 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al descargar la informacion!', '', 'error');
+                console.log(response);
+                swal.fire('', 'Error al descargar la informacion!', 'error');
             }
         );
     }
@@ -57,7 +58,7 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al descargar la informacion!', '', 'error');
+                swal.fire('', '', 'error');
             }
         );
     }
@@ -81,7 +82,8 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al descargar la informacion!', '', 'error');
+                console.log(response);
+                swal.fire('', 'Error al descargar la informacion!', 'error');
             }
         );
     }
@@ -105,7 +107,8 @@ export class ButtonsExportComponent implements OnInit {
                 }
             },
             (response) => {
-                swal.fire('Error al descargar la informacion!', '', 'error');
+                console.log(response);
+                swal.fire('', 'Error al descargar la informacion!', 'error');
             }
         );
     }

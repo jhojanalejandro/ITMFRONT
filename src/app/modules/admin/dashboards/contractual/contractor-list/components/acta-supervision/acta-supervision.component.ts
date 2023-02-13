@@ -42,6 +42,7 @@ export class ActaSupervisionComponent implements OnInit {
     nivel: '',
     supervisorItm: '',
     cargoSupervisorItm: '',
+    identificacionSupervisor: '',
     rubro: '',
     nombreRubro: '',
     cdp: ''};
