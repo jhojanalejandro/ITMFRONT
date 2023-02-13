@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CreatePdfComponent } from './create-pdf.component';
 import { RouterModule } from '@angular/router';
 import { createPdfRoutes } from './create-pdf.routing';
@@ -19,6 +19,8 @@ import { EstudioPrevioComponent } from './estudio-previo/estudio-previo.componen
     CommonModule,
     RouterModule.forChild(createPdfRoutes),
     SharedModule
-  ]
+  ],
+  providers: [DatePipe]
+
 })
 export class CreatePdfModule { }
