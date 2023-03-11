@@ -71,7 +71,6 @@ export class AddComponentsComponent implements OnInit {
         this.tittle = 'Información Elemento';
         this.abrirDivComponente = false;
         this.dataElemento = e;
-        console.log(this.dataElemento);
         this.abrirDivElemento = true;
     }
 
@@ -100,7 +99,6 @@ export class AddComponentsComponent implements OnInit {
         this.subTotal = 0;
         this.elementosCant = 0;
         this.data.forEach((element) => {
-            debugger
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
                     this.elementosCant++;
@@ -114,7 +112,10 @@ export class AddComponentsComponent implements OnInit {
     }
 
     openDialog(): void {
-        const dialogRef = this._matDialog.open(DialogChangePercentajeComponent);
+        const dialogRef = this._matDialog.open(DialogChangePercentajeComponent, {
+            disableClose: true,
+            autoFocus: false,
+        });
         dialogRef.afterClosed().subscribe((result) => {
             const newLocal = result === undefined || +result === 0;
             if (!newLocal) {
@@ -132,6 +133,7 @@ export class AddComponentsComponent implements OnInit {
 
     addComponent() {
         const dialogRef = this._matDialog.open(ComponentesFormComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 idContrato: this.id,
@@ -161,6 +163,7 @@ export class AddComponentsComponent implements OnInit {
             );
         } else {
             const dialogRef = this._matDialog.open(ActividadFormComponent, {
+                disableClose: true,
                 autoFocus: false,
                 data: {
                     idContrato: this.id,
@@ -186,6 +189,7 @@ export class AddComponentsComponent implements OnInit {
     addElements() {
         let elemento = { valorTotal: 0 }
         const dialogRef = this._matDialog.open(ElementCardComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 elemento,
@@ -204,6 +208,8 @@ export class AddComponentsComponent implements OnInit {
     }
     editElemento(elemento: any) {
         const dialogRef = this._matDialog.open(ElementCardComponent, {
+            disableClose: true,
+            autoFocus: false,
             data: {
                 elemento,
                 idComponente: elemento.idComponente,
@@ -220,6 +226,8 @@ export class AddComponentsComponent implements OnInit {
     }
     editComponent(componente: any) {
         const dialogRef = this._matDialog.open(ComponentesFormComponent, {
+            disableClose: true,
+            autoFocus: false,
             data: {
                 componente,
                 idContrato: this.id
@@ -262,7 +270,7 @@ export class AddComponentsComponent implements OnInit {
         });
     }
 
-    private getActivity(){
+    private getActivity() {
         this._Economicservice.getActivity(this.dataComponente.id).subscribe((response) => {
             if (response.length != 0) {
                 this.activities = response;

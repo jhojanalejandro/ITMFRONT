@@ -6,6 +6,7 @@ import { CollectionAccountsItemFResolver } from './collection-accounts-list/coll
 import { DetailFilePaymentComponent } from './collection-accounts-list/details-file-payment/detail-file-payment.component';
 import { DetailFileManagerItemFResolver } from './collection-accounts-list/details-file-payment/detail-file-payment.resolvers';
 import { ContractorListComponent } from './contractor-list/contractor-list.component';
+import { ContractorPaymentListComponent } from './contractor-payment-list/contractor-payment-list.component';
 
 export const nominaRoutes: Route[] = [
     {
@@ -35,5 +36,9 @@ export const nominaRoutes: Route[] = [
     {
         path     : 'lista/contratistas/:id',
         component: ContractorListComponent,
-    }
+    },
+    {
+        path     : 'payment/Contractor/:contractId/:ContractorId',
+        component: ContractorPaymentListComponent,
+    },
 ];

@@ -47,7 +47,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy
 
                 // Get the item
                 this.item = item;
-                this.getUserById(this.item.userId);
+                this.userName = this._authService.accessName;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -88,11 +88,5 @@ export class DetailFileContractComponent implements OnInit, OnDestroy
         }
     }
 
-
-    async getUserById(id: any) {
-        (await this._authService.getUserById(id)).subscribe((Response) => {
-          this.userName = Response.userName
-        });
-    }
 
 }

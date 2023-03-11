@@ -23,7 +23,17 @@
             </div>
 
             <!-- Separator -->
-            <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
+            <div class="hidden lg:flex h-8 mx-8 border-l-2">
+                <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                </button>
+                <mat-menu #summaryMenu="matMenu">
+                    <button mat-menu-item (click)="signOut()">
+                        <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+                        <span>Cerrar sesión</span>
+                    </button>
+                </mat-menu>
+            </div>
 
         </div>
 

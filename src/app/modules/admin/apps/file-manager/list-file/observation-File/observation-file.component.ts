@@ -43,9 +43,7 @@ export class ObservationFileComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private _data
   ) { }
 
-  ngOnInit(): void {
-    console.log(this._data);
-    
+  ngOnInit(): void {    
     this.formFile = this._formBuilder.group({
       motivo: new FormControl(null, Validators.required),
       observation: new FormControl(null, Validators.required),

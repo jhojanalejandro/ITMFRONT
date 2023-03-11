@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import Swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
@@ -13,6 +12,7 @@ import { AsignmentData } from '../../../models/asignment-data';
 import { EconomicContractor } from '../../../../nomina/models/economic-data-contractor';
 import { IElements } from '../../../../../pages/planing/models/element';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -36,9 +36,10 @@ export class ContractorDataRegisterComponent implements OnInit {
   economicDataList: EconomicContractor[] = [];
   update: boolean = false;
   componentes: any;
-  userAdmins: any;
+  userList: any;
   componentselectId: any;
   elementselectId: any;
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
   alert: { type: FuseAlertType; message: string } = {
     type: 'warn',
     message: ''
@@ -49,7 +50,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
   formContractor: FormGroup;
-  hinringData: IHiringData = {      contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, rubro: null, nombreRubro: null, cdp: null, numeroActa: null, identificacionSupervisor: null }
+  hinringData: IHiringData = {      contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, nombreRubro: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
   constructor(
     private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
@@ -89,7 +90,6 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.formContractor = this._formBuilder.group({
       contrato: new FormControl(this.hinringData.contrato),
       compromiso: new FormControl(this.hinringData.compromiso),
-      rubro: new FormControl(this.hinringData.rubro),
       nombreRubro: new FormControl(this.hinringData.nombreRubro),
       fechaInicioReal: new FormControl(this.hinringData.fechaRealDeInicio, Validators.required),
       numeroActa: new FormControl(this.hinringData.numeroActa),
@@ -107,17 +107,18 @@ export class ContractorDataRegisterComponent implements OnInit {
       elemento: new FormControl(null, Validators.required),
       componente: new FormControl(null, Validators.required),
       cdp: new FormControl(null),
+      caso: new FormControl(null),
     });
     this.getAdmins();
   }
-  async addDataContractor() {
+  async addDataHiring() {
 
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
       this.formContractor.value.requierePoliza = false;
     }
-    let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm);
+    let dataAdmin = this.userList.find(x => x.id === this.formContractor.value.supervisorItm);
     if (this.formContractor.value.cuentabancaria == null) {
       this.formContractor.value.cuentabancaria = '0'
     }
@@ -148,9 +149,10 @@ export class ContractorDataRegisterComponent implements OnInit {
           identificacionSupervisor: dataAdmin.identificacionSupervisor,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
-          rubro: this.formContractor.value.rubro,
           nombreRubro: this.formContractor.value.nombreRubro,
           cdp: this.formContractor.value.cdp,
+          caso: this.formContractor.value.caso
+
         });
       }
     } else {
@@ -176,9 +178,9 @@ export class ContractorDataRegisterComponent implements OnInit {
         identificacionSupervisor: dataAdmin.identificacionSupervisor,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         actaComite: 'vacio',
-        rubro: this.formContractor.value.rubro,
         nombreRubro: this.formContractor.value.nombreRubro,
-        cdp: this.formContractor.value.cdp
+        cdp: this.formContractor.value.cdp,
+        caso: this.formContractor.value.caso
       }];
     }
     this._uploadService
@@ -217,7 +219,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    let dataAdmin = this.userAdmins.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
+    let dataAdmin = this.userList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
@@ -240,9 +242,10 @@ export class ContractorDataRegisterComponent implements OnInit {
       identificacionSupervisor: dataAdmin.identificacionSupervisor,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
-      rubro: this.formContractor.value.rubro,
       nombreRubro: this.formContractor.value.nombreRubro,
       cdp: this.formContractor.value.cdp,
+      caso: this.formContractor.value.caso
+
     }];
     this._uploadService
       .addHiringContractor(registerContractor)
@@ -385,22 +388,20 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   private getAdmins() {
-    this._auth
-      .getAdmin()
-      .subscribe((response) => {
-        this.userAdmins = response;
+    this._auth.getTeams()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((teams: any) => {
+        this.userList = teams;
       });
   }
-
   dateChange(event) {
+
     this.minDate = event.value;
     var date2: any = new Date(this.minDate);
     let day = this.cantDayContract * 24;
     var numberOfMlSeconds = date2.getTime();
-    console.log(date2);
     var addMlSeconds = (1000 * 60 * 60 * day);
     this.maxdate = new Date(numberOfMlSeconds + addMlSeconds);
-    console.log(this.maxdate);
     this.ref.markForCheck();
   }
   openSnackBar(message: string, action: string) {

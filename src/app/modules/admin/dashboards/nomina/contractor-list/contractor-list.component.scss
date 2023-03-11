@@ -1,20 +1,41 @@
-.inputsearch{
-    padding-left: 70px;
-    
+.inputsearch {
+    padding-left: 50px;
+
 }
-.hiring{
+
+.hiring {
     margin-left: 30px !important;
 }
-.search{
+
+.search {
     width: 350px !important;
 }
-    // .mat-form-field {
-    //   font-size: 14px;
-    //   width: 30%;
-    //   margin-left: 30px;
-    // }
-  
-    .mat-column-name,.mat-column-priority,.mat-column-item,.mat-column-imageUrl,.mat-column-id,.mat-column-Group,.mat-column-availableQty,.mat-column-finishedQty,.mat-column-salesOrder,.mat-column-operationsGroupId,.mat-column-requiredQty,.mat-column-prodOrder {
-      text-align: center !important;
-    }
-   
+
+
+td.mat-cell,
+th.mat-header-cell {
+    /* row border */
+    text-align: center;
+    border-bottom: 1px solid #1a1917;
+    justify-content: center;
+
+}
+
+table {
+    width: 100%;
+    text-align: center !important;
+}
+
+.mat-sort-header-container {
+    justify-content: center;
+}
+
+.mat-header-cell {
+    text-align: center !important;
+}
+
+table {
+    text-align: center !important;
+    /* row spacing / margin */
+    border-spacing: 0 8px !important;
+}

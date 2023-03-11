@@ -5,8 +5,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
-import { UserService } from 'app/core/user/user.service';
-import { User } from 'app/core/user/user.types';
+import { AuthService } from 'app/core/auth/auth.service';
+import { IUserModel } from 'app/modules/auth/model/user-model';
 
 @Component({
     selector     : 'dense-layout',
@@ -17,7 +17,7 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
 {
     isScreenSmall: boolean;
     navigation: Navigation;
-    user: User;
+    user: IUserModel;
     navigationAppearance: 'default' | 'dense' = 'dense';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -25,11 +25,9 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
      * Constructor
      */
     constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _router: Router,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _userService: UserService,
+        private _userService: AuthService,
         private _fuseNavigationService: FuseNavigationService
     )
     {
@@ -63,11 +61,11 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
                 this.navigation = navigation;
             });
 
-            this._userService.user$
-            .pipe((takeUntil(this._unsubscribeAll)))
-            .subscribe((user: User) => {
-                this.user = user;
-            });
+            // this._userService.user$
+            // .pipe((takeUntil(this._unsubscribeAll)))
+            // .subscribe((user: IUserModel) => {
+            //     this.user = user;
+            // });
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

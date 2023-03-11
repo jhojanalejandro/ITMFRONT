@@ -4,7 +4,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 export const defaultNavigation: FuseNavigationItem[] = [
     {
         id      : 'dashboards',
-        title   : 'Opciones',
+        title   : 'CONTRATACIÓN',
         subtitle: 'Opciones de contratacion',
         type    : 'group',
         icon    : 'heroicons_outline:home',
@@ -27,25 +27,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     {
         id      : 'apps',
-        title   : 'Historial',
+        title   : 'PLANEACIÓN',
         subtitle: 'Lista contratacion General',
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
-            // {
-            //     id   : 'apps.academy',
-            //     title: 'Academy',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:academic-cap',
-            //     link : '/apps/academy'
-            // },
-            // {
-            //     id   : 'apps.contacts',
-            //     title: 'Contacts',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:user-group',
-            //     link : '/apps/contacts'
-            // },
             {
                 id      : 'docs.ecommerce',
                 title   : 'Planeación',
@@ -74,13 +60,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon : 'heroicons_outline:cloud',
                 link : '/apps/file-manager'
             },
-            // {
-            //     id   : 'apps.tasks',
-            //     title: 'Tasks',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:check-circle',
-            //     link : '/apps/tasks'
-            // }
         ]
     },
     {
@@ -89,14 +68,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     // {
     //     id      : 'documentation',
-    //     title   : 'Documentation',
-    //     subtitle: 'Everything you need to know about Fuse',
+    //     title   : 'HISTORICO',
+    //     subtitle: 'Historico de contratos',
     //     type    : 'group',
     //     icon    : 'heroicons_outline:support',
     //     children: [
     //         {
     //             id   : 'documentation.guides',
-    //             title: 'Guides',
+    //             title: 'Contratos',
     //             type : 'basic',
     //             icon : 'heroicons_outline:book-open',
     //             link : '/docs/guides'

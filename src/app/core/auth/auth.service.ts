@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, ReplaySubject, switchMap, tap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
-import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { IUserModel } from 'app/modules/auth/model/user-model';
 
 @Injectable()
 export class AuthService
 {
     private _authenticated: boolean = false;
     encryptText: string = 'encrypt';  
-    private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     private _teams: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _user: ReplaySubject<IUserModel> = new ReplaySubject<IUserModel>(1);
 
     apiUrl: any = environment.apiURL;
 
@@ -20,16 +20,24 @@ export class AuthService
      * Constructor
      */
     constructor(
-        private _httpClient: HttpClient,
-        private _userService: UserService
-    )
+        private _httpClient: HttpClient)
     {
     }
 
-
-    get user$(): Observable<any>
+    /**
+     * Setter & getter for user
+     *
+     * @param value
+     */
+    set user(value: IUserModel)
     {
-        return this._data.asObservable();
+        // Store the value
+        this._user.next(value);
+    }
+
+    get user$(): Observable<IUserModel>
+    {
+        return this._user.asObservable();
     }
 
     
@@ -42,12 +50,12 @@ export class AuthService
      */
     set codeC(codeC: string)
     {
-        localStorage.setItem('codeC', codeC);
+        sessionStorage.setItem('codeC', codeC);
     }
 
     set accessToken(token: string)
     {
-        localStorage.setItem('accessToken', token);
+        sessionStorage.setItem('accessToken', token);
     }
 
     set accessId(id: string)
@@ -61,12 +69,12 @@ export class AuthService
     }
     get accessToken(): string
     {
-        return localStorage.getItem('accessToken') ?? '';
+        return sessionStorage.getItem('accessToken') ?? '';
     }
 
     get codeC(): string
     {
-        return localStorage.getItem('codeC') ?? '';
+        return sessionStorage.getItem('codeC') ?? '';
     }
     set accessEmail(name: string)
     {
@@ -128,8 +136,6 @@ export class AuthService
                 // Set the authenticated flag to true
                 this._authenticated = true;
                 // Store the user on the user service
-                this._userService.user = response;
-                // Return a new observable with the response                
                 return of(response);
             })
         );
@@ -148,18 +154,18 @@ export class AuthService
                 this.accessToken = response.accessToken;
                 this.codeC = response.contractId;
                 this.accessId = response.contractorId;
+                this.accessName = response.userName;
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true
                 this._authenticated = true;
                 // Store the user on the user service
-                this._userService.user = response;
                 // Return a new observable with the response                
                 return of(response);
             })
         );
     }
-    getUser(): Observable<any>
+    getUser(): Observable<IUserModel>
     {
         // Throw error, if the user is already logged in
         // let plainText:string;
@@ -168,33 +174,16 @@ export class AuthService
         // let plainText:string;
         // let encrypt:string;
         // encrypt= crypto.AES.encrypt(plainText, this.accessId).toString();
-        // let plainText2:string;        
-        return this._httpClient.get<IResponse>(this.apiUrl + environment.getByIdUserEndpoint + this.accessId).pipe(
+        // let plainText2:string;      
+        return this._httpClient.get<any>(this.apiUrl + environment.getByIdUserEndpoint + this.accessId).pipe(
             switchMap((response: any) => {
-                // Store the user on the user service
-                this._userService.user = response;
                 // Return a new observable with the response
-                this._data.next(response);
+                this._user.next(response);
                 return of(response);
             })
         );
     }
 
-    
-    async getUserById(id: any){
-        let urlEndPoint = this.apiUrl+ environment.getByIdUserEndpoint;
-        return await this._httpClient.get<any>(urlEndPoint + id);
-    }
-
-    getAllUser(): Observable<any>
-    {
-        let urlEndPoint = this.apiUrl+ environment.getAllUserEndpoint;
-        return  this._httpClient.get(urlEndPoint).pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
-    }
     updateUser(data: any){
         let urlEndPoint = this.apiUrl+ environment.updateUserEndpoint;
         return this._httpClient.post<IResponse>(urlEndPoint, data).pipe(
@@ -219,10 +208,6 @@ export class AuthService
                 if(response){
                     // Set the authenticated flag to true
                     this._authenticated = true;
-
-                    // Store the user on the user service
-                    this._userService.user = response.user;
-
                     // Return true
                     return of(true);
                     }else{
@@ -245,9 +230,9 @@ export class AuthService
     {
         
         // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('accessId');
-        localStorage.removeItem('accessName');
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('accessId');
+        sessionStorage.removeItem('accessName');
         // Set the authenticated flag to false
         this._authenticated = false;
 
@@ -312,21 +297,7 @@ export class AuthService
 
     getTeams(): Observable<any>
     {
-
         return this._httpClient.get<IResponse>(this.apiUrl + environment.getAllUserEndpoint ).pipe(
-            switchMap((response: any) => {
-                // Return a new observable with the response
-                this._teams.next(response);
-                return of(response);
-            })
-        );
-    }
-
-    
-    getAdmin(): Observable<any>
-    {
-
-        return this._httpClient.get<IResponse>(this.apiUrl + environment.GetAllByRollEndpoint ).pipe(
             switchMap((response: any) => {
                 // Return a new observable with the response
                 this._teams.next(response);

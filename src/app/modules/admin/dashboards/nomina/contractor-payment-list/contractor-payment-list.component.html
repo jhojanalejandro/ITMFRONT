@@ -6,30 +6,23 @@
                 <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                 <span class="ml-2">Volver</span>
             </a>
-
         </div>
         <div class="mt-4 sm:mt-0">
             <!-- Add section button -->
-            <button mat-flat-button [color]="'accent'" (click)="SendMailsAccounts()"
+            <!-- <button mat-flat-button [color]="'accent'" (click)="SendMailsAccounts()"
                 [matTooltip]="'Shortcut: Ctrl + .'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
-            </button>
+            </button> -->
             <!-- Add task button -->
-            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="registerPayment(null)"
-                [matTooltip]="'Agregar Varios pagos'">
-                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Agregar Pagos</span>
-            </button>
+            <div class="flex-auto">
+                <mat-form-field class="fuse-mat-dense mr-20 p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
+                        [placeholder]="'Buscar Contrato'">
+                </mat-form-field>
+            </div>
         </div>
-
-    </div>
-    <div class="flex-auto">
-        <mat-form-field class="fuse-mat-dense ml-20 p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
-            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
-                [placeholder]="'Buscar Contrato'">
-        </mat-form-field>
     </div>
 
     <div class="flex-auto border-t -mt-px pt-4 pl-4 pr-4 sm:pt-6">
@@ -44,10 +37,12 @@
                             </button>
                             <mat-menu #summaryMenu="matMenu">
                                 <button mat-menu-item>Generar Cuentas de Cobro</button>
-                                <button mat-menu-item>2 days ago</button>
                             </mat-menu>
                         </div>
                     </div>
+                    <!-- <div class="p-6">
+                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
+                </div> -->
 
                     <div class="overflow-x-auto mx-6">
                         <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
@@ -73,32 +68,13 @@
                                     {{columna.title}} </th>
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
-                                    <p
-                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento">
+                                    <p *ngIf="element[columna.name]!= element.fromDate && element[columna.name]!= element.toDate && element[columna.name] != element.paymentcant">
                                         {{element[columna.name]}}</p>
-                                    <p *ngIf="element[columna.name]== element.fechaNacimiento">{{element[columna.name] |
-                                        date}} </p>
-                                    <p *ngIf="columna.name=='acciones'">
-
-                                        <button [matTooltip]="'Opciones Documentos'" mat-icon-button
-                                            [matMenuTriggerFor]="summaryMenu">
-                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
-                                            </mat-icon>
-                                        </button>
-                                        <mat-menu #summaryMenu="matMenu">
-                                            <button [matTooltip]="'Agregar datos'" (click)="registerPayment(element)"
-                                                mat-menu-item>
-                                                <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
-                                                Agregar Pago
-                                            </button>
-                                            <button [matTooltip]="'Historial de pagos'"
-                                                (click)="historicalPayment(element)" mat-menu-item>
-                                                <mat-icon svgIcon="heroicons_solid:clipboard-list"></mat-icon>
-                                                Historial de pagos
-                                            </button>
-                                        </mat-menu>
+                                    <p *ngIf="element[columna.name]!= element.descriptionPayment && element[columna.name]!= element.paymentcant">{{element[columna.name] | date}} 
                                     </p>
-
+                                    <p *ngIf="element[columna.name] === element.paymentcant">
+                                        {{element[columna.name] | number :'1.0-0'}}</p>
+                                    
                                 </td>
                             </ng-container>
 

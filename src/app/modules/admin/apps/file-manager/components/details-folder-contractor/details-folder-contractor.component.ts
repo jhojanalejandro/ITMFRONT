@@ -46,7 +46,7 @@ export class DetailsFolderFileContractorComponent implements OnInit, OnDestroy
                 // Get the item
                 this.item = item;
                 this.item.type = 'carpeta'; 
-                this.item.userId = this.getUserById(this.item.userId);
+                this.item.userId = this._authService.accessId;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -88,22 +88,5 @@ export class DetailsFolderFileContractorComponent implements OnInit, OnDestroy
         }
     }
 
-
-    async getUserById(id: any) {
-        
-        (await this._authService.getUserById(id)).subscribe((Response) => {
-        return this.userName = Response.userName
-        //   this.lastName = Response.lastName
-        //   this.identificationCard = Response.identificationCard
-        });
-    }
-
-    // async getFilesBy() {
-    //     (await this._authService.getUserById(this.item[0].idUser)).subscribe((Response) => {
-    //     this.userName = Response.userName
-    //       this.lastName = Response.lastName
-    //       this.identificationCard = Response.identificationCard
-    //     });
-    // }
 
 }

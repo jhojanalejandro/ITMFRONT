@@ -9,8 +9,6 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { NominaService } from '../../service/nomina.service';
 import { ContractorPayments } from 'app/modules/admin/dashboards/nomina/models/contractor-payments';
 import { EconomicContractor } from '../../models/economic-data-contractor';
-import { find } from 'lodash';
-
 
 
 @Component({

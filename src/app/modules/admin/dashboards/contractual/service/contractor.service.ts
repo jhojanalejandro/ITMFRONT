@@ -6,35 +6,47 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { PaymentAccount } from '../models/paymentAccount';
 import { Minuta } from '../models/minuta';
 import { ContractContractors } from '../models/contract-contractors';
+import { Contractor } from '../models/contractort';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ContractorService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _contractorsByContract: BehaviorSubject<any> = new BehaviorSubject(null);
+
     apiUrl: any = environment.apiURL;
 
-
-    /**
-     * Constructor
-     */
     constructor(private _httpClient: HttpClient) {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Getter for data
-     */
     get data$(): Observable<any> {
         return this._data.asObservable();
     }
 
-    async getContractorByIdProject(id: any) {
+    get _contractors$(): Observable<Contractor[]> {
+        return this._contractorsByContract.asObservable();
+    }
+
+    getContractorByIdProject(id: string | null = null) {
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
-        return await this._httpClient.get<any>(urlEndPoint + id);
+        return this._httpClient.get(urlEndPoint + id).pipe(
+            tap((response: any) => {
+                this._contractorsByContract.next(response);
+            })
+        );
+    }
+
+    getPaymentContractor(contractId: string, contractorId: string) {
+        let urlEndPoint = this.apiUrl;
+        const params = new HttpParams()
+        .set('contractId', contractId)
+        .set('contractorId', contractorId);
+        return this._httpClient.get(urlEndPoint+'Contractor/GetPaymentsContractorList', {params: params}).pipe(
+            tap((response: any) => {
+                this._contractorsByContract.next(response);
+            })
+        );
     }
 
     sendmailsAccounts(data: any) {

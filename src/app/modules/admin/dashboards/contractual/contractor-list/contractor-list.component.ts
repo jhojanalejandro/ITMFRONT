@@ -19,6 +19,7 @@ import { ModificacionFormComponent } from './components/modificacion-form/modifi
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { ContractorService } from '../service/contractor.service';
 import { ContractContractors } from '../models/contract-contractors';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -41,27 +42,26 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
-
   @ViewChild(MatTable) table!: MatTable<any>;
   elements: IElements[];
   componentes: Componente[];
   listId: any[] = [];
+  contractors: any;
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
-  contractContractors: ContractContractors = {contractId: null, contractors: []};
+  contractContractors: ContractContractors = { contractId: null, contractors: [] };
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'componenteId', 'elementId', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
-  /**
-   * Constructor
-   */
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   constructor(
     private _contractorListService: ContractorService,
     private _genericService: GenericService,
@@ -73,6 +73,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder,
     private _fuseConfirmationService: FuseConfirmationService
   ) {
+    this.getDataContractor();
   }
   columnas = [
     { title: 'NOMBRE', name: 'nombre' },
@@ -80,8 +81,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'CORREO', name: 'correo' },
     { title: 'TELEFONO', name: 'telefono' },
     { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
-    { title: '', name: 'componenteId' },
-    { title: '', name: 'elementId' },
     { title: '', name: 'acciones' }
   ]
 
@@ -91,7 +90,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userName = this.auth.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
-    this.getDataContractor(this.contractId);
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -137,10 +135,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   ngAfterViewInit(): void {
-    // Make the data source sortable
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.recentTransactionsTableMatSort;
   }
 
@@ -164,23 +166,15 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
 
-  async getDataContractor(id: any) {
-    (await this._contractorListService.getContractorByIdProject(id)).subscribe((Response) => {
-      this.dataSource = new MatTableDataSource(Response);
-      this.dataSource.sort = this.sort;
-      this.dataSource.data = Response;
-
-    },(resp =>{
-      console.log(resp);
-      
-    }));
-
+  async getDataContractor() {
+    this.contractors = this._contractorListService._contractors$;
+    this.dataSource = new MatTableDataSource(
+      this.contractors.source._value
+    );
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    //esta validacion nos permite mostrar y ocltar los detalles de una operacion
-    //console.log('data', this.selection.selected);
     return numSelected === numRows;
   }
   masterToggle() {
@@ -218,7 +212,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
             swal.fire('Bien', 'Contratista desactivado Exitosamente!', 'success');
 
           }
-          this.getDataContractor(this.contractId);
+          this.getDataContractor();
 
         },
           (response) => {
@@ -229,9 +223,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
   }
   SendMailsAccounts() {
-    // this.selection.selected.forEach(element => {
-
-    // });
     let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.selection.selected }
     this._contractorListService.sendmailsAccounts(ids).subscribe((Response) => {
       console.log(Response);
@@ -243,6 +234,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   modificacionContrato(data: any) {
     const dialogModificacion = this._matDialog.open(ModificacionFormComponent, {
       width: '900px',
+      disableClose: true,
       autoFocus: false,
       data: {
         idUser: this.auth.accessId,
@@ -251,7 +243,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
     dialogModificacion.afterClosed().subscribe((result) => {
       if (result) {
-        this.getDataContractor(this.contractId);
+        this.getDataContractor();
       }
     });
   }
@@ -275,7 +267,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getDataContractor(this.contractId);
+        this.getDataContractor();
       }
       this.selection.clear();
       this.listId = [];
@@ -284,9 +276,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   generarMinuta(data: any = null) {
-    if(data != null){
+    if (data != null) {
       this.contractContractors.contractors = [data.id];
-    }else{
+    } else {
       this.selection.selected.forEach(element => {
         this.contractContractors.contractors.push(element.id);
       });
@@ -301,20 +293,20 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.estudioPrevio = true;
   }
 
-  activateContarct(){
-    this._genericService.UpdateStateProjectFolder(this.contractId).subscribe((resp) =>{
-      if(resp){
+  activateContarct() {
+    this._genericService.UpdateStateProjectFolder(this.contractId).subscribe((resp) => {
+      if (resp) {
         swal.fire('Bien', 'Contrato activado exitosamente!', 'success');
-      }else{
+      } else {
         swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
       }
     },
-    (response) => {
-      // Set the alert
-      console.log(response);
-      
-      swal.fire('Error', 'Error al activar el contrato!', 'error');
-    })
+      (response) => {
+        // Set the alert
+        console.log(response);
+
+        swal.fire('Error', 'Error al activar el contrato!', 'error');
+      })
   }
 
 }

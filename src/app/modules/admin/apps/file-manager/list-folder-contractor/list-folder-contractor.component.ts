@@ -97,6 +97,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
 
     uploadFileContract() {
         const dialogRef = this._matDialog.open(UploadFileComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 show: false,

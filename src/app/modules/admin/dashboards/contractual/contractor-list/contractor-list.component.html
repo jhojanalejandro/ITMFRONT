@@ -23,8 +23,19 @@
             </button>
         </div>
     </div>
-
-    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+    <div class="flex-auto">
+        <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+            <mat-icon
+                class="icon-size-5"
+                matPrefix
+                [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input
+                matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input
+                [autocomplete]="'off'"
+                [placeholder]="'Buscar Contrato'">
+        </mat-form-field>
+    </div>
+    <div class="flex-auto border-t -mt-px pt-4 pl-4 pr-4 sm:pt-6">
         <div class="w-full max-w-screen-xl mx-auto">
             <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
@@ -56,14 +67,7 @@
                     <!-- <div class="p-6">
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
                 </div> -->
-                    <div class="inputsearch">
-                        <mat-form-field class="search" appearance="outline">
-                            <mat-label>
-                                <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
-                            </mat-label>
-                            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
-                        </mat-form-field>
-
+                    <div class="inputsearch p-8 pl-20">
                         <app-buttons-export [idContrato]="contractId"></app-buttons-export>
                     </div>
 
@@ -146,6 +150,7 @@
                                 (click)="selection.toggle(row); selectRowFull(row)">
                             </tr>
                         </table>
+                        <mat-paginator [pageSizeOptions]="[10, 30, 50, 100]" aria-label="Select page of contractors"></mat-paginator>
                     </div>
                 </div>
             </div>

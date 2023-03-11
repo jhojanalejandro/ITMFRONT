@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnIni
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { Subject, takeUntil} from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import swal from 'sweetalert2';
 
 @Component({
@@ -36,21 +36,24 @@ export class SettingsTeamComponent implements OnInit {
             .subscribe((teams: any) => {
                 // Mark for check
                 for (let index = 0; index < teams.length; index++) {
-                    if (teams[index].avatar == 'vacio') {
-                        teams[index].avatar = 'assets/images/avatars/usercircle.png';
-                    }
-                    switch (teams[index].idRoll) {
-                        case 1:
-                            teams[index].idRoll = 'admin'
+                    switch (teams[index].code) {
+                        case 'ADM':
+                            teams[index].code = 'ADMIN'
                             break;
-                        case 2:
-                            teams[index].idRoll = 'encargado'
+                        case 'PLNC':
+                            teams[index].code = 'PLANEACIÓN'
                             break;
-                        case 3:
-                            teams[index].idRoll = 'leer, escribir'
+                        case 'CTL':
+                            teams[index].code = 'CONTRACTUAL'
                             break;
-                        case 4:
-                            teams[index].idRoll = 'inactivo'
+                        case 'NMA':
+                            teams[index].code = 'NOMINA'
+                            break;
+                        case 'JURD':
+                            teams[index].code = 'JURIDICO'
+                            break;
+                        case 'SPV':
+                            teams[index].code = 'SUPERVISOR'
                             break;
                     }
 

@@ -9,7 +9,7 @@
                     <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
                         <img
                             class="w-full h-full object-cover"
-                            src="assets/images/avatars/brian-hughes.jpg">
+                            src="assets/images/avatars/usercircle.png">
                     </div>
                     <div class="flex flex-col min-w-0 ml-4">
                         <ng-container *transloco="let t">
@@ -22,7 +22,9 @@
                             <div class="ml-1.5 leading-6 truncate text-secondary">Tienes 2 mensajes nuevos y 15 tareas nuevas</div>
                         </div> -->
                     </div>
+
                 </div>
+                
                 <!-- Actions -->
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
                     <button [matTooltip]="'Cargar Excel'"
@@ -37,23 +39,26 @@
                     </button>
                 </div>
             </div>
+            <div class="flex-auto">
+                <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+                    <mat-icon
+                        class="icon-size-5"
+                        matPrefix
+                        [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                    <input
+                        matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input
+                        [autocomplete]="'off'"
+                        [placeholder]="'Buscar Contrato'">
+                </mat-form-field>
+            </div>
         </div>
     </div>
 
-    <!-- Main -->
-    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+    <div class="flex-auto border-t -mt-px pt-4 pl-4 pr-4 sm:pt-6">
         <div class="w-full max-w-screen-xl mx-auto">
             <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="p-6">
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">CONTRATOS</div>
-                    <div class="text-secondary font-medium">Puedes Buscar Contratos</div>
-                </div>
-                <div class="inputsearch" >
-                    <mat-form-field appearance="outline">
-                      <mat-label><mat-icon >
-                        search</mat-icon></mat-label>   
-                      <input   matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
-                    </mat-form-field>
                 </div>
                 <div class="overflow-x-auto mx-6">
                     <table
@@ -92,6 +97,7 @@
                         (click)="selection.toggle(row); selectRowFull(row,'register')">
                         </tr>
                     </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of contracts"></mat-paginator>
                 </div>
             </div>
         </div>

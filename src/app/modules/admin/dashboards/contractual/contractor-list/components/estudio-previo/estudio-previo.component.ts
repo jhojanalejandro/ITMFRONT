@@ -43,9 +43,10 @@ export class EstudioPrevioComponent implements OnInit {
     supervisorItm: '',
     cargoSupervisorItm: '',
     identificacionSupervisor: '',
-    rubro: '',
     nombreRubro: '',
-    cdp: ''};
+    cdp: '',
+    caso: ''
+  };
     elementData: IElements = {
     nombreElemento: '',
     idComponente: '',

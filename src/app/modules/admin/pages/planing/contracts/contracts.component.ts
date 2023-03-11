@@ -9,14 +9,14 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Router } from '@angular/router';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { RegisterProjectFolderComponent } from '../components/register-project-folder/register-project-folder.component';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { EconomicChartService } from '../service/economic-chart.service';
 
 @Component({
   selector: 'contracts',
@@ -35,28 +35,33 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
+  contracts: any;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['companyName', 'projectName', 'valorContrato', 'contractorsCant', 'action'];
+  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'valorContrato', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  /**
-   * Constructor
-   */
   constructor(
     private _uploadData: UploadDataService,
     private _fuseConfirmationService: FuseConfirmationService,
     private _genericService: GenericService,
+    private _economicService: EconomicChartService,
     private _matDialog: MatDialog,
     private auth: AuthService,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
-    private _router: Router,
     private _formBuilder: FormBuilder,
 
   ) {
+    this.contracts = this._economicService._economicsChart$;
+    this.dataSource = new MatTableDataSource(
+        this.contracts.source._value
+    );
+    this.dataSource.sort = this.sort;
   }
   columnas = [
+    { title: 'NÚMERO CONTRATO', name: 'numberProject' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'VALOR CONTRATO', name: 'valorContrato' },
@@ -64,7 +69,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     { title: '', name: 'action' },
   ]
   ngOnInit(): void {
-    this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
@@ -87,6 +91,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
       }),
       dismissible: true
     });
+    this.getContractsData();
 
   }
 
@@ -94,8 +99,11 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     //this.validateDinamycKey();
     switch (route) {
       case 'registerFolder':
-        const dialogRefPrroject = this._matDialog.open(RegisterProjectFolderComponent);
-        dialogRefPrroject.afterClosed().subscribe(datos => {
+        const dialogRefProject = this._matDialog.open(RegisterProjectFolderComponent,  { 
+          disableClose: true,
+          autoFocus: false,
+         });
+        dialogRefProject.afterClosed().subscribe(datos => {
           if (datos) {
             this.getContractsData();
           }
@@ -103,6 +111,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
         break
       case 'editData':
         const dialogRef = this._matDialog.open(RegisterProjectFolderComponent, {
+          disableClose: true,
           autoFocus: false,
           data: {
             data
@@ -136,10 +145,14 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   ngAfterViewInit(): void {
-    // Make the data source sortable
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.recentTransactionsTableMatSort;
   }
 
@@ -155,27 +168,21 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
 
   getContractsData() {
-    this._genericService.getAllContract(false, 'planeacion').pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((Response) => {
-        this.dataSource = new MatTableDataSource(Response);
-        for (let index = 0; index < Response.length; index++) {
-          if (Response[index].valorContrato === 0 || Response[index].valorContrato === null) {
-            Response[index].valorContrato = 0;
-          }
-          if (Response[index].contractorsCant === 0 || Response[index].contractorsCant === null) {
-            Response[index].contractorsCant = 0;
-          }
-          this._genericService.getDetalleContrato(Response[index].id, false).subscribe((response: any) => {
-            if (response) {
-              Response[index].fechaContrato = response.fechaContrato;
-              Response[index].fechaFinalizacion = response.fechaFinalizacion
-            }
-          });
-
+    for (let index = 0; index < this.contracts.source._value.length; index++) {
+      if (this.contracts.source._value[index].valorContrato === 0 || this.contracts.source._value[index].valorContrato === null) {
+        this.contracts.source._value[index].valorContrato = 0;
+      }
+      if (this.contracts.source._value[index].contractorsCant === 0 || this.contracts.source._value[index].contractorsCant === null) {
+        this.contracts.source._value[index].contractorsCant = 0;
+      }
+      this._genericService.getDetalleContrato(this.contracts.source._value[index].id, false).subscribe((response: any) => {
+        if (response) {
+          this.contracts.source._value[index].fechaContrato = response.fechaContrato;
+          this.contracts.source._value[index].fechaFinalizacion = response.fechaFinalizacion
         }
-        this.dataSource.sort = this.sort;
-        this.dataSource.data = Response;
       });
+
+    }
   }
   /**
    * Track by function for ngFor loops

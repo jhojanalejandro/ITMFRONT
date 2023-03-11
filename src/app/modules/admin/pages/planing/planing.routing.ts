@@ -48,7 +48,10 @@ export const PlaningRoutes: Route[] = [
     },
     {
         path      : 'contratos',
-        component: ContrtactsComponent
+        component: ContrtactsComponent,
+        resolve  : {
+            products  : InventoryProductsResolver
+        }
     },
     {
         path      : 'Componentes/:id',

@@ -117,6 +117,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     uploadFile() {
         //this.validateDinamycKey();
         const dialogRef = this._matDialog.open(UploadFileComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 show: false,
@@ -137,6 +138,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     onChange(event: any, file: IFileContractor) {
         if (event.value === 'rechazado') {
             const dialogRef = this._matDialog.open(ObservationFileComponent, {
+                disableClose: true,
                 autoFocus: false,
                 data: file
             });
@@ -158,7 +160,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                     console.log(response);
 
                     swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-            });
+                });
         }
 
     }
@@ -218,9 +220,9 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this.items.forEach(element => {
                     if (element.passed) {
                         element.passed = 'aprobado'
-                    }else if(element.passed != null && element.passed === false){
+                    } else if (element.passed != null && element.passed === false) {
                         element.passed = 'rechazado'
-                    }else{
+                    } else {
                         element.passed = 'revisar'
                     }
                 });

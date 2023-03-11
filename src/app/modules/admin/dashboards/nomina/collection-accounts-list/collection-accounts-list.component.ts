@@ -132,6 +132,7 @@ export class CollectionAccountsListComponent implements OnInit {
   openDialog() {
     //this.validateDinamycKey();
     const dialogRef = this._matDialog.open(UploadFileComponent, {
+      disableClose: true,
       autoFocus: false,
       data: {
         show: false,
@@ -153,8 +154,6 @@ export class CollectionAccountsListComponent implements OnInit {
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.selection.selected.length;
-    console.log(this.selection.selected);
-
     //esta validacion nos permite mostrar y ocltar los detalles de una operacion
     return numSelected === numRows;
 
@@ -242,8 +241,11 @@ export class CollectionAccountsListComponent implements OnInit {
   }
 
   chosenMonthHandler = (normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) => {
-
+    const ctrlValue = this.date.value;
     let month = normalizedMonth.month() + 1;
+    ctrlValue.month(normalizedMonth.month());
+    this.date.setValue(ctrlValue);
+
     datepicker.close();
     this.dateSearch += '/' + month;
     this._collectionAccounts.getItemByTypeAndDate(this.type,this.contractId, this.dateSearch).subscribe((res) => {
@@ -264,6 +266,7 @@ export class CollectionAccountsListComponent implements OnInit {
     const ctrlValue = this.date.value;
     ctrlValue.year(normalizedYear.year());
     this.dateSearch = normalizedYear.year();
+    this.date.setValue(ctrlValue);
 
   }
 

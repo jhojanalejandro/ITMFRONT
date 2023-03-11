@@ -25,7 +25,6 @@ import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EconomicChartService } from '../../../service/economic-chart.service';
-import { ElementCardComponent } from '../../element/element.component';
 import { IComponente } from '../../../models/componente';
 
 @Component({

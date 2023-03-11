@@ -58,7 +58,7 @@ export class AuthSignInComponent implements OnInit {
         }
         this.showAlert = false;
         const useraLogin: IUser = {
-            username: this.signInForm.value.email,
+            userName: this.signInForm.value.email,
             password: this.signInForm.value.password,
 
         };

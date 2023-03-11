@@ -17,6 +17,8 @@ export interface IProjectFolder{
     fechaDeTerminacionAmpliacion: Date;
     detalleContratoDto: DetailProjectFolder;
     numberProject: string;
+    rubro: string;
+    project: string;
 }
 
 export interface DetailProjectFolder{

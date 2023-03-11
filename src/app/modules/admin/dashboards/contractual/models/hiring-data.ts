@@ -23,7 +23,7 @@ export interface IHiringData{
     supervisorItm: string;
     cargoSupervisorItm: string;
     identificacionSupervisor: string;
-    rubro: string;
     nombreRubro: string;
     cdp: string;
+    caso: string;
 }

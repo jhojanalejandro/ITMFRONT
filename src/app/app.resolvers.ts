@@ -4,7 +4,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
-import { UserService } from 'app/core/user/user.service';
+import { AuthService } from './core/auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +18,7 @@ export class InitialDataResolver implements Resolve<any>
         private _navigationService: NavigationService,
         private _notificationsService: NotificationsService,
         private _shortcutsService: ShortcutsService,
-        private _userService: UserService
+        private _userService: AuthService
     )
     {
     }
@@ -40,7 +40,7 @@ export class InitialDataResolver implements Resolve<any>
             this._navigationService.get(),
             this._notificationsService.getAll(),
             this._shortcutsService.getAll(),
-            this._userService.get()
+            this._userService.getUser()
         ]);
     }
 }

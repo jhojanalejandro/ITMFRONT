@@ -28,7 +28,6 @@ import { EconomicChartService } from '../../service/economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato } from '../../models/detalle-contrato';
-import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
     selector: 'app-alement',
@@ -137,8 +136,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getDateAdiction();
-        console.log(this._data);
-
     }
 
     private _filter(value: string): string[] {

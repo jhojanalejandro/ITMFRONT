@@ -3,9 +3,8 @@ import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, takeUntil } from 'rxjs';
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
 import { FileManagerService } from 'app/modules/admin/apps/file-manager/services/file-manager.service';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import * as CryptoJS from 'crypto-js';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 
@@ -90,12 +89,14 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
     }
 
 
-    async getUserById(id: any) {
+    getUserById(id: any) {
         
-        (await this._authService.getUserById(id)).subscribe((Response) => {
-        return this.userName = Response.userName
-        //   this.lastName = Response.lastName
-        //   this.identificationCard = Response.identificationCard
+        this._authService.user$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((user: any) => {
+            this.userName = user.userName
+            // Mark for check
+            this._changeDetectorRef.markForCheck();
         });
     }
 

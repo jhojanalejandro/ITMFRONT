@@ -11,27 +11,23 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { ContractorService } from '../../contractual/service/contractor.service';
 
 @Component({
-  selector: 'contractor-list',
-  styleUrls: ['./contractor-list.component.scss'],
-  templateUrl: './contractor-list.component.html',
+  selector: 'contractor-payment-list',
+  styleUrls: ['./contractor-payment-list.component.scss'],
+  templateUrl: './contractor-payment-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorListComponent implements OnInit, OnDestroy {
+export class ContractorPaymentListComponent implements OnInit, OnDestroy {
   contractId: string;
-  data: any;
+  contractorId: string;
   userName: any;
-  value: any;
-  listId: any[] = [];
-  disableElement: boolean = true;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -39,40 +35,28 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   elements: IElements[];
   componentes: Componente[];
   configForm: FormGroup;
-  componentselectId: any;
-  elementselectId: any;
-  paymentData: any;
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'componenteId', 'elementId', 'acciones'];
+  displayedColumns: string[] = ['select', 'fromDate', 'toDate', 'descriptionPayment', 'paymentcant'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
-  enterAnimationDuration: any = '2000ms';
-  exitAnimationDuration: string = '1500ms';
 
   constructor(
     private _contractorList: ContractorService,
-    private _matDialog: MatDialog,
     private auth: AuthService,
-    private _cdref: ChangeDetectorRef,
+    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
-    private routerActivate: ActivatedRoute,
-    private _router: Router,
+    private router: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _fuseConfirmationService: FuseConfirmationService
 
   ) {
   }
   columnas = [
-    { title: 'NOMBRE', name: 'nombre' },
-    { title: 'CEDULA', name: 'identificacion' },
-    { title: 'CORREO', name: 'correo' },
-    { title: 'TELEFONO', name: 'telefono' },
-    { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
-    { title: '', name: 'componenteId' },
-    { title: '', name: 'elementId' },
+    { title: 'PAGO DESDE', name: 'fromDate' },
+    { title: 'PAGO HASTA', name: 'toDate' },
+    { title: 'DESCRIPCIÓN', name: 'descriptionPayment' },
+    { title: 'CANTIDAD PAGADA', name: 'paymentcant' },
     { title: '', name: 'acciones' }
   ]
 
@@ -81,8 +65,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 */
   ngOnInit(): void {
     this.userName = this.auth.accessName
-    this.contractId = this.routerActivate.snapshot.paramMap.get('id') || 'null';
-    this.getDataContractor(this.contractId);
+    this.contractId = this.router.snapshot.paramMap.get('contractId') || 'null';
+    this.contractorId = this.router.snapshot.paramMap.get('ContractorId') || 'null';
+    this.getDataContractorPayment();
     this.configForm = this._formBuilder.group({
       title: 'Remove contact',
       message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
@@ -105,44 +90,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       dismissible: true
     });
   }
-  registerPayment(data: any) {
-    if (this.selection.selected.length > 0 || data != null) {
-      if (data == null) {
-        data = { id: 0, contractId: null, componenteId: null, elementId: null }
-        this.selection.selected.forEach(element => {
-          this.listId.push(element.id);
-        });
-      }
-      const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
-        width: '900px',
-        disableClose: true,
-        autoFocus: false,
-        data: {
-          payment: this.paymentData,
-          idUser: this.auth.accessId,
-          id: data.id,
-          nombre: data.nombre,
-          idContractors: this.listId,
-          contractId: this.contractId
-        }
-      });
-      dialogRefPayment.afterClosed().subscribe((result) => {
-        if (result) {
-          this.getDataContractor(this.contractId);
-        }
-        this.listId = [];
-      });
-    } else {
-      swal.fire('Ei', 'Debes seleccionar registros!', 'warning');
-
-    }
-  }
-
-  historicalPayment(item: any) {
-    this._router.navigate(['/dashboards/nomina/payment/Contractor/' + this.contractId+'/' + item.id], { relativeTo: this.routerActivate });
-    this._cdref.markForCheck();
-
-  }
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -157,7 +104,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   ngAfterContentChecked() {
-    this._cdref.detectChanges();
+    this.cdref.detectChanges();
   }
 
 
@@ -192,13 +139,11 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
 
-  async getDataContractor(id: any) {
-    (await this._contractorList.getContractorByIdProject(id)).subscribe((Response) => {
+  async getDataContractorPayment() {
+    (await this._contractorList.getPaymentContractor(this.contractId, this.contractorId)).subscribe((Response) => {
       this.dataSource = new MatTableDataSource(Response);
       this.dataSource.sort = this.sort;
       this.dataSource.data = Response;
-
-
     });
 
   }
@@ -232,8 +177,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   //metodo que obtiene las columnas seleccionadas de la grid
   selectRow($event: any, dataSource: any) {
     if ($event.checked) {
-      this.value = dataSource;
-
     }
   }
   openConfirmationDelete(element: any): void {
@@ -248,7 +191,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
             swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
 
           }
-          this.getDataContractor(this.contractId);
+          this.getDataContractorPayment();
 
         },
           (response) => {
@@ -258,18 +201,5 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
   }
-  SendMailsAccounts() {
-
-    // this.selection.selected.forEach(element => {
-
-    // });
-    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.selection.selected }
-    this._contractorList.sendmailsAccounts(ids).subscribe((Response) => {
-      console.log(Response);
-
-    });
-
-  }
-
 
 }

@@ -21,7 +21,7 @@
                 <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
                     <mat-label>{{datos.nombre}}</mat-label>
                     <input disabled="true" type="number" id="ejecucion" [formControlName]="'contractorName'"
-                    autocomplete="off" matInput>
+                        autocomplete="off" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user'"></mat-icon>
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="outline">
@@ -103,11 +103,11 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            
+
         </form>
     </mat-dialog-content>
     <mat-dialog-actions class="action" align="end">
-        <button mat-stroked-button type="button" [mat-dialog-close]="false" class="text-warn-500">Cancelar</button>
+        <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
         <button mat-flat-button [color]="'primary'" type="submit" [disabled]="formContractorPayment.disabled"
             *ngIf="!formContractorPayment.disabled" (click)="addPayment()">Guardar</button>
     </mat-dialog-actions>

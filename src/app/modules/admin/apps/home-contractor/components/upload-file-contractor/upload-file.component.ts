@@ -6,8 +6,6 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject,takeUntil } from 'rxjs';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from '../../services/home-contractor.service';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import * as _moment from 'moment';
 import {default as _rollupMoment, Moment} from 'moment';
@@ -24,7 +22,7 @@ const moment = _rollupMoment || _moment;
 
 })
 export class UploadFileContractorComponent implements OnInit {
-  date = new FormControl();
+  date = new FormControl(moment());
   monthYear: any; 
   shortLink: string = "";
   loading: boolean = false; // Flag variable
@@ -58,7 +56,6 @@ export class UploadFileContractorComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    console.log(this._data.contractId);
     
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
@@ -125,16 +122,14 @@ export class UploadFileContractorComponent implements OnInit {
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
         if(res){
           swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
-          //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   
+          this.matDialogRef.close(); 
         }
-
     },
     (response) => {
       this.formFile.enable();
       console.log(response);
-
       // Set the alert
       swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
@@ -152,7 +147,6 @@ export class UploadFileContractorComponent implements OnInit {
       registerDate: this.registerDate, 
       fildata: this.file       
     };  
-    console.log(registerProject);
     
     this._upload.UploadFileContractor(registerProject).subscribe((res) => {   
         if(res){

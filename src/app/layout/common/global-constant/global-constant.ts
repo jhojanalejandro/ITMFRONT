@@ -5,25 +5,40 @@ export class GlobalConst {
 
     public static roles = [
         {
-            label      : 'Admin',
-            value      : 1,
+            label      : 'ADMIN',
+            value      : 'ADM',
             description: 'Administrador de la cuenta'
         },
         {
-            label      : 'Leer, Escribir, y Eliminar',
-            value      : 2,
+            label      : 'SUPERVISOR',
+            value      : 'SPV',
             description: 'jefe de personal.'
         },
         {
-            label      : 'Leer y Escribir',
-            value      : 3,
+            label      : 'CONTRACTUAL',
+            value      : 'CTL',
             description: 'Solo puede leer y escribir'
         },
         {
-            label      : 'inactivo',
-            value      : 4,
+            label      : 'PLANEACIÓN',
+            value      : 'PLNC',
+            description: 'Solo puede leer y escribir'
+        },
+        {
+            label      : 'COMITE',
+            value      : 'CMT',
             description: 'Solo puede leer datos.'
-        }
+        },
+        {
+            label      : 'JURIDICO',
+            value      : 'JURD',
+            description: 'Solo puede leer datos.'
+        },
+        {
+            label      : 'DESACTIVADO',
+            value      : 'DTV',
+            description: 'Solo puede leer datos.'
+        },
 
     ];
     public static nomina: TypeSelectString[]=[

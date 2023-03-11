@@ -65,7 +65,7 @@ export class RegisterFolderContractorComponent implements OnInit {
   }
   async addProjectFolder() {
     const registerGFolder: IFolderContractor={
-      userId: Number(this.authService.accessId),
+      userId: this.authService.accessId,
       contractorId: this._data.contractorId,
       contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
@@ -93,7 +93,7 @@ export class RegisterFolderContractorComponent implements OnInit {
 
 
   async editProjectFolder(){
-    const registerProject: IFolderContractor={
+    const editProject: IFolderContractor={
       id: this._data.data.id,
       userId: this.authService.accessId,
       contractorId: this._data.contractId,
@@ -101,9 +101,9 @@ export class RegisterFolderContractorComponent implements OnInit {
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 
-      modifyDate: this.registerDate,        
+      modifyDate: this.registerDate       
     };  
-    this._uploadService.UpdateProjectFolder(registerProject).subscribe((res) => {   
+    this._uploadService.UpdateProjectFolder(editProject).subscribe((res) => {   
         if(res){
           swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
           this.ref.detectChanges();

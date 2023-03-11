@@ -49,9 +49,9 @@
                 </div>
                 <div class="nationality" >
                     <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
-                        <mat-label>Rubro</mat-label>
-                        <input type="text" id="rubro" [(ngModel)]="hinringData.rubro" formControlName="rubro"
-                            autocomplete="off" matInput placeholder="rubro">
+                        <mat-label>Caso</mat-label>
+                        <input type="text" id="caso" [(ngModel)]="hinringData.caso" formControlName="caso"
+                            autocomplete="off" matInput placeholder="caso">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                     </mat-form-field>
 
@@ -174,7 +174,7 @@
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>{{supervisor}}</mat-label>
                         <mat-select  [(ngModel)]="hinringData.supervisorItm" [formControlName]="'supervisorItm'" name="supervisorItm">
-                            <mat-option *ngFor="let admin of userAdmins" [value]="admin.id">
+                            <mat-option *ngFor="let admin of userList" [value]="admin.id">
                                 {{admin.userName}}
                             </mat-option>
                         </mat-select>
@@ -202,7 +202,7 @@
         <mat-dialog-actions class="action" align="end">
             <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
             <button mat-flat-button [color]="'primary'" [disabled]="formContractor.disabled"
-                *ngIf="!update" (click)="addContractor()">Guardar</button>
+                *ngIf="!update" (click)="addDataHiring()">Guardar</button>
                 <button mat-flat-button *ngIf="update"  [color]="'primary'"  [disabled]="formContractor.disabled"
                 (click)="updateContractor()">Actualizar</button> 
         </mat-dialog-actions>

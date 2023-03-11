@@ -13,6 +13,7 @@ import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { RegisterProjectFolderComponent } from 'app/modules/admin/pages/planing/components/register-project-folder/register-project-folder.component';
+import { MatPaginator } from '@angular/material/paginator';
 @Component({
   selector: 'app-contracts-list-contarctual',
   styleUrls: ['./contracts-list.component.scss'],
@@ -33,8 +34,9 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['companyName', 'projectName', 'contractorsCant', 'action'];
+  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   /**
    * Constructor
@@ -49,11 +51,11 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   ) {
   }
   columnas = [
+    { title: 'NUMERO CONTRATO', name: 'numberProject' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
-    // {title: 'FECHA MODIFICACION', name: 'modifyDate'},
-    { title: '', name: 'action' },
+    { title: 'CONTRATISTAS', name: 'action' },
   ]
   ngOnInit(): void {
     this.getContractsData();
@@ -65,7 +67,10 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     //this.validateDinamycKey();
     switch (route) {
       case 'registerFolder':
-        const dialogRefPrroject = this._matDialog.open(RegisterProjectFolderComponent);
+        const dialogRefPrroject = this._matDialog.open(RegisterProjectFolderComponent, {
+          disableClose: true,
+          autoFocus: false,
+        });
         dialogRefPrroject.afterClosed().subscribe(datos => {
           if (datos) {
             this.getContractsData();
@@ -74,6 +79,7 @@ export class UploadDataComponent implements OnInit, OnDestroy {
         break
       case 'editData':
         const dialogRef = this._matDialog.open(RegisterProjectFolderComponent, {
+          disableClose: true,
           autoFocus: false,
           data: {
             data
@@ -93,8 +99,9 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     }
   }
 
-  uploadExcel(){
+  uploadExcel() {
     const dialogUpload = this._matDialog.open(UploadFileComponent, {
+      disableClose: true,
       autoFocus: false,
       data: {
         show: true
@@ -126,10 +133,14 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   ngAfterViewInit(): void {
-    // Make the data source sortable
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.recentTransactionsTableMatSort;
   }
 
@@ -137,11 +148,6 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
-  }
-  selectRowFull(data: any, type: any) {
-    if (type === 'register') {
-    }
-
   }
 
   getContractsData() {

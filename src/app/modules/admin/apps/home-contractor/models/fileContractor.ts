@@ -1,7 +1,7 @@
 export interface FileContractor{
     id?: any;
-    contractorId: any;
-    contractId: any;
+    contractorId: string;
+    contractId: string;
     filesName: string;
     filedata: string;
     typeFile: string;

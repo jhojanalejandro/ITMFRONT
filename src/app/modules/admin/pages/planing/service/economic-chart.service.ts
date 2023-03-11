@@ -52,7 +52,7 @@ export class EconomicChartService {
     }
 
     /**
-     * Getter for products
+     * Getter for contracts
      */
     get _economicsChart$(): Observable<EconomicChart[]> {
         return this._economicsChart.asObservable();
@@ -68,16 +68,7 @@ export class EconomicChartService {
      * @param order
      * @param search
      */
-    getProjectData(
-        page: number = 0,
-        size: number = 10,
-        sort: string = 'name',
-        order: 'asc' | 'desc' | '' = 'asc',
-        search: string = ''
-    ): Observable<{
-        pagination: InventoryPagination;
-        economicChart: EconomicChart[];
-    }> {
+    getProjectData(): Observable<any[]> {
         const params = new HttpParams()
         .set('inProgress', false )
         .set('tipoModulo', 'planeacion')

@@ -31,7 +31,7 @@ export class RegisterProjectFolderComponent implements OnInit {
   tipoModificacion = GlobalConst.tipoModificacion;
   editarData = GlobalConst.editarData;
   editData: boolean = false;
-  dataProject: IProjectFolder = { companyName: null, projectName: null, descriptionProject: null, execution: false, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, detalleContratoDto: null, numberProject: null, enableProject: true }
+  dataProject: IProjectFolder = { companyName: null, projectName: null, descriptionProject: null, execution: false, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, detalleContratoDto: null, numberProject: null, enableProject: true,project: null, rubro: null }
   dataDetail: DetailProjectFolder = { fechaContrato: null, fechaFinalizacion: null, adicion: null, tipoContrato: null, update: null }
   constructor(
     private _upload: UploadDataService,
@@ -79,7 +79,8 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaInicioAmpliacion: new FormControl(null),
       fechaDeTerminacionAmpliacion: new FormControl(null),
       numberProject: new FormControl(this.dataProject.numberProject),
-
+      rubro: new FormControl(this.dataProject.rubro),
+      project: new FormControl(this.dataProject.project)
     });
 
   }
@@ -87,40 +88,6 @@ export class RegisterProjectFolderComponent implements OnInit {
     this.ref.detectChanges();
   }
   addProjectFolder() {
-    this.formProject.value.ejecucion = false
-    if (this.formProject.value.updateData === 'Solo Editar') {
-      this.formProject.value.updateData = true;
-
-    } else {
-      this.formProject.value.updateData = false;
-    }
-    const detalle: DetailProjectFolder = {
-      fechaContrato: this.formProject.value.fechaContrato,
-      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
-      adicion: false,
-      tipoContrato: '',
-      idContrato: null,
-      update: this.formProject.value.updateData
-    }
-    const registerProject: IProjectFolder = {
-      userId: this.authService.accessId,
-      companyName: this.formProject.value.companyName,
-      projectName: this.formProject.value.projectName,
-      descriptionProject: this.formProject.value.description,
-      execution: this.formProject.value.ejecucion,
-      activate: true,
-      enableProject: false,
-      contractorsCant: 0,
-      valorContrato: 0,
-      valorSubTotal: 0,
-      gastosOperativos: 0,
-      noAdicion: this.formProject.value.noAdicion,
-      fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
-      fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
-      detalleContratoDto: detalle,
-      numberProject: this.formProject.value.numberProject
-
-    };
     if (this.formProject.invalid) {
       this.formProject.enable();
 
@@ -132,8 +99,43 @@ export class RegisterProjectFolderComponent implements OnInit {
 
       // Show the alert
       this.showAlert = true;
+      return 
     } else {
-
+      this.formProject.value.ejecucion = false
+      if (this.formProject.value.updateData === 'Solo Editar') {
+        this.formProject.value.updateData = true;
+  
+      } else {
+        this.formProject.value.updateData = false;
+      }
+      const detalle: DetailProjectFolder = {
+        fechaContrato: this.formProject.value.fechaContrato,
+        fechaFinalizacion: this.formProject.value.fechaFinalizacion,
+        adicion: false,
+        tipoContrato: '',
+        idContrato: null,
+        update: this.formProject.value.updateData
+      }
+      const registerProject: IProjectFolder = {
+        userId: this.authService.accessId,
+        companyName: this.formProject.value.companyName,
+        projectName: this.formProject.value.projectName,
+        descriptionProject: this.formProject.value.description,
+        execution: this.formProject.value.ejecucion,
+        activate: true,
+        enableProject: false,
+        contractorsCant: 0,
+        valorContrato: 0,
+        valorSubTotal: 0,
+        gastosOperativos: 0,
+        noAdicion: this.formProject.value.noAdicion,
+        fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
+        fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
+        detalleContratoDto: detalle,
+        numberProject: this.formProject.value.numberProject,
+        project: this.formProject.value.project,
+        rubro: this.formProject.value.rubro
+      };
 
       this._upload.addProjectFolder(registerProject).subscribe((res) => {
         if (res) {
@@ -200,7 +202,9 @@ export class RegisterProjectFolderComponent implements OnInit {
       noAdicion: this.formProject.value.noAdicion,
       fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
       fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
-      numberProject: this.formProject.value.numberProject
+      numberProject: this.formProject.value.numberProject,
+      project: this.formProject.value.project,
+      rubro: this.formProject.value.rubro
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
       if (res) {

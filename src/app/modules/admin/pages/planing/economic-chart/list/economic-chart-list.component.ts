@@ -15,9 +15,9 @@ import {
     Validators,
 } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import {
-    Subject,
+    Subject, takeUntil,
 } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { EconomicChartService } from '../../service/economic-chart.service';
@@ -29,9 +29,12 @@ import {
 } from '../economic-chart.types';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { SelectionModel } from '@angular/cdk/collections';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'economic-chart-list',
@@ -42,22 +45,20 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
     animations: fuseAnimations,
 })
 export class EconomicChartListComponent
-    implements OnInit, AfterViewInit, OnDestroy
-{
+    implements OnInit, AfterViewInit, OnDestroy {
+    selectContract: any;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
+    @ViewChild(MatSort) sort!: MatSort;
+    contracts: any;
+    @ViewChild(MatTable) table!: MatTable<any>;
+    dataSource = new MatTableDataSource<any>();
+    selection = new SelectionModel<any>(true, []);
+    displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant', 'fechaContrato', 'fechaFinalizacion', 'action'];
+    columnsToDisplay: string[] = this.displayedColumns.slice();
     registerDate = new Date();
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    projectData: any;
-    displayedColumns: string[] = [
-        'actions',
-        'companyName',
-        'projectName',
-        'descriptionProject',
-        'fechaContrato',
-        'fechaFinalizacion',
-        'execution',
-    ];
-    dataSource: MatTableDataSource<any>;
 
     componentList: Components[] = [
         {
@@ -89,21 +90,20 @@ export class EconomicChartListComponent
     selectedProduct: EconomicChart | null = null;
     economicChartForm: FormGroup;
     tagsEditMode: boolean = false;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         private _economicService: EconomicChartService,
         private _genericService: GenericService,
-        private authService: AuthService,
         private _router: Router,
+        private _liveAnnouncer: LiveAnnouncer,
     ) {
-        this.projectData = this._economicService._economicsChart$;
+        this.contracts = this._economicService._economicsChart$;
         this.dataSource = new MatTableDataSource(
-            this.projectData.source._value
-
+            this.contracts.source._value
         );
+        this.dataSource.sort = this.sort;
     }
 
     ngOnInit(): void {
@@ -121,9 +121,18 @@ export class EconomicChartListComponent
             images: [[]],
             active: [false],
         });
-        this.getDetailContract();
-    }
+        this.getContractsData();
 
+    }
+    columnas = [
+        { title: 'NRO CONTRATO', name: 'numberProject' },
+        { title: 'NOMBRE EMPRESA', name: 'companyName' },
+        { title: 'NOMBRE PROYECTO', name: 'projectName' },
+        { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
+        { title: 'FECHA INICIO CONTRATO', name: 'fechaContrato' },
+        { title: 'FECHA FIN CONTRATO', name: 'fechaFinalizacion' },
+        { title: '', name: 'action' },
+    ]
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -166,75 +175,33 @@ export class EconomicChartListComponent
             this._changeDetectorRef.markForCheck();
         }, 3000);
     }
-
-    async addProjectFolder() {
-        if (this.economicChartForm.value.ejecucion == 'Ejecutar Contrato') {
-            this.economicChartForm.value.ejecucion = true;
+    /**
+ * Track by function for ngFor loops
+ *
+ * @param index
+ * @param item
+ */
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+    announceSortChange(sortState: Sort) {
+        if (sortState.direction) {
+            this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
         } else {
-            this.economicChartForm.value.ejecucion = false;
+            this._liveAnnouncer.announce('Sorting cleared');
         }
-        const registerProject: any = {
-            userId: this.authService.accessId,
-            companyName: this.economicChartForm.value.companyName,
-            projectName: this.economicChartForm.value.projectName,
-            descriptionProject: this.economicChartForm.value.description,
-            registerDate: this.registerDate,
-            modifyDate: this.registerDate,
-            execution: this.economicChartForm.value.ejecucion,
-            budget: 0,
-            contractCant: 0,
-            cpc: '',
-            nombreCpc: '',
-            activate: false,
-        };
-        this._economicService.addEconomicChart(registerProject).subscribe(
-            (res) => {
-                if (res) {
-                    swal.fire(
-                        'Bien',
-                        'informacion Registrada Exitosamente!',
-                        'success'
-                    );
-                    //this.matDialogRef.close();
-                    this._changeDetectorRef.detectChanges();
-                    this._changeDetectorRef.markForCheck();
-                }
-            },
-            (response) => {
-                this.economicChartForm.enable();
-                // Set the alert
-                swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-                // Show the alert
-            }
-        );
     }
 
-    deleteComponent(componente: any) {
-        this._economicService.DeleteComponent(componente.id).subscribe(
-            (res) => {
-                if (res) {
-                    swal.fire(
-                        'Bien',
-                        'informacion Eliminada Exitosamente!',
-                        'success'
-                    );
-                }
-                this._changeDetectorRef.detectChanges();
-            },
-            (response) => {
-                // Set the alert
-                swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
-            }
-        );
-    }
-
-    getDetailContract(){
-        for (let index = 0; index < this.projectData.source._value.length; index++) {
-            this._genericService.getDetalleContrato(this.projectData.source._value[index].id, false).subscribe((resp: any) => {
-                this.projectData.source._value[index].fechaContrato = resp.fechaContrato;
-                this.projectData.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;                
+    getContractsData() {
+        for (let index = 0; index < this.contracts.source._value.length; index++) {
+            this._genericService.getDetalleContrato(this.contracts.source._value[index].id, false).subscribe((resp: any) => {
+                this.contracts.source._value[index].fechaContrato = resp.fechaContrato;
+                this.contracts.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;
             })
         }
-
+    }
+    
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
     }
 }

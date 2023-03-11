@@ -106,6 +106,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
 
     crearCarpeta() {
         const dialogRef = this._matDialog.open(RegisterFolderContractorComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 contractorId: this.contractorId,

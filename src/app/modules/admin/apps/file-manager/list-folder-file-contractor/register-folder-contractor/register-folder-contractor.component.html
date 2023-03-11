@@ -41,7 +41,7 @@
 
 </div>
   <mat-dialog-actions align="end">
-    <button mat-stroked-button type="button" [mat-dialog-close]="false" class="text-warn-500">Cancelar</button>
+    <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false" class="text-warn-500">Cancelar</button>
     <button mat-flat-button [color]="'primary'" *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
     <button mat-flat-button [color]="'primary'" type="submit"  [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Aceptar</button>
   </mat-dialog-actions>

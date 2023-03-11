@@ -22,6 +22,7 @@ export class AuthSignUpComponent implements OnInit
         type   : 'success',
         message: ''
     };
+    code: string = 'DTV';
     profesionales: any = GlobalConst.profesional;
     signUpForm: FormGroup;
     showAlert: boolean = false;
@@ -68,8 +69,7 @@ export class AuthSignUpComponent implements OnInit
         const userRegister: IUserModel={
             userName: this.signUpForm.value.name,
             userPassword: this.signUpForm.value.password,
-            rollId: 7,
-            avatar: 'vacio',
+            avatar: 'assets/images/flags/user.png',
             professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
             phoneNumber: this.signUpForm.value.phoneNumber.toString(),
@@ -95,6 +95,8 @@ export class AuthSignUpComponent implements OnInit
                     this._router.navigateByUrl('/confirmation-required');
                 },
                 (response) => {
+                    console.log(response);
+                    
                     // Re-enable the form
                     this.signUpForm.enable();
                     // Reset the form

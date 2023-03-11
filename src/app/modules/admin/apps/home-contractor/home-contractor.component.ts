@@ -16,6 +16,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
 import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
+import { Router } from '@angular/router';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -45,6 +46,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     private _contractorService: HomeContractorService,
     private _matDialog: MatDialog,
     private _auth: AuthService,
+    private _router: Router,
     private _contractorListService: ContractorService,
   ) {
   }
@@ -121,5 +123,9 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   }
   getAccount(){
     this.cuentaCobro = true;
+  }
+  signOut(): void
+  {
+      this._router.navigate(['/sign-out']);
   }
 }

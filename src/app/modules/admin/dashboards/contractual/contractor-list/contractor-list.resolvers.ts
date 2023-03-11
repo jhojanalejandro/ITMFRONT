@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { EconomicChartService } from '../service/economic-chart.service';
-import { InventoryPagination, EconomicChart } from './economic-chart.types';
+import { Contractor } from '../models/contractort';
+import { ContractorService } from '../service/contractor.service';
+
 
 @Injectable({
     providedIn: 'root'
 })
-export class InventoryProductResolver implements Resolve<any>
+export class ContractorsDataResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
     constructor(
-        private _inventoryService: EconomicChartService,
+        private _inventoryService: ContractorService,
         private _router: Router
     ) {
     }
@@ -24,8 +25,8 @@ export class InventoryProductResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<EconomicChart> {
-        return this._inventoryService.getProductById(route.paramMap.get('id'))
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Contractor[]> {
+        return this._inventoryService.getContractorByIdProject(route.paramMap.get('id'))
             .pipe(
                 // Error here means the requested product is not available
                 catchError((error) => {
@@ -49,12 +50,12 @@ export class InventoryProductResolver implements Resolve<any>
 @Injectable({
     providedIn: 'root'
 })
-export class InventoryProductsResolver implements Resolve<any>
+export class ContractorsResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
-    constructor(private _inventoryService: EconomicChartService) {
+    constructor(private _inventoryService: ContractorService) {
     }
     /**
      * Resolver
@@ -62,8 +63,8 @@ export class InventoryProductsResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any[]> {
-        return this._inventoryService.getProjectData();
+    async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Observable<any[]>> {
+        return  this._inventoryService.getContractorByIdProject();
     }
 }
 
