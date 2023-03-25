@@ -24,6 +24,21 @@
                     Este campo es requerido
                 </mat-error>
             </mat-form-field>
+            <mat-form-field class="hiring" appearance="outline">
+                <mat-label >Tipo Carpeta</mat-label>
+                <mat-select formControlName="typeFolder" name="typeFile">
+                    <mat-option *ngFor="let tipoCarpeta of tiposCarpeta" [value]="tipoCarpeta.viewValue">
+                        {{tipoCarpeta.viewValue}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon
+                class="icon-size-5"
+                matSuffix
+                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                <mat-error *ngIf="formProject.get('typeFolder').hasError('required')">
+                    El Campo pension es requerido
+                </mat-error>
+            </mat-form-field> 
         </div>
         <div class="folder">
             <mat-form-field class="hiringD" appearance="outline">
@@ -41,7 +56,7 @@
 
 </div>
   <mat-dialog-actions align="end">
-    <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false" class="text-warn-500">Cancelar</button>
+    <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
     <button mat-flat-button [color]="'primary'" *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
     <button mat-flat-button [color]="'primary'" type="submit"  [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Aceptar</button>
   </mat-dialog-actions>

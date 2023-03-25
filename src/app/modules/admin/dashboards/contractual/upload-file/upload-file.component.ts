@@ -38,7 +38,6 @@ export class UploadFileComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private _upload: UploadFileDataService,
     private _gerenicService: GenericService,
-
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFileComponent>,
     private _formBuilder: FormBuilder,
@@ -96,11 +95,18 @@ export class UploadFileComponent implements OnInit {
       passed: null,
       typeFilePayment: this._data.typeFilePayment,
       monthPayment: null,
-      FolderId: this._data.folderId
+      folderId: this._data.folderId
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información Registrada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.ref.detectChanges();
         this.ref.markForCheck();
         this.closeModal();
@@ -168,7 +174,14 @@ export class UploadFileComponent implements OnInit {
       // Should match the parameter name in backend
       this._upload.UploadFileExcel(formData).subscribe((res) => {
         if (res) {
-          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();

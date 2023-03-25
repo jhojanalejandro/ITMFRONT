@@ -121,7 +121,14 @@ export class UploadFileContractorComponent implements OnInit {
     
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
         if(res){
-          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           this.ref.detectChanges();
           this.ref.markForCheck();   
           this.matDialogRef.close(); 
@@ -150,7 +157,14 @@ export class UploadFileContractorComponent implements OnInit {
     
     this._upload.UploadFileContractor(registerProject).subscribe((res) => {   
         if(res){
-          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();   

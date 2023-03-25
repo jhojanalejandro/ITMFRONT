@@ -203,7 +203,14 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
       if (result == 'confirmed') {
         this._uploadData.DeleteContract(element.id).subscribe((res) => {
           if (res) {
-            swal.fire('Bien', 'informacion Eliminada Exitosamente!', 'success');
+            swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Información Eliminada Exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
           }
           this.getContractsData();
         },

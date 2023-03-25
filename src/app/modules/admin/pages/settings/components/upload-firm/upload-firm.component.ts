@@ -116,11 +116,18 @@ export class UploadFirmComponent implements OnInit {
       passed: true,
       typeFilePayment: 'execel Contratista',
       monthPayment: null,
-      FolderId: null
+      folderId: null
     };
     this._uploadService.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información Registrada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -148,7 +155,14 @@ export class UploadFirmComponent implements OnInit {
     };
     this._uploadService.UploadFileContractor(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información Registrada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
@@ -176,7 +190,14 @@ export class UploadFirmComponent implements OnInit {
       // Should match the parameter name in backend
       this._uploadService.UploadFileExcel(formData).subscribe((res) => {
         if (res) {
-          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();

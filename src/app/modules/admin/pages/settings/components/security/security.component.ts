@@ -68,7 +68,14 @@ export class SettingsSecurityComponent implements OnInit
                     if(data){
                         this.securityForm.enable();
                         // Set the alert
-                        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+                        swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información Registrada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                          });
 
                     }
                 },

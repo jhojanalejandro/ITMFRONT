@@ -68,7 +68,14 @@ export class ObservationFileComponent implements OnInit {
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información actualizada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.matDialogRef.close(true);
       }
     },
@@ -102,7 +109,14 @@ export class ObservationFileComponent implements OnInit {
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información actualizada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
       }
     },
       (response) => {

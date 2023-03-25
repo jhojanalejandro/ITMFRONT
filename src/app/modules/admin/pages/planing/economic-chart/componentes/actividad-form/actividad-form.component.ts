@@ -131,9 +131,14 @@ export class ActividadFormComponent implements OnInit {
             this._Economicservice.addActivity(model).subscribe((response) => {
                 if (response) {
                     Swal.fire(
-                        'Buen Trabajo!',
-                        'Se guardó la información!',
-                        'success'
+                        {
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información Registrada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                          }
                     );
                 }else{
                     Swal.fire(

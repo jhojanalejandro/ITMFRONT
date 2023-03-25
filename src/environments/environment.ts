@@ -12,6 +12,7 @@ export const environment = {
     updateUserEndpoint: 'User/Update',
     updatePasswordUserEndpoint: 'User/UpdatePassword',
     getAllUserEndpoint: 'User/GetAll',
+    getAllAdminsEndpoint: 'User/GetAll',
     getAllUserEmployeesEndpoint: 'User/GetAllEmployees',
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
@@ -55,6 +56,7 @@ export const environment = {
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
 
     addFileEndpoint: 'Files/AddFileContractor',
+    addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
     GetAllFileByFolderEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',

@@ -262,7 +262,14 @@ export class AddComponentsComponent implements OnInit {
         };
         this._contrtactService.UpdateCostProjectFolder(registerProject).subscribe((res) => {
             if (res) {
-                Swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: 'Información Registrada Exitosamente!',
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
             }
 
         }, (response) => {

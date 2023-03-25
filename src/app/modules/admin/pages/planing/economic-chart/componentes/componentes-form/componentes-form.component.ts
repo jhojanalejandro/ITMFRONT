@@ -73,13 +73,13 @@ export class ComponentesFormComponent implements OnInit {
                 fruit ? this._filter(fruit) : this.allFruits.slice()
             )
         );
-        if(this._data.componente != null){
+        if (this._data.componente != null) {
             this.id = this._data.componente.id;
             this.nombreComponente = this._data.componente.nombreComponente;
-            
+
         }
         this.componentForm = this._formBuilder.group({
-            componentName: new FormControl(this.nombreComponente,Validators.required)
+            componentName: new FormControl(this.nombreComponente, Validators.required)
         });
     }
 
@@ -87,8 +87,8 @@ export class ComponentesFormComponent implements OnInit {
         this.abrirDiv = true;
     }
 
-    ngOnInit(): void { 
-        
+    ngOnInit(): void {
+
     }
 
     ngOnDestroy(): void {
@@ -125,14 +125,17 @@ export class ComponentesFormComponent implements OnInit {
             };
             this._Economicservice.addComponent(model).subscribe((response) => {
                 if (response) {
-                    Swal.fire(
-                        'Buen Trabajo!',
-                        'Se guardó la información!',
-                        'success'
-                    );
+                    Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información Registrada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                     this.matDialogRef.close(true);
                 }
-            },(error => {
+            }, (error => {
                 console.log(error);
                 Swal.fire(
                     'EI!',

@@ -12,7 +12,7 @@ export interface IFileContractor{
     passed: boolean;
     typeFilePayment: string;
     monthPayment?: string;
-    FolderId: string;
+    folderId: string;
 }
 
 

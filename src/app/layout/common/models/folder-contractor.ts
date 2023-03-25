@@ -7,4 +7,5 @@ export interface IFolderContractor{
     descriptionProject: string;
     registerDate: Date;
     modifyDate: Date;
+    typeFolder: string;
 }

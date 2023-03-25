@@ -193,7 +193,14 @@ export class ModificacionFormComponent implements OnInit {
 
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
-                swal.fire('Bien!', 'Registrado Exitoso', 'success');
+                swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: 'Información Registrada Exitosamente!',
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
             }
             this._changeDetectorRef.detectChanges();
         }, (response) => {

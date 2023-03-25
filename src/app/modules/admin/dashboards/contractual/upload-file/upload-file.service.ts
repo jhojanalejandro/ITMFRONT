@@ -35,4 +35,10 @@ export class UploadFileDataService
         let urlEndpointGenerate = this.apiUrl+ environment.addDetailFileEndpoint;
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
+
+    UploadFileBillContractors(formdata: IFileContractor) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addFileBillsEndpoint;
+         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
+
 }

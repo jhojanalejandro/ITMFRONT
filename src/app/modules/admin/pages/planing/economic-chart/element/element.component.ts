@@ -206,7 +206,14 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         };
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
-                swal.fire('Exitoso', 'Registrado Exitosamente!', 'success');
+                swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: 'Información Registrada Exitosamente!',
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
                 this.matDialogRef.close(true);
             }
             this._changeDetectorRef.detectChanges();

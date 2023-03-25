@@ -96,7 +96,7 @@
                             [(ngModel)]="hinringData.fechaFinalizacionConvenio"
                             formControlName="fechaFinalizacionConvenio" [matDatepicker]="pickerFCo">
                         <mat-datepicker #pickerFCo></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerFC"></mat-datepicker-toggle>
+                        <mat-datepicker-toggle matSuffix [for]="pickerFCo"></mat-datepicker-toggle>
                         <mat-error *ngIf="formContractor.get('fechaFinalizacionConvenio').hasError('required')">
                             Este Campo es requerido
                         </mat-error>

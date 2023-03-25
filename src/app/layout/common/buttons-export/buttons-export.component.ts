@@ -24,7 +24,7 @@ export class ButtonsExportComponent implements OnInit {
                 link.click();
                 if (res) {
                     Swal.fire({
-                        position: 'top-end',
+                        position: 'center',
                         icon: 'success',
                         title: 'Documento descargado.',
                         showConfirmButton: false,
@@ -49,7 +49,7 @@ export class ButtonsExportComponent implements OnInit {
                 link.click();
                 if (res) {
                     Swal.fire({
-                        position: 'top-end',
+                        position: 'center',
                         icon: 'success',
                         title: 'Documento descargado.',
                         showConfirmButton: false,
@@ -66,16 +66,25 @@ export class ButtonsExportComponent implements OnInit {
     exportarPaa() {
         this._service.getReportPpa(this.idContrato).subscribe(
             (res) => {
-                var downloadURL = window.URL.createObjectURL(res);
-                var link = document.createElement('a');
-                link.href = downloadURL;
-                link.download = "SOLICITUD PAA";
-                link.click();
                 if (res) {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "SOLICITUD PAA";
+                    link.click();
                     Swal.fire({
-                        position: 'top-end',
+                        position: 'center',
                         icon: 'success',
                         title: 'Documento descargado.',
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+                }else{
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'Información de los contratista incompleta',
                         showConfirmButton: false,
                         timer: 1500
                       })
@@ -98,7 +107,7 @@ export class ButtonsExportComponent implements OnInit {
                 link.click();
                 if (res) {
                    Swal.fire({
-                        position: 'top-end',
+                        position: 'center',
                         icon: 'success',
                         title: 'Documento descargado.',
                         showConfirmButton: false,

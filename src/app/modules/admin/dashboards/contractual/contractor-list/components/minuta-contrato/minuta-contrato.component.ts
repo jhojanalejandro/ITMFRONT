@@ -1,11 +1,14 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
-import { Minuta } from '../../../models/minuta';
 import { ContractorService } from '../../../service/contractor.service';
 import { ContractContractors } from '../../../models/contract-contractors';
+import { IFileContractor } from 'app/layout/common/models/file-contractor';
+import { UploadFileDataService } from '../../../upload-file/upload-file.service';
+import { AuthService } from 'app/core/auth/auth.service';
+import { split } from 'lodash';
 
 
 @Component({
@@ -17,13 +20,18 @@ export class MinutaContratoComponent implements OnInit {
   @ViewChild('pdfTable') pdfTable: ElementRef;
   @Input('contractContractors') contractContractors: ContractContractors;
   year = new Date('YYYY');
+  registerDate = new Date();
   file: any;
   dataContractors: any[] = [];
+  SaveMinuta: IFileContractor[] = []
   docDefinition: any;
   base64Output: any;
 
   dataMinuta: any[] = [];
-  constructor(private _economicService: ContractorService) { }
+  constructor(private _economicService: ContractorService,
+    private _upload: UploadFileDataService,
+    private ref: ChangeDetectorRef,
+    private _auth: AuthService) { }
 
   ngOnInit(): void {
     this.getHiringData();
@@ -472,11 +480,11 @@ export class MinutaContratoComponent implements OnInit {
   //     .download('Filenames.pdf');
   //   console.log(test);
   // }
-  
+
   public downloadAsPDF() {
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
       let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
-      if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.nombre == null) {
+      if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.nombre == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null) {
         swal.fire('EI', 'los valoes de algunos contratistas no estan completos y no se puede generar minuta', 'warning');
       } else {
 
@@ -652,16 +660,55 @@ export class MinutaContratoComponent implements OnInit {
             // alignment: 'justify'
           },
         };
+        let nombreMinuta = 'minuta' + data.nombre;
+        let registerDate = this.registerDate;
+        let userId = this._auth.accessId;
+        let contractId = this.contractContractors.contractId;
+        let _uploadervice = this._upload;
+        pdfMake.createPdf(documentDefinition)
+        .getDataUrl(function (dataURL) {
+          debugger
+          dataURL = dataURL.split('data:application/pdf;base64,')
+          const registerFile: IFileContractor = {
+            userId: userId,
+            contractorId: data.contractorId,
+            contractId: contractId,
+            filesName: nombreMinuta,
+            typeFile: 'PDF',
+            descriptionFile: 'minuta del contratista generada',
+            registerDate: registerDate,
+            modifyDate: registerDate,
+            filedata: dataURL,
+            passed: null,
+            typeFilePayment: 'Minuta',
+            monthPayment: null,
+            folderId: null
+          };
+          _uploadervice.UploadFileBillContractors(registerFile).subscribe((res) => {
+            if (res) {
+              swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: '',
+                html: 'Información Registrada Exitosamente!',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              this.ref.detectChanges();
+              this.ref.markForCheck();
+            }
+      
+          },
+            (response) => {
+              console.log(response);
+              swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+            });
+        });
         pdfMake
           .createPdf(documentDefinition)
-          .download('pruebaMinuta.pdf');
-        pdfMake.createPdf(documentDefinition)
-          .getDataUrl(function (dataURL) {
-            data = dataURL;
-          });
+          .download(nombreMinuta + '.pdf');
       }
     }
-
   }
 
   private getHiringData() {
@@ -673,7 +720,10 @@ export class MinutaContratoComponent implements OnInit {
       }, (resp => {
         console.log(resp);
       }));
-
   }
 
+  private guardarMinutas() {
+    debugger
+
+  }
 }

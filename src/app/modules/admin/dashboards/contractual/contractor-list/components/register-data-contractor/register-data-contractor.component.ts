@@ -112,7 +112,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.getAdmins();
   }
   async addDataHiring() {
-
+    debugger
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
@@ -146,7 +146,7 @@ export class ContractorDataRegisterComponent implements OnInit {
           nivel: Number(this.formContractor.value.nivel),
           supervisorItm: dataAdmin.userName,
           cargoSupervisorItm: dataAdmin.professionalposition,
-          identificacionSupervisor: dataAdmin.identificacionSupervisor,
+          identificacionSupervisor: dataAdmin.identification,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
           nombreRubro: this.formContractor.value.nombreRubro,
@@ -187,7 +187,15 @@ export class ContractorDataRegisterComponent implements OnInit {
       .addHiringContractor(this.hiringDataList)
       .subscribe((res) => {
         if (res) {
-          Swal.fire('Bien', 'Contratista Registrado Exitosamente!', 'success');
+          
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           this.ref.detectChanges();
           this.ref.markForCheck();
           this.matDialogRef.close(true);
@@ -201,13 +209,14 @@ export class ContractorDataRegisterComponent implements OnInit {
         };
         console.log(response);
 
-        Swal.fire('Error', 'Información no Actualizada!', 'error');
+        Swal.fire('Error', 'Información no Registrada!', 'error');
         this.showAlert = true;
       });
     this.hiringDataList = [];
   }
 
   async updateContractor() {
+    debugger
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
@@ -239,7 +248,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       nivel: Number(this.formContractor.value.nivel),
       supervisorItm: dataAdmin.userName,
       cargoSupervisorItm: dataAdmin.professionalposition,
-      identificacionSupervisor: dataAdmin.identificacionSupervisor,
+      identificacionSupervisor: dataAdmin.identification,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
       nombreRubro: this.formContractor.value.nombreRubro,
@@ -251,7 +260,14 @@ export class ContractorDataRegisterComponent implements OnInit {
       .addHiringContractor(registerContractor)
       .subscribe((res) => {
         if (res) {
-          Swal.fire('Bien', 'Contratista Registrado Exitosamente!', 'success');
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información actualizada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           this.ref.detectChanges();
           this.ref.markForCheck();
           this.matDialogRef.close(true);
@@ -388,7 +404,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   private getAdmins() {
-    this._auth.getTeams()
+    this._auth.getAdmins()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((teams: any) => {
         this.userList = teams;

@@ -35,29 +35,31 @@ export class SettingsTeamComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((teams: any) => {
                 // Mark for check
-                for (let index = 0; index < teams.length; index++) {
-                    switch (teams[index].code) {
+                teams.forEach(element => {
+                    switch (element.code) {
                         case 'ADM':
-                            teams[index].code = 'ADMIN'
+                            element.code = 'ADMIN'
                             break;
                         case 'PLNC':
-                            teams[index].code = 'PLANEACIÓN'
+                            element.code = 'PLANEACIÓN'
                             break;
                         case 'CTL':
-                            teams[index].code = 'CONTRACTUAL'
+                            element.code = 'CONTRACTUAL'
                             break;
                         case 'NMA':
-                            teams[index].code = 'NOMINA'
+                            element.code = 'NOMINA'
                             break;
                         case 'JURD':
-                            teams[index].code = 'JURIDICO'
+                            element.code = 'JURIDICO'
                             break;
                         case 'SPV':
-                            teams[index].code = 'SUPERVISOR'
+                            element.code = 'SUPERVISOR'
+                            break;
+                        case 'DTV':
+                            element.code = 'DESACTIVADO'
                             break;
                     }
-
-                }
+                });
                 this.members = teams;
                 this._changeDetectorRef.markForCheck();
             });
@@ -73,9 +75,8 @@ export class SettingsTeamComponent implements OnInit {
         return item.id || index;
     }
 
-    onChange(rol: any, user: any) {
-        user.idRoll = rol.value;
-        // user.rollName = event
+    onChange(rolCode: any, user: any) {
+        user.code = rolCode.value
         this._authService
             .updateUser(user)
             .subscribe((res) => {
@@ -85,7 +86,8 @@ export class SettingsTeamComponent implements OnInit {
 
             },
                 (response) => {
-                    swal.fire('Error', 'No se pudo actualizar!', 'success');
+                    console.log('error', response);
+                    swal.fire('Error', 'No se pudo actualizar!', 'error');
                 });
     }
     openSnackBar(user: string) {
@@ -93,4 +95,5 @@ export class SettingsTeamComponent implements OnInit {
             duration: this.durationInSeconds * 1000,
         });
     }
+   
 }

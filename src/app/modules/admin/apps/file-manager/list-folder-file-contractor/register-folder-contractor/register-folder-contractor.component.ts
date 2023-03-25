@@ -7,6 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { IFolderContractor } from 'app/layout/common/models/folder-contractor';
 import { ActivatedRoute } from '@angular/router';
 import { FileManagerService } from '../../services/file-manager.service';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class RegisterFolderContractorComponent implements OnInit {
   editData: boolean = false;
   folderName: any = null;
   descript: any;
+  tiposCarpeta: any = GlobalConst.tipoCarpeta;
 
   constructor(
     private _uploadService: FileManagerService,
@@ -57,6 +59,8 @@ export class RegisterFolderContractorComponent implements OnInit {
     this.formProject = this._formBuilder.group({
     folderName: new FormControl(this.folderName, Validators.required),      
     description: new FormControl(this.descript, Validators.required), 
+    typeFolder: new FormControl(this.descript, Validators.required), 
+
     });
 
   }
@@ -71,11 +75,19 @@ export class RegisterFolderContractorComponent implements OnInit {
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
-      modifyDate: this.registerDate      
+      modifyDate: this.registerDate,
+      typeFolder: this.formProject.value.typeFolder,      
     };  
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
-          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();  
@@ -101,11 +113,19 @@ export class RegisterFolderContractorComponent implements OnInit {
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 
-      modifyDate: this.registerDate       
+      modifyDate: this.registerDate,
+      typeFolder: this.formProject.value.typeFolder,       
     };  
     this._uploadService.UpdateProjectFolder(editProject).subscribe((res) => {   
         if(res){
-          swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información actualizada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           this.ref.detectChanges();
           this.ref.markForCheck();   
           this.cerrar();  

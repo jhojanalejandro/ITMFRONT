@@ -306,4 +306,13 @@ export class AuthService
         );
     }
 
+    getAdmins(): Observable<any>
+    {
+        return this._httpClient.get<IResponse>(this.apiUrl + environment.getAllAdminsEndpoint ).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                return of(response);
+            })
+        );
+    }
 }

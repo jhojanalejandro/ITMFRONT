@@ -139,7 +139,14 @@ export class RegisterProjectFolderComponent implements OnInit {
 
       this._upload.addProjectFolder(registerProject).subscribe((res) => {
         if (res) {
-          swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();
@@ -208,7 +215,14 @@ export class RegisterProjectFolderComponent implements OnInit {
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Editada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información actualizada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();

@@ -208,7 +208,14 @@ export class ContractorPaymentRegisterComponent implements OnInit {
     }
     this._nominaService.UpdateEconomicContractorPayment(this.economicDataList).subscribe((Response: any) => {
       if (Response) {
-        Swal.fire('Exitoso', 'Pago Actualizado Exitosamente!', 'success');
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información actualizada exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.ref.detectChanges();
         this.ref.markForCheck();
         this.matDialogRef.close(true);

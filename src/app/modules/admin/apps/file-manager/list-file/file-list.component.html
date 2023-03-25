@@ -76,13 +76,13 @@
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <a
-                                            class="flex flex-col w-50 h-60 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+                                            class="flex flex-col w-50 h-50 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
                                             >
                                             <section class="example-section">
-                                                <mat-radio-group [(ngModel)]="file.passed" [disabled]="false">
-                                                  <mat-radio-button (change)="onChange($event,file)" class="example-margin" value="aprobado">APROBADO</mat-radio-button>
-                                                  <mat-radio-button (change)="onChange($event, file)" class="example-margin" value="rechazado">RECHAZADO</mat-radio-button>
-                                                  <mat-radio-button  class="example-margin" value="revisar">POR REVISAR</mat-radio-button>
+                                                <mat-radio-group  [(ngModel)]="file.passed" [disabled]="false">
+                                                  <mat-radio-button [matTooltip]="Aprobado" class="mr-4" (change)="onChange($event,file)" value="aprobado">A</mat-radio-button>
+                                                  <mat-radio-button [matTooltip]="Rechazado" (change)="onChange($event, file)" class="example-margin" value="rechazado">R</mat-radio-button>
+                                                  <mat-radio-button [matTooltip]="Pendiente" class="ml-6" value="revisar">P</mat-radio-button>
                                                 </mat-radio-group>
                                               </section>
 
@@ -109,6 +109,9 @@
                                                 <div
                                                     class="truncate text-3x1" 
                                                     [matTooltip]="file.filesName">{{file.filesName}}</div>
+                                                    <div
+                                                    class="truncate text-3x1" 
+                                                    [matTooltip]="file.typeFilePayment">{{file.typeFilePayment}}</div>
                                             </div>
                                         </a>
                                     </ng-container>

@@ -86,6 +86,11 @@ export class GlobalConst {
         { viewValue: 'XLSX'}, 
 
     ] 
+    public static tipoCarpeta: TypeSelectString[]=[
+        { viewValue: 'Cargar a gmas'},
+        { viewValue: 'Carpeta pagos'}, 
+        { viewValue: 'Archivos adicionales'}, 
+    ] 
     public static tipoDocumento: TypeSelectString[]=[
         { viewValue: 'Planilla'},
         { viewValue: 'Cuenta De Cobro'},

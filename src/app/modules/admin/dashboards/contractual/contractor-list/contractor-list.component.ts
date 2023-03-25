@@ -60,6 +60,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
+  visibleOption: boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
@@ -173,6 +174,11 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     );
   }
   isAllSelected() {
+    if(this.selection.selected.length > 1){
+      this.visibleOption = true;
+    }else{
+      this.visibleOption = false;
+    }
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
@@ -197,9 +203,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   selectRow($event: any, dataSource: any) {
     if ($event.checked) {
       this.value = dataSource;
-
     }
   }
+
   openConfirmationDelete(element: any): void {
     // Open the dialog and save the reference of it
     const dialogRef = this._fuseConfirmationService.open(this.configForm.value);
@@ -296,7 +302,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   activateContarct() {
     this._genericService.UpdateStateProjectFolder(this.contractId).subscribe((resp) => {
       if (resp) {
-        swal.fire('Bien', 'Contrato activado exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Bien',
+          html: 'Contrato activado exitosamente!',
+          showConfirmButton: false,
+          timer: 2000
+        });
       } else {
         swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
       }

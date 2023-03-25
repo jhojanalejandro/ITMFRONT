@@ -125,7 +125,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 contractorId: this.contractorId,
                 contractId: this.contractId,
                 folderId: this.folderId,
-                typeFilePayment: 'contratista'
+                typeFilePayment: 'Contrato'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -144,7 +144,14 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
-                    swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
                 }
             });
         } else {
@@ -153,7 +160,14 @@ export class FileListComponent implements OnInit, OnDestroy {
 
             this._uploadService.UploadFileContractor(updateFile).subscribe((res) => {
                 if (res) {
-                    swal.fire('Bien', 'informacion Actualizada Exitosamente!', 'success');
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                      });
                 }
             },
                 (response) => {
