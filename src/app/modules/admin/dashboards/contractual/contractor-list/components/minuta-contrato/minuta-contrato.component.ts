@@ -4,11 +4,10 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
 import { ContractorService } from '../../../service/contractor.service';
-import { ContractContractors } from '../../../models/contract-contractors';
 import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from '../../../upload-file/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
-import { split } from 'lodash';
+import { ContractContractors } from '../../../models/contractor';
 
 
 @Component({

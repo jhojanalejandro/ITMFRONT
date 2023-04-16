@@ -1,11 +1,8 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import html2canvas from 'html2canvas';
-import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import { IElements } from '../../planing/models/element';
-import { ContractContractors } from 'app/modules/admin/dashboards/contractual/models/contract-contractors';
+import { ContractContractors } from 'app/modules/admin/dashboards/contractual/models/contractor';
 
 @Component({
   selector: 'app-minuta-contrato',

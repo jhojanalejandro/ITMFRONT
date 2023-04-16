@@ -5,17 +5,14 @@ import { AuthService } from 'app/core/auth/auth.service';
 import swal from 'sweetalert2';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
-import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { ContractorService } from '../../contractual/service/contractor.service';
+import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 
 @Component({
   selector: 'contractor-payment-list',
@@ -32,7 +29,7 @@ export class ContractorPaymentListComponent implements OnInit, OnDestroy {
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
-  elements: IElements[];
+  elements: Elements[];
   componentes: Componente[];
   configForm: FormGroup;
   accountBalanceOptions: ApexOptions;

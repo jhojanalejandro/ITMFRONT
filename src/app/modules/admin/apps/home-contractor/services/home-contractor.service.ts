@@ -90,6 +90,13 @@ export class HomeContractorService
         );
     }
 
+    GetMinutesPdfContractor(contractorId: string, contractId: string) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('contractId', contractId);
+        let urlEndpointGenerate = this.apiUrl+ environment.GetMinutesPdf;
+         return this._httpClient.get<File>(urlEndpointGenerate, {params: params});
+    }
 
 }
 

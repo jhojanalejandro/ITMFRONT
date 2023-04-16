@@ -25,6 +25,7 @@ import { MinutaAdicion2Component } from './components/minuta-adicion-ampliacion/
 import { MinutaAmpliacionComponent } from './components/minuta-ampliacion/minuta-adicion.component';
 import { EstudioPrevioComponent } from './components/estudio-previo/estudio-previo.component';
 import { ActaSupervisionComponent } from './components/acta-supervision/acta-supervision.component';
+import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
 
 
 @NgModule({
@@ -33,10 +34,12 @@ import { ActaSupervisionComponent } from './components/acta-supervision/acta-sup
         ContractorDataRegisterComponent,
         ModificacionFormComponent,
         MinutaContratoComponent,
-        MinutaAdicionComponent, MinutaAdicion2Component,
+        MinutaAdicionComponent, 
+        MinutaAdicion2Component,
         MinutaAmpliacionComponent, 
         EstudioPrevioComponent,
-        ActaSupervisionComponent
+        ActaSupervisionComponent,
+        NewnessContractorComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

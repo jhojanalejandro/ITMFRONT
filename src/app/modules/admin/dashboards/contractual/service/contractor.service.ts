@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, retry, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { PaymentAccount } from '../models/paymentAccount';
-import { Minuta } from '../models/minuta';
-import { ContractContractors } from '../models/contract-contractors';
-import { Contractor } from '../models/contractort';
+import { ContractContractors, Contractor } from '../models/contractor';
 
 @Injectable({
     providedIn: 'root'
@@ -63,17 +61,29 @@ export class ContractorService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    async getContractorById(contractorId: string, contractId: string) {
+    getPaymentAccount(contractorId: string, contractId: string) {
         const params = new HttpParams()
         .set('contractorId', contractorId )
         .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
-        return await this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+        return this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
     }
+
+    getContractorByContract(contractorId: string) {
+        let urlEndPoint = this.apiUrl + environment.GetContractsByContractors;
+        return this._httpClient.get<any>(urlEndPoint+ contractorId);
+    }
+
 
     getDataMinute(contractId: ContractContractors) {
         let urlEndPoint = this.apiUrl + environment.GetBillByContractIdEndpoint;
         return this._httpClient.post<any>(urlEndPoint, contractId);
+    }
+
+    addNewnessContractor(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
+        .pipe(retry(0));
     }
 
 }

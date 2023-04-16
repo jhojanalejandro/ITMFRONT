@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Contractor } from '../models/contractort';
 import { ContractorService } from '../service/contractor.service';
+import { Contractor } from '../models/contractor';
 
 
 @Injectable({

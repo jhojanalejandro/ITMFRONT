@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import swal from 'sweetalert2';
@@ -12,14 +12,14 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { ContractorService } from '../service/contractor.service';
-import { ContractContractors } from '../models/contract-contractors';
 import { MatPaginator } from '@angular/material/paginator';
+import { ContractContractors } from '../models/contractor';
+import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
+import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 
 
 @Component({
@@ -39,11 +39,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   cuentaCobro: boolean;
   minutaAdicion: boolean;
   disableElement: boolean = true;
-  private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
-  elements: IElements[];
+  elements: Elements[];
   componentes: Componente[];
   listId: any[] = [];
   contractors: any;
@@ -62,6 +61,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   exitAnimationDuration: string = '1500ms';
   visibleOption: boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(
     private _contractorListService: ContractorService,
@@ -72,7 +72,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private _liveAnnouncer: LiveAnnouncer,
     private router: ActivatedRoute,
     private _formBuilder: FormBuilder,
-    private _fuseConfirmationService: FuseConfirmationService
   ) {
     this.getDataContractor();
   }
@@ -147,11 +146,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.recentTransactionsTableMatSort;
   }
 
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next(null);
-    this._unsubscribeAll.complete();
-  }
   selectRowFull(data: any) {
     console.log(data);
   }
@@ -207,30 +201,28 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   openConfirmationDelete(element: any): void {
-    // Open the dialog and save the reference of it
-    const dialogRef = this._fuseConfirmationService.open(this.configForm.value);
-
-    // Subscribe to afterClosed from the dialog reference
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result == 'confirmed') {
-        this._contractorListService.DeleteContractor(element.id).subscribe((res) => {
-          if (res) {
-            swal.fire('Bien', 'Contratista desactivado Exitosamente!', 'success');
-
-          }
-          this.getDataContractor();
-
-        },
-          (response) => {
-            // Set the alert
-            swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-          });
+    const dialogRef = this._matDialog.open(NewnessContractorComponent, {
+      disableClose: true,
+      autoFocus: false,
+      data: {
+        id: null,
+        contractId: this.contractId,
+        contractorId: element.id,
       }
     });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getDataContractor();
+      }
+      this.selection.clear();
+    });
   }
+
   SendMailsAccounts() {
     let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.selection.selected }
-    this._contractorListService.sendmailsAccounts(ids).subscribe((Response) => {
+    this._contractorListService.sendmailsAccounts(ids)
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((Response) => {
       console.log(Response);
 
     });
@@ -247,7 +239,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         data
       }
     });
-    dialogModificacion.afterClosed().subscribe((result) => {
+    dialogModificacion.afterClosed()
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((result) => {
       if (result) {
         this.getDataContractor();
       }
@@ -261,6 +255,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       });
     }
     const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
+      disableClose: true,
       autoFocus: false,
       data: {
         idUser: this.auth.accessId,
@@ -300,7 +295,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   activateContarct() {
-    this._genericService.UpdateStateProjectFolder(this.contractId).subscribe((resp) => {
+    this._genericService.UpdateStateProjectFolder(this.contractId)
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((resp) => {
       if (resp) {
         swal.fire({
           position: 'center',
@@ -322,4 +319,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       })
   }
 
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
+  }
 }

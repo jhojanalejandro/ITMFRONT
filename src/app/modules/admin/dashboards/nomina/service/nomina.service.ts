@@ -3,7 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { IElements } from '../../../pages/planing/models/element';
 import { EconomicContractor } from '../models/economic-data-contractor';
 
 @Injectable({

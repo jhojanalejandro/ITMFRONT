@@ -9,21 +9,19 @@
         </div>
         <mat-dialog-content style="margin: 0px; padding: 0px;">
             <!-- Card form -->
-            <form class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto"
+            <form class="flex flex-col flex-0 items-start w-full p-4 sm:p-6 space-y-5 overflow-y-auto"
                 [formGroup]="elementForm">
-                <div>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Consecutivo</mat-label>
-                        <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text"
-                            formControlName="consecutivo" autocomplete="off" matInput placeholder="Consecutivo">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
-                        <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
-                            El Campo Consecutivo es requerido
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
+                <mat-form-field class="consecutive" appearance="outline">
+                    <mat-label>Consecutivo</mat-label>
+                    <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text"
+                        formControlName="consecutivo" autocomplete="off" matInput placeholder="Consecutivo">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                    <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
+                        El Campo Consecutivo es requerido
+                    </mat-error>
+                </mat-form-field>
                 <div class="folder">
+
                     <mat-form-field [hidden]="showDate" appearance="outline">
                         <mat-label>Modificacion</mat-label>
                         <mat-select [formControlName]="'modificacion'" [(ngModel)]="elementselectId"
@@ -82,7 +80,7 @@
                     </mat-form-field>
                     <mat-form-field appearance="outline">
                         <mat-label>Tipo Elemento</mat-label>
-                        <mat-select [formControlName]="'tipoElemento'" name="tipoElemento">
+                        <mat-select [formControlName]="'tipoElemento'" (selectionChange)="changeTypeElement($event)" name="tipoElemento">
                             <mat-option *ngFor="let tipo of tipoElementos" [value]="tipo.viewValue">
                                 {{tipo.viewValue}}
                             </mat-option>
@@ -110,7 +108,7 @@
                             El Campo nombre cpc es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field appearance="outline">
+                    <mat-form-field *ngIf="typeContractor" appearance="outline">
                         <mat-label>Cantidad Contratista</mat-label>
                         <input type="number" [value]="elemento.cantidadContratistas" id="contractorCant"
                             formControlName="contractorCant" autocomplete="off" matInput
@@ -142,7 +140,7 @@
                             El Campo Valor Unidad es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field disable appearance="outline">
+                    <mat-form-field *ngIf="typeContractor" disable appearance="outline">
                         <mat-label>Valor Por dia contratistas</mat-label>
                         <input type="text" value="{{elemento.valorPorDia | number:'1.0-0'}}"
                             formControlName="unitValueDay" autocomplete="off" matInput placeholder="Valor por Día">
@@ -182,7 +180,7 @@
                         </mat-icon>
                     </mat-form-field>
                 </div>
-                <div class="folder">
+                <div *ngIf="typeContractor" class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>obligaciones Especificas</mat-label>
                         <textarea type="text" class="example-full-width" id="obligacionesEspecificas"
@@ -190,7 +188,7 @@
                             placeholder="Descripcion"></textarea>
                     </mat-form-field>
                 </div>
-                <div class="folder">
+                <div *ngIf="typeContractor" class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>obligaciones Generales</mat-label>
                         <textarea type="text" class="example-full-width" id="obligacionesGenerales"
@@ -198,7 +196,7 @@
                             placeholder="Descripcion"></textarea>
                     </mat-form-field>
                 </div>
-                <div class="folder">
+                <div *ngIf="typeContractor" class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>Objeto</mat-label>
                         <textarea type="text" class="example-full-width" id="objetoElemento"

@@ -14,9 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ContractorPaymentRegisterComponent } from './payroll-register/contractor-payment-register.component';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
-import { Componente, IElements } from 'app/modules/admin/pages/planing/models/element';
 import { ContractorService } from '../../contractual/service/contractor.service';
+import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 
 @Component({
   selector: 'contractor-list',
@@ -36,7 +35,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
-  elements: IElements[];
+  elements: Elements[];
   componentes: Componente[];
   configForm: FormGroup;
   componentselectId: any;

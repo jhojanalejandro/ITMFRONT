@@ -9,14 +9,13 @@ import { HomeContractorService } from './services/home-contractor.service';
 import { UploadFileContractorComponent } from './components/upload-file-contractor/upload-file.component';
 import { saveAs } from "file-saver";
 import JSZip from 'jszip';
-
-import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
 import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 import { Router } from '@angular/router';
+import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
+import { ContractsContractor } from './models/fileContractor';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -27,6 +26,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class HomeContractorComponent implements OnInit, OnDestroy {
   dataCuenta: PaymentAccount;
+  contractIdList: any[] = [];
+  minutesDocumentPdf: File;
+  contractSelected: string;
   id: any;
   userName: any;
   cuentaCobro: boolean = false;
@@ -56,15 +58,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 */
   ngOnInit(): void {
     this.userName = this._auth.accessName
-    this.getDataContractor();
+    this.getContract();
   }
   openDialog() {
+    debugger
     const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
       autoFocus: false,
       data: {
         idUser: this._auth.accessId,
-        contractId: this.dataCuenta.contractId,
-        contractorId: this.dataCuenta.id,
+        contractId: this.contractSelected,
+        contractorId: this._auth.accessId,
       }
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -116,16 +119,53 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
   }
 
-  async getDataContractor() {
-    (await this._contractorListService.getContractorById(this._auth.accessId, this._auth.codeC)).subscribe((Response) => {
-      this.dataCuenta = Response;
+  private getDataContractor() {
+    this._contractorListService.getPaymentAccount(this._auth.accessId, this.contractSelected).subscribe((Response) => {
+      debugger
+      if (Response != null) {
+        this.dataCuenta = Response;
+      }
     });
   }
-  getAccount(){
+
+  getContract() {
+    this._contractorListService.getContractorByContract(this._auth.accessId).subscribe((Response) => {
+      this.contractIdList = Response;
+    });
+  }
+  getAccount() {
     this.cuentaCobro = true;
   }
-  signOut(): void
-  {
-      this._router.navigate(['/sign-out']);
+  signOut(): void {
+    this._router.navigate(['/sign-out']);
+  }
+
+  getContracts(event) {
+    this.getDataContractor();
+  }
+  descargarCuenta() {
+    this._contractorListService.getContractorByContract(this._auth.accessId).subscribe((Response) => {
+      this.contractIdList = Response;
+    });
+
+  }
+  
+  descargarActa() {
+    this._contractorService.GetMinutesPdfContractor(this._auth.accessId, this.contractSelected).subscribe((Response) => {
+      this.minutesDocumentPdf = Response;
+    });
+  }
+
+  downloadPdf(base64String, fileName) {
+    const source = `data:application/pdf;base64,${base64String}`;
+    const link = document.createElement("a");
+    link.href = source;
+    link.download = `${fileName}.pdf`
+    link.click();
+  }
+
+  onClickDownloadPdf(){
+    let base64String = "your-base64-string";
+    this.downloadPdf(base64String,"sample");
   }
 }

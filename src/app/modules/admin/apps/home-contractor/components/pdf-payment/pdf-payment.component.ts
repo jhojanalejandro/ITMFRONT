@@ -4,9 +4,9 @@ import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { IElements } from 'app/modules/admin/pages/planing/models/element';
 import { PaymentAccount } from 'app/modules/admin/dashboards/contractual/models/paymentAccount';
 import { DatePipe } from '@angular/common';
+import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -25,7 +25,7 @@ export class PdfPaymentComponent implements OnInit {
 
     data: any[] = [];
     fechaInicio: Date = new Date();
-    listaObligaciones: IElements[] = [{
+    listaObligaciones: Elements[] = [{
         id: 'any',
         nombreElemento: 'string',
         idComponente: 'string',
@@ -95,6 +95,7 @@ export class PdfPaymentComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        debugger
         this.downloadPDFInforme();
         this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
 

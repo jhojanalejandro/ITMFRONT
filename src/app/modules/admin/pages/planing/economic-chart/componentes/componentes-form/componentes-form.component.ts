@@ -25,7 +25,7 @@ import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EconomicChartService } from '../../../service/economic-chart.service';
-import { IComponente } from '../../../models/componente';
+import { Componente } from '../../../models/planing-model';
 
 @Component({
     selector: 'app-componentes-form',
@@ -117,7 +117,7 @@ export class ComponentesFormComponent implements OnInit {
     addComponent() {
         if (!this.componentForm.invalid) {
             this.nombreComponente = this.componentForm.value.componentName
-            let model: IComponente = {
+            let model: Componente = {
                 idContrato: this._data.idContrato,
                 nombreComponente: this.nombreComponente,
                 id: this.id,

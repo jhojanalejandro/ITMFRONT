@@ -25,8 +25,7 @@ import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { EconomicChartService } from '../../../service/economic-chart.service';
-import { IComponente } from '../../../models/componente';
-import { Activity } from '../../../models/activity';
+import { Activity } from '../../../models/planing-model';
 
 @Component({
     selector: 'app-componentes-form',

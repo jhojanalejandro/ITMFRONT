@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { ActividadFormComponent } from './actividad-form/actividad-form.component';
-import { Activity } from '../../models/activity';
+import { Activity } from '../../models/planing-model';
 
 @Component({
     selector: 'components-card',
@@ -45,6 +45,8 @@ export class AddComponentsComponent implements OnInit {
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
     totalCalculado: number = 0;
+    projectName: string = '';
+
     constructor(
         private route: ActivatedRoute,
         private _fuseConfirmationService: FuseConfirmationService,
@@ -58,13 +60,17 @@ export class AddComponentsComponent implements OnInit {
             this.chargeData();
         }
     }
+    ngOnInit(): void { 
+        this.projectName = this.route.snapshot.params.projectName;
+    }
 
+    
     abrirDivComponent(e: any) {
         this.tittle = 'Información Componente';
         this.abrirDivElemento = false;
         this.dataComponente = e;
         this.abrirDivComponente = true;
-        this.getActivity();
+        this.getActivity(e);
     }
 
     abrirDivElement(e: any) {
@@ -74,7 +80,6 @@ export class AddComponentsComponent implements OnInit {
         this.abrirDivElemento = true;
     }
 
-    ngOnInit(): void { }
 
     chargeData() {
         this._Economicservice.getComponent(this.id).subscribe((response) => {
@@ -277,8 +282,8 @@ export class AddComponentsComponent implements OnInit {
         });
     }
 
-    private getActivity() {
-        this._Economicservice.getActivity(this.dataComponente.id).subscribe((response) => {
+    private getActivity(e: any) {
+        this._Economicservice.getActivity(e.id).subscribe((response) => {
             if (response.length != 0) {
                 this.activities = response;
                 this._changeDetectorRef.detectChanges();

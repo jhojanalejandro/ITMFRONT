@@ -48,7 +48,7 @@ export class GlobalConst {
     public static tipoElemento: TypeSelectString[]=[
         { viewValue: 'Docente'},
         { viewValue: 'Suministro'},
-        { viewValue: 'Corriente'}, 
+        { viewValue: 'Contratista'}, 
     ] 
     public static requierePoliza: TypeSelectString[]=[
         { viewValue: 'Si'},
@@ -287,5 +287,12 @@ export class GlobalConst {
         else
             return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
     };
+
+    public static tipoNovedad: TypeSelectString[]=[
+        { viewValue: 'Despido'},
+        { viewValue: 'Renuncia'}, 
+        { viewValue: 'Cancelado'}, 
+        { viewValue: 'No contratado'}, 
+    ] 
     
 }

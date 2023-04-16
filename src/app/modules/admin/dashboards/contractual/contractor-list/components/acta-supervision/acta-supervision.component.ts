@@ -9,7 +9,7 @@ import { EconomicChartService } from 'app/modules/admin/pages/planing/service/ec
 import { UploadDataService } from '../../../service/upload-data.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IHiringData } from '../../../models/hiring-data';
-import { IElements } from 'app/modules/admin/pages/planing/models/element';
+import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 
 @Component({
   selector: 'app-acta-supervision',
@@ -43,10 +43,9 @@ export class ActaSupervisionComponent implements OnInit {
     supervisorItm: '',
     cargoSupervisorItm: '',
     identificacionSupervisor: '',
-    nombreRubro: '',
     cdp: '',
     caso: ''};
-  elementData: IElements = {
+  elementData: Elements = {
     nombreElemento: '',
     idComponente: '',
     cantidadContratistas: 0,

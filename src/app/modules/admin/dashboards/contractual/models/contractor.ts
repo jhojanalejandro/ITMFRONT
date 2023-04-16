@@ -1,3 +1,19 @@
+import { Elements, ProjectFolder } from "app/modules/admin/pages/planing/models/planing-model";
+import { IHiringData } from "./hiring-data";
+
+export interface AsignmentData{
+    contractId: string;
+    id: any;
+    idContractor: string[];
+    type: string;   
+}
+
+
+export interface ContractContractors{
+    contractId: string;
+	contractors: string[];
+}
+
 export interface Contractor{
     id?: string;
 	tipoContratacion: string,
@@ -43,4 +59,22 @@ export interface Contractor{
 	company: string;
 	from: Date;
 	to: Date;
+}
+
+
+export interface Minuta{
+    contractor: Contractor;
+    elementosComponente: Elements;
+    hiringData: IHiringData;
+    contract: ProjectFolder;
+}
+
+
+
+export interface NewnessContractor{
+    contractorId: string;
+    id: any;
+    descripcionNovedad: string;
+    tipoNovedad: string;   
+	contractId: string;
 }

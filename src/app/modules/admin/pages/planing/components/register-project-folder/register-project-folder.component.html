@@ -19,7 +19,7 @@
                 <div class="folder pt-8">
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Nombre Empresa</mat-label>
-                        <input type="text+" id="companyName" formControlName="companyName" autocomplete="off" matInput
+                        <input type="text" id="companyName" formControlName="companyName" autocomplete="off" matInput
                             placeholder="Nombre empresa">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                         <mat-error *ngIf="formProject.get('companyName').hasError('required')">
@@ -65,6 +65,12 @@
                         <mat-error *ngIf="formProject.get('rubro').hasError('required')">
                             El Campo Proyecto es requerido
                         </mat-error>
+                    </mat-form-field>             
+                    <mat-form-field class="hiring" appearance="outline">
+                        <mat-label>Nombre Rubro</mat-label>
+                        <input type="text" id="nombreRubro"
+                            formControlName="nombreRubro" autocomplete="off" matInput placeholder="Nombre Rubro">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="folder pt-2">

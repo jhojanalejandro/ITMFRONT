@@ -54,7 +54,7 @@ export const PlaningRoutes: Route[] = [
         }
     },
     {
-        path      : 'Componentes/:id',
+        path      : 'Componentes/:id/:projectName',
         component: AddComponentsComponent
     },
 ];

@@ -35,6 +35,17 @@
                 </mat-menu>
             </div>
 
+            <mat-form-field class="hiring mt-6" appearance="outline">
+                <mat-label>Contractos</mat-label>
+                <mat-select [(ngModel)]="contractSelected"
+                    (selectionChange)="getContracts($event)" name="contract">
+                    <mat-option *ngFor="let contract of contractIdList" [value]="contract.id">
+                        {{contract.companyName}}
+                    </mat-option>
+                </mat-select>
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                </mat-icon>
+            </mat-form-field>
         </div>
 
     </div>
@@ -76,7 +87,7 @@
                 <div class="text-xl font-semibold">Archivos Para Descargar</div>
                 <div class="flex flex-col sm:flex-row items-start mt-8">
                     <div class="flex items-center mb-6 sm:mb-0">
-                        <a class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+                        <a (click)="descargarCuenta()" class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
                             <div class="aspect-w-9 aspect-h-6">
                                 <div class="flex items-center justify-center">
                                     <!-- Icons -->
@@ -95,7 +106,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+                        <a (click)="descargarActa()" class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
                             <div class="aspect-w-9 aspect-h-6">
                                 <div class="flex items-center justify-center">
                                     <!-- Icons -->

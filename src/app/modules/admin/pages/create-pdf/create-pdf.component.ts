@@ -1,1173 +1,1564 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { ContractContractors } from '../../dashboards/contractual/models/contract-contractors';
-import { Minuta } from '../../dashboards/contractual/models/minuta';
-import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-import { IElements } from '../planing/models/element';
 @Component({
     selector: 'app-create-pdf',
     templateUrl: './create-pdf.component.html',
     styleUrls: ['./create-pdf.component.scss'],
+    providers: [DatePipe],
 })
 export class CreatePdfComponent implements OnInit {
     //@ViewChild('pdfTable') pdfTable: ElementRef;
-    @Input('contractContractors') contractContractors: ContractContractors = { contractId: null, contractors: [null] };
-    dataContractors: any[] = [];
+    myDate = new Date();
 
-    cedula: string = '1000189631';
-    nombre: string = 'jhojan alejandro hernandez yepes';
-    direccion: string = 'Carrera 31 calle 107 -98 int 107';
-    telefono: string = '3003853164';
-    contrato: string = '234';
-    convenio: string = 'convenio'
-    lugarExpedicion: string = 'Medellin';
-    obligaciones: string = '1. Apoyo en la gestión de procesos administrativos y logísticos. -> 2. Apoyo en la creación de espacio web para repositorio en la web del Instituto Tecnógico Metrolitano. -> 3. Apoyo en la creación de macros para informes y combinación de documentos.';
+    constructor(private datePipe: DatePipe) {}
 
-    num: string;
-    digits: string[];
-    listaData: any[] = [];
-    realDigits: string[]
-    data: any[] = [];
-    fechaInicio: Date = new Date();
-    constructor(private _economicService: ContractorService, private datepipe: DatePipe) { }
+    ngOnInit(): void {}
 
-    ngOnInit(): void {
-        this.num = this.obligaciones;
-        this.digits = this.num.split('->');
-        this.getHiringData();
-    }
-
-    // public downloadAsPDFs() {
-    //     //const pdfTable = this.pdfTable.nativeElement;
-    //     //var html = htmlToPdfmake(pdfTable.innerHTML);
-    //     for (let index = 0; index < this.listaObligaciones.length; index++) {
-    //         this.listaData[index] = [ [
-    //             {
-    //                 text: this.listaObligaciones[index].obligacionesEspecificas,
-    //             },
-    //             {
-    //                 text: '',
-    //                 alignment: 'center',
-    //             },
-    //             {
-    //                 text: 'Correos electrónicos',
-    //                 alignment: 'center',
-    //             }
-    //         ]
-
-    //         ]
-    //     }
-    //     console.log(this.listaData);
-
-    //     const documentDefinition = {
-    //         content: [
-    //             {
-    //                 style: 'tableExample',
-    //                 color: '#444',
-    //                 table: {
-    //                     widths: ['*', '*'],
-    //                     body: [
-    //                         [
-    //                             {
-    //                                 colSpan: 2,
-    //                                 text: 'INFORME DE EJECUCIÓN MENSUAL OFICINA UNIDAD ESTRATEGICA DE NEGOCIOS ITM',
-    //                                 style: 'tableHeader',
-    //                                 alignment: 'center',
-    //                             },
-    //                             {
-    //                                 text: '',
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'NOMBRE DEL CONTRATISTA',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: this.nombre,
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'NÚMERO DEL CONTRATO',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: this.contrato,
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'FECHA DE INICIO',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: new Date(),
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'PLAZO',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: '3 MESES Y VEINTICINCO DÍAS',
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'OBJETO',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: ['Prestación de servicios como contratista',
-    //                                     'independiente, sin vínculo laboral por su propia cuenta',
-    //                                     'y riesgo para realizar la gestión de Apoyo asistencial',
-    //                                     'de logística y procesos administrativos en ejecución',
-    //                                     'del Contrato Interadministrativo No. 4600094924 de',
-    //                                     '2022, celebrado entre el Distrito Especial de Ciencia',
-    //                                     'Tecnología e Innovación de Medellín y el',
-    //                                     'Departamento Administrativo de Planeación']
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'VALOR DEL CONTRATO',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: '3 MESES Y VEINTICINCO DÍAS',
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'SUPERVISOR ITM',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: 'DIEGO ALEJANDRO MARÍN CIFUENTES',
-    //                             }
-    //                         ],
-    //                     ],
-    //                 },
-    //             },
-    //             {
-    //                 style: 'tableExample',
-    //                 color: '#444',
-    //                 table: {
-    //                     widths: ['*', '*', '*'],
-    //                     body: [
-    //                         [
-    //                             {
-    //                                 text: 'OBLIGACIONES ESPECIFICAS SEGÚN CONTRATO',
-    //                                 alignment: 'center',
-    //                                 style: 'tableHeader',
-
-    //                             },
-    //                             {
-    //                                 text: 'EJECUCION O DESARROLLO DE LAS OBLIGACIONES ESPECIFICAS SEGÚN CONTRATO',
-    //                                 alignment: 'center',
-    //                                 style: 'tableHeader',
-    //                             },
-    //                             {
-    //                                 text: 'EVIDENCIAS DE LAS OBLIGACIONES CENTRALES DEL CONTRATO',
-    //                                 alignment: 'center',
-    //                                 style: 'tableHeader',
-    //                             },
-    //                         ],
-    //                         this.listaData,
-
-
-    //                     ],
-    //                 },
-    //             },
-    //             {
-    //                 style: 'tableExample',
-    //                 color: '#444',
-    //                 table: {
-    //                     widths: ['*'],
-    //                     body: [
-    //                         [
-    //                             {
-    //                                 rowSpan: 12,
-    //                                 text: 'OBSERVACIONES (En caso de tenerlas)',
-    //                                 alignment: 'center',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                     ],
-    //                 },
-    //             },
-    //             {
-    //                 style: 'tableExample',
-    //                 color: '#444',
-    //                 table: {
-    //                     widths: ['*'],
-    //                     body: [
-    //                         [
-    //                             {
-    //                                 rowSpan: 12,
-    //                                 text: 'DIFICULTADES (En caso de tenerlas)',
-    //                                 alignment: 'center',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '',
-    //                             },
-    //                         ],
-    //                     ],
-    //                 },
-    //             },
-    //             { text: '\n\n PERIODO EJECUTADO: \t\t\t del 29 de agosto al 30 de agosto: ' },
-    //             { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t VALOR'},
-    //             { text: '\n\n Para constancia se firma en Medellín a los 23 días del mes de septiembre del año 2022'},
-    //             {text: '\n\n' },{canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350-2*40, y2: 1, lineWidth: 1, margin: [5,0] }]} ,
-    //             {text:  ' JHOJAN ALEJANDRO HERNANDEZ YEPES\n' }, 
-    //             {text: 'CEDULA N: \t' + '\n'},
-    //             {text: 'Contratista ITM' }
-
-    //         ],
-    //         styles: {
-    //             header: {
-    //                 fontSize: 18,
-    //                 bold: true,
-    //                 margin: [0, 0, 0, 10],
-    //             },
-    //             subheader: {
-    //                 fontSize: 16,
-    //                 bold: true,
-    //                 margin: [0, 10, 0, 5],
-    //             },
-    //             tableHeader: {
-    //                 bold: true,
-    //                 fontSize: 13,
-    //                 color: 'black',
-    //                 align: 'center',
-    //                 margin: [0, 0, 10, 10],
-    //             },
-    //             tableExample: {
-    //                 margin: [0, 5, 0, 15],
-    //             },
-    //             title: {
-    //                 bold: true,
-    //                 fontSize: 13,
-    //                 color: 'black',
-    //                 alignment: 'center',
-    //                 margin: [0, 10, 0, 0],
-    //             },
-    //         },
-    //         defaultStyle: {
-    //             // alignment: 'justify'
-    //         },
-    //     };
-    //     let test = pdfMake
-    //         .createPdf(documentDefinition)
-    //         .download('Filenames.pdf');
-    //     console.log(test);
-    // }
-
-    // public downloadAsPDFsActaSupervision() {
-    //     //var html = htmlToPdfmake(pdfTable.innerHTML);
-    //     for (let index = 0; index < this.digits.length; index++) {
-    //         this.listaData[index] = [[
-    //             {
-    //                 text: this.digits[index],
-    //             },
-    //             {
-    //                 text: '',
-    //                 alignment: 'center',
-    //             },
-    //             {
-    //                 text: 'Correos electrónicos',
-    //                 alignment: 'center',
-    //             }
-    //         ]
-
-    //         ]
-    //     }
-    //     console.log(this.listaData);
-
-    //     const documentDefinition = {
-    //         header: {
-    //             columns: [
-    //                 {
-    //                     image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALcAAABACAMAAABvJxYMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAC/VBMVEUAAAAMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVv////Mb2P8AAAA/XRSTlMAAAIBAyF5qY0jBBEiOE9lipiip6uo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',
-    //                     height: 50,
-    //                     width: 150,
-    //                     margin: [50, 0]
-    //                     // alignment: 'center'
-    //                 },
-    //             ],
-    //         },
-    //         content: [
-    //             {
-    //                 text: '\n\nCONTRATO DE PRESTACIÓN DE SERVICIOS P-6240 DE 2022',
-    //                 style: 'header',
-    //                 alignment: 'center',
-    //             },
-    //             'Entre los suscritos, de una parte, ALEJANDRO HOYOS MONTOYA con c.c. 3.413.859, actuando en calidad de Jefe de Oficina- Asesora Jurídica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80 de 1993, leyes modificatorias y decretos',
-    //             'reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte DANIELA DIAZ CALLE mayor de edad, identificado (a) con Cédula de Ciudadanía 1152690770 de MEDELLIN que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas: PRIMERA. -OBJETO DEL CONTRATO. Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No.4600095169 DE 2022, celebrado entre EL DISTRITO ESPECIAL DE CIENCIA',
-    //             'TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM. SEGUNDA. - DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de 03 MESES y 17 DIAS sin exceder la vigencia 2022, contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. 4600095169 DE 2022 . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo',
-    //             '217 decreto 019 del 2012. TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de Veintiún millones ochocientos quince mil cuatrocientos veintidós pesos m.l ($ 21815422) El I.T.M. cancelará al CONTRATISTA, pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestacion del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente. CUARTA. -OBLIGACIONES DEL CONTRATISTA. EL CONTRATISTA se obliga en forma especial a prestar el servicio objeto de este contrato en los',
-    //             'términos señalados y específicamente a cumplir las siguientes OBLIGACIONES GENERALES: 1) Presentar el informe de gestión de manera mensual al ITM de las actividades realizadas con el visto bueno requerido. 2) Presentar el Informe final de las actividades realizadas durante la ejecución del contrato. 3) EL CONTRATISTA acepta que la propiedad intelectual sobre los estudios, documentos y en general los productos resultantes de la ejecución del presente contrato, quedará a cargo del Distrito Especial de Ciencia, Tecnología e Innovación de Medellín. 4) Concertar la presencialidad requerida. 5) Observar e implementar las directrices institucionales sobre la administración de documentos. 6) Cumplir a cabalidad con el objeto contractual, en la forma y plazo establecido en el mismo, y con las especificaciones técnicas señaladas en los estudios previos. 7)',
-    //             'Cumplir con la prestación del servicio requerido en el sitio acordado con el supervisor del contrato, según las especificaciones técnicas indicadas en los estudios previos. 8) Acatar las recomendaciones del supervisor, como enlace directo entre el ITM y el Contratista. 9) Presentar las facturas o cuentas de cobro correspondientes a las actividades realizadas durante la ejecución del contrato. 10) Abstenerse de presentar la factura o cuenta de cobro por encima del presupuesto disponible, de acuerdo con el valor del P-6240 DE 2022 contrato. 11) Garantizar la prestación del servicio según las condiciones previamente estipuladas entre el contratista y el supervisor. 12) Informar por escrito al supervisor, las quejas, dudas, reclamos y demás inquietudes que puedan surgir en el desarrollo del objeto contractual. 13) Atender los requerimientos que sean formulados por el supervisor y para efectos de ejecutar en debida forma el contrato. 14) Toda comunicación entre el ITM y el contratista deberá',
-    //             'constar por escrito con copia al supervisor del contrato. 15) Informar por escrito y en forma oportuna al ITM, los impedimentos para el cumplimiento del objeto contractual, referente a las obligaciones específicas. 16) DEBER DE CONFIDENCIALIDAD": El DistritoEspecial de Ciencia, Tecnología e Innovación de Medellín es el propietario de la información y las bases de datos actualizadas, documentadas y depuradas que el contratista recolecte durante el desarrollo del objeto contractual, en tal sentido le asiste al contratista el deber de confidencialidad, comprometiéndose a hacer uso debido de la información que conoce y a retornarla alDistrito Especial de Ciencia, Tecnología e Innovación de Medellín al terminar su vínculo',
-    //             'contractual. Así mismo no podrá utilizar información para beneficio propio o de terceros. El contratista se compromete a garantizar la reserva de la información económica, financiera y tributaria que se le suministre para el desarrollo del objeto contractual. 17) Se obliga a responder civil y penalmente por sus acciones y omisiones en la actuación contractual, en los términos de la Ley. 18. El contratista deberá dar cumplimiento al Decreto 1072 de 2015 que establece el Sistema de Gestión de Seguridad y Salud en el',
-    //             'trabajo SG-SST en lo que aplique. 19. El contratista deberá dar cumplimiento a la norma NTC-ISO 14001 de 2015, que establece el Sistema de Gestión Ambiental SGA en lo que aplique. 20) En ejecución de sus actividades el contratista debe disponer de manera correcta los residuos que su ejecución pueda generar. 21) El contratista deberá informar al ITM, si debe realizar sus actividades por fuera del lugar en el que normalmente las ejecuta, para que la Institución informe a la ARL dicha situación. 22) Desplazarse por sus propios medios al lugar requerido para realizar las actividades contractuales inherentes al objeto contractual, haciendo uso de los elementos de identificación establecidos por el proyecto.23)Deberá cumplir con las medidas de prevención y precaución dadas por el Gobierno Nacional, Departamental y Municipales en los Decretos sancionados en relación a la pandemia que se surte hoy en el mundo llamada COVID-19; Adicionalmente y de conformidad con la normatividad expedida por el Gobierno Nacional en lo relativo al Estado de Emergencia Económica,',
-    //             'Social y Ecológica, eberá, debido a la naturaleza de sus actividades, objeto contractual y desarrollo en territorio de las mismas, adoptar todas las medidas personales de prevención, precaución, higiene y distanciamiento social, en aras de evitar el posible contagio o propagación del virus, para lo cual deberá hacer uso de los elementos de protección personal, en aras de mantener las condiciones de salubridad necesarias para la prestación del servicio presencial. así mismo se acoge a lo establecido por el ITM para el desarrollo de su actividad laboral en casa cuando haya lugar a ésta. 24) Las demás inherentes al objeto del contrato. OBLIGACIONES ESPECIFICAS:1.Realizar seguimiento a la inversión pública y su evaluación respectiva a través de la identificación del cumplimiento de objetivos trazados y su grado de ejecución.2.Generar alertas y recomendaciones de la inversión pública una vez se haya identificado los objetivos y su grado de ejecución.3.Realizar informes que consoliden la',
-    //             'información recolectada del seguimiento mensual y la evaluación trimestral realizada a la inversión pública.4.Recolectar información asociada a los procesos presupuestales que permita elaborar el POAI de la respectiva vigencia y distribuirlo a las dependencias de acuerdo con los criterios establecidos e identificados.5.Sugerir a las diferentes dependencias la construcción de los mecanismos de planificación que permitan un oportuno seguimiento y priorización a la inversión pública.6.Elaborar respuestas y requerimientos, tanto de entidades internas como externas, que requieran información respecto al seguimiento de la inversión pública y los proyectos del Plan de Desarrollo 2020 – 2023.ADICIONALMENTE',
-    //             'debera cumplir con los siguientes productos:1.Formato de seguimiento a proyectos de inversión.2.informe de seguimiento a los proyectos de inversión.3.informes de análisis, presentación de la evaluación realizada.4.Formatos de presupuesto, presentaciones a las dependencias, POAI elaborado.5.Presentación de los resultados del análisis para las reuniones estratégicas.6.Informe que contenga reporte de respuestas elaboradas.7 El CONTRATISTA se obliga igualmente a responder civil y penalmente por sus acciones y omisiones en la actuación contractual, en los términos de la Ley (Artículos P-6240 DE 2022 52º Ley 80 de 1993). QUINTA. -DERECHOS Y DEBERES. Las partes declaran conocer y desarrollar los derechos y deberes consagrados en la Ley 80 de 1993 y cumplir las obligaciones específicas consagradas en este contrato. SEXTA. - MODIFICACIÓN, INTERPRETACIÓN Y TERMINACIÓN DEL CONTRATO. EL INSTITUTO tendrá la dirección general y la responsabilidad de ejercer control y vigilancia de la ejecución del contrato. En consecuencia, este contrato se rige por los principios de modificación unilateral, interpretación unilateral y terminación unilateral por parte del Instituto Tecnológico Metropolitano',
-    //             'conforme a las disposiciones contenidas en los Artículos 14, 15, 16 y 17 de la Ley 80 de 1993 (modificado por ley 1150 de 2007), la cual para todos los efectos legales hace parte integral de este contrato. SÉPTIMA. -CADUCIDAD. EL INSTITUTO, podrá declarar la caducidad si se presentan algunos de los hechos constitutivos del incumplimiento de las obligaciones a cargo del contratista, que afecta de manera grave y directa la ejecución del contrato, y evidencie que puede conducir a su paralización. La Entidad por acto administrativo debidamente motivado lo dará por terminado y ordenará su liquidación en el estado en que se encuentre. OCTAVA. -EFECTOS DE LA CADUCIDAD. Declarada la caducidad, no habrá lugar a la indemnización para el contratista, quien se hará acreedor a las sanciones e inhabilidades previstas en la Ley 80 de 1993, y las normas que la reglamentan y adicionan, Decreto 1082 de 2015. NOVENA. -MORA O INCUMPLIMIENTO PARCIAL. En caso de mora o incumplimiento parcial de las obligaciones adquiridas por EL CONTRATISTA, de acuerdo a las cláusulas del presente contrato, podrá EL INSTITUTO, mediante',
-    //             'Resolución motivada, imponer multas, las cuales deberán ser directamente proporcionales al valor del contrato y a los perjuicios que sufra EL INSTITUTO, sin exceder del cinco por mil (5 x 1.000) del valor del contrato cada vez que se impongan. DÉCIMA-CLÁUSULA PENAL PECUNIARIA. Sin perjuicio de lo dispuesto en las cláusulas anteriores, EL INSTITUTO podrá imponer al CONTRATISTA, en caso de declaratoria de caducidad o de incumplimiento como pena, una suma equivalente al diez por ciento (10%) del valor del contrato. El valor de la cláusula penal que se haga efectiva, se considera como pago parcial pero definitivo de los perjuicios causados al INSTITUTO. DECIMA PRIMERA. -DE LA APLICACIÓN DE LA MULTA Y LA CLÁUSULA PENAL PECUNIARIA. Una vez ejecutoriados los actos administrativos que la imponen podrán ser tomados dichos valores del saldo a favor del CONTRATISTA o de las garantías constituidas. Si no fuere',
-    //             'posible lo anterior, se cobrará por jurisdicción coactiva. DECIMA SEGUNDA. -DEL PROCEDIMIENTO PARA LA IMPOSICION DE LA MULTA: De conformidad con lo dispuesto en el artículo 86 de la Ley 1474 de 2011, en concordancia con los artículos 29 de la Constitución Política y 17 de la Ley 1150 de 2007 reglamentado por el Decreto 1082 de 2015, el procedimiento en caso de imposición de multas, sanciones o declaratoria de incumplimiento será el previsto en el artículo 86 de la ley. DECIMA TERCERA. -CESIÓN DEL CONTRATO. Los contratos de prestación de servicios estatales son "intuitupersona" y, en consecuencia, una vez celebrados no podrán cederse, salvo los casos en que medie autorización expedida por la Rectoría de la entidad, en acto administrativo debidamente sustentado. DÉCIMA CUARTA. -TERMINACIÓN DEL CONTRATO. - El presente contrato podrá darse por terminado cuando: a) Las partes de mutuo acuerdo decidan dar',
-    //             'por terminado el contrato. b) Cuando de la aplicación de las causales establecidas en la cláusula sexta, opere la terminación anticipada del contrato. c) Cuando el contratista incumpla alguna de las obligaciones contractuales contraídas, sin perjuicio de realizar el proceso de aplicación de multas y/o de la aplicación de la cláusula penal pecuniaria. d) Cuando culmine el plazo de ejecución del contrato. DÉCIMA QUINTA. -CAUSALES DE SUSPENSIÓN DEL CONTRATO El presente contrato podrá suspenderse a) cuando el contratista por cualquier causal no pueda prestar el servicio para el cual fue contratado. Esta causal incluye enfermedad general, invalidez temporal, licencia de maternidad, licencia de paternidad y todas aquellas circunstancias de hecho y de derecho que no permitan la prestación adecuada de los servicios. b) Cuando el contratista no cumpla con los pagos al sistema general de seguridad social dentro del tiempo establecido por la Ley y que, no sea presentado de manera oportuna a la entidad Contratante. c) Por mutuo acuerdo de las partes. DÉCIMA SEXTA. -NATURALEZA',
-    //             'JURÍDICA DEL CONTRATO. El presente contrato está fundamentado en el contenido del artículo 32 de la Ley 80 de 1993, el artículo 2, numeral 4, literal h) y artículo tercero de la Ley 1150 de 2007, reglamentado por el Decreto 1082 de 2015; la Ley 527 de P-6240 DE 2022 1999, Decretos 417 del 17 de marzo de 2020 y 457 del 20 de marzo de 2020 y las Resoluciones del Ministerio de Salud y Protección Social No. 385 y 407 de 2020 y demás normas afines con la materia. Además, se celebra en consideración a las calidades personales del CONTRATISTA, para el desempeño de actividades transitorias, toda vez que el objeto del mismo no es posible llevarlo a cabo con personal de la planta de cargos. EL',
-    //             'CONTRATISTA se obliga por su cuenta y riesgo, a título de contratista independiente. EL CONTRATISTA se obliga por su cuenta y riesgo, a título de contratista independiente. EL INSTITUTO en consecuencia no adquiere ningún vínculo de carácter laboral ni administrativo con él. DÉCIMA SEPTIMA. -INHABILIDADES E INCOMPATIBILIDADES. El presente contrato está sujeto a las inhabilidades e incompatibilidades contempladas en la Ley 80 de 1993 (modificada por ley 1150 de 2007) y EL CONTRATISTA, para todos los efectos legales de este contrato, declara que no está incluido dentro de dichas inhabilidades e incompatibilidades legales. DÉCIMA OCTAVA. -SUPERVISIÓN: La Supervisión de este contrato estará a cargo del Jefe de Oficina – Unidad Estratégica de Negocios o quien el INSTITUTO delegue, quien ejercerá actividades de supervisión y vigilancia técnica, administrativa y financiera del contrato. Es responsabilidad del supervisor verificar que EL CONTRATISTA haya adecuado sus afiliaciones al Sistema Integral de Seguridad Social en Salud y Pensiones, conforme a lo establecido en el presente contrato. DÉCIMA NOVENA. -APROPIACIÓN PRESUPUESTAL. El pago de las',
-    //             'sumas de dinero que el INSTITUTO queda obligado en razón de éste contrato, se subordina a la apropiación presupuestal que de ella se haga en el respectivo presupuesto. VIGÉSIMA. -IMPUTACIÓN DE GASTOS. Los gastos que demanden la legalización del presente contrato correrán a cargo del CONTRATISTA, y los que impliquen para el INSTITUTO el cumplimiento del mismo durante la presente vigencia fiscal se hace con cargo al certificado de compromiso No. 6240, el cual hace parte integral de los Anexos de éste contrato. VIGÉSIMA PRIMERA. -AFILIACIÓN AL SISTEMA GENERAL DE SEGURIDAD SOCIAL. Con el objeto de dar cumplimiento a lo preceptuado en Ley 100 de 1993 y la Ley 789 de 2002, los Decretos 1990 de 2016, 780 de 1996, 1273 de 2018, Ley 1955 del 25 de mayo de 2019 el CONTRATISTA para la suscripción del contrato deberá presentar constancia de afiliación al sistema integral de seguridad social en Salud, Pensiones y ARL como trabajador independiente. El artículo 1 del Decreto 1273 de 2018,',
-    //             'por medio del cual se modifica el artículo 2.2.1.1.1.7 del Decreto 780 de 2016, establece lo siguiente: “El pago de las cotizaciones al Sistema de Seguridad Social Integral de los trabajadores independientes se efectuará mes vencido, por periodos mensuales, a través de la Planilla Integrada de Liquidación de Aportes (PILA) y teniendo en cuenta los ingresos percibidos en el periodo de cotización, esto es, el mes anterior.”, atendiendo lo contemplado en el artículo 3.2.7.6 del Decreto 1273 de 2018, sobre “Plazos”. Así mismo el Decreto 1273 de 2018, establece: 1. El Ingreso Base de Cotización (IBC) corresponde como mínimo al 40% del valor mensualizado en cada contrato de prestación de servicios, sin incluir el Impuesto al Valor Agregado(IVA) cuando a ello haya lugar, y en ningún caso el IBC podrá ser inferior al salario mínimo mensual legal vigente ni superior a 25 veces el salario mínimo mensual legal vigente; 5. Cuando no haya lugar al pago de los servicios contratados, de conformidad con lo dispuesto para el efecto en el contrato, estará a cargo del contratista el pago de los',
-    //             'aportes al Sistema de Seguridad Social Integral y los intereses moratorios a que hubiere lugar; en estos eventos excepcionales, el contratista deberá acredita al contratante el pago del periodo correspondiente; 7. Al contratista le corresponde pagar mes vencido el valor de la cotización al Sistema General de Riesgos Laborales, cuando la afiliación sea por riesgo I,II o III, conforme la clasificación de actividades económicas establecidas en el Decreto 1607 de 2002 o la norma que lo modifique , adicione o sustituya; en tanto que el contratante deberá pagar el valor de la cotización mes vencido, cuando la afiliación del contratista por riesgo IV y V. PARÁGRAFO PRIMERO: De conformidad con lo establecido en el artículo 3.2.2.1. del Decreto 1990 de diciembre de 2016, ha modificado los plazos para la autoliquidación y el pago de los aportes al Sistema de Seguridad Social Integral y Aportes Parafiscales, así: Todos los aportantes a los Sistemas de Salud, Pensiones y Riesgos Laborales del Sistema de Seguridad Social Integral, así como aquellos a favor del Servicio Nacional del Aprendizaje –SENA–, del Instituto Colombiano de Bienestar Familiar –ICBF– y',
-    //             'de las Cajas de Compensación Familiar, efectuarán sus aportes utilizando la Planilla Integrada de Liquidación de Aportes –PILA–, bien sea en su modalidad electrónica o asistida, a más tardar en las fechas que se indican a continuación:',
-    //             {
-    //                 style: 'tableExample',
-    //                 color: '#444',
-    //                 table: {
-    //                     widths: ['*', '*'],
-    //                     body: [
-    //                         [
-    //                             {
-    //                                 colSpan: 2,
-    //                                 text: 'TRABAJADORES INDEPENDIENTES',
-    //                                 style: 'tableHeader',
-    //                                 alignment: 'center',
-    //                             },
-    //                             {
-    //                                 text: '',
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: 'Dos últimos dígitos del NIT o documento de identificación',
-    //                                 style: 'tableHeader',
-    //                                 aligment: 'center'
-    //                             }, {
-    //                                 text: 'Día hábil de cada mes de vencimiento',
-    //                                 style: 'tableHeader',
-    //                                 aligment: 'center'
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '00 al 07',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: this.contrato,
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '08 al 14',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: new Date(),
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '15 al 21',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: '3 MESES Y VEINTICINCO DÍAS',
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '22 a 28',
-    //                                 style: 'tableHeader',
-    //                             },
-    //                             {
-    //                                 text: ''
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '29 al 35',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: '3 MESES Y VEINTICINCO DÍAS',
-    //                             }
-    //                         ],
-    //                         [
-    //                             {
-    //                                 text: '36 al 42',
-    //                                 style: 'tableHeader',
-    //                             }, {
-    //                                 text: 'DIEGO ALEJANDRO MARÍN CIFUENTES',
-    //                             }
-    //                         ],
-    //                     ],
-    //                 },
-    //             },
-    //             'PARÁGRAFO SEGUNDO: Una vez efectuado el pago, deberá remitir la constancia al ITM. Lo anterior para la verificación de la respectiva cancelación de aportes. En caso de no acreditar el pago en la fecha establecida, el ITM podrá realizar la  suspensión del contrato. PARÁGRAFO TERCERO: Los trabajadores independientes con contrato de prestación de  servicios personales, deberán continuar efectuando el pago de sus aportes a la seguridad social, directamente',
-    //             'mediante la planilla integrada de liquidación de aportes – PILA, en la forma en que lo han venido haciendo y en las fechas  establecidas en el artículo 3.2.2.2.1 del Decreto 780 de 2016. VIGÉSIMA. SEGUNDA. -CLÁUSULA DE INDEMNIDAD.  El contratista mantendrá indemne al Instituto, de cualquier reclamación proveniente de terceros que tenga como causa',
-    //             'las actuaciones del contratista, de conformidad con la normatividad vigente. VIGÉSIMA TERCERA. -PAGO DE LOS  CONTRATOS. El ITM realizará los pagos que demande el convenio y/o contrato sujeto a la confirmación del ingreso de  los recursos transferidos por Municipio de Medellín a la cuenta bancaria del ITM donde son administrados los recursos.  VIGÉSIMA CUARTA. - PUBLICIDAD EN EL SECOP. El presente contrato deberá ser publicado en el SECOP,',
-    //             'con fundamento en lo dispuesto artículo 2.2.1.1.1.7.1 del Decreto 1082 de 2015. VIGÉSIMA QUINTA. - PERFECCIONAMIENTO Y DOCUMENTOS DEL CONTRATO. . De conformidad con del Artículo 41 de la Ley 80 de 1993  en concordancia con los protocolos institucionales adoptados en el marco de la emergencia de salud pública y la Ley 527  de 1999, Decretos 417 del 17 de marzo de 2020 y 457 del 20 de marzo de 2020 y las Resoluciones del Ministerio',
-    //             'de Salud y Protección Social No. 385 y 407 de 2020, el presente contrato se perfecciona con el acuerdo sobre el objeto y la contraprestación y la firma de este escrito mediante el acuse de recibido por correo electrónico del contratista suministrado por el contratista danieladiazcalle@gmail.com quien certifica que es de su propiedad y uso exclusivo. Para la ejecución se requerirá la aprobación de la existencia de las disponibilidades presupuéstales',
-    //             'correspondientes. Para todos los efectos legales se entienden incorporados al presente contrato la Ley 80 de 1993 y normas concordantes, es decir, los decretos reglamentarios, así mismo los siguientes documentos anexos: 1) Carta de adjudicación del Rector 2) Certificado  de compromiso presupuestal 3) Formato único de hoja de vida para el Sector Público (Ley 190 de 1995); 4) Formato de  declaración de Rentas y Bienes 5) Autorización de consignación para pago; 6) Fotocopia de cédula de ciudadanía; 7)',
-    //             'Fotocopia Libreta Militar (en los casos que aplique) ; 8) Certificado de Antecedentes Disciplinarios; 9) Certificado de Responsabilidad Fiscal; 10) Certificado de la Policía Nacional; 11) Certificado de Medidas correctivas. 12) Certificado de afiliación a la seguridad social (salud y pensión) como independiente; 13) Fotocopia del Rut; 14) Fotocopia de los certificados que acrediten los estudios y experiencia laboral; 16) Examen pre-ocupacional.',
-    //             { text: '\n\n Para constancia se firma el presente contrato por las partes en la ciudad de Medellín ' },
-    //         ],
-    //         styles: {
-    //             header: {
-    //                 fontSize: 18,
-    //                 bold: true,
-    //                 margin: [0, 0, 0, 10],
-    //             },
-    //             subheader: {
-    //                 fontSize: 16,
-    //                 bold: true,
-    //                 margin: [0, 10, 0, 5],
-    //             },
-    //             tableHeader: {
-    //                 bold: true,
-    //                 fontSize: 13,
-    //                 color: 'black',
-    //                 align: 'center',
-    //                 margin: [0, 0, 10, 10],
-    //             },
-    //             tableExample: {
-    //                 margin: [0, 5, 0, 15],
-    //             },
-    //             title: {
-    //                 bold: true,
-    //                 fontSize: 13,
-    //                 color: 'black',
-    //                 alignment: 'center',
-    //                 margin: [0, 10, 0, 0],
-    //             },
-    //         },
-    //         defaultStyle: {
-    //             // alignment: 'justify'
-    //         },
-    //     };
-    //     pdfMake
-    //         .createPdf(documentDefinition)
-    //         .download('pruebaMinuta.pdf');
-    //         pdfMake.createPdf(documentDefinition)
-    //         .getDataUrl(function (dataURL) {
-    //             console.log(dataURL);
-    //         })
-    // }
-
-    // public downloadAsPDFs() {
-    //     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-    //         console.log(this.dataContractors);
-    //         let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
-    //         const documentDefinition = {
-    //             header: {
-    //                 columns: [
-    //                     {
-    //                         image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALcAAABACAMAAABvJxYMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAC/VBMVEUAAAAMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVv////Mb2P8AAAA/XRSTlMAAAIBAyF5qY0jBBEiOE9lipiip6uo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',
-    //                         height: 50,
-    //                         width: 150,
-    //                         margin: [50, 0,10,15]
-    //                         // alignment: 'center'
-    //                     },
-    //                 ],
-    //             },
-    //             content: [
-    //                 {
-    //                     text: ['\n\nCONTRATO DE PRESTACIÓN DE SERVICIOS P-6240 DE 2022',
-    //                     {text: 'inlines', margin: 20},
-    //                 ],
-    //                     style: 'header',
-    //                     alignment: 'center',
-    //                 },
-    //                 {
-    //                     text: [
-    //                         'Entre los suscritos, de una parte, ' + data.supervisorItm + ' con c.c. ' + data.identificacionSupervisor + ', actuando en calidad de ' + data.cargoSupervisorItm + 'del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
-    //                         'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.nombre + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.identificacion + ' de ' + data.lugarExpedicion + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas: PRIMERA. -OBJETO DEL CONTRATO. Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No.4600095169 DE 2022, celebrado entre EL DISTRITO ESPECIAL DE CIENCIA',
-    //                         'TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM. SEGUNDA. - DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de 03 MESES y 17 DIAS sin exceder la vigencia 2022, contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. 4600095169 DE 2022 . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo',
-    //                         '217 decreto 019 del 2012. TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de Veintiún millones ochocientos quince mil cuatrocientos veintidós pesos m.l ($ 21815422) El I.T.M. cancelará al CONTRATISTA, pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestacion del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente. CUARTA. -OBLIGACIONES DEL CONTRATISTA. EL CONTRATISTA se obliga en forma especial a prestar el servicio objeto de este contrato en los',
-    //                         'términos señalados y específicamente a cumplir las siguientes OBLIGACIONES GENERALES: ' + data.obligacionesGenerales + ' OBLIGACIONES ESPECIFICAS: ' + data.obligacionesEspecificas + '   QUINTA. -DERECHOS Y DEBERES. Las partes declaran conocer y desarrollar los derechos y deberes consagrados en la Ley 80 de 1993 y cumplir las obligaciones específicas consagradas en este contrato. SEXTA. - MODIFICACIÓN, INTERPRETACIÓN Y TERMINACIÓN DEL CONTRATO. EL INSTITUTO tendrá la dirección general y la responsabilidad de ejercer control y vigilancia de la ejecución del contrato. En consecuencia, este contrato se rige por los principios de modificación unilateral, interpretación unilateral y terminación unilateral por parte del Instituto Tecnológico Metropolitano',
-    //                         'conforme a las disposiciones contenidas en los Artículos 14, 15, 16 y 17 de la Ley 80 de 1993 (modificado por ley 1150 de 2007), la cual para todos los efectos legales hace parte integral de este contrato. SÉPTIMA. -CADUCIDAD. EL INSTITUTO, podrá declarar la caducidad si se presentan algunos de los hechos constitutivos del incumplimiento de las obligaciones a cargo del contratista, que afecta de manera grave y directa la ejecución del contrato, y evidencie que puede conducir a su paralización. La Entidad por acto administrativo debidamente motivado lo dará por terminado y ordenará su liquidación en el estado en que se encuentre. OCTAVA. -EFECTOS DE LA CADUCIDAD. Declarada la caducidad, no habrá lugar a la indemnización para el contratista, quien se hará acreedor a las sanciones e inhabilidades previstas en la Ley 80 de 1993, y las normas que la reglamentan y adicionan, Decreto 1082 de 2015. NOVENA. -MORA O INCUMPLIMIENTO PARCIAL. En caso de mora o incumplimiento parcial de las obligaciones adquiridas por EL CONTRATISTA, de acuerdo a las cláusulas del presente contrato, podrá EL INSTITUTO, mediante',
-    //                         'Resolución motivada, imponer multas, las cuales deberán ser directamente proporcionales al valor del contrato y a los perjuicios que sufra EL INSTITUTO, sin exceder del cinco por mil (5 x 1.000) del valor del contrato cada vez que se impongan. DÉCIMA-CLÁUSULA PENAL PECUNIARIA. Sin perjuicio de lo dispuesto en las cláusulas anteriores, EL INSTITUTO podrá imponer al CONTRATISTA, en caso de declaratoria de caducidad o de incumplimiento como pena, una suma equivalente al diez por ciento (10%) del valor del contrato. El valor de la cláusula penal que se haga efectiva, se considera como pago parcial pero definitivo de los perjuicios causados al INSTITUTO. DECIMA PRIMERA. -DE LA APLICACIÓN DE LA MULTA Y LA CLÁUSULA PENAL PECUNIARIA. Una vez ejecutoriados los actos administrativos que la imponen podrán ser tomados dichos valores del saldo a favor del CONTRATISTA o de las garantías constituidas. Si no fuere',
-    //                         'posible lo anterior, se cobrará por jurisdicción coactiva. DECIMA SEGUNDA. -DEL PROCEDIMIENTO PARA LA IMPOSICION DE LA MULTA: De conformidad con lo dispuesto en el artículo 86 de la Ley 1474 de 2011, en concordancia con los artículos 29 de la Constitución Política y 17 de la Ley 1150 de 2007 reglamentado por el Decreto 1082 de 2015, el procedimiento en caso de imposición de multas, sanciones o declaratoria de incumplimiento será el previsto en el artículo 86 de la ley. DECIMA TERCERA. -CESIÓN DEL CONTRATO. Los contratos de prestación de servicios estatales son "intuitupersona" y, en consecuencia, una vez celebrados no podrán cederse, salvo los casos en que medie autorización expedida por la Rectoría de la entidad, en acto administrativo debidamente sustentado. DÉCIMA CUARTA. -TERMINACIÓN DEL CONTRATO. - El presente contrato podrá darse por terminado cuando: a) Las partes de mutuo acuerdo decidan dar',
-    //                         'por terminado el contrato. b) Cuando de la aplicación de las causales establecidas en la cláusula sexta, opere la terminación anticipada del contrato. c) Cuando el contratista incumpla alguna de las obligaciones contractuales contraídas, sin perjuicio de realizar el proceso de aplicación de multas y/o de la aplicación de la cláusula penal pecuniaria. d) Cuando culmine el plazo de ejecución del contrato. DÉCIMA QUINTA. -CAUSALES DE SUSPENSIÓN DEL CONTRATO El presente contrato podrá suspenderse a) cuando el contratista por cualquier causal no pueda prestar el servicio para el cual fue contratado. Esta causal incluye enfermedad general, invalidez temporal, licencia de maternidad, licencia de paternidad y todas aquellas circunstancias de hecho y de derecho que no permitan la prestación adecuada de los servicios. b) Cuando el contratista no cumpla con los pagos al sistema general de seguridad social dentro del tiempo establecido por la Ley y que, no sea presentado de manera oportuna a la entidad Contratante. c) Por mutuo acuerdo de las partes. DÉCIMA SEXTA. -NATURALEZA',
-    //                         'JURÍDICA DEL CONTRATO. El presente contrato está fundamentado en el contenido del artículo 32 de la Ley 80 de 1993, el artículo 2, numeral 4, literal h) y artículo tercero de la Ley 1150 de 2007, reglamentado por el Decreto 1082 de 2015; la Ley 527 de P-6240 DE 2022 1999, Decretos 417 del 17 de marzo de 2020 y 457 del 20 de marzo de 2020 y las Resoluciones del Ministerio de Salud y Protección Social No. 385 y 407 de 2020 y demás normas afines con la materia. Además, se celebra en consideración a las calidades personales del CONTRATISTA, para el desempeño de actividades transitorias, toda vez que el objeto del mismo no es posible llevarlo a cabo con personal de la planta de cargos. EL',
-    //                         'CONTRATISTA se obliga por su cuenta y riesgo, a título de contratista independiente. EL CONTRATISTA se obliga por su cuenta y riesgo, a título de contratista independiente. EL INSTITUTO en consecuencia no adquiere ningún vínculo de carácter laboral ni administrativo con él. DÉCIMA SEPTIMA. -INHABILIDADES E INCOMPATIBILIDADES. El presente contrato está sujeto a las inhabilidades e incompatibilidades contempladas en la Ley 80 de 1993 (modificada por ley 1150 de 2007) y EL CONTRATISTA, para todos los efectos legales de este contrato, declara que no está incluido dentro de dichas inhabilidades e incompatibilidades legales. DÉCIMA OCTAVA. -SUPERVISIÓN: La Supervisión de este contrato estará a cargo del Jefe de Oficina – Unidad Estratégica de Negocios o quien el INSTITUTO delegue, quien ejercerá actividades de supervisión y vigilancia técnica, administrativa y financiera del contrato. Es responsabilidad del supervisor verificar que EL CONTRATISTA haya adecuado sus afiliaciones al Sistema Integral de Seguridad Social en Salud y Pensiones, conforme a lo establecido en el presente contrato. DÉCIMA NOVENA. -APROPIACIÓN PRESUPUESTAL. El pago de las',
-    //                         'sumas de dinero que el INSTITUTO queda obligado en razón de éste contrato, se subordina a la apropiación presupuestal que de ella se haga en el respectivo presupuesto. VIGÉSIMA. -IMPUTACIÓN DE GASTOS. Los gastos que demanden la legalización del presente contrato correrán a cargo del CONTRATISTA, y los que impliquen para el INSTITUTO el cumplimiento del mismo durante la presente vigencia fiscal se hace con cargo al certificado de compromiso No. 6240, el cual hace parte integral de los Anexos de éste contrato. VIGÉSIMA PRIMERA. -AFILIACIÓN AL SISTEMA GENERAL DE SEGURIDAD SOCIAL. Con el objeto de dar cumplimiento a lo preceptuado en Ley 100 de 1993 y la Ley 789 de 2002, los Decretos 1990 de 2016, 780 de 1996, 1273 de 2018, Ley 1955 del 25 de mayo de 2019 el CONTRATISTA para la suscripción del contrato deberá presentar constancia de afiliación al sistema integral de seguridad social en Salud, Pensiones y ARL como trabajador independiente. El artículo 1 del Decreto 1273 de 2018,',
-    //                         'por medio del cual se modifica el artículo 2.2.1.1.1.7 del Decreto 780 de 2016, establece lo siguiente: “El pago de las cotizaciones al Sistema de Seguridad Social Integral de los trabajadores independientes se efectuará mes vencido, por periodos mensuales, a través de la Planilla Integrada de Liquidación de Aportes (PILA) y teniendo en cuenta los ingresos percibidos en el periodo de cotización, esto es, el mes anterior.”, atendiendo lo contemplado en el artículo 3.2.7.6 del Decreto 1273 de 2018, sobre “Plazos”. Así mismo el Decreto 1273 de 2018, establece: 1. El Ingreso Base de Cotización (IBC) corresponde como mínimo al 40% del valor mensualizado en cada contrato de prestación de servicios, sin incluir el Impuesto al Valor Agregado(IVA) cuando a ello haya lugar, y en ningún caso el IBC podrá ser inferior al salario mínimo mensual legal vigente ni superior a 25 veces el salario mínimo mensual legal vigente; 5. Cuando no haya lugar al pago de los servicios contratados, de conformidad con lo dispuesto para el efecto en el contrato, estará a cargo del contratista el pago de los',
-    //                         'aportes al Sistema de Seguridad Social Integral y los intereses moratorios a que hubiere lugar; en estos eventos excepcionales, el contratista deberá acredita al contratante el pago del periodo correspondiente; 7. Al contratista le corresponde pagar mes vencido el valor de la cotización al Sistema General de Riesgos Laborales, cuando la afiliación sea por riesgo I,II o III, conforme la clasificación de actividades económicas establecidas en el Decreto 1607 de 2002 o la norma que lo modifique , adicione o sustituya; en tanto que el contratante deberá pagar el valor de la cotización mes vencido, cuando la afiliación del contratista por riesgo IV y V. PARÁGRAFO PRIMERO: De conformidad con lo establecido en el artículo 3.2.2.1. del Decreto 1990 de diciembre de 2016, ha modificado los plazos para la autoliquidación y el pago de los aportes al Sistema de Seguridad Social Integral y Aportes Parafiscales, así: Todos los aportantes a los Sistemas de Salud, Pensiones y Riesgos Laborales del Sistema de Seguridad Social Integral, así como aquellos a favor del Servicio Nacional del Aprendizaje –SENA–, del Instituto Colombiano de Bienestar Familiar –ICBF– y',
-    //                         'de las Cajas de Compensación Familiar, efectuarán sus aportes utilizando la Planilla Integrada de Liquidación de Aportes –PILA–, bien sea en su modalidad electrónica o asistida, a más tardar en las fechas que se indican a continuación:',
-    //                     ],			
-    //                     style: 'header',
-    //                     bold: false
-    //                 },
-    //                 {
-    //                     style: 'tableExample',
-    //                     color: '#444',
-    //                     table: {
-    //                         widths: ['*', '*'],
-    //                         body: [
-    //                             [
-    //                                 {
-    //                                     colSpan: 2,
-    //                                     text: 'TRABAJADORES INDEPENDIENTES',
-    //                                     style: 'tableHeader',
-    //                                     alignment: 'center',
-    //                                 },
-    //                                 {
-    //                                     text: '',
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: 'Dos últimos dígitos del NIT o documento de identificación',
-    //                                     style: 'tableHeader',
-    //                                     aligment: 'center'
-    //                                 }, {
-    //                                     text: 'Día hábil de cada mes de vencimiento',
-    //                                     style: 'tableHeader',
-    //                                     aligment: 'center'
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: '00 al 07',
-    //                                     style: 'tableHeader',
-    //                                 }, {
-    //                                     text: data.numberProject,
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: '08 al 14',
-    //                                     style: 'tableHeader',
-    //                                 }, {
-    //                                     text: new Date(),
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: '15 al 21',
-    //                                     style: 'tableHeader',
-    //                                 }, {
-    //                                     text: '3 MESES Y VEINTICINCO DÍAS',
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: '22 a 28',
-    //                                     style: 'tableHeader',
-    //                                 },
-    //                                 {
-    //                                     text: ''
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: '29 al 35',
-    //                                     style: 'tableHeader',
-    //                                 }, {
-    //                                     text: '3 MESES Y VEINTICINCO DÍAS',
-    //                                 }
-    //                             ],
-    //                             [
-    //                                 {
-    //                                     text: '36 al 42',
-    //                                     style: 'tableHeader',
-    //                                 }, {
-    //                                     text: 'DIEGO ALEJANDRO MARÍN CIFUENTES',
-    //                                 }
-    //                             ],
-    //                         ],
-    //                     },
-    //                 },
-    //                 {
-    //                     text: [
-    //                         'PARÁGRAFO SEGUNDO: Una vez efectuado el pago, deberá remitir la constancia al ITM. Lo anterior para la verificación de la respectiva cancelación de aportes. En caso de no acreditar el pago en la fecha establecida, el ITM podrá realizar la  suspensión del contrato. PARÁGRAFO TERCERO: Los trabajadores independientes con contrato de prestación de  servicios personales, deberán continuar efectuando el pago de sus aportes a la seguridad social, directamente',
-    //                         'mediante la planilla integrada de liquidación de aportes – PILA, en la forma en que lo han venido haciendo y en las fechas  establecidas en el artículo 3.2.2.2.1 del Decreto 780 de 2016. VIGÉSIMA. SEGUNDA. -CLÁUSULA DE INDEMNIDAD.  El contratista mantendrá indemne al Instituto, de cualquier reclamación proveniente de terceros que tenga como causa',
-    //                         'las actuaciones del contratista, de conformidad con la normatividad vigente. VIGÉSIMA TERCERA. -PAGO DE LOS  CONTRATOS. El ITM realizará los pagos que demande el convenio y/o contrato sujeto a la confirmación del ingreso de  los recursos transferidos por Municipio de Medellín a la cuenta bancaria del ITM donde son administrados los recursos.  VIGÉSIMA CUARTA. - PUBLICIDAD EN EL SECOP. El presente contrato deberá ser publicado en el SECOP,',
-    //                         'con fundamento en lo dispuesto artículo 2.2.1.1.1.7.1 del Decreto 1082 de 2015. VIGÉSIMA QUINTA. - PERFECCIONAMIENTO Y DOCUMENTOS DEL CONTRATO. . De conformidad con del Artículo 41 de la Ley 80 de 1993  en concordancia con los protocolos institucionales adoptados en el marco de la emergencia de salud pública y la Ley 527  de 1999, Decretos 417 del 17 de marzo de 2020 y 457 del 20 de marzo de 2020 y las Resoluciones del Ministerio',
-    //                         'de Salud y Protección Social No. 385 y 407 de 2020, el presente contrato se perfecciona con el acuerdo sobre el objeto y la contraprestación y la firma de este escrito mediante el acuse de recibido por correo electrónico del contratista suministrado por el contratista ' + data.correo + ' quien certifica que es de su propiedad y uso exclusivo. Para la ejecución se requerirá la aprobación de la existencia de las disponibilidades presupuéstales',
-    //                         'correspondientes. Para todos los efectos legales se entienden incorporados al presente contrato la Ley 80 de 1993 y normas concordantes, es decir, los decretos reglamentarios, así mismo los siguientes documentos anexos: 1) Carta de adjudicación del Rector 2) Certificado  de compromiso presupuestal 3) Formato único de hoja de vida para el Sector Público (Ley 190 de 1995); 4) Formato de  declaración de Rentas y Bienes 5) Autorización de consignación para pago; 6) Fotocopia de cédula de ciudadanía; 7)',
-    //                         'Fotocopia Libreta Militar (en los casos que aplique) ; 8) Certificado de Antecedentes Disciplinarios; 9) Certificado de Responsabilidad Fiscal; 10) Certificado de la Policía Nacional; 11) Certificado de Medidas correctivas. 12) Certificado de afiliación a la seguridad social (salud y pensión) como independiente; 13) Fotocopia del Rut; 14) Fotocopia de los certificados que acrediten los estudios y experiencia laboral; 16) Examen pre-ocupacional.',
-    //                         { text: '\n\n Para constancia se firma el presente contrato por las partes en la ciudad de Medellín ' },
-    //                     ],
-    //                     style: 'header',
-    //                     bold: false
-    //                 }
-
-    //             ],
-
-    //             styles: {
-    //                 header: {
-    //                     fontSize: 12,
-    //                     margin: [0, 5, 0, 5], 
-    //                     bold: true,
-    //                     alignment: 'justify'
-    //                 },
-    //                 subheader: {
-    //                     fontSize: 16,
-    //                     bold: true,
-    //                     margin: [0, 10, 0, 5],
-    //                 },
-    //                 tableHeader: {
-    //                     bold: true,
-    //                     fontSize: 13,
-    //                     color: 'black',
-    //                     align: 'center',
-    //                     margin: [0, 0, 10, 10],
-    //                 },
-    //                 tableExample: {
-    //                     margin: [0, 5, 0, 15],
-    //                 },
-    //                 title: {
-    //                     bold: true,
-    //                     fontSize: 13,
-    //                     color: 'black',
-    //                     alignment: 'center',
-    //                     margin: [0, 10, 0, 0],
-    //                 },
-    //             },
-    //             defaultStyle: {
-    //                 // alignment: 'justify'
-    //             },
-    //         };
-    //         let test = pdfMake
-    //             .createPdf(documentDefinition)
-    //             .download('pruebaMinuta.pdf');
-    //         console.log(test);
-    //     }
-
-    // }
-
-    public downloadPDFActaDeInicio() {
-        let latest_date = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
-        //this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
+    public downloadAsPDFs() {
+        let dat = this.datePipe.transform(
+            this.myDate,
+            'EEEE, MMMM d, y',
+            'utc'
+        );
         const documentDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'FOLIO',
+            pageMargins: [40, 80, 40, 60],
+            header: {
+                margin: [20, 20],
+                table: {
+                    color: '#444',
+                    style: 'tableExample',
+                    widths: [100, 210, 'auto', 70, 70],
+                    headerRows: 3,
+                    body: [
+                        [
+                            {
+                                rowSpan: 3,
+                                image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALcAAABACAMAAABvJxYMAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAC/VBMVEUAAAAMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVsMIVv////Mb2P8AAAA/XRSTlMAAAIBAyF5qY0jBBEiOE9lipiip6uo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',
+                                style: 'title',
+                                fit: [100, 100],
+                            },
+                            {
+                                rowSpan: 3,
+                                colSpan: 2,
+                                text: 'ESTUDIO PREVIO CONTRATACIÓN DIRECTA PRESTACIÓN DE SERVICIOS',
+                                style: 'title',
+                                alignment: 'center',
+                            },
+                            {},
+                            {
+                                text: 'Código',
+                            },
+                            {
+                                text: 'FBS 057',
+                            },
+                        ],
+                        ['', '', '', 'Versión', '09'],
+                        ['', '', '', 'Fecha', '03/02/2023'],
+                    ],
+                },
+            },
+
+            footer: {
+                margin: [10, 10],
+                text: 'Medellín - Colombia',
+                alignment: 'center',
+            },
             content: [
                 {
+                    text: 'Fecha de Elaboración: ' + dat,
+                    style: 'subheader',
+                    margin: [10, 10, 10, 10],
+                },
+                {
+                    text: 'Rector',
+                    style: 'marginRector',
+                    margin: [10, 0, 0, 0],
+                },
+                {
+                    text: 'Jhojan Alejandro Hernandez',
+                    bold: true,
+                    style: 'fontPeque2',
+                    margin: [10, 0, 0, 0],
+                },
+                {
+                    text: 'Instituto Tecnológico Metropolitano',
+                    style: 'fontPeque2',
+                    margin: [10, 0, 0, 0],
+                },
+                {
+                    text: 'Ciudad',
+                    style: 'fontPeque2',
+                    margin: [10, 0, 0, 0],
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    text: [
+                        {
+                            text: 'Asunto : ',
+                            fontSize: 10,
+                            bold: true,
+                        },
+                        {
+                            text: 'Estudios Previos para la contratación de prestación de servicios.',
+                            fontSize: 10,
+                        },
+                    ],
+                },
+                {
+                    text: 'Respetado Rector,',
+                    style: 'fontPeque2',
+                    margin: [10, 10, 10, 10],
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    text: [
+                        {
+                            text: 'La Unidad Estratégica de Negocios del ITM, requiere celebrar un contrato de prestación de servicios en la gestión como Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública correspondientes al Contrato Interadministrativo No.',
+                            fontSize: 10,
+                        },
+                        {
+                            text: ' 4600095169',
+                            fontSize: 11,
+                        },
+                        {
+                            text: ' de ',
+                            fontSize: 10,
+                        },
+                        {
+                            text: '2023, ',
+                            fontSize: 11,
+                        },
+                        {
+                            text: 'cuyo objeto es',
+                            fontSize: 10,
+                        },
+                        {
+                            text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN, IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP.',
+                            fontSize: 11,
+                        },
+                    ],
+                },
+                {
+                    text: 'Este requerimiento se fundamenta en el siguiente estudio:',
+                    style: 'fontPeque2',
+                    margin: [10, 10, 10, 10],
+                },
+                {
                     style: 'tableExample',
-                    color: '#444',
                     table: {
-                        widths: [100, 200, '*', '*'],
+                        widths: [100, '*'],
                         body: [
                             [
                                 {
-                                    rowSpan: 3,
-                                    image: 'data:image/png;base64,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GhYqS4OZpOzJYpvZ8CDIXKzSFGYCAAAA8IPwEwBYS9N2ixWk4UFg+vAxs0rrtthSdu7iwX/P28v+MJtOHj4OAAAAACsTfgIAO/NIcBoezCx97nvBTNOtu14MIhdcPfL9mwdVmb2r2XTy2P8PAAAAADsh/AQAsvegde9jXnp80VPB677cPVI9+ZzHgspFN7Pp5GFoCQAAAABFEH4CAAAAAAAARfgfpxEAAAAAAAAogfATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAAAAAAKILwEwAAAAAAACiC8BMAAAAAAAAogvATAAAA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AAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAAAAiiD5CQAAAAAAABRB8hMAAAAAAAAoguQnAAAAAAAAUATJTwAAAAAAAKAIkp8AAAAAAABAESQ/AQAAAAAAgCJIfgIAAAAAAABFkPwEAAAAAACA/9+eHdAAAMAwDJp/1dfxBmxAgvwEAAAAAAAAEuQnAAAAAAAAkCA/AQAAAAAAgAT5CQAAAAAAACTITwAAAAAAACBBfgIAAAAAAAAJ8hMAAAAAAABIkJ8AAAAAAABAgvwEAAAAAAAAEuQnAAAAAAAAkCA/AQAAAAAAgAT5CQAAAAAAACTITwAAAAAAACBBfgIAAAAAAAAJ8hMAAAAAAABIkJ8AAAAAAABAgvwEAAAAAAAAEuQnAAAAAAAAkCA/AQAAAAAAgAT5CQAAAAAAACTITwAAAAAAACBBfgIAAAAAAAAJ8hMAAAAAAABIkJ8AAAAAAABAgvwEAAAAAAAAEuQnAAAAAAAAkCA/AQAAAAAAgAT5CQAAAAAAAPy37QA6rCGDaFczlQAAAABJRU5ErkJggg==',
-                                    height: 50,
-                                    width: 100,
+                                    colSpan: 2,
+                                    text: 'DESCRIPCIÓN DE LA NECESIDAD O PROBLEMA INSTITUCIONAL QUE SE PRETENDE SATISFACER',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                                {},
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text: 'Centro de costos o área de negocios',
+                                            style: 'title',
+                                            margin: [10, 10, 10, 10],
+                                        },
+                                        {
+                                            text: 'Definición de la Necesidad',
+                                            style: 'title',
+                                            margin: [10, 100, 10, 10],
+                                        },
+                                    ],
+                                },
+                                [
+                                    {
+                                        table: {
+                                            widths: [
+                                                50, 50, 50, 50, 50, 50, 50,
+                                            ],
+                                            body: [
+                                                [
+                                                    {
+                                                        text: 'Código Área de Negocio',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'Nombre Área de Negocio',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'Código Centro de Costos',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'Nombre Centro de Costos Nuevo',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'Misional o de Apoyo',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'Inversión o Funcionamiento',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'Proyecto',
+                                                        style: 'fontPeque',
+                                                    },
+                                                ],
+                                                [
+                                                    {
+                                                        text: '070201271525',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: '95169/2022 APOYO A LA GESTION DEL DAP',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: '1016231102123',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'CONVENIOS Y INTERADMINISTRATIVOS',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'APOYO',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: 'FUNCIONAMIENTO',
+                                                        style: 'fontPeque',
+                                                    },
+                                                    {
+                                                        text: '211- GASTOS PERSONALES',
+                                                        style: 'fontPeque',
+                                                    },
+                                                ],
+                                            ],
+                                        },
+                                    },
+                                    {
+                                        margin: [10, 10, 10, 10],
+                                        text: [
+                                            {
+                                                text: 'El Plan de Desarrollo Institucional “ITM: A Otro Nivel”, 2020-2023, está orientado a trascender de la innovación competitiva a la que transforma, a partir de la articulación de la ciencia, la tecnología, la innovación y la producción artística, aportando desde su vocación tecnológica y compromiso social al logro de un modelo sostenible para la humanidad. El Plan de Desarrollo Institucional fue aprobado el día 29 de mayo de 2020 por El Consejo Directivo del Instituto Tecnológico Metropolitano Institución Universitaria, en ejercicio de sus atribuciones legales y estatutarias. La Unidad Estratégica de Negocios, observado la nueva propuesta rectoral, en especial el Gran Pilar No. 4, denominado “Modelo de gestión flexible, eficiente y sostenible” y con el fin de dar cumplimiento a objeto contractual fijado en el Contrato interadministrativo número 4600095169 cuyo objeto es ',
+                                                fontSize: 10,
+                                            },
+                                            {
+                                                text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN,IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP., ',
+                                                fontSize: 11,
+                                            },
+                                            {
+                                                text: ' se solicita se autorice la contratación del siguiente personal, para así poder realizar actividades de acompañamiento y apoyo a la gestión, para la implementación y seguimiento al Plan de Desarrollo Distrital, Sistema Distrital de Planeación y los diferentes instrumentos de planificación y evaluación.',
+                                                fontSize: 10,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        margin: [20, 10, 20, 10],
+                                        style: 'tableExample',
+                                        table: {
+                                            headerRows: 2,
+                                            widths: [180, 180],
+                                            body: [
+                                                [
+                                                    {
+                                                        colSpan: 2,
+                                                        text: 'PERFIL DEL CONTRATISTA REQUERIDO POR EL ITM',
+                                                        style: 'titleTable2',
+                                                        bold: true,
+                                                        fillColor: '#3F91B1',
+                                                    },
+                                                    {},
+                                                ],
+                                                [
+                                                    {
+                                                        text: 'REQUISITOS ACADÉMICOS',
+                                                        style: 'titleTable2',
+                                                        bold: true,
+                                                        fillColor: '#A2B1B6',
+                                                    },
+                                                    {
+                                                        text: 'REQUISITOS DE EXPERIENCIA',
+                                                        style: 'titleTable2',
+                                                        bold: true,
+                                                        fillColor: '#A2B1B6',
+                                                    },
+                                                ],
+                                                [
+                                                    {
+                                                        text: 'PROFESIONAL EN CUALQUIER AREA DEL CONOCIMIENTO',
+                                                        bold: true,
+                                                        style: 'fontPeque2',
+                                                    },
+                                                    {
+                                                        text: 'CON 1 AÑO DE EXPERIENCIA',
+                                                        style: 'fontPeque2',
+                                                    },
+                                                ],
+                                            ],
+                                        },
+                                    },
+                                ],
+                            ],
+                        ],
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    pageBreak: 'before',
+                    style: 'tableExample',
+                    table: {
+                        widths: [100, '*'],
+                        body: [
+                            [
+                                {
+                                    colSpan: 2,
+                                    text: 'DESCRIPCIÓN DEL OBJETO A CONTRATAR',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                                {},
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text: 'Descripción del objeto y sus Especificaciones Técnicas',
+                                            style: 'title',
+                                            margin: [10, 200, 10, 10],
+                                        },
+                                    ],
+                                },
+                                [
+                                    {
+                                        margin: [6, 6],
+                                        text: [
+                                            {
+                                                text: 'Objeto : ',
+                                                fontSize: 10,
+                                                bold: true,
+                                            },
+                                            {
+                                                text: ' Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No ',
+                                                fontSize: 9,
+                                            },
+                                            {
+                                                text: '4600095169 DE 2022, ',
+                                                fontSize: 10,
+                                            },
+                                            {
+                                                text: 'celebrado entre ',
+                                                fontSize: 9,
+                                            },
+                                            {
+                                                text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
+                                                fontSize: 9,
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        margin: [6, 6],
+                                        text: [
+                                            {
+                                                text: 'Alcance del objeto: ',
+                                                fontSize: 10,
+                                                bold: true,
+                                            },
+                                            {
+                                                text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        margin: [6, 6],
+                                        text: [
+                                            {
+                                                text: 'Especificaciones Técnicas: ',
+                                                fontSize: 10,
+                                                bold: true,
+                                            },
+                                            {
+                                                text: 'Para efectos del cumplimiento del contrato el contratista deberá cumplir con las siguientes actividades:',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        margin: [6, 6],
+                                        text: [
+                                            {
+                                                text: 'OBLIGACIONES GENERALES: ',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                            {
+                                                text: '1) Presentar el informe de gestión de manera mensual al ITM de las actividades realizadas con el visto bueno requerido. 2) Presentar el Informe final de las actividades realizadas durante la ejecución del contrato. 3)',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                            {
+                                                text: ' EL CONTRATISTA ',
+                                                fontSize: 10,
+                                            },
+                                            {
+                                                text: 'acepta que la propiedad intelectual sobre los estudios, documentos y en general los productos resultantes de la ejecución del presente contrato, quedará a cargo del Distrito Especial de Ciencia, Tecnología e Innovación de Medellín. 4) Concertar la presencialidad requerida. 5) Observar e implementar las directrices institucionales sobre la administración de documentos. 6) Cumplir a cabalidad con el objeto contractual, en la forma y plazo establecido en el mismo, y con las especificaciones técnicas señaladas en los estudios previos. 7) Cumplir con la prestación del servicio requerido en el sitio acordado con el supervisor del contrato, según las especificaciones técnicas indicadas en los estudios previos. 8) Acatar las recomendaciones del supervisor, como enlace directo entre el ITM y el Contratista. 9) Presentar las facturas o cuentas de cobro correspondientes a las actividades realizadas durante la ejecución del contrato. 10) Abstenerse de presentar la factura o cuenta de cobro por encima del presupuesto disponible, de acuerdo con el valor del contrato. 11) Garantizar la prestación del servicio según las condiciones previamente estipuladas entre el contratista y el supervisor. 12) Informar por escrito al supervisor, las quejas, dudas, reclamos y demás inquietudes que puedan surgir en el desarrollo del objeto contractual. 13) Atender los requerimientos que sean formulados por el supervisor y para efectos de ejecutar en debida forma el contrato. 14) Toda comunicación entre el ITM y el contratista deberá constar por escrito con copia al supervisor del contrato. 15) Informar por escrito y en forma oportuna al ITM, los impedimentos para el cumplimiento del objeto contractual, referente a las obligaciones específicas. 16)',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                            {
+                                                text: ' "DEBER DE CONFIDENCIALIDAD"',
+                                                fontSize: 10,
+                                            },
+                                            {
+                                                text: ': El Distrito Especial de Ciencia, Tecnología e Innovación de Medellín es el propietario de la información y las bases de datos actualizadas, documentadas y depuradas que el contratista recolecte durante el desarrollo del objeto contractual, en tal sentido le asiste al contratista el deber de confidencialidad, comprometiéndose a hacer uso debido de la información que conoce y a retornarla alDistrito Especial de Ciencia, Tecnología e Innovación de Medellín al terminar su vínculo contractual. Así mismo no podrá utilizar información para beneficio propio o de terceros. El contratista se compromete a garantizar la reserva de la información económica, financiera y tributaria que se le suministre para el desarrollo del objeto contractual. 17) Se obliga a responder civil y penalmente por sus acciones y omisiones en la actuación contractual, en los términos de la Ley. 18. El contratista deberá dar cumplimiento al Decreto 1072 de 2015 que establece el Sistema de Gestión de Seguridad y Salud en el trabajo SG-SST en lo que aplique. 19. El contratista deberá dar cumplimiento a la norma',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                            {
+                                                text: ' a NTC-ISO 14001 de 2015, ',
+                                                fontSize: 10,
+                                            },
+                                            {
+                                                text: 'que establece el Sistema de Gestión Ambiental SGA en lo que aplique. 20) En ejecución de sus actividades el contratista debe disponer de manera correcta los residuos que su ejecución pueda generar. 21) El contratista deberá informar al ITM, si debe realizar sus actividades por fuera del lugar en el que normalmente las ejecuta, para que la Institución informe a la ARL dicha situación. 22) Desplazarse por sus propios medios al lugar requerido para realizar las actividades contractuales inherentes al objeto contractual, haciendo uso de los elementos de identificación establecidos por el proyecto.23)Deberá cumplir con las medidas de prevención y precaución dadas por el Gobierno Nacional, Departamental y Municipales en los Decretos sancionados en relación a la pandemia que se surte hoy en el mundo llamada COVID-19; Adicionalmente y de conformidad con la normatividad expedida por el Gobierno Nacional en lo relativo',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                        ],
+                                    },
+                                ],
+                            ],
+                        ],
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    pageBreak: 'before',
+                    style: 'tableExample',
+                    table: {
+                        widths: [100, '*'],
+                        body: [
+                            [
+                                [
+                                    {
+                                        text: '',
+                                        style: 'title',
+                                        margin: [10, 200, 10, 10],
+                                    },
+                                    {
+                                        text: 'Tipo de Contrato',
+                                        style: 'title2',
+                                        margin: [10, 80, 10, 10],
+                                    },
+                                    {
+                                        text: 'Plazo de Ejecución',
+                                        style: 'title2',
+                                        margin: [5, 5, 5, 5],
+                                    },
+                                    {
+                                        text: 'Duración del Contrato Interadministrativo número 4600095169 de 2022',
+                                        style: 'title2',
+                                    },
+                                    {
+                                        text: 'Forma de pago',
+                                        style: 'title2',
+                                        margin: [0, 5, 0, 0],
+                                    },
+                                    {
+                                        text: 'Supervisor',
+                                        style: 'title2',
+                                        margin: [5, 70, 5, 5],
+                                    },
+                                ],
+                                [
+                                    {
+                                        margin: [6, 6],
+                                        text: [
+                                            {
+                                                text: 'OBLIGACIONES GENERALES: ',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                            {
+                                                text: 'al Estado de Emergencia Económica, Social y Ecológica, deberá, debido a la naturaleza de sus actividades, objeto contractual y desarrollo en territorio de las mismas, adoptar todas las medidas personales de prevención, precaución, higiene y distanciamiento social, en aras de evitar el posible contagio o propagación del virus, para lo cual deberá hacer uso de los elementos de protección personal, en aras de mantener las condiciones de salubridad necesarias para la prestación del servicio presencial. así mismo se acoge a lo establecido por el ITM para el desarrollo de su actividad laboral en casa cuando haya lugar a ésta. 24) Las demás inherentes al objeto del contrato. OBLIGACIONES ESPECIFICAS:1.Realizar seguimiento a la inversión pública y su evaluación respectiva a través de la identificación del cumplimiento de objetivos trazados y su grado de ejecución.2.Generar alertas y recomendaciones de la inversión pública una vez se haya identificado los objetivos y su grado de ejecución.3.Realizar informes que consoliden la información recolectada del seguimiento mensual y la evaluación trimestral realizada a la inversión pública.4.Recolectar información asociada a los procesos presupuestales que permita elaborar el POAI de la respectiva vigencia y distribuirlo a las dependencias de acuerdo con los criterios establecidos e identificados.5.Sugerir a las diferentes dependencias la construcción de los mecanismos de planificación que permitan un oportuno seguimiento y priorización a la inversión pública.6.Elaborar respuestas y requerimientos, tanto de entidades internas como externas, que requieran información respecto al seguimiento de la inversión pública y los proyectos del Plan de Desarrollo 2020 – 2023.ADICIONALMENTE debera cumplir con los siguientes productos:1.Formato de seguimiento a proyectos de inversión.2.informe de seguimiento a los proyectos de inversión.3.informes de análisis, presentación de la evaluación realizada.4.Formatos de presupuesto, presentaciones a las dependencias, POAI elaborado.5.Presentación de los resultados del análisis para las reuniones estratégicas.6.Informe que contenga reporte de respuestas elaboradas.7',
+                                                style: 'fontSegundapagPeque',
+                                            },
+                                        ],
+                                    },
+                                    {
+                                        text: 'Prestación de servicios profesionales y de apoyo a la gestión.',
+                                        style: 'fontSegundapagPeque',
+                                        margin: [10, 5, 10, 10],
+                                    },
+                                    {
+                                        text: '03 MESES y 17 DIAS sin exceder la vigencia 2022',
+                                        style: 'fontSegundapagPeque',
+                                        margin: [10, 5, 10, 10],
+                                    },
+                                    {
+                                        text: 'Cuatro (4) meses, sin superar la vigencia 2022.',
+                                        style: 'fontSegundapagPeque',
+                                        margin: [10, 10, 10, 10],
+                                    },
+                                    {
+                                        text: 'Se cancelará en pagos parciales correspondientes a la entrega previa del informe y/o producto. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo de satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARÁGRAFO: En el evento en que el contratista no cumpla con las actividades y/o productos correspondientes al mes, el Instituto no cancelará los honorarios de dicho mes; una vez se cuente con la totalidad de las actividades cumplidas, dicho pago será efectuado en la siguiente fecha de pago programada para el proyecto.',
+                                        style: 'fontSegundapagPeque',
+                                        margin: [0, 10, 0, 0],
+                                    },
+                                    {
+                                        text: 'Jefe Oficina– Unidad Estratégica de Negocios',
+                                        style: 'fontSegundapagPeque',
+                                        margin: [10, 10, 10, 10],
+                                    },
+                                ],
+                            ],
+                        ],
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
+                                    text: 'DESCRIPCIÓN DEL OBJETO A CONTRATAR',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text: 'Con fundamento en el artículo 2, numeral 4, literal h) de la ley 1150 de 2007, reglamentado por el artículo 2.2.1.2.1.4.9 del Decreto 1082 de 2015.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 2, 0, 0],
+                                        },
+                                        {
+                                            text: 'En efecto, el precitado artículo 2.2.1.2.1.4.9 establece lo siguiente:',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 3, 0, 0],
+                                        },
+                                        {
+                                            text: '“Artículo 2.2.1.2.1.4.9 Contratos de prestación de servicios profesionales y de apoyo al a gestión, o para la ejecución de trabajos artísticos que solo pueden encomendarse a determinadas personas naturales. Las Entidades Estatales pueden contratar bajo la modalidad de contratación directa la prestación de servicios profesionales y de apoyo a la gestión con la persona natural o jurídica que esté en capacidad de ejecutar el objeto del contrato, siempre y cuando la Entidad Estatal verifique la idoneidad o experiencia requerida y relacionada con el área de que se trate. En este caso, no es necesario que la Entidad Estatal haya obtenido previamente varias ofertas, de lo cual el ordenador del gasto debe dejar constancia escrita. Los servicios profesionales y de apoyo a la gestión corresponden a aquellos de naturaleza intelectual diferentes a los de consultoría que se derivan del cumplimiento de las funciones de la Entidad Estatal; así como los relacionados con actividades operativas, logísticas, o asistenciales.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 3, 0, 0],
+                                        },
+                                    ],
+                                },
+                            ],
+                        ],
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    pageBreak: 'before',
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text: 'La Entidad Estatal, para la contratación de trabajos artísticos que solamente puedan encomendarse a determinadas personas naturales, debe justificar esta situación en los estudios y documentos previos.”',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'El contrato de prestación de servicios a que se refiere la norma se celebra por el Estado en aquellos eventos en que la función de la administración no puede ser suministrada por personas vinculadas con la entidad oficial contratante o cuando requiere de conocimientos especializados.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'En el desarrollo de estas actividades se incluye también el apoyo a la tarea de generar y dinamizar procesos con el fin de obtener los productos y servicios para satisfacer las necesidades del ITM.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'Con motivo de la expedición de la Sentencia de Unificación del Consejo de Estado: SUJ-025-CE-S2-2021, se deberá tener en cuenta lo siguiente en los contratos de prestación de servicios: ',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text:
+                                                '1. En el marco del numeral 3º del artículo 32º de la Ley 80 de 1993, los contratos de prestación de servicios no generan una ' +
+                                                'relación laboral ni el pago de prestaciones sociales. En todo caso, en los términos de los principios de transparencia, planeación ' +
+                                                'y legalidad, en la estructuración de los procesos de contratación de prestación de servicios, se deberán adoptar las medidas ' +
+                                                'necesarias que eviten la materialización de “relaciones laborales encubiertas”, en los términos del Consejo de Estado y de la Corte ' +
+                                                'Constitucional. Es por eso que se invita a la adopción y ejecución de buenas prácticas administrativas que eviten la transformación ' +
+                                                'de la naturaleza jurídica de la relación exclusivamente contractual que se tiene con los contratistas.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text:
+                                                '2. Tal y como se estableció en la Directiva Presidencial No. 7 del 28 de octubre de 2021, el límite temporal establecido en la ' +
+                                                'Sentencia de Unificación no prohíbe la celebración de contratos de prestación de servicios de manera sucesiva, antes del término ' +
+                                                'de treinta (30) días hábiles, siempre y cuando se cumpla a cabalidad con las normas jurídicas pertinentes. Lo anterior, debido a ' +
+                                                'que dicho término fue establecido por el Consejo de Estado con el fin de tener un marco de referencia para el cómputo de una ' +
+                                                'eventual caducidad en el ejercicio de las acciones judiciales y de la prescripción de los derechos reclamados, en aquellos eventos' +
+                                                'donde se determine por parte del juez, la existencia de una relación laboral, conforme al principio de la primacía de la realidad ' +
+                                                'sobre las formas. Por eso se reitera, la clave del manejo adecuado de los contratos de prestación de servicios es que tanto el ' +
+                                                'ordenador del gasto como el supervisor del contrato, no incurran en prácticas que configuren una subordinación de carácter laboral. ' +
+                                                'Conforme lo anterior, en los documentos previos del contrato, incluido el estudio previo, deberán contenerse de manera detallada, ' +
+                                                'el análisis de la necesidad, justificado desde la falta de personal de plata para satisfacer la necesidad o la especialidad del servicio, ' +
+                                                'según corresponda, garantizando en todo caso, que dicho vínculo constituya una relación autónoma e independiente y que no se ' +
+                                                'genere una subordinación o dependencia.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text:
+                                                '3. De conformidad como se estableció en la Directiva Presidencial citada en el numeral anterior, el plazo de los contratos de' +
+                                                'prestación de servicios debe ser el estrictamente necesario para la ejecución de su objeto y para el desarrollo de las actividades ' +
+                                                'previstas, en los términos de la normativa aplicable.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text:
+                                                '4. En ningún caso, la Sentencia de Unificación restringió el derecho al ejercicio autónomo y libre de la profesión u oficio de los ' +
+                                                'contratistas. Conforme a lo anterior, no se puede limitar la concurrencia de vínculos contractuales.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                    ],
+                                },
+                            ],
+                        ],
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
+                                    text: 'ANÁLISIS ECONÓMICO DEL VALOR ESTIMADO DEL CONTRATO',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text: 'Análisis de precios de mercado: El presupuesto oficial de la contratación que se pretende adelantar se hizo consultando el valor de los contratos celebrados por el ITM en vigencias anteriores para este tipo de profesionales o de auxiliares. ',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'Estudio técnico: El contratista deberá cumplir con las especificaciones técnicas establecidas en este documento, en la minuta del contrato que se pretende celebrar.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 8, 0, 0],
+                                        },
+                                        {
+                                            margin: [0, 8, 0, 0],
+                                            text: [
+                                                {
+                                                    text: 'El valor estimado para esta Contratación es de',
+                                                    style: 'fontSegundapagPeque',
+                                                },
+                                                {
+                                                    text: ' Veintiún millones ochocientos quince mil cuatrocientos veintidós pesos m.l($ 21815422).',
+                                                    style: 'fontSegundapagPeque',
+                                                    bold: true,
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        ],
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                    },
+                },
+                {
+                    pageBreak: 'before',
+                    margin: [10, 10, 10, 10],
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
+                                    text: 'CRITERIOS PARA SELECCIONAR LA OFERTA MÁS FAVORABLE',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text:
+                                                'Considerando el servicio profesional y de apoyo a la gestión que se requiere y teniendo en cuenta lo ordenado por la Ley 1150 de' +
+                                                '2007 y el Decreto 1082 de 2015 lo importante a tener en cuenta para seleccionar la oferta más favorable y conveniente para la ' +
+                                                'entidad en este tipo de contratos, es la idoneidad, conocimiento y experiencia que acredite quien asuma la ejecución del objeto ' +
+                                                'contractual, que garantice a la entidad la satisfacción de la necesidad planteada y por consiguiente el cumplimiento del objeto. ' +
+                                                'Deberá acreditarse por el contratista que cumple con los requisitos académicos y de experiencia requeridos para la satisfacción de la necesidad.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'JUSTIFICACIÓN DE LA CONTRATACIÓN CON “DANIELA DIAZ CALLE”',
+                                            style: 'fontSegundapagPeque',
+                                            bold: true,
+                                            decoration: 'underline',
+                                            margin: [0, 8, 0, 0],
+                                            alignment: 'center',
+                                        },
+                                        {
+                                            margin: [0, 8, 0, 0],
+                                            text: [
+                                                {
+                                                    text: 'La contratación se realizará con',
+                                                    style: 'fontSegundapagPeque',
+                                                },
+                                                {
+                                                    text: ' “DANIELA DIAZ CALLE ',
+                                                    style: 'fontSegundapagPeque',
+                                                    bold: true,
+                                                },
+                                                {
+                                                    text: 'con cédula de ciudadanía ',
+                                                    style: 'fontSegundapagPeque',
+                                                },
+                                                {
+                                                    text: '1152690770”,',
+                                                    style: 'fontSegundapagPeque',
+                                                    bold: true,
+                                                },
+                                                {
+                                                    text: ' quien cumple con los requisitos académicos y/o de experiencia señalados en el perfil para satisfacer la necesidad requerida por la institución. ',
+                                                    style: 'fontSegundapagPeque',
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            margin: [0, 8, 0, 0],
+                                            text: [
+                                                {
+                                                    text: '“DANIELA DIAZ CALLE” ',
+                                                    style: 'fontSegundapagPeque',
+                                                    bold: true,
+                                                },
+                                                {
+                                                    text: 'cumple con el perfil requerido el cual es ',
+                                                    style: 'fontSegundapagPeque',
+                                                },
+                                                {
+                                                    text: 'PROFESIONAL EN CUALQUIER AREA DEL CONOCIMIENTO CON 1 AÑO DE EXPERIENCIA',
+                                                    style: 'fontSegundapagPeque',
+                                                    bold: true,
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            text: 'Se anexan certificados académicos y/o de experiencia que permiten acreditar la idoneidad del contratista para suscribir el contrato con el Instituto Tecnológico Metropolitano.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 8, 0, 0],
+                                        },
+                                    ],
+                                },
+                            ],
+                        ],
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
+                                    text: 'ANALISIS DE RIESGO Y FORMA DE MITIGARLO',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text:
+                                                'La política para el manejo del riesgo contractual del Estado para los diferentes procesos, consagra como principio rector, que estos ' +
+                                                'corresponden a las Entidades Estatales, las cuales deben asumir sus propios riesgos por su carácter público y el objeto social ' +
+                                                'para el que fueron creadas o autorizadas y, a los contratistas, aquellos riesgos determinados por el objeto que persiguen en el ' +
+                                                'cumplimiento de su actividad; siendo entonces la asignación adecuada una herramienta que minimiza el costo de la mitigación del ' +
+                                                'riesgo, logrando asignar cada riesgo a la parte que mejor lo controla: ',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            stack: [
+                                                {
+                                                    ul: [
+                                                        {
+                                                            margin: [
+                                                                0, 5, 0, 0,
+                                                            ],
+                                                            text: [
+                                                                {
+                                                                    text: 'Riesgo Previsible: ',
+                                                                    style: 'fontSegundapagPeque',
+                                                                    bold: true,
+                                                                },
+                                                                {
+                                                                    text: ' Son los posibles hechos o circunstancias que por la naturaleza de la actividad a ejecutar es factible su ocurrencia.',
+                                                                    style: 'fontSegundapagPeque',
+                                                                },
+                                                            ],
+                                                        },
+                                                        {
+                                                            margin: [
+                                                                0, 5, 0, 0,
+                                                            ],
+                                                            text: [
+                                                                {
+                                                                    text: 'Riesgo Imprevisible: ',
+                                                                    style: 'fontSegundapagPeque',
+                                                                    bold: true,
+                                                                },
+                                                                {
+                                                                    text:
+                                                                        'Son aquellos hechos o circunstancias donde no es factible su previsión, es decir el acontecimiento de  ' +
+                                                                        'su ocurrencia, tales como desastres naturales, actos terroristas, guerra o eventos que alteren el orden público.',
+                                                                    style: 'fontSegundapagPeque',
+                                                                },
+                                                            ],
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            text: 'A continuación, se establecen, los riesgos que deben asumir las partes en el presente proceso:',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        [
+                                            {
+                                                table: {
+                                                    color: '#444',
+                                                    style: 'tableExample',
+                                                    widths: [
+                                                        'auto',
+                                                        'auto',
+                                                        'auto',
+                                                        'auto',
+                                                        'auto',
+                                                        'auto',
+                                                        'auto',
+                                                    ],
+                                                    body: [
+                                                        [
+                                                            {
+                                                                rowSpan: 2,
+                                                                text: 'CLASE',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                colSpan: 3,
+                                                                text: 'TIPIFICACION DEL RIESGO',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                            {},
+                                                            {
+                                                                colSpan: 3,
+                                                                text: 'ASIGNACION DEL RIESGO',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                            {},
+                                                        ],
+                                                        [
+                                                            {
+                                                                text: 'No.',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: 'Descripción',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'Observaciones',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                            {
+                                                                text: 'ITM',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'PROPONENTE Y/O CONTRATISTA',
+                                                                style: 'titleTable1',
+                                                                alignment:
+                                                                    'center',
+                                                                margin: [
+                                                                    5, 30, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                        ],
+                                                        [
+                                                            {
+                                                                rowSpan: 5,
+                                                                text: 'Administrativos, legales, documentales y/o regulatorios.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 150, 5,
+                                                                    5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: '1',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: 'No firma del contrato por parte del proponente y/o CONTRATISTA.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: 'En caso de que el CONTRATISTA se rehusó a firmarlo, no estuvo de acuerdo con el clausulado. Riesgo que asume el CONTRATISTA.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: '',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'X',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                        ],
+                                                        [
+                                                            {},
+                                                            {
+                                                                text: '2',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: 'Incumplimiento del contrato por parte del CONTRATISTA.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: 'Hace referencia a cualquier clase de incumplimiento por parte del CONTRATISTA, antes, durante y posterior a la orden de iniciación del contrato. Riesgo que asume el CONTRATISTA',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: '',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'X',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                        ],
+                                                        [
+                                                            {},
+                                                            {
+                                                                text: '3',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: 'Demora en la radicación oportuna por parte del CONTRATISTA de las facturas (correctamente diligenciadas y firmadas) y/o cuentas de los gastos reembolsables.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: 'Riesgo que asume el CONTRATISTA, teniendo en cuenta que le corresponde a éste tener planes de contingencia y/o calidad para que las facturas se elaboren correctamente y radiquen oportunamente de acuerdo con lo manifestado en el contrato.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: '',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'X',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                        ],
+                                                        [
+                                                            {},
+                                                            {
+                                                                text: '4',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: 'Demora en la legalización del contrato por parte del CONTRATISTA.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: 'Causada por parte del CONTRATISTA, por no radicar completa, correcta y oportunamente la documentación de legalización, según el instructivo y/o lo manifestado en el contrato. Riesgo que asume el CONTRATISTA.',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: '',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'X',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                        ],
+                                                        [
+                                                            {},
+                                                            {
+                                                                text: '5',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {
+                                                                text: 'Errores involuntarios que hayan quedado en la oferta presentada al ITM',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: 'Hace referencia a cualquier error que se pueda presentar en la oferta presentada al ITM ',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                text: '',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                            },
+                                                            {
+                                                                colSpan: 2,
+                                                                text: 'X',
+                                                                alignment:
+                                                                    'center',
+                                                                style: 'titleTable1',
+                                                                margin: [
+                                                                    5, 50, 5, 5,
+                                                                ],
+                                                            },
+                                                            {},
+                                                        ],
+                                                    ],
+                                                },
+                                            },
+                                            {
+                                                text: 'CÓMO MINIMIZAR EL RIESGO:',
+                                                style: 'fontSegundapagPeque',
+                                                bold: true,
+                                                margin: [0, 5, 0, 0],
+                                            },
+                                            {
+                                                stack: [
+                                                    {
+                                                        ul: [
+                                                            {
+                                                                margin: [
+                                                                    0, 5, 0, 0,
+                                                                ],
+                                                                text: [
+                                                                    {
+                                                                        text:
+                                                                            'Estableciendo una forma de pago de tal manera que sólo se efectúe el mismo, una vez se produzca la entrega a entera satisfacción del bien o servicio.',
+                                                                        style: 'fontSegundapagPeque',
+                                                                    },
+                                                                ],
+                                                            },
+                                                            {
+                                                                margin: [
+                                                                    0, 5, 0, 0,
+                                                                ],
+                                                                text: [
+                                                                   
+                                                                    {
+                                                                        text: ' Consignando las cláusulas de multas y penal pecuniaria en el contrato.',
+                                                                        style: 'fontSegundapagPeque',
+                                                                    },
+                                                                ],
+                                                            },
+                                                            {
+                                                                margin: [
+                                                                    0, 5, 0, 0,
+                                                                ],
+                                                                text: [
+                                                                   
+                                                                    {
+                                                                        text: ' Estricto y permanente acompañamiento y seguimiento por parte de la Supervisión asignada.',
+                                                                        style: 'fontSegundapagPeque',
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    ],
+                                },
+                            ],
+                        ],
+                    },
+
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*'],
+                        body: [
+                            [
+                                {
+                                    text: 'ANÁLISIS QUE SUSTENTA LA EXIGENCIA DE GARANTÍAS',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                            ],
+                            [
+                                {
+                                    stack: [
+                                        {
+                                            text: 'De conformidad con el artículo 7 de la ley 1150 de 2007, las garantías no serán obligatorias en los contratos cuyo valor sea inferior al 10% de la menor cuantía, en consecuencia, el ITM se abstendrá de exigir garantías, dada la naturaleza del objeto, la forma de pago y las condiciones establecidas en el análisis de riesgos para minimizar estos.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'No obstante, la anterior determinación, de acuerdo con lo establecido en los artículos 7 a 17 de la Ley 1480 de 2011, en asocio con las determinaciones de los artículos 932 y 958 del Código de Comercio, el Contratista tiene la obligación de garantizar la calidad del bien o servicio objeto del contrato.',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 8, 0, 0],
+                                        },
+                                    ],
+                                },
+                            ],
+                        ],
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                    },
+                },
+                {
+                    margin: [10, 10, 10, 10],
+                    style: 'tableExample',
+                    table: {
+                        widths: ['*', '*'],
+                        body: [
+                            [
+                                {
+                                    colSpan: 2,
+                                    text: 'RESPONSABLE',
+                                    style: 'titleTable2',
+                                    fillColor: '#4FAACD',
+                                },
+                                {},
+                            ],
+                            [
+                                {
+                                    text: [
+                                        {
+                                            text: 'Nombre: ',
+                                            style: 'fontSegundapagPeque',
+                                            bold: true,
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: 'OLGA LUCIA GOMEZ HOYOS',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 5, 0, 0],
+                                        },
+                                        {
+                                            text: '\nCargo: ',
+                                            style: 'fontSegundapagPeque',
+                                            bold: true,
+                                            margin: [0, 8, 0, 0],
+                                        },
+                                        {
+                                            text: 'Jefe Oficina – Unidad Estratégica de Negocios',
+                                            style: 'fontSegundapagPeque',
+                                            margin: [0, 8, 0, 0],
+                                        },
+                                    ],
+                                },
+                                {
+                                    image: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABHb29nbGUAAP/bAIQAAwICCgoKCgoKCAgKCggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICggICAgKCgkICA0NCggNBwgJCAEDBAQGBQYIBQUHCAcHBwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI/8AAEQgCnQgoAwEiAAIRAQMRAf/EABwAAAMBAAMBAQAAAAAAAAAAAAECAwAEBgcIBf/EAEEQAAEDAQYEBQQCAQQBBAECBwEAAhEhAzFBUWFxEoGR8KGxwdHhBAUT8QYHIjJCUmJyCBQjgjNDkvIXorLC4hX/xAAYAQEBAQEBAAAAAAAAAAAAAAAAAQIDBP/EAB0RAQEBAAMBAQEBAAAAAAAAAAABEQISMSFBUWH/2gAMAwEAAhEDEQA/APy/obChJqTA/wAhiLyBcOS5Ts1xfpLCAIkzJJdU3yTSjVyTjyKw6mL8u+lFmpbNqdz8P31QB74vpkPUboEItst+905EIMH3KjSpC0GVQmcZihMGaXnRA86ok/rJAR8rXd3oM5+CzBJhCUS1UAXxXqF+v9pM0ycZOPnC/JaybsNF+59lZXuei0l8fvtFEjgr8CnaWaOaQZgkeqOZfoJ3UnftBIHflTrmpQuQ5R4b9cMoUo4xSqlociflIGnqo3KRzFlnFBu4jDNRoC+N0A7U7QExCmgZ1ph1Shq0JHFAzjrzCxdkdxmlc/RK0z6oGCznJgkBxQYikRM3aa95rMF23I8sDql/ImYUGB9gsUHBYOQDg1Wc27dZrkCgfik06pGt1W7osUSmPNDjn2We2MeV/wCkpFUYwxSjb5RtDy3x0CRhrcjWq0IuvzNOeiky0oBFccgdNEbQRpOfqrPbW6aC7vFGpScUXnmi52sylLU1mfFGMz6wbFFRre9FGO/dM11SINCEa2KlywN87jTRFxSgeSJn6M3YRcUtpWkRkc0xFJwj1RtB3ki2lBRsnY6xW/kl4/3gmJRj9EuSuMa9USUxZRG9hAUxCWUWhGK0oBPaHvJC0aD8IjWbpvGx9s0eCMb86SpAlUY5AQc+ys9uqFp7JXOr3kgL3/paBffoprFyBrRyk46rE+FYxUzZQEDfl79UJnDqe6JgRHd61KUN1YE8kE3G4GIF0C5WIyymc1NrapmZZV70QAOQN8RJ89CmhA3ayZ71QOB4Y65JJStGZGgRM8sMggPFKRrfEwnc27zw2WLpPKEC8OWN6azYlBuWc85UwOB2QF9TH6SmDlh4LApI70QchwzuzgdE/wBOwbi4nHaEgCJdOKC7ndLpWAi8yt+OiNUBfZ4yJNCInY8glZ8JXWRvr1osUD8G3KnVTaMMsc5RLkeIIGcAfNRnnuAQNtVQpLQZX7UQO2dNov3SY3ckbJ6BQYt8cUOHG4A0zMV6Zqj/AA6lK9gwN0zNIm8bkIFtHJmH2QAWcgB7w8lUN/6imqTg/WKZhju/dAQKrPahT2TceAwvlBiTkU7W5pC4zQ08VUHMBArma8jh7osb3j1yWeeysG95/CDW0dLtzemFnnjVAhJaO6wgqHTyw/5LFtZj3Rs254eGaB+om7lnCCZByPNPGkrGcysH7ICbPZZ484og51/LxRg9UCrNM65X06URe3DqlY6MIGiCrG6+AQcNaZJSUzXoFaqN9OmqUvQDciQdRfqgwBznDVZoxSsfF3XFYvrBi7A5ILWbr0rrTDsJWj43SzodSb0Ey/eM7lyGAbIOEi4ckbNqAmND6cs1OIzg3CAY5qvDjM5I5538lJQGrOI8/FLw5galM0A5iIjVUGf0gX3INPe6Fn9PFZ6rMgYWmSFiYvTWQi6d07hKWDOKQuTNKmx8xkL+azjMazO/Mpw1YD40Svd4Xrc8aOLTKupWtDdmZAUg5UtzSMd1Q9hYjEiapC4X38yNML1J9oA2TeaSL8k9k66kDAIC4d33GiUWcTfnoZyTtKFo80GSCREZwakT0CBK3d1U0x3U+yDPbMC7GctE41NUgM6JX7ygoL0ba1gUNadQkm7dKJ8PBAWvO8CBIrfngjx5/HPNOxtMLu8VF9e++iIoeXSo2yUo0nRaFQ4QTdX22RSM700T8WEil2yUp58kCBvfdE4AxCEoOagUNSuFZ8lYA4X5U80gPXKMUAYNTXNOZ+PVL+SsYtKNm6TeYAkV8EDymYPTaiQOv1oOZRc/brRA9vfyUh1Pd6YXXz3nd4JXNyvxr4bIA5iV12HRPJS6Yi9AosPKZyCEaHrHgqNMXZoPdKBbNl51uRdhocL+qxBiIjAVv1SBk7+qCnfLBTRa5B8dT0QZ1mMcUjnb+QWeSRGOEd5IiyjEmMzKARp0QATNs8+XumFmMZ3p5Qgm9MbL5yCWRhWM6IhsoA61HX0VLIUM6eKlakGBAv1kk65J2/43X4mZGnJBnWkKPD4D1TfkoLuqIbigm50TrjgmY6lw5juqcnA5zsMIUnP8Z7hAX2o/44cPLzWa0nKLhn1VfxRWk5wpvPeaBgYU7MRfrXmmY3FZqAOd+03HA0Km8nyT2eONYQNcK6UwqVPjOMUKMz7FTNp3ogwtY63Zogi/nCj9T41IT2dn6UwRqUCATURUmcyqjYd4pSBki05U9UXWc3WFuKiH4u8EXCvhEIwwt0nHpM3e4ThqU39K4jZBZhUbQ95LEZXHM44IeeKNcW4P2sy0QtLTvu5I50RQmb4pF3VG1XP8UhtYwkoz4XJD+9tAjPI5GUzv/jrsUtmAcd/ZNxRhIy9UnEESU7nLC2Ixj1SAoko2px4XDekrAjNKxq3F+0TQadTt8pmslAn4vjWly0orB8G+6LsP0ouMGsHUCOync715rClM65+aAuGqnanvdZz+8VewsIkuxiBIMQggKbpmNMVJOpPhoEj+7kWE4cv0gZzeWoQ4ga/JOs+iVwlTs+/1ggsHoBqVMGRWRhHRAQJuMaphcNLzmlbCnatr317xQp3hMBT2UiPHudkze8OiMyYzXDuPRZr6qTbPQ8lRre7v2jRwZuUOP9eqp2Un4O5AQBtpp+kWjxyQ5dKp7OznGB4ygaKycbtAtaPnGmBp61vosLWM9wlfX5j2QKAMb+qZzp7vQCz9L8kGfaapCiZFT0xSC0n3wQOAiWovGXfula3UbINE7+CQTNBdSgTiyJuWYcPFATXD9xVZzctOSJKXhQAO55rG1gERfHgi1vQ36kZoWjkG4tEbsjqPJIHHsonbog3is06QiAs5BMMvnFUbRBx6+CP5EBEHQjFK+z7980S34+UX3osZjgDM1F00/aKIZuN6RrMYoI0/LYYk0AoG8NJJvpgArA4iK0pl7rj2VoD/ALciCDLT4eS5oApocMTNEYI0qrHqffPNBqCgQBWSkaoGJTSTVJO6LCgZp9lTjS2bdR/465ppzkRjgdkAJyWOsaQthQYpfyKhyY39l+v9rcZwpfW9fkWLsCcZqPXdft/bG1HZK0l8dmSWj5TuuUwEc0XHRLbNVTZpLS0QRcckjzVVhR46RHeeyNSamWKXGme/SOcqTjhio1ifdUWpSOiYrKlCDigRGaRyBnBKXUzr0TAIIF4Vg1EsWQDvRYrMtL9ErLWe74QD8dTySkxzodlUFAN7KCbnYYHrz1RLljf17KMoJmzVLMU7lKaKjW0vHNAGFTc7LrkqBiV/00Y35IFbKJCZrVnt79USzSNd3kk7nyVSUA3FE6nCYhZ6wb08ZRZMBq0pWtW4EUwKcu/amWxGqIKOdmHY1ZziVgNQg16LpnFK5yDXRfclLcrxeiW6qeXqpVkV5ZG5VLe8tJR4BzRBYfbbVSLvPuidENxuzxJQDJK5yRok3kq93ogSEOFEEpZQBloqOU+FAWvfkgcU/UoF3dR4JXWgPdxSEboKi8UkzdExKm89SbucItfBvy5+qk5+GfoZKB224xxHQZJB4LNZPfkgWoDCZhwUrS5awxOcBBYuRaUoYR1qc0oeJQMR5hOTduleYSizogVrlT8WIQCLRiCDthmgUWmf6ShsJ+Ci1qMIQIHfpM91PRZuWiwQSY1VaPclAFK+0IO6DkF/7yT2bB7JbKzx6jA7IuH/AProEFPyeFEAams5KdmxU4bvdAXHPolT3rP39igmEA5PKEdRCAiufL1lNAyw8rykDcJoSg9vjHJAG2qc3TrHPNTsbKFXi8EEw6puEzEAxoFnnzHonPmls7JBgjKdzYy5eCVAGz71uRcNZ1Svs5RFyAhuK309sDIAmL0349+8SgBGU+mMoLONZWQ41uKoiMZ5IGIStci9ogR5G9IxuCBiEWj9pj702WD6IFLdeaFnZx6qgalLc6rMoZpC1pTuvJBoyCz3ZjCFoCM07XIIh8YIJ8PeCY2OP+MIGvcR6FRE3Th518kFS7Kea0+adhSx+0TQt8hjemY7NAHyRYa8gUVUthKwg/pTiTKo9iBQ3WU/Eg0yg9hFyBm0pkgHb8kPw5pi2KBKAwHCNUzqUyoTyQBpTnnyQAOtfVY4jNZXdO4d7IBsXBLZQN636q2po2TDrei9qxtO6oFy0enWcEGgZn5WeimDFINVXZpeKuF2aWazAc9C0YFiwfKMfCRoQfbkgwTVBrzWkR3emLUEPqag7rlWNnAU3XVjvHdF8HWUTSOdW8dQEzxrv8IGzzxoE9oYp0RUAD1mOSIs807m58kxiEEXNRIWZW7G7bFFjPBAOHlv6JYjGU5beMlm/sIEtTRGysNEDUxdGlDPqntDNEAtR7ckgKIwqUxbS7x80EnedNlUgdL81mt2Rcb9UGBCBWIGSJhAAUrjHOo2mqZo/SE16/pAAzzKFnZQanOm/wAI/lEil+XksO/RBSQlhLKdmt2OyDHLO/0SrOP7KyBbTsYnJN+P95ZhYNvOIQjlugwdCRrK7piM+uCzrSAgLHbUujS/qtNeaVjceSPcoFDss5jyRazE4mVsNcExx0CBT5JZQD8IO+CzjCAk58tloRc/yUy/zQa1PeqZhWaxENQS4LrzpIgEVR/HndlzuTWozPxSFnAmuHnywQce0Zj/ANtqC6PJWYKXj15puKvdUto+aelEChx61nZY545prRkCCZ2wStGfggcuHMXKEapyYvPgmFpOFNUAtB+vVThGI+aqgaglweYVLMRjyR4lMGbkGJrygbpRZ6inl+0GmvUHGITtZd56IMbYDIpDbU5C/wBEoB7ARNn3mdEDcSNAK8tFrONUXvwQFsXfCD7S5SFnd1lW4ddTmYyQJ+QbE5AoOcJuErcM3eKQWfeKAvcoizPeKcNRA+IwR0kw1kVN9vLuET/p4pgwFZo0I7wU3UkXTEnRFEDxvi4RcsUWmMglchSgpWSMN/dchppnqpm2RnqRzNT6JwdECbk7Go0naW3XJGNN0wsorU76rNoR2EY5Fsz4InvkmtbPLmkaZPLwzQ7C53eiQCVjry9kSEal1gcFIhV4FNyLQ4ViJ79liDkmLdQN0Y7EBT1rGIqRgs5tFiMe/BFlKX7HvHVFraBKKpS+sI0Z4TC1FNL/AGR4POUlqUB4uVfDJK5Ia44mdYulUL0Bb3X3wTNJPJICsLTCL0DcRSOCfhSh+IrBg6FAW2azmqgei8fCM2pEI8FJmmWJQc3Emgvi+UzLLGTdTLojSDB6pwi3LRM15QLb2uESEgGkLFvdQgCgWOuEp2Dacd0GtTgR3egzn/GmiVpSushkOaUMwpyQUY/KOYnpCZ2kilxvlK1sU5oziTTE3oM4JDZqrWUnCKJSEEyDkjYGk8tUHjQ7zRBhvplogclL+RNweOWqNoIwQL+MIDywSFyBKC7Cl8c7g460oEHWqVjkFPzGsxGGY3GPJBSe4TdU3n/riJuCyLrgss5zuuNPAeS5IByjbH2K430LyaxGET/jF4IOJhcvj0uKCbLS8RcfBUDVicc1pRB4lnY+Cix3eSuAgzbsE7GqTrPQ7zgnsnIC7DSfH2TMcp8SJQUSALNPZQa5BayXY/soBv1jwgLrth+t12P+PNrJvi/mFtm1+65imWKj7NSJrNdkYKHKRAVZUrRiCblF41OXeKtK47nYak+ilWRgVB5F/Un0VHhQ4VlcpXOn1Qa5O1kLQjYEpLRa2QnBAAEGjwTMbpTE5IFuRQK1p9krBmTt8ppOaBKBRZ9Mli325ZohK11+qB5iiQjPFOWVvrTwW5IFgLPWDUhQE2aUOqi9yVrMfBBZyxCQndLaOKJTEIAbnaeuyzbXNADkdESfPRJ9liUGHS7uUwYjJ9cVi34RYxBrPNGp89ZrUz0Ag5iNNKzWdxHqtZjw8/0nLu8UCsKnaO+FUPgb9VINz2RiwpqDpT3KezF+WBz3T2eQT2b9OqMtZFEbSlcZWc9BiwZ6/CPsllEBArgkD08IFAyV46d1+ERkBOnmUCUACUha0d4JOWuiDOStddv6LSi7ogLmhTc1OD3igXVEihxQYEC6UrnnTxWNEHIBxXJgYv6fKmW+CdiB+PzuTMGkI8HYSufCDC0i4aqgGW/PJI3UdOq1paYC6+OUVKDNZBO3neuJY2O4rIE4LkG08oWDUFTkNY53KQP7ThyVjpQBafBVdZ0pfGSRx8QgAr6FFu88kwSlxQU+nb6+SNoEWNTgIM3zv0SGynACLgLj1VA1OGoFLUCNT6DbFM8075owgQBYM6+eict+ddEPyaIJdlMdDfhFRzW4fFMO4QTbUXUzy9EWs1nCc959EWvjv0RcJj0QDyx/aJ056J3CI7lGzFcpNECmuCIKLj1N6AZ1QB50jojZ2fmi6g7vQQM33kc0oH7WcycflM7xQKWzW72Ra0e+qLDhBpSvojwHJAA/16o4bLcFOcpfzQYIwmfRAWkySTyzRLkXMx7yWY8oH4/iLucqZKPVbvmgZrdNL/FN+NKHo2YvQLxeNB37poqJrGB+EGmNa02OJQL5yQAG+eQFw6rImzm9MB19ETR4J01F6xGPTM+nVbi+dVg3Cde+qGj+JCRN2+qpF+vglLEUWlQ/KZAGOJVikLL/AA0QUAosxs3rMCYOWeQE95ei3fcJfyUlaxJPwkoDQctU1m0ztfsjwa5JuM7KWpQd33gp2hGCLR4pykqFsOipwftIx4OkRfjK3H3srIunDowG0XnPHxSx3MIMtNk9o7u9aSkO6DrISJrGYvR4Zr+1mIYwibpHeSDwCaeKdj47p0U7SzpW8mmZjCAs2LFC6inZDzhZj5z5otBHh4rSmjfxQCIEY+Ponc0YoFsnD26KXEJrXz6q7TS665KAECB/xoiWBFxn02U7SUDthAmOaVjEOI53eKBzaeyW2FRGs9Vg7H9zmmcUCPfdffpks0oPHiPCbligFpnfpcgy0n/bGtE9lfyI64rcSAsjHDHNTL0zXrICOXhVAP8AdSdZd+iuxsYxRAj3/ofCFmtZgXxB3Tk/tBgQOinlfdkeSeEQ8hAGti/xn0qtbAzHgJiN0HOJvTA8ygnKxOCw9EeL20QKwqjmi9CZ5dEnFVBrW0gINRe2U4FEE7R+9LueywJKmLadKYpzdAxx1xQEWnhQ0PS5ZzqxUA33GfZCysN5NTqqucg1qaSZGkGPZcWzZjfguTbtJis3ROGcqMx4+CByd/BIZTORQIDp4otBN3skc9GzcgzCK0kmm2oQ/e5GaYWeMjZK8oMlcBl0+UR3ms5qAM2TOZmNQSgBft3stwCkDRAY7Hyg53mmwuKSztEDWSm613ptVVc6iRBEBEDkg5o+ZTOtMMb9I90Ba2AmZYzikLp0z+EzTlPYQID8IsdPJNZ2UtnMY4VSyO8UARY1YPnKnksbSO6I1vwXHZTaDlS+UQ+U/GjJTj4KfF3qjaOSG4HNBQ22Qv8AAY+KDmoC2FRWovQDUdNNaW3YmElnZTX58E0rOdN3shoutNdefwtG51N6Yt2uBoEOL53yRLR4lIsVAc+qcNpz8M0YcY05eOwVLG6vyqvfSgy1Km4o6g8Izos1iVjozPogwCT8nVNaOU2tRzsM85oPbGvis988rkLNpwMDH35oSM0dmnfNNxBI5yXh2RZKxte81g0o8PytxI2DmmK1QB1W4q+iJBvHD4SgxC1mxNxTU41RfaUQKN+XypuKyHIz4IH4kAUSs1k4oAAn40pfCBKCjWShbtincpuOFEsncoKMFEeJZ3cLFu3qibAnWPVB1uUHDJULYioM4C8IqYWjy8UQgD80u2KDO7lAdwjaGO6LPCBWuT8Sk2x1Oya7vogxK11eSAW4O+8UBns4DSFhGawb37ok8+SCptKRgpE6+XojxfCnSZAuM6HkgTj7lMQnBxpW8xT4U3HvBA5aR2FNzk0oWmiBQmDYWa2Fr0ALUwMYSO+aICJNDsika01FXAgUjEYCL+ayPDlzrBndBF1+czhrMmgABOWRu0XJYwHC4TieXwuNwibxtXoBguTZu2GFfhCjNP2lBTTGKQHGCDqZnVGRsinA8VmzJ1wi7Y4po/SDOYiElnTTyTvfsg0e0eqEIygQgDmzidMv3qkk69b1T3RAukX1QX+mYuz/AGD0jpeur2T6gyBF1/ku0fYTWBhMH/y0W3J+25y47dRd4q5cooEe3lqpPCtasUXnUoFLVJzcbsIVnyMJOQUn34EEdDujfFMsUnFUeIx5JLQrLSPD+0OCcRTDEqsJOHwxFD1UEyxLFOao7vXdIQgDx38JSqNfl5eizGVIQSju7yU+Xr4qr2a0yUnICEOHxywTNCL3afpACdUQUrbPWeio46IJlqDU7h3mpMHh4FEtwrx+hVOGeHjoiGec5IkaDx90JSh5x0ohw64J4n0Q4drkZ7E/Gs4o6yjwolupfh8cQa35XJuEzTSpu1oqhEjxQnosdrWUgJGQrSDI5o/i7zTNs8vdG7NZFBplYoeCWJCE/XqgWoz2JHceZwTlqR9kL66GT5C/mqluZ8fRGr4WxZCo/wDQ90HGEZRzLZitD/8A0k+KNoy/1vPshZ7cycMgAiTkgm32wEpuqHEM/BFp7uQKEpdqntDqeqlxHU718UDl3glhHiS8SBp8jF1DscEDlA1jEn0xSuaMVo+I7ogX8ZywKmPGm/dyYO00vWiB3T9oEjU+KAM1yuTOGRTlArzt1lZnTVZ2t+fugG7aIDTPvkixmQv0jnml8d4Fc/hP+TvVBmj9e63Amsgj+bRAGNGmwISurh1WjplGO6cHeTSSaAaBAr7NZompN2AWD6ChqEv5YBJml+KBy3QpGrcWGp8cEwF/hqEA4fnD9ohmZE6Im2wjRH8WPogUi7xTtbvfp7LEH9lY2veXggo1yw7zQLwmFptzQOx84iMseqLnJbN+y1psR3ugZr/Gm2oQcb96bJAO8OueiIQYHxWhK9vgb8UzBqgMJAUXyFmifWQUG4UxEjekpXNm+dgYR5UQYtjEUAEmswE4750pska1VYNDpGKBGWUdAnjGUHjvHmlJrG/hggzzz0TMs4uqktTodTHglsrKJwjC+9BcEZbz6IgQhZtm7lK0dzPkgQ2lE4Kd304zOsUhK9tUFIimimW53ZVRL0I/fZQUNbv1GiVndIUyKXxB5HPwTtfhCDPdXmgGxzvylObP1TNaRcfDqFKlTNiqOMV7KYOCUa4JLqaUVOVK6rNdpf4Jja5446rNZAVVMmL/AITxPvoixvfcpCYxRlZtmBig6t0TnouPYWEmSRpxYRlGa5PFpigIurf3ei7S6TffogVmt1vuJ8ROmSK3CiHrB1JWLbrqibrkNK/wFJR4VnMKq4QFLNWJiz8KpgPW5Cz2A2F6zwp1MJXPAXCvVYmmIrzITj9aJwzx8E6olZWHhcE3ef6Ka2bAp0XHtBdrcs/qI/U1I0dK5nDHNK1n7u9EeLDWZC6BeAYgJxZrBbkgzWDXHz9UbVwWnUpHM7EkougD3+yi9mR+D5ItCEbYGqNE+oVLN1BqOe6zLDNxnCmPsntBsTmcv3KCfANJ5ya5iiDrIyKwIiD/AKpOMi9Hh79k5CAAxSOeCZoRFkn7ulS1HHda6GlNChdfTXdAWl9IyUw0m8k7pLpFnWsSCBofQm9QsneGGCpaNuWuVUHnLqiT1xyRB076o2hET0GCJSOb51jK9I1vd3VV5JBy53ImsGRXyuSWbZ6mO8lX8+AjkkYzr3giw35duinbW0AursMFR57iVF7ZvCKNi+QJmlRN+as8eNeuCmDpHfojheEG4cJiuA9bkDfXKc4rQCLjCYARfAy867rTdF2YI8QgVr4Qe7GsRhmiGipTWYHLpGyCVjOPKYRLlYWOdQTSaxzU3D94TkgzBsdkr3HEQmAGPn7LOb7jGUGaNT0IEb4lUa0aSVJg5ZZBPZj4GeqAWjY8tEhuE8ljZmu6Fq6MzTIUQZwRHkk4pjUSNkYPZCCrm/EE+KEUSuJy6p7I36eiCdrmkZ9Pj4ZrkF1NAYGq47jONNEBKWDryAKoTS66EHHITmBggQhZh0iQBtqjHfeCJQY2HFfFNSI6XoNtdDTASDpes5+VbpjXPJF7uyZ9EEy2s+VI3lAOHjNL+yrBvz67hZrgBNOlyCL3aZ41gmiJ0PuEDmcbloQIQnDhd4yktWzSvKiNkyNkBa6SIMgYYbrPKxtDUTIOw+Vi27I9ZHogRtlNQkDBQ9FVz9Rynpgg2029kCETSvp7SqndI2LpMXwETBwApscs0BoL40lTA9fNWayaaZSPFIBE8/BBM7A4fKzjcph86VrPJOKa5fCBQtJTfkW4tBzF6BHWlIrJ7vTBh65Jm/UG6g5RyxQtD2EakGzZ4dyncxT49QKAVQ4ouBnGlIRqTDgo2ZiqnjvTbVEu1M45ShYo2ZoYoMfVTaAOsndbhi6m5SxrzBEfKM2Hs3dEXxBAN8dOx4pGtnGiwbQ4RnHgjKZtMpGsweoqjx6eJStdQeSqwo6s1/6QD7+iLXBL+IkTp1PzRAsTd4+iVjImSgLSlxmY575ao8R1G5Bn9eqMWkOMJnPw08MErzvrFJTFvkL0XiAstVuBKD1Nw0Rc7LqjQ8HfhCn3j7p2ic53gIWr+7rt0ZtxuDfwTubScUGP7y3SC1jqeqEprYCJ19PdTePBO8Z1N8d08UpbeSjQNaj+UgYxzHkmtR3pmUo3PUoEsndgEdU4ecz0gfpM079UQxAjm9c8EXYV6Zpga5ovb+kCjuZI8FrOM9hCIKW1agznC6uyIsxn7ofj2vw9U77Ovft6omFLozp/uF6m4V96lVIHuhwoowsWBEDuqD7xfTCDUIE5LTt1VmtrfGeUbpSYuiKiokH1QS4qUHRNyjdHjnCud3kiW93oEaRqiXGMFZzNCkFkL5qNEEWTpdVPxftCZRQYsm/C7PfYoOZCJd7zjtssGzgbkEn+BHRKxULOWSWzfRAj006Ui/VBwV7Fsi8Rjmgi5h1R/H+kSMR/pzxnbdKRqgElVHfeKQbzPfJO0oJt+nk3Cb4NJ53LKj2TSv8AkADWtJuOF6VBwm2ON0XiZ8hCpxd/tK2zIJmCZ/2H/wCOIwxqm4kaoPdp4z4ItagTfqtCMimDvJI1+h5eywKBmu6is6ZbrPPcwmBTHz7qgBcg0pvaUCEAYy+d41WNmdTAjksQqWW/seaCtj9PMBdn+xWNbydgB+4XXbBtV2r7SyG0pjMSQrHOudbmP1PiFNis7s3T6KbbNaQj3jVQlcgi/VQf6nxQI5S4TqrFAuUo4j59li5Uey/wzClO/MQFluUrkrwmc5Z/Y95RrSmzxzJhJHzJ8kxcdNiKpXD9XICBj7+izUpQJGYm+MfK9DSW5M49APJKEC7u/wDSi6RdTO4zTdE2LQg1PZGiBOIiNSAiiGrFyEfKYsnEDT1QIUCe6+tE4aTp3rKDzNCTAxlAhHdPRAsT8KXv5QBrzSIhM1xHxHqpWjiIiYxGBlVg6ayY/aAcOOZuWnzKMboEINOnnM+yD2xhPM+mSZrkRz6eqJsI2e/lOLTunkFjZjs03SvbdVDYp3RZrx+zCWzYme7XoEcwtbSSKRos9D8WnQT6pj6IuFBQ4a+WNUT3NE86AI1vzCuJ38E9nPdPNZzJv6ihvTEdn4RgOHGAcKkCpw5JDkjwRgCL7sc64rcKBWki/b9J22e0JR+9s1m2gGHTzQC0b49ypsZNaeMlG3tbrxrFEAUAd3d6pWjvGfZEhZpQZ3dJSNPhhF6o2cPFZo646IEZjOBohacjsmekjuAPIIMHdhEjdZrumXynY740QTDVJ1oRdEm6U7mIxJ2QE+BwRbF0c5iAtw7dUPxTfERPZQU/HkD1BSAx2PRZ48o/dydjAMKaZoFaUXm5a0bh4nxWwzyPwgkGd5QqsdSuPkmDKJR4FBOysDJPFSZiLiPQpzZ5k07xTNZ2UxfcN9ggW68k8684TPtOmckkcjegwb15/pHh36IDw89SsexroUHNnYGYEVOpQbaXjJAH2E1nSt26o0RhN1N1hrQUqiUCkRG5msq7RlHwp2VnWt3lui2yOcakEA7fMIKNffAgT1IuKix1a88xzxTuYP1+kG2c8ucjNABll5JnGiB58xHRK7fwQO5usyEG3Vv8UQ5AvQH8Zv8AA480zBiad3KZbTdK5sm6mt+4QWdhERtPRM5wyM+qh+MgXzW6IvVbM5gnDEAaoKCvS6YhI0ItKZgv8DhzQICYzm/3KLGxroL+ZSuGu8e6u8AXE3TA7zQThOyzzMKbCjNCdcSMdEDNtfHBBs6JOGqcoM0U6Yk4ZYIg+tUOFMCgMY6QDE1F6Q2cY36Qi9xIiCeG4AwK0N2hU3tqK1EUvuQVafW/vNN+SuUi43TpmmY2/wD7VO+iDOzmiUpwp09U4GOJzTNHxfT3W4kInTKcamI1Wv5aynLDfTLuFmi+hzuRCg4JHN0VmjSekHxQewATI0AnnsiBYtjHwzVG+t/x6qTz3h1TWIi/dGlBePFObTbkCk7gxHPNFh8KHQoyYuGQFKX+iLBznG5AN7xhM0THnj6IJl8U79kobinAnvHvBUE1uqZyTVTDkHN08VMv84yj4VpxpfAvr7VSroBhRO8espvyZU9dB7rNs/OixKUnF38pA2/9GfUK9vhz5qRMwAMKrWxlx3PpdKtw3DaUeAZIFiujF+8+EIt2EDMwTt5LBuPgmaR/xE549dLqIAHDIjxTM7wUzaQRjimacc7gpQ4jRLwmEhxnEzlVO91BGMi8+KRoHGTlqgwKbrUxvdr4Jw3ORiARBnI1VUzD5pnie/dK1mZ54HZN+O44GlCgAFOxzSvbmBpUnyRdbDDkEhG4lTYFdZYzy9US6FR9nrekeyVm3+Cbj3dHjXogD+vZPxpWjfktbE0rn/pZ9nUdwnc4DfGfSqzSrqUhtPnPSEC03GKawqF5zS2myIwbOHilB3OpVGiim9xOAPLxRqCGapO+5TvwjCsj1yQ4N94p1RUiCSL7j3RWAog8wJiSI6HEoces6SgoGeWvpck4b5Mnu8Jvz8uceim5sna71QMxu/eqRw6eXNJauyCP04N+GBz5ftByOKm1ww3UdJxjKvqnbSuJU2Gpp1rXFA/5NOfd6HFPLks8+v6TcPlKABvdPVYsQ49wiLPXcmI8kAbRFzLqai/rVA79EXNmJggaVnfLRAHE03RdaR3PgsG/OqX8mGGAgUG6AgXUu1/1eyIJMmgvpOBp6Id7fKD3jeM7wUCutYAGRNeWqDOfRoCzmTAnoJ+FrBp0jCuPeCDAHeOQ6Ko5DbFIX81rQ0pf5IBCxI1539UY565pXBA9nZyJyv8A2g45DWZy90JviIAE8jMoA97IFtLU+03bHRa1bhQ4nJY9MiRITuzOWUTqgS0GV5z8PBTLIz0+ZTOcqMOY2rigRoN8A8wk4O7/ABVPyT5SM1nWUd1QI7TEdDzos5p7+UAz5VS7vvVBKJx6xCJaBh0KayOI8gfNS4pN4QEuOnvodFM2k3irRERgcdlRzRnGkE80XPurMC6b0BayBffca16JBuO/hNwSJum4XpWDCY04QZ54IBanK485Oyi1tDuKTXaVR146xd5IMdqdO4lAAzKR3mmsEl+WcGa73eaZp0joIpuintLVILXHC6MKofhnu9P+KcbsDcgWxcm44Wc40qBgALt7lNombvdHQzq4o0Bm9BjogxtvE+izyTfFckCb4J7Ns6ckxFw1A693oWhgxdFBcaboEhLb2cxOBkH0zhWFljcpOf1v6oMXHCqRrTifhB9vki20HvkiU7BUjzuOiZ9vSIbTz5qDnd6IF2vkRsKIQDj3Ee6rZWoFSOKMAVIpo6ozJ9IGE1oBeQcsgnefIwsXd9ygxqLZ/GBQATBq1mdq1FTHiEaBxwhJ+HHwmVyLNmo6pLU/vBEtIZ0RGdyzrLY9fNTtn1x3hFV/KYvuqo/j2jGc8ITuZdqaex3SuaSa/A2CBtccCYjoKpgMb6eM61SizrI6rcOoO5qgP4Ma8ruSLhhlW7PVb8pg307xKzRrOVTI3GSAtI0nWfRLPY9JTOGF/gOqTh7w2BxQO09x63LPM6AGEA/5yxvGKIfTS84IJlmWN6oa6oHwTNJQDgyQI0rdfdrHhCDn0IunzRcK3ciAcOygbg1QDjmfDp8pASsg5DXKJ2TCz1SPogItfHwS2hWYUGhA7H8khbrvf64oFEIFaPjPmjHeKVztz0haOW6Ak+w9ymsnXzHj6JA2MeaJOpnlKDOd33VTnl1PmqWja3g0zmVJtmgcvjX0RM4c9kAFsNT3QIAxm40iT1ST3iqcQuNNIWhAgcnDkpKdg26RXOiDRpddWEE1j9QQ7/S8giP9E9DJJ8EUHBZcBgKNzjVYlLaG8jWQTw82lHiznmi6Zo/d3glNn4cvG5Bjq1vwhOUQBaJmBI1iYIHCLj3RDiQQMRTx5pnDrvKVpR7jBAMsZyw3lPwoFqViD9D6ZxXbPtFl/jPhkun/AE9rdGY6Luv299O7lrHOrcKTi/aqXKQVQtoVK1VLR0X3b+YUbVveSBOxISEd1VmO64KLn15QpQhd3ikc7DLDLmaIhpypmp2nPO7zWRnHuEpiNZvvKYs7+Ups+70dJMTO49eaBcsQlLZRSOMI0RL9As584IlmlczWMTropO06QD4yqlq1mBiidQsqIOaJmBzEzyTh+PIbIOKNM1k0uw31S8Xq35RtgDka3XpfAaCiAubz28o9UrIyEGqJs8c74AAlFyBSc79Lkjh77qgHygSgzbSnol6bFMUCECh1ZwIgVJA9EbRBh7wTA3RijNuA5uXNENOg1M+Gazdf3klIumIyj2Rg4CwCN1MxPJMHUOxjfBAcO5lALWT6XLEIBHYK3H+qiVglIRZcFtK+EynD+4lRNoRkjZnelURVzvG4QZPstzPJYuiYxMycNkfyaFBi2ZNaDHHrlegHeV6xGcEZGabQlHJBmhB/cFF78uaUIFD+U54dVuGJu9unqgSjaC6OeaBHAjNFww8Z8VPjzNEhFUFOJN63lIP1yzOaAQHi0iNZDtaLSNT3KIakPe6BnHRNYm/wRa9I4oA9xyMbJRWIwvCJ7rRBhoRmgY1TNs/C/UaapAP3CzXIKtPeKzidFJjVVrJoTGRxnJAWN1uvrQDfNHipTM4ztRACKeCzndjIIM20TPOcAoFusSJCH4tToTegzjoc779EtmdRoMQqtZma4e61pFM95QTth2EGuxzwyVQzw8ds0xsQOYmdUClGzs4/aBasCgLu8c0WOiuc8tEGCUsRiI2xQO606ZJg+6OZSEaQYmdFV1pigxs9ZxGFNkpGA2SWhy6osHfKUDHUjkaJXOp1RdaQklAHWt2Ii+niL1TW+dLtYWNmEJPK8Zygowag+ibiw9DEZTmpxIkVzmJT4x3dKA98tdSsx+CLKhCl3pjlOSBj33glc+cRSkR3KZp0pilYRn4U7iiDNbQVGtFm2c4+Y9EWu0RJ5bIEYNVSKYdOylY01rqsW+CAsJxWc5L+MTtg40HNUYMj0QIQdK3lZm6pxbbwKIONJ2QNG+4Ws2DXyRYNPfsI8HcSiaV1pXFM1992iDmbUyEJg1GRJ19UZ7ASADba+U4d+vZApZ73oF843api7TeaIts0oD7MSLq46ofUvkkb4Xqg5c0rqx19FJdGDBA8iSVQXeO+mqDbL4Rc7v0VAa7Q+UcryqR0OJogCEJogHFl8Hmgy1yFMyULF+4r0Cq9kXR580GEZhC0fSleRlKDN6qxtLx1UkwTIuPZQmbztlse71nDHwHosO5r4qhg8YTz9EbV3TSUrk3HS8+CxZgTgzMHw6lV4IORuN/tCU18N0xcsiBBx180wZ3cgHQaosE/tdJMAJ7x5JWnPW6/vNNxbI2dtuNoVGbtoiXd/Cm6zxzM5kjNMEA44vRLNbq7pOKa4JyUGaRrzmPGic8uZSzQGb7wcOaACNao93YuSWaUFNHshpw8V8Cpl08lK3Meou8MVVgpjzXI0PyX4euyHGQqk/tTnZak00jG30v76pXlG0Oo61QaTpW6bicNllDMszf/AI6yKqZd37KoECsVkGDI1qpz44eCsuIfh7xUmGe6qrTy0y7vSxOU3gmi6KLAs4Jmqbj3KNNwad65oOPcqlmRqg92AuymUCCt5jUX+NCg5uo6QfCiI5+KACluATolJF3n4RmUZr64J3EECkkG8XZVVg47XEiDOV8QrNMx5YR7o2T8rhfuhaWmpqgPD3zRabzEyOhzS8PVEuujGfD3QCUpd5X+iIMZDW8/CzXzp4oC4jCOuKzXYU3PiN9kpGNOV/RZpQOBgjB10y5oF6S0dqUBc79fOUICzi+vXiPQUUy4zjvFOqu0TCBX+Gt87i/mkPt83LWhm6ozRb3mgFrkL8gT4BYg0EXCtLyUtKkVnNI4ctEDseNfROQgyzWLkCMcmP7RHLqigxjoptGIrvcmLsJN1aUQI1I2MIMfqKUgZgVjPNT+mtpFRpWZm6dlnkHCZz+E7GYCabdwgRv6M03TE4X9FnlAbIM0xciGc/FKHDBsDwKLzp6DogMoOZ3KBemDoy6IBZsEYd56J3ugC7eAUtbxfOB9EHil96CLH/8AlIuxBGVLiiHVy8T8GfBFo57pg+MeWAQLa2hoMMNFtZPsi1u0mkLFsADKpJu2pigk/n+vZTgzhA1hwKq/OBuMd9k5cNOiBSeuXnJQazkcLj+0eFB70a4miMa7e/opl51xwvpfyWgoB1Zi7zRrBDiYk7Ug+FFVpStcD5ycFnmO4lFMb/YnyuQ/LgPCCpk1GQJMboBmQBPmEDuynxgwuOwVi/vHVEjLExdWMK6J7GyvEXE10CCn0zBU/wCQGAJmFC0Ybq0orvGtMUHvEUmcygg/sKDWaRN2XVNa2iIcYMxsPREtUn5zByHNKBXGNQs0T81VA4YieeOiEukdZ6rWjYpMzEH5TuedBoMd1mt7lFJZujCueB55py+nnkhbEDTIG8nPZL+OhOF2hMimm6DNNUxtI8cJlMW4AuAyABGsFSNmAKTTxQp3G8iYByGPjRSazOdKC9Usm7z5Kr3DJs0OM08Ec7dSOVfRKxm52qmNvO+By2QajUpWxgCazFwkanFUNNaeOW6zhHsptnp56o0UnTZOG6eCLRf/AOPqaoMto1pNUGYEXv0G8iUGumqHF2K9UAdaQL0GFNOXMxXYTgkrn1jzQMR33is41AywulDig586Il2+3zeg2N9conxStMnb0TMP6TCMJnFAC/XlSR3ogw+KDhVNZmmPQed6By7adSkA3QNnVYcr9UBqkjfmCFWydHmk/Lj4oC5iQuqndbGg9iFKduVEDIEYR6lFEui6uMAxogQNFaXDL2Rsx55QE0nPOZ8vBK1yBgynTzRB2xyWa5KAgc7XXUUi9VfabqQCAN8PHlonBU05KDEftTtBh44JydEjzmg1mFntlIDki3uiUMHkzBIP+0g8MUxJpzWUnODbyBIqYFL70FjsItZnxXXOvj0WfaQkbb4xBMSDhE4c0xdzzAyK21TWVahZxSGy5aBU0ojJQSqboIhqAopUQUBbH/bw76pnLcK3GgPElc5B4nlMLceCDm/TNrSMscfBdz+1f6Yyjuq6Z9EP8hliu6/Rf6VtyVJSuaqFLCCIZj4KRCq5ym/v9IF4vHwUZz8oVw1QfVBNz6JXHyWdC3Eo3MIw37TpO1yD0R5pFlppSzhFc6EbEZoOWc27W9ApCVwTFyIKBQUHM+EzmpJQYhLZlNxe4hKQgJHf6Q276oSUGuhA5PolJS2Qiniri036oJSgeXimc1K4/G6Gs/s4eKwKwWlGbSNCMQnctvejDNfkDN5NK96JJOW+iYnFMLXCMBXNBm2me6O1Fil4UamCQsXIFt6H4/FGR40MFnCN0Q/DmgBcM+UH0TMoUWnIVTWbou6oMHHKeiR7zkTpnoi9/gnP/wDl5Y80A45zGmSXi18UXFE7BACpudgN+V0Jy7fvJSe6MPJAChag4Y3hK1C0y8Regz2VN2nQJHj4SRCW2rHPxQa0+sAq50cslb6f6gOEgzMryn+0P5baWEBsS4Ov0MU2leOfR/zW2baC1BPEDLorTKNtFR9dCDj6pCMl1b+BfzT/ANxYtd/uigiCfldqsnd+aB3btwOMAeqVz415Jmv005JSP0oFLU3EmaPZLwIF/LGxwyRsBfyr8Iixi67W9FlphjXxQEOVQoubhmFXvvVAbVwFZQLZW4eyhYsia3meRwQY+VyR5+P0rWja8kvBjlVAzWoFmMIm0m7kU7XIE4zTSoQbaJg2s5IOZlmT1QYOqj+P3wgdESFmlALR5FUbK6ce6JX6+GSXiOfggqG/PNMAFFhPjP7TvtLtb4uQMD3ghxos7KXhQEsTt2WtHIOKDFqLws5uyFnRAhZ/luKp2GI0/SdtmL8/BEIM0LOtLuZOsIswGkdUjbNAP/cTQXqhnbURXMbJRZjwTgoA1iYmcOwp2lvGpMEne4BEszg6AkQguHQMPBRc+aZ+KNm1FrO8tkCG4YiJJxT2DpAOaz9AYNLyfCFSysou75IM2LovSkX6x4Kli3rmhfkjJm6d/tMT3idkBnlgNEW2mt1KIhQ2nmMepp0SAeQPNNJk9VhaawszdD8SErAzrkbo5I81obgCZreenylc4JeNAWiqYtSWZmnVO5iAWZKJ1prHoiPWNViJm65AXM7u5oMZKDe9sUzucbRVBnOGB0KVwjyCVtlGMp5mNFKCBnfhtyyQeJWbfKJCnEAN1HNYIOCK0GaAaC+b0XNJugDImsd5osbG2WKVrOXos8gfyRTvmmCQEbzfn4wmtWYeaTAHWIN/msbttPWUv49lRjVoL+Ola4pYCbhkrNs0CgZZVS2kmBgVQMjmb8UWWfeqBLOzhb6qpOpAbtp7lUN+il9SZiMJ8UE2vwxv5ZKpcpOsitxYRVBQvWNpdAMulsiKamaQlc3rdy9OSwdniYCAGyHW+ZP65Jrro5IhqDgua4WTks1qZ5SjvRbis9YDxKJb+0jra6hvhYwFo9SPZCnqjw+vsl/GmJTuOKWdOsFMW08elErh4ey6RS8SPDVFjwUxKKRsZFFrEXFI9pjdBrayzCAIxGka5oWtjNToL/ZZwQbggb3gpfxTUGgzpEeKe0E+Hmm+ocLgNs5xnRAnGMASdLjutxXTTT3QsxEpnGu5QYDzOMrOZ3rks7RIbSKThogq1oU7V2niEAtw6+CAWTKousuzdyTSsXctb5QABBw7uTWSDzjpCDNKnOSZEam/GIEg6IFRATucOeKFm/FAvCakRQ4H0hZrL5wCzG81g2MpN8IACiG/tMAlDhlHOZQIbLEUjlKPAmlBpQTxx3wha0VHJBZ+SBI7EyOqM0TB2GiUMlBuJHihAMWtB6IMR0vSDK7JH8W3TBEiDndGUIDxeF8Xn0StnLxBPgmc7RKxACehwWFmehojaZftNFECNOoWezXkFN9lWgjxVOGK91ogZzqY1BrtqptFab51/axtaRgg22OF2UVQORQzjX35KLTVODKLj0HeCA8CmHDLmnLJwGl6Nk2t/OI8LkAL/VS/HJuuVbV+3RK0ZGDNct0XR4dkbRmamxm2M75hOSLzNJjWc+aN7E+Dvy6pHOwINUxtBlynNAesDY3oreRuMCTGPNGMjdnNZwy6pbRsRpShu1VnGECEHJTe1a0cclNxOIKGs4ClaxdWvO7VFh8EtlYqos4RNhS3/wDqu0i9ZllnWuGSAI80XDyvuRm/4IHktxYhBtn53YLSNbu4RZpmu63LWwMamhGiDTilNrOCNHcxKXCUrunjKaEGecUXVxJPSNEnEjwoYLG+SBagD37IubCGGZPTxQNnlSkoi1CUvv18kFHGl9covC406XXKrToToPdI44frqgAMkaTPojw9RihZuRefBAPyaGl8/CICzSsSgzQgDgs0qjt/BApby09UpZdnlNIzVXvjvDFKTPeCBSzPNAtTvf4JbRupmkZIGDookfb4a5V6lFoQcMgZ8EGBTAYY4apQFo7x5HBAgZFPBPwpLGMPfxTce+/wgzm9/pYjD9dVgm4MkCuHyg1uGpSvamGaAOw7uTSkamlAwbhljnNym9qrKmKoMGrJlkA4VuDu9MRPopteR1QT70QsxjgqWr/HzUXHzrspfEp7G3IcNJApc2JrfOiCnaPpW5Fc2NcH6owRrEk1wzV2tjEHUeSRpjE+Hsn+nuXV11RoxQtX/pEOOnSfFBw7KIUuTNWz05dEsgX+Z9kFBS9AifRAV/acUQLwKlm29Gzci5Ags9q9VnOxyHO/BUDck34u9P2g/Q+gIoa0oRiu3/SXTjFNtdV037bZGQSJn9LuH0rIA75LbnVZRe9ZEBEcd0YqTlyHtgrj2hQI4KBVXuU3jb4wUCWrPGg3UHeScjDolcUxY1mfJI56ZzaFKSsuhHXkdPdayBxTmzQcLufigS0ahZlMhwIkujCm5wVC5CKIlpAYFAjPosAUCEWXWtR5wllNKVzZxoii7mltGZLOHYTEIFRNpC0fCANdK0xRLNYFKWItCBajmIGHz+lMWkCuYrzVGjULIDPS9AEDdNCAfH6lAWk4x6ou72Qc5LKLJpXPTcaDu6IjHUoggrNoUwCXh16oKErH4KDAcr8sN1mOid0GI0RDkC9Zh1Nb8hsgdru8tVmNCUuv1Apjfkt+SKc0C2pm6/DTPwUH8vVHhvOXqg5tUEWt8dwiWwfJUbadlTfac0ErW035JXDlvgrCzULeykEZgoPHP7cqW0BAa5s33uknwC8isLLhMxFcMa+q9W/tK1c0gEXB1BS+BMYleZl0jURPlK1Ex2/+vP5K6xtG4AuuM0pQZCV9E/b/AKlr2gtuMmhnEyvl76GwioImf8Zwih3Xrn9W/wAjkfi4zxAHhBvgVMXGsFKr05wCVlDJuuEX9FnZHBYWPfrusjHksx3YRcs00lAtqTQRTNO1o16lazcJrMDS/ZKX0hBVrVuLSUgdRNZwKydUDONEpZrCU2okjM8oTB/fkgZpjncQPNbn0MIN7HrunDAdx0jZAA6vgpWrzhmMJVLNmUaTuDXoiWXxdN3sgAQ/InJ0G+KwKDJifJAIOBwQUm4IuYOyla0m672FTslez0N2dyBuIYIuHgB8pGM7zOibgIvpoUDFuvhO6BM81Nz6x6mPJPzQPNdEsT83pRab6an2QZPWseiCl3vknDRf3VTZZ9+qo53jcg3HvXFFlkTeNtIvWBWfcg04637JZ290PxzjGguWe0+x7wQO9t+Vwrmi5qT8WeN9FRruoiPI70QIfp8ThdyTlGEpHcFA3FvySh28C+UznfO6zH4XbolKHTlBulUs6ZckW2egCa5GSA7es4LBsUTutIxCUWk5FAZ36JnUwbX/AI3nfVEY4RX9JHOrOOCAWbq4oWVmK0TG1/Rww6G9A2s4dPbFA4b3h+1ig1yLm3bIJtXIURZVmly1pPd42QchnL1Uw+ZoaUM+icOos3x9EAOcx4rMcmdb78gB4SiDFSMIE3ASLwgmQkshXG84qv4saaRd5I8GH6QZ3olc3A+yLgpvss4oZE3R7rNv4H41njdOwaQgbTIyMTiFmXBrJuabgSsPtJw2CDQfQ6hb0Va3emSV9pkEhtMlSz3HWqxbo1k3G+MfMIB3MY6BK+dNQqingrIC1sYAzcIGPslLtkAO8U4OpWwgcmdaU5rG8LOZmgg55VS+N0Cz9lMLLqgjaalCzZfeYyTvaQUQ3UoJNPgK5cli8BPw9Tf6eCzR7XXahBN87zcEws+8jeqmvOff0QbaTcCgR7rt8MrqpINdCne/9Youd1Uka0oU22V/jnyVDam6kbZ3qZlVD91SilOazGdyi52WaVcAtpN+3qks36KsZKVo5SXUPaE50iCJU3WZPhO6oGoi6KKhLOyvwmYSfl3pfKsgLPAxVFK1s1yvR4fG8YApnHLIhaPlFK8xzOGG+iOG6zmpmdd0Efynog5mKYjsLNNe6IMTdt2eaVrc8bvbkqOd5Qp/S2mf/wBed6B3HL4Uy2tbr01oPWiRx90FQBgFEXpbZhMVvInZMWc65x+0BBTH40lArOtECuYs4puwt3zQKRTC7WeiJuCZ19IAxJJknKIoEqBnNjf0wUgb03EsHIFAVH2gpHNbkEloAgnagnSMM1RjM+90zYAQ8kGUyUbTKD6LcCDELWiLrQTfesCgTgoBWZPUXIgRhXE1KdoWd71xQTPmamNMkpKo58KVpGFdBfqgZ4nu5TJ/foma1Evqgx66INrTsFZMwx7YoE4E1mFrO0lYoJyQZwNAFvyIFtU4xm7x5oBHLz5IuvlA2lUHjU7IMSgwrcI/cpmi7v8ASDWdpRKAdhcNT8JzWdPHZZjxnXWUANjSukpWCgRfaJGticTjp2EFLe33vi8JHjfkKHqgH+WPpqg0GAPHHmgThx2RlFoCcgU38wjpPEbJFpRnSBkEpb3lsiiBum4sTVM67fE37KL3IxRCm4IzPceCUmfKqMqWQ2538lisUeAoA1wCmxkya8oVmO7v/SSO5R1JxRft2Al4e4ITt08RVa0RLcEBKHJ47nzCQZX+myM9jNCznoMMY9UIRezBqzRgUXFZoRon405s/NBzj6Db3CexBwje8IM2ypMi+64+CkLOP3KsSOgumApFBJoqnfpRbh9UONBmjNZyJKdjECtKMJnlKHoNCLbNNxBCNTGUoE4aoLNMfuaLfkOR5IKxj3cpcWio4qYd3lsgBOl92izrU0gbk3eCAedFi79BBjyg3QnZCH4Y23QAQZz8kzbkAOl5wqmc/JAnFqFg0YGc9EeHsURc1BOEzQs1FrkAhABMUXhAp7qFpQ4Mb6Rt4ogoGdUKcLPalD+uCBXlRe7v/dyVrUzsIpmVMtrJwu2vUviXwrrbQ8gCeYzRUbWs0qRMTjgBpzRXNzce3BkwCIuBiSDEGlAqMNE3DTIYgdwk/JGekjvxXV1UaCqKNmegoNtsOSs3OqAvFyAbncptM1yVLTPPWEBSl6zT3enlAWBM2z79UoCYv8wgLwMIjeq3Ep2Tc+SuxuaD9D7Vf6LuVlbUG3TmupfbGQQIpiZMzou3cVAtuTPKnxLEY4oEIJueovKd9ylaNQKapZTzOyT8fsgjw44JTZ075Jy2KKTys1YBKLlglIUdNCUeJZzEhagxKUsKPKIu3WjRAC3v0RcIQ4deX/JKGxKGD+VKSi3Tml/EhgwlLvflinJCU2U33IM1wndBiFrZIoGbmgWoOEhazbAhGLWgIJoSEIyIQA8TCZi3WNECtekeK+UZqjm+wnAfKIaiyf0s47DmESUHIwEW3+F4E3D41bsktLMGmd6DLKEZVBQJ+NkCErBHflpogsx8IT5yUm6pxbdEGPcVNdFnO6Y6IUwSutEDk0SH4Wa1E2fftkgXhwz9EtozHon7vlTtLOcbjRBoHucEpsxRAt08vRDgQNau1hcV4HLFO9nPVLHe96NXPx5//Zf8eFqyby2YIFbs14J9TYmzcWkOkQNIx5r6V/mEhstrrqMl4R/LvoeI8QJ4uIyDFxvEiq1GXCsfuwAOl11Zvvqv1/4H93i3FpURIFf+Q4SCfELov1bY4ZyNMoK5H2v6kggtNQ4EHYTXODKtg+xPtdrxNDjj84rk8a6j/BP5N+ayBIMgwTNOKBSPI7rtdja191zn+hh6JWuwpTVMsW9x7qgyTAk+aR9rXERi65UNqsQECcFPXP8ASeMZ0aZjdb8nTy3Sl04FAHWdR3Mi9MSFvzRQc1n8q4gR0QPZ+6Zimx0Xk51xTAygwYmtbTJH8eNKQLlN1tWnPBA9mEAUzT2EHHvFBQN3Sl3eI0j1Qdd7SOpRAp8z8oC2cLqg80XpWs7M+SbgipridNkDNbTGdwltTKV1+9QdMkQgzRS8i7D1QJTfjS+GiBPrWyBBivXRXac+hQIryWcIBOIqB3ogcQP/APWtdUzjngsHeIuyJQa3flRA3B44+iFrYxe2JuQLhqnNvAG6DFwwnms20z5IH0puiCEDRQX3YJIB5V1Rc6RVFoJbECJrT2QL+afA+aJN2qZoiKSL6+SDnV9ESjHX0Qm6gTOk8hJrFMUgIwGxvJ+ERcnspOJYtS8PRENwC6FrJmAjHHRZrRhjeg1usY94goAMqG+tZEZAVOSfiBFL8cLskwd3RTL8+99E0GxAmuhOactrzMbYJbWymJEi7n7Sk+lBxBNSgq4CeSL+6Sm4vOFpQRlEMVmj5R4MsbtUAhMw5eKmxmuNw2VHsiLq3IGcELN1c5rWtFuDbO+QqhBxy+ICdzo5Kdm2a9NsVf8AHPK725LNE3FBjZvwvVn/AEwj2x0lYCgiYF8lYCNKDmxhTEjvNMRpelc3wu9Vqf6G4ae6AchEKn4xziBQRGM4jkthC7pikZahUcLxpAi4wjwXRz51U+DWb6pj7oHvdEOml0LIRoPTv9BZpS2doLtbh5pi3MLWwA3pihaP6Im74CbAhdF95npgi1ZPZd5qiTTBivMI2jkn11sRURWQCaCRfchZWMiCTuRmgezaiylOqzbPOhyzRtLLuZ5IFc3FNwDv4QaxM2zrnddlVZuiUVnvkg92NYNyraWeQ5yfK7qpPVrQG6dViYnaVopv2LlnZHC4pL/QYxg74Slj9rHZK1t+yKX6h8CRfMIfTiead9nTOB0uuWw/8qjlSqoz35IMKe0Ejal1eqUBGWedao2nfwgxusYGMij+bwRYBEDvxTNCQlHiARTFqwCDiERaDnigRzPhE/uMRglLryBGQTWltiSKiD1ogk5gxnrTmqE8IwnDLkl4+6X51SXXSZvPugVzzW67dEzTdO53eSDn4YgzUCNYIrXJAvBW66oTPn9oADCDsIW4kBIKVoGs5gIz081oQYlBztuqPCcEptIp4ZzcgYNWAS4jQ+hRae+/VA7kB5VOyCMIFlI9u6qK+hFyzxG6CP1F0ZXE4Ih8DzWc+qYM96IMXeIUy5MSg1qAMs8+SdzEwSui/pz0QMyEkGqa/FveSBMbYIEsPVNbuzEYjUJvPGUheMidyYGwQSCLB3MIcPLVO0zkgUjO/Qyi7r5hB4QNmbyPJA9b4hIWx1iqdoXO+k+ka4QfxguLxacb3tLLD8f+FpYtYC20tfyXttC1vDxQbgg/Me6OZ8FUZIPZJvnUCAeXdM70lozDPJBnm7eIGSDmRfTLQItInUUuK1pXvP5QYOzjmJlZxEUk1g0gDZK0+Q8EeNBrEb9J6p7Z1Y0vS/k9zMhSDdvMckB4a+ua34pN12K1m3FGM70Bc1bjrJuWIQAQTjK7vwTBl5OnXBF7oFeq1paUxOg2lG5SETVGVnMWcUXYDn+cV7vS2jFgOwla3AzyoUYoMYiEPxDXmUyNXPxuE/tO9/yhZmTEofUYX59EYI0/r1WcUWOBOt6M1rSn6R1K1nYRCFmiD3REufpeK+OanxKpjHv4SfkA55I5iXFMGUujVH1SEo1M/WcaLMasLMmqLTCNjZWBPK85BLbGkCRjRLalO6z8p2QBtkehMxlgma0Qd4U3eafgi8AaoJu39KoBMbPxzQaNeVUGJ/aZrP2jGiBfgjP3ReAEoI29UQFj8I0xQIxrAvMY5JgPhKx5x6IFNapQ6PC+6uSavwsUCPZ8IOtNMPFUtopJreB8pRZxkRlHVA6IdWl+GSVjjEhLZ544oHfbkpGj9pXOwVOHNAofhijw/Oyws99yfRGyfMxGWN6DF+PkiBmhZHVYibrsUDudKVzUSAOXogbYG4cwYvQMVNyxcktH6j15ICw+KNmNr1No7xVAgJNCpMTLByBX980rfKqq5k33KdbhdhOSUStXQJqIuNI5nBBO36av+mc8T0QXPGfjiF/+kgkAiSAJhHhm+dQKUQ4dTOZIrsMOaZoXRo3DJJuGGadhjA3QaiEhZ5eqZrfM7dUFCc78PlIAsqNQazCS08vJUAWc3fkgUNuVAEAlhBdoQaa+RzOCDAdFVoKD9r7S+TEHMmkBdkY5da+xNrlrnmuzupstuRX/AKSOtcP30Tuek4UEXCMOqhJxvVrRhwU3OQJd3CmXJy6EmmZyQTc3x7vSOKq4VhKSgRJPS4QazmtfcVi1Ya4gGRvjilD8+SLn780so2xCBhM8TolA5xeUAceeoNRpCLXT3CUtWLUB4+6+q3KdqnogDhJI19kLMX05oEgX1GhVA9ZrZqTMmmgQJhAr7SuPSnVA6o8GVyDnR6INZN7+EXPCweg0oxRY9Ma4jbGEspmhGU7TY780SPBM5q3AgwCUhPxjDmlmUatLGaIEkX3jf9LAIE5k8sP/ACyRkAyTSaE+az/DBZzOxfzWczuIQFh+EePZR/EnsZz7CCrLU6brOKQFO1msUk+yCbnIhqf8mYnM5DBFx7N6AdhICjweiDuuiAAKbnV2TQb5rl6JRZygUnOm2aciI1vScKNq6Pn2QTefEoWJNcwndUTSTkIULR0C+t8RfpqqPwv5NZf4V+MfEryP739JMwBieYn9r2j73YF1nUXmvCvKPu30jmtdIIA/0k1nNaHSfuH2TiY4hv8Ap4Zdi2ctyumsYQRxTLLxnNxXsv8AGvpA+zfIJDmPoREFt3Karyv7p9OA++TcTkSZnlctW6Tjr1X+k/v8E2JM/kI4MvyVgHdoK92dbXAtpngdl8n/AMN+5llq2IDmOa8DFxaZkcpGxK+ofofrvyAO/wCgjmJpoudMxyQ3fvosX781mOoLsYgzREsJxUDTv0u3SMZHdDqiRciCgDLS+LymLcYHVYjKAcw29KX19e7kDl0VgIMbOOCIshilYyfCNkCCyEya+S5QAwUmHkqz83jyQasXUON3ig47U1lM0znS6L01bpFLsDzQTbOQTMRhZx0B3QL3GCDc4A0FyaNOWBVGx3X9BArHaeI8sVuNaUAz/tsMkDHPIRoN1uL5yO2m6DrHnp7p7NuIFMTegLTpzw2S/j84VnjlGWal+QdL6DFAXM1jYV/SwOYP/kcdDsljIFVLdB5IF88dluPvRBndZ80K4xsR5IHnT0CLR48xsgO8kA5AbQ96JTa9x6o8E4/PwmYyPT5QBz57wRYPJKGX5npyT/Ts3qJwRKo4UlJZsTX1xxoPRIwHTmjJrStIn9FFulTohwAeWQTv+nzBAiaEIEJ/WKLXhKzX38b1MU7ogvGQikrg/cPvtjZyHWwaRET4k9hb7z90FlZueYoDQx/+6uC+a/5n/J3Wls48Z4TB4eE1kaG4VIVH1B9u+52Vozjs3hw4i0XVcL7indfyhfPn9Ifc3t+qZYB5NmbK1tnSf9zGuMX/AO6Gr6EZbSBtM5/KzYNZ2d5kf4xAOMp7KiQMrOhvzw6XJmCTcLrhnj0VFeLDBJAzhM5sYzN4geaDrWaAbjNS3ARp4YoR1x7wWY2M/REKjN7gz4p7N3DdA5T1n4SQRzw9VRmMmTF8AclLcE2m+PKL63bqhYf92Hh8IPkXR/8Aa5ZtnNKC6640V0MSRdyNKIMtMMdiBvfKnZW2lQbrxAzCq9wJG1Vzt0MX994IB1ex4IOdSpupW45aoh3YuGoF6gR8STr4oudsnNn8nNHhQKNdksZxpNKjPomKayfGunJa0RNjWa1EGbqjBUYfIFUsdq4hIdOWCkuANGSIsDtN0V8U4Gk3Y75pCchyy/aUSP0wJkCt3uqcaFhnQXyTcN07WY849fVQKieXig7vXotZ9PHotSBJxzRcegv7xW4U7Wfq7xWwjjO2ERzMHFM91PXHoFF1rJuitNgi8IGcND/5UTBpSlvkm4f0EtChB7c5yEGK9VSzbmJwyvok+pZWBgMfNZ7BJ1NL/wBpQE0JS+E7DEhTY2E5CDG3zpkU9Aci6l/oP2mfz8B0QHfyUkbOz1mDefhRY++aVugzvSkJ3CD57Ily0lSdPxgcpCZzLtvHFFjqdL7krzScM0ZKWa36Jm2dIg0zhKDVYnDzqfBBi3ULGznlXQpTOQjKCqNs6DSnX5RrWeyfgoFyzyg5vhcitzG3rKIujxgGeeWSmIrnRUG3NZ0I4bnaErLPlKJPfqrPtaDM6YZp2EXNhI6oyjEX+qpaE+s74IOdhABjI3ZrUTSlmGRzPijEftUsx8k3pHQSZJjIAIoH9eiX8Wd/TwQc7fmqXc0BIoosNa9wmecvjoksrMxWCTfF2ngguWEXgRh+kCUtoTnPoEQEGPdQs6zOICLW0SygIscYHj7pPxwnDskDZ5xq2cUExfGS5Fp9PIkxTMwpFwwEch5rE94IED/FBhWtRT39E1m0wgYs29emaUuyv/23XagIvBwjmUhbWnKb5x5IKTpd481N7orXb/icjqnaPVC1F26AzjhjoUHnK7ZMbP31rdGmapbmPXdBx/xqbychuASUzbRAWfZvQZhlM5kDyQhEkm7xQK1/7w2WJkcyY8N/FKOXJOHxEY063oAy6P2FnWsUxiAjwX454JQ2dIz1v9kCuOhGESYTts5oL/RK1w+D6eaW1ttvhA77Ppipu0uOfdFh4DDPVKTXSEBtDoNpnwx3Ww9FO0s4IzgAEap2GOaDAz6DDvmj+bD1ElBjaVpkUovqEFGMM+mfonLY8PFZg6eHS9TJk94IC10+YjvVbxvv1QI+JodtUzrOnmgQDxiO8ws3OZJBkjSnVZxiuJuOEYpWOB0wgYA3oA5ZhjDbdUIUHWmCBi3vsoBneqzRt0jxQJzwrRFlVLoA6R3XxSAbcjP6U+OYm5VdOUDCsTujXprVtI6R4yoxy2r7rBpxjx80f1jcb79UOzADOTfGQ1TtaM/Xc8ksdYosXaYX5oei94oBXPbAqXBGZ3jwTSle1DqwOB8K+KW7dUshUIWhJKHUbO0v1QA7+EvBAk5wtHfeCNGNN1p3oDOxu8VicoS2dnlcaVvQGztLtMcNFYWkf6vColSBwy8kXNCJoOOOddBspcWp8EeBAtxRT2bu4lZx3OkpQ3f05pjY+KM2g4ctJlMwm+KDA5+6dg0G4xQt+xqbih6U2f8A2qcAlNuJFD/25LOZEHM+SQI1BdaEHDOchkm4ZwSkLc7xSsY5IKEHMHkFNrk7xSRNL6iqnxaBAr7PE/Hgmby5JbVypZtmmd6BbR9OeiJdKwAxRtHfvTIa6oNaNVLB5m8709lIjfcX8zcsHdI8UFra08oUCfDvBH0598lm1QJxfv03W5974bpg3wSRKA2jwNfT3WNqY6ZeyNoMjOkCnNCxspogxasHdEnCqcKBHORa1Z1rNYja+lMadErR3igZ7UrZHvgnDhiputs5vNRroiXwX2HHh/iAZcXQJwBAgkcwimtBgAKNk0iSMIH+orI5vyQMBwXg/wCRh0f9c07Gyb6XVJB9lR2MgiP9QIEzoRTolsCYmOeHRHVRgvIOkYQEW2mvLBY7ADzOaFm4YoHc2mm48U1neRA0oi2x0v8AZKDTVAWOH6CazfrIN1CD4koMEc0T2M+aBAriEtm26nJOO9stYQZydrJ+UnfxC1naT5bFB2D7LZ1A3qN12V+WS6/9obdB5RfStd1+6TRbcgc1Te5FztdxnzSHyu1QI61U/wAg35KjhlH/AO0mqXD1QcS0NfVHiN80V+EKD8ppoCgm91PVTgqlo1LxQiwGCsgEyLhHVTjuk7LOftznwhaVh0wCN0pCZx1lLxIMBmEA3vyWDkrsfdGZpnsyS2bNRMXLd4IhyNNwdytwIEIClZQFjsrkgtc4imOuyZz8vZZ7t0Ctd3Mofjg1xW4xdisgZ0dhI5Ud5peDrmjFCzKa0clc3sXIhiMmchCX816o12QBi+ZoM0CRgs7w8f0maPT5QJ5xSc0WF4NegU7N8b1kYEZnIhUtNK6fr1Sss9q3gT+kWjJwMa/tLx4VOqctSNnADqUZUaz9fuiE9+ix18UrmoMwwb5TGI2qALpU2sTBukaoFYJna6DHVFzf0i7nrXEaaotd3f4oC4aoD6flr6LNYVRppXxQca2Mc6z57US2P1rTMOBjqMqYpfu7YabrjdsvN/tX3w2dtLyWs/x4TE4wbpwzQek1y3qFSzbGWxqp/TWgcOIEEOrnTOTCAI7CBnN8cEn1LrhflfROHxdU4eqR50hEQeyZnkvMP5L9O1jnEGCSQZ1Bm9enfU0H/kIrrjovCv7R+rtA7h4HFo/3EgyIMmhmBQLUR+5/EeEk8MzUOEyA1wyzyXmX81+i/Hb2jDBa0jhwDuNrXC7FoK7f/Un1pFo4wf8ANokYSy41rW5fnf3J9jDLVrh/ptWl5Jv/ACAAEaCC2ISukdQ+2P4Xhx0A0ddGy+m/67ti76eyJMkWYDtXXTsvl76V9QDMzlJ3+V9A/wBQ/wAgBsQ0kBzHBobm0mhO5KjXx6IThAE5jwS8ZGEaJi45DlXzQJmpUczkIrWj8qTeIkcpuSsroM+5QVISCzxN910hVCU2kczdmUBcKcktnZzAwFeyibPfakeCDXR8SgPfeqLUAKVumm/nzuVrMAXHXuUGa1B9qOaIGfW6Atw1uFM8UCsKswJHN5BO51NM0CusxN/LFM5KW6jp6otdrXNAWb3Its764SK/CWDOgvw8Ez7WRsOxVAWNpXMXaoOPjdss1hpS/wACs8nDCI2ivIdUDHzB8M0nDE+eHJEmN8swUvDhh5DJBRlrlelDZ9N8Vm3d9wsHIKNpfd4oOGXv5pR3+lpQO9sxfBukRcg+0qAIyJgT3qlNrkfYbJg1APLU1FcM06IffvA1WhBJzT7qtm0TebkHDMFZjBkeqlSmA6IgIcWkRT5OqxckozR4Gie3svDn5oNs6YeM+K1Tnpf45rMrJXNplikZY3Y8lR6hb24Y0uJgAXxTxWx5L/a/30yWMcAGuLHj/m0Am7AA0XiFvbf5GDQkgumrRpQrvn9hfcwXvcZglxBBaZ4nE4cl0H6Np4mkCQTEcrzhitNvWP6T/jn/AMn5eIUs3Nn/AHySLxgC0HqvfADSlwhed/1B/HXMsOIgB9oeIEmoYRwtFCRn1XoZG2FxUrNUbqi18Cb55Qks3ZEV1ryvhFra6QaGsKIYQMeRE+Iomaz991WZRMyk9+JWaDgok6+apHhfjHRMWz6eysom1pz6qh58qpQcO4uKLBWKRkfWKrNDTnTzWaPBNIQA8CCr+BeGvd/eapGnkkb3h4pnchG8+SwNa0B20xWCmK08yqMYdIQE95INdoFgBqVi1AUOM9x19U0d4oBAAzGhnqQbk1n2Mf0g1+PfgqEhBEmcKVuTRly031OCb8vTHQnRIO6mfJA7gJE/uM1nlIB2T6FZ8ICVoSNmaIj3V0N3S5Bzcx1SycTyC1s4Z3Z4qyhTHLO69VYdARnPop8M6Hu6FrS0kyBCWhnP7FyL2dRhoaTmtKm68EHMdVNBBrd5+6nbFUa3DK45rPYoFFpdqJRDMcMDEHoVmMOWE4XLF0jRFITGFe8EPzE3p/x5nnFdgUhtcIoMbyd1uK3qgDteBtqjaupP69/RTsXfHJT6p2PF1JE1IrO6U8kxPPn8KYM3+a1EpnX0F91evjgl4qRj3yTOaL8sRfXGuqQO6xznVXWQY3fqm4BET6QdcxsjfMYZX+KkSTWTMAG/hOwIoimn29+qhY/UybyIJBnzEYJzZeYXIDEVKzVkB3n7LcUIpWtCQlC0tP8AaKTccgNNUzWyMwIqIxU+AOMmc4QIRt3yaCIxz0Sg8u7kyJTXnuESO8USemWO6X8es6KkO5yjTyR6iOafiEbC/PdFKxiwMGTyQaUBaDKdsEGLkbN84EnID3Q5T588EXkSOsCpnKQgYOnSvNIzOb8MRuELQpHMjBBS0ta57GB4rUzjlM6I2VnFMNgSnb4ATNxPISEC8Slaupf3un4hgPFZrdeUTzQLZGgGXqj9SII7os92Q6BKABUm9AznBB5OkeKRgB1qn4UGFpcKZxHqs1iYMmJuyE9Vmvz7CDFyXyxTE6X3JLS/lcbvBAzXdc8co9UGtnE3A0Rp2CAg9o77uQTZbecSkL9Tsmc3nrCxilDdegACzSjPZ7lN+OMTzgIJly35YqK74dELVw0yKRjTMkRMU9eeSCoJuyJrNDKS0tSbjS6iZ9+iYv28kErNtamgHU6JYF/z5K3ENIGKWaTIAmuqBHk9KfK0dyhIN3MDwRZr1QCFgyvlpsg21wpjzTWX09aTkBKBrStMPVKBfFTI07op1mMk7kGeJxA5x7otNaLOaT/uimV+i3DF2J6dUGc2aQJmflUtNLu/AJS5MPjkUEmNxwOeemiR4x7Ko5hJphd8aqYLcTE51nlmgJfklbZZ54KoON0UjBQtbXlKAhlJ88Ugsk4RAR0yEtLTa/umSpPcyDyWNbuqdjQL67X97orNYKeiU1uqcrvNNbOGAI1PkIpzUOJHM4b0z1yi+ExdncpF+N3SAj+TT1lDQ4ELQfCIetIz80NLZ2eczlh1+ESEjh2KnmE5duT4eCG1nWaLuUZY/pRc44c6Xd6J2d7I6MHIl3YRDVnhAjdMMcTom4EGjDDPVb81dpjVDBcKwfBK1oWDs/GELUxGsd0QNxjXkpg363I8Fb7sMPBE2iGMHT8J7J8THjpkgAgUMa0tJSTki8oGzx5zhkRqgYWh25BKRN95xyWO/ii3xx/SA2hAFwoMr/layaTNDuYPzCFo5CMcUAs2U78kbNqDnd3rB3mPlACK0QjSOcqkIOF26DBh05Isyxyj1RLsOhxO6BJFcMc/dAhcsAs06XlF/efRAslZxTEpGvGnjPigbh771TMPwkef3H+XnCmXbevsgaK5LOB7x5Itcg5yBSgU/F3HygW9mEGazpnPcp+Hv21QcxI0+FyJfFGupTGs4g4LLEaxOOGxAr4rI5vy2sAAF8COIyDGZBqnYIihI2kFIGXTkALq+sKgxmb6QaTS9HUzLWckQ1MCsXIKFp0WlIxqJ7CBrMp7MwpstNPGs7ZJ+FA7nocW22PLVT9PX2VGlAWu88fVNZCFFzlybITSfFB2T+P4c/ZfuGzr5L8X7M2gwIAJjz9V+xJW3IhEJRufRM+20SA6KAPfhdoMVKFrVKR8fKok8qb2xcQdcQqOKmgk9u6WET3glCNSA3ptVYoFu/JaML8VhsHFKB3CLkHBBmGRclb+pFQtIWCJbhHu7gpmv6Z6rOQ4ffoidhrGguCmm40XP7F6LLpX1NRkRpomJQlAjwRQYP2tK0LAIEaExrn0S8O/VCydOGiMU7N1nfsIhYuCMg1idwpCSUzB08UCuf8A9ROc16I2bT3gfhEt8PFEIAWDL0SlGUbMhAn4zmNqz7LAJydRGCT8yDOf3KzWoNeFpQMSs96TivGfgfZITnPeSDFxOHwl732RnyNMsigThzlAzLas+PxcuQ21y6r8r7i4AX5eZXWh/JLRrw0QASTF8gECnmg/b/k38jYwf/I9oDZJc4xIwHVeXf8A80/p3ua0AO4nlstIwGuGK7d/OPtAtrI8YFZOZpXlRfN/3GwY20IZA4YF0RjIzm5B9b/Z7BoaC0UIEVz0FFz2nVeXf0//ACw2jRZkyRQVrkBVen2fxzQD823NB26NuaUUHTUzlSOtc1RL6+3gGTjSaUGA2Xkf3z+ZfTWhdZ2tmeJjnMmQIBNDrN67t/NvuXDZuANS13CbqxQTOa+dre2e98vGJkCpImAZ0Oa0j1P+H/QsDyWt/wDGcivxv7ncSGNcDDS9xOEENoOgXcP68+m4mg8MwwX30xS/279mc5hLW8UloAiY/wAa+WKK8IsLWDRxEAASJicyF6j/AEj9QA5zJlziQJES0EOkZkHFeWC3bEDE5R0i4hd2/rW2i3Y6Yax4FTJPFQ+Czy+fR9KWL4vqnDu9MVD6d9Dv4KlnZjvVQM200VWhADyB5/CaUAYUzRKAVoQKfPuqWzdQihwmqxNbu9001Am89EAB2mKzN2HNb6c31FYGOJhOChatk5YoLMcK4iaaxePZAn4x8Ulm3RVDB8oEYFRj0tpaftIwygqBisW0QLzSmNflM92yCQNwryIr1VCK3kiMUzCjwwgw/aUne/mjZjyHmme7rmEEmmc+abZZzvRYvQMT3kktHol2UR1PynbjjIitI1AQTAoix91/mUobhklczrT5RNXtLcDM1gAjHApnui8it8DH4XFe2unjOK5AuhSXQJBz5iFUNnkpssov01TO8q777qq1lWaGmJMqgtIpTqka2MImprX9Kn5MqyjOEQDRknLko7i9ZsQ/Hj4KYbr5qvHpglhZswaaU5rqf8++rLbF5BqGnEDELtlu+P8ASQNYv3yXmf8Aan8gDbG1YRBeIaQcjJoTjC3B4D94+4hzqTAMOBzFdl2T+tfsf5rYN4Zsx/kTfXKmQhdGsLbiMi5xkjGZHovo7+mPstn+EWvCATaGsXQ0AiAt629G+h+iDGtaIBDYik8OAjCBmuQw/uKDcpTZyQd5g3zdy0V2WSyyzRrtFyZrR76rWbVg5EOx2qICDD4Xwi5+U80B4pvz2oRSYv5oOcYAxv2TO71Wx1HdDesWAOtL7q69RCLbPcGszHCAPGqZzUMzmd1kLafUgUAvuylOx+84xggT7n3CzBpTeqCYfzPl6K4E7eXNK5wN/jVPwwDS7AZoAw7d0Rce4U4ICLNUBA95TT2UIunPut6YtGaBXeOWHVYDuQmJn3xStOZKBht4pbQbU1rGy1mzXZZ7EBI5/KAFJxFEWhZyAgDLcqYEUjqm8kr3oC1qISN+fhNCAvYs4Z3ZBZjs+/ZaEAFn3kEbRsXV3z10TcV9UueE106IuJuZ4osb401JyCZ3PlTsJAMemaIPDh19FvxnONIJ7otqktHZnbPnqgcOv77lY+CTi8PH9LcGNc4JRrGc5M20y7CW+qk60iYrAuyQwz3z1J6qzXAQSOgzXDsrUE3Ggv1Vn3LfY1mvk89orjKmwzhAF4kGUOI5Kc43ap2Sr/VOu6RcM78VJyHCi1qwh2kXE3deqAfmlr2UHhb4rBDe4TBym4b9SES88tb01dPxpHNR40DazdE63KW6osdBummNUrWhFx0SAqQFpuIpPdUzapGhbi3XQM959zmPhazfPLxQtBOJAnDH4RJr7UnogJb4pArWTLpyPVTtjF0azdAv56oACNfRJY2cTrePJFpN9/8A1Fye0bPcIAGkZhDi0u5VKrIgDGKqfDJoMPFAAbr635Qma6sCgP8AqQcMKzgEAL9b9NUA0WfhOCZjlJlb+hQDGlw0VeJTFnBMVBMj25JjYTXGbkDttQOdxFApOtsKADnun/F6qb0Bb3giXVQbum4OiBmu8ErnImMPlYHW7DPRAzCbueo02Qce9cUbW06qBHv1QO2+p5YBK5yaBrhXqpwgna20YA7mqqDdONRXD3WLUHBBnWgGaHEtZhEYR4INZ/UCtNbsUjrSTcRpCfhhI6qB7Kz3itbvNTtQmcKXcqDxQaEBuvM1oDcnaJmaDSOqm6zRtaCMx8oJlqDjddWbqxlOSZzaeIPeag8aZTAzQOT2BTmns/qgLsMRcp2dms6iBrO0wyxzTB1QEpYNdTsi1AwdeP30yUWmdse/BWtK+SmxsaoKt9vC5M60yv8AD9qePdFiM8bhjKAWlrhmL/bJSNiDldAnA/OaqW+3PFKLLxnqLlmQG1ugGazcp2WMq7xG6i0UWhpWBSl9O+ymae8UdTcWKwMa49UAcrzdPryTtEUQDi7lSYa+neSpw7qX4KjfMjA/CM7vw/5BcJkaT4IN18o8EPw7jUGnPVI50cvGdUTqbHuizPWEhaUXCeiHUznZDnckJ6ZBHg1F2IlPZiiNSYk5mPqmDtO8kpcmtHE4eVNa3kIqjBy8B1zSWp1PVMLSeXcqbr0C9Ir1W4btPBD8QOc6J2u7xogYsRsxeII1pCFo6vklMoDa2g0HL1UnvyjqmcRfktxoHcYuugFJx/EJXvTWYy5zcgxwOPkn4xHWZ1qpvNKX8wBySPHLus5oGLkQ9BrM0XNhAAdEAdUS3VGPjLnggx2HRCFjqtTX1QNZ/TyZkjSKIxvrIhKxxup0TkoEtBksyzxVABvvRM09z6FBJwAvNMdFP8um13Vch7BqfLmFxYBwQbhWcxZztExZh3VBN7um8FF1qDSveqbhQBQb8SzIz5JyUsIGc1Se3HHNUcSpBA1mUC1bi6jDPdFzp8KYIVjaX3YX+KyPHcBnXEa8kEY6uAAKkcjiils2wKtIigAcHRuRei49937I2azH6807klkc6naE/wCVAYrui1ZI5BRrVVTaiHINfMYQeSq3zhIi1pwuQYrkfRCvJcV9+njOui5X0gjnXbRB3D7JZ/45nGtea5hpjyX5/wBmFFz3rbnQakLkxS96IibyovCvaFQtDjdzQbzXGfuqkJHshStRO0SJw8RipPfgo2xtFMPpkU72ZTzvQIUCuCFoUS3HJKD0Ri0pCCcnllRISiz76Xj0A1Wc/dZrpRO+PojNNw90Uwm4Ss1F4hKBdpvfUZ6Ik1QDtfBG2bbaJS6t3smjZbiwv7vQZr4u8aqdoa0pPOvoE6wO2SJkYIcHTJOCEp7KOYnvTJa0cihCBwVuKhOyXvL9oOCBnaIOscqz/kTqUA5F571QAhLwouGt9EARdRBmtQc5E5KYdOmp80FAovEVnbZM8apHOQI+08Rep2jdzxHDGLo7Cd212sSofUW/C0uvgExkYhUdb/lX3/hhvFPFQAX8UTByhfhfag4uk4OEVqAaHxquh/2F/IIeINWESC6P8pcKDZX/AIJ96e57ZN5ih6D5Vwew/e3Dhg1GYxp4hfM/85+hA+qfH+hwByrlGh1X1H92+2DhqMJxHiF8/wD9ifYiHkiYMkAQcZAzUqV13+M/enWNo14JFRMaGlNV9P8A8Z+4/ksmv/5wdQSJMhfJjhwkA1kAmbo01GS9O/rr+xXWTuB5Lmx/jhExARY97dcvzPq/quEEwubY2/EAZEEAyDSuHJcT7k2hbSTFEasjxf8Atb+Qj/AEuDhaBzr4LYIAldT+m+5tdw0jiLA4moN1Jwkrjfz7/P6m2GDLT8bazLWxdzlX/jH2Fz38EUMY7V0IyRZI+gv4T9IxlnQf7RUaiVz/AK36ZrgRAMx/qkRSMNFL+MfazZ2TWmp4QKYU7qubaMgGdwb500ViWR8n/fftosrV9mG1s3lrwRMOvvyiCuZ/FLc2bgYH/wCRsjGDf0X6v9r2fD9S5vAzicwWrjJBPHQbkQF1n7ZawQB/1MibzUhSrI+sPt31Yc1oE0FayMMV+hwZSV1L+A2k2bZyrvryhdtewi6fC7RQsUJRAU335aKhZG9+kIwIfGBTWQ1PSOwkc+66TkTITufd0QOzLKoRaddqLBvhjmmAQI3vXJOQgEQUDfkHvREHw8UkSmGWVd9EBtGApWjJPaDx9UAsy3Q7Rn1SsG3MSjzxnsJitBWtxTcNcTzkKTLVWHI6hAWHwuTNvkqTnJ+99EAtDh3eUYUnMF9TOExHumiRrCAWlpl1iVQCgJ5+6DTQXiAsSjIEySZv8U1mwZ1yIic6qRtPhcb6n6fiiHEEHC9FfoPspy6pmMz5RVceysjcSK1kCOSuGJiiCmFnfJunnkFmgDy+ULRwO4u1KCTWzfgFZjQEGjOZ0CUsodSL/bSEZEFFpTsZikciiUzQln2WBhGUTOV1TsF4F/e/3oPtDZtb/lZtbOnEZO8he7fcfrOFhJurOg9F8s/2d9yFr9W97AQ08IqZDg1sEtIrf6qyDrLLESBBbEHmKwOi+qf69+g/H9LZMoCQbQmZnjJM6lfM/wBm+1/kcDdBkZVpzEFfVP8ADbACyZiA1obybBjmq1X6DbV3FeYFAA0wZvJ1wX6TWA75Zx8IsN2ngm4lllgzXqmZZCMox+Ehs4z9pRGvL5QGwETJq6vwmc7IbqYsZ0yz56J3INyuVWIArWlopfATus1vUJTZwc1m2huzK5jNTMQdjF6ZlMfBBuFK+3rvei52iRlmMZpnigq+7uiwOfRO7WI0USPj5QP4+iBHPU4JiY6VSF4xPS9Azlh3ULcKxKAlqHEtCyAgoOCLabjE+KAYDSYxlAW6ocKwHh48lh1yKsBDEHrcOR70WcOylDNpflf/ALuizmpQhwKBgBilaMkUQ2ms8kVK0s5xuvRdmBonlb5G2qIXj6616ZJIQtPqOHCU5fvXNAsd64rSg8qrRRGyWrZ0080jPpxdmFrZ0wbkQiUlnZ+KNoEZju5TtcECWbpwu1H7Qc7nnkVRwUp272WolZzL84BqMJwOfJMwLcPUCmULNd+ojmsoaIU3lM+mKmCt8Q4KYWgGtapQRryQbnTljos0Utm13FIyUmsVAPBI83RfiorWrq90SObGtB46o8CM6ooFvykYCawQMPdK210uxF3JNZkzXOnytbVM+0AA09UzBjogbMRVFhmn7/S1A1taYBcdtnOJuVXG/e9TNpsqGcbqxFKIOtJvNQRzHdEPxzjROW5dUC/jvd2IuRLpx9Er7MnE60iUxBQNGvNJx36gyjaNuqlaxAEYOSYBE2kY+EoELtMuSNoIw2rEoNtU1s27euY2QKx1Msxf4pC2vkVQjvySud+0Gen4qKINK5lRba1ieWKDklmvrXRKXd5qgsPeqVwAjed4/aDR+kHDvBObMCs/CQ2nfwgYDDvFI5qpx09T6JGHFAGPI7qs56BnK+mu6L2jO/oNNUCcWicnIwkdbkUE8kGOQa0cShdvjkOaoHd4KbbOm6DWNgTiicNoQcwpfamdxmUBtHJHNnu5WLUsIF4qeHTRAOPfeCV+fZRa26ZishArBVbhqn4NkH2kd9ZQStybhSDf501RGGtwxRc8RPir8WQ7hBGM0bOzidYnkqN18Uto6pCBnWeNES0V7qh+LSI1NeqUWiBDa5XeWqoLbTZTtvhFwv8ABG7E32ZOMVCNo2+OSYrNGPKO80YT44wmnwh9K0kVvT8KLWm9G5VNkOGUjWE1NMhOGZGatZkY1gX/APLlojQPIAXGtQb1U1oPFJbTcbgiZEzlhf4oudh2EbMYouciiBjNyBR4alK50IA2zzp4okUVQDhGspC+nPOEE2M65rAEJx584QL+8tUZ36JaI2FRmpz6k6+yazFbtznqg4jHwRoosK4j/wAT5olKD64QiD3cgyazFdEJ7mU9m2OfP9IEtW34yjZtOXiPJMy2opvPL1QYlYDwWcEjUBBSkdEzWpjlogRGe70Dee+i0a+HqgIA7EJ2Nob9W93JSCtaOQI4C/wR4kCjwxz8EDF+izSkJ0VA5A7lG1GuEmuGiJKLmzTxQK36oEUE5g0hJxJyIQaOiBUQ/wAFSDOAjuUrxjHzy0QSa01PYTIGxjnhfOumyYBBmCeS0arOeJiqZzsEC8CzWVIG8qgCg50c5QNw1qBRK4VkXRG2qnZtpmnJMRQZEHzQazcKAVOV3jcio2jgDh61xE0WQQ4CYFCQLwA2dThJRLUpF11a3QR8jJYhARyWCLWoubvStASgYOwyu1BQ7r57picdMjKBEoCHzcZ5Eeazu8+Sdr8z1RPdEA4cqZ67puJbiunX4lYoMXVrkCSYjbdcj6dokjkFBrRj88ly/o2jOmt6DtX2oRHTwXOc3WMdyuH9qbDa586jFcpzltyDh5b0QtZGBjPPZOHKbipQjiohve6dzlMbqiJYNeqJKM10wSWloEE3WU3pHjKYTuKmSs46Txi5YLR7rOIOXU05KM26Ujp5pB37J0hI00Qk/QmcFO1ZkquyzST43oW6hYDwv1VLVOWRn6JHnToUZAPIzPoPZK8Tced6oG45aSlY3sCL6o624DGrPamAWDUZ7As7YbotRc/oiW6TCAfBK84AJ41PkEC5GSA6KgCD1M2wyPJGrVAg1yOCUtRkwf7xjGeyEoPtYMi+5AsznWARtW5BQOpeO9UpbqFiNadPDHdNwXbimcoAG88tFPgTwsQgRz8VifTnOCbhzW4UGcSB7hcYlcpwn5uUrTPFBJzV1z+V/UEMmbgZypXxXYm2hXV/5Y8fjeZBAaSYiKYxorB83/ya0L7Z74guMikxW5d//qP6YvtGUBJDi6l5ZWTkvOPvIi0eRJDnAgb46bL1j+nBD2mpgPaAK/5OH+7wvzC1Ux7PbMmQcuXTFdE+7/ZGlx/xpBuzXov1godhPquvmxqYBrdAmmmCwV43/OP4g3ha5rSAJLiKgEXAXLzP8pBiSCJMxl3cvrC2+1cTHMLJDhUGh3Gy8f8A55/UhA47NxcJJDeCC0HCcYWpVif8A/th1nwMtY4HAiSIDSAa3G9dj/kf9nhzHFjgSAQIxphivCPqw4SDILTcaSMxjF/VJxTnWl5wVWzH7I+vL38XCZeSawL717B/V32ME8ZbFf8AViCQKTicei83/hn8ZfaPFDAi8H/EVuOa+jP4p9mbZsAAMxd0qRss1H6xMd5LiPfOErlOdf35KNoaUCg8F/ur7JDrO1/3Pa9hObWRw00mF5/9os5c0UpFT0NNL16N/c9s4vswY/8AiD5/4n8jsDcYgLo32N4428UX4RBrirjUr6K/rt02DJiYryND0XbH9/K/H/j9jDGgAUDSYzImBpC/XBUXk0xhui52u8ZYgpWMOqZrYwHOUYM2mEaIiO6pHEmuVI9UIphIwF5QWH7TNJ5FSsbea4+AGCa1t8IQMxsnSvhgnaph0C7ons3bCn+4hE1UlIDprS5BrU7W7c0U7Gipiu6FmVK2tCMq0gYaqjTUd1GaJh7V0YkIOdt1RD77plKW/pCKWQEDRyRmwx/SBHd/gi03dTvdI5YIprN11L4Oyo5qmCJMXE44qhCBOGIxvA0OYRR05yiBqgTjGeCH5E7QBdikDZ5YRHjigJbrGoRAreTSRhM5oA4eCcdwiazaUTOFeRPILBuPii1DSJmNSgeHlrkltHnQQhqjzfVM4KIOfNVFQBdW8DDI7oUzHZ+U+KWVV9nSnIKRtAL6b+yMkc45mle7kPp/qAcxuFS2AIrjkoEhoEXZXeKo6J/aX3YssiQ6A6WEG4uiYXzwbG+8Tf50yXuv932gdYDhc2TagwYEGgO9F4h9cLhhP+rMxdzVg7r/AAD+Nl7+OnCYisUm/RfQP2f6LhY0TSN40w35ry7+qfsY4A4uMGgi+BQ0/wCp8ivX7BtAMqbrLVO0aqgOvyg0ozMaVuiaXQjJ32dwgbipIwWeLhfnAu0U2jWD4hAHvNYsD3ftB7li34Th9IhJcBfAxwrRZrEWP0ScVVd34HIlFvyDjOS0BaVmzAC7v1RFUv5K3J58aD3UABTvddQ6zhuh3F3ipWlZGecwgoPDAaLNapWDDWTtkNFybEUQC1NVFwnBM5tb7xSRims3X3aTQICW9+iDTopWluZimgNyoHIA620Gipx0hJP7UbUTSdN1ZNFm4709eicNUWOIjzVGs5KAi0AMTsUQc1J1hXeqoSrJofjSTSAJm+fRLM/uAqWY64zRKJuOiazfollM8KDOISTC1oMaAG9TtH0unKiCjSgbRTsR/wCX/wBlV78EC2jcwgwrFmfJICYF04+nJBQMQ4+aZqxZogDdf0kBTBJaZ+Gf6QPwpXP0WEm6BF4z9kCPmECPd3oohmic2s0HOKokoM8jDKDpVLxdQLzihEc0oGw3yQGEZW2qhZs+d1qXAA+CnIuoK1/7Tikcy5UD9PBZXBs0LNlTXPamqL6YqfCTkrLgAtr6adEtsE0nKNEW2Mq5pgWYpXPvqhxyZ/8A4jyyTWtl6Ypfx9/K1Ji+DaGSs6nd6WEzb9IVUtrak/CA5p2QhxRroKoFYwlb8Na+aZxRcUCuyUrTA1kaq0Um6PFQZX4qRuMZvQSDDM4+CvZ2VADhjN4T2dlBFZ7yWf8ApAXslKyzRFoiwoFm7XwWcdNjilLVVxAx5IFNnKL1MWk6eCa0fE12QTe2VQGNqbpYmt2l86hazCDWloeWJT2bbtRIW/LGEypgn5Qa1E4794IsdStNYknyRCQuQEPzxRARCDSgcGMp1w5LisNdATXA97Lkk9dbuqmHxf0N6BS/FUcDF9yiE35MqjO5BrMSYBk5QmIvv0AwRbbROZEUEHqoWh6oCGj9IunLLGtUTZ9cvlBg0ImlTMeyDcal+TzVWty71Rs29EE2jNAGcbr1iP8AVpMJXWY7r0QM1153PwgSdNaeaUCLpTsfy7yQYOF4ux9vlZjrylc3v10RIwwQHinuUhNbrrtVQDxCDXRqY6ICHoOcMBGyZgGSRza3XEcx7IBHjULNfoqPZCm87cr0dQY7CFS0dggG+NwxUnNnvBEtEGqcP6JeCML8VnDzylGYpGtEONFTLeW57hG1GUCi58+oVWV5eKWnM+H6RnM+gwLOslprkIrnKxft3nqiy6L3Tdp7KcHlreiSh+bVFBrhNMLqqrxNTHuUtlZ0uU3mMtES3Czy0VIUg6SDkaqjbuZRM/T27Yjw31UA4bz5pnTpBxyOySMI6GQjQ8SVg+RgBgRuURF+Qu9c0/H5+CDOC0zogaouQK4ocKxF5yRL7ue8oGZ5IW50SlxHrKa+/wAPVAWsSvb536IFpwQJ9RGMxQ7IFCuxkVStZRD85pegFp70SApwc+91iUGbF8JZRalAQM1YnDXyQIwFdcUpZ18EFeOu3imc+spG+aIegS1sybxFxzlM5mXRMDPJKX+SBpEXifm5Kxs4rFiAQRDKyNZ1kyqrManL6IIGzlP+LblisxyAfnO/wgMpbRyJPdyzggm1yFo9OGeSV58aKidrZAjvNBMxkV7Eecoq6OKx+R3gmBsi1yL20BkjCKRucZySOGZA2PEd4jwWRQFEqYbFRJB2WvQVhKRugLTVO0dzI9EBITNKMLHY9RCA/jnTf0WnBZz/AAWFUGZXuvRcv6cx8hcVo7j1XOsW+isHbPtjP8Zz/wCWGxXIe/UDCpmUv07IYBrfyQfXLwWnIrnZ+SDj4oWjdfNK5ACyKSa4wYHNTe2MOkKvFqdaSOvwo8AQI8Sph2FPVcosyoo2gxx1x9EEnOvopDRO/vRCEXUjaVg8tVnN5ZjVF9K67rQMPNZiElYWfcBNC3DQkzG09IVxdTvQIRexLCyhXuwjnilDzcI1zCoLPSdrylNpoabIM163CMYvmsnBKdMLzTGqYXZou1i7TmtxohtFgO/DwRAIS8PeCdz9uXykJQK21F2OSo+z7yKT8sUxzSF2h3MEeCB3bJHNWJ38fIpXnKegRYYMGaS1tBN9ML1QBStx8oVSztNk5/fooGaU5/GaYE+NyIqQBslc7vTBZx3jYR7pjQT7eqAb9/KU6TzQFrpQ5rOQM5LwrcSVz0DF89Yz8FNzqwmc7x8CpPYZw6oAGzvfGI1XVf52B+N5kRwukxBMiKZrs3AfGkXxveuq/wA0seJhqRwtJgiAQATAJ9FYlfN9jaguLpmp4fkZr27+kbNp4yAP8eCXA3l0yJwoAF4My2gujigHiFMSatrlTNe1/wBKudJBJDHWc0uc9rv8RyBJK1Uez/WQ0ThX/VW9ddsvqjMVnSmPkv0vuRMbg6jkun/TfdoNQKAtP+Rm/IUCw07j/wC3ivE7rIPJWF2hF0Az7SuF9s+qD2yDOFfLBcwWSDrX8j/gv0n1B/8AnsgQBAcw8Fo3QEDFdV+g/oaxbX8j+Ef6ZALg2YjiipjSV6dyHTsqrX993bq6uvxfsn8Ms7GQ0E3Q4mCd1+wLI5GAVrT6jyPcrGzx0RAc3nhTqktWUT8ZE66JZMYda393JB4b/cn0hPDfEvmt0GWyF5rYW5DmkRQiddG6r2/+1/pv/jNJiXF1B/iJpXMndeFuaQP9o2Mu6XA63rTUkfT38E+5cVm3QczSB4LszG+AXln9N/dOJrmuq4cMbXR1Xp9panoBNLwsLVQ3WiYhRbaE0iFcNRgznx7hTcMRTas8k0IcABwyGmPwgoLXIQB15qbXDHHupwRKYUw72QMDqJurPmtZWJGArflOFccU1n6VF0NzC/C/kX8qs7HiD3AOAkFzwGEG6gBMhUfvC2rBgGYqcYmmVFxrf7k0TxOawDF7mhp2JIleDfdv7yeHuH072SKcb2C0bnQHSkryj+Vff7b6h3HbPLnFxIApZgEm5skBXB9bfU/2L9KyS/6iya1t7zaDhjORNFb6f+Z2NpP4vqLC2AwY6b83UXxgz6XiMH/SCACBE/8AXXKoXd/sf2twENcYLT/iL5in+XymI+lT/P7Bsg/UWQI/1N42y3cGui7B9v8ArGvbxNeHAif9QIjcYr4p+t+lLX3kk0fxOMiML6r3r+g/rnCytmGYa6z4QaxxTxATJyUqvXy7fotx8tfhFlnv5KFvaRyMib95QUtfuLW3vYINZMRlM3SuQz6kEAhzSHTBDgZjZeFf2t9bxcXE4hrySOEgHAc+a4n9J/yK14m2BgjjcGSP8hDSTXG5KkfQTWzyjoUjnb10yKwsx/yJJgmkVTOMd5qKTiqE1kFLi4amIzOC8/8A5t/alnYuDbJxfaX0bLGUuOfVB6I/6fHLCYpunFLvCsDUrzX+L/26bUgWjWgvFzWmBWgJOJvpC9D+gtS5pNRNAREHr6IzV/yUiYGQN+tVg+ByS2lmBF5Iz+EWukc6bIhWNPI35kaJi6seGNdMVL7h9TwMc4gf4RIBqJIuAMxGK8a+/f3twPcA0B1OF3ECQAe70V6396++2di2XPBMf6RWXYArz379/fVk1p4WOcQTxS8MAM4CJ8V5J9+/m5teJxc4TLi2gg3itZX4/wBH9G+3lreKRUcTKOGhBrC1i16faf8AqAdXhsmOAiauN/mQoWH9/W/+5lhw5tDg4ZSCSZXVfs/9QfU2oAawNaXH/UYIi4xPEv27X+iPq7Pi4jZvgSHNP+WwlwM8kxl6f/Af7VZ9SYqHBscLmumaD/UaQu+/UgcM8QgCpwC+Nja2n09rSQ9rg0iXTjeBSi9k/rf+f2tpZua6AQKVqVR+N/b31BP1IaHyxjGvc0ERxPx0Jhef2zA5wBvb/k0TAIqKrmfd/u/5rZ9qBBdw0JAoJF+N1yn9rs+O1Y2KfkZNJkcbZGNIyQfTP8L/AI22xsmNH+xgZW/igFxO5nquxMby11Q+ns6UqM7gtZ22HksNVXhzvOdJ7vTsdGVcL1CydhcM7yOqsRhER172RlQgkc60u0lDhIynAzcl4DrS7vPdMW784JWPQGNxkzjj0VGt6eOqVveXXNPxLWQBrq/pZtndoapD9RJjLHTJVB7CmYFtAg85Zdao3/OKNmNKkRdMLOgPb18kxw0RawDHwKi5hwE7mM+4UVV1pzqnYApx8gjyIPmsTUC7NFxwvvf3ptk0uIoMiBPVeRN/9Qbvziz/AAMFm4wLbjfSL5ZEeK9B/mn2oWjDOGl4XzL/ACn7cGOeM6tMj/ITc0YHxXWcYj67+x/dBbM4hURIIgTywXItCvGf6A/mHE02JLvyNcam4sgXziIXtHFjl0XOlKLOU4AGKXjA95qeSHAD6EqILiFK2cG1J7wUfun1oY0vNwoBjMUXj33j+bPeTLoqf8QcF1kHp33v+eWNjV0uAa5x4CDAEX66LnfZ/wCSWdqAWukObxNzAImuS+evuf3A2pLGnidQBkFpgxNbiYF5XYf65sLWy+psWO/0f/I+0AmOFo/xZzOSWQe8WdoKaJXMSWLpqBMgGBhKZ9rofBY4hHMTgd4LrX8t+8FjTDy04EReN5vXUbP+0n2MG1h1YM5RlEzFaLV42q9Tc2tBvolsbKcRGpxXmn3L/wBQH04ANkDavIP/AMUPYGnCXlgldZf/AH7amT+Cxv8A9rniNpvhTpUe6cu9ElkDN0wcF59/A/7gb9S42bwGuE8P+XEDF8CBEayu9uef9pIiszFOizZgtxA4oMFZwF+iVk5UzxQNpBGeAz98eigWtZFP9pRLch8IizGmeKS3t2ta573BrGipkiuUYoLMGEqTrSKesrzT6v8AuUutDZ/Ts4mtMPtHD/EDQEcRccsF+pbf2r9PZx+S0AJdEBjjJoIoP8a4lavGz6ru5KDK18FH6L7gHgOEw4BwGhurHiuS5kCMVlEbV9aCuO6LSdRN+EpmADnijxdM58EaxPijnioALkPHiKBSfZkUpN9couRKwSurnrU35IsYYE0nleNlQ2aIQsy8apmO+d0hCRrYN9MzRBUM6YlF7IxHRStHe9EjHzU0Gqq6q4d/Ci5+6j92/kNlYt47S0ZZsb/qtHTEm4Rf0XQfv/8Aef01nSzFpaumv+JY3hwIc6p5BbyD0qyOE1xE1VnPAvIbvSt0L57+8/3Jbvj8Np+PObNheQf+Lv8ArqF+N9V/Z31D5Bt34B3FXiNJIBpEZei1nwfSX1X3VogUk4XnS7BVM+l9N18xfbv5xattA42jnWcg8GramHVdXJfQ38d+4/lsbN8H/OzbaRNRNza5AEVzUV+lwnCudVRqFndTGuu1DFErn+mXkimLkpeBAuJ8ZR4M/ZHh1icqoEcEDZTmnLVWkU8CEHFtbLSdDhrC1mYuznoFSMwaZ9yi79aoMHLOFyAuO4SuE3xF06/CAgR5V0RshXzSMabpuvpEqjXgSSYgU1KBicQJivLNLaEd0TcXe6g9s16n2QPQX34Y9cqJWmcLkpYRGRxxjULGwiszOKCvDpWJ2Suas1/wtZuogbhz8UpPzstWb6RkD5rO4jSLqggATOB6IHPO7LwStjutUBlXYGCFg3v3QBo7yVbUHA68v2kLM5jQVS1umI8PO/JBMsyKxZmgXp2ZX+yAPMfuFg2KdAmc3oL57lKaIBavTNbAFN9Urn5CUGi6ovzQM9+Qqs1mazRdtWcO8kz7TvNBIMv5cylc5Bz8IOcjPKDonfYjuqBWjXpUDQKcaTkqPOQvySNHygwEYDkZQlCZotP60zMeqB3P36yUQVPh12up6p7M9jH2QNaPwAJzj2xWazv4U7M7iuaqxnvN/JAI3rdtmtZs3TPOrtJ8lMuIqRTcoMXz0SNaMughNatN+WCmXm/Mi8H0RuVQ5980zdCDrkg5uMdflIESi8Z1qBIw1TtGGWOCxF/IlKBkQEZGeWE5pXDBYsM3x3gi+mEUvxJwlHSUpGiDjN2FKm9G07gqbmfM+aKwfWIwk7LAdMk7CLiYygHzQd2AhCkpgcxsk4zcB8bolAeIjrPhdsksjkBVM6l+NyScKE30kIzyUDRjGdCAfKqV46YabokDel5vStrXwRqM5mF+iL7Mzdzw656LPPj46IFwgIALKL+wiXJJrF6ciiBQESM0oce71Rtd80AkY+8bocSwsr9b0tm1AOPriUS7l6o2jEOGNZ8EGlA9lU/LhUZnP9JeHDxQI606DH0Rs2k+az2U8jnuE7Gd8kEy/LxCw79kxQ3FdL+nwgV225Iu0yQDU4BWjvLdBNo1O+KYGt/qUoCBrTnPygcG+lMEWhLZjoM7+91Yv/SDAfuKdeSQNTActJMc4Qdn6yg3AsES03zrufZGzKBSfGfBApnCdISvdCBe6VTcEZ10SCovIzj3v6JyzU85u5oEI3QTfj7HcJHM35xPggIKNpajL08URZd9+iW0ZdU1FSMNUCOtcyIGZ6XooOJFZnIGgOEmQY6IoOE4HHrj6nxQI1TstAd4BSWrDTDxnGYwx0RcHgHYj1RLUGEZhUL+8eaIUMxjvRWs7Pw81OzGvj6KhegBYL4E5o8Xcws40SC01wqgIM+uO26Zgio+PhYWopInKfRGytdIlAWrn/QvqKd4LgP0X6P0FlcfDGQqxydw+kYQOUnGuiYnE9TEIWRoNhtzxSkX+vdy0yR8JXLEJX76XoN+Tv3U3la1GV+8oFvMboEdfWoi6YCDj3kEC6uiDiZ3QScEC3u/qmeEpbtvidOSmhS1Blnr+0S72S8CyM7l0Sfk7+EePvFTA33N0aRigZxyp4+aEIcPRB5I78kBJKXgWlK+5G5TEY536lZpSMYmcEaF7O4lKxnnlF6M7rcd3VGKDRI96IBqYumteaRElZ/dPVBzu80HbnqgGoWle9YLOZ0Wa04TtREFpQO084RDkO/lBj3p8pmFLE56XLdOU+MoGLu5WeM0oQe5A7btkAFKJ7vVPD/7IGtBN12KWO6X5JCO5RLRgEGe753SPP6Qe7mcs0LO0dkB/wAuIGRoMJQG0sqYg4EL8P8AkP0rnt4SZJENJANTgboC/dtRHpsuB95H+IORJ6VVg+UvuRm1cDAAtHscZkBzCQabr03+ofuxY8NDh/k4UwcMwKrpH8g+ni2dQf5ue4CP+ROC5X2n7ibN4LIDm4GjSBn/AMVqj6W+9WQIPDSK7rqX0VmZIdnxAQKzmb8ZX7v0P1/5LKzfT/NodAPFeJNcayuFaA5gbjyhYWTX6/2+xAF1c/i5cuayuF9l+oMGcDExEhc14R0hWBMyzrss1yZw90Z5FEJmlK0d7pma5SNKowLwoOKtaHMzoke0QL766jDxVg6R/Yv0pdYWkDiMXD/iDUr52NqaX1h1BSLqr6x+sZ/iSAOISAIihB6818vfyT6J1na31Jrg0VcSQtDvH9Q2g/JM1jhmgvMkRMECL17pYMmKyMR8r5V/jf1hZatc0wOOAJPCZxcb52X1D/H7dpaOFwkgUPj4rKa57Wqk08t0R3KW0E/Cij55kUQFmE7m5+N6YsQQtABUkiDAGc1la1dALiJAwrT5U/qrSKmaXmJjXovJ/wCwP57R9mwul3EAQ6P8SL4FxVTXO/sP+z/x/wCDHhxqxswOEkEyXAcRAuAXz/8AyH7i+2eXOdxVxaDvU1X6P1H0t8kkBoiSSZEAVNZvxUvtP8ffbOa2LThcTxECeH/iSbjsVprH4/0v0jg08DaQDIIAMXgEnALlfSfxy0cA7hiazBIOQ4gCJX0x/FP6s+nYGOfYBxZBHFJDXgf6gJgzqIXem/StGDYvDRgdBcFNZfIP0n8Qt8bF7QBxf5S0GK/4kgTK/asrYtaRhSG1BuwN6+nvqvt4eBIki7irHLui6D/aH8aAYLVjAXTwuAAgC67ClU1Hgv131weRMiKASJOFTiV6f/T/AN/LHFjqhx4jSDI/09F5z9V9ne1xNCL5yquT9j++CytA4mMylI+tW2sjHmuP9RYSNYIaM9F+f/Gvvlna2TSx7XREmZ3Hov2Wsr0vwUXXz/8A2l9G5s8QcA0CZF0upGa6n/XX378P1Nm908Nm7jAGcFt+xrqvUP7raAWvDZa7/F9HEAsPEc4JkLxL/wBy0HibxCCS3O+TvzVqR9o8dKCCaxeVxnvBJqSTy4eS6/8Awv7v+X6ewtZpbWZdxO/1SP8AF3iOS/V+qedJGJpTMEZXrLTz/wDtP+cvseGzZPE4OrcOECprkvFrJ9oZeSZcSZcRjS7Ndp/tT76LS3eC4Qx5bZnMCh5Eyh/X/wDHG21oAQLrzJAIIj2WvErifYrI8NWuANzgSHTsvSP4P/NHWThZPJgiGFwl1NcQu5n+HsAhoZIrMQDIxwFdF076z+Ous7QOtGEhrhwlhumlMSE1HqTLWcZpxYCi/L++/wA4sfp2Fz3CAKAVLowAxK4f3z+Tfisg6QCBiAKRivm7+T/e3W73F5iHENyLSP8AbvjKkMfrfz3+17W1c78by2zd/oEVFAA11N152xjoMni4zxGP8pJERF+0Lsv0v20GZq0gFoJkYdIwXfv4D/D7Nz2kXwHYRSJpoYK006R/FP4g62PA4OBBu/3AC8mYvyX0N/AP4iyxbMS4ggcUQBhIrgF+6P41ZiP/AI2kxV4vrqF+nZ/RtEARDQZ8x0lZ0Cys2g/6BOdwT2hitMKESiNDOVIQLiacN18VNFE14x/ev8QsqfVN4m2heGWogljgZAMYGcRqvLf47/J3fTuLmAAmWwbhxUuN9LoX0d/ZP0znfTWrGiSW8Wv+H+VNdMQvlH7m2CRmQWkVrjC2kfpfTjGIEkgGAJMkyT5Lv/8ATH2njt3WhAIY2QZoHOIA9Y1Xm9i7OCLyK+69i/oWzeBbud/pfwBv+M/5MJNdCCAs0r3FtlhJuFNZoExbhUbFIL05+As1FLMm6L8cUTkbpmBhuVPjJoIGROOdFRo6jCIB7KSYK8WeOCV76fKUPN0nb0Wi4HEqgtnxvT/jpMXiZ0RsGKdvaGYkxlggey7uT8eg5KYYBcEGE+C5C1l+kxrf4XpD7KhZ+8OSBQO/fJZGzblilszfN45SM4QZ4U7UCKDnfd4K5s4qpuEaaBBA/b2vjiEi8XjyvXzb/cf2IWNtc2XniaKUaDGa+lbTuF4r/wCor7aHiytOEcVmHMLoqWk0HWoXWK8o/iP8nd9N9Sy2YAYd/kLpYaHoCSvrn7L9xa+yD2mWvEtPhXmviQ292hucD4EL6l/pD7wLT6NggzZF7DfUlxNU5TVrvrTonbaUR7+F+F/Ofu/4bB7zAcWlrBP+4gwY0vWJGXmn9tfzVwe6yaHCIB/yBExU3HwIXn32H6uSAJcXgiRUzE8JGG6/L+4fdi95c5xdNZMXmi7/AP0p/FvyP46EMDmO4m4uF05i6V2Hdv4B/Bx/rtRLhEC4insu+WH2VgMgVBoYwN46LlWLOEAAUgAzeIVAYuqudopZOrlBndcb6v6kCSbrzGCsDryXXf5f90DGOEVIk/5R/jdxDRZ6jqX8++82ZEX3EUMSvn7+Zffja2hBjhBpj4TRd3/k38hoRxCYkEEGdwvNvoLA2jyQ28wMJOO67NQ/2/6fiiCSL5BplHKcV+7bWHCK1/7Ujmv1LH6WxY2GyXm+AIBujKF+99i/gr7ZwabOhvIMiMKigWrTw/8AR/2efq/yBhDGWNrBrwuc+BTUA4r6FBuoQABA5Yr8z+NfY22QEATwgHMUiIulfqWz47r7Lz8vUZ1rpNYjKkroP88/npaPx2Tf/kONP8CM5ukZSu7PPKZgaleBf2Z9/wCH6hxbENIFOGZaP86X3mJ0XSLHd/sf9kvs7M/+4P8AlcwyCSMqXrzD+S/zW2+teWC0cbEEt4BNnLqEZXZyvwLT7vafUEcTj/i4/wCLWAyOuUr0n+Mfw42tWtgNAEm4AmKtvm+5XR1e1+5iybwWRqG8JGTs61J1lfgn6DicHWrjIFxMXVFM17x/Lv47Y/T/AEto5rWcZgOtAy+6n+UkbhfNv3D6w8TpqGAEZcOJ3Car6R/qL76bWy4SZNk5rWk4WZFAedBK9CtCTOlF45/6cfoHixNo+It5cw8U8TQYacIhexG3jb3XLldZqH5YTtfl1ySOvy2xXD+5/d7KybLrVrJMDiIknRpqtSrpvuX8jsbH/wDLbWdmTMcZgC++mMJ/tn3VtqOJpa5tIe24zliei+cf7kFpa2rHfkD2tZ/gLjw8RMgjE4tM4Lk/x/71a2dm08Vo2G3RUkUAEZrTNr6LtHwWzjIaDjsne+LwRob+i+afv386+q/IPx21owAtMtNdRWYqh9X/AG79YyP/AJm8RIBe/wDzfGRBEQVbw+aPpO0PnCbhNKXZ+y8p/rr+1v8A3Dgy1J4wAZaW2bRWD/jjK9QYRQ4EX3wsSYuJ/VW0SYumYN+pHovGP7I/upzIbYiZdwml1L6hewfdLUNZMwADXE0K+Q/5NaD8jgBAH+QnGSZlaMTtfulpay60e95d/wAnuc1tZgNMARmn+k+3Wto4Cza9xJ/0xBnTCMVH6G3GVx7hd+/r/wDtE2Fp+OBAP+J4Wy7SSJELSJ/Y/wCmPq3mbRv42kA8P+JeZFCYJIFV3g/1GyyFWOeHXkmWh19ALpXZLf8AskEF1wMBzpbEXxyKp9D/AGV9O4hs1JAA4TB/7F08O1Eajg/xf+qbGS61sTm3hcWcFdDWQvRRYNa0NawtaBDcZFTfJvU/t/1jHgua5pF3+quwGMKj3DCDzNJpTbJYUPp34oi0wvGRi/TFK0RSZ17yWBH/ABGlcr0Aa4YfKaUDaAZ7ACVpQBzkrT+wmI7oUXCk9RRBPh26pgYTuYKUF2SDG7ZczVArXX1v5rNzrvHpcmLcy4/9bhPJBwzKAM8VQmBMTopl6JfXG/DHRA5dK1qY7vRNBGkoEyJkDQoI2bJvHOYjlildJ2Tutd90bNqBfx9NcNEwci89hFgHfqgmBtR0xOBEJrQZcyDJCJf7IAAd05oAeznuih+SuVMMdUGHPPsoNJ2rfJReY99UXGRsZHeKUj9XeHqgR7daYileaA/Wywcg4jCUDFx7w90vCNOp8kOHs3JmM7/28kEg5xN1FVz9ELRx1jLvBF7N7sL0AbfHY0QtafCJdcADM4AXZ7hKBWcKjogzbLLmke4okdFmj49uSDNKDmk48gEWWs3RQCpxTuCCbWcvPktaN5ZxSd0pcMEsoGLBjdkt2NPdAlEIF/KDdWMcdtk9nvd05ots9s9eaDbSED8EVxmYAwr6wg919InBAtSzeIkG/MIMW64n4G6d5jDcG4hId+eaVoju8I6WMBXbGSqjTDuqRqqwwjFKDMgY06JHmDGWWCcnxu0zn0SMb1RGadScvYDRYxFDMXzfVNSL6yaXzfigbUnanVAnCpm2wrue8E5szJEYivn1RFnWMtp9oQIbpi6Z1GAS/k3rhkqz5BTc1G+J2voczHgla74mYWha2dRGmAOM7QIGymLK7KtfdKCDXsohuNINDw+aJbhpWagSg20GRA/7Ya7IpyNRogxkxGKo9rrgK+HcJOGMYhBmCPZNyhKLMXy7oIqlcNRljM5gXQgwCId33ogy1BimZdWZw5VSg5eF3NAYrUSN4TPte4C1rbU80pGcf9YrtMoC1yACJsqXnkJHNIWE4mlTtsgaY9D5po6HxOfwlY/LyQc0dzH6QM9/RCKQmjbldKobMfq/mgiBXT1Ra7rmme5LZOQacNSneM0jRXXOfQJXO1jkgB7CXg70RcEC/ITogaO8k34+9ckvLkjxnkP9uB1QCEz2U9fi5AEp3N80CBncIcUIzXG5YO/WaAlnj3fcndHhUBK0aDLhB8YSWnRBiQlBzJPolancKIG/IgI2zxSvKDs0DF4ywvnWPlIWzp7Jmt8fKZhH8WsTUTdGQjFAgsZp0GmIy1QRfBni4g04ivSLkUHFb9TNTfmIEjWMdkoG/PyTWtLqwp8RwE//AOKLpwO4Wcsx3ZRcO4RCyqNakPXSPVVae8tECvb3MVSMaeWXd6od+S03nIc0BLcYpGNBsFm2fcmAQgbXKdpHU5LPOG06azigeydHnzX6H0ArQj5xOy/Na+sdwv1foGimnutRjk7j+/nZSems3U76bJbc45kKsohKT32CnJSBASBtgpOteym4+ikAgUuvwnolLe8U1p3kltXZ9RSNEEzzrfKUtyiN6og9/JolJ15LNG/JggSlJWeFAvCkvuzzVJSloQKTqEOU0jbbTksGdDt6IPkeiAkJGt1I0Wc04GUIjdAWuPeS1a64rPdrCUNki4joOSNaow6gxjWUPyX3aEio2NIWDqm5sUkm4ckDXXXNGSgVvwxEj9pGcxzlM+0yPIXIOOSAlqn+SN+tET385IMaEAD9QP8ArWT1jdYAfMwPVNesW93+CBGNmTSlzgZE7oxNACccDvcs98c8qRyuQnu5AXnOsXRQ+Nyf8e3Q/pTs8KxFxv5JidMzU3lAx77v8FPg79YvTBwQLdj4DqgZpwrTVYDPrgtCWLkANlqRXcdME72fsIELd6dUCBu87EmM4hNxdzM6nLmh+aBXHG6N9EnNAxZPdOdCuJ9wsqXYVA79ly33KX1D/wDEnMKpXz//AGF9Dw2vE3CZimOB+F1Y21f8jEYmDMnEwu9f2zZuaZAoMf8AlJpG2K89+usyW3yReBsKcplVNe6fwD7sPwNbI4WghsVIk3AZRcuX9V904HEG4/6ZgneJoF5//APvUNcwumGiv/2iei/XtbVxcakg3SRPW9SunF6R9i+oDsqipwj3X6bX9zUbLrv8RsSGVJrdsuxWgynWihaMyiLNBoQnr6IlqoPcoMOjfHvmltGjC7HdADVEUe/fYKT9gTAgEXY3ymg5wsWUvrjr3cg4ds8jADGdbvVeB/2z9tLXlxNOJzoF95mLqTveF9AfUsmNsPL15LzH+6f48XWbLUBp/ESHNP8Aq4XQSZGUCm+a1B419JbRoWybmkxoDvMr6I/q37gH2DIfxEAyTAxMSBcdAvm76SwwuPj1K9K/q7+Z2dg8Wby0Ncby6gI1FxJiZSsx9APbO+izHa77JGPBgtMgicMU4nALLRuLMH/rJ+Mkk3HuqEnebjkmJuvppMnJB+d91s5DhOnqvnb+XfS8D3kyZdNL63UovpP6kSDWv/DE4BeA/wByfQWjbR7/AMZDP8YrecRnRajNflfxH6VrrVoNzoEHEjHRfRn2j7M1rRDGNMCYA8hSea+TPofupa9pa4zExcJ+F9MfwL+attmQbRpe1rQTmbojPVTW9dxaIpiKU+VMTr30VDZi+lbqVlBtmcyozSTp7L83719rNqxzIFWnGJ8V+vw79QpuZMZE9VYy+WPvP0jrF7mOszLf9P8AlTW+/CF+D9b9SDNJmCRQuB9l6H/eP0z7K3Lq/wDyNEAgEDgAu5FeXW9vMOIg30F/K9WrHsv9c/yqz+nAaSRxkSJHCOS9lsPuXGJDibjFBPS+F8e/bnvdfxYgHQlfS39UfWE/TsD2w9rRBzF3EdTlgouPwP7wtoY24AudNYJhoJpoDVeF2REg0pnJDtxFOS9w/wDUD9HxWLXRVv1LYOTbRvC7waSV4MLal5JwOAvwC0kfTH9LfVsd9DYtaeI2L7WzcHZuebQHaHRyXcvub/8AExBMzE0IxF1KLxz+g3Oc62q7gFnZuFbncXCbv+q9k+qsyWugSagbQstPmX+ZNH5nyBV73YUEkxXddn/pz7oTbOY24WTnDSHt01Ny6/8A2p9Jw25AMXOmAYBGNcYXE/rv705n1DSBfDDq1149UH1JxUBO+50XE+6W44XOgHhEwSJE3LkfTVFJ2Nw2XXP7AsbR1k5tmJJ4SaxJqIJyzKjLxn+U/frf6i1ewNLmj/GgJibpgxAXN+5f1l+KwFpaGpAgBxhpoBAIESTcV6Z/Bf4A2ybL/wDWSHvAqKioBxAK4f8AcYa36ZwuBewAH/US1wd0orGnglt9Q5wcGn/EGjQIpkTywXsP9KWJPG6P8QGWdakPdDqZf4tXhb/r4gSanPB1LsYX0F/Q1geC3BN9pZOnAkMcI6LQ9XZTbLWPJIxve6qlIWGdSLDNOsXJxkIGZukp5MVJ81rRmpHIIiNpZzTlWKzS84FfLH9nfTNs/qbWzZZw1jiCP8f8SamNKr6i+520NJjCPXrRfJf8u+4C0t7R5n/MlxneIJ0hbWPxfpjWCJMwJnHUey+mf6g+xfjsJJBL3cYFf8QTTnRfPf8AHvpQbRkgkFwaACBUml+V6+rv439KGsgAf40pos1p+zYCcLo8UbTnTXqph8A3+dQrtGPmowUNHrtWkphaOJqRA0r1KFo6hipvJuvT2IurvMT4IKcegUmtrM3TAF0nNO6M+S0b+SBnHQ8889lgfJAT+0wstIQK2t2Coe4Uy2aC6ZJ9E34+wJK5BA+Jh1YMA3eqp9EKX1NTJk/pA2fh1VuPxryN3kg0T37ELNHXNEbRojEIM96S0M7qhd3kl/F79b0HEdIXnf8Aef2v8n0lq7jDPwAWznEGrWkf4tyrmV6UWxF1Tgvxv5L/ABdv1VjbWDiQ22sjZk3wSZnqukV8ZWjZuIvHei9//wDTX91lv1FlIlto20DceFzSARpI6rxH+RfY3WVo9hvs7R1kdmn/AFcwu9f0b/IPxfUOs5EWzAATSPxy6JvHNaafTj9l88/3h/MSbX8I4w1n+o8UjidQwBNwF2RvXo387/sUWLYa6rmzBj/LnWIXzT92+vc9zy6au4pJuyjMYbKxMH7P9uFs+zs7xa2jbMESCGl0SSJIIqV9afxH+PMsGFrAJ/xJgXloiZ1XjH/p/wD4l+S1tLZ3/wCmGssRhxODi5x1ECF9CWLiKAeoSsnaflLaWtbztAptVF2Oc1UXv2neqxgd31wb/k6BwiaC8/peFf2p/ZYJLW8J/wAiDQGmAmbl6T/ZH8gZY2JDokhwaKkwaEnZfKX1luC6QQa1zvpM6LUSuwWFv+TiJgtuOU6Uoc6r8+0/xI4YjEi4VuBz3hcT6JrqMsw55JP+Lb5JXs38D/o15bxfVM4HGrWBzHEicQ2cFp0dX/g38VfbODjZksmBxAhrqi/POl8L6D+w/YRZCgimw8JXL+2fx+zsQGsaAGgc9Vy7a0nZYtSpWO4oda7U9kjxJFRf2CVYHWVx7dwAJhv+IJh11Lz0XMj8X+X/AMlH0ti60oS0G8x/lFBF/RfJP1/3R1paG0ef9ziBM/6iTO5mF2n+1/5UbX6iA4luAJIYZcZgG+ghdM+m+n/JatYwEwZtAL721Gknku6vW/6g/hpe78rm0EtaH0g0wxzle9fb/t7bIQAKitIJ5xfyX5/8U+yiyYBiABmJbfzKP3z+TWTAS5wkNP8AicCFmpro39u/e3Fn4hRoAL6gS4HGSJhfPtj9KbS0LWieI8JO5jCaVXef7K/lf5XSOEG6AZkH/cZXZf6e/r+v5Xs/1NEXAGCCCBkfFVNetfxH+PtsLCxswaMsmtaDAwkwcanRfrhtJOBvw6pLKyj/ABwE8OMDBef/ANh/y5zG8LXVJDSZggioWMH5X9p/3FZ/Tn8TW2jrR4o5n+PABiTOOy8Gtf5Da2ji5z3OcSSC5xdA6xmuR90tXPJL/wDIuJ/yJ7ou5f13/TZt5tXgtYKhsgcbTjxbraOD/HPupcAXji/HPBxjwBOa7Wx4cJvxgHijYL0D7P8A0/8ATWbZDXkumrncVQMBFy5Fj/Vn088XDJnNzaZwCNlPEseKfW/aiSYOM34/7u811z7n9kti8hljaWnEL2MLiIi+i+rLD+L2A/8A0hyA9armfRfSNYDwtAk3x/lCvf8AFeGf1R/Vtuy2baWodwgGZaCB/iCA6IgjU3r3exs8MBcnbjEVFZJrvmn4c/YdL1Go4/1DARFDuJFy6J/Jf6VsbcyC5gucRwEf/UcNKrvkI8Xgorw37j/6f3l3/wAVqKEQLSGmBjIGN3JcL6v/ANP9vLXB9kHgw4cTwBrQQTC96YBJcbwKGU1taCKnGZP6V1h4J9T/AFj9TYh3/wArXtALn/6gAbgGgipXSfqrC1syeIOgTxGo4iMLoGYX1dxCIwN+q6f/ADj+C/maS0N4jNLhlJ5Jq68J/jn9gusiCSS0Okgkuv0kL33+KfytlrZtcIkgSACR/pB5FfL/AN5+zGze8OaQbK+b74kRgTcuz/w7+TO+mdJJNm4iYmhMSdQMQrhr6fs7UUmk3T6q/wCPUYUuPyvxP483ibN5dDhJmhqKYUX61ocu5UaMWJwpMtc7k7goAXAfCPGg6yv9EWoBZu1jzTl0TfW733CmLPzvVXgAam5AjSjw51nC67VazPe18qb3+CCrXYdNdkxb3lupuPeWyS0tIG4QVLB69ES4uz39FJgJxG83qrn0pSOpQZkYj/6m6dEr3qdVrkDAootf2fRLw1ykwgIHZ7qls3zPMdhZzp1i4xRFlmBjE1QCcOVVRza7DlySEKT3xiNz5IGfaxzyWNqTvrlvEoWOfTKBeqPO2hCCTmwgLb/xyFFbindR4cygBcb5pkJgBB85xstaDL2CowIAHEC+udJ50W4O5U3U53b5Krj3UeaANmu/dcEWCsSJ5pOKhIkXLWh0nQd80CutYEnM3CPVZtpEVjJStLOYiIBreaftP+MkXm9BmvEygbH93ctkwZPLVOGoI2rYOkc1MN26K9qzNQL0BHXvyRa69FwzvNUD47hAzXVN9bkGiE78aEZVGVT1UuJBR8nCEQw6LMtd0to+8UvOOKBuIen6N6m60T8FPBCTryj1RrW4IQDJSCM0wciGs64TosTpHmlFpHvcTOSFwi+Mc/1ciKFwGe8e6Zn1G991FAGVS7K67TNA1r9RphhupstK0MTMik6X3YrPZHpHVT4O80DWl21yAOBTsGdAPErTVG+KdpZ9xyFUGsphTApnmRWROMUkYBKXFDfpp2i808AhOGCWzs791nM38kWxnMAi4xfGCZz6VuuEVSMYLxdis60gX5U5oqhtiYqR/wArws9IXzMXiOk1TFu/SiDWY072SuZeiGzei8eHeCCAu9E/AcEzGjWpqLhdfIqhAwQU4qa7KRcmH085qhYIuF8E4/tGd+pgRgK5A+NVMGL7tE3EM+SezYBXDEGtUaK5o10hBzUzjHM05JQ3NACbtDP6TErDspgNOd3mgRrt9gs+1mIF10p7R4wOIBSQjNpAPTdO0o8KBajRe9kC7CJI1TNb73wmbag57nA6QgDNxzFPGExsjP6qNEr31kwd7kA6mHiUGITCvpukai98YxpBNUGGt+iWz7hYNQa9A35eVI5o2rp980zXjNIgky0kpsUBGV/X9rAYVjWiDNtIwM7LcU5zoPlYAZeacWfRAsacsEzG4UgXesg08UA85LEpVZrQDgZP+27zQRZaCRPDndfnWQgsauONatigPqRucUrn6RdULeWOcjP4WIW0weBDg1TAoWgRCMdOfMyrAyogQqWdyB6IEfrJABZBvxiVnWguyWKxI6YVQPZOjDZfu/amxEc1+Ixt1cJrhov3/sQrGnXLktRnk7A11OSVtn4pyMu+ykA6xyVYStGpWWWqeUvGgV6gOmiq44pHWiBZ8Lt1AH4VJSwO6eCBWnyxu6KLm9i5ULv0l5EKDPKmHpvxzTE3Vol4P3gshTaaJS+UDz3zRcykgjWqDcSV4QamcxAvfwsHdR2fBY0Hyp2eyDWrJwnRMAsSsO4QK/IXZZb4ytELE1gY9111RccECG/kqBqna2eOyQFAS0pmuWeTdRCP1igLWpZGaLzh7eyz9cMEC8KZtltus1srOs/Du9AjxudyiCs9ueGAx12GKE9+qBy3pfOq3APlL+TLmOcStxTcEDc+S09+iSzen77GKDFyBKLGDJEQUEyyndFuHPAiCclR6wE5biYQI4jKTN64lq0uB0FDnuuT+MeKH4CaU8EHQv57/EvzWbpcAWgua51RMUYG5kzU0qvBz9G5tC2S0kXRBuPLVfWT2C4gVEQRMldf+v8A4DYOLj+MAyLpil4gzQla0eFfw1rxaVs3VDoIgtgCs56LuFp9aLKHG40AyM4gXr0QfxJrRRoH+JuoRJuXQvqf6h+ptPqeK0cwfTgXNf8A58QIP+nBSjvX8S+5l7RLRvd4LtBd4L837J9q/EA0EG+KGg6r9EsjmoDaC7VJKLWb+nMJCdRpCACxyVG2aLW+Hlikfa3+GyAF+Y3GaLmVF8f7d8Qs0nHpgn4Z6g8xKCduzXUL877z9tFpZuYbiDPPDZfpuNa5RQKVoymNQg+Vv5P9q/DavbAA4yBRy/OsziBUUuiq9q/tf+CG0DrVs0g/5TUgVI6rw+xtDMTEGoP+oRqaLQ+lP6k/lTbayALhx2fDZkC4CBH7C71aTnC+W/4P95Njah4J4TRzRnovpz7dbhzW4ktmuUSoOTZsOZWiK4ZYIsWD+Xdygm8Svx/5V/HG29k5jhJEFuYOBX7ZMVjSMbvS9Lx7VpI1QfIX8r/iz7C1Ic55rPE4U/yJoNIX5n0P3d9m7iY8tc2vEIw919Z/zf8AiVn9VZ8L2DiYIa4UJEVqL6r5v/mn9cWtgaWZh3+k/wCoEZki7mtaOy/Y/wD1E/UMBDrNjxP+0cJG9DK9G+w/+oL6W0bNsLSwh4af8fyNOoLRTmvmG0tHtvYRycI5YhOPqXQSOLHAxuRcpU19nfaP5xYfUAPsnhw4jZgn/Enk6DcV+ta2zIMD/K6+g29V8OH6pzeE8ZBBDmw4xN8mCI3yXaPtv9p/VWQhrz/lEF8uAzLSSbwkR7L/AHl9vD/p2Wkkvs3ho1Y6jicDw0hfPMkEjDwX7/37+wvqrZrg+2c5pNGQIaKSBQUMTVdfs3TWsZUmfZWunB+5/Hvr+GTFTQG+G5Rrevdv6l+9MdZkBxJEtIgta2ImJvrFV8+/Zj/kJuJiPYr6b/rn7eG2QPDBcyHBwrxSCDM5C7VRmuv/AN1/bp+mmT/ja2boktJiQR/+0yvnZpqZFTSCZpmvo/8AuOyLrCtzbWzJGB4uJsnIL5wba8JINCDXO6gGy0ke4/0BaD/5hQyLEUrRriZPVey21oP14LxX+ibMcT3g1izbwaVLicqwF7M7aJ8Jw3WVeC/3r9KW2rHG5zQ0RfxNkmTlC8z+h+vId/tkVBqHA0jQ3Yr6B/u/7RxfR2hLZcy1sXNMXDjAd1BXzs/6aCZpLjXERSnJFlfZX8c+qD2MII/zYx12bR6r9Rww9r14/wD0b/MeKzcy0fVjuFnFi2KAea9fDgbiDlWAES0n47yM/ZdN/tL7CLT6Z3+NSWxfP+P+RMaii7k+2NaXDC5cD76ZZEkTXOKRdgCkSPkH6j6ANOEtuBEw04L6H/pf6uzFg1ocCeMl4xHLyXg/8qdNtagGQ17m8UQDwx5Xcl23+m/qmstzMDjjG9wjhMbq4r6aIPLzU4yb1qOirZWc8JJH+QmhSusxKyhg3PfsLjfU/UMYP8nASq/VfUAAkkQ28yAI0JvXiH9m/wA+D5ZZugcMXyYzBGa1Efu/2B/OyQWWZGM7XDv3Xz/b2LiXcZlxJrgMoXY7P+dts7MMa2eJvC4uq7irJz6r8FtpNQ0+6qx3X+oftofbASHCtpUXOGAG5X0Z9t+nIApGmuK+cv6etI+qsyc3jdxab9sF9IWP1RxOKzRzLJM5smULATXA3Ji/LuKLlGUS0zSgxGat9PbgTWL707Vg0LpKG+nYquoltG4o8PX0xQaUBaIttAgGRRJRScUlpaUpemJw7nNSa27HvLBchdpVAEheNt+wlE1nA0IMoHBQ4FmjzhFzVcBLxolBSsCY1uGxwlbkwK9tMkpmkGDIE6JuLA/pTOa0r52/v7+Ofit2WgP/AOYXAUkTPMyvM7J7muDmO4cARhSk7Fe//wDqFe7/ANuKNn8jId/uaCTN900ovnS3sDBF83kXSMlpp2D+T/ey9xbx8UBoeRdxQl/i32A29qyyu4iG6Z15VX4n0gpEV8SV7D/Sf8Ye+3D3sLQ1jnDCscIm8wATzhS1HsH8J/itn9LZtYwgkNIcYqXTed1+8bXu5b8EUEGKSEtoFiVkX2tFxre2hpMGlbsq3q61qz/E5Umueio+W/7Z+vtX2sODgK8B4v8AEtmaj/cd1037H9iL7QNn/wDK5rG4QcTRep/3VYf/ADtAFG2IIAwBc4hdO/htmX/VfTgUi2s3HUAGg3W0r6Q/gf8AALGwAc2ys+OADaQeIkUN67W9oFc71L6cnhBiJJpsUrzIXKza6KMqp2oqCJ6rFsdM1mnUq2CX1bKUvdVdI/tf+Rt+nsC2f87Wzc1hxaYmoyN1F3P6y34QS4jTmvmT+7P5g76m3tGh8ss+BtmRSgALq70TjPo85tPqHuH+VT718Ll6H/TH2t1p9TZkEBti5r3zEuj/AGjO8Fef2NiSYmb6kwF3v+E/eW/T8VrQva0hoGZAhxzqMF0H0n98+9tsmmf8bzSvFTwC8X/lH8ha8mHYlw6gwZuXWfu380tvqHOs4cXuionhLTg2MdF6N/Bf6aEMfbE/5NnhdfBPgUZrpH8N/q61+rteO0sy2wHEeMn/AFGcMQMN19DfaPtgsmNsxJa0cLZrAwC51lwtaGNYAAAKCLrpUnuyp7Lno/M/lX8lFixziCeEEht10zXei+ZP5l/Ln/UO4rg6vDO15F5XrP8AdH3VwaAJ4XAg60mOq+fvp3G7Gt+QXSRY7z/XH2QW31Nm0/6QC4zUGKAHmvpP7b9BwAicYOArhkvIv/Tt9iHDaWzp/wAnBlmDWjZLiboBOq9mcQbmxW44FS38VmON3L08UWesIWeiYnrisgvCk+0IVg+KRPpuvzfr/robJIBjiFYEXQs59ZcT+RfyMWIBN7ogA1doBev0Ptn1nG3igibgTdNSPJeRD6p31H1THT/jZEgxOeZXr/0RgAC7KNltFXGiI7CznVvOwFFmPUq4LgRrpgpudOBreCaJi1I53ysyYFcynMI8JJgGMjumZ6IG0ocIaTPJaHz3/e/0gb9RxcI/zs7Muuva5wkRfJzXQPofreAw4yIDpnAibhQUX7/9o/yH8ttIENoA2ZkVM6CSaLqn8e+2m1cWEABxc1sXgGjZz9l0/Gn1X/X5mxYb5s2uac5FPBdjtjWf9sUzk3r8L+F2HDZsbFbOzYx2RDGgAjxX7j7XsYLAZtig5uiAcnB71wUAmbxffOBzCnaAyK3clS1tLglFjWckFA3vzSkIk6jbFSNUDWjr9RHgt9PZj99Lk7WjHvZBz63X1HqgLrRGzx6c70Xj59PBKMesdUGa/CkbJyUgMhbh2615DFAWO271SG13Rc1UF1eSCbWJ3upuplyVBrN4uG2KLbLbzQazxvVDZjP4QDggYC+nsgDms6305oNZ5+KzYFJM38kz3U3WFpGGI2qjaOWggmNrlgwGletOiW0dWmF6YUQKW4ZLWRv1MpiMVhGP71QLKHFNTOVTJRaNVuHyhBkWaapHvjw8TCMkaa5IBbSMDBOBi/NBziL46d3LOeb694oh3Q9ZhAQP3idSlY88gtKJfogLq+3kuLaP3POgVi0pHbUz1QJPimLFQkQuO6zmmfqgd1pJ2pGXNVL8O6oExSK3JXtpA3Jyj5QK0m4XHMoBkees75J2Pw0WtB7c0GLaSoEm6Y2qVd58fDTdB5i6NwgAamjNRZecsFyPyIA6xi7irqkDa3g05pbW3OanQXXk5oKzHWT0Ra034Rh7LObnesbO7Se4xQCedOxKAPeSJqbjTHDpmlc3aNL5wQM6zPJAtx6pbS1JvF98Iixp35IshrTuEtjfhXNNxeP6SSAceko6LWgjv0UpHulnXqi5kVwRmwxsu8lP8easH9mgKQGTojRhbxml45rjAC3vHsmsbNAjbQhYHfqmcBmpWlrod/JGc+tK3x6pGtz9k7Wd5o0eJy7zTOsjjFLtknFomFqcvjdAtnYrcC1SEl5rcBKAgBPaBKLKvddkbUICGrEnMbKYRhBuHuVnDHLqsHHvD4SEIGREdFqAAYlE2XigJiKXTjepzX1wRJpcOizWygATWFmhZ2eP6TuNO6bIIuHCYgzfXdGEXumsk0iScEAEAe2lM66ypkTyT8XdcOSctQArcMbItMJTaU3qgaFmvSys5Ahbj02TWixaqWbKbawgm1qVyYu77gKbnYCaX0iu5w1QEEYjnAkbFFI98Xz0knbNZBB4zxr0TscpuAqAKBPZMjnVF0SffmlIhUL4uUTOQRDA+foqBw+VNp7CIsxgeqBi/Cvomc6TrlslDK7CZWa6vfnggxQfaTT/AIyjGfLTcoluOvfJAbMLsn2L6aaEkzWcY3XX/wAFN12P7EDlc27ZajPJ+4LPaBdfX3KR9mcjGaM5gnY0BzhYjuSqwgSlcU7+5u8EjcbqZIJPSFUc6FOdCgk8pXnIc5NUXIEIEj9IvB05kzywS8WCRxWaMT+skHPwzjyRc1I0qDBiR5jnes4IPKDSg60zRGxWtAgj+cZ7Cnoma+RS5Bv0ovgckWZIKFyWUhE3U1NyPD4ICB1SOvTkYlI8oCWxXAZ3pGtVYStMIAFnIEpmtQEN5aZrU+VK0CAst41vQM5s0zRujfwjFOB2Uv5PnIoDZUuux1m9SsrMZAZRknJ1v0KzaIENoB306LFxNxjVG0FVgDFM/BAwWhANRLkGCBSubUIzW8DfyQHiW49Vgc598o5rBnNAj3fGnumba4SSc7kbRsYfCibSo3yQVc3Pwx13U7O0xyVLS/dRYxAbUyiG4p2NiJuSuHigOfp3cg5/eCzUqAmzvg3QRWkpBW/OVQN7olNPj1QMe6SsLC7fZPxd64JPydIicZNAOqDC0TcSLUxs8UC8KZtgMRctOkp7NlD6kSiOJ9b9MHgtMHiBA4rhovmj+zf4i6wti8Nhtq41DSWy0DK5fUndFw/uv2hloIc1tZvbxOrfU3K6r5J+1s/zaDgRxc7l9Q/wn6YixYC7iiHA6ZcvVS+2/wBd/SWdG2DZJkvd/kZF4k4aLstl9MG0ERFwuCDMfiL8aBEokIN/W6gHD+89EWjHDyTl8DekYqTiYiiDW9/jySfha4EEAgm4iZ00RtLOU1kY0Qfl2/8AEPpn8Rf9NZOJvJaLhlC619y/pv6Ikhli5hcalr3RGjZXe5yBrfkNlQFEx49//JBjSQQHsgxLf8tOi/D+6/8Ap+tOE8NoQCeJoIMtGQgXL30NlM36uDeVdMfL31v9EfXCCBZ2gJP+kkODRSXcUQuh/Vfbn2Ty20AZwyaGQY9ZX219VZ8QDTFZ/wAs5uXz1/eH8HNnafmYTwvdFKgEC4tIoKEq+tS48y+223++bjdF5nrFF9F/1l/ZDLYcLrMteGCWz/i7hpNa0ovnL6a2kG+TSDpSYXqH9GWfFbFpFBZvkm8kuv2AEJiPY/5J9j/NZvaKktdeJFP8rhlAhfJ31nA51P8Ak8OBBo5h4XYf8hC+zWfTZGJ78V87f23/AAcWX+bWkNJAIkwDJdIGvilEv6k+5gWwMistIBImkNEZzVfR1kSWit9Tvlsvkz+Gl/57MtaQGvFQKEyCM9V9ZfQvkSAaxM0vE0CymofdvtDbazdZuFHCuU4EL5f/ALI/izvprYMIo+rXn/SYH+k6lfV/Auv/AM8/gdj9ZYuZatw/xc2A5rpBBB3AVI+V/tdu5pBbaOaQZBmBIwjESvVP4l/fPA38f1dk+RPBbWbBwn/i1wkumLzAC6P/ADj+rfqPo3F/43GwhvDaUfJFXBwbJGhXWfpnuef9QJMwf9NMq+qqPoO2/wDUF9ExpPHaOcACLMWZniyxpquh/wAr/vC1t2cNnY8HHIls8cYEnJeffbftFqXhobJkTSYBxJGC94/hf9KBp/I57aACOE46KfIrwf677F9RZVtLK1AcPyF5khwN530VPtH3Thc1wNWxXEA184X1t92/itla2ZY9st4C0EUc2cqHJfPH83/qK1+ndxM4ntI/xbVxDReYi8ZJqu6/xb+8zZsAtLFziKB/+P8Ai3TiK/X+5/8AqA+ma0vs7R1oQCRZlgkEEBwgOGM47LwSwbFC4itA4EGRgA4TJuTO/jDrQjgY4kVLWjM40mJVxZNdi/mn9vfU/UQ0Wn47OeL8Vk3hABxMkknE1vXVbP6a0tIADnE5TLtYFy/Z+1f1L9bakNFgRQf5Olt//YwI5L2/+tv6dd9PDrUjiBqA4PLTvFyiWPP/AOOf0s59lxuNSJmvEDSBUYYrpH3D7Y6zdwk3Oc08h7r7Bb9OLmgQO5pSeS8L/uL+Mts3cTRJtKkExcZPDAy3VlSV07+v/ruH6hhmP8mjmaEL6ismyJgj4XyL9ltOF7DQ/wDyMN9RBBvX1t9t+p4m6XwL61lSq5zLOOs0wn0R/HPiaZD1QFwOYg6qjNO9FjqwAiFSzoktMNU9m/QLUmAPcZunGNErRNMBlf8ApUdY4qrRAUvgmGa8o7KYCEUPzaz4KcQeFO1seyQupzi5HjhYGLk7e9dVGxcrPatSaGNog045rNb3RHg8FZfwK20rlqiCjalK003kFaGtflLxwiGpTGOXZRXW/wCbfxtv1H09qx7W/wCTH8JImDwkjarb718gMktF1MpwpI3X1l/Z38g/FYUJEG8XvlrhG2a+Un2JgcIuvikStRp+h9l+h43Na3iNQTjAGy+tP4T9vFnZiAASxs/8uLfKq8n/AKV/iEH8loyha0icTBK90ceECBpdkudrNSc0i/zlEjvH9Jgz/GSamTCmx2inFFXN8PVcc1pgaAZzd0T/AFD6zN/pC41qciNFsfPX8u+pNrb/AFNpJji/EwEg0sv8S2l1QVxv6VAP1zAQKWbzWvCWCkbSv1f5H/HnWLrSA/hcbR3+UVNoS5xoL5MrqP8AVv3f8X19g6gaTaMdM3OEHHZbxLX1iX0BIoajRYWorGIp6qP0VuHCAQaAjborhoFSQAMTQRusOibrTAUgX5/pcf7h91YwS4mleKRAX433X+a2I/xDw5wmYcP8BjShOS6D/Kv520tMvBbcABBjvRWIb+xv5y17P/jc6JALhQSZkSV4P94tGzR0ms77rsX8g/mBtG/jawNZM5uJz0XWbSwu1M0zotAfREEOgb50vgY8l2H+G/wr6j6kjgZDCf8AF5nOOKINBrqvzrb7MA2YNDIjGbpyX01/V325rPprDhaAf/btDqTxEASScZMmUUP4j/Wth9OJILntMfkJucby1oEATiu1WNniTXDZPwR+xXlggf0Key48r9ZrFxn5U32gyTWjuqDWE9OaWDyv+9yTZWUMJAc4PIwkUndfPD2Pj/b/AMmg/wCoia19F9p230LHtLHtEOpUAwc7sF85f2h/DXWLyQwcPCeEtAAoQDhsuvHl8WO/f0r/ADOzdZhkcLmyAz/EOE0umea9YdZ0BNOI34r4j+p+pIPE0EPiOIEgt3Iu3FVb6f8Akv1ANPqvqGnMPcfMkeCWb9NfaT7OCMzdyX531/8AJrKzo62smudMNNo0O6TK+P8A6v8Al/1D4Yfq/qRW8WjgXOwBINF+bwhpLjaS4nil5L3yMSTNxyTE19Ufe/7q+mZxn8pPAIho/wBxwqvP/qP5+/6guDGP4YaC7hIAvunzXVP6o/irvqrQnhJazi4i4SxxJoIN1Lyvob7j9gDbBzGNAdDRQDalJgDBMV0X+B/UBrgJ/wBRHFTC6Z1XrbHDL1XzP96FtY2rqwGkQJvbf0ld4/hn9pf6G2pDC8D/AFXcX+4SJuSmPY3WcoPfS5fh/T/zOwP/AOoBEAk3ScRmF+o37m3F7TtdHksposf7FFjr0r/q2f8AIDcj3X5v3H+W2Nm1zvyNPACYLxXYIP0PqLcC85G4XLzz+zP7UsrFr2WNtZ2jyC08EEMkVaYN/qvLf5//AGtaW5PA4tYQZ4SWupcInFec2hOJ/wB3Fd/uNJOpWoi7vrOJxcRRwlud1ehldt/qP7ObX6kASGtItHOF/wDjENm6F1f7X/EvqPqXBliHBsw5xFACYcQceS+mP6q/rtv01nLuEuMAluQECZrUK6ru30VnwtgC8ZjuqZrIT2hAuyjpcol5zWF0XPRazBIGGfNXYxFMNZ5Aeqm1+U0pW+qYjOdh7+iNnZATfdMYjBAXN8olABPwjPVJOX63QAtCdneaXgukxSfhO2MOuaCIabpG8GqrxwbkgtfhEvnn30QF5nfJCzKDo55oGyCBm8/RF76Tilela2ncoBYnf0VJU2lUqcqIMBrygeaXh1vv70SsM1u0xWs7O/A+MILvYAQBkVB1qLk9o2gg6nMZ+KVllpcEBtWQBrTvkl5Tei0RS+EriAKicvlBuPIja9LxzjudNFgzGACU0aRzQBxywu+Vn2u8eCPDlfMThCxaMLkDRKS0f+steaaO/bVI3qg3H1wQtTCcMju5K5mNewUEw/f0ha0Nw0F3O9PCIfAE0xOZm5AvCtbWiJSm6UCl4Sk5U2xm+VTh0U7QQgHpeUJRs7K+gEjBEN72CBBuibRE2covs9ROWPygU+xOazmzFYg0RaiHDIIG4R1pzUbWJVOIU5JDZ43A44A+yCZkXnFORjTmnJy8VM7yfBAW16FEWYxE3ckA/KQbgUgM944oKuKm3P8AfNEtT/VWGZ1ABFOaDNMz5KVl3gi61rfGNAVRt192tUAFUSwYBFpzpOCT8Va8kb4k48E7RNEgbFNqrF9UaMWJXvNxNLwPVYtm9a2ExpTkgLG53INpmnsrNK/zogEVnRVtLUGBz5+yiCPRLaBAHDMzgPZMGpDhXFA28daDNBZr1Nzj3khndyw0VWEIA4p2uQcUrigo8qYKU2iYt+PVBp7yRLZ5Y+KVrlQ56x8oEZaeyYu0rmlnHGLxcjZNnS8zyQStDluTmsG6DZYY1u0vnJK9yBwaoudtS6qmHA68oTC0iiDFyyQnvTCqPHp4oH/Kl40pRcEC8SsH4/7s8hkkj43WceuKBg3Hqlfai+QN0rbSMZ2u8U9owZDCcbtPZBiFnMWZW7BMXoIvGWOfoixyMan2+Vp79UBDo5ocH7SmOwUwYgYWfeanamZ6QncaTWawcBCk5+gpfugZzIHFWW0jX/qgiKxNwu7zQQcOxZjhA8laVIPuOYmJk11VQd0aoIE+IhBoyO4xTBGU2Owy8UaZRpeU4alPh480Dyi5/cIm5D8mpOUiEBcB2EwclLeXLpCaxcTfNDCDkWAXZfszanYjmusWNpXnHiuz/ZbGMjPgtRjk/Xe2p7wUSnLdB7dlKXKspWjJUxZ5KptZHcqb3UuQT4cIFb5mAldOco7xslc5BG1djFclNqZ5z6j1SuZCBJS2jU1q70ShvNZCkJCnk5JSOmJyOSgJCk9qdwSgV2zQAE4rOKeEj3RzQK1mw1TQEWnuUGMOl+KBXOWM58qX5ynOw7yU0a4lePO6ETd6x6ItHwsNrrvhG02XCEzVg/MknMouF9YoSTnojkAag4pg6UAzfogJKVxN5uTGiQvnLmfRAWtGXiiEoTd/soM2UHHplnzTE5Qdq9cErbOKfqECSM04HiCOqUjzVQ2BnsgRrScLtYnTmpzWIjS/xVA9Ke5QEBbgUw6DpmqcKDFizWxeATqaeC3F1mAnszn1QSdZbjQ4JnUMHK6n6VLUz3zXGtK517hBTpsPfBYClBXcU2rKwELHUjpCCJtpMeBmE47oYVI0rggBHO/UoEhHhWY1B+6ANT2Ikn9eaIZT190OGUBfZKbvbzTFmAmt2Q/8lRlltyoJQAV9BlzR4Uz7PzvWcEE3swy9kbOxHP2qqFxyGsHxTEIFL1uMpnDLsJHWcXctCgZzu4WS2BkSRzJEnYJmtwNyBwhxdfJGz/Wo90vFkDzEIM411WNoiHaczgtFPTBAgtOndfhazZ87FYWVKZzly2VA1BnWU3c4pPXJGzs0QIppVUDexgiam4pSxUIjDdGzKGke67w1X4X8q/jg+oYWUrUE4OzOK7I0CK1P+3TNTbZ7Ia+ePuX/AKf/AKptpxM/G9rj/kfyBsf/AEdW7Veh/wBZ/wAFf9KzhtQ38hcSXtAAc1x/0t/6tEVxMr0XiBgVBkG6lPdF4k1wEDRv7Q1x27CMBW5S+5fbWWjSy0Yx4JqHNkxvSFzWdTgPUpfxmcOvcokfjfaf4X9NYwbKwYw8QJO2FT4hfsNiSU9p9HMTcZrKIs4xPMoum4f2lA8xXP2U07WzpuimFkCCHCRJ/wASJ86L85/8X+mc6XfTWJi48AbBzIF8lfpBF+FEQn//ADrEHiFjZggV4WAAgXA5qtp9ZU3DIAQlDb/dEjGO9EZTaYzrf2UX1gm6aHHYZBM5uMINHOaZwjUfjfef4VYW4AtGN/xMtdH+YdhDuwv0rD7NZWbh+OyY2AG8fCJMCJJE34q5sqxv4eqLX0i4ZIaq61jAcruhUrdw9eaDnXahI87XRihpwIXlX91/TngDiP8AFvFBF4kVJXqJdTmQdxHguv8A80+2i1snWZAJc008Z9FYR8q2LaggCkERN+Z3X0J/XP8ALjatA/3N4WEN83ThC8DIDXllZa6CzLTkvSv6E+mcba1M04amkD/KAL79UqvfPp200wBXIZZex85SNJ5ZKtmVnWA/H506KlmMDSdk4s8ZE4jHklc/xIGoVEnWt4vAN+Jw6K5bdUEd3oRHdUOIYXG4YjdAeJM1qzW79Uj2oGcldZp22eZCVyzJ9DWLYmcwjaibqIBVtXnwWgpGUjuqBag094o9/pALMZjEUnBUcBKRplF9EtGcLozSlskXX4iU1m4Vm8+C/M+7/dhZ2brS5rGl3+R4TQYTikV4n/dv8pc55sQP/wANqf8AcDWCCI03XUf6/wD47+W1PEZLSKC4g1Mlfl/dfuH5bW0eZJtbR74xHEZjpEQvVv6h/j5b/lAhzRvINOi1V16x9m+zts2NEVAu8ui/U5clMXDOKpTadj0XG+o1ra8RuAi6MUp790XPoO+oTOs6XK8UK0+/XDyULWwHNcuy1u5d4KVo0d5LWtOo/wBlfY5sXuYBxfjcAL6waivJfLDXxaVPC5uHEBE5TEnZfaL7FpvF/wDjfnFfBeYfzf8AouxtuJ9i0/mLg7gLosyZ/wAjUUVlK8psP7i+tsIFlatLGD/9RodIGApcl+9f3/8AWOa5vFZBr2cJ4bKJB1NxEUK7N9T/AOn63NP/AIy+BPC4kQcroIC/GtP/AE/fU8fBwCDE2hdxMY0D/fF0nJbZeX2v3lxrJ4gb7nVqbl2X+Mfxq3+pdDRaRIMvNCMwRlkV65/E/wD02BhB+ptLK0a0yG2JeOKDeeIXYQCvYPp/stlZt4bNjWNgCGiKC6VNWPmX+Y/xk/T/AImmC5zHcRBuLYNa4yuqWLOJwGVZyxJGa9Q/v36ThtrMtp+Sxe8m/wD/ABvAu1BqvNftbpcCCINRiJieE5clVfq/e/oXG0s7Kz/1Wn42RcJeQDNwoDNV9T/aPtgsbKzsgf8A8dk1mOEZ1grx/wDgn2ptpam0IZxf4Gpnhc2Mtl7W6zoMaDRZtxErRZ7Vh3CoW0HlksbECKLOEXYpmsp2FO2OQmL9FpSPlT+4fZmWlmbO1YHNfRwOW4qFaztxffsnfb88o8UWPMPrv/T3YuLjZ2j2cQADRVrcpJ1oupfVf+ma1JpbWbWuj/MmTGcNN696LqTWpAj4ySufdyFEV4F9F/6YocQ/6oGKlzbN3+QFwEvoeq79/Ev6a+j+nB4bIuc4/wCRtXF8NyFacl3t+WR8U3DogT6ays2N4bKyZZtvhtCSYxvN01QDqg95IrWbM+ys5dZx0r+Yf1yLbic14DjIiKcsl5H99/r62sq/4lorShpzovpOFO2sWumWgzmJW4Y+V3fcnAf5cRyht3OK8lyWfzp4oC4j/jh1N0ar6Mtf4L9M4f5WQdpJaB/+2F+X9R/VX0RMn6YCW8Mse8Ea/wCqp3VMfPf3H+Y2sl0l7AAADhOOq6n9+/lDrQE4CWgEGhGN0Rgvq2z/AKW+iDCw2TyDWTaP4tjBvyR+1f1P9FYkOsvpmhwxc59pfo8kJueJn18o/af459R9RSwsHWxgS9o/xn/jN0xXmvR/4x/6ffqrRw/9y4WLA0EMsyH2hIvaTMAL6OsPpWtgMaGAEkizhoJIiTAVLFkCSATUCntuo0/O+zfYLOxa2zYAGtuJEGoqaX1X6BaB/iBheFVxOA8PdQLTjfeT6BRSvCwbCACc38pU0YAosdNMenigAi1neaSpDtszhTc/CDZF951lEnNbhx0hVS6I3LC65HhQIXTgmA2G8lZrsugw6p+GhJpHU7ZnRBEOj3F3gqKbnzWD3mM07nIAWfGiYotKTj2i4VrKBi0rWlmMzyRhTIi5A7yK7UOqSzai12l+KZALUKZsrirtefjvBTF/nogoLDyrz+UDaRclfOsZ4bJS9AD4oEImyxIRfddPmgzHpS+uiezs5qClp84IASs0LD9fKw3jvJBnfpAZp7CzxNwkU+U1o7KlINJlBFmMpHEgeSoQTgY1We+4Zfrr6IJtArqBOhCR1lMTMYax4jmmOqNkSMAZxrdlfCB+HS7NZ4p/qxuEdSg8b16Tule6Mb8ruaCbh180Stwots8a9PVAgbN5p0WboLtUbRCzPZQN9O+BEVNZ9FxpkiQDHUc/lchuPRLwgU66oHa8YBAtQfaDll3gnaBSmo0QIfk6LEUjwmiexFKV3ujNTt7QTNIwrB6IFa3XCOqk10U8cVdSAr7oHdaUQsGhEtTtGMThFyLC2yi5nf6T2gzBnvELB18aVRrYwyxRnsR5qbfHuqJGoMmKUGKLsMGk65GlOWaW1tM55omzpdOF9CEgs6mkAHBFPZpy0dVMnKN49VuCaIxPTOKJb7qbxNPBUcKeA2RsQ9G2iFuK6n+nMgSpl/wgmWpbRmGJuPfqn70RbGe++CCH45pfyonZZhuuM5HAKlqK0okGGZ7KA8XW87rD4TMsNIETBNQUgIrU8x5IAy2rGA/3Z7HFUcVnMGHxyRNoIQLHcJnDWmWIz6pXO0QQGcIRYfO7JKKItdogd7khci9ymT4dUC2l6zbKZ8EwdpzKad0Ey7wvS8WkzinO/t0SN3QPp455DkkayqYIk/pBoGZTR336JITHsaoMRflTuFpQLe+i0fpBu4w/aH45jvu5UDNloQEM7rWb0hbpHO9F57lI0oM8IuCZqR4r3CAkoF3gm/GIJmYpzN0JI7zQM494Hf4U+GK6pmtn5uWBOUd4IIWk3gnMNGZoZogqz/kDnSf8o8KIoPzbG0JOcAVGPNcgWw05lF7/APy3kXZUWFpGA6CeqLpuPW5B3d6A7OEIjcjPJEMGalaYw6Gp3QnXpesEDB3IYXSFgRj40xros7n4RCxbN/ZQPddvQjlqh+Q409VP8fXWIGgGA6p2M200QWs2C/0Xb/szYGogDY+q6lZsA3uvwzXafsl15wNfJajHJ+k4qbynLPdI4eEKslc3U+qVrVnPSTOhyxQG0Ki+zGMHeY8EzssEhspnQ99EC2br68jXsbrjk93eSe43j5yShqCRv67aVQiOd+XOPVO5qDcrlkTc06d9EHTpF6o7f2+UjnKBHO8e+qwHhcfQ6rPHLdL+Md3dEGc4ayNadECb/RYM8UwGo2QA4bhRthXn6qwali9ArGbUP/IjpKdpnuUlpyOk37ynARZcJxpXia5XYVT8Ocmvihv2EXswalhF3fkla+KGehRkzdjvgkLr845KrTI7v9lIU7qg3FvyvRJ791mvrM1WLkG5c7lrMdzKJOfLa65LxzhTaEDNdkTySnJNZtQLkADCcaKgMdQpl+HjrEp2N1J0KAOphO5iNkGjKh1JIRPeyUDDNAS4YkJC9Zgn4Rf3KB23ClZkX+KAnOmQ+KIgRlIui4qbbT1F8DBA4EbGa3wRcIzTOb1whMLOuFFF1pXnGyByzOkdxCDWnGecQg7wMArWjkGte8xzStdp1r4rNdmE1mYwp4oA4rcSzrPkFpQBztEeE4+BHiCsXLfjxogZjuad9p49+SE3aoBqBw8ftAv0I1wPLCiDtp9FNlubsjjead8kFmWfdyYuSflRc46b4IMHeFN9kfxpnJRaaH4CDCy8USEn5U3FPxegL4jyiiay5jmks3E0pyw3uVM7+iAWlpX3SPKZmZ76pjvXIIJicB+0WfUC7irm4QNoT8KqABnXYx4IJNaTBnOYFeuSs2z77CX8k3IkImM8IWbEpab66p4Qw57obt1MtnlUfpMH0vAIOsx4JbO1ON5uQwrbZN+TIUu91OyFaZyaTuqu29URi1Zo0EYGP/7j+kzWdi7mi0moMRhFBrRCJHv4TMCc1pSggUwWLd0XCixGM9U73a9flIWous47nqimFnrQQamqEChzuGiPM3QljnqjNMbRMxp7KDLGsqlpa4AeyzLqJkxlJxGSFm5aMwOSfC5aXSPfXTDOT4LcN+3qi0dmoGyAKIHHpoNs+qDmnslUBU7V/TCEawpYdL0tr9IHAgxB2kKzW+nisI7EomukfcP6X+jtLT8pbaMJ/wBYaWjii4zBhdg+z/xP6f6Zp/ExzXOEOkyHb5L9glStPpi40BAuM49ygs23BuI/WC5Fn9QCMuh8EjGQMZxHYWZZiZuUkRYePSYqlez3m/uFQON03pZ/UqjNatHfyi4TXSI4hzC3tlQSg3HHntok4icThdA/aDnjGeQJ75rfnikTrhyWbcFS2+eWKDH7XVUnWhy72RslockP0ohaOmPL5Ra5az30rVBFv+Jm8G8eFBgVSZy5peKt991IMj0Rc4U1v2Sg/k7CDzqsReb0PqNhXFc7dAleY/29/MyyzfZASIILSRJDgvR/qPqovFCYyvgXr5f/AJz92dafUWgMgC1cIJBEAwBiY6LpB+P9hsuJzCZ/1AUOVfDovp7+G/aQ1vFwCYoamhF/ovnP+M/Sl1q1g/xL3cPEf9IpUiNMF9S/Q2vCxrWinC0SMYAEpyuDkCcY5AjzTtopxFTMdTzSvwOE+krkKcePIc8EHv8ASRutZsRcIrEwLs9d1ZcG4UrmeHksRW+mGdQb1Y2dKnBBx7SzGd0jeqDbXllfCZoEzeTB9DtVLaESfWuGCge0NBHexy0Rs3EC+igStJWpA5fJuiLqoPYTiBqa+RWLtJ8krm5eCdh4n/ftiP8A4X/7h+Sy2FDPPTNeT/YP8TODa8ON0A9V7D/6g2N/HZEUd+S0bXFoa0z1ovDW2p4hBNYBj3+F04341Htn9JsNpbWwAPCxrZk0/I5xMGMQ0L2u1MnRogbfGea8/wD6a+1CysnOpxfUObaugg/6WNZ5yea782nd26xz9TSkrNJwiTRYiPTJa0zUk1BspGueSha1ph4/Ks86nqsWdmq2sT+lYG4Xpia0I3KPChKNA8g50ypKNo3lF8+hSuGSAccfGqCb249DeiG88ZIHTJF01NI6R7hLx7d8kGAwGW0VwhM1gxO2BJ2wSOJinTRDiF8mlYF3W9BVvgMCDXY3JbPbnSiBtDhN0xE9BSeSIsCRJ5QI6tKAtMXGmZCH5kHTdCj+Pu4oOXauzib/APVVSeZiL8YXHezOOavZv2QFtnn8pi7bSQfdYPRbaaT4b9CjIAHGI59TKLm05xGG4Sl0nlKRpnO/mjTPKQMT8IqBM0J4sIyzWLsLlzvqaex+lm+RlWEpflFKERWMdJ1WtTSPEIcMXc9VeKN3qqBhzpl8IM6eCFswYnxw8Fs0VjZ6otfdflF6Lj3ksy60natO+l5jTIpYkxBA/wC3d+Sa0aTdTG//AFbLEYGukyFoHjCT8INTxAXQD47IEbazl7om2P8AyyDaTOmiAhxNBemIi/lGaIELWlpW74QITWvnQ7nBMxwGH/7buRxShgudXKKdc0r6cshRBRmwTlqjY2taDcxcqjv4QAeWd3NZzh2UX2eeN045Shx0EhtJpEitEAPLShKAZtyBHWUGmAmYJrHeyBII+PZZvOtO8lTnzSHLrS85zigIbn7oF8XeFFrRIQgPFOdUzzd+kjBvqAjGvwg097oNeRzxyj3Rs2X6oMPj0QMHTp6rjW5u7r1iVyeLDGJ06qJ+nk1P/wBRd8oAyyz+VRtMx4ri29oRQAVAM3kT6JvpCca5lBe9I5wHceV6q4ZRGaQt33FCesoEJuRtAgLMzeBy80H2wHPJBgU4sr5wNAsDSoyKWfNZtAc2dJxSvai/vrKD3StDCz70VHFTsx+8E5MY0OCAMacMs4ohZ2Pcz4qnCltopQwMkEbQaDxPglnrnh0wVLW1Fb6ZXlLZVzrnegVoJ9pmeS3Hh5iExfvz7CFpUZXVQAE0MiND6J32eV0XC7otdgIwj3WZakeFEELGb8Z6Ae6ZruQ8OioXIDnGvojpIA1i+dMvlBr4ryWezu/yWPe23qils7Ole8lrNMPqs4igbpCUNqiYYnv4FVvyzU3DI45VuWJj1xn9J+IGvmInfVFSLpwphifFCblQjzUg7v4QZ9cwJwhPaNySh0IvEX9nEoEjTngi1vM93Jyy6t+CDz+x3KBXDvNYN9k9l6ZJ3MBFcIuQTaNDySEKxb0wz+Elo6t2s3oFnQIh+P6j3QcUrvDuiBbR2uwzVGu/6jxSNfoqNYgVrq5DSiZrD51n1SuZnHWEHtHZkBA7RN523CW2S8+wmFvGBvm5BDhi/wAymNmee8hUtImeXDkks7AZnqgxoMDqBCZZtaKlofFBMBM1qDrUZ9EA5AGpg5aKTGnRK4/BwQUJ16DzKDe6z5o/TDACb5itcb4RcgBclAQtEG2eZCBy9TDu5hFrNuqBCBg7A3aeq0JAiEDuOFOiayb4ZgC5K1yE93lUpAKyKUqcpwhFO202O4v/AEsrjHZ+Yy2oM7jAgToVi6fL4RDRzxynMC7ogG7nlistqEdlM92EDa5Ix+EEmJ4qSET1OaAybsckWOOIj1R4UQEA4U1q/pRA80Cd+RQMBI0ziYTWTb9IrcTVQJBuvuND+k7wg51i2t/zpyXavtTIC6j9Cyowiampk9F237Q8wtRjk5rjVB5RdW/2UxyVZKWJHJyEjygUqNpVWDd9KU6ypOOiCTnQks7OSamMIMJnOn1+M0nGgnO+s5aJeFUc6cBfjipg0gUlArZwR4dpWI1+FHhBqZkZG9YDP1jvQINf3d+kQh+EIMH94rNGvLBM4ZJSf0gHF3EpQdU6DkGNoc9v8QT4oNGs63eSzCM+lVg6+AYGiLAtDjO40zlI1nYvSvf3n+k4OHcIUzRhGwv3k+SR70CJN3RMWohS/IHqsCnF3cKbRedUDTmptRLdTsTRGNP0gT8M4znOmSLARtlv7J+LTfVBjPEz8fKDfTtmlcxn4pbd8gxftBEaeyaysziP1MJyzs0KLlTbY0GhBNfTRNavyQ4dr9aahObPVDEWotfqiBsOayIIRHdZShyaO7qZgX80Csb4IWbAc9is5pOcTgMPlOxqDOs9P/tPos6PEmiBdEDORdRZoOlL6/CDB/ZTAVqkHLWKwPcIsHeaBv0s7vseqwMJXAjbNAGjunmiAI1lFjpHwltLMHG7xQBw7w5p2xotZNjqna2MQgzDOApcmDQmL90n4f1CBHtvHFyDfXNZv03XA39ck5ZWB4jzWshfEUv4adJvQBg8btd07B3OKAvw53+yYN51mKEoJ2m+KfhUwid0D2gQcg9yDux2EDudPYUyExf2aIsz+QgoDSu2nJIHdMoPmERa4G6s0mNBkOqcNimAxm+RjRArjpyw/as3z1lSDteaoXZjnPmgJaKTM4ZeHqi4d94JTZm/XdZyAyNfRFrkjTh43Cct1OJ76ILC0wzvlG2doOaP09lUbGd1ndnBBNr9Bl3orB8U2rropOwAx6dUbd1EZPPgptNaQb8xGd96YWkzdWJzAzjEDdOw0vpqgVzt1g2iLk7LU9M6o0Se8PlO62oBrhWee6laOnrKZtnXxymKxogwM3J2hK13vpyQjxmAiaYiff0W4yVxvpbpm6aFc0PB/ZylBFOaXjxWA/WeiLbLPpkgVpWhPaMWF15RkG2I7n1SWbb96LWeZTPd35IqnEtZ2mgpvXoot+nOdCJhVNMPZTUUiK+iLrYnH0SvFNzTki1uGfJUMBj31Rf3hflss0i6BvXxrB6KLzheb7pp1QUFrfywx0OKYH9+iez5jSf9PtOSFizGvSahBuzhGkYpSUC6tcdPW9LaGbkFOMa+VfUZo2T/AAu05JHADfvda0kjID1/SlCvt6xHSnT1VRpzn0UxhIrHXvJQH1EGLxhOeU5JquaT4Z0/a1oRrGm6QVy2nwTZ1wqPlXSj0xAvoMEzWzhltClZuzp3ii9s4DMG5S+Ie1AmCMbsIwTXiOwostRIBNTdAM9KhXtWEdDMkTPKYWMH438ibDHGf9DHOumjRMkeq+VXfU8Re9xjjeSSBfxVrzX0t/Yf3QMsHgGXWrDZ/wCFS0YzML5ktLGDRzqmC2+egou08XHpH9Q/bD+T8nDQNc0kVgmK6GF7zYOoABSKV6ldL/qn7F+Kxa4mtoG2gGUiBuIXdTHnPIyscgWvynIz5xgj+IY+CICQnULmik89MeSRxnEgRlf7FUs7TQQRXONDgo2lptW43nnkeq1ARy0z6rWzQboOazx5+dyNrZxfGww3TNErJuPfXFLadn1XIZZiI1m8pRYQplHC4Dj4Xe86LksfBjFF4RD7/BXKJm/4VOOaeN3nRSdZ41TtFxi7DHorIPD/AO8PtsubGHG2QbpM0BxgeK8a+5/RlrS4gAhpLDIE8IvgUvzX0l/a32//APEZ/wAXF5rWOH4ovEv5/ZAREEEgDAQbwMyukaj3n+obOfpLJ0D/ADYHENvDSGx4g+K7n+Qe8+i6R/T1kW/SWTS4uhsAwBDQTAzIriu9F4MUuEanbNc+U2/GWhKex3fsg98RQ1zp4JWtVgxZr19FuHWVizaTljufhEtiirbNb7R8J2DE3C+gHScUhtMlI2ztNZv5Joo52MQMMZ9gktG41/8AEJzaZqfCeecXLEv1NLl4SK6o8SobMZTrI6RqgbM6bTctbDUnBM1mm+d6DkXHCf17qqFs6t912yk62wpOvmqkNuE5m6QkDBeR493IC2cajRBxiPFP+Q57U9iVMWfMZwIQb8nPREvjbavMoMACQMnAfCBvzCaxpvquQCBcANQT+lxj9MDeKi4g3FWnQ95ojCFjHr35pbV0CnPLKvmjZjOTrn+0VnO0rfAu65oMnGmUKhCAtNLuwglaziROiIi6s3/CV9sbhQY4pGnPHCb90FiJw8UrVuLw8OaY2tKm7UBEYO3Q4tuYola+UwBKKfjA8ueiFmRjPqk/Fz7vTHyv71QbjqcsIRA3QcOqW0d3noEBjTPzWafDms+0k0pAjniiG+IQB06cvVBje/0homsTRBQWuWyWczdiKqVmU7X4i/W4AZoKOdTEjOInxohZ0GQ3Uxanfbuiz35X5fKCrW30viDN2qRz4okNc5vOUbpmn36IDEV8Lo7vUwfj4RdN5vwux8UAKoAG890QEx7KDbXQ8/RBN9pos3vngmI7yRbamIEEd3ZIJWlljHKSPAJ22OPggTN1BhJTWM1OG90FBi2KxE0+ExaaCq1o7WdMd0gfGAv20k31QBzRvsI8VrlMD2nCmqseuorOaBS9K51043XVTF+vhKBtPmk/pAfyfGime6JmrMcOSDCy0jKs97JOMayjav15Z5JfyTy5R7oDGvgsM4B2/wAQqMBmZ5FLbWum4QYHuJWszn//AGx4rT3pv6LB+3MwgLmSKqfBpzRJJw6GRcmicZQZz8wDOVPBT4YumvgtwxqZCfiQZ7cLzmFEtCe0s63VxE0HNAszQGaaZz3etrgaYnnAwRs2GojxCoW0NLhKLjjWjcL7jN05/pYALOanswjom7vP9IOFP36eas4mP+vfqouCGs7SOeek4LNs9K70Shn7Tg4R/wDbPlcibAbtubyNlQHbcTMahI18IvQ2FBqi92u3zqsDj2NlO0b7orCzzJ0pHVC0cMZOoqiTt1os0xfXwQMRyyqsbKt55LP8kjx+hRA3U7osteml6Vh8lndM9UGYNYU4RKyANKZpQY1Y9+yAsF9PGUQ4+h5oCdOQhPZNrOAED/tnzhAhtCP8aRfSTdnPkkIOeqafOgxrgfdZ1CgxZSa7Ss5uc+myR8HAXrk2VkKaTACDj8M/uL8JT2dnHp85otoLpU/yIKus1JrevgmNmce+gQ7yrvegzibrkx7yQbuEHO3vQVA1U2kEgAHXJNaXVF+GIxk7oA00xogZ1hFOmCFqBNCMqGcFH8nwmY2lyDOf7CPNHjTvfQDzUQe8uaAlBp719kfW/FZ3M+KABBx80z7LxWMIC1EOPTuUrii/u9A50pURMuGsxhGCCm435AE1BAi6nDUoKjgwMq6pXXUmdTAQN99axQ4DHJUshSprjldgoFsRhd4eKtZHuIUj3putw7oLkd3oN8b8kLJsZyicdDmgbjSuCzHIg9zCBm65jEUGydwuSDfcDw3QG3VCudYV5Gd489l277af8aipxIArouo/Ri4ajzXcPp30xpS6kLUc7dULdUJhI5KGaqobi7Km53cJnlTLeqCgXFemepl0XeKBLQqYT9ypz3mgBtMB1F/shKEJXFAHoQsUCd9OVKrNGd3VA2ZOM5YftFw1Shu8qA2gohKIOlyCDFqEpXOSuEEEc0DHvVAmoN0YSs03c+SV505wewg1paZzGOfJJaVuqraXFTFmdxqUDPqBSDklc5KLKK534xss3yu1QADuCEwbHhshPnKcOOvJAHNrdy7KAesXIPOkaoCHrP1Hn6JGV901UBazsmIjdAjWcs9d8Fgac5WYIFZ5GEblEn2HL3TyVNrjMmI2rMReqls93onIjzmlKw6Zx8pWj9IyfHlXK/zQnx6+8Jj6RGN6UlBuHXxTMCUO031RDkDOdGHfmpPcRzvTwevdFQWGV+tyCdkTj2ESgZx7Czjhnf3kgZoTWV9eWWS1m1BzuwgOk3JDZ1ujMzP6TuddnmlDDN6DE5TTFK96dhxWABOyAt1RNrF1VgEQxARzF+N+6LjsgQlLUDG079UWujEeSRrTFIkms+QTFsVnIHEUOCDHv9pbVqZwRd2UCNAxTWndC3wWclawa+aA8q6VTcU90QadFn30PWoAQJavgT3NyjYWxNHAzjkQuRw+PTkqBoFwu8kBswIoIkXDzQDeqpxCeXkpvGSBumHVK+1ipwwznJZhW/HI7vQNZ/U5Y3jAfOSazb0U7KwiiqQUBc+Dul4c5neAmjv2S2rkDtS71Ws2rfCJhm7aIk5/CUHzBSnUIp2WiRloZjqi14Arh2ELPMX+aCrmfv3ySsacYjb1QY2b7tc09oemMYdmiADsIWh0GeMoyU2M4RfzRMYv0Ra1I0efVFpRBI70x5pgN0rm+qoSi6UOyjIz5rHKUwSvcRtjojLSehjS7FJw9m7kt+W8i71uTg9yg3DroqNYpWtp4FFtrN3e6kmCprAwEpvxrB+BhEtVCkd+izSYrAnAXjfVO1gAuF8oOPeKzKouznJFrfCsbpAEwb6BaD2bL/CUKe8Iuv0vG6SYwWZUMH5fK3Gc8KBAjv33WVs0I1yaysdqoNacEWX65LAMGaR6oOam4bozrqt9Q7AYSluji/UW2EYX7+y5DbWgGQicUG2Ga1kPNb/BnG43Ft0X81H6v6i/O/nrp8K7nTOELjfWvhpdSR5TCng8U/s/70S8tBOFJip7K6P9v+hDrSzaDHHats5mjS4xLovXY/5qQbZxJqSTG1y5H9ffbg/6mygAlp/I6f8Arieq6ta98+gswxjWNH+hrW4n/SInbJUs2+PqqWTZFaQJOc48kGFcuRThp9suaHB8KQtCScBSAqufosMibYXQg5npMIWrfDDNMPSvogzHE6aeSz0soOcuk8UQ6Mb0H2iVoWaNIGeaoLDmg8azoMEbV2GKg1plEPE4pA43Cc59JWtRjgt+MgSfNFj8D+cfZ/yNDjBAaQINQSRIjGdF86fz/wCpAeGyCA00IpII8Qvpj+QOP43CfgD1XzF/YH0Rdan/AIhsDOSAStRp7X/Un1H/AMFmDeGuBz/1mOgovQ2Vv+eS8z/qD6xp+nsjMGHtcL/8+KvhB5r0uxPhStJpesW5WCwZmp3vR/Ly1yTWh6KbBSFnsKEZKYGNZ8OaYnvmhYnNba0x15qgtIkVPIJFrMarHI1icUju9OSa0KL7TQLLKRJ05XocWHiaLNTWlnSfBBE2g5YZzdXRPxaoHl8JAzlRdY1ollLvFEM+MeZCJPkpSgo6z06JWWAGMc0zHRVC1IRQArd2cUrm6x4JrIyfVM9vig1idsfLVOBQZqdhYgcyi9/commbfdfmtaA6UwHkhdjf1TOssZO18boF/Ig4qjbPFTc9FY2filDUONPKJoQLuwgWAzMXYtxStGMUVWNm4ShpWsy5/CsbTAJOAjZTca6abIoMBrgZ5RoVSwbE4zeBWUryle+4ZoGab/f2WjuSfRGyZ5JWlAXW2QWbaT856ItI8JRAHtugm0Eb6rCdI0R0Oceqo61gRAjNBFtn0ULcxjjlPgFaVmAYg9EDsqm4gPJA2mg9bo6oA0QKbP8AXqtbOgc+iNi04lO5s31kIEsHTU+PQeCa0uvF6MUwSOE+aDOZ3opEeKwbWpKa0+pEgDZA3EiWiIQjO/DVCEDcsskRZIMd+0XP6SgDnxjzSPIRDBeliUBefkYIC10uWZUxWgRc3vNAu3Xu9BrjjGkY5ysxsC5ZiBQ3uqDhW49cNBfzTuYtMd1QLwR8380jnaKvEfdRaALrkFHP379EGi/NZo2WtLQZ80AcIWc67xx8FrTXPqjZGnugzH6Drf7LWjsp13QdaC7HJGf1eAgRrNf17p2t1cpmcIG6XgnMZ7jLdBRx5rHvNNZC/X0qpubkRTVAWM7u6oFt40zjksHVQtXI3xPaH0gD1U579yiAt+PvdGga3sIyqC3ANL81K1d1g1RLNYv7Hr8IB93fZRefIeSCJ1Ztmi4d+6ZgHv6JBa6HWcMuoqh1FoQfnNBSIT2ZUbR1em1Eaa158o73QJmvgsRjKws47xQBwQnVGUrUFEHIcJM+Gim1qAjLI35pwKVSwi4IANJ5phZ07vQ4ES5AjX4db4KByyTBl6YvQZtFMIPtFgMB0j1QOFrR579EWpePPogUk+2oWcmB+EGv79kDEHVBp7mVrO0KL25DSEGCzWY+CDjoeiwKCjHeKb6p1IzvUmWm05i9BxQFrkHOQhMLSMSJxF6BbY5+KUC79YJgYP8AlXn6pXO+EGlK5KSqsZRBKNVpRtrTC/cIFA7H4c0WkjGZ5wla27TBZz1RRlsZkSHCgIvBN1DTqgmfa/6QLhH/AJFwGaKuD8pgiKkmtXHirqYrzhM5mYPkBpmi0+3UrMYa1uN/ssgtHjf3iqWbEjbLVNsgdIHX9ynSNCAhYoMRDUGDc/ZUaVF7Z5XKjPLuFYOf9G731jZdu+lsoAqTInsLq/0VmDXTnOWy7V9O6g2WmKclTlMWouZrcjKeaQnQprQ/oKLxqaX/ACgnbv1HL5SgCs5YZpuBQJ0HIeaAF+VfBIW+XiqgKJHrPMoM5sKXJUHc3KRKB3qb24eHJGfExzzWNpnsCJUoBsYRBSPZ3MoWdleshpOwzCywb2VggUWNdMVp02RLUOA8u7tUAYe+7lmlBNuDuECjkiG/ooQg5iB3x6bKU3aLTh3zQcEGc6EnEnCUtqgoQpusliFvy+fmgBKcPRccICVjsEGDs0wtPhB1mtI1vQYFUtH+SiXfCPD6oEdWnXVOLVa0yyxkT+koIQO2/LUYpwOqQFFjdK7+6ANRjXkhZ8weqRBXjWNoke39hM07aIFamAWsnYVSnYoGJRc1Tayqe3tIIFa3dUGc/RNxYzWMvBZ7b0QAgDKb8orl6pW2d+eRuTud11RY+UGsjf2B3qmKVzN+WJyQJ7yQUI8/VCVJhrePGqpbED2xQC0cbopEzqmAW4d0pbrvogYN5HJENRY4HGqXXQjqgW06FMEoCfTBAQ6VmNv2RKUnvRA0+6Zg9kLOFigL9qZzWcUjXdPE+0LOeJAHeiwogrWMKcqeSSwNECVgIvHkgtMHcIOBwWcfJFhQCSe+S0IkogIFa3wCxbmOhRazXoi1px+UCEeCadKqn5gIpMJOLs3oJudNM7z6Ktmzy/SJCDRvdHJA09Yqi0pG7ogoFL96ouYYrEJrMd4oF4z55nLdBrIJrUiJi+kY+KxcsGyjOM1yJKwQLkMUbabIuNyBskvBp4oh3tpduApflGUeaa1Jw57JGNQPNfHdO4ZdLkR+tkyBHWVBdGcqrH02vS5dNN91nimk1OCDEaoOWtXZRFPAJTagX3RMrN/xcOM4jOflEFFwnG8T4py66qz9Ab5LSFN9ofZFtfVdEFru9kH2uM/KDStxZxGEIGs3HGnjPRHhQY7ylHiXOwUBOik1u91I0TkpwRlPOFAj2Zio/wBIN+qizzvVnWsgzfcK3bckov5K6AbOin9THC6b4uwvF6paWq/M+9T+N0YROZqk9Hg/82aA8wZlxDSboldv/pr7cQXvLf8AItYHGaRNzcpAC6T/ACi1m0IpH+RrgZXav6w/krLOWPkEuDpJicABgaLtfB7a4+Iu9Erm4LifQPDwHAwDrVcsDqLj7rjlUzAi3loayom0VZu1C3Ihtb1O1DqABsf7nFxmAKcLQIJmlYon407bXTu5SiTXICEzgJkifBJYgZbKzwZ7+SnajsUTWlrMHpvimbdW8nyUmqV0C4YXoNMYp3tSfjWkC0Iw8VB7BrrW8baaKwsxzSjVBxfuIlrorIgZmq+df7E/iNsXS1jyaGGj/dkvpZ4ioTWpmZANazhzATt/FeX/ANK/Yntsj+RnA5p4uC+CYHiAF6WXdyhY2YbJa3Sl0arNM+Sxyu1E7Q0gZ0zGOKdh0iaV8ead5g6qbrSVlYVlbrtbzsiWb8/hO+2uAGaWzK6qV7Nb/DomZZ+OM5IFqD7RA1pajIoNN9MOnug1nS+VW1j0+VLERa2EX2lB5IP/AEJ8VInTlqpIggZ0F3gmc7nGGiBOWF42R/MCABhPcp90TdNIvxyjBM1qdt2hvz2UhaeC0rWjqUqdoSizF9dlSEHBGiMtPVYsKo5gCXiKmwFoTMbWkHwWiiLcdh4YqhA+/citwHus01pEQNJR4OenmjaUWYym50zWIw291g4G6dUz7MdMN0Rb6AT34rTQQiVMlMXRh4ogkJnP7CmRNYnnEJ2tpOWOSzdQQ0YlKW5wNk1jEVGxQck1YwKUCTKUpmvotKRwN1I3v3yV2PERFbgcFJ2N3K8JS3ehuQEVJm+4EXQMdyqMpO1N0jQntX08EAB75Qka6bgYwrHmFTh7KU22lyAEfOicuOAqUrnJ7N4QSDMzXJUa5Z1rr4eCiSgsw+aRwRaaJQgZtK3yhbNN4iCKzhtmnaIvQc39IIWUp3WcG5YmDySOI1lBTi8UzmaBLw1BS8eft4IKMYhao/UOpTqlBzPggSNK+Eao2Q+Uj7WtANZkbInvDyQVIArG6m12uMYItb0xQa2TWI8UGdIvEeqDnXeWiZwSPHP0QKHHCuid4WaP3jySlBitZsk7kYhCEXN64oJFmBwnFazOfVM85mgxy6LMOVQfFAbUTfgEHC7ZM5vxvqg51+oPKckCtZ3d4pWd95qjGThHPzUSK98kFGFFgrceam01VC7TxQbiASk6DoKpHCUzB4BBuFM336rNeKEDn8FZwoK4k9dEblZjkHtvxMUqka+En5hN9csUaV4to2rOSAs4nz0NaIR3qlawjGpulBS1HT4UwIRd8IMs9UY+le3HqqPHcoWY6rB/NGoUWijeax4q1r0jL1U//bxjn4oa3HW6kGmuycOlbgjnjoi0U501RT8MVUS68ZJ7V13NSZZINw6ogpmhNZ8kAACYCh0hThYNynUYaIJuf8FNwRfVEhYNQZ5yUuMaZG+ZN0BXAjn1Sfkwk7IFa3Ku96L2aGdCiSNOvslc5Bg4rOapkp2svnARTBBnGiIGKRx+SctkeGEDcXePsi1ldqovtZwQY7SOcoNNSg7fpVUfaTlRSIQOeozgA+Sk9WaacpU3ICyzWc3WcjCnHNMTqBqUE3Aws/TGsZI8R6pSEBa9Z1qg1iLmINxGRPSkdflPFdcsEgFO6qXEcO+aClqUWlK1vymYIujmirB0nSKnK+7XVBF7gBNa3lwkEaNQU1p+ex21axiMgqtymJAM3nxoks7UmsX54bqlnZ0qZr3VVnC2hTWblnuj2x+ULLW69EM/zSA95pisEGMbBZg2g3EYJLMX6LMACCv5IzrEGKGUWnCufTdR5mmtNlZrPTxVg/T+3tHEMjGK7dZii6h9G2oH623Xbi7yPitMcjA5qbxHeaZjlN96MlcErnIqdofJBIvUvBWe6kEBcchAxOmIUyESllAnHPLxKUNRLUoAzE3457IG4bu8FIA/q7mqgiqTiUAB7wQLuxctai5ZpUCuC0LCgjx90DRQG1dBQQLpWJQYBMGJQlFogdwQ4krb6RdiiHX6+G6DPaIvrgpC1gSZOBuTmyQ4IQHi015LTyWfPxillBig8eQ5apgEpJwQOOuqUDyCIGiWZFJvQP1xg6k1CEJHv0F87bKh9e7kE3mL8aicdli9OR4R2FMEycoogIYn/BqtPigAgIs4Sv06qgcs1veWqBWNhNZlCN+dViNuRQMGjvBKAmuFOpuSBnvzxQOAkEZ8pKPBTp4e6zrOd0Gsk58kJjvxQbfvPkgraGVIFM+PDxCmLSvigqGIMCkbSuPoVQv7r7IGJWswp8WQJjCMEWiBuZnHbZBcgZJZzU8aJjYnECMJQOy6cz+kpb368ksed8noAqOacjUkg4V1QKRhimKWzrVazfM6YIC25A6EUv8AZMUHO7CAudy0VOHootKsGzKBQxbh1lAFZoQFtn7oFl2oVGvQebkCfh5VpjTNZtnC3Ecyp2bMYOuKC7kbM0xvwQa0m5UaUAjLpkn0U3PTBvugZ26Vp9UC1FA3uESwDGarSlNrGEwOc4eCAgovbAQaeWdR8Iwcc45IGs7RBz1mNv2RYzvEoA1OWhYpSRmNq+yJo8PmixtPPncg53TH0S2dr36Iqlkg9qzmwszv0QOeylJ6FZzM/wBpgpbjDBqZxWazU7YIOakozWlEuyCW1OGddtkeKIGfQKhi7nqpcSfhqj+Knpj7eKAF0ClfdRLCTXK70VSNRr3CZueKkmNq8eEDHE4Qlfela5D8OplLNZORoaZpS5K/xzkogqoVz1mWoKJbdzn0Ttga0ogIAuG5OuWyaFKx15YT7pn9yFi0Oez6ICzlFrewk/H+8lkL+PnGKFo04K1n8dKJ3CB57dwgh9OJwTPsQ7ibBIdQkGEbG2BkNrzu2TkzOE5eS1IPBv55/CXB7vxtcThSQdZG12mq6p/GP4vaW1u1pBaGkyRQgg+FF9SfjnLSgPmFAfQNDp4WgmaQK7rrquP9o+1Ns2NaJMC8mSewuQXkYqpNNgAkYyvdVi3AbN0qn5PC5Z9uBQDkfVBjexgrEGzf4LcXP0xW5YQU4bGInKI/cKWaJTUUMXicx5zqgDIqmc7NTbuVYHsxfyAQeFuOm1CMdCNNUHs780CtsYv4zN2SdliRWTqMVmu3NbzotbWqBCdUhCezZ1Re7L5WfQnCjJyxCAbnTzCpw5E+Ssgm5pOngEeODhdhiUH7ypTtHiuYS3YakXnu5PYtGM8tkWtG+ouSOZfW+AIzms8lqTQjmzUKto39LERQTGF3fisR2Ctqkx189E7WhVa7Sut0bpLTvLki4kTTHOiSD7Z81ZlFvz5V3RCNamcO/lEu/SQnv0RAhCarNZpPkmbZ53946IFe79JbNvQ1zVWurXZZ3xAuQK9uqRwC0YqgYjWpWbcDdmnJzEZJnNWZUCl2OI2WeozXrOJg0i6NRn1UzZ1kKpZjSggLSpNHeCNm0G/wPumLMcvHQovefiPBEI07eqzhU1vEx3ciRW4Uvk3JXPv8t8ZyRStCZ4wzoEWtSkTmgWxJuyVnuRs26V8US2qJiZ8PJGzbRM/vDwTOOPfNFStRCYT4HqtbHPwScZMyTBQKyzT8RwCiGTcDJvrM7DBXacrwP30wQBzUu6z2amqUjsoKETPIhTe8eia0bh4o8deg1MIDwbpSUXuU2szQU4O8VjaRT981iYGppXAKTWVnG87oHJx8NM0301oCoPuzwphuuRYtgIC6z8/RLbONIAxuriL59E1kzPkkLO5hAoGJ2AQ/FOXU+ixWaI5lBQOidLtUjDJk3ihKBfofC/DFLYM8cTegNo7AHW5MQg5qoZMzggT8SWUryq2TIrkgMwkAm7mNsUXtSsKDWpPYiiDPNPwqc+cIGDsq5qT5VXPPIJTaY50KBbOzAxJ3WcL64LT5JHml1biIHugLDXyT45aJGDQiM0eLs4bIGtTscKJCxPHefyg8xOqBScYKaJryS2bMLvNUpiKZBBJruxcgDWUrPA+eSzmfvEbIHL0rZxEFKWTtmcViToiyawCz7Ha7GUzGdMe90XW1CjXVxLIUk51OHySrtsRpuUxfdtkEXPKNAhEHa7YoOtI9dijGYvuPeKBHE5IcRVrMZ4CmaBKAPOOKQFM5yVhQKQix09T4JphLWEZ6jwitUWiNRmhB6aTPwi7S69FkwTbaaqTnDxnmrWViktbIc+iKRq1pZprOg26la0rtjOaBQ+aZIhmHJUsrUYCsU31U3C7380AIRL0hRa1Ar0WjMDfNMWAfPskcZRnWtW6dAFM0TFkmZIgRTHdF9mjRXOyyr5ottZOhvSluOyzWnAU8kDNZ37ouZgkfKdpQAWZWa3WOWKAcibSKVNLz57oGJjcpCZ9RkEHGqJs59/hBZzsuShanOeUJgw5HenlK3FoNzfsEAZ5d1TEUKAPZyWuxHM1QIcEjjsmc3GimDkgZp8b6EiPdF7qUMxcMEAe5WDcj5+yDR35ovdrKVjSnLUDcKTiR4Vmu8kawxaJqI19slklpMmcwJEm/EU6rLPVXGEzcRNwgz0NU/FqB3jqk+nfNZjIiSepNFyHuJy86brTKIb8TimA9gmc1AhEYjn4IAn9JQ1Ua1As15Yg+GaDR/wBZ5j1TWh0KzW6czggR5+RhW47rkNg7U64+KTg5dKqlm2MVYP0vt9jLgcI8V2mzf5BdW+1zPQ108l2hrQB4mcNVpjk3GErs8Nx6IAZ1ioKd78oRlDuoNyRzsOabjxg8jCW0EoIOfog0JzRSc1ApSkIz3RAlAkd+aQuGvUIlimR4IKHaMrq6UQ4UIjn6IPPP0QFz+/Tkl7y6IEYBAG+67ESs0MPHa7cpQZUvyAXN6USttpz0qoLLFYuQI0nWbkGL1gNUQFMtQKefMKrlMm7l5rAeFyBi4fOWiDj43JrMJSgJdSoO96RloClc3O4+KVllny0BQVPYz7vR4jhXRTdaBZgCBwDj0yQa3vFFpv8A/Ei5Kz1QE2Sdpvjl6pWbVQ3pN0x6oGaZrN/oiG/tAu1KFoyEAe7lvjsn/IFExkJwm7kM8kw58kBDCcp3TNs8MYpFx0JSPKRtjqg5Fk359UHZVzqEG2YyHMx1GKYO8O6IFk5UzwCA7oVnW1eRFfZIbauJ09skFDa8tffVFj8OaV2BjlMlV/IECPadeYolYFTiQayUCcQ9xkgLLvREytwcsZpM5IHDOyltW01nksBkQdUwuz9OnqgnZMK5HELwMQDmaVKmD3cqNd6nW65ArDeZN6waSJkmDdgEQ5Emd860290DB50UrZ5GsQTJNxNYF0pye5QZZbciZ6IEPc0EKrmxzxGKAGqPBr0v6oF46+13VEppWAHxAKBQYVrN360U2eKPHpKBZrtd7eioe+9Fo8kG+hHVBiyTyHv5LOaOys600Rrgf/qgBCBNbyNqdUDbZxXAEnz9ERZV9igu2z7F6PD3InwTAZTr+0oPLu+UGhYBKT/15rFqDOYcK6eqzJrcfT5RlZwQZruelyDG6zqsxpm5FrjjHsgdrcdUkmVi1a0yIQOWC+D1TNbis2cuQWcMeuXVEoDuSi50XDpj8JbMKVsya3VBkXnTREV/KN9K+ioAAJzFErm4gDfFOX3DKUaBt5JNctPhFu/v+kjGNiIxm8idE7iM8YnEabDNGaMrSledOaDdgdQfeqIs519CIz28lNtojaFTLBr1pzzQFonkrBqVoyuWc2e70A+oZpFbick5aZkgxFx9NEgbhyxuTMHxsgAF1aRWAJ6qlndfJ3EwhYv6C8KtmMJ1qPW9FTbY479b0Q1a0uCkwd6Ih3O84QKaR7JRdBMGTTdA7zSEjLOByKays6VN1yH4q5a/pAws+kSkfb4IcGF4BMnGMk1lY3kYXZlTA+HMJ2lbi8cEps9SfRPgbjpy9UrnSPTPRYsHhMhZjVj9CWdlF1JVWovdoDQipMdECMrl0BBuv6JHGvMQc0ziOyl4b9TKAtbVY2WvKCiP1ut+TfyWaJus1QA5dPZZ1p2PVae4p0Vgzgf3TySNYdccRHunaRhzmY6Z7IwqF4Vm5dws4ThUZXn9I8AxgyMk0LYnLCRWp5+yMZ01zQtLUDIBYWnqgT6bGd0xrpqms26DfEpbQoAYHqktXgRiDhrhVUZudhQH4UfxTBMQMMtd1mQVI8bjjtyRaxSaZvvWNqc4Whhai4Cmt/6SvA7qel6LXRi47xRTfaipMX3RWt1dL1yGLruaWPOmU+apxIAUM/vTkt8QCCcI9UDOPLZZgi7FM3zWlZtrlgl9+4Wfes6zQIXb82nxhNZ2E4iRfSE1qRjVYNm6BF9CT1lEIWIWo7nFB4rE0kTKzvBA7nnP1Cm8VwGFxEyMEbSzmJ5X3IxnTIaZoFDN9jiktXfr1VCMkbN1YnwnzQJZcjo2sbppujFPufCFnASgUjxu3QbZ9MTkswHTmMNMkbUxeiiWGfLZZlhX/caExRTs+ekqzM89sECOtAbqiBeFP82IuFK5g+NUz69U3FWcDTvRFhSL5iSZMVHeiBZ69+ya2bGNaXGiYuH/ABpFxzzRErM6J7JxGFM/RKXacljP6oUaYuk+ypZNxg/40ndSby2x3lOHqaBaHI96+yzQgWoRtS6ioDn4djI81L8mmIG+ackXVB2FdsQEbGzIuB5QfNAQ0wIkE3Exei55wG/wgLUYRyJnxST10NeiBiZO/pf4qhsgN8kDOfIqTrTWf+2WnJBjaHDWfBHhxGJQsLNEWeQMZUI8UFBZ16pC79IvnKNKLAxl09UAog/mmB8Rv5+iUM8cxRAtkyJPIAYjfNWY7MEaGPRSYfSmoN6ZxN/ZQMXJLR47xTXXi/BTBn2AuQBg25lAu7g+qc5cyIrIu8FMsnA9B3RBhZhOB2b1rOzhOXD5QT4uel530AV7MY6Vi6BrmpcGOKm61nL/AMawd97kDO5c1mv54GKgHIpS/ToKKoERhtigVzsupNyZlltcJqiLeBEXkyRfXLJK5mXIoNajuRToo4z4xQ/pXa3y6qPBBHOmG6AutISizNZ3WZZ45+mSd3dUAs3/ALSvOg3JjonaMiRoI9UrfLvBAHO16oXYEiYBjvFNaCtdUtna0puJzQZj/AeKzH3SMMVidAO6rNYgDHRhzVLY5zWtAp/iP7SufXSvugXhQLdPGFhanfVb8YOHVAWWWvJaEeHoMcFniEVO0Jm49RHRb8feB15+iPATgaVmBXMbYK8wLsZjIZBG4i9sX8h6rN8fCdcgqPM1ukz1CzrOATA2y/aKk1ldo2osbLU5xSNdQpm2F0gGeEAX1VBfOWHrzQN3T0nFL+PH9oF9O6fK35Kd9UAAHPAZ75IFxyWdjyNM/wBKnBt36oEtet1EWtGFUHvSkAe0lA35Mlmtyml8GEGHu9Fw02qgq0xXDqpWxWLTN++6X8cX9LvBBmOivylBnkZTtbQV/wBsTidNkLEYIHc3sBY2d3d+eSeztNqYBTt3zp6/GiAOHj0QaIv8LlP8gCPHPlyQNxSYmNEWtSAd0Qb8oYFraa+B9Ulkf3jyzVHCXTFAiLMm5s6U90AdXfYrNMbc1d8f/wCoPmuMLKMTtegEJXP/AGmIqgThhogDmxfcmZ11uSNMwYMHMQeaYvH/APFJQE1ojPKsbpOPUcqeCaueh2QYAVv5wi3FMAEC03UqL8RsPdAHCY0y9UHWf7wCzL8TQiTgsXIJuMa5R8eqEfpNHfvmlczbpCAnl6oNzk/GmIQ4NYjxWDR8ZoKtPd08/ZSLUZ+PVEIMWXXiMcEWMGJgdhGyQL+89NZRSNdBg89PdFLbuxgEC8EkHkRUII0k2G0BpdHncqgKLnV/20wg0Vmt25IlISj3GSNopsuw9UZOGRn09VvxZLNZz9E13vmgLBoKLObsFntyjCf+SxbWkxqgwdpzTsfgb8EoCoAbzUnHJWFfr/aG/wCQzOGk1K7I9x9iuvfYBUTBvExdJEBdicxac7dTQtCfm5I+znPrAbmjpgiJmuHMXDdLxJ3uoVIPQARkkJjyG6xOKm9yCZOaBZ1xC1nknfbIJg95aoPfhSumSBtEHPQAsxOE3jNK1Z9b5uqDEo2ju7p2QI/v9pIRtXwls3rNCv7pMLBo79k5RByxUAgaDVYFN3RTJOvUICWalE0CDpyW4eWiN+EKyEoObywrjkEZtH86XiTsdn1QtBiOSIJGGGGixzKX8uvQrWbMa7Eyg3CMkTGfJEFOW44ZC9AgHclFre/hKG79apgzfmg36nGU3AK0FccRss5yBdkB4m/yQYt/WJ8MELRv7Hki44ZU/SwQBjRl1SutITFYd5oE461RFpVOXTcIGWSmbPWNkBeJm/CIOZRBpsLok77pRZa9Un5KoGNnsZzgH4UrOxw7oVYibyYyFCiXAXkChNTgL0Dts1vzVjUDms910GhHcaJWu+RrmgqfVADJZyXh0QBxHvums3dx6qb9iNkwOEwcJ7qgwszhh1M4YLOtPFYpWg17wQOw9+eyo0dgpGNRcN/RA7eSJ5cjISAJ+JARf18Erm68xftGWqYikzKV/LoZQZxWY1HhG/NAuIuQEBO2xSB2nqsX5TzuQUgC+ZxqhIUZjWTFP8vNUb32EGDRMyZOcQELSmGPZRD+idAvFzWZRbiGnVMHR8VQbpXwRa5AiqxB080DFg3TN05DBIxu3rVHh25+iA/k1pdzWFp+8EHXLWXLlIRKcY4RjgUSEHDWfC5FqA8Qy8/dGPZId4nGJTjlyv8AFEKBh5os1zIgovtREzjjE+CiLaoog5VnaTgKUSvdvGQK1mUwbVGikZBDh638kCDKYsRkQemazDjdJNDeQMUrm0oRIqKGqYGTOMRWiLo8GawApS7x3WeUhdtp6ohxr8clnO0B1r6USus7uLGoiD1Ep2RmDBxkAeyIJs+5lAtGK0EnHKREdSibGPmPRBm2UZxgi510YrWZnPki6BfOxRcMwaSlbZxcfLpVUczI8lIjs3IilpjrfqgyqNkdud6cbdEC2z9CPlLZaHRK+zJphjWueKttrPTBAo8kX2kDLRK613NBsExFR1QD8RJmDApdTvRMbPU0vnXLaECaXkai/ksLMYmug85QJZEYG/FUuzKA6+EIcV2vVBRo5VmqFow1yRACayE3C5SzQps7q5UVHuwhRK2Xdc1ieh3dwlDBnf5pmt8MrylFn+/QLoC4DGNNtckpGHX4zVCbwALrypNU0OO9NUxZ3r+kgCLj1xoEtwYJ2pGtRLaDdTsC52fnIRbZ66/G6UadNERS7DGAR8q24o8c3YdTS7xSuGWCAFKYkEzgcSBsmazvA/tYXEn5HuOqezGomYRtic4xga3Ttkpsdpz9V0ZM93I4hRnbr7iU7lIMmvyOSBnWkXEHdIW6gDkUHECqDDOyz2BLdLu5RA06lIBlBP8A1nyKzRPK9WXQz3fIvjco/hpNfCO4SWW46GeZWc3bmuYFo70wShpuRmmRFTjTAqjB3yW+IlXS+4GZ1Oqd6xstPTyvWcyKzXLRaa0C4Ze6LnnlmkDdfALF+QrkbkRN9e71VjI9ECyL5ib9Uz9/BETtnTdFKTMGIMp7Ix7yCeaLInKcJrlK2/zKAE3UmcqkQpPp747RkqNd1UwcTNf2gZpv0nyTB+PpClxZX9AqScIoKzWdd0Ad/wCMoA5kShxmYTW1r5oHYgTKz7Q08dAqB1LudCgXijaa+iecMruqg5hv1/05+0Kzib4peipvnAeiGhgG8C+mWiItYM8hojB39EaI4YeAuWc2PbHdaaSYgG856DFKSZg995IyezsxBv2PxKQu28UzHHKmZAHkktLTmpZq4dr/AISFia0M3SNzPTRK4nTdTqrOctxLR3nqs1aDcIEXyamnmp2j6E5bpg0a80rm794nZAtnYnHyhVY3T/7JOImsCIwp4CicO1x28kCObGXylt/qGtgdcpWDjhlcuPbAcQ5knJByBZ9hVe8D1E1G6nYvOm+Kbh5yg1O7u9FmuwyuQ/Ela84f/wBSBw0nMZH1WDDjfFZOI9Cns7U6YbVxSPYZPLAC/wA+aAv89KdUZpFapQ/fbDmFmP6nDAbIBZjPome8GnnTogPTyPslJnLoZQLNctqoNnNM+x16CCUHmeVZ/wCIQYWZOI5rNaO/ZED9i8pdkDfmw8e6JbR+GmWI2Co9sxpX3HNLZkZeMQgxbhjhlrRLedAsx3cR+904fNBSez4IM1+neiBPhjhsmcyKQRShJlStWTQm7HX5QPxd5pW0N1ImCPVYn9ZftT4O5M+yBnvrGHugQsKZc71plAfxo8B08kobn0Sm1wr07uQU+orlRACkrjubW8mp9FW0s/0gQ2i1i72gHHA7pi/SdFg/pl8oFdaHxNM1jYnvDRUDO8kpCATt7pX3LBmESfBMWHTlggRlnIqBTfxWLsCG6Q6faFUPURZY9EanogePRFoGVIpkTmlaOpv2TtOGYPijbRU5g+kpXDUbA3bp2ugRrjXopnGAgjwwIEgGsiC484oomyrJcaRDsD+lzG3c8Uo5RhCByZ1wlTP09IMZmbwNNUWPwmDWmKR7t+aDObSlcBusLidEzBjlcsx1+6JbhLM4wFmg3HoD2UWj40WIrNZyFDHsimDO/QoA/r/iFqz6qjDNUEnOj0lLxTf1T2rcfBIbXIboMxmXKTeqMaTjTH9pHOjLvyRB7k+SJZovDQJ4rz4qRb43KjmRU3ZQISet0fN3JFjNYa+0p2Moe/BKxveKY2czPuUEwdR0Wc4ZifHa5Hh7gBPZXjcIJgd1WtGx1yoKeqdrfCVF9rX9+VyCbG5Z9wqT33ehaP172uTudGCBAOvTwTNCzR37G9Kx2nNBZ9rRQ77CR7T2UGhA7OfgqNbvzRtRksbQAVqaQECz3pn1TOHcgeiNbwNZ4ughb8eu+6BOLeqJOk+Ca0bHwg6z35mUCNssVI3p3O8EvdxQG0Yi1iAPd375rAIB54LcKzWVuCo9vYQZrUR6dlTcz/sd70wcfIAYnMxqpVS+tZJImZA3z2QTvJn/AG4RN0nNZee8rGk4IvBE4EzG5QaL9dklhZkAAzN5k8R6mJVAvSlZyYd0CDmHMmM4mqDSjI977rDseqAcsbQ3RIx3QNlfUFMf0sx+daUwQL9EA4kJ8OVUe8KZ9UeOlKmcQD6qxzuuw/YhcRGE1xm4BfvvE4EeC/C+xWGgz7wX7oetIW1PfKFEuyuwVi+++8KLjyyQazs6KX1Ii4hEWmhGpPslfVBMtU7Rqdx3S2rD1QRexMSOSzW391U4QZw7CnrknL+iAs6x5Xc5QI52Hilxg4Cmuyp+bwpGJUz3p7IBxRv3KQMxxTcOaFqco3qs0KW6dEWDUDe/lqlbJ/3EaQK808KBC6PlYPlPKjaPPPPJA57EJH1u6BBric98DoiLPLwKLpd/Kf0qNqOXZ3Qc5BzrkQSyEgE/CcnuvulYEBIvpfeUsaDp1TlYeXjOaAQjKWznMJifgZc0AtBdmanbBUYEhWkoCRKxEYJyPnBBp1J3kHwQZms0vk3DDdKX53dwg4aTp+0fxYX9OnJAJQDkS1Bxyv7xQCcBfldz2Wb3VNZnOMuSV51HSO4QY91lL+OUWs+dUQ3UcpQZ7YVA0VF+hF1ZoSptciycSgZ6zUqV9uBiZOEU61QWLNuSPZSC2GNKxzRcR+kG/wDqd0htcKnpQdPJO1+pO+CbjEoF/F+sUXsu7laa/KNo7sIHbYeCBfn4XqYacDdfW5Fw5ePTJA0zzwx5prNhjr5rWdmB6FEj29UAk4T1TtEX+dPBYO0CQik5X5nZAli4mVUWfylae8fZMGoGszCX8unS9Z5w5pZAONK0McrkDiYiaTOHsg93iU0qcoKWYA29UGoA9x7qVj9UDfQjMyTsgqWgf7SgxsYkHMYglPZuJxPRYz0QA3ajMmqLgkNfRBwOM+KCpMYad6p2xT99FKU1mzvHkgYvzJA2k6XIsaM+dybBZ9eiMkL/AAnxQa4ySbrh3yVGNWAoYx8TnoiMZvk7BC3eaUvvOBRs3dUbImoyu1RU22c34q309lA9DfCVh6TBCq879lAxahZX94pSUzXwi0jrVKRtvNdoWtTigWIgtTOddXwUy5XB+EaSe+Lrz35Jm6HZJa2dUXm7SZRlQuFc5WYZN4EYHGZ0wWYdBrPcrfiGfiPCao0Zjqi7bI6ovdnzAuQZY41JP/a7XXJNakHDCckZot5HTNZ3r2EWKZf4o0eMATcLyiw11N2PUINmpKLXHDGl1Rz9EZp22om4DZM+0IEXYylLfLwRgXHAUxnTTmiDYj5Shwia95oMZQUgY0rpJmES44D9ZoFrMim+KL7L/diaIB9bpAFN0f8A3En/AEmTfWY70WQ5dGIpvPfJJat2M44+g8FRzhkpkTtmtaItaYgYiJlWsWUitMUfwjPScuSZjsOygcn9IER35oupBzTMf11u5oItFUxdGeRju5KxxIoLnVRsXTdhhrnyu5rH6KcdxyvlI3uLvla0J7u8KpDaf9p0p6LYcmtL0ve6LT1RNnHfupYBOOV4TR8jJCycZOWsIg+M+Cx9DAZz66TyWPp5IME1zRctyBQK84nSFUXCt4OFOqkHJmG+/CKyPhStQwfgOuHkFiyaX5qZemFtpfRYUHgc4E8lMN29Qld34pmMju9dWANh+1G2dBiabT4BD/3BJPkhJ2nwQLaWMjuvLDmnsmwESO+75zWI/S5DfkjndqOSWYuF+GSDDqNkzhHkRkuk8UrbKbjhMn9oeRuyO6H5REBtcKeN6P5DOcaQOixBowOUCMtUwd6BSBu5yjw45Yeq6RBlAtGU6wKIyi12qAtbttinhRfOVZvoDGXdVWxfGPK+eqBSAAetUjGp/qLYYXe6hxm4Cl06ZoK2Tq12B0KWzEn1wW/IB3ks22p4opeOPHw970bOwJN19K0CazOYvunoltbW4YXoMNut3KIQdaRjtRBzyiNYuFfhEJ+Sc9x6qxMb4FIwYZ3ouPwgW0kGpma5b5ZK35NDvd4KX1NrccQIIvobwnH1HeiDMOnKpnVA2ZP+7PZODrtff8hQmuWQRVQPCRnzS2k4O6AyRkjxIF2qNFsSYGOVx6hUL/fVJZ0uEYndE2qAfip/qO1JQa1BwxyvHkmc45RpPigV4TNJu2Sym40ADjJlZ/U5BAFPAkdEClvLfu/mkLxiDGJrVVcDG5qDmLjokil9PDwqgznxcBcQAbq51vyUw2aVBmYCoHRfz1OaAtb9kG4VNtmrLHvvNACyo0wRISMBwWaTiUBc06nZFrcYhQNucAYV7R5gDrW5A3DN/PC5BxOOnOLkAY9Ep77ogwcm/OApvOiLSKygL2Tgi49k+yEjKMveiZpHzdPggkG19MFnOj9Sg4kx41TtpdG5EoAwSNorcs21yvxF/ii62BHpVJYvjD9oGNofjFTe5XOt/ooloF/j3f4IGOw80zHBSDxf6LF3sga1t8I2KwssiEPxz1HhimjL96hBntkkAkATdFe6qTjEdlUJGA3OJ3w6I8IjDxn2QANxz1FEkJfw+KrAQIEj467+PwqT4KRbzzQOBt7LcCjtXPvwTgb3QADEHO6qAvPfmpGcdwNFR7srqbzWeqUhAeNYn53QacI5qhdl0j1QLG84mKBA6GcyLzy+U1gwXzTpXZMxyCTrI/JpOnJAVwxzw0XItBG3eCgBlPQosZzv8qVAum/rcmc/3z8ksrNcjo0jPoFNw35e/wAK9lZxz1UrUidfNBFz9uaq6zAyrEwefcQlce90LK1nHvlRAW439+PiltO6R4qnFGe2Hv0Qc8uvoN/SJCBQQlTFnfdyUujUZ5aZoYZrsgJ1PwmpmNRNZ6JbM35ovwxOJEoCYjyGE6pWv77yRtBdjlGBSBszfyQKTz5EJg3sJn65eGanwoCdRTGiZjTgJ5iUXBK1ug8R4oC0nGdJHlWUto/1S2j51OIi7nigEBCIckJXIYKIEbXKiXivkRpf5IWlnr4IQeaCzXwNNguO12ypMbm9IgWzdoPbZb8lczqtKdqBOD9tEeaLx+v0h+Q93LNcTh5BBmAZBZw7wG6DiiTr4T1QM0lNwd0Uy7TpcsHVQO50YGIvOdyLXd94IygXIA+059+KANEHuHogXoMOSTiy8/dHh7PpCXLS9Bp1nKQUwcL8MbzVYnXqtZ/v9IMHIFuqdiFo/wCAaoCLkwGOIrOKVjPfDFBrqGo6qqxE3UrOk4BZBt0Gg6V3RUxpxW2k459MEzwuNZtmoNAakGhGEaLli+EZ0ZSuclnvBZz+/REC1fGCexsz1SkZo2dpS+qAx+kxI/alx9n0QcP2gNq+sUjCmOK5ViYMZ06risuVbEmQrEvjtH2KzjHPwuX7L3r8n7Ke8f0v1S1acykHlspOVHO+RJrryU3IIvQ/Ii5uGo6YqXDfugYnmlebtCibj4KNofHHL2QBrsc1NwRcTdSNfe9IB2b0GDc7kLQ5Hnsi93wlNmgTg65oJnJQFBuFAtTSkA8fBQYCEeJKQjFFG/GlK9YBI45IzRAWL0Xv2iMBWUrkQgGqYsSub5p0ANoPdBtoiXKbGKjfmVOPegk7ZrcCmNfn9IHKzW5nosMBljnujwKDLNGc3mmouWD1uCZnxQUcCp2jq9Ezp1Svzia3IDKYHEKRMUgznhHun4aUQZY8kQxI8QgIKzbJZpWc5BrRp01SgIEz6oggVr1nyQYhZlr37LOtZ90LOwIvgxcNUDcBy591UrZkja5W+K5ZhCmiAfTia3eW8ZqxYla6NsUA7IiO7kDcCDmXLAlDu9A4d4CgzWfOIjRBrPHUpp/ftkEGYy+BfVNCYLBBn2kBaybGtEECUDNhE2lc4uQaPJLaRkaDGslBrPe9B9qBhK34BjJkCmafjAEQNNPhAGzHloEzG80SaC4Z49FmPkbeKBZ+NE1m1ZzkWO8kA/Hff1WtbMZZVI9cEC3r4QlcTflU+UIMwR+6KpKBZkgSgq40p1yUySiNP/sfQeqJtsMkBaxEhRd9UQIFTKZlrmDrUILNCUD4WEZnzRd3n0RkzXUOt++SFkDhtGuiwTsdUd4IY04YoDS4QQEBqlIEbUBzRFC7HDHPki2tQhYWYjaqo59BA3iiNk4SsFSPfZIQiUS8KfF0N3ynbZSi99OeCIWws8xn1QLvBYHdM5vkjR3BKUbJsqT318KXjKd0FC4ICz8iQfRKYPOl0HqjZWZEtJpSDpfBQUayiYjyhFrdUrmb7hBnckBZzui+nxkcDsmD796HRAjHpzSNVOxM3ARv7pwVmxMUe3XvJEGDTQ+iRjTpApW8+lFWFpkAN9Vi6EA4aoubqgk51JrRVY+lOYzWPhduiwzgKUHvRSwY4HCYTEgBEHPOmmXXEqbr84odFnqNYi8npglZaSbqYnGUxE0uTNpRbADu+cLB1/RZ6YtyyQTNmLq1remDMwNvVZpTFBmjIfpRtGVwCd5KoBzwj1QLxTWf8qiRkjxz3is2z25JQgZDUXYoyl/XrKluBmFFBrUWv0KmgG101pyRLkXvuGiX8sV5rAcujwQFtF19b8Qke6ROYlPZNxOHh1RdTL4pTXmp/UMxF3ks8Det95+EPqH3bV+QuqEsLLvFKbbSNDei5yAjvWqDNdOes+ieUheP0mtB3iuQT8fcJXtrOKYk0F0lAmta7LpPGowdQjxu72QbdePEpOE4+MJ2UpXkuZWDpyStKa0S/jWpcZAlEuF/YQ/GphvMLYs20xwlFxGUykaMEVLcAcxCcPNEOv8AX0Sh3ZSVRtG9lHjnBLaV7vW1VaZzqHHKcEJTCzz5/CDx4IFae+8E7aYoUg+Ci15lGXJKUGeSzcdkbCziKgTdNxRC2ld/Bciy+opBjeKqLrIc8fjRNwUvrngilB1xT2xU4yTsZea3GM5hAoN/hqgGoWbU094dbkWCSkAWa4f9tqEcjesGbordPXosXeKLLEZ4E88BctxZoAwpXvqiW9/CIagOqFpoRXA4alYE9keixdQ1Fc/dAvHOc4nbLRaZpcma4DU6ZUv5pLV+QQMBKDSiDQbDqsGTkZQO67a5TbngR0zTPoFxhbHO+6KYoKg4IuZUIJmMxmdJ7ogPB1SPcsLSuN2YidkXhApFL8VrO1M1MoEb+nss7vNAbQ+6zTilZ3PsmcMkClywFEzbJO6zpqgmCgXbT4J3+ina2OyCdk794LkNbyU7OypcOZTuOqBXOqMtSktnSd/RO00k+KmbOdNRCB2toaiAMdVo8UpNKimV5OqLQgP4TfcMziMoWLsoopWwkRJEgiRf8J7OxAAIN4Eg5/KAvMXFZmqxPitw4DxQLaCPhEsWiEwQKGJQxPaWmXNI5uFY3QADXqgXxuDIVHPj3WaAQZJnAwL/AGQQ8/2mA+FMddcD3fyTNtIHKhQGVmmMuq1gfKcv2ma85d80Bg+M3JmFcf8A9zHQoWH1PFXkd0HItTNSp8Q6aoObU18fRKQMOmKAB6IST1whUsvTFG+IzNEr3gYYVMTCUUqeQHqlccTzjwRoCe7p5LWZ7ARIVXUjVApdlGs4FSdbme/BWfZ/KV7dYQKWkiYMeSEA4ql96wdGAOpoiW4U2eXmtYzqFha43bK7Xd7+yMT1xHv0OAp3egxpOAjWi5VschVRAN1NkdCxpGiwEpjZa3Guk4JLRqAWoKACAoN1oQMsg+9EHwQFoVrKqhHxqiHfKAi0Wfazdf5Kbm/PPFZre8UGcKV6pDaVuTufpOhKpYWOGAGF+d6CcpiFuAYIOQKzl1Wf0SsNKkyMcCmnSahBk1kIuoou7PwnagZmOncpbV431Hmg5yazGMwbtCgazndMQgxxmtO9EjrSSgNp2MN1NlmncEDaU3r3sgxMIPOSDRRAuQFrNuqzmpXNuMpkGY6EHHRBye0F1QM6SgXW84HLZYRiARlmtHt8pQz0jTOUDHTlmNEEwspuvNxvrtcig4n04g4QeQ5C5VEZgHDXRSa04ZnaE4wvQMQpMHx7qrSlLUAaZT8KWe6JpQEMCUBEuSv8PFALPSoisTQqzD43/vBJZARTDkqWbKQBTTPPRaS+O1fZh1AI5FfpvdC/G/jxMQalfsPaq5puU/xm/AzvTRWaoPZjiTdkgR+xWczREhDj9UCOUA3v30Tvckc/HK5Aj3zp5ckpTOfjGpQd4oFPkgHJeNAoC1udKJEzs1NgmEDSkJWm8ZIWh9vlZoYWhU4vOqLFi1RqffSuflRF71mtSgI1kYLEjNB76XZeaf8AJF0+EckMgNags3x89Fm2k4RtU9EMhHWdTomDITMKYurvTZVLCAecIAgoWgWACMLubGS41p9VomI163oiz0UAsoKUW0wRMYgjEapvx5Qgcj4IHnTYX0zlZpIzTMdykdhI9yOmQS39X13TB2hSNC05IzYL9P1ss5tPVNZnqsH6fCMhZPSPCZwjGZ0Rc6bouQBjY9EgpgOi1cU8oF453yTFJw1lHhKAuZqsBsNUhtPdWLqIFsmjPGumRTsEYKLTp4xcqsdI2QZz4TgjIV0xRFnOCnaDLCsIM9uvwMVrF86ZJmWWc1wTOYEGaMZpXwRaZRLZWA8ggDnfvJH8PilxTOKDBNAi80SOQaUFJQOXYWbZ1QtGaoF71RnkhfrrBCZrEBCzigGa+FEXIFs9Z0rcqMyNyQ2l3Ke8vVMW+dyCgFKmMqyNkgW4EWtQayTOszjXZGNBGhqs637FyBQwZEbpvxpYTSgMQlOeK1o2bjXG9EDRAbu7t1mm/T3RLUoKDPtfnpKVh85VAz5SMbBRMO3yvVBldqp2ZzzV9UUlpZ69PLZLhIAvyj1R/HrS/XZac+UoFjMTt3ciLIzNEBaVTwiYM9D16Ih2CAbqs2BhM0j1RTgwRSCZ5KQsda4n03S/TtJqbyTjMaaKgPwgzjoiPp5Re4zy8UfzUQJ+JVsGHTnKzj5LNegBpiK3phZjwkVQiVg1AtgBdgUIg6eKcAfpM5gig90SmYdLzI2RJQbapLR6MqfmGk4DNFzVOwspM3gYi8dlEWlIxxORxogAB6GFVo+dEjKa1MpnKUNaPySMKLJAhKWFJRnOvpOqnYyf3CY+8prK1gRr1CoqWpwUiQthZoo0JQ75+EcMEvFNI5nA30WoHNpApr4qItdvZOy0um7GfRO030QJPVaz/aPF1P8Au/48sVm+figxKMISlLMj4LPIZzpp+lmY5AxlOyLANe9US8ZUFBWYWBPguqfNObIGaXRzlIWVVRax3igzrMCPDRKbWnKqRjjeYrfmgG5Yn0QKy1yJCD280Tfr4R7ouP7yj3zXUTbZTWRQG/FJaHA1TuK49mM/nmsWgtsqyrce0wRnQowhaNWRnlKCsxnzsg818uXuuk8USwRlliChZjKDWuGaMTuMEsZ9hc1rOckAKcgXxldh+0H2l/KEZAlRIMXZeJViViV0vgaybgtx6LBBxUn30bh+Fg3ZIG58so11TMbp6K40L0oEJiNEC5VTOHZU1gcb9OaYv0QL+Obtb9BKaxdTLM5o2juml6Vre/lGWbaHNGBWRM9BsMFga3botciFa1HhTOtVE2m6NQ10U0R4Dp8JQRhXHmnf37ckG4VnWYwJ2wHJObOI/wCxjZRYPmEVmtqDWk0BzWLidVuC7InyzTNfTWaC5EABLxIzfWkz11yWA90IKTjRNUGuiZBOQEIouftyTR/5ciPUFQYKg5noqtZ8fKBXD9Ihvz8Jhss1k7XyL6YICXfGPggbX4ApzRY6/umamxuMbGcNkGLtUwdrHS7ms5lyYAaIMW0x3Kk9qtbCk4ZqJtRhHe6AsbTw1WNrkg60yO9Ez2oEY2BAFJnPspuHE/PJPxwL4oo27xStZFwrGPkgZK4VTO87sFJ7qYnwn2Qcg2gCRx6mh0StdvzThvmgw73UrQq1uNfBScRF0ZyZ6INZhLbP9x8p7PTwSOyAFcZlBrJ5xqJqeWSV1llWk/CpxZYrEVoY6oA1seoxCzii92P+I2JMjMpJPeXugpZ2ON+3n0WLZrP6U22pNAd6TCY2gGMk+eaBmjTnT0StfpI7og0mDFBjmeaazbAu5fOKAFmu37SvNYGScj9LMbHNAhCHGqtapvagnaUvSjdO5k/pKaYeqDPZrj7osbggbbprr7IWdtcc7gPVBf8AFAq2uE3bhTs3IOtyZJgSZjbAINagV9mJ7qiGZDdEN8MFrV8XC+iAWm58EbO2oYpqosYnFnhdigLW773IfloD6ys2zqg6NEb4lc+e8EQOaWMtI9UwEXzdzlFpiIF9yIA6i/u5DgTcAxGyETL8Ms0jm1VHRnf/AMp9PVScNTp8oqzbRZz9OqW0jnosLRE9bgjD0TA+NFi/wwuU8EMO+pO+PukBRN3mgX4HKZF1L+aKwcjx6JGWuURhN5VOAicY6H9IIWrkbKl3yhaNqs5AA7c7ogye6oOs60Ec5B102VC5AGuVPzePLrmpJuMZIALKMalYtScSMUKAmyi9MbXBTlFlmgAsoyHNZ9pcE7WrNdVBJ42W4tExrO6AbEknC7FAGvhFz0528UBaX4yI2QI6zRJ0HPDUarOKws0CscT08AnZZV2RcYuxzj0Shs4Gfa4bIJumeaZjAcflFxzG+ke6DnoBxViFThUmN9fhOzFAsHA50gIcZRA8/BDj7KBnTySBVD6Dx6XpDaDQT3ggQlYOzMa++iUlMNqIKMtAL8buEE0zACyUQYP+Q4QYIH+XIXFBDSOAwgDIT6oWLaRy8ygLO6/G86pnt6+CCVobszh83JmtMVRbctEYj2HugMItbmlDuyqNKBHHSNTidFNzTyxVy3v1S25yjr7oFcR7Yz7Lk/SlcKws8e9V+h9JZ1HcdytpfHZfs1nQUvFV+i4rjfaruS5LrTS8I5ph2im41Voug7iLqZqL2xXOaZfvVAj33UuSrPJ1Sg9fDogUtSP7OCqCoA5+FyDAkcxcoNCvavnLl7qJtUCvKDT8HEd3KjsMBNTCmRhfHd2qBWt8b+5WLe8kwCzygRtn+0rmKg7rCV5m9ZoWEkrcG/MJw1RvxM7H0HfNBrhFI6/ATEBZ2SM2pPCoGpg3CK54XIF2g1Jv5Itulc3WDgcilJVClejITp3zCzXwmDj+0LRs/KOlK0ybqDH4R4NluKbsKb6oh2o6SjmXh7p6EoytONI2iUpQBxxTiK1mAlszj0HrOqYied+vPBBillMfPwQLO58hgjfYzii6259D5IZd9USMvBqM26XiWDSiW9/NyJI1jb/LwREy3v2zRDUxbznFYuOQ5oAGINd5IimKE6Da/wAUGYbtE7nUokDeXeSfhCCcRlr7JWEdg+aNmyMBWquP3lyQKxxwT2SLTp6IlwQK/K5K1mqZ5xIxvzy5JuHvD96oMWhExp1Sg6oyBmeQgICHa9D50QlMGouCBXFZ7kSzvA7ItwpnWdTCAC06Vrzm5T+ofPCen6RrNR/9hcma6soMWEIuI0Sm0znleka2bgSfT3QWDkgPmsTtyKKDOcg21m6TuhwcxibvBPwoA4xVVdaE39FNjsxplOKFva3X8igo07dfiqYtSNtJ7uVw0m6IMD9IIBsKnDiKRga9LkxAQe5AvDjB70QD1jJpMa+ipxaARSRigVpx2W/JkgX3iFNrtUFuNBp0WLVg2cUZNOgvndCzLRMEib5v5IvKR1lSsivQf+QRpyBZa870jCe4hNGFaZlKTogB500xTE+OBoUB3WB1uRN+mV4EIDdSKJpU3BZr/mfRAws5wHNZjqXQZoJPfgi51BhXJHhM37QM859EDvOXTJIG46qnClDfdAHrNd5dewlc3OVRlmOWaDW9nEe9yzWgYBT+qZdT/ThMEzjqFSziMb96IGa7S/w1WDsJxwSNtK3GMcCiEDOtB33ctxctFPv9q1l9PH7u90ZoMejw1nLBYwMJ1FPBMx3uiMDS4CkdfVZgSg+NBoi58EDmcwgwv5rNbqgLX3n0R4cZjRSh7R2SVDjjRPZhJMEgyvinDU8+y1r6Khe+7k1mOoJwyU2lN+O++kRGJOM48kFLR879PBTfhofQoiNq3G+7HmtZOnz0oQN0Bcc7o2Sg+icBCy0n/tOA0QKFvyRJmuonwlZ84VGt/JKbE4zzhABbTEc9FXRJZ2cY+CZr/wBoM4YSCdFnsgY3eKVuOqFtttW/kgLMK1B6+yTi88lmWeZFyYOOWc0QKeyiWmKYSUSaeiDiBHfgud9CWdnMHFH6u06zCZ9qBMG6hob+aV5kb6dKK26IOx0QTxj6wl1zwvWQWH1Qe7355LRdulLa80DzHslL1UWYScOgoCb4ldJ4A51O6pT6LNQb3isWBiz5v90CiBr+8EoEVr6z7LXFQLUrq3t6o2lqQai+bjzuvCYO0VpjNH6RS2nifD5RYfXCPNJMAlZz1g/2i/noi5w1uwuVaB31AF9ctNkS4HknYPHNB2OQqawgawAprncltbUTSL7wacqJWnECDdWo5StxaeYu2ogUCuuqFmyJpdrenBBr6pbMVv1QNZCb6AVPsne7BZhnD51U7JufiiYKWK+9yowfHzoltnXbC+6UTAab7qXwg907FYMzIJNaJ+AY3o0LiLuik+0E0O+XVH8c681UWYwnWbkEQy4X1mMOuiVgxvNdInrcqFnL3Cdzb4jDSM4zQSgdBej+X4w5LMdl09Vvyac6IC60UwJTvaL0vDT4Pugk2x8FYUrXkUtmMfBAPIJkAiaAXoh+K+kSc5onm6JEritsoJMklxk5CcANFy2tOh1y90TC2k0Bi/8A1aZKBtaI2hJyrnMDogwQdhhMeKNCBS9LaG7GfBUNZKQNQa1rfBi6ntTwKAs0Q/4M0WQFvfsiX4A8sEGikRRAGEBe+4ZAggDMyOinZWdbxqT4U+U3B8IPFYIwFCJrvlmgUZmuxRNuJuE3iVWAIiOkY4KDWzrBwKCodN9CqPPdEA/GK4TdzSPf37IFcZxN13r8IO7vWDhmZFdkzn/+XWemSDOoJBSnuEzLOKkDSJmNkJQBrZ3QBrGWPomnnzjxTt+myE1m+BzlBJyX80emSqbIRf1zxUH2eTgNIv5oEFmYqcamIlUa3LDwG6ZtnmYnNCyZFM+Igi46ckFCMRf5oErFtfJZ1e70Cjuspi5Ky/qgCgZ5ig0OU6JY0jRB7RrpKD7SEFOClyl2cymBM4qcjGZi9ACJEfPdYVHOmcLpy1IKV9BS9JaG6f8ATBwq722QM2yF0mGmk1mc9lUQKT4KNoxM1yBbZyzfqsI6onOZ5QuPaP00vhA5tIwSm0JTnvNMxmY2rCOkqTRrz0yKL0ztB8apTZboW4UeEHqUeFYt32VfxDLONtUJQF3ggWannVK19Od0eI90peciii5mqLEIWDu8kY6sRKraVhT4b+SwcjUmGA1CLW79L9kSzX9+yR/jmiltm6jBS+qs7q3Gblfii/xSl/cSgNjaU+Eju6wnYw4nnF2kIxhEbH0QRFe5CUmVe2b0iqWzsxpA6BBNpoj+OMb70WuwGGOCYbzqgACmac0wdS+O70rTN/VAQ2UYPh5JXGO/NNxVvN1QIhBpTOw8tVrMd64ohqAErAIArBut/ggx8UnFWsnkn9e6LIAyyr8rPamI6agg+yVze/lAWtRDkjSsRrT/AKiDO6AuKVj6oxkJ8VuEet8RogW2MmaJWNTOafj59FixApb8LWjjkmZ7x6pr0Ey3FLwp2uw9EzTkgiQlIVbR6m494oM45LEznugtGWNNOaFUs3e2OKCTj1BN5qIpksjHUpYbyDtEVzACPTkg9w1jCs0OZvWcMqdUbYNQIRbaXiulyzygExCoTft10Ug+7HPRXcQcQPPRAgb7IOZ5xcmnsJGuqgswclawb40XGsxguRYGoOEXaraXx277Ow8OnYK5L1xftzf8QMAPOq5TijmV2iS0TKTgglxVRcMfBFxQcUEnv7Jp0UrYd4clYuGXhK473oNFEhaqnPxx6KYNQgW0tBFTCh3OBVmnP4/aU2fwMoRrPjF1PNEMWc2K61Wfa6AZVmUZTeUoVOJTLbsDUz74BZoW0Og5Itd8rA5i7og7v5UX6Q/oLNExd1R/EnPdEADv0lcPTBE2kGM8clie/wBI3kDg1QDUQNxOCDXH0QyFONbhKcMSEo8GtTWUTkxE3pgzYdUOA908UxcczzRghedNErAqus+WqzbLuUCxWmUhYmPWvoi0YyLzMnwAhK5u3QoCBOIwOtMNknFdr7ovHLkK96I8OJjLEHlhTFArX10oL600VWP0PVK4xTx0ylBzZQIaU7r7Jp0laaxr4p2CqBXIBF7u6IPMoDZao/kNRM1oDcNgErWLEd5IA6c1Y80BZfvNEhBnlZvLnctbN7vFeawcgzXaDki5qLCmJQSBRDtOaZzO/wBJnFBJrKqobnjzSNfh4p+DLr7oHBjXwSmvKvokaw6c0W2huuzpRA5Q4dcFgECgdjJpgklO1nghEoGNgdOqSztf2s4LMGl3igxGvVGyGh90ocqPIpQIE4cUzDCDlgcUDOGGs+CzW6ItFJptWfFObTvvFAobFyPAMzVBrumWucrBAC6KZUSAdkJy3UV3JBGeSzW94IFcPBZ+x5JjaYY3jbFFr0CN7lK36brtCqIzQ4jnKBmjPqtvM5miwdkfWN0wwuyvIRkgZUaKjjh/ty1+EBjQaQ4/pIJm6k1iqLVQSfU5IvFPJKx1NMwK8wg6t2Q80Uxu5rB4F8bTVKGrcOnr0lBRtmb+gRDdugnqsDG6BKDA6kziY9E4Og3U3tuTsOiB67pSzGt1yi60rBzkKpByhAbR+nWiLm97+aLXxlNQAa1CQWwnCsYINa1Nb6ViaJjA9ohaLvFEWulEGNppVStH0mDtCcnGkZXc5KweM3RyQS+neuTxd49Elm1E20CeSM0zG4yjGF5F/uNdErHbR15J2m+mExkURnDEX6j0zTfgmf8AtQn2SfkgZ6mkIgjE7RXwQNbETA275JXgx2blN1YgiLojAYziUzdvD9IHJ8cSoWtqRFdq+aspgDKTgKRzQPYGk0ygXRmrNdKi094bfKcHKRvdA11QOKprNtdEgcsX7+6AlvMkmgrdVC1fNMNYoU7L60I/XkkbZippfcs7dBDu2haztxgDTGAJ2RNnuNQYQLRkBF0H0WhIPurvp1oi8m8rf+42rmAQeSm9xx84QU4Se7k4d6c5UvzSPDKdvdTi6ojAXnSoQWs6mg1UnisifM/pKw4XHy0hav6BAQUI1oMfhTe/fTIo2To9BhzPulk3xyNxQO1B/wBJIqZrNTHRaxszUxQxXIzURzQcBob4OcZLnfRWIvbM4I8OAU2i73RfbAfsR7qCVpZ8JjOt/oleaxSgnGUxEmtdZoAri3ABodwcNEHHebunyi9uo9lK0clnARrJgckFHGDeNKKjBIJy7oo8tN0lt3WOdL1dFNcBpMck1nbh1boupE7ha1doY5pTZY+C6AudQ9Vi/T4RAzLYzDh4i9F+dcrsEVJ7QTlsL0wCAaOysGoBxJn4YRitdrknDO8t0WFcMqd+Swx88kHuH6+U1m2cKYyUUXOHWK4zchaWGddilDQbiRlS9EBwxGFC2vW4oMGajdENi7QXzGo90GnwvFDf3Kz3efNApH7RbaHCIxmhhF3nhjl8oustvHzQB84xyuVfx+WFVLKnQ/tANi67Ux4IHL90kbRgJWLs6HBbh1rt5FALMZc4nomJQdaHTmtZuoSez+0AdXGNqeKsx0Cu1TU88d1OO8Roi4jeM6R7oJtfKPBM3LQl8Yu6/wD+KCpHsMwNVIp3s1JvE07hCEGaNApWtp+kXn9JBZ95aHdBrMHZUs7E1OAQIWJ6IMbTU+yJfTFbh6qbrkBB755rcU/tF3LXADZAN9ZppTkg1pRcX6iuMeqs9yZlqfiEC2IpSgF4kVV3saBVw03ySM/+vSqWRmgAtc/BUa6MqzelYweN8rA33X0KAfjPJa/bHT9p/wAWfwtaN3ruggywyJ3JJ6DBWbSkA7outdB1u3nJBBWzE+2Wynawn4rr6g5U0ONUpshcPOSgg1tU5EY9O7lrQRcpmtY5xCBhUzdsYqiAgNtVi3MHTVBSzA+OytZWs0yvLqJG2c5RoELSxmRgCY0GpxQAif8AcYuhBtjr1p4puDwUrXLDpB9kFb8K3V9ELuQjY4pbPVULeQHeKBGs36J41CQ6Gc59EHjHDAxXyvQK7x26p2t/SWMupMIO7iSgIGl2ST8k4CDcI7qhN5M8rxyWEX10CB7xjIoR6zokNnfUXUu3vTNGUz3nekEexv6xRBnd5dVgzaMgqamQMs9kG1x6mOXJArn7xlfRF2YHomYe5p1hB9tPW9BB7Msc1gYpncTnpmmszmNK+eSZ1mBW/IYDXRBFztD/APtgpgSTGkyVT8w35k30QbMxieaNRrNsVlK9xVSYopFqHIrmlMXn9H0SAdwZnK/0WDe4HngjUhy3GopzSztTrzTuGouzn0uS/TAHEGhiMd0UoM3YX6JZyTz+vlYRiQcYGHMUQL+XbYha0N07VJ6BVsrTCL7jkj+TDW9BJztgMzTzRZaddblR1ppzNRzCQM0HWZ71QFtkb6xFwr4pA7IUxr7fCZzTQSIOsJnWQbT/ABOFBiMzigHF2JPXJZjAKms3LNHYp1zCVyClraf+XIBccnPoL+YVJzE0nkMN0jX93dc0S0bRg/V4OULTnzz2RsX1OymRPZqhAc+l3JIFRyVgHJFZrsk4YchjdhuEgG/KvVMXnGk34BBr8sb7qrBw0QbsekjqnJ8L8Z6VQFusZkrWnhjolxvW4UBNpdQCMkO90C7TmsCgwbqU0LNciBNfBASELkAUO9AgJtZuBjGnipu7j3VDPvtssEE5WLlThry8SpllOqBWYjGZ5YrBmyZru/lL+TkLqoAPNNZkBAj4KqxBI31wuhTZYmtBOc4ZKlo3JA+O9EEnCDroqNtpFaVyqVNtpAms08+lyZ5+NBlRBWxEaZNMdUVB1rFTXGglxB/2jDqggm20MAx/rbJEEQcrr1jdv1R4qRP+4nTlos5hQTs1TQ3pmAi4b1u11WBBrU5+6ANGEnlEq/Fy8fEqRd2b1g0oKAYC455oNCxPZ9EXNqgdtmEGur5KdpZ5VOXqr/RgzdoMjIFeS2l8ds+0vpAwr4LmF2//APaPlcb7cyG0vXLLdeSOaYYokUGisXqKCdokcn3xuUxN1DsgFoBFL1Ahch1oB1CgbXCu93kgk7bx9kvDCd9/tFEAO8Ub4ltcMrylN9eSLmJAbtLijNY2mCYWsX6Qct81hZ5rEgX8kQr/AEobvJANRQfZjr/29FkC02ISRG941OSoGwlcy/qo32K0ZXeuKEp2Hv3WDdkOwNCDQma9AI0Qsg3yYoMt00eYKx7mZ8Er7XsfKBXNWcefh4qrIOugBEHclAC/wRKWydp4ovkol8YX3BazOceNyOZOLnqaERog1ypaNGYOm/ssR1QAz2ElqSLxyTMf3IomJQI0aU81iBldXfRF2daany2Q4I8/ZAhCsxtEGiiT8iAuP711WA71URaHIenimDfkQgJnA8j6LcJ28kzB4Y7rB1+Nb8ECWdljXWFazZ1Sm0MGBhSbpzOKLbXatKUE5hA/5EjjVMBJwPKvipuZX3vQOWV9a+VySxdN+sJ3AYlZrRSJOeiBmn49kZSlqcIAO+ynYZwHqpWrkLIoLMxkINAkmLwMVNgOnr7KvB2fhACUQY9kAmaM/JAof8otfIN5pQQKGc1nAImEBjz8ViM9giD3TvJDiQK1veCZxxRbyRa1BNx0G+KxaaGMUz33UA3vQA0EDMXaiEGDs0xsoyk1gGeqIhIR53AV/SCzbMa394pXZRiYI6p3CDdgJn02SfkmgwuO+aCZamLcMNBXX0Th2eCDXm5piUCOsa5xmn/IiBTXrJStZn0iEAsrAVJE0gVIjeL0xN3lM+aJKDXBAGiEbA6dUQNucp3P7wQK0C66a0uqaytMwbpqgHTTA36wnBQEBLPRY2/OMMOaoAKTPLPBEpA7al2qCcWN903ippCnxznz7iENNaOwRE6+RSNvO9DtfCZ45jM4d3IozJw0+VRtFNiY99hBoxII3TOfCm5u2sH0wTuHycK3c0AbaCbpi6+ipxxdjeKmmMIC0ruQDhTlem2JI8kCB059EtiA2b66yExtUQwTcjAtclNTh0TCndyBbiECgohuwR4fTFI13hfVGqpxoESi/wCpjAALMfOBG/mjJg7QckgAxTgJjyg/8gQBsb55paFDkrLPKetFjF2d0ZBB/PfJJdDj9eoQLkvEKYyEHs2kYi5BTj9PBAN35J7CuF3ihx3xOxwQMxnTXJKwA1AEDXFJ+U9E1kMygsaQOmSzbsfWnokd1yp5YTyW4veuHRAPyYieia0t95E0j2TgKIZGJyqgdpGUmJoY5TdKV1t2YCDbvGtyzHjEH/K4C7regFofDRLa2lbycgQEHHAUA8wle3W7HNBQ2l2GEXhK5t8zsDTklc2nTwuVHW9EE7AAZ73lUtH5EgYib95SE/8AlsptfWDdTBBctpPggYGnOe+S1q+bwb7zS7RSL0VV22x1iCUDbRrOl2aUsJyz2zpdX0WnYzeEMP8Akpf8LiuJz+ZVhTERkZrsgW50y1xUtxAa6M51MhTaad3I/klEBNBY2c4zHoixsa73outFi/lykcyuYDUbhdW/lmgHd/pECf3PeysgzjFxTMk+9ym5tcNch6qrrSlGuJkLoJuflHRZ7gMJvxNI0SOdlI/6wI5GJTss4vvrJnBFaB3imc4ICxnGBA58yi9owrga08MUMMGjIzgeKPRQLoOG955rSewE9nY1wRCPnOc5jlCeyB90ePs3ctUGu37zKKxTB505pIGEciT1lEN1jT2RdZ5wgSLyMZr8JW2oyIyy67LG+fHT9LF2lNPa5FMHTzuRpkToZHyms3ch06H2SuEeklAmlNrh1TWYGXiUL6YLPcMCgBN9ahBtp3CXizx6K1k3WEShaU6XYftJZV+EbSyETOA+UeGM1NNVd45qaFlZRzqs++NFTTNGOhxvUrOtd6C6vqna7UihhBnZQ0x80pci1nfd6RlMM7hduihCBtKxWMaJnGiRpvyxQGe4/aSe7liexd1vnRUmK5XoA4/KXjOhGSdrp2wSNdeg3ARiLgYORSh0XCKXkT8Qi3Acq+CDzhXkRHOfRACK6xURd+0B4DuFg2keZPmltH3Cl+FyB7MfGv6SFmOvgnYw1u3wSRggdm1JVmqNnZpiIvQG1tKc78ISOsooa4wT0uWc45XXz1R4ttSECud3+1ZjLznr6JBGZpmBE+cJntHhyKB3OF0j5SWdpyi43Hmns3Gs5eCnaWevjKAOdh51QcRSMNVLhw+PFK8dhA7rRE7TzNCk/EU4FLwgLCYAJk+CwO5il8TOKYNEU8TPmptp0hAryRFb76JiY9KTRTeFZh6oA230G1UsHTqU77Q7HPDml4jIE5k5FA5j33SkTTpui9m3UpLRsVQCcyJ0uSubTxQYM+qZorug4zb/AIhXi4eOCrwfKkWiLjVBSKeRGCmxoESLyDTVNOSUNk5YSaCN8UD29vlMeiRt4yWnsoflwHoUFC+LqT/qF7TscFN7TldkLgmFnX3NaXpXN26n0QDjnbBKXnAxnSZRATxrQDqUCMdpgix8eyezdp1SGToiylfbJS5ADNFtnny03R0l0A6VWz9ClaO9kXuQa+tBSKZLWj8OhAgTlzXHFkn4cNZ1QEnu5KNuid/coMbGSBmFEb3FDj0ppf40RLqXc6A+BQBrqQbiZGZ02RfE99VNwmP8u90HFA4Namhupf7LN+PlC0uWYXbIMTMgSIvznIIssrzXLnl6qlk06XzOqe0dfrU75omuKSMo5ykKJK1+VLjWeYuRm3QYKkogrEaymYOz6I1PAczGYjxU3iVT6l8D0xQFMjtgNcEVC0bIx3TtGopznkmY+TuD1wTNpdSKGccaIBOQIzg05j2WcYy1hayKzYrRASgDdrfoMimbyQtXV1v6+CAByNm0XkA5TeswgZTus4i/A4IC581nqKog9EOA3VIi85qYvjmgo1155UTBtCRfh+kk9jPNEWm/NAbV030zyRI7w5IG27w5peGh0QM52Gk+yWO/jFAlI7UTA7lAXPGRQcBd3IuSkRlyu5ImznEd54IFPkmBPd/RObPHx1ySGzGVUAD81B5Vnf8A15SEkIJARWt4GYnlVVEY9lDEeI9d0CKgYRM6ypfBnCSDSlBWDXyRS2LPdZc2ezj2T8JGQAAgjGCqOJ5Zdj1TOshlXMYA6Ijs56rq1fcNZM70RhZhRLu9cEE3WStZvgfpYpNEBa/Hsys4oub4UWb3qgzTdndpAErlWQ60gLjh37/7ARCt9I+7MxPxktpfHbfoZAk5fC5H5Oq430bparNRzAhI588rqRTkb1QpXBBN7VPiTlxUxVBO0U+E6c09s6EhacbkCFvJT/J1TvM8r8o3Q4giylHpETBW4qAZLGiXhRAKL2zE4BK4e+vJEM3O6lGalee+ws4nJNF043eqyAxqzn9+u6BKQtQAaIk9NT5QFgEGtQEtTh3YEeCk44qgGJuxR1AOSvbKZzO/JK1yM2sRcMqbjVYWUXEDcws/kixyM6xd3kg63nOcUSEnFkiCIugrBoGB8Ewap2zoHPwQMBfdfPdEWjPv4QbaLOQYO8ZvwQcD8xQbpixLxYIMwZYmTj5wlIyuy1zTF+1LtEpb7XzRAzz7LcKSzfin4tuaAdBNwQO0o8O2nwtKCb2VF/O9V4EWmhJjIVrOy35dtZy0QO+zHPdYD9qYGU3mZyTPGGaDcPnK3FuK3x8o8EUgwNc7krpyN6AtFb/FPZsqb98o7hIG78lV1qRWh80AnHs7rByDpitMlmDkgBtPikQmYZ+VhZXpuAZoMXzTDH0RI0MetI5LBBxKBXT4qr+/b1SgUx6IWaAynNmkJTNMIFJTcaa5TDdvZAHuzqU1md+9FuDzKHwgZh1CYFB4BM4oll8eNEGe3uT5JQ7zTtohwoA/6cHs+SezGFd4jogcZ5IA0N0ASUDWloIkUzGeqWzM8u78UQD4HaqX8SBnNRlI04JuFAtq2o0TFYHU9QpuJ012QW77yRcbtoSlkicrvVMWyiaWzZgmcKDavwgG5Zok9b0PSFxgRnJziMk7LP8AZvSGyggg1IJJ1yTRryyQwZSF+FZzwTWbb0lmcSim4Tnyu8kzBy8fEoAzXoigYLMcZqKV2pcd0OJMCKwcpGSAtf1iBrssGxGfceKQD0TvdCA2iBM9x4qdtaEViRfGNVUMxnk6h5DFExizvHnoi136wSB+dwUm2yJV3WaZgXGb9UVV1vScckWiW4n28FUW0jTvFTZabxqEwF1IBpGiMqOFw8FVrqUA1nDkuOBfPJEGBz66IEsBJ59nZLZ45HE6LfTN8Kc71W0yyu2SQI60icpop2trkncwiKTSud5uOFEC3WccPRAG2t3lWP2nDvDvBGzEg6J2vIuxvQYERzns+iQWgReYU/wyZmMkHIOkHZCeqDAg7nyQM+1NDgiCBiTIpQBIXUjzSsBxwH6QWmdruqlanvLbLZBx8KlAlBK0efkUPVNZuogUWuF4m+KoMjRF7kgKB3OyTtZI7HjekaM/MJSKoGtKdyks2AxnUHK+Vheni/uP2jUYg88NYujxQPZw9/BTtn+ERzlM2L8YvRWD8j4T4+yUZ5SqwkY2/CLtUsSlBn9Qt+XRTKZ7qhGQdfGkxMeiLrPCKd5pXd/tFwWLA7W+IE7oDYqRcuRZtWp4Ei4Eb3VSD6gTXCl8e/knjSuaAZjqeeSoZpS21sBeJmnLFMGefopWtiSRGde80ajkcV2gokrN4jKE7glYEKe0ZSfBRs/SVT8c4xkL5QGZphF555IQB03WnvRDhmnws0ICSjKBHij+G7ojJC8nuiazbHx+1nvigE5X0xStdiZ5I2o9tJ1PLdSfZA4Dljumc0jz3GyZrECWI8t7tFjZIsCKAFmOKU2VZlP05lJxRXWAgciaaXeZC3Ef2l4RnHmg+wm67W9TGRbaZc+6piB806JXMhPYt/5XEH4O6q4wcdNqzuMK6oWhrFaZ3rWTx4VOuCWPlDB/Iaj1g+S1gDdxdfVZoU3WunNFB9D/ALjoDToi184csOaezFEoQKH7bCvmmDCak1yFzkkfpVB8EErdkRrWBd+0GgEY0WtXTyqtxG+BoZiEAc7vTBBtrhEnX/Si1iL7GiBCzeTflyyQs4jmsHV2vnwjNCyNLov80AFnt4hPwTeRTO8okLWRlA7kLSzuGSzFuOe6INCxHj5Ih2QkipQtXFBO2sTgKgSaq1i+gmdY+UbSyiCbiJk3A5IOdU+B9kFW5nOADfTPBcZ7dcZpd0VnGg0E+OOqg4/KBSIihK35q/CdlpfreoOQVcb9L0oz8FMPx7O+au1pgUicEAcka67eO9E7bdKwxzPEIqI1QM1sRqcFn5d77rNHZQBu5oGHefNDiyKJd3cgY05IBaZ5o/lF0eyd7KDsoW91LznEztkgW0+onADZRY5K58GNkzSgazBF0aE47hK5tVnNhECiDEd9lBg08Fmt+U9o41EkARHNBM59JzTiL4E+aIbCRzsmoMXkmYF1SN/FI93cQnsxHpohf67oMVoosw7JnWkoNZZIOtOuKzBfzURjSLq4IGe79eyw07GKpa2cZQdVLhOmkI3xGkbkEHHZJj7XYqgbOwpzQZZbwMTqjSLXZEyOYhEO64qgbiMZUnOQMES0pg4Isf3ggmz9okdnyCJNcblSKoJ8GyIMUv1iqznJRmgY2d/XlomNpUDNKDTXHZTIuiadEFmO1Pfult7cG4Cgi6EAY9ErhVGbAeyk0uMRrmkdXMbKv1DjMJA2iJI3DvTNK0/Ppn6JS43DromY2AjYcSDAiAqFsYIFbZ95IFsVmT5BK123KqzvOvIEIGif2m/Fr6DwvSiv/Hqs1AHD9rF3cIuCV7cAg1m/RNRB1n5BThBVtofdKw+aDjNy0ZTOqBrRYO+EoCIf5FAR7+SAs8TNa19MkjrREyUBLdT4R5IAR65HdZr1iZMYVr6INRZo7zRBolYEBJ//AIcFhTfP0TuN041G2qlaHv5QBz1uMrNHwks3T12Rm1pvR49QN7kzW+F0IusYvMFS+NJOtATgSb+ESYwQVGNnMbCPFFc0yIk7DQGQRusEXsGh2uHJIbQC+64brqq5ddt5GqDbTBJ+Pw9U5QYgotQM6darBASULR1I6od3LIDZnQRN+Mrm/TEEiMTgbl+fdzXM+lZWI2W0vjuH0TaAZAmuyoSofRNhoEi5UKOYWgp1Svw2TgZ3Ya9lRtCgFq7yhTKYhISEE22ngpyq2rqQpgIFLduYnwWCJPXPFK4oFmvsUHtOOFxQjHC5Bw9UAtMtUHCZWcEzdOaAHvwQhF5SPN6yFfapg5LxBZoUdQczsLB/h3RYoAY5FUbjxTtekcO8kzbsbjfTFRyMeXTvokAomaPACfRYhBjn3zQnFCz1wzElM8ait1IqgU33nYolymAgxhQUmUJi74jZZgWeUB4u7lNNw1WLCgB90A1HsUnqmmPUaiPNBnm5Y2d6DzW43JOI5XIM4TTDBH8eHVLZuy5J215eaClyQvv3lYOQFmgJrrQQLvEJ7IZ6qfDncneEG4gi1ut9TNa6ZJG2acBBiy8yfA+fklBxuxGuHVHgPx6FNNfHbZAlkazWogwYVTQd9EZSCqAtPeqL88fREFCndyBR3ROHbRoIPPNBlqCNcMjnVAlAS/K7a/2R4tuiRtypCDOP6Q3wrqFmsPLDNENQOx/fqmdabdEn5MXZxRMWaoA+07FFmMx80zbPONile5AXGUWnLnsg2zohxIG4UPxdUXPQLkEwwqjVSys8ZMQQRkYog99dgB7lBmhBwB5J4/aBdoSgi9uGHqr2drRApeLLyQNaPny5IBvgggRoQgLWDJYiFnOv2+I9U1k3H9dUSlLezUdFp/VI5G8bKj7wlLEZI6zmhTNOWN++Hgg8IMfVFhnFCTQRFBXOqwenKNM05m84aLEpRXkfNHh/SBmhEW3yRkkLZVQJvQKRPd6DyBQSJGQzxTAoB37N5QYADC69Br8aQKjcXIjDQeKfj1QTZZTXXNUdZZ8swhw+PJG1bFDeKiDI1rsiam5ohYNw5okITfrREo2jR+0vHW7oAR0VO74S8aIbiThyjKct1QUlLTEmt8X7jwRc5I29BiTfneaX5k54IlyW3s4FIEmK1HRB78MSPLJBZz7gJm+Z8EhCxMHvwQlGsUY+i3dDCQvQDgb0KoVqRKwCZzrkZPwj3XHeBN0qnj6dhTFpfvCShmACvUYFb800ApVC0cs06dPdBgc0ipTGY8UA4xzKBQExqsHJQ5AXFLx4YE1JwEXJuJA2lYu80AD/ABpISutIpsiSjx4C7HkiqcYBNCboSk+NyW0nzrssT2EaAisdfRFrpnAoiyumKxH+VdfRG0Od2iDP9L9AlcJFxwM6IGy9teSfj5ACDlog4xoR3elcDj2MPBWZbX7Y+ahaW+21ZRmmnDAp7PyoogyaA4K4aiNbCYAvxwErMcYMG8VTNZJn9pXnS6/XdZsAs3eUpXA8lVhGQqaLcYx8BPh6rQDjdopA1VbCszdEpSAc4QNwokITECOd/VMHopSkcyKzOWAG6Lis9hQwHN8bytZuOPI5puJAs3jSqGGc5M9s0QAyuwnPFAPi46c0QHNFyYPhJaEm9BiNnLhmi4qVkUwQMCms0oBynmpghA1tZi8gGNM6dEG7Dkth480JpqL0Sg92Sqweniphsc07bXvvJc76gWjjGxB6FCN+qfguPfNKBlnBOS3K0WOmOqzTlQa90We3UdYTflCoT/3Gkwak5aZrMEm4aGqY7bQsxs1GF85oLALjWtrURh4rD6nC44ZdVhZoHA6pbQV3EIkLcOPSBegUHNA2pN9ydr5mhEKZtYQXY47aYKLnzesTIy0xWsvKAgDwEjnTcIVCMcELeBB7/aBYRa5a0wOdyAQOJwWeFrAIE1QE15XYdVg+esZXLOOCBZQaQgBCYNTvpG0pOO+hr3RAE31b7oKwO3VTc5AoszeUBZiJywOKo18mJOwCS0aDegDzKPHN6k161oaxigtPjekL8BM5koMaqNbmgmGQmCMTd3n4INIB6qaC6kVNenROWjHDDU0U2i6/ojbDvxVDF2tFK2bNTeE7rK6uEmNUtqckE7OtPb0TEpC6K6EjwWKDFyYBK7IzIOeCIb4INGkp7MYwm4kCe70AtMNR4pmhTHki8IFG5OpWBWhLXvCqCrLLnGKV8d5qFrZhxnHeLtE7RndvXSiB7/XM8ghQV/SZ7NZ2w0OqRx0nZArXVqi20+FpStsOyjUp7RkY1NyP5NJ3wKBGgr1WaPHzQnqdq+o0yRFosWDxjmpzhHXu9GzvZfmqPEisXKUxd3+kr7oQcgQsXKVkg56Dce3MJbR00AuNNkXP70xRArAxulA/CAleZSmvWOgW+nM1yod0Z5EPqsEXsInM+SRjkWeGhA+GN6ZzkOLmitxYC4UGyZx8FmCTcs5lEE1vyIt8lu9kDAoOaORvWmVm+SBRZ88tP0mDNVuJNZsk0w5IEe2g0oVMOXKbiOa44KDPKmQi6uELWbKjJApPeSo1LJW4Z+EBZKYNmkc9rkrbTal9UTbUQK8fPO9ZzsByKAm/DBBA7ThiAmbZaRp3mlJF7sBSdqJZN4iKa3ygz0XP+ddCs5yEagIMGIQi0pwIQI7AIG+PFM59dcPVLH7QM/8AacPnbVSPj1WczxHQ4qXwJb0IIEhod/u/yIj/AGhZJZ2JkHM8IgS6t99wRXMJZneBQSa0WeAbqU3gZevNVtX1IypvqFJz7hiuoLX59U/Gjw97bocGOaDNcZqe805QWDkBaylcDSPVYv8A1j0QJ7vQFsboHRA0rl/Rj0XHaKrlfS2VTnSK4rUqXx2j6ZtB3cme+K1pktY2cDxO5vGyZVzB1rmpOuHNPaJbQYxpM1PJBJwu0QJ78kSgWoIvzSmSmeEvFp3iEE2shKAeQuTgoTG9KIEIRB858kr3m5ZAjneqRjznfgqvFOfh7rFo20KlCuB+ckCw/KL7RGzeshWH9pJGM0uy1VCVP8leU9+yOrE+SE9i+tFiY78EWN8fdXRmt3yrkqgKLHT4qnCoz1K50VzoiGnG9Bze70A3zRmnY3H1JSPtKpmnK7zqg4aFEZsZdUzgDieZELNFEnAgDxgTVJTXlenexB7UGc64iTGd/JM1+OlRfVKXrBvjegAaET4oQsfIoC91aIuch4z3mljvRAVgJr3CxasxiBi6MY8fhBg25oOana1BgOWoTEIDv0Wa1BmC/lCXGPnxRjomAQB26Vz0Z9IzqhxYckBL0ovQe2PLmqNYgMb80QdMDfXopTVNwdygoG5XIOs55XI2YGOCL21uQa5Ftog5qIHd/ggDiP2JErfl7iFuAmtK8O+tME3CgzbUC4Iudj5XrAjv3Rs2fEoJqrWRQdykDk3EeVyAfUf5RhnSkIiLh4Y6oSUp0vywQULVi2L70r2SRkRfrjlFU5bhfHeaAPtcB2T7IcFQDcL9Qb+iIvUySSg5IujKgjGM0A5YBBzfEygJasHb80wKS0Yg0+CzjcgWpmszQNFQes3clrTRI5yHkjJSw1WJm6NcJ1VGhSdSmWOaLhg5Zl5yAEc70l1Uv0zrtBPVDHJHwUjwU4SPtMpG1yKKDR2KrccbG8pOOLkF+BM1i4zXTnnX0XJDUChmOCLHLemKJBPJAITOKS0Cd1PlAjDX1TPNN5hABB1lccp8UZZrqI8FUgee67oMCI5FoREa+hUgk4Tked0ZrNcM/BFhwcVklo1O1vfwgPAma7vvNFlochGClHfkhFnEftLZ2cTlJIzjRKU1qMJMYIA185ev7TFus6p207CQ2/fojRC7ZD8Yvx8OaP5EX2kIlVw9krWb8kXZ/pGEZJaaeKNmMErkwGeN216kmAuepnDWvfinie8xeELO6DUXXULfeclaM8LWYx9J8EOAZxkKmmCJdPxMdVJQto6T2PJYWew3TPb1y+UHu7v8VRNorfMTJPonhLweBWDaoAFO2tSK0oqnJDhBvHqgazt5AOkpXOhC1ZnjddcL88Ew8kXWk4jOl3cJfyHMkbXdlZ7zNZrN/K5LwwRN3r5Ianad1IXJc5IRjG2NcAsbXZFlStD37JycBdjKxYm/CRfARKn9JExndonflMwiH7BYDsIiVo03Axqr/T2Wey3fZuW4pExAArNTpELNoDXT3T96IuZvXJTs30EQAZMHNUA0N2nULQxEc/FAaYV90oJ7vTN5XQgxbGxxwStPwnfZ3TUC4YLcSKwCW0cmL4v5JX2vgPFDSyixyk9ld7jgqh3h3RDTh2Czz3gs8qTGHFCC/wBq5T5pTaDIg3Ai7oncfTwSWo+EaFg+YxRa6FBzyDAuN/LJVsWoH4Qljlomc0oQexKDUwxpsECRqjPXGlE4b4oEB0R4dKnwCJacrqZrOFN++5lc6yD3ZYGCndF0VWLQkeVeLRWgIWhSssiaC7FUNgLp116+i2A0JQ86QeqyoAOguCCRsUwdHwhxTcCg9t+YhAC/NOTtnclsj1VGmh0MoJB+KnaWYkEg+ya2E4BPftugkH6pnjDxVA8ZlIBz8EAs3X7ySbyFO1s560Gi5AsaXqYb3CDONIBghKE4IRAy78AgYAxz8Etq4XLAZc5wQFlGMoMx5nQBHi8fBB7v0ha0QFzp5Xk3ckLW3wxJW4CRqJux0MqTPpzIuuJv8EFg6Y0FVg8XUI1z0SEc/JNw6Gufog1laZA675ri/U21e5GsLmtbQmTQKMAYT5oOPftmuRYGm12y1mch1UmicuvsEFzbA+XNZzUjbCeuGPh4pns7CAsnbzWoASZmaSaZI2QwHPZS+rbKmBbG3mcIVgM0LIAYE0jCiDuk86YKh20z5qFnqqFpUn7FA5PiUC/kdhVZllj3yRZtEd1QYWOM1Wv3SERfGlVTjx0rXJAGiMdFmDG7XwWEH2xolFoMjXog1nM9zyPqnHfeaSSqcHeAOqCb2eIoQU0U84xUzYgGnMZbLCw36oGa8RVcS1cS4QKBpHOVzRYAJeLetRGBQKbM58lgmc4+W/NUs7KOdOSCHEmYTjd1QfATWTL53BwKDW7xdgp8Vdx5LWp0NMfTdEi+c+ekIs9WDRWlBj6riWtpPKvsiHGIi/SqQsKOgtGdx7KZzvC5ZlnF5NbkoKAli0d++qZzZWtUCWbE1sEB4rC0Iu50N2e6ChHfvklptog7TG/VB9rnTofFEs0jjXLEHP8A6+vNEiK53pX38uo90A+vK5FMe8uSDgtPeqwCAtKYu7/dyP46A5rWllQ6IJ8SyWPAJmhARTfzWKLmahL37IAy1pFN4MprImIrF+pKUsyvXIZbACEHHtHFTcSi63nqlc5A9k2qU36HwSN0QJr3fmgPF2blmnUDZKxww76p2Ge/RBmoG1BRaEzB3H6QCe8tUWIAdymJhALZ83+GEUBSWlkMe5zTMf1vjCPRB7fGvsgAsfC5YhMbTxU+LvBA894rPf3il4+voiQgzSiGpcEBsgqCpsG6drKHRGz/AHhKl8EhljHSLz6II29nT/GBN01qBpWOaC5ibGxf0OGmvNLwV7uU/p3HH/ID/ScRvirsGJPeC6h4vrfdMR4IM28QZ6IhH8u3l4oF4kQUOLy580bK5AXd9hKHKhfgEtmMMPXH0QWY5cj6GzgjevouPZt7lcv6V9YGlfZWJfHarFtPDWSg5tTf4eiX6d1OXRF7vFacxLVIs5aRPWJjnCp5RVSd534SgnCmXRRUJwEbVpuUrj+0Ck5QZuJw3SWlqiTrfehaHRBN1nyOczRA9wmcz94JHd1QYnfmKpAE7dvGYGeym5wrWawIxR0gOcg4qrO5U3lZqsDt3kg9KT3it3moCAk4Ox5pg0Z97Jj37xkgkflMWocG5jZLCBiY7qpk6nYH4TOZuckSNqCSgdtljfFR/lwxoc9krbdLx0ORiUZGAoiaAd4wgSc/lUFkg12Y5z2US/fAATfj7+UrR2b1nN7hGClu/gjxpwUv49UA/JCRglOSmCCdpRMQKjWZWNplQZmsnRM5mOd+wQTcQbyKIWlPJUY3xvQfZAiDVAbK09+mFUJpuZ154QlecKiOhTM7vQIx1+4xEqrnd/tITXDaL1i2TlpggBtPMRJuVcYwz1UBY1zjDRVFrtGGiB3hAO9qpbB+BPM3eCBcJM3FATaecc8I2WLvnVHLRJaNxQM5+yH5LzSm6S0bITCwipM0x1QGztdhuqFwz57KbHqn5NSYmEAaRP8AyOc06J3N6BDjlMNwgwYYvpRPxVEXmp2uUs0BRAxN3jtKLnKTLWeYFMkzCgYN8KwrkqVt9RF3OtJRD5QGBF/VL+XDDPVHhGInyWexAoeg1MLkoQMH9wmbaea4Vs9xpePI5Lm2YgRAzMXHQ6oGDK4U9fBGyd+80CO/Loms8tkB4tvFEvQA77zRAxQMzyodkjkYG2qLz+8OSDNs5W4KpOPyTcNL+aAlqS0tYEGYONFn7yM0/HsO8jeiRNrhFLtUjXJn2ZPzTwTRnGHjcikAkxAj1TcJzHTNBxyPJazbNx656IKSYr1WtG45xjSt0ZprOx6Z6pPrLaanAAdMt0Ez3X0RCSzOt916Yu56oD13VGv/AO0i7VLCIf5XIHce9MJzR4v1rnKjYvkJ3CoyiSckBdMdKEwDXNB9nW41NK5qlm3QwRMn2SsGIrkgVpTNsyLjfn80UgOuXmqvFORQaBcAabc7tVmNrlSZofASVCx1NcYNVUE4zWlMjUFGaZ9pPfgptCLrHWuFI80zXU8yUWMM8ITNzwzF6laMcSMIN0+eEKr2getaFErOad6ms8MckIPZlWDovEINPXBFgNs0jZNwkC+ipUaDFJGEc80VonONZonc3GMK3XpSBnyqg900QZrRldUi7n8BRc0k30yVWswm7FAhBVp0uSuOW90LC2zTcOQ+EZTa6vhUUBzonDOnX9bIHJM2zjKt+qLRj3nW6FMWhjDn7XTzTuacqYqbSjJgzWZvJ9kePDnCSBjHWFNtmZvyHIIrkF2XkSp8XXDdULd/JKEQrxfp19kAw31qsXfs4oWWPkN88EGA8KomzxPtHLGqRzTUQZzlFokwW3Y5FFU+nEGTBEXnM3CL/BKBcs9/mJOgQ/H4X4zqiA01qR35d5JJw8L/ABTmy1OwbX5SjQDUz3igzWn4z2+VR1hjOsFSfNRt2E8nvJFa67dYtz8krOfISVS0nlgDghhHmDCFoShxeveyb8uh3Qxm1EXeXPRMbY5e3LGEG2gumcwiSgBMHlzpfdh4rOaCKi672TPs8Oc49Vn2ugjE94qajObHO+bhlHNI8aDms21+KzPJLZs6Kg2YKYu7z54JXHKuuiznZIpXuumvotKPCDhVC0p1RYLROvoqfjU7Md8pVbO0aP8AUCRkM8CitZs7xvrf6Jn2mUTrKT8sbYZqVnXS9EhiDmFgMeie0CQPRTizSpBZg1TFqBA5ULt+keKAEJQ4lASs1/Yu8fRK96wCDSZTtcTeI8Z6JX2kYSbwNf0qDl0QRdam6KLNBzXJs/o+IGscNb79KqFqNRefcQg1nOAFc8skARoNpURa8p8vlUDZrA9UFWWevymtO8UnFRK6qDOeYpHO/wCEHE9byNEg7+UzWYUzpUftBrPlWk1n2W4cEbSypfAzSMcMEDXGKc0gFwgUqTjOQI/SdtpX3Ta+F3jcgjaWRwT2rJWc6JrsNEtkcUHIAjE5KFnaGfnJU+ofAGM5LjETSOePRBVzjJMbV7iiwtUDZwI7oltAeiAk1pUEVJF2yJs1mDuUhfUitDGnMoHY3rOKFq7f0HqhaDsVvRtHeYk5zefJAQJ9SD6XpXeGmKcMIu8sN0SykoNZCNxcbxGyNrak4zvhtCDhlfglb9PxepmIQYc+anannrcnfTu9JaD9IMxpTi0i6aXkxdlFfBKWE/6fEoOYQBcgd1rBM0nz9EjHThVZrf3ina3aN6ygb8ugkznQC+ICThzrF10eCdttANYqOmScCcudyCII/wCN/TvZbiM39MB6pZk7DA5LOthrugBfVSY06x6+ypaWOVUxsouxMzl3ogSM/JBjpxp/4kU3KLwe8VmvKBwQMI1pVTfW6NxfzTOGnVENnE8qIFbY9c7p6pmtGZpeBQdUXOoUpsz4eCDflrQUFRumzQLgFgc6DPNAtiy8nXemQVGMPscY8lP8U3Cb63X7YJzAjKoi+4C5GsEqTrRUs3pHIyzXT/uk3nPbJP8AVW1ANefupMciYxCAWBFZEzhGARn4FaJi2OnXVTeEGjxO9SktHYEGhjKvrFEzHxoCBdiQkc8z/lTcoCAcSN5H78EdjGqDmTgL5WA1v8dUGY/Cm5v5YItxUrEq3CiwvEpkq341Mn9I6SkFnOKf8nzstYsTOaEZtKGxA8/lLZjsKzrSRzOuEQpNuOl6HFMu8xEpiMIlJEnu9VfZx60RpEOwJ86IgRlpencPme5Qb+kLTi1vpPMDzSByIKDndUYzQc3vFGxsZ80GGnWu96cOpF3d6LIDgEQECgZRo1lZd3pXNwSvOXipufSc8sMEGezLwICcPGtL5Q6Df01QcKet8oE4lg0fqfZZncJ3ndAtm2la6rcPYWDopecsk6BJ281Rx7if0iD8GL/Vb8PS7mgmGwbq5GlNMOq1pbyaCi1tZYD56rAR66ICLNF9ndp7g+iLCM8/KUbS0uFKhAloIwv8FAvj5+Vy7T6i4GsyIyjJSJ64TBn9IING6NrQ480z9BXLIYmdEzAgzXqrD8lSfOfW8puGm+CDMeNazjFy3CYmBAwKZh7y/aV1vOGJrgNc1L4OOWY3TdAg6gCqKL3GuN5k3CIyBMlBcwhdOhIFAZkDGae6o06AaDHU5ckrXzUggmTFHZ3FtCOaLbQX/HOF1Bes1iJcMwgUGosIzurEgAqYCaEDA3nMeKYd74lAPQY7HqguFyfpHR7LhC0XP+iFRTqrEvjtFjHDNDCMfpD6Wzph0VeDQ0WnNFx6EYYQZSus554prVDinQIEa9Z1mCgWwpiznuEC2o8PFSVSPis+KQYnLNApMiMMZu5HNJZWIyGd3gmaNfGnRDiQAM6aXn4SEJvxjAmMTiClIjvNHSeFFtON1FNzMU/IDbHVHuqzVYDx7hI1vYWnu5EDUKBXdwYPeyw8bkyUBAtoEIPLORTlendy5iStxk3xrSEBhcZ9mDIyiYAxzzV7QJKDAY1z/SAsbC3HhoeqdrKCt6V1nj+wjFY5id/jJEs/cItdyyhScIx6oQXHeUWt1PmkafhVQpAM+iDhoESezVMeSL1THY+U5r/y2JEJQFQodQNld2KXrT4pWHundUGWmB5H4RhUJQ4G4qDiSBgdMd0/09nS8boDPZJ8kxdKAbr6po+Sgm5y0E07/eyo2z31Br6JHNQYDC7mCUzu/wBpG8q3zf1TMZ0yQJZA+Kcgz8SnNp3CQOBx3CDGZvnw8Ezu+4SOfEdlOGQTPSvsgEpWm/1QHrFCmfS+vlzQBjMYVRZTlpB85Sa12VG2mw5VQKwJuHsCeuSDXJtvb9oAEj35QdyQBrIR/JkEeLSUDWdniQZ5R8pi+Lp/aDrcDnI6ZBYWn6i9BnMRZZ+/wtaGvkbjGUeqo0oACI9B7qbufmg1+/eqDDXGcADfsEBdZ1Ne9NUfxbozHPApHOOvVAxbUHDHAdDVOx8DmUoPPeqtZtGkaXgoNwSVn6E33e6DtM0GoHYa3YZdwsPJK7c7AxcKJjaU9h5oCBfEZ337BTcMfBNxbXZJZlBJz6zoqBuk7+iYNRmckGDli7uEhdGIRadEFWHTrW+mPVcciToTDdmqvEpizvzwQZliL8dyFXiSFnzFY5Iz09EBfyuOEpnWYy6+cKYsouulMHaxTsIB+RTsm1Jz8E34QqE8tUA4Erm9ymae8wgHTdPMU5e6BmlBztY1w/aBGoG6LxSvKUAfbXDxk+CqVCyb3krkY/tAoOwjEYpiKeiB3FEhegrCZr6iK311iii4T6IgmNjsdkZo2r4xg9UDrzQZZQZxwN8Jya+eqNGsnC+4/wDUe6R1tJ9xPsltB5Dw904bREU/H7XDqiaXVIuzUwTCDj3j1RT/AJzfXlf0KxON8kYwRrdJ6rcWlSKysTlnXbGEC2TTijwwtZ+SPDvzQB1K5rMZoTjSl+BTCz80Lsb8EGFnBgiAa31ncIvPxmka27fzVHeSMp8BN0HQkjyWszsJpEpfym4c8+iLgdqIMX9+qw0WayOmPfgpWlvFwn/xCIrZ2k+c47Zphn5CZOsqbm5QJE534YJmOpz5o1GdXG/HJTD8NYnUKhbigWg7eRRB48EQlawDLmgiCBkEznUvrNcuGLt0h3QdcfRGj46XxfPd9Uv46CuMmTfpsi0TygXX00UnfU1iNJ1iqIpaMv3770WgVNBSckSUTZimetRpGyIQiYp5+V6Jf0Hl+0XXa1/yy+E1lZUgEUrTA76osAEYROiBNExAz3H6SAX1uRpQNGlLlEO0jQT5rNdhjMHLSuycFALNl+pV7FoBqol9aTtKq6yONPFGaFq6tcBU5g4qZb7Tmt+QEzIuAjZLhspIigaDgTvFE7x4CvpC45s8ZpljpvVNaA594KjREgTrF3eyQtR4aY6ndK3uiNYLR79ykdF1U9qM5oJkGMYiMk7n0Q1Npjlj6pmPN+fohZja+oOt0KnAims8hvJWLAM4rMXypuMZXjGu0JngoGFlT3UTZzQG/wAxlkqWrYvN90JJOGKAmz13RlL+OMvPxRAQSc3vRZohVepBuveuaAt75pG2mR56ZbqnDRPZsHuO8UE7FwyrMCaiSuSXbbiT1XFbZ1nC8k3bbqrR0PiEGY/iEwBTLHquG1l3j6L9R7qRgI6DBcNjtRGyCT2Xd3eytFOcn2TvLRTGMBiottUBd+gns28gBuJyGNUFvzHLGZkQPVAe/hYNEZYwEjW06kbrB5iTNcojyQA2pukADafFY2YOZ8+oQc2cBosxug8vVAHC6l92CLn6DmSt7oW9qO6jlkgUDe7JPZkQKG7l1Ws7TGfZISLpplN2yBiRCVg+KkRvmiAlc5Azt98kInloSgCckv4jmeVOWyANqdAEfw1lNxYAY3pwy/QwaIFY/bxx9kXlKG3nTwRLaZZaoGDhW8HPA6Qlba3JSazFbgZpyVmPrXE119kE22s8jG3NVD0bWzDRQXXxdM3nVSNocI6T090EnsS2tocvOelyobHQpuKaYDL3QceybW8Kz7P4C3GJ9hRBttpOuSDcGGd0SrR8/CRu86g3Jgwa8jVAvDhhN8A+aW0acCOeV8lMXRcM8c1NrTrTogxpfinb4hZzKz4YIcEYc/hAHTOO8pXNm83XQYWdacstUWYygA801oNK5zCLTtyF6QaIJicY5KhamczQLF8nyQbh7KxmVNzDffF9cUxByKAFw51QYEAE7XIMJwJ5BAWXKMMuqzn+QBSvnbZGuxwUobVFrISWhRc0LTxwhZrSeeOUIsOMDOlKhO24SAbzXVEsTc43eWP7Q4j35aRkqECIFPEjY4Kbn6fOp1Rklo3UnTCctEWv8tFmAn2unOViyajC8xRBnu10+UzMf8prsk/NkfY+yYWfug0ZeCBZWCfGDzCwtL07n07870CzhJrjlzQtGRE4i/PRbj6UlM8xS/EaVRvinJ7Plkixpkzdlj+ks7wUzib7s9UZ/RfZ9gLfj5Z7a5lWs416prYjEgUN+MI3Jjh2b4WcZPOox08UrHd5fCXvdFUbHogTh3sg3vRZtn4aeqJZrAox2EAiitCIK0oMcgYvnCIvWa5O60wPkpvbv6oM5vCeUqZCYunMxmkLqoEjPOiLzXa9EFC1QKGo8CFm9PPZqgX8edSMLgqcMj29UpZqff5TucgDE5duknJPdQ45FBIrNS2j8KIgoGa4630IIkDUERcqCznM8/OKKf5BmNr1nv22uneEG/EIxupSnVSLPIwcjgi/Qi+sXAbT4pePNAQ2d8Rcg1y3DN3fym4dNIzQBwqi53fwiMd0EBahb2lJyxKw8cBnspufOByIkQFL4D+OIxkcRIv2GSyi4wDUVoDDpbubo2RXMFzOGGQRw3DJHgny3RZYimF8AaXzMnqlc6LrsZPlRdRQhKTGPKJSg/GqVx6zEIKMfoiCkBwCPH3KAE995ogVujTJZwxzomaMZQb8gzX6f20Vu53r86yykYAUFfZfofTGPQKxL47ZZMpOdBl2EvuJy5Kf0tp/jByp3qqAa7UMHYrTmS1NT5R6+iW0H7uVXOzHd6hbjKvOECNqL70Iw5z8JmnNTJPsgRwrlqh+Trkme741UrR5QC0tEHOQcxJaORqGdaUpjf3mk4lghHpfqjZowm7H0SOCVzJp8eKzWxTv5QNPUrOcVJ9dI5rNMZGb6VPss0PKVrkPy6JlAOPX22TMakeE4QZ4F/ifZCnzfKEzyPVYBErEa0i7HktCIE1WRJ89Of18pChCwRdjJXFYWeaZkV3RWctxfu9K96IF4QCz9/2lcaa4wsL6Rrp7oPZqho2dpvrPmD6I2dmCd8UW2fclBhmooMvNHM7bPvRNM5U6LShwoYVrh38o8eniD5Ik9VF1v3ARFn2cYyp/jRLtEjAehiuaBw5Axr6LcC1lZR4lAwtIF9Z5QiXdi4rC09cAb+SxeKVv5eSAC+Y5d+aJaL/K/sI99ysgzhscJiOcZpXN1Wdoi4wgRtkqMEYfC3Chwxl1MnfVA4GiV7CaU1ByRTBtZ0QbhzkYUOSws47uRJ8CDzCBOmaAcU5j11TF91ccL+aRnjksWYZoGtbQE38zgn4u81EWJFTFaxfQUTzqgpElLwojUHa7xSXR3CAgaeJPiie8fNEbBY7IASmLT412W4ZwVLYAXVogVze+aDQkbVUYgVoz9P2nc+EpegbX2NJkeiA/lmnLVOGb81xvxVBEXXes+i5Txrz9ECgrcE4ocVYi/U+SbuEALUonsx4rOemJQBmUxON8c1g+cCIz0x5rNcmcTcR4oFjsYoAnL0omcaeicnuJ5IJOfEAVm+HGiaZuQcyt3fL1lacYIHn7IC4IlviOlUpdVZ7oQBtnr4J3vzB3SWVMe9Ezu7/dAzLWK44CnjKFs4nIbgGdoQF0QNjXxWAi6nigdo6dzRbjnWEpJwO+M5QE4CAWc5QEX2eXiiLbLrX5SkoCLICvfVLaPrlmJBCYBB7YjVGazRTeqo2yQfZxnsR8pDZyL+SNHc8YQkI+UBHVFjq+Yr5oKuYlfliccetyJaL+V6GXM06IC1qcGvfTRYmKZ4qSB+L9C6MK4lPw5fCiRVVe9Bnm7Os5GfZI7UkRkPVYlNxIELtyJvn0QdZzRHjS2ju8kSi5+V8RPsibSl9fH2QtAl4yPfNEEWimbKsynlBrsEMH8t3inA1r5oER3hmgfIeqLDcffNB9oMI5BEsUrPpqinI0hTaDjrh0Tupsi888fVGcAtRHKFsJzQhAQzkEAPWPdOW08FO0MYGoERXqjSjXIcJ0StO6biQKYx72TF9wAEYSYISPfdvKZo0CMxO0s6075pzYjhiZrXFM50HlVRs/pwDPVGleDPBbhySWlrNMVrOeiB2t0vGm/pHNEuja851wEZLAKbbTK/wRKdllHULBle/DVaSVvxzpFJm7lElGQIrOUX36okm4U5IEpppuYhFKKd9UvHkSdT6LAedyZtqUaK1u8dx8rHv5TpbMkFAQaDLCbvD1VbKzAk6GJxOU4bpGMn1ilUv1jRdt4oC62Jwg7z447ogCKzW7dcezXIlAHNGIKi1hN1BrnoVbmsPmEC5zFYuvByRca1vyFButaALNPVAHDM9KFZwRtKKTe9UDOeli6vyqWbibqQe6I2r55IBZsoInMzXHAJmOmiSfASnY8ZINbsuExBk66FQNn8/Gmas95z3oCCpNb4epQZojE8/TRGzshN/qmdZ509UocTdFL9YQG1sQKzzPwkYf3f4JiBjyp8pHv7uQZ8XzdynksTomba8uh81vzThjfhRBMHphnzlNxac550GMrOtJQtLQRHcICWHLvNStOnj4KrXJMbiUBYyIruUQEjxmFm2efLBALR8ViSs1tJv7lG1sZ5IPNIQBn1M30Tvtad3LOschPhWPZKx/sQgZloCL8JlOCeGJNTp1okbhA3TEecwgU2uW0AI2JgyccDCPAsXIAWIMJvjlnqjavFBhue5SF+XRAbNuPka8yUzR8C/xU7Gff0VAycDGhgoEcao8OiJ25EyaapXIHFaCNc+SkYAgeN6V9vG5u7wVA2lByQKMK4XJmNyJrrQdarfixTs2QKE7/qKeCmSgXTXlyQbj0U3NGO4O9wKd9pjkkA7vQOREU8ZrjVC0tO7lmu2oADFeyUdAeoFctQgVjNhpN6LR+vKFSztKGhOvwkKBuDXaSlJzidFMiU7219UBnlPiVN5PiOkKl9/UpQRkECX6fHujwDVa0WD/AJRcZre9dU1qlmELV12uCGUQ7prfyQ4adzzQ7omD+8eqLlAO7hK62rGWkJnHnqUXQBdXzRsvClsrA/BpznFM0d+iFu2aIxybiOkRXOdNM0HgzAuviYG60USOE35DwRk3/tR7hYECoF1LyZ6oF/rXvHROx0VpsfEoE/8AbiZJN2ERzSvtML9U77TivjkgQAEALUEJRRviV7M+U3c4qna0/wD8MJTOSPFHdEaO0R3hqltnzQmYuEdeSEofj6QgR/l3cg06dD6IvYMKrBwrcI0QNPeKUuvF+JM1GkIF/dISSDQczCBoTMs6X8ox5YbrBixHdfdAbSx8MM9EeICbtAs6SZrOEnqtxT2EABPpMzKJtCbwIzm/OiUnvJEOxyM76IM2JiIjHMJeFKDJwG/oj3VAhb3zRJzunOCq/hRcwYweXygiLOE8Kb3yixpO3RAWmfY3oqdmwzeTHdclSyr4+CAApTsj+XNZ1ogm118nqPVBpTzvF4WnRAWjKmevtKDn9SqMCR1jrzQKWLcEf7pSk/PeqwdlVA7Sh6JT2E7R8jv2QGBmgDtzQO0DMohAAewktW3CBIoMOue6ZzrqXnsrHPM12UvhUOCD/urQ/wC+NYkUG6y5BbjddWBME0mYmFlzYyocRkXmbjT0SwMee/6TOPU3kf7dRqp2doQSKGKnXCV1bVBRj4QY7HPyzWLtuaAcM4cs0C8Jg5MHZc6TzQBhkeSm5t1cE9mbjnPUJhaINZWS/Q+iAkFfnyaUpedfhfo/Qt1gCKb3KxL47TZsunedBgs9uAJg1kp7H/SAbwAg5acysj2y/aWAL0Ij55pnoEtNBTx5KLnq5tAuPaIFccMRnckc4YTprvqgGHNYtu1rsgS1fWnT0U+DK7p4KrnVOd2+6mDhlB8bkA4efNYnDOneyLwle7HvBHSeFc3BArcCMIpeBK5qYt1hK51FmgGNeSZy0JWu91AwCVrU1yzkAGOeGqZw780AFg1AnEiDKzwkaK4czCJYo4HBBvcpg79StCEmE7rekFjjNVY33FCco9iilIRaM55Lcawfp4wgDDTmfVLKZqZzUSzWs1n6RK1n6xHqsbMaIzPRcOxciTy1zRhLaON5wj980OQALAIERzTN7zQz5pbTdNx6IMtBpOREzsld4ZIycOSNesX94oByBjqLwTrTBZ5R/W6k1A4dnFKIgDXqktKeHghZycMZQVCDWZoNsM0XDsoKArF+HOVJu92Hsg5/feCC7FpSh3shZhAzimslnEY9ckSMjKBTCzHY+KPChhHPxQYlbkgAlNog1s9Fjk3BKVw1PIXoOQ2EnF4dxCxai1AA9ZrUEzSEAhMbXTRSbajUck/CcfdBgOynaMjvkoC2rEHorsHfogz7c4Ck05e6zHdlYOzuQkYC/WUFGhZzUAKU/eSUyL5QB5qi6ynFZrZQe9A4ZS4ZCdKz6Iga9ykc3fRK628pQOX1GHeSe7Hneka7a7xRDUAB3vHRAGfbNOAJrOhCDqIIk1jHLFVLUQ/bdBAJCKDQBREIEtLVbhOHjdt8p47JhZp6IJ2EiZ6Z7LkMMC/v3Rcxb8mlECvmOkZp3OCXjT2cXHAzS+Yx0QK0IlpQcVXiojNRAm81qmYMbkr35JHg57qWa0myxv1VrIxSU1i2+RcsTXVWTE0eGb+yjYsAuNNRn6UWaO/+ou5yllFUe4eyTioPFI5GzP7QZoT8PlI12ScKdzCMdkGuWE+NZSE994KjskE3NQLvFGEXnn6IlGdEvFh4JWtpyKdxFTQIQAExaBia3zhohx076pUVQ+iTgRlbi/WSAcC1o7u5EOSSgY2ffeCAfHwg5xRQaztAQd8UMCmIzWZ3n0Qbi1WddzWJPMf8kA7O/FAzUsLLF6AtGkX4o2lph7c0J8Fmu3xKIEIualTIpuHv5ReNUHCOYMdQpoGtbj4IE+R6p2s8blR1mEEhaxQtKIzQL1m2oFMyiYPCgTXVa2s5BE35XpGtI6g6oRTh7u/aR5SNtVQbIp3MF8pQgLLdOXDFBnxdXPRTJGpjNOTKXijDRBuIUqKz36INE3fPJAM6pi+DegR0TqOqAfdvVBxE3apbVyB3szkpuFI9pMaBPw+AQK60qgHUWjboixkC/wB4QM1iQitFmuSWTPOUFXv9t1uMa+iQNn944IkIMapQFWwsybuwg8DCtJMYVuQStGpODu79qoN1Lq7pad4IMXV6IvYnbY1iRdNEXAYdUEfx0nO4ZJ2RGPopPtLhlirRRAgbVG1s7tL9Usp+KkoENy3r4ID5TtMXzGlSgnZWMHQCNCqHy8PfZTt/qBOkSlNrv0QNP7zW/EnYEJg+KBSMjGfwhZWKcsKXiQVuu80GgJYSuagu95084Ui7vNM61jCoEwl+ncTljA3zQYMSmzjBYOKBegDrQ1uw3hO0Sd1Hhrdtr8KhZCBX06pnnos1uvqECe9kCNs75mvgq2bow7zQLkvCUDsdF2crMR4lN6BS7/IjSQfTwQaa+ivZvoaDfFSa/KdkCtbSo6pGUuVvqJouPZygoLA5RrmmcO9VjbnELNfjj4ftAK61S2RnG5M+5QP1dYAQch4TWbREVkX5GcApsKq1sIEtAbvD5QFnTyTk8+/JLbvnkgk8J2MCRr9FiEdJ4o4IvIiBhX4Ui+uiY0RRaOaYNlIBgVrRvsjNpmiFNrpr0XI/03eK4z3/AB+0JR4lPmtwrWdnCJyMAmBCDmzkN7lJlmBcL76yKIvVZ0e3VB48vNKGxfyVrRwNdEZsxxTsuQ33XHlLftgERZ7qpHHxqlDU4KN8W/IRlsb0G91hB19UpCG/VXjH4hQNphWNFyLMRsRdqpd3yjQXXJXs8USFgLh465oMLId56osaqE01mLo5pLO45oEc1YHuUC+UWNQDiRciVnIFCa1uCR7uc4bI2zrjkIQY3FEHvFBp8Fn+06oHc84b6jRAjNAuySccCs1uogLrLGsZJXDEHlil4t0SIQDjrnsVdtpp2VNx2jIeCLSgQtRs7OfdFtn3og0IDatwyStIQegGoKykcc+WSFme9Mk5egRon1iKwiLNZp9Z2KDHmJrXPRAWtWDtUryg0IKcRx8kWtQ4xpW+fRAFBgOaDmqsReoPcpfArn0rGdc+aKzM6G4gEUBxlZcxxBSs33HHmME7u9kjHE1N/IeSdzSV1BaOpvVEjM1r507lBQ+CR7OmYKDHys90bZIHQswlD57uTgoKSv0ft94PY3+V+U0a8l+r9sfWpvFdTK0l8drsgSMajwSvbRUa6mkX1vySOVcyWvsokc1ZwSvdtvig4lrYmZWLldxUHoENos1y0IFBN7jeB1Wn3RgHNKQgSUpVDZKYRYfi80rnV5rETSTyv6pOABHQtosR3NEyV6APclDk1mEjLE1WTRb2MOaxcs0rdgKGtxqgBqouArNBMSKkdFWxcfGeSDcawFUr2rB6Gm1QB1Hey2iThQM0Z+KLk1o7MhAbImwI0Q4ZwI5rB83LWbTii6LLL2GmqDj7HXVb8azGayjN0Yy0+YWIuTkpSPEI0Jcl6navmi49MQAgweiMcjFywFEA5NyIRr8Jw/JxGyLmo8feanw780YwxaNVJ76XKrFOUQwO/gnsrNL+IdhONBOnogV1nKEYAnXKmRVGD50/SQvnvxQBlp1yxQtHSbsIjXFHg65ocQx6nEoEe3qNfRPZg4+SJtBqdI9UwtRndggZo73TNZCVtptzEohpx8ED8fyEvHl5lYBZw7CBi7RJPXGFmVwO8JuDlpnugzhdzSOs1oKfgOSDOacFMk9PFOxxWJCBLWl2NZ3T8WWFd1pTBAvGnsrVMG97pSgzys0a+KErEIDxLcc7JHM506ofSNgZUkiZ7pKB7a1HeKNk+cqdUjbMEkmkaXZYpmswJO+KCvFkiXZ153ahBiwCAPIrHzcgH3eWKYj5SAoDaOSGwmDpX2VQUUGjpcsN0jrTAnG7UIPd+kGcfJMQkF6LwUDRhhmm4YQwwU7MyT4RggpFceQlNGSnxctc0zXYoC1mQ4t4AG2aJH67xU3Wp5YZphKAhyYJZoTlet+THTyuQZz8r8jitZO0xy72S22l8jlKq1kGomuaAOcg5BwmJwpAy91QNptgjNK5qI1OIvyRNoMA4+iAaf8AjOqBLN2PKPVH8YlBrVQBAXrOUH/UzSCDqrNcjRhY9lK1wjl4hbjKV8IhnWh2uO4KDWz1TEXYgiD1keyPuYCKBZhojHeyH5M6eaW0ZvcYyO6DOQLEAqttURInzr0Qe3uqek3eKCKDbXSt2VNkQOd/kktDUd3qgHgg3EMs/JKTjhN51uCOmBuTExfXTCvsgD0pYs0U8DOIwRe1ApJPYTWtB3VLCYRfAJwJ9kGa6g7KxbgjCYM7xQDjpGXPzS8SQWuifSMZ8LkBDUnCmHe+KLhMaeKDQgG6ocXeqM+CDOKwSkqjX7oAKd3aIBY2kA6HwWlA7jlPgksnG/W5LZiNJOpHVUkTHjhKCNoVZjLjiB5qFq6QrWTCfJAHMhGaXIF/nAzhM59I1lEiTnDLx6qlk7InmISOATsbh3sii8Yz5LO/aLrOmVQR6rE3zjPwgpxxyUg6pOaZ3mkA/SAWnNB48h8rApntnlmgFkwY7g4DdI6JzxVA0QT2UgdS4IC+2y2QGNRdhTzS8WQxiqxGPpKClmyimTeegyTx3EJH2ROYrMoMzTuL1N9pOifgOn6VRYSNkCWVh2MSmDQO/JDhi8XeoogdeWyChtMuey4dmJO/K65XBx0I6o8NOSBWj9yT5pWtGXJNZvBA6dEeLw8s0ALsgUHMm7nNOiZhqhaW5IuEAyOSANagXxRYk9Fi/bdACc0Q+lMcMEocb8IhUswNoQL+KL1F9kdf0rWhqd6eyZ1hQXU0QRFnjE/GCL7O7CtY7oqBuHzz3SPHhpCBgPC/n7LWjgDGt+W6LCpsZmgd4PyLjtlzShqo1vr4JXFAOynYEjhO9OgWDTWt1wz/AEgq9vxqlcz2JuJQbnnhlsm4ZKDWf01EjrMCszpiqOfhreuOXzyQLeaxS6lR0QtAmsnSs5yBOCeWCYPwlBoreULdvOuSDExkeao0qQs1ScDQjP4QFpQtHLMPeeq4/wBXaQJyuQXe6ik04gRCb6R8iTjFMj2E7W6ePugUvugX1jTNEH/HCtBn0yVC8De74XFtSSRSouRriYlBtnySi0FxvyTBEpzELjY050VnoWT8ueqIsGItKUkz8yPBYukZbIKBkYXqVo0AUKqbavKq4pvQCzH7VHBKHX4AjC7vNEtRuUsYYJ3C5Fjrt09m2gz/ANu/ojROEn9G5A0TWVrA76KL2oCLQkm87JXtlGzchxA5hGJDBlEAIw5JOFUA7wRq4DG6+SP5IGg6HRU4O/RSe8eqLrNtSMPhZ1rkN0wab8M1Euv6ICKLcVUgR4kMYlGMnDaESkhApM7ZFBgVmhNwjFGM+ls34noo2Y1Cu303+EhdN8EaBGyPcBj0WhF1nd1RaR8YoFY7GswsW5JnHHNBze7vJBuFEFAM25GVie/JAXDFK22RARLEERM7eqNma7+eKJgIiEBdaINRFmK6IFqAg9chhvqla5Bxi7nmgHIFaE4d3kkaU5dtXJAS1FrEG5+GHJGZ2QRPYTs9k5HhcUpnNAbcxdXat/spAYo2unLZLaNiIuPnigcgZpStHhcjKBW34LWpqMU0IcKDPQJWhM1mNPbZAotAL/FUBQdZa0RgC9Av48SlaeyntiNxolAUvgzgTcJqZIuuxBWWY/DqDI8VlzHEs7YEnA/7hMxlOSL2KgI/ygdTOMZKQcuo3CiHVWs2SmNggIYg8HJFyIKBQxFrISB1UwN/lggoxq/S+0i46r82zdj4YL9T7a+CNfBaxL47ZZ2n+PppmkZZ+FJTsdTkpteq5ktBfoR6Kb3LkluPwuMcOfmgk1mak9qq96mgTgSz3Cc46XRQ9UiBHFGRl8LPatYvv/f6QK4KZTgV2E3+CSytJrlKDApXhMSgTjrCNdk3UKDb96jRcizs5xjZShDsmXFM61p6ys1+GSxZ3CJLhJi/v4S2g8fLRYvpOsJvxwMzgThostZv072mcBERnBvJSkFBloqAqLbgcK0DTxRadI1WejFqTH6HKYIk6BFzqKn07sMjArcltsd0a5MLQqgZ3nopsMCYB0Nw8lVlnNZvRgrNliO5RFlqVnWU4xqiygXJWMjl6qj7GBebhfVRc04mUbl05eMEHdUXWkQKVBF2s+aUmOk9ETsLHDH9J+KoFIrdssPpSYh0TE0BvSvoNRjmh6zW+SwO/WUj7Ssc5BjXonjxEo0H4+I3GGiZQLwLindaQDqB5qNqAMEBtP8AIQsyz0I5ouVTZ99lHP8AWahaN7HcqTreDj1j0VQUa6tPKFOuMzhN0Kwspx0SORgYzp6pT00TIOKAHRCzZ6zoqN8sI9Vsz31QLwkXAakuTtv5ZpWN8QZ5QmtXQXCBSEDvdBuSl+QrlkjZWNJn4QL0GLZqZnIXBMXJXWtYj08PVPaWdUCkocfPy5rNqUQKdjxQYt2nM+nyl4xl1iUTZz5oWRmkxrRA3AjCUN7AAHgl4qoLPPK6l+ixF2WKVpr3ki44oMfBAHDDPA7LA0RLIkIM44BI2ypEQNMVjSNVVnrHRAqziiH39PlBtcTyQO1BgM3c/jBG5Y3Tmga1GAU2tTPszEzfhF2F6QnOuWEe6Bi5ZsmDBAk4XjO9LaWcGFvyVIy1lBTgv9krrKl9JMG+VrJL9ZaRFKRMYSUA4JruORvKdrkn5JAwpeFuOqB3v25rMBwSsrOml6ZrkDuYOeKU+nitaNxmYwUWW9YgXSgqNvQBLZVNDQY56Jw5ayQB4mmyNo3omDVnX9PFAjQeWacOmnimdbYCeZkdIUminVBZ7qSpm1TcFeY8ljZeuCM0oZncVkos7hJgCUx7y75o0ZjluFIWxl0We84xpAiPlA5c3CJxGI5pkzWETU02rOdELJiATdzTDaFuBIx15gVwy2Qa1dQ3Qlsn+KFoIEZt9FdjKch5IBZiL8EhPwmdlpKnZV5XIKgKbgiH4pnlAG2fM35QApx410vonaU7rkAjwSscUzHYeKz3Zi4wEGhKe/JM2yQF6B3sUVR/l4qFla9ygcOTkKVk2cU/EiUwCHHlflCwKdjEUrKVrGcXnQItdnRI6TWSmswgTiwHeaLnDDC9OT+lmihOExEeMoFBz7+UC8dn0TsNfI5JbNuZkmTN3JAGHFPxJS+EbN8iYQAka1yWHcpi2u4nbRS+odTmEFOJAidrvBYmsYQCqMtCs2s0n46q7rLv38Ulneha2VT/AJGg4/SIyWmkwPZK8Jii9tJ8IQKyzjmqB/dyhZvVnOQUBvSEjKcZuj35qP5O5RtW8M1kCKG6qCgsz36I2oz7CFk26+t9aJCypup+s0DA+nfNJaEfCc493KTe8UE7JprXEeH7VnnCJ7hNlQbrB8eNeaAhguvhyQt0I0Re3GVOyQUaEGtr/qJTFySPLuiB7NEWlEHtu/8AH1Urc0HNApEmpjxV3YdFxWWlFZuAyr1QZhQfaeePojaCkpbOzBilRWZ8NkBnuITPAA1nDLIys1k1Ovhcka6b8UCNEXp5uGCxN25CZiDWn7UpWcfFGxsBMbVn0QMbNJaTlemLIJrNb0Dggez8r90tsx2AkZzciWwAc+71A2tflBRrMcMk5sxdjfKninAmnfkg3FclszO/d+io2zv0MDQI2o70yQDiwy875WdJxHPJNKLrpQSLlmN8zfepvM38k4QOX+CFo9Rce8OidrtB0hBRrKZ1ukXJH2Yvg+6QvUa4maoKopGJ4nkgV1rh5XrNOfS4JAK8p5iio184IFcJ/advTXEJG2fnGV+qa0CBjqZ80ltZzdctaBXbYyPHog45cOlxzWYNKb93JbB8lM+lZzEZQgcuBuMhSeAPQ5KbPqZigESp/UWlDoD5TkjpJi3LmixSBiNQPIH1VA6UYoEaowjZ+SFo+twRA4VQHxSzW7H0WDq9EADfcrA4Y4nBP9WaxohZZZ38kA4IEC4Gh3StatbWlCcq+IHqph1+lQUFJ8EGDp6LXJ7C0nCPHwR1G0ooPtO8Va0d4+CjaWsYTOeCB2uSfjScazSgua0GF9D7pXmIvUH21Yy67dyqsfKMcjOf5pHhVbZT6YpbYzfjlT/T+0WQA3dB37MT4IWtsg1FtxoGfJFy2ASg4Zop22MjTPJIGYC7NBp1N+fJMW3blBnNjUrcXmi/BKPNASRN/gpls4QLonHNUPeHilcUClO5yRrQb/NHhkkaT8IGjokccuSNpZx8/tGyZInlsg1YvStGo3NyBoi6kaoKNaBe4TnhyQLlImoEms5eyVsTSaaygoLO+VMt9fJOShKAvbIy39IxTMbSDBjqJu90B5IAz8UKAOCXh79/hUBw8ULV0Aa+GyCQvWcKoOcqBAWoObhnVOfRSZ6oH4lNzs45XD1WaUzBKBH2qRrFVzEvFAgydSUFA0JXj254qYtcUz3UnGJ5lAWwiLRLQAUwSgoC5+3imDtuSDkGOQUpmlc1UAU7W+EEmiPU5JyVkHjZS+A3HOkkZTcVlN5gEj/rQmRf1QXMf//Z',
                                     style: 'title',
-                                },
-                                {
-                                    rowSpan: 3,
-                                    text: 'ACTA DE INICIO DE CONTRATO',
-                                    style: 'acta',
-                                },
-                                {
-                                    text: 'Código',
-                                    style: 'tableHeader',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: 'FBS 038',
-                                    style: 'tableHeader',
-                                    alignment: 'center',
+                                    fit: [100, 100],
                                 },
                             ],
-                            [
-                                {
-                                    text: 'Versión',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: latest_date,
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: 'Versión',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: '03',
-                                    alignment: 'center',
-                                },
-                            ],
-                            [
-                                {
-                                    text: '',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: '',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: 'Fecha',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: latest_date,
-                                    alignment: 'center',
-                                },
-                            ]
                         ],
+                    },
+                    layout: {
+                        hLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? 2
+                                : 1;
+                        },
+                        vLineWidth: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? 2
+                                : 1;
+                        },
+                        hLineColor: function (i, node) {
+                            return i === 0 || i === node.table.body.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
+                        vLineColor: function (i, node) {
+                            return i === 0 || i === node.table.widths.length
+                                ? '#4FAACD'
+                                : 'gray';
+                        },
                     },
                 },
                 {
-                    style: 'tableExample',
-                    color: '#444',
+                    margin: [10, 10, 10, 10],
                     table: {
-                        widths: [100, 397],
+                        widths: [163, 163, 163],
                         body: [
                             [
                                 {
-                                    text: 'Fecha',
-                                    alignment: 'center',
+                                    text: 'Elaborado Por',
+                                    style: 'fontPeque',
                                 },
                                 {
-                                    text: '',
+                                    text: 'Revisado Por',
+                                    style: 'fontPeque',
+                                },
+                                {
+                                    text: 'Aprobado Por',
+                                    style: 'fontPeque',
+                                },
+                            ],
+                            [
+                                {
+                                    text: 'Maicol Yepes',
+                                    style: 'fontPeque',
+                                },
+                                {
+                                    text: 'Maicol Yepes',
+                                    style: 'fontPeque',
+                                },
+                                {
+                                    text: 'Maicol Yepes',
+                                    style: 'fontPeque',
                                 },
                             ],
                         ],
                     },
                 },
-                {
-                    text: [
-                        'Mediante la suscripción de la presente acta, el contratante y el contratista asumen plena responsabilidad por la veracidad de la información en ella contenida.\n\n',
-                    ],			
-                    style: 'header',
-                    bold: false
-                },
-                {
-                    style: 'tableExample',
-                    color: '#444',
-                    table: {
-                        widths: [505],
-                        body: [
-                            [
-                                {
-                                    text: 'INFORMACIÓN GENERAL DEL CONTRATO O CONVENIO',
-                                    alignment: 'center',
-                                },
-                            ],
-                        ],
-                    },
-                },
-                {
-                    text: [
-                        'Esta información es transcrita tal cual como figura en los respectivos documentos contractuales de los que se refiere: \n\n',
-                    ],			
-                    style: 'header',
-                    bold: false
-                },
-                {
-                    style: 'tableExample',
-                    color: '#444',
-                    table: {
-                        widths: ['*', '*', '*', '*', '*', '*'],
-                        body: [
-                            [
-                                {
-                                    rowSpan: 2,
-                                    colSpan: 2,
-                                    text: 'CONTRATO',
-                                    alignment: 'center',
-                                    style: 'contrato'
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: 'NÚMERO',
-                                    alignment: 'center',
-                                },
-                                {
-                                    colSpan: 3,
-                                    text: 'P-4158 de 2022',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                }
-                            ],
-                            [
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: 'FECHA:',
-                                    alignment: 'center',                                },
-                                {
-                                    text: '13',
-                                },
-                                {
-                                    text: '02',
-                                },
-                                {
-                                    text: '2023',
-                                }
-                            ],
-                            [
-                                {
-                                    colSpan: 6,
-                                    text: 'OBJETO: PRESTACIÓN DE SERVICIOS COMO CONTRATISTA INDEPENDIENTE, SIN VÍNCULO LABORAL POR SU PROPIA CUENTA Y RIESGO PARA REALIZAR LA GESTION COMO PROFESIONAL DE APOYO  ADMINISTRATIVO EN EJECUCIÓN DEL CONTRATO INTERADMINISTRATIVO NO.CW153499 DE 2021, CELEBRADO  ENTRE EMVARIAS Y EL ITM.',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                            ],
-                            [
-                                {
-                                    colSpan: 3,
-                                    text: 'ORGANISMO CONTRATANTE:',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    colSpan: 3,
-                                    text: 'INSTITUTO TECNOLOGICO METROPOLITANO ',
-                                    alignment: 'center',
-                                },
-                                {
-                                    text: '',                                },
-                                {
-                                    text: '',
-                                },
-                            ],
-                            [
-                                {
-                                    colSpan: 3,
-                                    text: 'CONTRATISTA',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    colSpan: 3,
-                                    text: 'YULIANA VERA CARDONA- C.C. 1,020,446,482 de BELLO',
-                                },
-                                {
-                                    text: '',                                },
-                                {
-                                    text: '',
-                                },
-                            ],
-                            [
-                                {
-                                    colSpan: 2,
-                                    text: 'VALOR: ',
-                                    style: 'campoDerecha',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    colSpan: 4,
-                                    text: 'SIETE MILLONES QUINIENTOS OCHENTA Y TRES MIL TRESCIENTOS TREINTA Y TRES PESOS M/L ($ 7,583,333)',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',                                },
-                                {
-                                    text: '',
-                                },
-                            ],
-                            [
-                                {
-                                    colSpan: 2,
-                                    text: 'PLAZO: ',
-                                    style: 'campoDerecha',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    colSpan: 4,
-                                    text: '02 MESES y 5 DIAS',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',                                },
-                                {
-                                    text: '',
-                                },
-                            ],
-                            [
-                                {
-                                    colSpan: 2,
-                                    rowSpan: 2,
-                                    text: 'REGISTRO PRESUPUESTAL',
-                                    style: 'subheader',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    colSpan: 2,
-                                    text: '4158',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',                                },
-                                {
-                                    text: '',
-                                },
-                            ],
-                            [
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    colSpan: 1,
-                                    text: 'FECHA:',                                },
-                                {
-                                    text: '13',
-                                },
-                                {
-                                    text: '02',                                },
-                                {
-                                    text: '2023',
-                                },
-                            ],
-                            [
-                                {
-                                    colSpan: 3,
-                                    text: 'FECHA APROBACION DE PÓLIZAS:',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: 'N/A',
-                                },
-                                {
-                                    text: 'N/A',                                },
-                                {
-                                    text: 'N/A',
-                                },
-                            ],
-                        ],
-                    },
-                },
-                {
-                    style: 'tableExample',
-                    color: '#444',
-                    table: {
-                        widths: ['*', '*','*'],
-                        body: [
-                            [
-                                {
-                                    text: 'SUPERVISOR',
-                                    style: 'campoDerecha',
-                                },
-                                {
-                                    text: 'NOMBRE:',
-                                },
-                                {
-                                    text: 'GERMAN ALBERTO CARDONA',
-                                },
-                            ],
-                        ],
-                    },
-                },
-                {
-                    text: [
-                        'De conformidad con la cláusula segunda del Contrato No. P-4158 de 2022, se fija como fecha de inicio la del presente documento, por lo tanto, la fecha de terminación será el 30 de septiembre de 2022',
-                        '\n\nPara constancia de lo anterior, firman la presente acta quienes en ella intervinieron,'                      
-                    ],			
-                    style: 'header',
-                    bold: false
-                },
-                { text: '\n\nFIRMA: ' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
-                { text: this.nombre }, { text: 'CONTRATISTA: \t' + this.cedula },
-                { text: '\n\nFIRMA: ' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
-                { text: this.nombre }, { text: 'SUPERVISOR: \t' + this.cedula }
             ],
             styles: {
-                campoDerecha: {
+                header: {
+                    fontSize: 18,
                     bold: true,
-                    fontSize: 13,
-                    color: 'black',
-                    align: 'center',
+                    margin: [0, 0, 0, 10],
                 },
                 subheader: {
-                    bold: true,
-                    fontSize: 13,
-                    color: 'black',
-                    align: 'center',
-                    margin: [0, 10, 0, 0],
+                    fontSize: 10,
+                    margin: [0, 10, 0, 5],
                 },
                 tableHeader: {
                     bold: true,
                     fontSize: 13,
                     color: 'black',
                     align: 'center',
-                    margin: [0, 0, 0, 0],
+                    margin: [0, 0, 10, 10],
                 },
                 tableExample: {
-                    margin: [0, 5, 0, 15],
-                },
-                contrato: {
-                    bold: true,
-                    fontSize: 13,
-                    margin: [0, 10, 0, 0],
+                    margin: [0, 0, 0, 5],
                 },
                 title: {
                     bold: true,
-                    color: 'black',
-                    alignment: 'center',
-                    margin: [0, 0, 0, 0],
-                },
-                acta: {
-                    bold: true,
                     fontSize: 13,
                     color: 'black',
                     alignment: 'center',
-                    margin: [0, 15, 0, 0],
+                },
+                title2: {
+                    bold: true,
+                    fontSize: 10,
+                    color: 'black',
+                    alignment: 'center',
+                },
+                titleTable1: {
+                    bold: true,
+                    fontSize: 8,
+                    color: 'black',
+                    alignment: 'center',
+                },
+                titleTable2: {
+                    fontSize: 10,
+                    color: 'white',
+                    alignment: 'center',
+                },
+                marginRector: {
+                    fontSize: 10,
+                    margin: [0, 5, 10, 0],
+                },
+                fontPeque: {
+                    fontSize: 8,
+                    alignment: 'center',
+                },
+                fontPeque2: {
+                    fontSize: 10,
+                },
+                fontSegundapag: {
+                    fontSize: 9,
+                },
+                fontSegundapagPeque: {
+                    fontSize: 9,
                 },
             },
+
             defaultStyle: {
                 // alignment: 'justify'
             },
@@ -1175,19 +1566,6 @@ export class CreatePdfComponent implements OnInit {
         let test = pdfMake
             .createPdf(documentDefinition)
             .download('Filenames.pdf');
-        console.log(test);
-    }
-
-    private getHiringData() {
-        this.contractContractors.contractors[0] = '86ef47eb-76a3-4774-8b99-cfe935a9208a';
-        this.contractContractors.contractId = '86EF47EB-76A3-4774-8B99-CFE935A9208A';
-        this._economicService
-            .getDataMinute(this.contractContractors)
-            .subscribe((response: any) => {
-                this.dataContractors = response;
-            }, (resp => {
-                console.log(resp);
-            }));
-
+        console.log('puto');
     }
 }

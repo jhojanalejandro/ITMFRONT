@@ -56,12 +56,6 @@
                     </mat-form-field>
 
                     <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
-                        <mat-label>Nombre Rubro</mat-label>
-                        <input type="text" id="nombreRubro" [(ngModel)]="hinringData.nombreRubro"
-                            formControlName="nombreRubro" autocomplete="off" matInput placeholder="Nombre Rubro">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
                         <mat-label>Numero Acta</mat-label>
                         <input matInput id="numeroActa" [(ngModel)]="hinringData.numeroActa" formControlName="numeroActa"
                             autocomplete="off" matInput placeholder="numeroActa">

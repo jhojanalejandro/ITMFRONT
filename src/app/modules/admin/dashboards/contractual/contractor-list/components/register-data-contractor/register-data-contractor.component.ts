@@ -8,11 +8,11 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { IHiringData } from '../../../models/hiring-data';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { UploadDataService } from '../../../service/upload-data.service';
-import { AsignmentData } from '../../../models/asignment-data';
 import { EconomicContractor } from '../../../../nomina/models/economic-data-contractor';
-import { IElements } from '../../../../../pages/planing/models/element';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
+import { AsignmentData } from '../../../models/contractor';
+import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 
 
 @Component({
@@ -50,7 +50,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
   formContractor: FormGroup;
-  hinringData: IHiringData = {      contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, nombreRubro: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
+  hinringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
   constructor(
     private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
@@ -90,7 +90,6 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.formContractor = this._formBuilder.group({
       contrato: new FormControl(this.hinringData.contrato),
       compromiso: new FormControl(this.hinringData.compromiso),
-      nombreRubro: new FormControl(this.hinringData.nombreRubro),
       fechaInicioReal: new FormControl(this.hinringData.fechaRealDeInicio, Validators.required),
       numeroActa: new FormControl(this.hinringData.numeroActa),
       fechaComite: new FormControl(this.hinringData.fechaDeComite),
@@ -149,7 +148,6 @@ export class ContractorDataRegisterComponent implements OnInit {
           identificacionSupervisor: dataAdmin.identification,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
-          nombreRubro: this.formContractor.value.nombreRubro,
           cdp: this.formContractor.value.cdp,
           caso: this.formContractor.value.caso
 
@@ -178,7 +176,6 @@ export class ContractorDataRegisterComponent implements OnInit {
         identificacionSupervisor: dataAdmin.identificacionSupervisor,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         actaComite: 'vacio',
-        nombreRubro: this.formContractor.value.nombreRubro,
         cdp: this.formContractor.value.cdp,
         caso: this.formContractor.value.caso
       }];
@@ -187,7 +184,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       .addHiringContractor(this.hiringDataList)
       .subscribe((res) => {
         if (res) {
-          
+
           Swal.fire({
             position: 'center',
             icon: 'success',
@@ -251,7 +248,6 @@ export class ContractorDataRegisterComponent implements OnInit {
       identificacionSupervisor: dataAdmin.identification,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       actaComite: 'vacio',
-      nombreRubro: this.formContractor.value.nombreRubro,
       cdp: this.formContractor.value.cdp,
       caso: this.formContractor.value.caso
 
@@ -355,7 +351,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   sendEconomicdataContractor() {
-    let element: IElements = this.elements.find(item => item.id === this.elementselectId);
+    let element: Elements = this.elements.find(item => item.id === this.elementselectId);
 
     for (let index = 0; index < this.datos.idContractors.length; index++) {
       let economicData: EconomicContractor = {
@@ -384,7 +380,7 @@ export class ContractorDataRegisterComponent implements OnInit {
 
   private getHiring() {
     this._economicService
-      .getHiringDataById(this.datos.id,this.datos.contractId)
+      .getHiringDataById(this.datos.id, this.datos.contractId)
       .subscribe((response: IHiringData) => {
         if (response != null) {
           this.update = true;

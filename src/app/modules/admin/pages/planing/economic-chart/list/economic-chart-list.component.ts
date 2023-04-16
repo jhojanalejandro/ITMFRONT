@@ -27,8 +27,6 @@ import {
     EconomicChart,
     Components,
 } from '../economic-chart.types';
-import swal from 'sweetalert2';
-import { AuthService } from 'app/core/auth/auth.service';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
@@ -154,7 +152,7 @@ export class EconomicChartListComponent
     }
 
     addComponent(data: any) {
-        this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id);
+        this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id + '/'+ data.projectName);
     }
 
     /**

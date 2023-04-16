@@ -21,13 +21,11 @@ import { map, Observable, startWith, Subject, takeUntil, tap } from 'rxjs';
 import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { IElements } from '../../models/element';
-import { ListElements } from '../../models/list-elements';
 import swal from 'sweetalert2';
 import { EconomicChartService } from '../../service/economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DetalleContrato } from '../../models/detalle-contrato';
+import { DetalleContrato, Elements, ListElements } from '../../models/planing-model';
 
 @Component({
     selector: 'app-alement',
@@ -44,9 +42,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     valorDiaContratista: number = 0;
+    typeContractor: boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     filteredelementos: Observable<string[]>;
-    elementos: IElements[] = [];
+    elementos: Elements[] = [];
     allelementos: string[] = [
         'Profesional En Sistemas',
         'Profesional en areas de derecho',
@@ -54,11 +53,15 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         'Profesional Docente',
         'Tecnologo',
         'Tecnico',
+        'Recurso Humano',
+        'Gestion Humana',
+        'Apoyo Administrativo',
+
     ];
     tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
+    elemento: Elements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
     recursos: number = 0;
     totalV: number;
     totalExacto: number;
@@ -77,12 +80,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     elementForm: FormGroup;
-    // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         public matDialogRef: MatDialogRef<ElementCardComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -178,12 +177,12 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             this.totalValue = this.elementForm.value.totalValue
         }
         if (this.elementForm.value.tipoElemento === null) {
-            this.elementForm.value.tipoElemento = 'corriente'
+            this.elementForm.value.tipoElemento = 'Contratista'
         }
         if (this.totalValueContratista === null) {
             this.totalValueContratista = this.totalValue / this.elementForm.value.contractorCant;
         }
-        let item: IElements = {
+        let item: Elements = {
             id: this._data.idElemento,
             nombreElemento: this.elementForm.value.nombreElemento,
             idComponente: this._data.idComponente,
@@ -204,6 +203,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento
         };
+        debugger
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire({
@@ -221,45 +221,52 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             // Set the alert
             console.log(response);
 
-            swal.fire('error', 'Error en el registro!', 'error');
+            swal.fire('error', 'Error al registrar la información!', 'error');
         });
     }
 
     calculate = () => {
-        if (this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === '') {
-            swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
-        } else {
-            this.totalCalculate = false;
-            this.elemento.valorPorDiaContratista = this.elementForm.value.unitValue / 30;
-            this.elementForm.value.unitValueDay = Number(
-                (this.elementForm.value.unitValue / 30) *
-                this.elementForm.value.contractorCant
-            );
-            this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
-
-            if (this.elementForm.value.totalValue === null || this.elemento.valorTotal === this.elementForm.value.totalValue) {
-                this.totalValue = Number(
-                    this.elemento.valorPorDia * this.elementForm.value.cantDay
+        if(this.typeContractor){
+            if (this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === '') {
+                swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
+            } else {
+                this.totalCalculate = false;
+                this.elemento.valorPorDiaContratista = this.elementForm.value.unitValue / 30;
+                this.elementForm.value.unitValueDay = Number(
+                    (this.elementForm.value.unitValue / 30) *
+                    this.elementForm.value.contractorCant
                 );
-                this.totalValueContratista = Number(
+                this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
+    
+                if (this.elementForm.value.totalValue === null || this.elemento.valorTotal === this.elementForm.value.totalValue) {
+                    this.totalValue = Number(
+                        this.elemento.valorPorDia * this.elementForm.value.cantDay
+                    );
+                    this.totalValueContratista = Number(
+                        this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
+                    );
+                    this.totalExacto = this.totalValue;
+                } else if (this.elemento.valorTotal != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
+                    this.totalExacto = Number(
+                        this.elemento.valorPorDia * this.elementForm.value.cantDay
+                    );
+                    this.totalValueContratista = Number(
+                        this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
+                    );
                     this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                );
-                this.totalExacto = this.totalValue;
-            } else if (this.elemento.valorTotal != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
-                this.totalExacto = Number(
-                    this.elemento.valorPorDia * this.elementForm.value.cantDay
-                );
-                this.totalValueContratista = Number(
-                    this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                );
-                this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                this.totalValueContratista = Number(
-                    this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                );
-                this.recursos =  this.elementForm.value.totalValue - this.totalExacto;
+                    this.totalValueContratista = Number(
+                        this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
+                    );
+                    this.recursos =  this.elementForm.value.totalValue - this.totalExacto;
+                }
+    
             }
-
+        }else{
+            this.elemento.valorPorDia = this.elementForm.value.unitValue;
+            this.totalValue = this.elementForm.value.unitValue;
+            this.elementForm.value.totalValue = this.elementForm.value.unitValue;
         }
+
 
     };
 
@@ -299,6 +306,15 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         } else{
             this.totalValue = this.totalV
         }       
+
+    }
+
+    changeTypeElement(e: any){
+        if(e.value === 'Suministro'){
+            this.typeContractor = false;
+        }else{
+            this.typeContractor = true;
+        }
 
     }
     

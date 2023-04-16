@@ -6,8 +6,8 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
-import { IProjectFolder, DetailProjectFolder } from '../../models/project-folder';
 import { FuseAlertType } from '@fuse/components/alert';
+import { DetailProjectFolder, ProjectFolder } from '../../models/planing-model';
 
 @Component({
   selector: 'app-register-contractor',
@@ -31,7 +31,7 @@ export class RegisterProjectFolderComponent implements OnInit {
   tipoModificacion = GlobalConst.tipoModificacion;
   editarData = GlobalConst.editarData;
   editData: boolean = false;
-  dataProject: IProjectFolder = { companyName: null, projectName: null, descriptionProject: null, execution: false, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, detalleContratoDto: null, numberProject: null, enableProject: true,project: null, rubro: null }
+  dataProject: ProjectFolder = { companyName: null, projectName: null, descriptionProject: null, execution: false, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, detalleContratoDto: null, numberProject: null, enableProject: true,project: null, rubro: null, nombreRubro: null }
   dataDetail: DetailProjectFolder = { fechaContrato: null, fechaFinalizacion: null, adicion: null, tipoContrato: null, update: null }
   constructor(
     private _upload: UploadDataService,
@@ -80,6 +80,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaDeTerminacionAmpliacion: new FormControl(null),
       numberProject: new FormControl(this.dataProject.numberProject),
       rubro: new FormControl(this.dataProject.rubro),
+      nombreRubro: new FormControl(this.dataProject.nombreRubro),
       project: new FormControl(this.dataProject.project)
     });
 
@@ -116,7 +117,7 @@ export class RegisterProjectFolderComponent implements OnInit {
         idContrato: null,
         update: this.formProject.value.updateData
       }
-      const registerProject: IProjectFolder = {
+      const registerProject: ProjectFolder = {
         userId: this.authService.accessId,
         companyName: this.formProject.value.companyName,
         projectName: this.formProject.value.projectName,
@@ -134,7 +135,8 @@ export class RegisterProjectFolderComponent implements OnInit {
         detalleContratoDto: detalle,
         numberProject: this.formProject.value.numberProject,
         project: this.formProject.value.project,
-        rubro: this.formProject.value.rubro
+        rubro: this.formProject.value.rubro,
+        nombreRubro: this.formProject.value.nombreRubro
       };
 
       this._upload.addProjectFolder(registerProject).subscribe((res) => {
@@ -192,7 +194,7 @@ export class RegisterProjectFolderComponent implements OnInit {
       update: this.formProject.value.updateData
 
     }
-    const registerProject: IProjectFolder = {
+    const registerProject: ProjectFolder = {
       id: this._data.data.id,
       userId: this.authService.accessId,
       companyName: this.formProject.value.companyName,
@@ -211,7 +213,8 @@ export class RegisterProjectFolderComponent implements OnInit {
       fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
       numberProject: this.formProject.value.numberProject,
       project: this.formProject.value.project,
-      rubro: this.formProject.value.rubro
+      rubro: this.formProject.value.rubro,
+      nombreRubro: this.formProject.value.nombreRubro,
     };
     this._upload.addProjectFolder(registerProject).subscribe((res) => {
       if (res) {

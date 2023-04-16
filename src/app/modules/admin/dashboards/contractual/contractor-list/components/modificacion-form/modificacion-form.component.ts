@@ -22,13 +22,12 @@ import {
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
-import { DetalleContrato } from 'app/modules/admin/pages/planing/models/detalle-contrato';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
-import { IElements } from '../../../../../pages/planing/models/element';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { DetalleContrato, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 
 
 @Component({
@@ -44,10 +43,10 @@ export class ModificacionFormComponent implements OnInit {
 
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    elemento: IElements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
+    elemento: Elements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
     disableField: boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
-    elementos: IElements[] = [];
+    elementos: Elements[] = [];
     allelementos: string[] = [
         'Profesional En Sistemas',
         'Profesional en areas de derecho',
@@ -169,7 +168,7 @@ export class ModificacionFormComponent implements OnInit {
         } else {
             modificacion = true;
         }
-        let item: IElements = {
+        let item: Elements = {
             nombreElemento: this.elementForm.value.nombreElemento,
             idComponente: this._data.data.idComponente,
             cantidadContratistas: this.elementForm.value.contractorCant,
@@ -205,7 +204,7 @@ export class ModificacionFormComponent implements OnInit {
             this._changeDetectorRef.detectChanges();
         }, (response) => {
             // Set the alert
-            swal.fire('Error', 'Error en el registro!', 'error');
+            swal.fire('Error', 'Error al registrar la información!', 'error');
         });
         this.matDialogRef.close();
     }

@@ -22,3 +22,8 @@ export interface DetailFileContractor{
     observation: string;
     files: string[]
 }
+
+export interface ContractsContractor{
+    id: any;
+    companyName: string;
+}

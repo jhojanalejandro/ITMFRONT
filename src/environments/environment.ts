@@ -30,6 +30,9 @@ export const environment = {
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
     sendMails: 'Contractor/SendContractorAccount',
+    AuthContractor: 'Contractor/Authenticate',
+    GetContractsByContractors: 'Contractor/GetContractsByContractor/',
+    GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -65,7 +68,6 @@ export const environment = {
 
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete',
-    AuthContractor: 'Contractor/Authenticate',
 
     addHiringEndpoint: 'HiringData/Add',
     UpdateHiringEndpoint: 'HiringData/Update',
