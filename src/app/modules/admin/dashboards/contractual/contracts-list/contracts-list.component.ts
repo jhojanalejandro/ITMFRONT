@@ -60,7 +60,6 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
-
   }
 
   openDialog(route: any, data: any) {

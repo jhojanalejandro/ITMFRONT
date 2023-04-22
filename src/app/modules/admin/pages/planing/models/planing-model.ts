@@ -5,6 +5,13 @@ export interface Activity{
     idComponente: any;
 }
 
+export interface Carro{
+    id: any;
+    tipo: string,
+    modelo: any;
+    color: any;
+    cilindrje: string
+}
 export interface ProjectFolder{
     id?: any;
     userId?: any;
@@ -19,9 +26,9 @@ export interface ProjectFolder{
     gastosOperativos: number;
     valorSubTotal: number;
     noAdicion: string;
-    fechaInicioAmpliacion: Date;
-    fechaDeTerminacionAmpliacion: Date;
-    detalleContratoDto: DetailProjectFolder;
+    fechaInicioAmpliacion: Date | null;
+    fechaDeTerminacionAmpliacion: Date | null;
+    detalleContratoDto?: DetailProjectFolder;
     numberProject: string;
     rubro: string;
     nombreRubro: string;

@@ -122,7 +122,7 @@ export class RegisterProjectFolderComponent implements OnInit {
         companyName: this.formProject.value.companyName,
         projectName: this.formProject.value.projectName,
         descriptionProject: this.formProject.value.description,
-        execution: this.formProject.value.ejecucion,
+        execution: false,
         activate: true,
         enableProject: false,
         contractorsCant: 0,

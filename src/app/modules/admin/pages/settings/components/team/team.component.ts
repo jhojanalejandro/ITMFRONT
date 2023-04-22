@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/core/enums/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { Subject, takeUntil } from 'rxjs';
 import swal from 'sweetalert2';
@@ -37,25 +38,25 @@ export class SettingsTeamComponent implements OnInit {
                 // Mark for check
                 teams.forEach(element => {
                     switch (element.code) {
-                        case 'ADM':
+                        case CodeUser.ADMIN:
                             element.code = 'ADMIN'
                             break;
-                        case 'PLNC':
+                        case CodeUser.PLANEACION:
                             element.code = 'PLANEACIÓN'
                             break;
-                        case 'CTL':
+                        case CodeUser.RECRUITER:
                             element.code = 'CONTRACTUAL'
                             break;
-                        case 'NMA':
+                        case CodeUser.NOMINA:
                             element.code = 'NOMINA'
                             break;
-                        case 'JURD':
+                        case CodeUser.JURIDICO:
                             element.code = 'JURIDICO'
                             break;
-                        case 'SPV':
+                        case CodeUser.SUPERVISOR:
                             element.code = 'SUPERVISOR'
                             break;
-                        case 'DTV':
+                        case CodeUser.DESACTIVADO:
                             element.code = 'DESACTIVADO'
                             break;
                     }

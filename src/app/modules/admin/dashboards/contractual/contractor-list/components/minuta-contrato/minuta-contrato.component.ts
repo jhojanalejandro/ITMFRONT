@@ -666,7 +666,6 @@ export class MinutaContratoComponent implements OnInit {
         let _uploadervice = this._upload;
         pdfMake.createPdf(documentDefinition)
         .getDataUrl(function (dataURL) {
-          debugger
           dataURL = dataURL.split('data:application/pdf;base64,')
           const registerFile: IFileContractor = {
             userId: userId,

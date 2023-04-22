@@ -95,7 +95,6 @@ export class PdfPaymentComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        debugger
         this.downloadPDFInforme();
         this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
 

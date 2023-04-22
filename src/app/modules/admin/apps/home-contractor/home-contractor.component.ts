@@ -61,7 +61,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     this.getContract();
   }
   openDialog() {
-    debugger
     const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
       autoFocus: false,
       data: {
@@ -121,7 +120,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
   private getDataContractor() {
     this._contractorListService.getPaymentAccount(this._auth.accessId, this.contractSelected).subscribe((Response) => {
-      debugger
       if (Response != null) {
         this.dataCuenta = Response;
       }

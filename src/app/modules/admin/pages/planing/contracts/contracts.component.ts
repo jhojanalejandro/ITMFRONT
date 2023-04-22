@@ -54,11 +54,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder,
 
   ) {
-    this.contracts = this._economicService._economicsChart$;
-    this.dataSource = new MatTableDataSource(
-        this.contracts.source._value
-    );
-    this.dataSource.sort = this.sort;
+
   }
   columnas = [
     { title: 'NÚMERO CONTRATO', name: 'numberProject' },
@@ -69,10 +65,11 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     { title: '', name: 'action' },
   ]
   ngOnInit(): void {
+    this.getContracts();
     this.userName = this.auth.accessName.toUpperCase();
     this.configForm = this._formBuilder.group({
-      title: 'Remove contact',
-      message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
+      title: 'Eliminar Registro',
+      message: '¿Estás seguro de que desea eliminar este contacto de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
       icon: this._formBuilder.group({
         show: true,
         name: 'heroicons_outline:exclamation',
@@ -81,18 +78,25 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
       actions: this._formBuilder.group({
         confirm: this._formBuilder.group({
           show: true,
-          label: 'Remove',
+          label: 'Eliminar',
           color: 'warn'
         }),
         cancel: this._formBuilder.group({
           show: true,
-          label: 'Cancel'
+          label: 'Cancelar'
         })
       }),
       dismissible: true
     });
-    this.getContractsData();
 
+  }
+  private getContracts(){
+    this.contracts = this._economicService._economicsChart$;
+    this.dataSource = new MatTableDataSource(
+        this.contracts.source._value
+    );
+    this.dataSource.sort = this.sort;
+    this.getContractsData();
   }
 
   openDialog(route: any, data: any) {
@@ -105,7 +109,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
          });
         dialogRefProject.afterClosed().subscribe(datos => {
           if (datos) {
-            this.getContractsData();
+            this.getContracts();
           }
         });
         break
@@ -118,8 +122,9 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
           }
         });
         dialogRef.afterClosed().subscribe((result) => {
+          debugger
           if (result) {
-            this.getContractsData();
+            this.getContracts();
           }
         });
         break

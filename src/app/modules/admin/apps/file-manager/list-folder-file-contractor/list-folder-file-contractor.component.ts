@@ -115,7 +115,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
-            debugger
             if (result) {
                 this.getData();
             }

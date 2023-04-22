@@ -66,21 +66,5 @@ export const defaultNavigation: FuseNavigationItem[] = [
         id  : 'divider-1',
         type: 'divider'
     },
-    // {
-    //     id      : 'documentation',
-    //     title   : 'HISTORICO',
-    //     subtitle: 'Historico de contratos',
-    //     type    : 'group',
-    //     icon    : 'heroicons_outline:support',
-    //     children: [
-    //         {
-    //             id   : 'documentation.guides',
-    //             title: 'Contratos',
-    //             type : 'basic',
-    //             icon : 'heroicons_outline:book-open',
-    //             link : '/docs/guides'
-    //         }
-    //     ]
-    // },
 ];
 

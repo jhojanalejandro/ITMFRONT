@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/core/enums/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUser } from 'app/layout/common/models/userAuthenticate';
 
@@ -56,68 +57,47 @@ export class AuthSignInComponent implements OnInit {
         if (this.signInForm.invalid) {
             return;
         }
+        if(this.signInForm.value.userType === 'Contratista'){
+            this.signInForm.value.userType = CodeUser.CONTRACTOR
+        }else{
+            this.signInForm.value.userType = CodeUser.RECRUITER
+        }
         this.showAlert = false;
         const useraLogin: IUser = {
             userName: this.signInForm.value.email,
             password: this.signInForm.value.password,
-
+            userType: this.signInForm.value.userType
         };
-
-        if (this.signInForm.value.userType == 'Contractual') {
-            this.signInForm.disable();
-            // Sign in
-            this._authService.signIn(useraLogin)
-                .subscribe(
-                    () => {
-                        this._router.navigate(['dashboards/inicio']);
-                    },
-                    (response) => {
-
-                        // Re-enable the form
-                        this.signInForm.enable();
-
-                        // Reset the form
-                        this.signInNgForm.resetForm();
-
-                        // Set the alert
-                        this.alert = {
-                            type: 'error',
-                            message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
-                        };
-
-                        // Show the alert
-                        this.showAlert = true;
-                    }
-                );
-        } else {
-            // Sign in
-            this._authService.signInContractor(useraLogin)
-                .subscribe(
-                    () => {
-                        // Navigate to the redirect url
+        this.signInForm.disable();
+        // Sign in
+        this._authService.signIn(useraLogin)
+            .subscribe(
+                (response) => {
+                    if(this.signInForm.value.userType === CodeUser.CONTRACTOR){
                         this._router.navigate(['inicio/contratista']);
 
-                    },
-                    (response) => {
-
-                        // Re-enable the form
-                        this.signInForm.enable();
-
-                        // Reset the form
-                        this.signInNgForm.resetForm();
-
-                        // Set the alert
-                        this.alert = {
-                            type: 'error',
-                            message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
-                        };
-
-                        // Show the alert
-                        this.showAlert = true;
+                    }else if(this.signInForm.value.userType === CodeUser.RECRUITER){
+                        this._router.navigate(['dashboards/inicio']);
                     }
-                );
-        }
+                },
+                (response) => {
 
+                    // Re-enable the form
+                    this.signInForm.enable();
+
+                    // Reset the form
+                    this.signInNgForm.resetForm();
+
+                    // Set the alert
+                    this.alert = {
+                        type: 'error',
+                        message: 'Correo o contraseña equivocada, o el usuario esta inactivo'
+                    };
+
+                    // Show the alert
+                    this.showAlert = true;
+                }
+            );
 
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {
     BehaviorSubject,
     filter,
@@ -17,6 +17,7 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { Activity, Componente, Elements } from '../models/planing-model';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Injectable({
     providedIn: 'root',
@@ -70,9 +71,10 @@ export class EconomicChartService {
     getProjectData(): Observable<any[]> {
         const params = new HttpParams()
         .set('inProgress', false )
-        .set('tipoModulo', 'planeacion')
+        .set('tipoModulo', 'planeacion');
+
         let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
-        return this._httpClient.get(urlEndPoint, {params: params}).pipe(
+        return this._httpClient.get(urlEndPoint, { params}).pipe(
             tap((response: any) => {
                 response.forEach(element => {
                     if(element.execution){

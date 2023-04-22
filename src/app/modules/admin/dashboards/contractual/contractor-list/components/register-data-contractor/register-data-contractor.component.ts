@@ -44,7 +44,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     type: 'warn',
     message: ''
   };
-  nivel: string = 'Nivel';
+  nivel: string = 'Nivel ARL';
   supervisor: string = 'Supervisor';
   showAlert: boolean = false;
   requierePoliza: any = GlobalConst.requierePoliza
@@ -111,7 +111,6 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.getAdmins();
   }
   async addDataHiring() {
-    debugger
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
@@ -213,7 +212,6 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   async updateContractor() {
-    debugger
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {

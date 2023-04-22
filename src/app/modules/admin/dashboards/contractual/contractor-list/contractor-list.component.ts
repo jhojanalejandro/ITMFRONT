@@ -91,8 +91,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.userName = this.auth.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
     this.configForm = this._formBuilder.group({
-      title: 'Remove contact',
-      message: 'Are you sure you want to remove this contact permanently? <span class="font-medium">This action cannot be undone!</span>',
+      title: 'Eliminar Registro',
+      message: '¿Estás seguro de que desea eliminar este contacto de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
       icon: this._formBuilder.group({
         show: true,
         name: 'heroicons_outline:exclamation',
@@ -101,12 +101,12 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       actions: this._formBuilder.group({
         confirm: this._formBuilder.group({
           show: true,
-          label: 'Remove',
+          label: 'Eliminar',
           color: 'warn'
         }),
         cancel: this._formBuilder.group({
           show: true,
-          label: 'Cancel'
+          label: 'Cancelar'
         })
       }),
       dismissible: true

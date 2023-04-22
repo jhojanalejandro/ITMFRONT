@@ -21,11 +21,6 @@ export class NavigationMockApi
         // Register Mock API handlers
         this.registerHandlers();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Register Mock API handlers
      */

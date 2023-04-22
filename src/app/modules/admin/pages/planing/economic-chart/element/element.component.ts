@@ -203,7 +203,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento
         };
-        debugger
         this._economicService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire({
