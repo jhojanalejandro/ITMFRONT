@@ -37,8 +37,7 @@
 
             <mat-form-field class="hiring mt-6" appearance="outline">
                 <mat-label>Contractos</mat-label>
-                <mat-select [(ngModel)]="contractSelected"
-                    (selectionChange)="getContracts($event)" name="contract">
+                <mat-select [(ngModel)]="contractSelected" name="contract">
                     <mat-option *ngFor="let contract of contractIdList" [value]="contract.id">
                         {{contract.companyName}}
                     </mat-option>
@@ -102,7 +101,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                <div class="truncate" [matTooltip]="'CUENTS DE COBRO'">CUENTA DE COBRO
+                                <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">CUENTA DE COBRO
                                 </div>
                             </div>
                         </a>
@@ -128,7 +127,7 @@
                     </div>
                 </div>
                 <div class="flex items-center mt-6 sm:mt-8 -mx-3">
-                    <button (click)="getAccount()" class="px-3 mr-1" mat-flat-button [color]="'primary'" [routerLink]="['./']">
+                    <button (click)="getDataContractor()" class="px-3 mr-1" mat-flat-button [color]="'primary'" [routerLink]="['./']">
                         <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:document-download'"></mat-icon>
                         <span>Descargar documentos</span>
                     </button>
@@ -140,4 +139,4 @@
     </div>
 
 </div>
-<app-cuenta-cobro [dataCuenta]="dataCuenta" *ngIf="dataCuenta != null && cuentaCobro" ></app-cuenta-cobro>
+<app-cuenta-cobro (onGeneratePdf)="onGeneratePdf($event)" [executionReportData]="executionReportData" [chargeAccountData]="chargeAccountData" *ngIf="(chargeAccountData != null && chargeAccount) || (executionReportData != null &&  executionReport)" ></app-cuenta-cobro>

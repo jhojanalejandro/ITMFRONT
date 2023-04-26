@@ -12,9 +12,10 @@ export interface Carro{
     color: any;
     cilindrje: string
 }
+
 export interface ProjectFolder{
     id?: any;
-    userId?: any;
+    userId?: string;
     companyName: string;
     projectName: string;
     descriptionProject: string;
@@ -87,4 +88,28 @@ export interface DetalleContrato{
 	fechaFinalizacion: Date,
 	modificacion: boolean,
 	tipoContrato: string  
+}
+
+export interface ProjectFolders{
+    id?: any;
+    userId?: string;
+    companyName: string;
+    projectName: string;
+    descriptionProject: string;
+    execution: any;
+    activate: boolean;
+    enableProject: boolean;
+    contractorsCant: number;
+    valorContrato: number;
+    gastosOperativos: number;
+    valorSubTotal: number;
+    noAdicion: string;
+    fechaInicioAmpliacion: Date | null;
+    fechaDeTerminacionAmpliacion: Date | null;
+    numberProject: string;
+    rubro: string;
+    nombreRubro: string;
+    project: string;
+    fechaFinalizacion: string;
+    fechaContrato: string;
 }

@@ -17,14 +17,13 @@ import {
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import {
+    Observable,
     Subject, takeUntil,
 } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { EconomicChartService } from '../../service/economic-chart.service';
 import {
-    InventoryCategory,
     InventoryPagination,
-    EconomicChart,
     Components,
 } from '../economic-chart.types';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -33,6 +32,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ProjectFolders } from '../../models/planing-model';
 
 @Component({
     selector: 'economic-chart-list',
@@ -48,7 +48,6 @@ export class EconomicChartListComponent
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
     @ViewChild(MatSort) sort!: MatSort;
-    contracts: any;
     @ViewChild(MatTable) table!: MatTable<any>;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
@@ -85,7 +84,7 @@ export class EconomicChartListComponent
     isLoading: boolean = false;
     pagination: InventoryPagination;
     searchInputControl: FormControl = new FormControl();
-    selectedProduct: EconomicChart | null = null;
+    selectedProduct: ProjectFolders | null = null;
     economicChartForm: FormGroup;
     tagsEditMode: boolean = false;
 
@@ -93,15 +92,10 @@ export class EconomicChartListComponent
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         private _economicService: EconomicChartService,
-        private _genericService: GenericService,
         private _router: Router,
         private _liveAnnouncer: LiveAnnouncer,
     ) {
-        this.contracts = this._economicService._economicsChart$;
-        this.dataSource = new MatTableDataSource(
-            this.contracts.source._value
-        );
-        this.dataSource.sort = this.sort;
+
     }
 
     ngOnInit(): void {
@@ -119,8 +113,7 @@ export class EconomicChartListComponent
             images: [[]],
             active: [false],
         });
-        this.getContractsData();
-
+        this.getContract();
     }
     columnas = [
         { title: 'NRO CONTRATO', name: 'numberProject' },
@@ -188,18 +181,19 @@ export class EconomicChartListComponent
         } else {
             this._liveAnnouncer.announce('Sorting cleared');
         }
-    }
-
-    getContractsData() {
-        for (let index = 0; index < this.contracts.source._value.length; index++) {
-            this._genericService.getDetalleContrato(this.contracts.source._value[index].id, false).subscribe((resp: any) => {
-                this.contracts.source._value[index].fechaContrato = resp.fechaContrato;
-                this.contracts.source._value[index].fechaFinalizacion = resp.fechaFinalizacion;
-            })
-        }
-    }
+    }  
     
     drop(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
+    }
+
+    private getContract(){
+        this._economicService.getProjectData()
+        .subscribe(response => {
+            this.dataSource = new MatTableDataSource(
+                response
+            );
+            this.dataSource.sort = this.sort;        
+        });
     }
 }

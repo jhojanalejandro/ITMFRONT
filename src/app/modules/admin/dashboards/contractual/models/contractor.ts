@@ -47,7 +47,7 @@ export interface Contractor{
 	tipoCuenta: string,
 	entidadCuentaBancaria: string,
 	estado?: string,
-	userId?: number,
+	userId?: string,
 	claveUsuario?: string,
 	contractId?: number,
 	fechaCreacion?: Date,

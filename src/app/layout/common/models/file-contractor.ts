@@ -1,6 +1,6 @@
 export interface IFileContractor{
     id?: any;
-    userId: any;
+    userId: string;
     contractorId: string;
     contractId: string;
     filesName: string;

@@ -1,16 +1,3 @@
-export interface EconomicChart
-{
-    id: any;
-    companyName?: string;
-    projectName: string;
-    descriptionProject?: string;
-    registerDate?: Date;
-    ModifyDate: Date;
-    execution?: boolean    ;
-    consecutivo?: string;
-    ValorTotal: number;
-    active: boolean;
-}
 
 export interface InventoryPagination
 {

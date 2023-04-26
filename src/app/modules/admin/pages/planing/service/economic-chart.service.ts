@@ -11,12 +11,12 @@ import {
     tap,
     throwError,
 } from 'rxjs';
-import { InventoryPagination, EconomicChart } from '../economic-chart/economic-chart.types';
+import { InventoryPagination } from '../economic-chart/economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
-import { Activity, Componente, Elements } from '../models/planing-model';
+import { Activity, Componente, Elements, ProjectFolder, ProjectFolders } from '../models/planing-model';
 import { AuthService } from 'app/core/auth/auth.service';
 
 @Injectable({
@@ -26,9 +26,9 @@ export class EconomicChartService {
     // Private
     private _pagination: BehaviorSubject<InventoryPagination | null> =
         new BehaviorSubject(null);
-    private _economicChart: BehaviorSubject<EconomicChart | null> =
+    private _economicChart: BehaviorSubject<ProjectFolders | null> =
         new BehaviorSubject(null);
-    private _economicsChart: BehaviorSubject<EconomicChart[] | null> =
+    private _economicsChart: BehaviorSubject<ProjectFolders[] | null> =
         new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
@@ -47,14 +47,14 @@ export class EconomicChartService {
     /**
      * Getter for product
      */
-    get _economicChart$(): Observable<EconomicChart> {
+    get _economicChart$(): Observable<ProjectFolders> {
         return this._economicChart.asObservable();
     }
 
     /**
      * Getter for contracts
      */
-    get _economicsChart$(): Observable<EconomicChart[]> {
+    get _economicsChart$(): Observable<ProjectFolders[]> {
         return this._economicsChart.asObservable();
     }
 
@@ -68,7 +68,7 @@ export class EconomicChartService {
      * @param order
      * @param search
      */
-    getProjectData(): Observable<any[]> {
+    getProjectData(): Observable<ProjectFolders[]> {
         const params = new HttpParams()
         .set('inProgress', false )
         .set('tipoModulo', 'planeacion');
@@ -85,34 +85,6 @@ export class EconomicChartService {
                     
                 });
                 this._economicsChart.next(response);
-            })
-        );
-    }
-
-    /**
-     * Get product by id
-     */
-    getProductById(id: string): Observable<EconomicChart> {
-        return this._economicsChart.pipe(
-            take(1),
-            map((products) => {
-                // Find the product
-                const product = products.find((item) => item.id === id) || null;
-
-                // Update the product
-                this._economicChart.next(product);
-
-                // Return the product
-                return product;
-            }),
-            switchMap((product) => {
-                if (!product) {
-                    return throwError(
-                        'Could not found product with id of ' + id + '!'
-                    );
-                }
-
-                return of(product);
             })
         );
     }

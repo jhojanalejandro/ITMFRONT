@@ -1,6 +1,6 @@
 export interface IFolderContractor{
     id?: any;
-    userId: any;
+    userId: string;
     contractorId: string;
     contractId: string;
     folderName: string;

@@ -95,6 +95,9 @@ export class GlobalConst {
         { viewValue: 'Planilla'},
         { viewValue: 'Cuenta De Cobro'},
         { viewValue: 'Informe De Ejecucion'},
+        { viewValue: 'Hoja de vida'},
+        { viewValue: ''},
+
     ] 
 
     public static nivelSeguridad: TypeSelectString[]=[

@@ -25,7 +25,7 @@ export const environment = {
     UpdateContractorEndpoint: 'Contractor/Update',
     GetByContractorIdFolderEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
-    GetContractorByIdEndpoint: 'Contractor/GetById/',
+    GetContractorByIdEndpoint: 'Contractor/ChargeAccountGetById',
     GetBillByContractIdEndpoint: 'Contractor/GetDataBill',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
@@ -41,7 +41,7 @@ export const environment = {
 
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/UpdateCost',
-    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll/',
+    GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
     UpdateStateProjectFolderEndpoint: 'ProjectFolder/UpdateState/',
 
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
@@ -90,6 +90,9 @@ export const environment = {
     deleteComponent: 'Componente/Delete/',
     addElementosComponent: 'ElementosComponente/Add',
     geElementoById: 'ElementosComponente/GetById/',
+
+    GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
+
 };
 
 /*

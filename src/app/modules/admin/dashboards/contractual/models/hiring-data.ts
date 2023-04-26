@@ -4,7 +4,7 @@ export interface IHiringData{
     id?: any;
     contractorId: string;
     contractId: string;
-    userId?: any;
+    userId?: string;
     fechaFinalizacionConvenio: Date;
     contrato: string;
     compromiso: string;

@@ -721,7 +721,5 @@ export class MinutaContratoComponent implements OnInit {
   }
 
   private guardarMinutas() {
-    debugger
-
   }
 }

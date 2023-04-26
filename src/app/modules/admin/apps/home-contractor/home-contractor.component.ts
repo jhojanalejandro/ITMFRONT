@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -15,7 +15,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 import { Router } from '@angular/router';
 import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
-import { ContractsContractor } from './models/fileContractor';
+import swal from 'sweetalert2';
+import { ExecutionReport } from './models/pdfDocument';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -25,13 +26,15 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeContractorComponent implements OnInit, OnDestroy {
-  dataCuenta: PaymentAccount;
+  chargeAccountData: PaymentAccount;
+  executionReportData: ExecutionReport;
   contractIdList: any[] = [];
   minutesDocumentPdf: File;
-  contractSelected: string;
+  contractSelected: string = null;
   id: any;
   userName: any;
-  cuentaCobro: boolean = false;
+  chargeAccount: boolean = false;
+  executionReport: boolean = false;
   @ViewChild('pdfTable') pdfTable: ElementRef;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   raffleName: any;
@@ -69,18 +72,13 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         contractorId: this._auth.accessId,
       }
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((result) => {
       if (result) {
         // this.getDataContractor(this.id);
       }
     });
-  }
-
-
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next(null);
-    this._unsubscribeAll.complete();
   }
 
 
@@ -118,29 +116,55 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
   }
 
-  private getDataContractor() {
-    this._contractorListService.getPaymentAccount(this._auth.accessId, this.contractSelected).subscribe((Response) => {
-      if (Response != null) {
-        this.dataCuenta = Response;
-      }
-    });
+  getDataContractor() {
+    if(this.contractSelected != null){
+      this.getChargeAccount();
+      this.getExecutionReport();
+    }else{
+      swal.fire('', 'No has seleccionado contrato!', 'warning');
+    }
+
   }
 
-  getContract() {
+  private getContract() {
     this._contractorListService.getContractorByContract(this._auth.accessId).subscribe((Response) => {
       this.contractIdList = Response;
     });
   }
-  getAccount() {
-    this.cuentaCobro = true;
+
+  private getChargeAccount() {
+    if(this.contractSelected != null){
+      this._contractorListService.getPaymentAccount(this._auth.accessId, this.contractSelected)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((Response) => {
+        if (Response != null) {
+          this.chargeAccountData = Response;
+          this.chargeAccount = true;
+        }
+      });
+    }else{
+      swal.fire('', 'No has seleccionado contrato!', 'warning');
+    }
+  }
+
+  private getExecutionReport() {
+    if(this.contractSelected != null){
+      this._contractorService.getExecutionReport(this._auth.accessId, this.contractSelected)
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((Response) => {
+        if (Response != null) {
+          this.executionReportData = Response;
+          this.chargeAccount = true;
+        }
+      });
+    }else{
+      swal.fire('', 'No has seleccionado contrato!', 'warning');
+    }
   }
   signOut(): void {
     this._router.navigate(['/sign-out']);
   }
 
-  getContracts(event) {
-    this.getDataContractor();
-  }
   descargarCuenta() {
     this._contractorListService.getContractorByContract(this._auth.accessId).subscribe((Response) => {
       this.contractIdList = Response;
@@ -165,5 +189,13 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   onClickDownloadPdf(){
     let base64String = "your-base64-string";
     this.downloadPdf(base64String,"sample");
+  }
+  onGeneratePdf(e: any){
+    this.chargeAccount = e;
+    this.executionReport = e;
+  }
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
   }
 }

@@ -73,10 +73,10 @@ export class AuthSignInComponent implements OnInit {
         this._authService.signIn(useraLogin)
             .subscribe(
                 (response) => {
-                    if(this.signInForm.value.userType === CodeUser.CONTRACTOR){
+                    if(response.code === CodeUser.CONTRACTOR){
                         this._router.navigate(['inicio/contratista']);
 
-                    }else if(this.signInForm.value.userType === CodeUser.RECRUITER){
+                    }else if(response.code != null && response.code != CodeUser.CONTRACTOR){
                         this._router.navigate(['dashboards/inicio']);
                     }
                 },

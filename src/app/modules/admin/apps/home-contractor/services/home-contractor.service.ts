@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { ExecutionReport } from '../models/pdfDocument';
 
 @Injectable({
     providedIn: 'root'
@@ -12,9 +13,6 @@ export class HomeContractorService
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
-    /**
-     * Constructor
-     */
     constructor(private _httpClient: HttpClient)
     {
     }
@@ -96,6 +94,14 @@ export class HomeContractorService
         .set('contractId', contractId);
         let urlEndpointGenerate = this.apiUrl+ environment.GetMinutesPdf;
          return this._httpClient.get<File>(urlEndpointGenerate, {params: params});
+    }
+
+    getExecutionReport(contractorId: string, contractId: string) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId )
+        .set('contractId', contractId)
+        let urlEndPoint = this.apiUrl + environment.GetPdfDataExecutionReport;
+        return this._httpClient.get<ExecutionReport>(urlEndPoint, {params: params});
     }
 
 }

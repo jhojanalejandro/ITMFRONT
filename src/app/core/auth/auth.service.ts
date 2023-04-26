@@ -141,30 +141,6 @@ export class AuthService
         );
     }
 
-    signInContractor(credentials: any): Observable<any>
-    {
-        // Throw error, if the user is already logged in
-        if ( this._authenticated )
-        {
-            return throwError('User is already logged in.');
-        }
-        return this._httpClient.post<IResponse>(this.apiUrl  + environment.AuthContractor, credentials).pipe(
-            switchMap((response: any) => {
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-                this.codeC = response.contractId;
-                this.accessId = response.contractorId;
-                this.accessName = response.userName;
-                // let plainText:string;
-                // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
-                // Set the authenticated flag to true
-                this._authenticated = true;
-                // Store the user on the user service
-                // Return a new observable with the response                
-                return of(response);
-            })
-        );
-    }
     getUser(): Observable<IUserModel>
     {
         // Throw error, if the user is already logged in

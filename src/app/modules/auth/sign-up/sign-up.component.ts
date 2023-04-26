@@ -73,7 +73,7 @@ export class AuthSignUpComponent implements OnInit
             professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
             phoneNumber: this.signUpForm.value.phoneNumber.toString(),
-            identification: this.signUpForm.value.identification
+            identification: this.signUpForm.value.identification.toString()
 
         };
         // Do nothing if the form is invalid

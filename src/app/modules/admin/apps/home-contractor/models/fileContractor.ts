@@ -6,7 +6,7 @@ export interface FileContractor{
     filedata: string;
     typeFile: string;
     descriptionFile: string;
-    userId?: any;
+    userId?: string;
     registerDate: Date;
     modifyDate: Date;
     typeFilePayment: string;

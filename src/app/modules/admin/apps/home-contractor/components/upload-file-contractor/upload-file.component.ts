@@ -1,4 +1,4 @@
-import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit,Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import swal from 'sweetalert2';
@@ -21,7 +21,7 @@ const moment = _rollupMoment || _moment;
   styleUrls: ['./upload-file.component.scss'],
 
 })
-export class UploadFileContractorComponent implements OnInit {
+export class UploadFileContractorComponent implements OnInit,OnDestroy {
   date = new FormControl(moment());
   monthYear: any; 
   shortLink: string = "";
@@ -54,6 +54,7 @@ export class UploadFileContractorComponent implements OnInit {
         this.ref.markForCheck();
       }, 1000);
     }
+
 
   ngOnInit(): void {
     
@@ -119,7 +120,9 @@ export class UploadFileContractorComponent implements OnInit {
     };  
     console.log(registerFile);
     
-    this._upload.UploadFileContractor(registerFile).subscribe((res) => {   
+    this._upload.UploadFileContractor(registerFile)
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((res) => {   
         if(res){
           swal.fire({
             position: 'center',
@@ -155,7 +158,9 @@ export class UploadFileContractorComponent implements OnInit {
       fildata: this.file       
     };  
     
-    this._upload.UploadFileContractor(registerProject).subscribe((res) => {   
+    this._upload.UploadFileContractor(registerProject)
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((res) => {   
         if(res){
           swal.fire({
             position: 'center',
@@ -207,6 +212,10 @@ export class UploadFileContractorComponent implements OnInit {
     this.monthYear = normalizedYear.year();
     ctrlValue.year(normalizedYear.year());
     this.date.setValue(ctrlValue);
+  }
+  ngOnDestroy(): void {
+    this._unsubscribeAll.complete();
+    this._unsubscribeAll.next(true);
   }
 
 }

@@ -75,6 +75,7 @@
                         <mat-label>Cedula</mat-label>
                         <input
                             id="name"
+                            type="number"
                             matInput
                             [formControlName]="'identification'">
                         <mat-error *ngIf="signUpForm.get('name').hasError('required')">

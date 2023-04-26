@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -6,7 +6,8 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { PaymentAccount } from 'app/modules/admin/dashboards/contractual/models/paymentAccount';
 import { DatePipe } from '@angular/common';
-import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { Subject } from 'rxjs';
+import { ChargeAccount, ExecutionReport } from '../../models/pdfDocument';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -14,89 +15,44 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     templateUrl: './pdf-payment.component.html',
     styleUrls: ['./pdf-payment.component.scss']
 })
-export class PdfPaymentComponent implements OnInit {
+export class PdfPaymentComponent implements OnInit, OnDestroy {
     @ViewChild('pdfTable') pdfTable: ElementRef;
-    @Input('dataCuenta') dataCuenta: PaymentAccount;
+    @Input() chargeAccountData: ChargeAccount;
+    @Input() executionReportData: ExecutionReport;
+    @Input() generateChargeAccount: boolean;
+    @Input() generateExecutionReport: boolean;
+
+    @Input() dataInforme: PaymentAccount;
+    @Output() onGeneratePdf = new EventEmitter<boolean>();
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     date: Date = new Date();
     valueLetter: any;
-    contrato: string = '0654651';
     listaData: any[] = [];
     contador: number = 0;
-
+    specificObligation: any;
     data: any[] = [];
     fechaInicio: Date = new Date();
-    listaObligaciones: Elements[] = [{
-        id: 'any',
-        nombreElemento: 'string',
-        idComponente: 'string',
-        cantidadContratistas: 1,
-        cantidadDias: 10,
-        valorUnidad: 2000000,
-        valorTotal: 5000000,
-        valorPorDia: 100000,
-        valorTotalContratista: 200000,
-        valorPorDiaContratista: 0,
-        cpc: 'string',
-        nombreCpc: 'string',
-        modificacion: true,
-        tipoElemento: 'string',
-        recursos: 0,
-        consecutivo: 'string',
-        obligacionesEspecificas: '1. Apoyo en la gestión de procesos administrativos y logísticos',
-        obligacionesGenerales: 'string',
-        objetoElemento: 'string',
-    },
-    {
-        id: 'any',
-        nombreElemento: 'string',
-        idComponente: 'string',
-        cantidadContratistas: 1,
-        cantidadDias: 10,
-        valorUnidad: 2000000,
-        valorTotal: 5000000,
-        valorPorDia: 100000,
-        valorTotalContratista: 200000,
-        valorPorDiaContratista: 0,
-        cpc: 'string',
-        nombreCpc: 'string',
-        modificacion: true,
-        tipoElemento: 'string',
-        recursos: 0,
-        consecutivo: 'string',
-        obligacionesEspecificas: '2. Apoyo en la creación de espacio web para repositorio en la web del Instituto Tecnógico Metrolitano.',
-        obligacionesGenerales: 'string',
-        objetoElemento: 'string',
-    },
-    {
-        id: 'any',
-        nombreElemento: 'string',
-        idComponente: 'string',
-        cantidadContratistas: 1,
-        cantidadDias: 10,
-        valorUnidad: 2000000,
-        valorTotal: 5000000,
-        valorPorDia: 100000,
-        valorTotalContratista: 200000,
-        valorPorDiaContratista: 0,
-        cpc: 'string',
-        nombreCpc: 'string',
-        modificacion: true,
-        tipoElemento: 'string',
-        recursos: 0,
-        consecutivo: 'string',
-        obligacionesEspecificas: '3. Apoyo en la creación de macros para informes y combinación de documentos.',
-        obligacionesGenerales: 'string',
-        objetoElemento: 'string',
-    }
-    ];
+
     // dataCuenta: Contractor = { tipoContratacion: '', codigo: '', convenio: '', fechaInicio: '', fechaFin: '', nombre: '', apellido: '', identificacion: '', lugarExpedicion: '', fechaNacimiento: new Date(), direccion: '', departamento: '', municipio: '', telefono: '', celular: '', correo: '', cuentaBancaria: '', tipoCuenta: '', entidadCuentaBancaria: '', from: new Date(), to: new Date(),uniTValue: 0, company: ''}
 
     constructor(private datepipe: DatePipe) {
     }
 
     ngOnInit(): void {
-        this.downloadPDFInforme();
-        this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
+        console.log(this.chargeAccountData);
+        if (this.generateChargeAccount && !this.generateExecutionReport) {
+            this.downloadPDFChargeAccount();
+            this.onGeneratePdf.emit(false);
+        } else if (this.generateExecutionReport && !this.generateChargeAccount) {
+            this.downloadPDFInforme();
+            this.onGeneratePdf.emit(false);
+        } else {
+            this.downloadPDFInforme();
+            this.downloadPDFChargeAccount();
+            this.onGeneratePdf.emit(false);
+        }
+        this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
 
     }
 
@@ -135,9 +91,9 @@ export class PdfPaymentComponent implements OnInit {
             pdfMake.createPdf(documentDefinition).download('CuentaDeCobre.pdf');
         });
     }
-    public downloadPDFCuentaCobro() {
+    private downloadPDFChargeAccount() {
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
-        this.valueLetter = GlobalConst.numeroALetras(this.dataCuenta.paymentcant, 'PESOS')
+        this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
         const documentDefinition = {
             content: [
                 {
@@ -248,7 +204,7 @@ export class PdfPaymentComponent implements OnInit {
                                 },
                                 {
                                     colSpan: 5,
-                                    text: this.dataCuenta.nombre,
+                                    text: this.chargeAccountData.contractorName,
                                     style: 'tableHeader',
                                     alignment: 'center',
                                 },
@@ -292,7 +248,7 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'CÉDULA:',
                                 },
                                 {
-                                    text: this.dataCuenta.identificacion,
+                                    text: this.chargeAccountData.contractorIdentification,
                                     alignment: 'center',
                                 },
                                 {
@@ -308,7 +264,7 @@ export class PdfPaymentComponent implements OnInit {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: this.dataCuenta.lugarExpedicion,
+                                    text: this.chargeAccountData.expeditionDate,
                                     alignment: 'center'
                                 },
                             ],
@@ -318,7 +274,7 @@ export class PdfPaymentComponent implements OnInit {
                                 },
                                 {
                                     colSpan: 3,
-                                    text: this.dataCuenta.direccion,
+                                    text: this.chargeAccountData.direction,
                                     alignment: 'center',
                                 },
                                 {
@@ -334,7 +290,7 @@ export class PdfPaymentComponent implements OnInit {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: this.dataCuenta.telefono,
+                                    text: this.chargeAccountData.phoneNumber,
                                     alignment: 'center'
                                 },
                             ],
@@ -365,12 +321,12 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'CONTRATO:',
                                 },
                                 {
-                                    text: 'N° - ' + this.contrato,
+                                    text: 'N° - ' + this.chargeAccountData.contractNumber,
                                     style: 'tableHeader',
                                     alignment: 'center',
                                 },
                                 {
-                                    text: this.dataCuenta.convenio,
+                                    text: this.chargeAccountData.agreement,
                                     alignment: 'center',
                                 },
                             ],
@@ -393,7 +349,7 @@ export class PdfPaymentComponent implements OnInit {
                                 },
                                 {
                                     colSpan: 2,
-                                    text: this.dataCuenta.paymentcant,
+                                    text: this.chargeAccountData.totalValue,
                                     alignment: 'center',
                                 },
                                 {
@@ -418,7 +374,7 @@ export class PdfPaymentComponent implements OnInit {
                             [
                                 {
                                     colSpan: 3,
-                                    text: 'Favor consignar en la cuenta de ' + this.dataCuenta.tipoCuenta + this.dataCuenta.entidadCuentaBancaria + ' N° ' + this.dataCuenta.cuentaBancaria,
+                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.typeAccount + this.chargeAccountData.accountName + ' N° ' + this.chargeAccountData.chargeAccountNumber,
                                 },
                                 {
                                     text: '',
@@ -431,7 +387,8 @@ export class PdfPaymentComponent implements OnInit {
                     },
                 },
                 { text: '\n\nFIRMA: ' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
-                { text: this.dataCuenta.nombre }, { text: 'CEDULA N: \t' + this.dataCuenta.identificacion }
+                { text: this.chargeAccountData.contractorName }, { text: 'C.C : \t' + this.chargeAccountData.contractorIdentification }
+
             ],
             styles: {
                 header: {
@@ -470,14 +427,17 @@ export class PdfPaymentComponent implements OnInit {
             .createPdf(documentDefinition)
             .download('Filenames.pdf');
         console.log(test);
+        this.onGeneratePdf.emit(false);
     }
 
-    public downloadPDFInforme() {
+    private downloadPDFInforme() {
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
-        for (let index = 0; index < this.listaObligaciones.length; index++) {
+        debugger
+        this.specificObligation = this.executionReportData.specificObligations.split('->');
+        for (let index = 0; index < this.specificObligation.length; index++) {
             this.listaData[index] = [
                 {
-                    text: this.listaObligaciones[index].obligacionesEspecificas,
+                    text: this.specificObligation[index],
                 },
                 {
                     text: '',
@@ -489,6 +449,7 @@ export class PdfPaymentComponent implements OnInit {
                 }
             ]
         }
+        debugger
         const documentDefinition = {
             content: [
                 {
@@ -513,7 +474,7 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'NOMBRE DEL CONTRATISTA',
                                     style: 'tableHeader',
                                 }, {
-                                    text: this.dataCuenta.nombre,
+                                    text: this.executionReportData.contractorName,
                                 }
                             ],
                             [
@@ -521,7 +482,7 @@ export class PdfPaymentComponent implements OnInit {
                                     text: 'NÚMERO DEL CONTRATO',
                                     style: 'tableHeader',
                                 }, {
-                                    text: this.contrato,
+                                    text: this.executionReportData.contractNumber,
                                 }
                             ],
                             [
@@ -745,10 +706,10 @@ export class PdfPaymentComponent implements OnInit {
                 },
                 { text: '\n\n PERIODO EJECUTADO: \t\t\t del 29 de agosto al 30 de agosto: ' },
                 { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t VALOR' },
-                { text: '\n\n Para constancia se firma en Medellín a los 23 días del mes de septiembre del año 2022' },
-                { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
-                { text: ' JHOJAN ALEJANDRO HERNANDEZ YEPES\n' },
-                { text: 'CEDULA N: \t' + '\n' },
+                { text: '\n\n Para constancia se firma en Medellín a los 23 días del mes de septiembre del año 2022 \n\n' },
+                { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
+                { text: 'JHOJAN ALEJANDRO HERNANDEZ YEPES\n' },
+                { text: 'C.C : \t' + '\n' },
                 { text: 'Contratista ITM' }
 
             ],
@@ -789,5 +750,10 @@ export class PdfPaymentComponent implements OnInit {
             .createPdf(documentDefinition)
             .download('Filenames.pdf');
         console.log(test);
+        this.onGeneratePdf.emit(false);
+    }
+    ngOnDestroy(): void {
+        this._unsubscribeAll.complete();
+        this._unsubscribeAll.next(true);
     }
 }

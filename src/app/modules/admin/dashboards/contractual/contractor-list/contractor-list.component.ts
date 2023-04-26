@@ -302,10 +302,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         swal.fire({
           position: 'center',
           icon: 'success',
-          title: 'Bien',
+          title: '',
           html: 'Contrato activado exitosamente!',
           showConfirmButton: false,
-          timer: 2000
+          timer: 1500
         });
       } else {
         swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');

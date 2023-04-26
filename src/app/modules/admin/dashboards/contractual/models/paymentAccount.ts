@@ -18,7 +18,7 @@ export interface PaymentAccount{
 	tipoCuenta: string,
 	entidadCuentaBancaria: string,
 	estado?: string,
-	userId?: number,
+	userId?: string,
 	contractId?: number,
 	componenteId?: number,
 	elementId?: number,
