@@ -7,13 +7,13 @@
                 <!-- Avatar and name -->
                 <div class="flex flex-auto items-center min-w-0">
                     <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
-                        <img
-                            class="w-full h-full object-cover"
-                            src="assets/images/avatars/usercircle.png">
+                        <img class="w-full h-full object-cover" src="assets/images/avatars/usercircle.png">
                     </div>
                     <div class="flex flex-col min-w-0 ml-4">
                         <ng-container *transloco="let t">
-                            <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">Bienvenido, {{userName}}!</div>
+                            <div
+                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                Bienvenido, {{userName}}!</div>
                         </ng-container>
                         <!-- <div class="flex items-center">
                             <mat-icon
@@ -25,27 +25,17 @@
                 </div>
                 <!-- Actions -->
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
-                    <button
-                        (click)="openDialog('registerFolder','vacio')"
-                        class="fuse-mat-button-rounded"
-                        mat-flat-button
-                        [color]="'accent'">
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
+                    <button (click)="openDialog('registerFolder','vacio')" class="fuse-mat-button-rounded"
+                        mat-flat-button [color]="'accent'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
                         <span class="ml-2">Registrar Projecto</span>
                     </button>
                 </div>
             </div>
             <div class="flex-auto">
                 <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
-                    <mat-icon
-                        class="icon-size-5"
-                        matPrefix
-                        [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                    <input
-                        matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input
-                        [autocomplete]="'off'"
+                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
                         [placeholder]="'Buscar Contrato'">
                 </mat-form-field>
             </div>
@@ -59,54 +49,58 @@
                 <div class="p-6">
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">CONTRATOS</div>
                 </div>
-                <!-- <div class="inputsearch" >
-                    <mat-form-field appearance="outline">
-                      <mat-label><mat-icon >
-                        search</mat-icon></mat-label>   
-                      <input   matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input>
-                    </mat-form-field>
-                </div> -->
                 <div class="overflow-x-auto mx-6">
-                    <table
-                        class="w-full bg-transparent"
-                        mat-table
-                        matSort
-                        [dataSource]="dataSource"
-                        [trackBy]="trackByFn"
-                        cdkDropList          
-                        cdkDropListOrientation="horizontal"
-                        (cdkDropListDropped)="drop($event)"
-                        matSort (matSortChange)="announceSortChange($event)"
-                        >
-                
-                        <ng-container  *ngFor="let columna of columnas"  matColumnDef="{{columna.name}}" class="demo">
-                        <th mat-header-cell class="centre" cdkDrag mat-sort-header   *matHeaderCellDef> {{columna.title}} </th>
-                        <td mat-cell   *matCellDef="let element" >
-                            <p *ngIf="element[columna.name]== element.companyName || element[columna.name]== element.projectName || element[columna.name]== element.contractorsCant || element[columna.name]== element.numberProject  && element[columna.name]!= element.valorContrato"> {{element[columna.name]}}</p>
-                            <p *ngIf="element[columna.name]== element.valorContrato && element[columna.name]!= element.contractorsCant">{{element[columna.name] | currency}} </p> 
-                            <p *ngIf="element[columna.name]== element.action" >                                               
-                                <button [matTooltip]="'Editar Contrato'" style="text-align: center !important;" class="hidden sm:inline-flex ml-3" (click)="openDialog('editData',element)" mat-flat-button [color]="'primary'">
-                                    <mat-icon svgIcon="heroicons_solid:pencil">  </mat-icon>
-                                </button>              
+                    <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
+                        [trackBy]="trackByFn" cdkDropList cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="drop($event)" matSort (matSortChange)="announceSortChange($event)">
 
-                                <button [matTooltip]="'Desabilitar Contrato'" style="margin-left: 3px !important;" class="hidden sm:inline-flex ml-3" (click)="openConfirmationDelete(element)" mat-flat-button [color]="'warn'">
-                                    <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
-                                </button>
-                            </p> 
-                        </td>
+                        <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
+                            <th mat-header-cell class="centre" cdkDrag mat-sort-header *matHeaderCellDef>
+                                {{columna.title}} </th>
+                                
+                            <td mat-cell *matCellDef="let element">
+                                <p
+                                    *ngIf="element[columna.name]== element.companyName || element[columna.name]== element.projectName || element[columna.name]== element.contractorsCant || element[columna.name]== element.numberProject  && element[columna.name]!= element.valorContrato">
+                                    {{element[columna.name]}}</p>
+                                <p
+                                    *ngIf="element[columna.name]== element.valorContrato && element[columna.name]!= element.contractorsCant">
+                                    {{element[columna.name] | currency}}
+                                </p>
+
+                                <p *ngIf="columna.name=='action' && !showcontracts">
+                                    <button [matTooltip]="'Ver  Componentes'" style="text-align: center !important;"
+                                        class="hidden sm:inline-flex ml-3" (click)="addComponent(element)"
+                                        mat-flat-button [color]="'primary'">
+                                        <mat-icon svgIcon="heroicons_solid:arrow-circle-left"></mat-icon>
+                                    </button>
+                                </p>
+                                <p *ngIf="element[columna.name]== element.action && showcontracts">
+                                    <button [matTooltip]="'Editar Contrato'" style="text-align: center !important;"
+                                        class="hidden sm:inline-flex ml-2" (click)="openDialog('editData',element)"
+                                        mat-flat-button [color]="'primary'">
+                                        <mat-icon svgIcon="heroicons_solid:pencil"> </mat-icon>
+                                    </button>
+
+                                    <button [matTooltip]="'Desabilitar Contrato'" style="margin-left: 2px !important;"
+                                        class="hidden sm:inline-flex ml-2" (click)="openConfirmationDelete(element)"
+                                        mat-flat-button [color]="'warn'">
+                                        <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
+                                    </button>
+                                </p>
+                            </td>
                         </ng-container>
-                                        
+
                         <tr class="mat-row" *matNoDataRow>
                             <td class="mat-cell" colspan="4">No hay datos para filtrar "{{input.value}}"</td>
                         </tr>
-                
+
                         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"  
-                
-                        (click)="selection.toggle(row); selectRowFull(row,'register')">
+                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"
+                            (click)="selection.toggle(row); selectRowFull(row,'register')">
                         </tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of contracts"></mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                        aria-label="Select page of contracts"></mat-paginator>
 
                 </div>
             </div>

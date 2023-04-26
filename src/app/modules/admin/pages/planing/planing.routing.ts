@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 import { EconomicChartComponent } from './economic-chart/economic-chart.component';
 import { ContrtactsComponent } from './contracts/contracts.component';
-import { InventoryProductsResolver } from './economic-chart/economic-chart.resolvers';
+import { ContractsPlaningResolver } from './economic-chart/economic-chart.resolvers';
 import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
-import { AddComponentsComponent } from './economic-chart/componentes/components.component';
+import { AddComponentsComponent } from './componentes/components.component';
 
 export const PlaningRoutes: Route[] = [
     {
@@ -12,46 +12,28 @@ export const PlaningRoutes: Route[] = [
         redirectTo: 'cuadroEconomico'
     },
     {
-        path     : 'cuadroEconomico',
+        path     : 'cuadroEconomico/:tipo',
         component: EconomicChartComponent,
         children : [
             {
                 path     : '',
-                component: EconomicChartListComponent,
+                component: ContrtactsComponent,
                 resolve  : {
-                    products  : InventoryProductsResolver
-                }
+                    products  : ContractsPlaningResolver
+                },
+                runGuardsAndResolvers: 'always'
             },
+
  
         ]
-        /*children : [
-            {
-                path     : '',
-                component: ContactsListComponent,
-                resolve  : {
-                    tasks    : ContactsResolver,
-                    countries: ContactsCountriesResolver
-                },
-                children : [
-                    {
-                        path         : ':id',
-                        component    : ContactsDetailsComponent,
-                        resolve      : {
-                            task     : ContactsContactResolver,
-                            countries: ContactsCountriesResolver
-                        },
-                        canDeactivate: [CanDeactivateContactsDetails]
-                    }
-                ]
-            }
-        ]*/
     },
     {
-        path      : 'contratos',
+        path      : 'contratos/:tipo',
         component: ContrtactsComponent,
         resolve  : {
-            products  : InventoryProductsResolver
-        }
+            products  : ContractsPlaningResolver
+        },
+        runGuardsAndResolvers: 'always'
     },
     {
         path      : 'Componentes/:id/:projectName',

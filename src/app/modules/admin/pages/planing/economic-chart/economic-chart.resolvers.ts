@@ -6,7 +6,7 @@ import { EconomicChartService } from '../service/economic-chart.service';
 @Injectable({
     providedIn: 'root'
 })
-export class InventoryProductsResolver implements Resolve<any>
+export class ContractsPlaningResolver implements Resolve<any>
 {
     /**
      * Constructor

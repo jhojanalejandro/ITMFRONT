@@ -15,30 +15,20 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'app/shared/shared.module';
 import { PlaningRoutes } from './planing.routing';
-import { ContrtactsComponent } from './contracts/contracts.component';
-import { EconomicChartComponent } from './economic-chart/economic-chart.component';
-import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
-
 import { AngularmaterialModule } from 'app/layout/common/angular material/angularmaterial.module';
-import { AddComponentsComponent } from './componentes/components.component';
-import { ComponentesFormComponent } from './componentes/componentes-form/componentes-form.component';
-import { DialogChangePercentajeComponent } from './componentes/DialogChangePercentaje/DialogChangePercentaje.component';
-import { RegisterProjectFolderComponent } from './componentes/register-project-folder/register-project-folder.component';
-import { ActividadFormComponent } from './componentes/actividad-form/actividad-form.component';
-import { ElementCardComponent } from './element/element.component';
 
 
 @NgModule({
     declarations: [
-        EconomicChartComponent,
-        EconomicChartListComponent,
-        ContrtactsComponent,
-        AddComponentsComponent,
-        ElementCardComponent,
-        ComponentesFormComponent,
-        ActividadFormComponent,
-        DialogChangePercentajeComponent,
-        RegisterProjectFolderComponent
+        // EconomicChartComponent,
+        // EconomicChartListComponent,
+        // ContrtactsComponent,
+        // AddComponentsComponent,
+        // ElementCardComponent,
+        // ComponentesFormComponent,
+        // ActividadFormComponent,
+        // DialogChangePercentajeComponent,
+        // RegisterProjectFolderComponent
     ],
     imports     : [
         RouterModule.forChild(PlaningRoutes),

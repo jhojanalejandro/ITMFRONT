@@ -42,14 +42,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         id   : 'docs.ecommerce.cuadroEconomico',
                         title: 'Cuadro Economico',
                         type : 'basic',
-                        link : '/docs/ecommerce/cuadroEconomico'
+                        link : '/docs/ecommerce/cuadroEconomico/economic'
                     },
                     {
                         id   : 'docs.ecommerce.contratos',
                         title: 'Contratos Interadministrativos',
                         type : 'basic',
-                        link : '/docs/ecommerce/contratos'
-                    }
+                        link : '/docs/ecommerce/contratos/register'
+                    },
 
                 ]
             },
@@ -60,6 +60,29 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon : 'heroicons_outline:cloud',
                 link : '/apps/file-manager'
             },
+        ]
+    },
+    {
+        id      : 'list',
+        title   : 'INFORMACIÓN GENERAL',
+        subtitle: 'Lista Genral',
+        type    : 'group',
+        icon    : 'heroicons_outline:home',
+        children: [
+            {
+                id   : 'list.contracts',
+                title: 'Lista General Contratos',
+                type : 'basic',
+                icon : 'heroicons_solid:view-list',
+                link : '/ecommerce/contratos/lista'
+            },
+            // {
+            //     id   : 'list.contractors',
+            //     title: 'Nomina',
+            //     type : 'basic',
+            //     icon : 'heroicons_outline:cash',
+            //     link : '/dashboards/nomina'
+            // }
         ]
     },
     {

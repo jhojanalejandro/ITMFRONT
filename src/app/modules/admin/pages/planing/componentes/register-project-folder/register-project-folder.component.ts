@@ -54,12 +54,11 @@ export class RegisterProjectFolderComponent implements OnInit {
         this.dataProject.execution = 'En Proceso';
 
       }
-      debugger
-      this.dataProject.fechaContrato = this._data.data.fechaContrato
+      this.dataProject.fechaContrato = new Date(this._data.data.fechaContrato)
       this.dataProject.companyName = this._data.data.companyName;
       this.dataProject.projectName = this._data.data.projectName;
       this.dataProject.descriptionProject = this._data.data.descriptionProject;
-      this.dataProject.fechaFinalizacion = this._data.data.fechaFinalizacion;
+      this.dataProject.fechaFinalizacion =  new Date(this._data.data.fechaFinalizacion);
       this.dataProject.numberProject = this._data.data.numberProject;
       this.dataProject.rubro = this._data.data.rubro;
 
@@ -73,8 +72,8 @@ export class RegisterProjectFolderComponent implements OnInit {
       companyName: new FormControl(this.dataProject.companyName, Validators.required),
       ejecucion: new FormControl(this.dataProject.execution, Validators.required),
       description: new FormControl(this.dataProject.descriptionProject, Validators.required),
-      fechaContrato: new FormControl(new Date(this.dataProject.fechaContrato), Validators.required),
-      fechaFinalizacion: new FormControl(new Date(this.dataProject.fechaFinalizacion), Validators.required),
+      fechaContrato: new FormControl(this.dataProject.fechaContrato, Validators.required),
+      fechaFinalizacion: new FormControl(this.dataProject.fechaFinalizacion, Validators.required),
       tipoModificacion: new FormControl(null),
       updateData: new FormControl(null),
       noAdicion: new FormControl(null),

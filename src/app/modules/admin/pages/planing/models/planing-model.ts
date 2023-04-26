@@ -110,6 +110,6 @@ export interface ProjectFolders{
     rubro: string;
     nombreRubro: string;
     project: string;
-    fechaFinalizacion: string;
-    fechaContrato: string;
+    fechaFinalizacion: Date;
+    fechaContrato: Date;
 }

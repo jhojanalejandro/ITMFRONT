@@ -12,6 +12,7 @@ const ds = [
     AngularmaterialModule,
     ReactiveFormsModule,
     IgxTreeModule
+    
 ]
 
 @NgModule({

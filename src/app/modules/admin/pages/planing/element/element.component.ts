@@ -22,10 +22,10 @@ import * as moment from 'moment';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import swal from 'sweetalert2';
-import { EconomicChartService } from '../../service/economic-chart.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DetalleContrato, Elements, ListElements } from '../../models/planing-model';
+import { DetalleContrato, Elements, ListElements } from '../models/planing-model';
+import { EconomicChartService } from '../service/economic-chart.service';
 
 @Component({
     selector: 'app-alement',

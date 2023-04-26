@@ -10,20 +10,21 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
-import { RegisterProjectFolderComponent } from '../components/register-project-folder/register-project-folder.component';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
 import swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { EconomicChartService } from '../service/economic-chart.service';
-import { ProjectFolder, ProjectFolders } from '../models/planing-model';
-import { ActivatedRoute } from '@angular/router';
+import { ProjectFolders } from '../models/planing-model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RegisterProjectFolderComponent } from '../componentes/register-project-folder/register-project-folder.component';
 
 @Component({
   selector: 'contracts',
-  styleUrls: ['./contracts.component.css'],
-  templateUrl: './contracts.component.html'
+  styleUrls: ['./contracts.component.scss'],
+  templateUrl: './contracts.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContrtactsComponent implements OnInit, OnDestroy {
   selectContract: any;
@@ -39,7 +40,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   contracts: ProjectFolders[];
   typeContract: string; 
-  typeEconomic: string; 
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
   showcontracts: boolean = false;
@@ -53,20 +53,18 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     private _economicService: EconomicChartService,
     private _matDialog: MatDialog,
     private auth: AuthService,
+    private _router: Router,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private _formBuilder: FormBuilder,
     private router: ActivatedRoute,
 
   ) {
-    debugger
-    this.typeContract = this.router.snapshot.paramMap.get('contratos') || null;
-    this.typeEconomic = this.router.snapshot.paramMap.get('cuadroEconomico') || null;
-
-    if(this.typeContract != null){
+    this.typeContract = this.router.snapshot.paramMap.get('tipo') || null;
+    if(this.typeContract === 'register'){
       this.showcontracts = true;
 
-    }else if(this.typeEconomic != null){
+    }else if(this.typeContract === 'economic'){
       this.showcontracts = false;
     }
 
@@ -77,7 +75,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'VALOR CONTRATO', name: 'valorContrato' },
     { title: 'CANTIDAD CONTRATISTA', name: 'contractorsCant' },
-    { title: '', name: 'action' },
+    { title: 'ACCIONES', name: 'action' },
   ]
   ngOnInit(): void {
     this.getContracts();
@@ -107,7 +105,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
   private getContracts(){
     this.cdref.detectChanges();
-    this._economicService.getProjectData()
+    this._economicService._economicsChart$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
       this.contracts = response;
@@ -239,5 +237,10 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  addComponent(data: any) {
+    this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id + '/'+ data.projectName);
+}
+
 
 } 

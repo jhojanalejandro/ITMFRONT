@@ -24,15 +24,16 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { EconomicChartService } from '../../../service/economic-chart.service';
-import { Componente } from '../../../models/planing-model';
+import { EconomicChartService } from '../../service/economic-chart.service';
+import { Activity } from '../../models/planing-model';
+
 
 @Component({
     selector: 'app-componentes-form',
-    templateUrl: './componentes-form.component.html',
-    styleUrls: ['./componentes-form.component.scss'],
+    templateUrl: './actividad-form.component.html',
+    styleUrls: ['./actividad-form.component.scss'],
 })
-export class ComponentesFormComponent implements OnInit {
+export class ActividadFormComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     fruitCtrl = new FormControl('');
     filteredFruits: Observable<string[]>;
@@ -41,9 +42,10 @@ export class ComponentesFormComponent implements OnInit {
     @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
     abrirDiv: boolean = false;
     numberOfTicks = 0;
-    nombreComponente: string = null;
+    data: any;
+    nombreActivivdad: string = null;
     update: boolean;
-    id: string = null;
+    id: any = 0;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     componentForm: FormGroup;
@@ -54,7 +56,7 @@ export class ComponentesFormComponent implements OnInit {
      * Constructor
      */
     constructor(
-        public matDialogRef: MatDialogRef<ComponentesFormComponent>,
+        public matDialogRef: MatDialogRef<ActividadFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) private _data: any,
@@ -73,13 +75,13 @@ export class ComponentesFormComponent implements OnInit {
                 fruit ? this._filter(fruit) : this.allFruits.slice()
             )
         );
-        if (this._data.componente != null) {
+        if(this._data.componente != null){
             this.id = this._data.componente.id;
-            this.nombreComponente = this._data.componente.nombreComponente;
-
+            this.nombreActivivdad = this._data.componente.nombreComponente;
+            
         }
         this.componentForm = this._formBuilder.group({
-            componentName: new FormControl(this.nombreComponente, Validators.required)
+            activityName: new FormControl(this.nombreActivivdad,Validators.required)
         });
     }
 
@@ -87,8 +89,8 @@ export class ComponentesFormComponent implements OnInit {
         this.abrirDiv = true;
     }
 
-    ngOnInit(): void {
-
+    ngOnInit(): void { 
+        
     }
 
     ngOnDestroy(): void {
@@ -114,35 +116,42 @@ export class ComponentesFormComponent implements OnInit {
         return item.id || index;
     }
 
-    addComponent() {
+    addActivity() {
         if (!this.componentForm.invalid) {
-            this.nombreComponente = this.componentForm.value.componentName
-            let model: Componente = {
+            if( this.nombreActivivdad === null){
+                this.nombreActivivdad = this.componentForm.value.activityName
+            }
+            this.data = this.componentForm.value;
+            let model: Activity = {
                 idContrato: this._data.idContrato,
-                nombreComponente: this.nombreComponente,
+                idComponente: this._data.idComponente,
+                nombreActividad: this.nombreActivivdad,
                 id: this.id,
-                elementos: [],
             };
-            this._Economicservice.addComponent(model).subscribe((response) => {
+            this._Economicservice.addActivity(model).subscribe((response) => {
                 if (response) {
-                    Swal.fire({
+                    Swal.fire(
+                        {
                             position: 'center',
                             icon: 'success',
                             title: '',
                             html: 'Información Registrada Exitosamente!',
                             showConfirmButton: false,
                             timer: 1500
-                        });
-                    this.matDialogRef.close(true);
+                          }
+                    );
+                }else{
+                    Swal.fire(
+                        'Ei!',
+                        'Algo sucedio, vuelve a intentarlo!',
+                        'error'
+                    );
                 }
-            }, (error => {
+            },(error => {
                 console.log(error);
-                Swal.fire(
-                    'EI!',
-                    'Ha sucedido un error!, vuelve a intentarlo',
-                    'error'
-                );
+                
             }));
+            this.matDialogRef.close(true);
         }
     }
 
