@@ -16,6 +16,7 @@ import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
   templateUrl: './acta-supervision.component.html',
   styleUrls: ['./acta-supervision.component.scss']
 })
+
 export class ActaSupervisionComponent implements OnInit {
   @ViewChild('pdfTable') pdfTable: ElementRef;
   @Input('contractors') contractors: any[];
