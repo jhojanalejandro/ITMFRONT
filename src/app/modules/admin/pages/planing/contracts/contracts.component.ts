@@ -14,10 +14,10 @@ import swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { EconomicChartService } from '../service/economic-chart.service';
 import { ProjectFolders } from '../models/planing-model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegisterProjectFolderComponent } from '../componentes/register-project-folder/register-project-folder.component';
+import { PlaningService } from '../service/planing.service';
 
 @Component({
   selector: 'contracts',
@@ -50,7 +50,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   constructor(
     private _uploadData: UploadDataService,
     private _fuseConfirmationService: FuseConfirmationService,
-    private _economicService: EconomicChartService,
+    private _planingService: PlaningService,
     private _matDialog: MatDialog,
     private auth: AuthService,
     private _router: Router,
@@ -105,7 +105,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
   private getContracts(){
     this.cdref.detectChanges();
-    this._economicService._economicsChart$
+    this._planingService._economicsChart$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
       this.contracts = response;

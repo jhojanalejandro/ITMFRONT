@@ -21,13 +21,13 @@ import {
 } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 
 
 @Component({
@@ -77,7 +77,7 @@ export class ModificacionFormComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA)
         private _data: { data: any },
         private _fuseConfirmationService: FuseConfirmationService,
-        private _economicService: EconomicChartService,
+        private _planingService: PlaningService,
         private _router: Router,
         private _genericService: GenericService
 
@@ -154,7 +154,7 @@ export class ModificacionFormComponent implements OnInit {
     }
 
     getElements() {
-        this._economicService
+        this._planingService
             .getElementoComponente(this._data)
             .subscribe((response) => {
                 this.elementos = response;
@@ -190,7 +190,7 @@ export class ModificacionFormComponent implements OnInit {
 
         };
 
-        this._economicService.addElementoComponente(item).subscribe((response) => {
+        this._planingService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire({
                     position: 'center',
@@ -255,7 +255,7 @@ export class ModificacionFormComponent implements OnInit {
         this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.data.contractId, true);
     }
     getDataElemento() {
-        this._economicService.getElementoById(this._data.data.elementId).subscribe((resp) => {
+        this._planingService.getElementoById(this._data.data.elementId).subscribe((resp) => {
             if (resp.recursos == 0) {
                 swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
                 this.matDialogRef.close();

@@ -65,16 +65,16 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id      : 'list',
         title   : 'INFORMACIÓN GENERAL',
-        subtitle: 'Lista Genral',
+        subtitle: 'Información Genral',
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
             {
-                id   : 'list.contracts',
-                title: 'Lista General Contratos',
+                id   : 'docs.ecommerce',
+                title: 'Información Contratos',
                 type : 'basic',
                 icon : 'heroicons_solid:view-list',
-                link : '/ecommerce/contratos/lista'
+                link : '/docs/ecommerce/general/lista-general'
             },
             // {
             //     id   : 'list.contractors',

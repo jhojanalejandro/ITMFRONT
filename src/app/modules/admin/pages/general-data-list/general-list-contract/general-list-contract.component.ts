@@ -21,28 +21,25 @@ import {
     Subject, takeUntil,
 } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
-import { EconomicChartService } from '../../service/economic-chart.service';
-import {
-    InventoryPagination,
-    Components,
-} from '../economic-chart.types';
+
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ProjectFolders } from '../../models/planing-model';
+import { ProjectFolders } from '../../planing/models/planing-model';
+import { GeneralListService } from '../services/general-list.service';
 
 @Component({
-    selector: 'economic-chart-list',
-    templateUrl: './economic-chart-list.component.html',
-    styleUrls: ['./economic-chart-list.scss'],
+    selector: 'general-list-contract',
+    templateUrl: './general-list-contract.component.html',
+    styleUrls: ['./general-list-contract.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
 })
-export class EconomicChartListComponent
+export class GeneralListContractComponent
     implements OnInit, AfterViewInit, OnDestroy {
     selectContract: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -57,32 +54,11 @@ export class EconomicChartListComponent
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    componentList: Components[] = [
-        {
-            id: '0',
-            cantDay: 0,
-            componentName: '',
-            contractorCant: 0,
-            totalValue: 0,
-            unitValue: 0,
-            listElements: [
-                {
-                    id: 0,
-                    elemento: '',
-                    contractorCant: 0,
-                    cantDay: 0,
-                    totalValue: 0,
-                    unitValue: 0,
-                },
-            ],
-        },
-    ];
     TotalCost: any;
     SubTotal: number;
     operatingExpenses: any;
     flashMessage: 'success' | 'error' | null = null;
     isLoading: boolean = false;
-    pagination: InventoryPagination;
     searchInputControl: FormControl = new FormControl();
     selectedProduct: ProjectFolders | null = null;
     economicChartForm: FormGroup;
@@ -91,7 +67,7 @@ export class EconomicChartListComponent
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
-        private _economicService: EconomicChartService,
+        private _generalService: GeneralListService,
         private _router: Router,
         private _liveAnnouncer: LiveAnnouncer,
     ) {
@@ -188,7 +164,7 @@ export class EconomicChartListComponent
     }
 
     private getContract(){
-        this._economicService.getProjectData()
+        this._generalService.getProjectData()
         .subscribe(response => {
             this.dataSource = new MatTableDataSource(
                 response

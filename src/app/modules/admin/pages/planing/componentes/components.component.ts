@@ -18,7 +18,7 @@ import { DialogChangePercentajeComponent } from './DialogChangePercentaje/Dialog
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { ActividadFormComponent } from './actividad-form/actividad-form.component';
 import { Activity } from '../models/planing-model';
-import { EconomicChartService } from '../service/economic-chart.service';
+import { PlaningService } from '../service/planing.service';
 
 @Component({
     selector: 'components-card',
@@ -51,7 +51,7 @@ export class AddComponentsComponent implements OnInit {
         private route: ActivatedRoute,
         private _fuseConfirmationService: FuseConfirmationService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _Economicservice: EconomicChartService,
+        private _planingService: PlaningService,
         private _matDialog: MatDialog,
         private _contrtactService: UploadDataService,
     ) {
@@ -82,7 +82,7 @@ export class AddComponentsComponent implements OnInit {
 
 
     chargeData() {
-        this._Economicservice.getComponent(this.id).subscribe((response) => {
+        this._planingService.getComponent(this.id).subscribe((response) => {
             if (response.length != 0) {
                 this.data = response;
                 this.totalesPlaneacion();
@@ -147,7 +147,7 @@ export class AddComponentsComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                this._Economicservice
+                this._planingService
                     .getComponent(this.id)
                     .subscribe((response) => {
                         this.data = response;
@@ -178,7 +178,7 @@ export class AddComponentsComponent implements OnInit {
             });
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
-                    this._Economicservice
+                    this._planingService
                         .getComponent(this.id)
                         .subscribe((response) => {
                             this.data = response;
@@ -283,7 +283,7 @@ export class AddComponentsComponent implements OnInit {
     }
 
     private getActivity(e: any) {
-        this._Economicservice.getActivity(e.id).subscribe((response) => {
+        this._planingService.getActivity(e.id).subscribe((response) => {
             if (response.length != 0) {
                 this.activities = response;
                 this._changeDetectorRef.detectChanges();

@@ -1,9 +1,8 @@
 import { Route } from '@angular/router';
-import { EconomicChartComponent } from './economic-chart/economic-chart.component';
 import { ContrtactsComponent } from './contracts/contracts.component';
-import { ContractsPlaningResolver } from './economic-chart/economic-chart.resolvers';
-import { EconomicChartListComponent } from './economic-chart/list/economic-chart-list.component';
 import { AddComponentsComponent } from './componentes/components.component';
+import { PlaningComponent } from './planing.component';
+import { ContractsPlaningResolver } from './planing.resolvers';
 
 export const PlaningRoutes: Route[] = [
     {
@@ -13,7 +12,7 @@ export const PlaningRoutes: Route[] = [
     },
     {
         path     : 'cuadroEconomico/:tipo',
-        component: EconomicChartComponent,
+        component: PlaningComponent,
         children : [
             {
                 path     : '',
@@ -35,6 +34,7 @@ export const PlaningRoutes: Route[] = [
         },
         runGuardsAndResolvers: 'always'
     },
+
     {
         path      : 'Componentes/:id/:projectName',
         component: AddComponentsComponent

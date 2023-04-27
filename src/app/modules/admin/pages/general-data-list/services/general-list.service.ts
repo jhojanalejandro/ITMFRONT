@@ -11,18 +11,16 @@ import {
     tap,
     throwError,
 } from 'rxjs';
-import { InventoryPagination } from '../economic-chart/economic-chart.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
-import { Activity, Componente, Elements, ProjectFolder, ProjectFolders } from '../models/planing-model';
-import { AuthService } from 'app/core/auth/auth.service';
+import { InventoryPagination, ProjectFolders } from '../../planing/models/planing-model';
 
 @Injectable({
     providedIn: 'root',
 })
-export class EconomicChartService {
+export class GeneralListService {
     // Private
     private _pagination: BehaviorSubject<InventoryPagination | null> =
         new BehaviorSubject(null);
@@ -107,18 +105,6 @@ export class EconomicChartService {
             this.apiUrl + environment.addActivity;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
-    getComponent(id: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.getComponent;
-        return this._httpClient.get<Componente[]>(urlEndpointGenerate + id);
-    }
-
-    getActivity(id: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.getActivity;
-        return this._httpClient.get<Activity[]>(urlEndpointGenerate + id);
-    }
-
 
     addElementoComponente(data: any) {
         let urlEndpointGenerate =
@@ -126,38 +112,6 @@ export class EconomicChartService {
         return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
 
-    getElementoComponente(id: any) {
-        // const params = new HttpParams()
-        // .set('contractorId', contractorId)
-        // .set('contractId', contractId);
-        let urlEndpointGenerate =
-            this.apiUrl + environment.getElements;
-        return this._httpClient.get<Elements[]>(urlEndpointGenerate + id);
-    }
-
-    getComponentById(id: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.getComponentById;
-        return this._httpClient.get<Componente>(urlEndpointGenerate + id);
-    }
-
-
-    getElementoById(id: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.geElementoById;
-        return this._httpClient.get<Elements>(urlEndpointGenerate + id);
-    }
-    asignmentData(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.asignmentData;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
-    }
-
-    GetDataMinuta(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.GetDataMinutaHiringEndpoint;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
-    }
     DeleteComponent(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);

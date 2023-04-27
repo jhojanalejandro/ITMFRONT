@@ -1,6 +1,15 @@
 import { Route } from '@angular/router';
+import { GeneralListContractorsComponent } from './general-list-contractor/general-list-contractors.component';
 
-export const PlaningRoutes: Route[] = [
+export const GeneralListRoutes: Route[] = [
+    {
+        path      : 'contratos/lista-general-contratistas',
+        component: GeneralListContractorsComponent,
+    },
+    {
+        path      : 'contratos/lista-general-contratos',
+        component: GeneralListContractorsComponent,
+    },
     // {
     //     path      : '',
     //     pathMatch : 'full',

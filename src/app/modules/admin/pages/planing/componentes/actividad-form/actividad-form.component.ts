@@ -24,8 +24,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { EconomicChartService } from '../../service/economic-chart.service';
 import { Activity } from '../../models/planing-model';
+import { PlaningService } from '../../service/planing.service';
 
 
 @Component({
@@ -61,7 +61,7 @@ export class ActividadFormComponent implements OnInit {
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) private _data: any,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _Economicservice: EconomicChartService,
+        private _planingService: PlaningService,
     ) {
         setInterval(() => {
             this.numberOfTicks++;
@@ -128,7 +128,7 @@ export class ActividadFormComponent implements OnInit {
                 nombreActividad: this.nombreActivivdad,
                 id: this.id,
             };
-            this._Economicservice.addActivity(model).subscribe((response) => {
+            this._planingService.addActivity(model).subscribe((response) => {
                 if (response) {
                     Swal.fire(
                         {

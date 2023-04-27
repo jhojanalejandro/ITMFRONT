@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { EconomicChartService } from '../service/economic-chart.service';
+import { PlaningService } from './service/planing.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +11,7 @@ export class ContractsPlaningResolver implements Resolve<any>
     /**
      * Constructor
      */
-    constructor(private _inventoryService: EconomicChartService) {
+    constructor(private _inventoryService: PlaningService) {
     }
     /**
      * Resolver

@@ -25,7 +25,7 @@ import swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato, Elements, ListElements } from '../models/planing-model';
-import { EconomicChartService } from '../service/economic-chart.service';
+import { PlaningService } from '../service/planing.service';
 
 @Component({
     selector: 'app-alement',
@@ -90,7 +90,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _data,
         private _fuseConfirmationService: FuseConfirmationService,
         private _genericService: GenericService,
-        private _economicService: EconomicChartService
+        private _planingService: PlaningService
     ) {
         if (this._data.edit === true) {
             this.btnOpcion ='Actualizar';
@@ -159,7 +159,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getElements() {
-        this._economicService
+        this._planingService
             .getElementoComponente(this._data)
             .subscribe((response) => {
                 this.elementos = response;
@@ -203,7 +203,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento
         };
-        this._economicService.addElementoComponente(item).subscribe((response) => {
+        this._planingService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire({
                     position: 'center',
