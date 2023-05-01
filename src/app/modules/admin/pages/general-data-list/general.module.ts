@@ -18,6 +18,6 @@ import { GeneralListContractComponent } from './general-list-contract/general-li
         SharedModule
     ]
 })
-export class PlaningModule
+export class GeneralListModule
 {
 }

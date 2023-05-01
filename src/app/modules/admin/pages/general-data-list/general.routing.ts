@@ -1,36 +1,23 @@
 import { Route } from '@angular/router';
 import { GeneralListContractorsComponent } from './general-list-contractor/general-list-contractors.component';
+import { GeneralListContractComponent } from './general-list-contract/general-list-contract.component';
+import { HistoryContractorResolver, HistoryContractsResolver } from './general.resolvers';
 
 export const GeneralListRoutes: Route[] = [
     {
-        path      : 'contratos/lista-general-contratistas',
+        path      : 'lista-general-contratistas',
         component: GeneralListContractorsComponent,
+        resolve  : {
+            contract  : HistoryContractorResolver
+        },
+
     },
     {
-        path      : 'contratos/lista-general-contratos',
-        component: GeneralListContractorsComponent,
+        path      : 'lista-general-contratos',
+        component: GeneralListContractComponent,
+        resolve  : {
+            contract  : HistoryContractsResolver
+        },
     },
-    // {
-    //     path      : '',
-    //     pathMatch : 'full',
-    //     redirectTo: 'cuadroEconomico'
-    // },
-    // {
-    //     path     : 'cuadroEconomico/:tipo',
-    //     component: EconomicChartComponent,
-    //     children : [
-    //         {
-    //             path     : '',
-    //             component: ContrtactsComponent,
-    //             resolve  : {
-    //                 products  : ContractsPlaningResolver
-    //             },
-    //             runGuardsAndResolvers: 'always'
-    //         },
-
- 
-    //     ]
-    // },
-
 
 ];

@@ -16,6 +16,7 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { InventoryPagination, ProjectFolders } from '../../planing/models/planing-model';
+import { HistoryContractor } from '../models/historyContractor';
 
 @Injectable({
     providedIn: 'root',
@@ -24,9 +25,11 @@ export class GeneralListService {
     // Private
     private _pagination: BehaviorSubject<InventoryPagination | null> =
         new BehaviorSubject(null);
-    private _economicChart: BehaviorSubject<ProjectFolders | null> =
+
+    private _listProject: BehaviorSubject<ProjectFolders[] | null> =
         new BehaviorSubject(null);
-    private _economicsChart: BehaviorSubject<ProjectFolders[] | null> =
+
+        private _historyContractor: BehaviorSubject<ProjectFolders[] | null> =
         new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
@@ -42,18 +45,12 @@ export class GeneralListService {
         return this._pagination.asObservable();
     }
 
-    /**
-     * Getter for product
-     */
-    get _economicChart$(): Observable<ProjectFolders> {
-        return this._economicChart.asObservable();
+    get _projectList$(): Observable<ProjectFolders[]> {
+        return this._listProject.asObservable();
     }
 
-    /**
-     * Getter for contracts
-     */
-    get _economicsChart$(): Observable<ProjectFolders[]> {
-        return this._economicsChart.asObservable();
+    get _historyContractor$(): Observable<ProjectFolders[]> {
+        return this._historyContractor.asObservable();
     }
 
     /**
@@ -66,15 +63,15 @@ export class GeneralListService {
      * @param order
      * @param search
      */
-    getProjectData(): Observable<ProjectFolders[]> {
-        const params = new HttpParams()
-        .set('inProgress', false )
-        .set('tipoModulo', 'planeacion');
+    getProjectRegistered(): Observable<ProjectFolders[]> {
 
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
-        return this._httpClient.get(urlEndPoint, { params}).pipe(
+        let urlEndPoint = this.apiUrl + environment.GetAllProjectRegisteredEndpoint;
+        return this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
                 response.forEach(element => {
+                    if(element.valorContrato == null ){
+                        element.valorContrato = 'No Calculado';
+                    }
                     if(element.execution){
                         element.execution = "EN Ejecución"
                     }else{
@@ -82,53 +79,22 @@ export class GeneralListService {
                     }
                     
                 });
-                this._economicsChart.next(response);
+                this._listProject.next(response);
             })
         );
     }
 
-    addEconomicChart(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.addProjectFolderEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    getHistoryContractor(): Observable<HistoryContractor[]> {
+
+        let urlEndPoint = this.apiUrl + environment.HistoryContractor;
+        return this._httpClient.get(urlEndPoint).pipe(
+            tap((response: any) => {
+                this._historyContractor.next(response);
+            })
+        );
     }
 
-    addComponent(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.addComponent;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
-    }
 
-    
-    addActivity(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.addActivity;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
-    }
 
-    addElementoComponente(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.addElementosComponent;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
-    }
 
-    DeleteComponent(id: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
-        return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
-    }
-
-    sendEconomicdataContractor(model: EconomicContractor[]) {
-        
-        let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
-    }
-
-    getHiringDataById(contractorId: any, contractId) {
-        const params = new HttpParams()
-        .set('contractorId', contractorId)
-        .set('contractId', contractId);
-        let urlEndpointGenerate =
-            this.apiUrl + environment.GetByIdHiringEndpoint;
-        return this._httpClient.get<IHiringData>(urlEndpointGenerate, {params: params});
-    }
 }

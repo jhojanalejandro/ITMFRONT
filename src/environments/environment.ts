@@ -33,6 +33,8 @@ export const environment = {
     AuthContractor: 'Contractor/Authenticate',
     GetContractsByContractors: 'Contractor/GetContractsByContractor/',
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
+    HistoryContractor: 'Contractor/GetHistoryContractor',
+
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -42,6 +44,7 @@ export const environment = {
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/UpdateCost',
     GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
+    GetAllProjectRegisteredEndpoint: 'ProjectFolder/GetProjectRegistered',
     UpdateStateProjectFolderEndpoint: 'ProjectFolder/UpdateState/',
 
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',

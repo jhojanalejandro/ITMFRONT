@@ -65,24 +65,24 @@ export const defaultNavigation: FuseNavigationItem[] = [
     {
         id      : 'list',
         title   : 'INFORMACIÓN GENERAL',
-        subtitle: 'Información Genral',
+        subtitle: 'Información Genral contratación',
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
             {
-                id   : 'docs.ecommerce',
+                id   : 'general.contract',
                 title: 'Información Contratos',
                 type : 'basic',
                 icon : 'heroicons_solid:view-list',
-                link : '/docs/ecommerce/general/lista-general'
+                link : '/docs/general/lista-general-contratos'
             },
-            // {
-            //     id   : 'list.contractors',
-            //     title: 'Nomina',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:cash',
-            //     link : '/dashboards/nomina'
-            // }
+            {
+                id   : 'general.list.contractors',
+                title: 'Información contratistas',
+                type : 'basic',
+                icon : 'list_alt',
+                link : '/docs/general/lista-general-contratistas'
+            }
         ]
     },
     {

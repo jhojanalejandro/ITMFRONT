@@ -48,7 +48,7 @@ export class GeneralListContractorsComponent
     @ViewChild(MatTable) table!: MatTable<any>;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant', 'fechaContrato', 'fechaFinalizacion', 'action'];
+    displayedColumns: string[] = ['nombre', 'identificacion', 'fechaNacimiento', 'direccion', 'telefono', 'correo', 'action'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
     registerDate = new Date();
 
@@ -61,12 +61,10 @@ export class GeneralListContractorsComponent
     isLoading: boolean = false;
     searchInputControl: FormControl = new FormControl();
     selectedProduct: ProjectFolders | null = null;
-    economicChartForm: FormGroup;
     tagsEditMode: boolean = false;
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _formBuilder: FormBuilder,
         private _generalService: GeneralListService,
         private _router: Router,
         private _liveAnnouncer: LiveAnnouncer,
@@ -75,30 +73,22 @@ export class GeneralListContractorsComponent
     }
 
     ngOnInit(): void {
-        this.economicChartForm = this._formBuilder.group({
-            id: [''],
-            empresa: new FormControl(null, Validators.required),
-            requiere: [''],
-            operatingExpenses: [''],
-            contrctorsCant: [''],
-            cost: [''],
-            percentage: new FormControl('8', Validators.required),
-            price: [''],
-            subTotal: [''],
-            thumbnail: [''],
-            images: [[]],
-            active: [false],
+        this._generalService._historyContractor$
+        .subscribe(response => {
+            this.dataSource = new MatTableDataSource(
+                response
+            );
+            this.dataSource.sort = this.sort;        
         });
-        this.getContract();
     }
     columnas = [
-        { title: 'NRO CONTRATO', name: 'numberProject' },
-        { title: 'NOMBRE EMPRESA', name: 'companyName' },
-        { title: 'NOMBRE PROYECTO', name: 'projectName' },
-        { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
-        { title: 'FECHA INICIO CONTRATO', name: 'fechaContrato' },
-        { title: 'FECHA FIN CONTRATO', name: 'fechaFinalizacion' },
-        { title: '', name: 'action' },
+        { title: 'NOMBRE', name: 'nombre' },
+        { title: 'CEDULA', name: 'identificacion' },
+        { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
+        { title: 'DIRECCIÓN', name: 'direccion' },
+        { title: 'TELEFONO', name: 'telefono' },
+        { title: 'CORREO', name: 'correo' },
+        { title: 'OPCIÓN', name: 'action' },
     ]
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
@@ -163,13 +153,5 @@ export class GeneralListContractorsComponent
         moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
     }
 
-    private getContract(){
-        this._generalService.getProjectData()
-        .subscribe(response => {
-            this.dataSource = new MatTableDataSource(
-                response
-            );
-            this.dataSource.sort = this.sort;        
-        });
-    }
+
 }

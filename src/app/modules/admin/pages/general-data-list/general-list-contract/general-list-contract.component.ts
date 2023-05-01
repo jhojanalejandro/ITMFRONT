@@ -48,7 +48,7 @@ export class GeneralListContractComponent
     @ViewChild(MatTable) table!: MatTable<any>;
     dataSource = new MatTableDataSource<any>();
     selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant', 'fechaContrato', 'fechaFinalizacion', 'action'];
+    displayedColumns: string[] = ['numberProject','project', 'companyName', 'projectName', 'contractorsCant', 'fechaContrato', 'fechaFinalizacion', 'valorContrato'];
     columnsToDisplay: string[] = this.displayedColumns.slice();
     registerDate = new Date();
 
@@ -61,12 +61,10 @@ export class GeneralListContractComponent
     isLoading: boolean = false;
     searchInputControl: FormControl = new FormControl();
     selectedProduct: ProjectFolders | null = null;
-    economicChartForm: FormGroup;
     tagsEditMode: boolean = false;
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _formBuilder: FormBuilder,
         private _generalService: GeneralListService,
         private _router: Router,
         private _liveAnnouncer: LiveAnnouncer,
@@ -75,30 +73,17 @@ export class GeneralListContractComponent
     }
 
     ngOnInit(): void {
-        this.economicChartForm = this._formBuilder.group({
-            id: [''],
-            empresa: new FormControl(null, Validators.required),
-            requiere: [''],
-            operatingExpenses: [''],
-            contrctorsCant: [''],
-            cost: [''],
-            percentage: new FormControl('8', Validators.required),
-            price: [''],
-            subTotal: [''],
-            thumbnail: [''],
-            images: [[]],
-            active: [false],
-        });
         this.getContract();
     }
     columnas = [
         { title: 'NRO CONTRATO', name: 'numberProject' },
+        { title: 'NRO PROYECTO', name: 'project' },
         { title: 'NOMBRE EMPRESA', name: 'companyName' },
         { title: 'NOMBRE PROYECTO', name: 'projectName' },
         { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
         { title: 'FECHA INICIO CONTRATO', name: 'fechaContrato' },
         { title: 'FECHA FIN CONTRATO', name: 'fechaFinalizacion' },
-        { title: '', name: 'action' },
+        { title: 'VALOR CONTRATO', name: 'valorContrato' },
     ]
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
@@ -164,8 +149,9 @@ export class GeneralListContractComponent
     }
 
     private getContract(){
-        this._generalService.getProjectData()
+        this._generalService._projectList$
         .subscribe(response => {
+            debugger
             this.dataSource = new MatTableDataSource(
                 response
             );
