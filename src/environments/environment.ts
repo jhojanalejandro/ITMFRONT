@@ -34,6 +34,8 @@ export const environment = {
     GetContractsByContractors: 'Contractor/GetContractsByContractor/',
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
     HistoryContractor: 'Contractor/GetHistoryContractor',
+    AddnewnessContractor: 'Contractor/AddNewNess',
+
 
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',

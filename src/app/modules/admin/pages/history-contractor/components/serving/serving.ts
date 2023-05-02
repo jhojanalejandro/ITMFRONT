@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { GuidesComponent } from '../../guides.component';
+import { HistoryContractorComponent } from '../../history-contractor.component';
 
 @Component({
-    selector   : 'prerequisites',
-    templateUrl: './prerequisites.html'
+    selector   : 'serving',
+    templateUrl: './serving.html'
 })
-export class PrerequisitesComponent
+export class ServingComponent
 {
     /**
      * Constructor
      */
-    constructor(private _guidesComponent: GuidesComponent)
+    constructor(private _guidesComponent: HistoryContractorComponent)
     {
     }
 

@@ -118,7 +118,7 @@ export const appRoutes: Route[] = [
 
                 // Guides
                 {path: 'general', loadChildren: () => import('app/modules/admin/pages/general-data-list/general.module').then(m => m.GeneralListModule)},
-                {path: 'guides', loadChildren: () => import('app/modules/admin/pages/general-data-list/guides/guides.module').then(m => m.GuidesModule)}
+                {path: 'history', loadChildren: () => import('app/modules/admin/pages/history-contractor/history-contractor.module').then(m => m.HistoryContractorModule)}
 
             ]},
 

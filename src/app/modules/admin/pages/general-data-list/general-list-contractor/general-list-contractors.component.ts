@@ -111,7 +111,7 @@ export class GeneralListContractorsComponent
     }
 
     addComponent(data: any) {
-        this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id + '/'+ data.projectName);
+        this._router.navigate(["/docs/history/options/contratos/" + data.id]);
     }
 
     /**

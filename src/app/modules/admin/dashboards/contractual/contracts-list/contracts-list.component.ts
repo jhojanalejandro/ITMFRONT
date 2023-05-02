@@ -92,7 +92,6 @@ export class UploadDataComponent implements OnInit, OnDestroy {
         break
       case 'registerData':
         this._router.navigate(['/dashboards/lista-contratistas/' + data.id]);
-
         break
 
     }

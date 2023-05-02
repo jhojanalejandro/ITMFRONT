@@ -22,6 +22,7 @@ export interface Contractor{
 	fechaInicio: string,
 	fechaFin: string,
 	nombre: string,
+	habilitado: string;
 	apellido: string,
 	identificacion: string,
 	lugarExpedicion: string,
@@ -59,6 +60,7 @@ export interface Contractor{
 	company: string;
 	from: Date;
 	to: Date;
+	proccess: any;
 }
 
 
@@ -73,7 +75,7 @@ export interface Minuta{
 
 export interface NewnessContractor{
     contractorId: string;
-    id: any;
+    id?: any;
     descripcionNovedad: string;
     tipoNovedad: string;   
 	contractId: string;

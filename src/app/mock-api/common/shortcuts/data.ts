@@ -13,7 +13,7 @@ export const shortcuts = [
         label      : 'Documentation',
         description: 'Getting started',
         icon       : 'heroicons_outline:book-open',
-        link       : '/docs/guides/getting-started/introduction',
+        link       : '/docs/opctions-contractor/getting-started/introduction',
         useRouter  : true
     },
     {

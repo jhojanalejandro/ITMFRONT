@@ -30,6 +30,20 @@ export class ContractorService {
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
         return this._httpClient.get(urlEndPoint + id).pipe(
             tap((response: any) => {
+                debugger
+                response.forEach(element => {
+                    if(element.habilitado){
+                        element.habilitado = 'habilitado'
+                    }else{
+                        element.habilitado = 'deshabilitado'
+                    }
+                    if(element.proccess){
+                        element.proccess = 'en proceso'
+                    }else{
+                        element.proccess = 'en espera'
+                    }
+                    
+                });
                 this._contractorsByContract.next(response);
             })
         );
@@ -38,9 +52,9 @@ export class ContractorService {
     getPaymentContractor(contractId: string, contractorId: string) {
         let urlEndPoint = this.apiUrl;
         const params = new HttpParams()
-        .set('contractId', contractId)
-        .set('contractorId', contractorId);
-        return this._httpClient.get(urlEndPoint+'Contractor/GetPaymentsContractorList', {params: params}).pipe(
+            .set('contractId', contractId)
+            .set('contractorId', contractorId);
+        return this._httpClient.get(urlEndPoint + 'Contractor/GetPaymentsContractorList', { params: params }).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
             })
@@ -63,15 +77,15 @@ export class ContractorService {
 
     getPaymentAccount(contractorId: string, contractId: string) {
         const params = new HttpParams()
-        .set('contractorId', contractorId )
-        .set('contractId', contractId)
+            .set('contractorId', contractorId)
+            .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
-        return this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+        return this._httpClient.get<PaymentAccount>(urlEndPoint, { params: params });
     }
 
     getContractorByContract(contractorId: string) {
         let urlEndPoint = this.apiUrl + environment.GetContractsByContractors;
-        return this._httpClient.get<any>(urlEndPoint+ contractorId);
+        return this._httpClient.get<any>(urlEndPoint + contractorId);
     }
 
 
@@ -81,9 +95,9 @@ export class ContractorService {
     }
 
     addNewnessContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.AddnewnessContractor;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
-        .pipe(retry(0));
+            .pipe(retry(0));
     }
 
 }

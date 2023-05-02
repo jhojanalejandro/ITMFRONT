@@ -55,7 +55,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'habilitado','proccess', 'fechaNacimiento', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
@@ -81,6 +81,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'CORREO', name: 'correo' },
     { title: 'TELEFONO', name: 'telefono' },
     { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
+    { title: 'ESTADO', name: 'proccess' },
+    { title: 'ESTADO REGISTRO', name: 'habilitado' },
     { title: '', name: 'acciones' }
   ]
 
