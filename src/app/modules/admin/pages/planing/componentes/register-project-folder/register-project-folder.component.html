@@ -108,9 +108,10 @@
                 <div class="folder">
                     <mat-form-field *ngIf="editData" class="hiring" appearance="outline">
                         <mat-label>Tipo Modificacion</mat-label>
-                        <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion">
-                            <mat-option *ngFor="let exe of tipoModificacion" [value]="exe.viewValue">
-                                {{exe.viewValue}}
+                        <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion" 
+                        (selectionChange)="changeEdit()">
+                            <mat-option *ngFor="let modifica of tipoModificacion" [value]="modifica.viewValue">
+                                {{modifica.viewValue}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>

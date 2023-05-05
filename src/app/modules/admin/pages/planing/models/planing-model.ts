@@ -14,7 +14,7 @@ export interface Carro{
 }
 
 export interface ProjectFolder{
-    id?: any;
+    id?: string;
     userId?: string;
     companyName: string;
     projectName: string;

@@ -1,20 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
     BehaviorSubject,
-    filter,
-    map,
     Observable,
-    of,
-    switchMap,
-    take,
     tap,
-    throwError,
 } from 'rxjs';
 import { environment } from 'environments/environment';
-import { IResponse } from 'app/layout/common/models/Response';
-import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
-import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { InventoryPagination, ProjectFolders } from '../../planing/models/planing-model';
 import { HistoryContractor } from '../models/historyContractor';
 

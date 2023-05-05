@@ -3,7 +3,7 @@ import { IHiringData } from "./hiring-data";
 
 export interface AsignmentData{
     contractId: string;
-    id: any;
+    id: string;
     idContractor: string[];
     type: string;   
 }
@@ -50,11 +50,11 @@ export interface Contractor{
 	estado?: string,
 	userId?: string,
 	claveUsuario?: string,
-	contractId?: number,
+	contractId?: string,
 	fechaCreacion?: Date,
 	fechaActualizacion?: Date,
-	componenteId?: number,
-	elementId?: number,
+	componenteId?: string,
+	elementId?: string,
 	objetoConvenio?: string,
 	unitValue: number;
 	company: string;
@@ -75,7 +75,7 @@ export interface Minuta{
 
 export interface NewnessContractor{
     contractorId: string;
-    id?: any;
+    id?: string;
     descripcionNovedad: string;
     tipoNovedad: string;   
 	contractId: string;

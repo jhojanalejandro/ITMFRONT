@@ -14,9 +14,8 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 import { Router } from '@angular/router';
-import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
 import swal from 'sweetalert2';
-import { ExecutionReport } from './models/pdfDocument';
+import { ChargeAccount, ExecutionReport } from './models/pdfDocument';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -26,7 +25,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeContractorComponent implements OnInit, OnDestroy {
-  chargeAccountData: PaymentAccount;
+  chargeAccountData: ChargeAccount;
   executionReportData: ExecutionReport;
   contractIdList: any[] = [];
   minutesDocumentPdf: File;
@@ -44,9 +43,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
 
-  /**
-   * Constructor
-   */
+
   constructor(
     private _contractorService: HomeContractorService,
     private _matDialog: MatDialog,
@@ -56,9 +53,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  /**
-* On init
-*/
+
   ngOnInit(): void {
     this.userName = this._auth.accessName
     this.getContract();

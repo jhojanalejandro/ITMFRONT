@@ -60,7 +60,7 @@
                                 
                             <td mat-cell *matCellDef="let element">
                                 <p
-                                    *ngIf="element[columna.name]== element.companyName || element[columna.name]== element.projectName || element[columna.name]== element.contractorsCant || element[columna.name]== element.numberProject  && element[columna.name]!= element.valorContrato">
+                                    *ngIf="element[columna.name]== element.companyName || element[columna.name]== element.projectName || element[columna.name]== element.project || element[columna.name]== element.contractorsCant || element[columna.name]== element.numberProject  && element[columna.name]!= element.valorContrato">
                                     {{element[columna.name]}}</p>
                                 <p
                                     *ngIf="element[columna.name]== element.valorContrato && element[columna.name]!= element.contractorsCant">

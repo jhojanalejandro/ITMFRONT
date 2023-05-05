@@ -61,6 +61,9 @@ export class RegisterProjectFolderComponent implements OnInit {
       this.dataProject.fechaFinalizacion =  new Date(this._data.data.fechaFinalizacion);
       this.dataProject.numberProject = this._data.data.numberProject;
       this.dataProject.rubro = this._data.data.rubro;
+      this.dataProject.project = this._data.data.project;
+      this.dataProject.nombreRubro = this._data.data.nombreRubro;
+
 
     }
   }
@@ -251,6 +254,11 @@ export class RegisterProjectFolderComponent implements OnInit {
   dateChange(event) {
     this.minDate = event.value;
     this.ref.markForCheck();
+
+  }
+
+  changeEdit(){
+    debugger
 
   }
 

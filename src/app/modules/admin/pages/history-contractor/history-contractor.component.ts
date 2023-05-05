@@ -30,7 +30,6 @@ export class HistoryContractorComponent implements OnInit, OnDestroy
 
     )
     {
-        debugger
         this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
         this.menuData = [
             {

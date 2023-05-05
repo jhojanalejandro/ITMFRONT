@@ -43,7 +43,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
   showcontracts: boolean = false;
-  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'valorContrato', 'contractorsCant', 'action'];
+  displayedColumns: string[] = ['numberProject','project', 'companyName', 'projectName', 'valorContrato', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -71,6 +71,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
   columnas = [
     { title: 'NÚMERO CONTRATO', name: 'numberProject' },
+    { title: 'NÚMERO PROYECTO', name: 'project' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'VALOR CONTRATO', name: 'valorContrato' },
