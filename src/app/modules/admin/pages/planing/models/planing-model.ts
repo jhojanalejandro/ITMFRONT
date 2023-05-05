@@ -14,7 +14,7 @@ export interface Carro{
 }
 
 export interface ProjectFolder{
-    id?: any;
+    id?: string;
     userId?: string;
     companyName: string;
     projectName: string;
@@ -110,6 +110,35 @@ export interface ProjectFolders{
     rubro: string;
     nombreRubro: string;
     project: string;
-    fechaFinalizacion: string;
-    fechaContrato: string;
+    fechaFinalizacion: Date;
+    fechaContrato: Date;
+}
+
+
+
+export interface InventoryPagination
+{
+    length: number;
+    size: number;
+    page: number;
+    lastPage: number;
+    startIndex: number;
+    endIndex: number;
+}
+export interface Components
+{
+    id: any;
+    cantDay: number;
+    componentName: string;
+    contractorCant: number;
+    totalValue: number;
+    unitValue: number;
+    listElements: any[];
+}
+export interface InventoryCategory
+{
+    id: string;
+    parentId: string;
+    name: string;
+    slug: string;
 }

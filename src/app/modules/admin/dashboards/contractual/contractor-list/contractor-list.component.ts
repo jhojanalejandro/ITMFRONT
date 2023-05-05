@@ -54,8 +54,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
+  idSelected: string[]= [];
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'habilitado', 'proccess', 'fechaNacimiento', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
@@ -81,6 +82,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'CORREO', name: 'correo' },
     { title: 'TELEFONO', name: 'telefono' },
     { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
+    { title: 'ESTADO', name: 'proccess' },
+    { title: 'ESTADO REGISTRO', name: 'habilitado' },
     { title: '', name: 'acciones' }
   ]
 
@@ -168,9 +171,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     );
   }
   isAllSelected() {
-    if(this.selection.selected.length > 1){
+    if (this.selection.selected.length > 1) {
       this.visibleOption = true;
-    }else{
+    } else {
       this.visibleOption = false;
     }
     const numSelected = this.selection.selected.length;
@@ -219,13 +222,16 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   SendMailsAccounts() {
-    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.selection.selected }
+    for (let index = 0; index < this.selection.selected.length; index++) {
+      this.idSelected[index] = this.selection.selected[index].id
+    }
+    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.idSelected }
     this._contractorListService.sendmailsAccounts(ids)
-    .pipe(takeUntil(this._unsubscribe$))
-    .subscribe((Response) => {
-      console.log(Response);
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((Response) => {
+        console.log(Response);
 
-    });
+      });
 
   }
 
@@ -240,12 +246,12 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
     dialogModificacion.afterClosed()
-    .pipe(takeUntil(this._unsubscribe$))
-    .subscribe((result) => {
-      if (result) {
-        this.getDataContractor();
-      }
-    });
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((result) => {
+        if (result) {
+          this.getDataContractor();
+        }
+      });
   }
   registrarDatosContratacion(data: any) {
     if (data == null) {
@@ -296,27 +302,27 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   activateContarct() {
     this._genericService.UpdateStateProjectFolder(this.contractId)
-    .pipe(takeUntil(this._unsubscribe$))
-    .subscribe((resp) => {
-      if (resp) {
-        swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '',
-          html: 'Contrato activado exitosamente!',
-          showConfirmButton: false,
-          timer: 1500
-        });
-      } else {
-        swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
-      }
-    },
-      (response) => {
-        // Set the alert
-        console.log(response);
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((resp) => {
+        if (resp) {
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Contrato activado exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        } else {
+          swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
+        }
+      },
+        (response) => {
+          // Set the alert
+          console.log(response);
 
-        swal.fire('Error', 'Error al activar el contrato!', 'error');
-      })
+          swal.fire('Error', 'Error al activar el contrato!', 'error');
+        })
   }
 
   ngOnDestroy(): void {

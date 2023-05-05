@@ -33,7 +33,7 @@
     "file-saver": "^2.0.5",
     "hammerjs": "^2.0.8",
     "highlight.js": "11.4.0",
-    "html-to-pdfmake": "^2.4.9",
+    "html-to-pdfmake": "^2.4.20",
     "html2canvas": "^1.4.1",
     "igniteui-angular": "^13.2.23",
     "jspdf": "^2.5.1",

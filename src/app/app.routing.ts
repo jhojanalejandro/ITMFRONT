@@ -12,11 +12,6 @@ export const appRoutes: Route[] = [
     // Redirect empty path to '/dashboards/project'
     {path: '', pathMatch : 'full', redirectTo: 'dashboards/inicio'},
 
-    // Redirect signed in user to the '/dashboards/project'
-    //
-    // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
-    // path. Below is another redirection for that path to redirect the user to the desired
-    // location. This is a small convenience to keep all main routes together here on this file.
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboards/inicio'},
 
     // Auth routes for guests
@@ -122,7 +117,9 @@ export const appRoutes: Route[] = [
                 {path: 'ecommerce', loadChildren: () => import('app/modules/admin/pages/planing/planing.module').then(m => m.PlaningModule)},
 
                 // Guides
-                // {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}
+                {path: 'general', loadChildren: () => import('app/modules/admin/pages/general-data-list/general.module').then(m => m.GeneralListModule)},
+                {path: 'history', loadChildren: () => import('app/modules/admin/pages/history-contractor/history-contractor.module').then(m => m.HistoryContractorModule)}
+
             ]},
 
             // 404 & Catch all

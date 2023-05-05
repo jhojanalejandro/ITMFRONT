@@ -25,7 +25,7 @@ export const environment = {
     UpdateContractorEndpoint: 'Contractor/Update',
     GetByContractorIdFolderEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
-    GetContractorByIdEndpoint: 'Contractor/ChargeAccountGetById',
+    // GetContractorByIdEndpoint: 'Contractor/ChargeAccountGetById',
     GetBillByContractIdEndpoint: 'Contractor/GetDataBill',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
@@ -33,6 +33,10 @@ export const environment = {
     AuthContractor: 'Contractor/Authenticate',
     GetContractsByContractors: 'Contractor/GetContractsByContractor/',
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
+    HistoryContractor: 'Contractor/GetHistoryContractor',
+    AddnewnessContractor: 'Contractor/AddNewNess',
+
+
 
     addFolderFileContractorEndpoint: 'FolderContractor/Add',
     UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
@@ -42,6 +46,7 @@ export const environment = {
     addProjectFolderEndpoint: 'ProjectFolder/Add',
     UpdateProjectFolderEndpoint: 'ProjectFolder/UpdateCost',
     GetAllProjectFolderEndpoint: 'ProjectFolder/GetAll',
+    GetAllProjectRegisteredEndpoint: 'ProjectFolder/GetProjectRegistered',
     UpdateStateProjectFolderEndpoint: 'ProjectFolder/UpdateState/',
 
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
@@ -92,6 +97,8 @@ export const environment = {
     geElementoById: 'ElementosComponente/GetById/',
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
+    GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
+
 
 };
 

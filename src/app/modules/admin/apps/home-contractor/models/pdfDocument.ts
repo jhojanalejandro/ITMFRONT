@@ -4,9 +4,11 @@ export interface ExecutionReport{
     contractNumber: string;
     elementObject: string;
     totalValue: string;
-    contractInitialDate: string;
+    contractInitialDate: Date;
+    contractFinalDate: Date;
     supervisorContract: string;
-    periodExecuted: string;
+    periodExecutedInitialDate: string;
+    periodExecutedFinalDate: string;
     specificObligations: string;
     totalValuePeriod: string;
 }
@@ -14,17 +16,17 @@ export interface ExecutionReport{
 export interface ChargeAccount{
     contractorName: string;
     contractorIdentification: string;
-    expeditionDate: string;
+    expeditionIdentification: string;
     phoneNumber: string;
     contractNumber: string;
     direction: string;
     elementName: string;
-    contractName: string;
     totalValue: string;
-    periodExecuted: string;
+    periodExecutedInitialDate: string;
+    periodExecutedFinalDate: string;
     accountNumber: string;
-    chargeAccountNumber: string;
+    bankingEntity: string;
     typeAccount: string;
-    accountName: string;
-    agreement: string;
+    contractName: string;
+    chargeAccountNumber: string
 }

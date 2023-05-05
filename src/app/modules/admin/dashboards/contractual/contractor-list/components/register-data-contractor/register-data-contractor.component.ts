@@ -6,13 +6,13 @@ import Swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IHiringData } from '../../../models/hiring-data';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { UploadDataService } from '../../../service/upload-data.service';
 import { EconomicContractor } from '../../../../nomina/models/economic-data-contractor';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 import { AsignmentData } from '../../../models/contractor';
 import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 
 
 @Component({
@@ -54,7 +54,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   constructor(
     private _uploadService: UploadDataService,
     private ref: ChangeDetectorRef,
-    private _economicService: EconomicChartService,
+    private _planingService: PlaningService,
     private _auth: AuthService,
     private _snackBar: MatSnackBar,
     public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
@@ -284,7 +284,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   private getComponent() {
-    this._economicService
+    this._planingService
       .getComponent(this.datos.contractId)
       .subscribe((response) => {
         this.componentes = response;
@@ -292,7 +292,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   private getComponentById(id: any) {
-    this._economicService
+    this._planingService
       .getComponentById(id)
       .subscribe((response) => {
         this.componente = response.nombreComponente;
@@ -300,7 +300,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   private getElementById(id: any) {
-    this._economicService
+    this._planingService
       .getElementoById(id)
       .subscribe((response) => {
         this.elemento = response.nombreElemento
@@ -311,7 +311,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     if (this.datos.idContractors.length == 0) {
       this.datos.idContractors[0] = this.datos.id
     }
-    this._economicService
+    this._planingService
       .getElementoComponente(this.componentselectId)
       .subscribe((response) => {
         this.elements = response;
@@ -322,7 +322,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       type: 'Componente',
       idContractor: this.datos.idContractors
     }
-    this._economicService.asignmentData(asignar).subscribe((response) => {
+    this._planingService.asignmentData(asignar).subscribe((response) => {
       if (response) {
         this.openSnackBar('Componente asignado al contartista', "Exitoso")
       }
@@ -341,7 +341,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     }
     let dataElement = this.elements.find(x => x.id === this.elementselectId);
     this.cantDayContract = dataElement.cantidadDias;
-    this._economicService.asignmentData(asignar).subscribe((response) => {
+    this._planingService.asignmentData(asignar).subscribe((response) => {
       if (response) {
         this.sendEconomicdataContractor();
       }
@@ -368,7 +368,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       };
       this.economicDataList.push(economicData);
     }
-    this._economicService.sendEconomicdataContractor(this.economicDataList).subscribe((response) => {
+    this._planingService.sendEconomicdataContractor(this.economicDataList).subscribe((response) => {
       if (response) {
         this.openSnackBar('Elemento asignado al contartista', "Exitoso")
       }
@@ -377,7 +377,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   private getHiring() {
-    this._economicService
+    this._planingService
       .getHiringDataById(this.datos.id, this.datos.contractId)
       .subscribe((response: IHiringData) => {
         if (response != null) {

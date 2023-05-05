@@ -42,11 +42,11 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.formFile = this._formBuilder.group({
-      motivo: new FormControl(null, Validators.required),
-      observation: new FormControl(null, Validators.required),
+      tipoNovedad: new FormControl(null, Validators.required),
+      descripcionNovedad: new FormControl(null, Validators.required),
     });
     this.filteredOptions =
-      this.formFile.controls.motivo.valueChanges.pipe(
+      this.formFile.controls.tipoNovedad.valueChanges.pipe(
         startWith(''),
         map((value) => this._filter(value || ''))
       );
@@ -102,7 +102,6 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
 
   UpdateNewnessContractor() {
     let detailFile: NewnessContractor = {
-      id: null,
       contractId:  this._data.contractId,
       contractorId: this._data.id,
       descripcionNovedad: this.formFile.value.descripcionNovedad,
