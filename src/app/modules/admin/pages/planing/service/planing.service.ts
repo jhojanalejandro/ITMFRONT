@@ -76,6 +76,9 @@ export class PlaningService {
             tap((response: any) => {
                 response.forEach(element => {
                     if(element.execution){
+                        if(element.valorContrato != null){
+                            element.valorContrato = (+element.valorContrato.toFixed(0)).toLocaleString();
+                        }
                         element.execution = "EN Ejecución"
                     }else{
                         element.execution = "EN Proceso"
@@ -174,5 +177,14 @@ export class PlaningService {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdHiringEndpoint;
         return this._httpClient.get<IHiringData>(urlEndpointGenerate, {params: params});
+    }
+
+    getDataMinuteExtension(contractId: any,contractorId: string) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('contractId', contractId);
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetPdMinteExtension;
+        return this._httpClient.get<any>(urlEndpointGenerate, {params});
     }
 }

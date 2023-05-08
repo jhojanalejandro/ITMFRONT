@@ -58,7 +58,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     this.userName = this._auth.accessName
     this.getContract();
   }
-  openDialog() {
+  uploadFile() {
     const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
       autoFocus: false,
       data: {

@@ -5,6 +5,7 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { IUserModel } from 'app/modules/auth/model/user-model';
+import { UserFirm } from 'app/modules/admin/pages/settings/models/setting.model';
 
 @Injectable()
 export class AuthService
@@ -291,4 +292,10 @@ export class AuthService
             })
         );
     }
+
+    UploadFileFirm(formdata: UserFirm) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addFileFirmEndpoint;
+         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
+
 }

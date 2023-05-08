@@ -151,7 +151,6 @@ export class GeneralListContractComponent
     private getContract(){
         this._generalService._projectList$
         .subscribe(response => {
-            debugger
             this.dataSource = new MatTableDataSource(
                 response
             );

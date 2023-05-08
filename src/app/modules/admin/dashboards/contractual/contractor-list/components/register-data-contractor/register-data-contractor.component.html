@@ -17,6 +17,14 @@
             
             <form [formGroup]="formContractor"
                 class="flex flex-col flex-0 items-start w-full p-4 sm:p-8 space-y-6 overflow-y-auto">
+                <div>
+                    <mat-form-field *ngIf="showToal" class="hiring" appearance="outline">
+                        <mat-label>Valor contrato</mat-label>
+                        <input type="text" id="caso" [value]="valorContrato" formControlName="caso"
+                            autocomplete="off" matInput placeholder="caso">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                    </mat-form-field>
+                </div>
                 <div class="nationality" >
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>{{componente}}</mat-label>
@@ -75,7 +83,7 @@
                     </mat-form-field>
                     <mat-form-field (click)="pickerIR.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Inicio Real</mat-label>
-                        <input matInput id="fechaInicioReal" [min]="registerDate" (dateChange)="dateChange($event)" autocomplete="off"
+                        <input matInput id="fechaInicioReal" [min]="detalleContrat.fechaContrato" (dateChange)="dateChange($event)" autocomplete="off"
                             [(ngModel)]="hinringData.fechaRealDeInicio" formControlName="fechaInicioReal"
                             [matDatepicker]="pickerIR">
                         <mat-datepicker #pickerIR></mat-datepicker>
@@ -86,7 +94,7 @@
                     </mat-form-field>
                     <mat-form-field (click)="pickerFCo.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Finalización Convenio</mat-label>
-                        <input matInput id="fechaFinalizacionConvenio" [min]="minDate" [max]="maxdate" autocomplete="off"
+                        <input matInput id="fechaFinalizacionConvenio" (dateChange)="dateChangeFinal($event)" [min]="minDate" [max]="detalleContrat.fechaFinalizacion" autocomplete="off"
                             [(ngModel)]="hinringData.fechaFinalizacionConvenio"
                             formControlName="fechaFinalizacionConvenio" [matDatepicker]="pickerFCo">
                         <mat-datepicker #pickerFCo></mat-datepicker>
@@ -167,7 +175,7 @@
                 <div class="nationality">
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>{{supervisor}}</mat-label>
-                        <mat-select  [(ngModel)]="hinringData.supervisorItm" [formControlName]="'supervisorItm'" name="supervisorItm">
+                        <mat-select  [(ngModel)]="hinringData.supervisorItm" placeholder="Selccionar Supervisor" [formControlName]="'supervisorItm'" name="supervisorItm">
                             <mat-option *ngFor="let admin of userList" [value]="admin.id">
                                 {{admin.userName}}
                             </mat-option>
@@ -179,7 +187,7 @@
                     </mat-form-field>
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>{{nivel}}</mat-label>
-                        <mat-select [(ngModel)]="hinringData.nivel" [formControlName]="'nivel'" name="nivel">
+                        <mat-select [(ngModel)]="hinringData.nivel" placeholder="Nivel ARL" [formControlName]="'nivel'" name="nivel">
                             <mat-option *ngFor="let nivel of niveles" [value]="nivel.viewValue">
                                 {{nivel.viewValue}}
                             </mat-option>

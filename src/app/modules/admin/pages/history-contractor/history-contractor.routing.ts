@@ -8,16 +8,16 @@ import { ServingComponent } from './components/serving/serving';
 
 export const historyContractorRoutes: Route[] = [
     {
-        path     : '',
+        path     : ':contractorId',
         component: HistoryContractorComponent,
         children : [
             {
                 path      : '',
                 pathMatch : 'full',
-                redirectTo: 'options'
+                redirectTo: 'opcion'
             },
             {
-                path    : 'options',
+                path    : 'opcion',
                 children: [
                     {
                         path      : '',

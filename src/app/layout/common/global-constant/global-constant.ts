@@ -41,6 +41,7 @@ export class GlobalConst {
         },
 
     ];
+
     public static nomina: TypeSelectString[]=[
         { viewValue: 'pago efectivo'},
         { viewValue: 'no pagado'}, 
@@ -60,6 +61,9 @@ export class GlobalConst {
         { viewValue: 'Ampliación'}, 
         { viewValue: 'Modificación'},
         { viewValue: 'Adición y Ampliación'},
+        { viewValue: 'Adición, Ampliación, Modificacion'},
+        { viewValue: 'Ampliación y Modificacion'},
+        { viewValue: 'Adición y Modificacion'},
 
 
     ] 
@@ -126,6 +130,9 @@ export class GlobalConst {
         { viewValue: 'Supervisor'}, 
         { viewValue: 'Nomina'}, 
         { viewValue: 'Planeación'}, 
+        { viewValue: 'Juridico'}, 
+        { viewValue: 'Comite'}, 
+
     ] 
     public static TipoUsuario: TypeSelectString[]=[
         { viewValue: 'Contractual'},
@@ -291,6 +298,30 @@ export class GlobalConst {
             return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
     };
 
+    
+    public static transformDate(value: string): string {
+        const meses = [
+            'enero',
+            'febrero',
+            'marzo',
+            'abril',
+            'mayo',
+            'junio',
+            'julio',
+            'agosto',
+            'septiembre',
+            'octubre',
+            'noviembre',
+            'diciembre'
+        ];
+
+        const fecha = new Date(value);
+        const dia = fecha.getDate();
+        const mes = meses[fecha.getMonth()];
+        const año = fecha.getFullYear();
+
+        return `${dia} de ${mes} del ${año}`;
+    }
     public static tipoNovedad: TypeSelectString[]=[
         { viewValue: 'Despido'},
         { viewValue: 'Renuncia'}, 

@@ -51,7 +51,8 @@ export const environment = {
 
     GetByIdProjectFolderEndpoint: 'ProjectFolder/GetById/',
     DeleteProjectFolderEndpoint: 'ProjectFolder/Delete',
-    GetByIdDetailEndpoint: 'ProjectFolder/GetByIdDetail',
+    GetByIdDetailListEndpoint: 'ProjectFolder/GetByIdDetailList',
+    GetByIdDetailByIdEndpoint: 'ProjectFolder/GetByIdDetail',
     addContractorPaymentsEndpoint: 'ContractorPayments/Add',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
@@ -70,6 +71,7 @@ export const environment = {
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
+
 
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete',
@@ -98,6 +100,10 @@ export const environment = {
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
     GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
+    GetPdMinteExtension: 'PdfData/ChargeAccountGetById',
+
+
+    addFileFirmEndpoint: 'UserFirm/SaveFirm',
 
 
 };

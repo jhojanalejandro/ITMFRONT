@@ -117,7 +117,7 @@ export class RegisterProjectFolderComponent implements OnInit {
         fechaContrato: this.formProject.value.fechaContrato,
         fechaFinalizacion: this.formProject.value.fechaFinalizacion,
         adicion: false,
-        tipoContrato: '',
+        tipoContrato: 'Inicial',
         idContrato: null,
         update: this.formProject.value.updateData
       }

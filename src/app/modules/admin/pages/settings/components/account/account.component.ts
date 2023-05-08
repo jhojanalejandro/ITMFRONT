@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IUserModel } from 'app/modules/auth/model/user-model';
 import { Subject, takeUntil } from 'rxjs';
+import { UploadFirmComponent } from '../upload-firm/upload-firm.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'settings-account',
@@ -23,7 +25,9 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
 
     constructor(
         private _formBuilder: FormBuilder,
-        private _authService: AuthService
+        private _authService: AuthService,
+        private _matDialog: MatDialog,
+
     ) { 
 
     }
@@ -77,6 +81,18 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
                 }
             );
     }
+    uploadFile() {
+        const dialogRef = this._matDialog.open(UploadFirmComponent, {
+          autoFocus: false,
+        });
+        dialogRef.afterClosed()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((result) => {
+          if (result) {
+            // this.getDataContractor(this.id);
+          }
+        });
+      }
     ngAfterViewInit(): void {
         this._authService.getUser()
         .subscribe((data: IUserModel) => {

@@ -289,7 +289,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         });
     }
     getDateAdiction() {
-        this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.idContrato, true);
+        this.dateAdiction$ = this._genericService.getDetalleContratoList(this._data.idContrato, true);
     }
     onChange(event) {
         this.totalV = Number(this.elementForm.value.totalValue.replace(/,/g, ""));

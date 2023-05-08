@@ -64,7 +64,7 @@
                                     {{element[columna.name]}}</p>
                                 <p
                                     *ngIf="element[columna.name]== element.valorContrato && element[columna.name]!= element.contractorsCant">
-                                    {{element[columna.name] | currency}}
+                                    {{element[columna.name]}}
                                 </p>
 
                                 <p *ngIf="columna.name=='action' && !showcontracts">

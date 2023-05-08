@@ -60,16 +60,16 @@ export interface Elements{
     idComponente: string;
     cantidadContratistas: number;
     cantidadDias: number;
-    valorUnidad: number;
-    valorTotal: number;
-    valorPorDia: number;
+    valorUnidad: any;
+    valorTotal: any;
+    valorPorDia: any;
     valorTotalContratista: number;
     valorPorDiaContratista: number;
     cpc: string;
     nombreCpc: string;
     modificacion: boolean;
     tipoElemento: string;
-    recursos: number; 
+    recursos: any; 
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
@@ -84,9 +84,8 @@ export interface ListElements{
 export interface DetalleContrato{
 	id?: any,
 	idcontrato: any,
-	fechaContrato: Date,
-	fechaFinalizacion: Date,
-	modificacion: boolean,
+	fechaContrato: string,
+	fechaFinalizacion: string,
 	tipoContrato: string  
 }
 

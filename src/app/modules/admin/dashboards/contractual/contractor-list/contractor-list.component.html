@@ -6,6 +6,8 @@
                 <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                 <span class="ml-2">Volver</span>
             </a>
+            <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+              {{contractname}}!</div>
 
         </div>
         <div class="mt-4 sm:mt-0">
@@ -19,7 +21,7 @@
             <button (click)="registrarDatosContratacion(null)" class="ml-3" mat-flat-button [color]="'primary'"
                 [matTooltip]="'Shortcut: Ctrl + /'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Agregar Datos</span>
+                <span class="ml-2 mr-1">Guardar Datos</span>
             </button>
         </div>
     </div>
@@ -95,7 +97,7 @@
                                         {{element[columna.name]}}
                                     </p>
                                     <p *ngIf="element[columna.name]== element.fechaNacimiento">
-                                        {{element[columna.name] | date}}
+                                        {{element[columna.name] | date:'dd/MM/yyyy'}}
                                     </p>
                                     <span *ngIf="element[columna.name]== element.habilitado;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"

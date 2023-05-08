@@ -9,22 +9,17 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
-    FormBuilder,
     FormControl,
-    FormGroup,
-    Validators,
 } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import {
-    Observable,
-    Subject, takeUntil,
+    Subject,
 } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -111,7 +106,7 @@ export class GeneralListContractorsComponent
     }
 
     addComponent(data: any) {
-        this._router.navigate(["/docs/history/options/contratos/" + data.id]);
+        this._router.navigate(["/docs/history/"+data.id+"/opcion/contratos/" + data.id]);
     }
 
     /**

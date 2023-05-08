@@ -33,33 +33,33 @@ export class HistoryContractorComponent implements OnInit, OnDestroy
         this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
         this.menuData = [
             {
-                id      : 'opctions',
+                id      : 'opcion',
                 title   : 'Historial',
                 type    : 'group',
                 children: [
                     {
-                        id   : 'opctions.contratos',
+                        id   : 'opcion.contratos',
                         title: 'Contratos Asociados',
                         type : 'basic',
-                        link : '/docs/history/opctions/contratos/'+this.contractorId
+                        link : '/docs/history/lista/opcion/contratos/'+this.contractorId
                     },
                     {
-                        id   : 'opctions.pagos',
+                        id   : 'opcion.pagos',
                         title: 'Pagos Efectuados',
                         type : 'basic',
-                        link : '/docs/history/opctions/pagos/'+this.contractorId
+                        link : '/docs/history/lista/opcion/pagos/'+this.contractorId
                     },
                     {
-                        id   : 'opctions.datos-contratacion',
+                        id   : 'opcion.datos-contratacion',
                         title: 'Datos Registrados',
                         type : 'basic',
-                        link : '/docs/history/opctions/datos-contratacion/'+this.contractorId
+                        link : '/docs/history/lista/opcion/datos-contratacion/'+this.contractorId
                     },
                     {
-                        id   : 'opctions.serving',
+                        id   : 'optcion.serving',
                         title: 'Serving',
                         type : 'basic',
-                        link : '/docs/history/opctions/serving/'+this.contractorId
+                        link : '/docs/history/lista/opcion/serving/'+this.contractorId
                     }
                 ]
             }

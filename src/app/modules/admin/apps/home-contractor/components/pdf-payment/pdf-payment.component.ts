@@ -89,7 +89,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         });
     }
     private downloadPDFChargeAccount() {
-        debugger
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd'); 
         this.validateValuesPDFChargeAccount();
 
@@ -785,7 +784,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
 
 
     private calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
-        debugger
         let fechaInicios = new Date(fechaInicio);
         let fechaFins = new Date(fechaFin);
         const diferencia = fechaFins.getTime() - fechaInicios.getTime();

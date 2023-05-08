@@ -37,11 +37,11 @@ export class AddComponentsComponent implements OnInit {
     activities: Activity[] = [];
     id: string = null;
     configForm: FormGroup;
-    subTotal: number = 0;
-    total: number = 0;
+    subTotal: any = 0;
+    total: any = 0;
     contractorCant: number = 0;
     elementosCant: number = 0;
-    gastosOperativos: number = 0;
+    gastosOperativos: any = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
     totalCalculado: number = 0;
@@ -114,6 +114,10 @@ export class AddComponentsComponent implements OnInit {
         });
         this.gastosOperativos = this.subTotal * 0.08;
         this.total = this.gastosOperativos + this.subTotal;
+        this.gastosOperativos = (+this.gastosOperativos.toFixed(0)).toLocaleString();
+        this.total = (+this.total.toFixed(0)).toLocaleString()
+        this.subTotal = (+this.subTotal.toFixed(0)).toLocaleString();
+
     }
 
     openDialog(): void {

@@ -11,9 +11,10 @@ import { EconomicContractor } from '../../../../nomina/models/economic-data-cont
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject, takeUntil } from 'rxjs';
 import { AsignmentData } from '../../../models/contractor';
-import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { DetalleContrato, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
-
+import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 
 @Component({
   selector: 'app-register-contractor',
@@ -49,10 +50,20 @@ export class ContractorDataRegisterComponent implements OnInit {
   showAlert: boolean = false;
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
+  valorContrato: any;
+  showToal: boolean = false;
   formContractor: FormGroup;
   hinringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
+  private readonly _unsubscribe$ = new Subject<void>();
+  detalleContrat: DetalleContrato = {
+    idcontrato: null,
+    fechaContrato: null,
+    fechaFinalizacion: null,
+    tipoContrato: null,
+  };
   constructor(
     private _uploadService: UploadDataService,
+    private _genericService: GenericService,
     private ref: ChangeDetectorRef,
     private _planingService: PlaningService,
     private _auth: AuthService,
@@ -65,7 +76,7 @@ export class ContractorDataRegisterComponent implements OnInit {
       this.shareData = true;
       if (this.datos.elementId != null && this.datos.elementId != null && this.datos.idContractors.length == 0) {
         this.getElementById(this.datos.elementId);
-        this.getComponentById(this.datos.componenteId);
+        this.getComponentById(this.datos.componentId);
       }
     } else if (this.datos.idContractors.length == 0) {
       Swal.fire(
@@ -109,25 +120,56 @@ export class ContractorDataRegisterComponent implements OnInit {
       caso: new FormControl(null),
     });
     this.getAdmins();
+    this.getDetailProject();
   }
   async addDataHiring() {
-    if (this.formContractor.value.requierePoliza == 'si') {
-      this.formContractor.value.requierePoliza = true;
-    } else {
-      this.formContractor.value.requierePoliza = false;
-    }
-    let dataAdmin = this.userList.find(x => x.id === this.formContractor.value.supervisorItm);
-    if (this.formContractor.value.cuentabancaria == null) {
-      this.formContractor.value.cuentabancaria = '0'
-    }
-    if (this.formContractor.value.nivel == null) {
-      this.formContractor.value.nivel = '0'
-    }
-    if (this.datos.idContractors.length > 0) {
-      for (let index = 0; index < this.datos.idContractors.length; index++) {
-        this.hiringDataList.push({
+    let response = this.sendEconomicdataContractor();
+    if(response){
+      if (this.formContractor.value.requierePoliza == 'si') {
+        this.formContractor.value.requierePoliza = true;
+      } else {
+        this.formContractor.value.requierePoliza = false;
+      }
+      let dataAdmin = this.userList.find(x => x.id === this.formContractor.value.supervisorItm);
+      if (this.formContractor.value.cuentabancaria == null) {
+        this.formContractor.value.cuentabancaria = '0'
+      }
+      if (this.formContractor.value.nivel == null) {
+        this.formContractor.value.nivel = '0'
+      }
+      if (this.datos.idContractors.length > 0) {
+        for (let index = 0; index < this.datos.idContractors.length; index++) {
+          this.hiringDataList.push({
+            userId: this._auth.accessId,
+            contractorId: this.datos.idContractors[index],
+            contractId: this.datos.contractId,
+            contrato: 'vacio',
+            compromiso: 'vacio',
+            fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
+            numeroActa: this.formContractor.value.numeroActa,
+            fechaDeComite: this.formContractor.value.fechaComite,
+            requierePoliza: this.formContractor.value.requierePoliza,
+            noPoliza: this.formContractor.value.noPoliza,
+            vigenciaInicial: this.formContractor.value.vigenciaInicial,
+            vigenciaFinal: this.formContractor.value.vigenciaFinal,
+            fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
+            valorAsegurado: Number(this.formContractor.value.valorAsegurado),
+            fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
+            nivel: Number(this.formContractor.value.nivel),
+            supervisorItm: dataAdmin.userName,
+            cargoSupervisorItm: dataAdmin.professionalposition,
+            identificacionSupervisor: dataAdmin.identification,
+            fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
+            actaComite: 'vacio',
+            cdp: this.formContractor.value.cdp,
+            caso: this.formContractor.value.caso
+  
+          });
+        }
+      } else {
+        this.hiringDataList = [{
           userId: this._auth.accessId,
-          contractorId: this.datos.idContractors[index],
+          contractorId: this.datos.id,
           contractId: this.datos.contractId,
           contrato: 'vacio',
           compromiso: 'vacio',
@@ -143,17 +185,68 @@ export class ContractorDataRegisterComponent implements OnInit {
           fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
           nivel: Number(this.formContractor.value.nivel),
           supervisorItm: dataAdmin.userName,
-          cargoSupervisorItm: dataAdmin.professionalposition,
-          identificacionSupervisor: dataAdmin.identification,
+          cargoSupervisorItm: dataAdmin.Professionalposition,
+          identificacionSupervisor: dataAdmin.identificacionSupervisor,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
           cdp: this.formContractor.value.cdp,
           caso: this.formContractor.value.caso
-
-        });
+        }];
       }
-    } else {
-      this.hiringDataList = [{
+      this._uploadService
+        .addHiringContractor(this.hiringDataList)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((res) => {
+          if (res) {
+  
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Información Registrada Exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+            this.ref.detectChanges();
+            this.ref.markForCheck();
+            this.matDialogRef.close(true);
+          }
+        }, (response) => {
+          this.formContractor.enable();
+          // Set the alert
+          this.alert = {
+            type: 'error',
+            message: 'ERROR EN LA INFORMACION'
+          };
+          console.log(response);
+  
+          Swal.fire('Error', 'Información no Registrada!', 'error');
+          this.showAlert = true;
+        });
+    }else{
+      Swal.fire('Error', 'Información Economica Presento un error!', 'error');
+
+    }
+
+    this.hiringDataList = [];
+  }
+
+  async updateContractor() {
+    let response = this.sendEconomicdataContractor();
+    if(response){
+      if (this.formContractor.value.requierePoliza == 'si') {
+        this.formContractor.value.requierePoliza = true;
+      } else {
+        this.formContractor.value.requierePoliza = false;
+      }
+      if (this.formContractor.value.cuentabancaria == null) {
+        this.formContractor.value.cuentabancaria = '0'
+      }
+      if (this.formContractor.value.nivel == null) {
+        this.formContractor.value.nivel = '0'
+      }
+      let dataAdmin = this.userList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
+      const registerContractor: IHiringData[] = [{
         userId: this._auth.accessId,
         contractorId: this.datos.id,
         contractId: this.datos.contractId,
@@ -171,112 +264,46 @@ export class ContractorDataRegisterComponent implements OnInit {
         fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
         nivel: Number(this.formContractor.value.nivel),
         supervisorItm: dataAdmin.userName,
-        cargoSupervisorItm: dataAdmin.Professionalposition,
-        identificacionSupervisor: dataAdmin.identificacionSupervisor,
+        cargoSupervisorItm: dataAdmin.professionalposition,
+        identificacionSupervisor: dataAdmin.identification,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         actaComite: 'vacio',
         cdp: this.formContractor.value.cdp,
         caso: this.formContractor.value.caso
+  
       }];
-    }
-    this._uploadService
-      .addHiringContractor(this.hiringDataList)
-      .subscribe((res) => {
-        if (res) {
-
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Información Registrada Exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
+      this._uploadService
+        .addHiringContractor(registerContractor)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((res) => {
+          if (res) {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Información actualizada Exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+            this.ref.detectChanges();
+            this.ref.markForCheck();
+            this.matDialogRef.close(true);
+          }
+  
+        },
+          (response) => {
+            this.formContractor.enable();
+            // Set the alert
+            console.log(response);
+  
+            Swal.fire('Error', 'Información no Actualizada!', 'error');
+            // Show the alert
+            this.showAlert = true;
           });
-          this.ref.detectChanges();
-          this.ref.markForCheck();
-          this.matDialogRef.close(true);
-        }
-      }, (response) => {
-        this.formContractor.enable();
-        // Set the alert
-        this.alert = {
-          type: 'error',
-          message: 'ERROR EN LA INFORMACION'
-        };
-        console.log(response);
-
-        Swal.fire('Error', 'Información no Registrada!', 'error');
-        this.showAlert = true;
-      });
-    this.hiringDataList = [];
-  }
-
-  async updateContractor() {
-    if (this.formContractor.value.requierePoliza == 'si') {
-      this.formContractor.value.requierePoliza = true;
-    } else {
-      this.formContractor.value.requierePoliza = false;
+    }else{
+      Swal.fire('Error', 'Información Economica Presento un error!', 'error');
     }
-    if (this.formContractor.value.cuentabancaria == null) {
-      this.formContractor.value.cuentabancaria = '0'
-    }
-    if (this.formContractor.value.nivel == null) {
-      this.formContractor.value.nivel = '0'
-    }
-    let dataAdmin = this.userList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
-    const registerContractor: IHiringData[] = [{
-      userId: this._auth.accessId,
-      contractorId: this.datos.id,
-      contractId: this.datos.contractId,
-      contrato: 'vacio',
-      compromiso: 'vacio',
-      fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
-      numeroActa: this.formContractor.value.numeroActa,
-      fechaDeComite: this.formContractor.value.fechaComite,
-      requierePoliza: this.formContractor.value.requierePoliza,
-      noPoliza: this.formContractor.value.noPoliza,
-      vigenciaInicial: this.formContractor.value.vigenciaInicial,
-      vigenciaFinal: this.formContractor.value.vigenciaFinal,
-      fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
-      valorAsegurado: Number(this.formContractor.value.valorAsegurado),
-      fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
-      nivel: Number(this.formContractor.value.nivel),
-      supervisorItm: dataAdmin.userName,
-      cargoSupervisorItm: dataAdmin.professionalposition,
-      identificacionSupervisor: dataAdmin.identification,
-      fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-      actaComite: 'vacio',
-      cdp: this.formContractor.value.cdp,
-      caso: this.formContractor.value.caso
-
-    }];
-    this._uploadService
-      .addHiringContractor(registerContractor)
-      .subscribe((res) => {
-        if (res) {
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Información actualizada Exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          this.ref.detectChanges();
-          this.ref.markForCheck();
-          this.matDialogRef.close(true);
-        }
-
-      },
-        (response) => {
-          this.formContractor.enable();
-          // Set the alert
-          console.log(response);
-
-          Swal.fire('Error', 'Información no Actualizada!', 'error');
-          // Show the alert
-          this.showAlert = true;
-        });
+    
   }
 
   cerrar(): void {
@@ -286,6 +313,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   private getComponent() {
     this._planingService
       .getComponent(this.datos.contractId)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         this.componentes = response;
       });
@@ -294,6 +322,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   private getComponentById(id: any) {
     this._planingService
       .getComponentById(id)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         this.componente = response.nombreComponente;
       });
@@ -302,6 +331,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   private getElementById(id: any) {
     this._planingService
       .getElementoById(id)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         this.elemento = response.nombreElemento
         this.cantDayContract = response.cantidadDias
@@ -313,6 +343,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     }
     this._planingService
       .getElementoComponente(this.componentselectId)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         this.elements = response;
       });
@@ -341,44 +372,55 @@ export class ContractorDataRegisterComponent implements OnInit {
     }
     let dataElement = this.elements.find(x => x.id === this.elementselectId);
     this.cantDayContract = dataElement.cantidadDias;
-    this._planingService.asignmentData(asignar).subscribe((response) => {
-      if (response) {
-        this.sendEconomicdataContractor();
-      }
-    })
+    this._planingService.asignmentData(asignar)
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe(resp => {
+        if(resp && this.formContractor.value.fechaFinalizacionConvenio != null){
+          this.calculateContratcValue();
+        }
+      });
   }
 
   sendEconomicdataContractor() {
-    let element: Elements = this.elements.find(item => item.id === this.elementselectId);
+    if(this.elementselectId != null){
+      let element: Elements = this.elements.find(item => item.id === this.elementselectId);
 
-    for (let index = 0; index < this.datos.idContractors.length; index++) {
-      let economicData: EconomicContractor = {
-        contractorId: this.datos.idContractors[index],
-        contractId: this.datos.contractId,
-        userId: this._auth.accessId,
-        registerDate: this.registerDate,
-        totalValue: element.valorTotalContratista,
-        unitValue: element.valorUnidad,
-        totalPaidMonth: element.valorUnidad,
-        cashPayment: false,
-        missing: 0,
-        debt: element.valorTotalContratista,
-        modifyDate: this.registerDate,
-        freed: 0,
-      };
-      this.economicDataList.push(economicData);
-    }
-    this._planingService.sendEconomicdataContractor(this.economicDataList).subscribe((response) => {
-      if (response) {
-        this.openSnackBar('Elemento asignado al contartista', "Exitoso")
+      for (let index = 0; index < this.datos.idContractors.length; index++) {
+        let economicData: EconomicContractor = {
+          contractorId: this.datos.idContractors[index],
+          contractId: this.datos.contractId,
+          userId: this._auth.accessId,
+          registerDate: this.registerDate,
+          totalValue: this.valorContrato,
+          unitValue: element.valorUnidad,
+          totalPaidMonth: element.valorUnidad,
+          cashPayment: false,
+          missing: 0,
+          debt: this.valorContrato,
+          modifyDate: this.registerDate,
+          freed: 0,
+        };
+        this.economicDataList.push(economicData);
       }
-    })
-    this.economicDataList = [];
+      this._planingService.sendEconomicdataContractor(this.economicDataList)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((response) => {
+          if (response) {
+            this.openSnackBar('Elemento asignado al contartista', "Exitoso")
+            return true;
+          }else{
+            return false;
+          }
+        })
+      this.economicDataList = [];
+    }
+    return false;
   }
 
   private getHiring() {
     this._planingService
       .getHiringDataById(this.datos.id, this.datos.contractId)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response: IHiringData) => {
         if (response != null) {
           this.update = true;
@@ -404,8 +446,8 @@ export class ContractorDataRegisterComponent implements OnInit {
         this.userList = teams;
       });
   }
-  dateChange(event) {
 
+  dateChange(event) {
     this.minDate = event.value;
     var date2: any = new Date(this.minDate);
     let day = this.cantDayContract * 24;
@@ -418,5 +460,62 @@ export class ContractorDataRegisterComponent implements OnInit {
     this._snackBar.open(message, action, {
       duration: this.durationInSeconds * 1000,
     });
+  }
+
+  dateChangeFinal(event) {
+    this.ref.markForCheck();
+    this.calculateContratcValue();
+  }
+
+  private getDetailProject() {
+    this._genericService.getDetalleContratoById(this.datos.contractId, true)
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((response) => {
+        if (response) {
+          debugger
+          this.detalleContrat = response;
+        }
+      })
+  }
+  calculateDaysBetweenDates(startDate: Date, endDate: Date): number {
+    let dateInitial = new Date(startDate);
+    let dateFinal = new Date(endDate);
+    let restarDias = this.obtenerMesesCon31Dias(dateInitial, dateFinal);
+    debugger
+    const oneDay = 24 * 60 * 60 * 1000; // Cantidad de milisegundos en un día
+    const startTime = dateInitial.getTime();
+    const endTime = dateFinal.getTime();
+    const diffDays = Math.round(Math.abs((endTime - startTime) / oneDay));
+    return diffDays - restarDias;
+  }
+
+  obtenerMesesCon31Dias(fechaInicio: Date, fechaFin: Date): number {
+    let dias = 0;
+  
+    const mesesEnIntervalo = eachMonthOfInterval({ start: fechaInicio, end: fechaFin });
+  
+    for (const mes of mesesEnIntervalo) {
+      const diasEnMes = getDaysInMonth(mes);
+  
+      if (diasEnMes === 31) {
+        dias++;
+      }
+    }
+  
+    return dias;
+  }
+
+  calculateContratcValue(){
+    let element: Elements = this.elements.find(item => item.id === this.elementselectId);
+    let cantidadDias = this.calculateDaysBetweenDates( this.minDate, this.formContractor.value.fechaFinalizacionConvenio);
+    this.valorContrato = element.valorPorDiaContratista * cantidadDias;
+    this.valorContrato = (+this.valorContrato.toFixed(0)).toLocaleString();
+    this.showToal = true;
+    debugger
+  }
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
   }
 }

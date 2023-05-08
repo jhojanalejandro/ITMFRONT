@@ -26,7 +26,7 @@
                             El Campo empresa es requerido
                         </mat-error>
                     </mat-form-field>
-    
+
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Nombre projecto</mat-label>
                         <input type="text" id="projectName" formControlName="projectName" autocomplete="off" matInput
@@ -65,19 +65,19 @@
                         <mat-error *ngIf="formProject.get('rubro').hasError('required')">
                             El Campo Proyecto es requerido
                         </mat-error>
-                    </mat-form-field>             
+                    </mat-form-field>
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Nombre Rubro</mat-label>
-                        <input type="text" id="nombreRubro"
-                            formControlName="nombreRubro" autocomplete="off" matInput placeholder="Nombre Rubro">
+                        <input type="text" id="nombreRubro" formControlName="nombreRubro" autocomplete="off" matInput
+                            placeholder="Nombre Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="folder pt-2">
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Numero Contrato</mat-label>
-                        <input type="text" id="numberProject" formControlName="numberProject" autocomplete="off" matInput
-                            placeholder="Numero Contrato">
+                        <input type="text" id="numberProject" formControlName="numberProject" autocomplete="off"
+                            matInput placeholder="Numero Contrato">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                         <mat-error *ngIf="formProject.get('numberProject').hasError('required')">
                             Este campo es requerido
@@ -104,12 +104,12 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-    
+
                 <div class="folder">
                     <mat-form-field *ngIf="editData" class="hiring" appearance="outline">
                         <mat-label>Tipo Modificacion</mat-label>
-                        <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion" 
-                        (selectionChange)="changeEdit()">
+                        <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion"
+                            (selectionChange)="changeEdit()">
                             <mat-option *ngFor="let modifica of tipoModificacion" [value]="modifica.viewValue">
                                 {{modifica.viewValue}}
                             </mat-option>
@@ -140,9 +140,9 @@
                             El Campo no Adicion es requerido
                         </mat-error>
                     </mat-form-field>
-    
+
                 </div>
-    
+
                 <div class="folder">
                     <mat-form-field *ngIf="editData" (click)="pickerIA.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Inicio Ampliacion</mat-label>
@@ -165,12 +165,12 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-    
+
                 <div class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
-                        <mat-label>Descripcion</mat-label>
+                        <mat-label>Objeto Convenio</mat-label>
                         <textarea type="text" class="example-full-width" id="description" formControlName="description"
-                            autocomplete="off" matInput placeholder="Descripcion"></textarea>
+                            autocomplete="off" matInput placeholder="Objeto"></textarea>
                         <mat-error *ngIf="formProject.get('description').hasError('required')">
                             El Campo Descripcion es requerido
                         </mat-error>
@@ -178,12 +178,12 @@
                 </div>
             </form>
         </mat-dialog-content>
-        <mat-dialog-actions  align="end">
-            <button mat-flat-button color="warn"  class="m-2" type="button" [mat-dialog-close]="true">Cancelar</button>
+        <mat-dialog-actions align="end">
+            <button mat-flat-button color="warn" class="m-2" type="button" [mat-dialog-close]="true">Cancelar</button>
             <button class="m-2" mat-flat-button [color]="'primary'" color="primary" *ngIf="editData"
                 (click)="editProjectFolder()">Editar</button>
             <button class="m-2" mat-flat-button [color]="'primary'" type="submit" [disabled]="formProject .disabled"
-                *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Aceptar</button>
+                *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Guardar</button>
         </mat-dialog-actions>
     </div>
 </div>

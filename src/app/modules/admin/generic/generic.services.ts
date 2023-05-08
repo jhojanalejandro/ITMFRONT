@@ -53,14 +53,25 @@ export class GenericService {
         );
     }
 
-    getDetalleContrato(id: any, tipo: boolean): Observable<DetalleContrato[]> {
+    getDetalleContratoList(id: any, tipo: boolean): Observable<DetalleContrato[]> {
         const params = new HttpParams()
             .set('id', id)
             .set('tipoConsulta', tipo);
 
         let urlEndpointGenerate =
-            this.apiUrl + environment.GetByIdDetailEndpoint;
+            this.apiUrl + environment.GetByIdDetailListEndpoint;
         return this._httpClient.get<DetalleContrato[]>(urlEndpointGenerate, { params: params }
+        );
+    }
+
+    getDetalleContratoById(id: any, tipo: boolean): Observable<DetalleContrato> {
+        const params = new HttpParams()
+            .set('id', id)
+            .set('tipoConsulta', tipo);
+
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetByIdDetailByIdEndpoint;
+        return this._httpClient.get<DetalleContrato>(urlEndpointGenerate, { params: params }
         );
     }
 

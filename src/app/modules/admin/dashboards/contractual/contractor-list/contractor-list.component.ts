@@ -20,6 +20,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ContractContractors } from '../models/contractor';
 import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -55,12 +56,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   idSelected: string[]= [];
+  contractname: string;
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'habilitado', 'proccess', 'fechaNacimiento', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
   visibleOption: boolean = false;
+  datePipe: DatePipe
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private readonly _unsubscribe$ = new Subject<void>();
 
@@ -75,6 +78,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder,
   ) {
     this.getDataContractor();
+    this.datePipe = new DatePipe('es');
+
   }
   columnas = [
     { title: 'NOMBRE', name: 'nombre' },
@@ -93,6 +98,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.userName = this.auth.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
+    this.contractname = this.router.snapshot.paramMap.get('contractname') || 'null';
     this.configForm = this._formBuilder.group({
       title: 'Eliminar Registro',
       message: '¿Estás seguro de que desea eliminar este contacto de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
@@ -213,7 +219,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         contractorId: element.id,
       }
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed()
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((result) => {
       if (result) {
         this.getDataContractor();
       }
@@ -242,7 +250,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       autoFocus: false,
       data: {
         idUser: this.auth.accessId,
-        data
+        data,
+        contract:this.contractId
       }
     });
     dialogModificacion.afterClosed()
@@ -254,6 +263,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       });
   }
   registrarDatosContratacion(data: any) {
+    debugger
     if (data == null) {
       data = { id: null, contractId: null, componenteId: null, elementId: null }
       this.selection.selected.forEach(element => {
@@ -267,7 +277,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         idUser: this.auth.accessId,
         contractId: this.contractId,
         id: data.id,
-        componenteId: data.componenteId,
+        componentId: data.componentId,
         elementId: data.elementId,
         idContractors: this.listId
       }

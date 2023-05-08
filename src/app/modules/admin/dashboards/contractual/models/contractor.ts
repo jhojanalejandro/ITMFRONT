@@ -16,51 +16,19 @@ export interface ContractContractors{
 
 export interface Contractor{
     id?: string;
-	tipoContratacion: string,
-	codigo: string,
-	convenio: string,
-	fechaInicio: string,
-	fechaFin: string,
 	nombre: string,
 	habilitado: string;
-	apellido: string,
 	identificacion: string,
 	lugarExpedicion: string,
-	tecnico?: string,
-	tecnologo?: string,
-	pregrado?: string,
-	especializacion?: string,
-	maestria?: string,
-	doctorado?: string,
-	genero?: string,
 	fechaNacimiento: Date,
-	nacionalidad?: string,
 	direccion: string,
-	departamento: string,
-	municipio?: string,
-	barrio?: string,
 	telefono: string,
 	celular: string,
 	correo: string,
-	tipoAdministradora?: string,
-	administradora?: string,
-	cuentaBancaria: string,
-	tipoCuenta: string,
-	entidadCuentaBancaria: string,
-	estado?: string,
 	userId?: string,
-	claveUsuario?: string,
-	contractId?: string,
-	fechaCreacion?: Date,
-	fechaActualizacion?: Date,
-	componenteId?: string,
-	elementId?: string,
-	objetoConvenio?: string,
-	unitValue: number;
-	company: string;
-	from: Date;
-	to: Date;
 	proccess: any;
+	elementId: string;
+	componentId: string;
 }
 
 

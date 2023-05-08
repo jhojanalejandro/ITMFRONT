@@ -12,7 +12,6 @@ import { ChargeAccount } from 'app/modules/admin/apps/home-contractor/models/pdf
 export class ContractorService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     private _contractorsByContract: BehaviorSubject<any> = new BehaviorSubject(null);
-
     apiUrl: any = environment.apiURL;
 
     constructor(private _httpClient: HttpClient) {
@@ -61,7 +60,6 @@ export class ContractorService {
     }
 
     sendmailsAccounts(data: any) {
-        debugger
         let urlEndpointGenerate = this.apiUrl + environment.sendMails;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
