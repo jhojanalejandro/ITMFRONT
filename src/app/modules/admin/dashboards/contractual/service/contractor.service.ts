@@ -81,6 +81,15 @@ export class ContractorService {
         return this._httpClient.get<ChargeAccount>(urlEndPoint, { params: params });
     }
 
+    
+    getFilesContractorByContractId(contractorId: string, contractId: string) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId )
+        .set('contractId', contractId)
+        let urlEndPoint = this.apiUrl + environment.GetAllFileByContractEndpoint;
+        return this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+    }
+
     getContractorByContract(contractorId: string) {
         let urlEndPoint = this.apiUrl + environment.GetContractsByContractors;
         return this._httpClient.get<any>(urlEndPoint + contractorId);

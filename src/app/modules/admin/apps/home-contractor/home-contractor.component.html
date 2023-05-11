@@ -1,142 +1,186 @@
 <div class="flex flex-col flex-auto min-w-0">
-    <!-- Header -->
     <div class="flex flex-col shadow bg-card">
-
-        <!-- Cover image -->
         <div>
-            <img class="h-40 lg:h-120 object-cover" src="../../../../../assets/images/flags/firmarPaper.jpg"
+            <img class="h-40 lg:h-80 object-cover" src="../../../../../assets/images/flags/firmarPaper.jpg"
                 alt="Cover image">
         </div>
-
-        <!-- User info -->
         <div class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
-
-            <!-- Avatar -->
             <div class="-mt-26 lg:-mt-22 rounded-full">
-                <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/flags/user.png"
+                <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/flags/userProfile.jpg"
                     alt="User avatar">
             </div>
-
-            <!-- Details -->
             <div class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-8">
                 <div class="text-lg font-bold leading-none">{{userName}}</div>
+                <div class="text-secondary">Contratista</div>
             </div>
-
-            <!-- Separator -->
-            <div class="hidden lg:flex h-8 mx-8 border-l-2">
-                <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                </button>
-                <mat-menu #summaryMenu="matMenu">
-                    <button mat-menu-item (click)="signOut()">
-                        <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
-                        <span>Cerrar sesión</span>
-                    </button>
-                </mat-menu>
+            <div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
+                <a class="font-medium" [routerLink]="['./']" (click)="signOut()">
+                    Cerrar Sesión
+                </a>
             </div>
-
-            <mat-form-field class="hiring mt-6" appearance="outline">
-                <mat-label>Contractos</mat-label>
-                <mat-select [(ngModel)]="contractSelected" name="contract">
-                    <mat-option *ngFor="let contract of contractIdList" [value]="contract.id">
-                        {{contract.companyName}}
-                    </mat-option>
-                </mat-select>
-                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                </mat-icon>
-            </mat-form-field>
         </div>
-
     </div>
 
-    <!-- Main -->
     <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+        <div class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+            <div class="flex flex-col sm:flex-row items-start justify-between">
+                <div
+                    class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
 
-        <!-- Column -->
-        <div class="hidden lg:flex flex-col items-start mr-8">
-
-            <fuse-card class="flex flex-col max-w-140 w-full p-6 sm:p-8 pb-6">
-                <div class="text-xl font-semibold">Archivos Subidos</div>
-                <div class="flex flex-col sm:flex-row items-start mt-8">
-                    <div class="flex items-center mb-6 sm:mb-0">
-
+                    <div class="text-xl font-semibold">Selecciona un contrato para ver y subir documentos</div>
+                    <div class="flex mt-8 mb-4 lg:m-0 lg:ml-auto">
+                        <mat-form-field class="hiring mt-6" appearance="outline">
+                            <mat-label>Contractos</mat-label>
+                            <mat-select [(ngModel)]="contractSelected" name="contract"
+                                (selectionChange)="changeToViewFilesContract()">
+                                <mat-option *ngFor="let contract of contractIdList" [value]="contract.id">
+                                    {{contract.companyName}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                            </mat-icon>
+                        </mat-form-field>
                     </div>
                 </div>
-                <div class="flex items-center mt-6 sm:mt-8 -mx-3">
-                    <button (click)="uploadFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
-                        [routerLink]="['./']">
-                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
-                        <span>Subir Documento</span>
-                    </button>
-                    <button class="px-3 mr-1 hidden sm:inline-flex" mat-flat-button [routerLink]="['./']"
-                        [color]="'warn'">
-                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                        <span>Eliminar</span>
-                    </button>
-
-                </div>
-            </fuse-card>
-        </div>
-
-        <!-- Column -->
-        <div class="flex flex-col items-start">
-
-            <!-- Create Post -->
-            <fuse-card class="flex flex-col max-w-140 w-full p-6 sm:p-8 pb-6">
-                <div class="text-xl font-semibold">Archivos Para Descargar</div>
-                <div class="flex flex-col sm:flex-row items-start mt-8">
-                    <div class="flex items-center mb-6 sm:mb-0">
-                        <a (click)="descargarCuenta()" class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
-                            <div class="aspect-w-9 aspect-h-6">
-                                <div class="flex items-center justify-center">
-                                    <!-- Icons -->
-                                    <div class="relative">
-                                        <mat-icon class="icon-size-14 text-hint" [svgIcon]="'iconsmind:file'">
-                                        </mat-icon>
-                                        <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                            [class.bg-red-600]="'PDF'">
-                                            PDF
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">CUENTA DE COBRO
-                                </div>
-                            </div>
-                        </a>
-                        <a (click)="descargarActa()" class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
-                            <div class="aspect-w-9 aspect-h-6">
-                                <div class="flex items-center justify-center">
-                                    <!-- Icons -->
-                                    <div class="relative">
-                                        <mat-icon class="icon-size-14 text-hint" [svgIcon]="'iconsmind:file'">
-                                        </mat-icon>
-                                        <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                            [class.bg-red-600]="'PDF'">
-                                            PDF
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                <div class="truncate" [matTooltip]="'CUENTS DE COBRO'">ACTA
-                                </div>
-                            </div>
-                        </a>
+            </div>
+            <ng-container *ngIf="!viewFilesContract">
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                    </div>
+                    <div class="flex flex-col items-center mt-2">
+                        <div class="text-5xl sm:text-6xl font-bold tracking-tight leading-none text-red-500">¡Debe
+                            seleccionar un contrato para ver infomación!</div>
                     </div>
                 </div>
-                <div class="flex items-center mt-6 sm:mt-8 -mx-3">
-                    <button (click)="getDataContractor()" class="px-3 mr-1" mat-flat-button [color]="'primary'" [routerLink]="['./']">
-                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:document-download'"></mat-icon>
-                        <span>Descargar documentos</span>
-                    </button>
+            </ng-container>
+            <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                <div class="hidden lg:flex flex-col items-start mr-8">
+                    <ng-container *ngIf="viewFilesContract">
+                        <div class="text-xl font-semibold">Archivos Cargados
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <button (click)="openDialog()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                                [routerLink]="['./']">
+                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
+                                <span>Cargar Archivo</span>
+                            </button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start mt-8">
+                            <div class="flex items-center mb-6 sm:mb-0">
+                                <ng-container *ngIf="!filesCharged">
+                                    <div class="flex flex-col items-center mt-2">
+                                        <div
+                                            class="text-2xl sm:text-3xl font-bold tracking-tight leading-none text-red-500">
+                                            ¡Aún no hay archivos cargados!</div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="filesCharged">
+                                    <ng-container *ngFor="let item of fileContractorList">
+                                        <a (click)="onClickDownloadPdf(item.filedata, item.filesName)"
+                                            class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+                                            <div class="aspect-w-9 aspect-h-6">
+                                                <div class="flex items-center justify-center">
+                                                    <!-- Icons -->
+                                                    <div class="relative">
+                                                        <mat-icon class="icon-size-14 text-hint"
+                                                            [svgIcon]="'iconsmind:file'">
+                                                        </mat-icon>
+                                                        <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                                            [class.bg-red-600]="'PDF'">
+                                                            {{item.typeFile}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                                <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">
+                                                    {{item.filesName}}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
-            </fuse-card>
 
+                <div class="hidden lg:flex flex-col items-start mr-8">
+                    <ng-container *ngIf="viewFilesContract">
+                        <div class="text-xl font-semibold">Archivos Generados
+                            &nbsp;
+                            &nbsp;
+                            <button *ngIf="viwFilesGenerated" (click)="getDataContractor()" class="px-3 mr-1"
+                                mat-flat-button [color]="'primary'" [routerLink]="['./']">
+                                <mat-icon class="icon-size-5 mr-2"
+                                    [svgIcon]="'heroicons_solid:document-download'"></mat-icon>
+                                <span>Descargar documentos</span>
+                            </button>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-start mt-8">
+                            <div class="flex items-center mb-6 sm:mb-0">
+                                <ng-container *ngIf="!viwFilesGenerated">
+                                    <div class="flex flex-col items-center mt-2">
+                                        <div
+                                            class="text-2xl sm:text-3xl font-bold tracking-tight leading-none text-red-500">
+                                            ¡Aún no hay archivos generados!</div>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="viwFilesGenerated">
+                                    <a (click)="descargarCuenta()"
+                                        class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+                                        <div class="aspect-w-9 aspect-h-6">
+                                            <div class="flex items-center justify-center">
+                                                <!-- Icons -->
+                                                <div class="relative">
+                                                    <mat-icon class="icon-size-14 text-hint"
+                                                        [svgIcon]="'iconsmind:file'">
+                                                    </mat-icon>
+                                                    <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                                        [class.bg-red-600]="'PDF'">
+                                                        PDF
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                            <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">CUENTA DE COBRO
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a (click)="descargarActa()"
+                                        class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+                                        <div class="aspect-w-9 aspect-h-6">
+                                            <div class="flex items-center justify-center">
+                                                <div class="relative">
+                                                    <mat-icon class="icon-size-14 text-hint"
+                                                        [svgIcon]="'iconsmind:file'">
+                                                    </mat-icon>
+                                                    <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                                        [class.bg-red-600]="'PDF'">
+                                                        PDF
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                            <div class="truncate" [matTooltip]="'CUENTS DE COBRO'">ACTA
+                                            </div>
+                                        </div>
+                                    </a>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
         </div>
-
     </div>
-
 </div>
-<app-cuenta-cobro (onGeneratePdf)="onGeneratePdf($event)" [executionReportData]="executionReportData" [chargeAccountData]="chargeAccountData" *ngIf="(chargeAccountData != null && chargeAccount) || (executionReportData != null &&  executionReport)" ></app-cuenta-cobro>
+<app-cuenta-cobro (onGeneratePdf)="onGeneratePdf($event)" [executionReportData]="executionReportData"
+    [chargeAccountData]="chargeAccountData"
+    *ngIf="(chargeAccountData != null && chargeAccount) || (executionReportData != null &&  executionReport)"></app-cuenta-cobro>
