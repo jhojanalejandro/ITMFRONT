@@ -7,10 +7,12 @@ import { AngularmaterialModule } from 'app/layout/common/angular material/angula
 import { AddComponentsComponent } from './componentes/components.component';
 import { ComponentesFormComponent } from './componentes/componentes-form/componentes-form.component';
 import { DialogChangePercentajeComponent } from './componentes/DialogChangePercentaje/DialogChangePercentaje.component';
-import { RegisterProjectFolderComponent } from './componentes/register-project-folder/register-project-folder.component';
+import { RegisterContractFolderComponent } from './componentes/register-project-folder/register-project-folder.component';
 import { ActividadFormComponent } from './componentes/actividad-form/actividad-form.component';
 import { ElementCardComponent } from './element/element.component';
 import { PlaningComponent } from './planing.component';
+import { OptionTypeDataComponent } from './componentes/option-type-data/option-type-data.component';
+import { MinutaContratoMacroComponent } from './componentes/minuta-contrato/minuta-contrato.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { PlaningComponent } from './planing.component';
         ComponentesFormComponent,
         ActividadFormComponent,
         DialogChangePercentajeComponent,
-        RegisterProjectFolderComponent
+        RegisterContractFolderComponent,
+        OptionTypeDataComponent,
+        MinutaContratoMacroComponent
     ],
     imports     : [
         RouterModule.forChild(PlaningRoutes),

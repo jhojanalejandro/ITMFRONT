@@ -6,7 +6,7 @@ import {
     tap,
 } from 'rxjs';
 import { environment } from 'environments/environment';
-import { InventoryPagination, ProjectFolders } from '../../planing/models/planing-model';
+import { InventoryPagination, ContractFolders } from '../../planing/models/planing-model';
 import { HistoryContractor } from '../models/historyContractor';
 
 @Injectable({
@@ -17,10 +17,10 @@ export class GeneralListService {
     private _pagination: BehaviorSubject<InventoryPagination | null> =
         new BehaviorSubject(null);
 
-    private _listProject: BehaviorSubject<ProjectFolders[] | null> =
+    private _listProject: BehaviorSubject<ContractFolders[] | null> =
         new BehaviorSubject(null);
 
-        private _historyContractor: BehaviorSubject<ProjectFolders[] | null> =
+        private _historyContractor: BehaviorSubject<ContractFolders[] | null> =
         new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
@@ -36,11 +36,11 @@ export class GeneralListService {
         return this._pagination.asObservable();
     }
 
-    get _projectList$(): Observable<ProjectFolders[]> {
+    get _projectList$(): Observable<ContractFolders[]> {
         return this._listProject.asObservable();
     }
 
-    get _historyContractor$(): Observable<ProjectFolders[]> {
+    get _historyContractor$(): Observable<ContractFolders[]> {
         return this._historyContractor.asObservable();
     }
 
@@ -54,19 +54,14 @@ export class GeneralListService {
      * @param order
      * @param search
      */
-    getProjectRegistered(): Observable<ProjectFolders[]> {
+    getProjectRegistered(): Observable<ContractFolders[]> {
 
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectRegisteredEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetAllHistoryProjectEndpoint;
         return this._httpClient.get(urlEndPoint).pipe(
             tap((response: any) => {
                 response.forEach(element => {
                     if(element.valorContrato == null ){
                         element.valorContrato = 'No Calculado';
-                    }
-                    if(element.execution){
-                        element.execution = "EN Ejecución"
-                    }else{
-                        element.execution = "EN Proceso"
                     }
                     
                 });

@@ -1,35 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { NominaService } from '../service/nomina.service';
 import { CollectionAccountsService } from './collection-accounts-list.service';
-
-@Injectable({
-    providedIn: 'root'
-})
-export class FileManagerItemsCResolver implements Resolve<any>
-{
-    /**
-    * Constructor
-    */
-    constructor(private _fileManagerService: CollectionAccountsService) {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item> {
-        return this._fileManagerService.getItemByTypeAndDate();
-    }
-}
 
 
 @Injectable({
@@ -56,7 +30,7 @@ export class CollectionAccountsItemFResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item> {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile> {
         return this._fileManagerService.getItemByTypeAndDate(route.paramMap.get('type'),route.paramMap.get('contractId'))
             .pipe(
                 // Error here means the requested task is not available

@@ -21,6 +21,7 @@ import { ContractContractors } from '../models/contractor';
 import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { DatePipe } from '@angular/common';
+import { UploadFileComponent } from '../upload-file/upload-file.component';
 
 
 @Component({
@@ -58,7 +59,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   idSelected: string[]= [];
   contractname: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'habilitado', 'proccess', 'fechaNacimiento', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono','fechaNacimiento', 'statusContractor', 'juridic', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
@@ -88,8 +89,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'TELEFONO', name: 'telefono' },
     { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
     { title: 'ESTADO', name: 'proccess' },
-    { title: 'ESTADO REGISTRO', name: 'habilitado' },
-    { title: '', name: 'acciones' }
+    { title: 'REGISTRO', name: 'statusContractor' },
+    { title: 'JURIDICO', name: 'juridic' },
+    // { title: 'JURIDICO', name: 'legalProccess' },
+    { title: 'OPCIONES', name: 'acciones' }
   ]
 
   /**
@@ -166,11 +169,13 @@ export class ContractorListComponent implements OnInit, OnDestroy {
    * @param item
    */
   trackByFn(index: number, item: any): any {
-    return item.id || index;
+    if(item != null ){
+      return item.id || index;
+    }
   }
 
 
-  async getDataContractor() {
+  getDataContractor() {
     this.contractors = this._contractorListService._contractors$;
     this.dataSource = new MatTableDataSource(
       this.contractors.source._value
@@ -263,7 +268,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       });
   }
   registrarDatosContratacion(data: any) {
-    debugger
     if (data == null) {
       data = { id: null, contractId: null, componenteId: null, elementId: null }
       this.selection.selected.forEach(element => {
@@ -279,6 +283,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         id: data.id,
         componentId: data.componentId,
         elementId: data.elementId,
+        activityId: data.activityId,
         idContractors: this.listId
       }
     });
@@ -311,7 +316,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   activateContarct() {
-    this._genericService.UpdateStateProjectFolder(this.contractId)
+    this._genericService.UpdateStateContractFolder(this.contractId)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((resp) => {
         if (resp) {
@@ -333,6 +338,22 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
           swal.fire('Error', 'Error al activar el contrato!', 'error');
         })
+  }
+
+  uploadExcel() {
+    const dialogUpload = this._matDialog.open(UploadFileComponent, {
+      disableClose: true,
+      autoFocus: false,
+      data: {
+        contractId: this.contractId,
+        show: true,
+      }
+    });
+    dialogUpload.afterClosed().subscribe((result) => {
+      if (result) {
+
+      }
+    });
   }
 
   ngOnDestroy(): void {

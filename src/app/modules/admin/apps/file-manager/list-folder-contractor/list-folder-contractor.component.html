@@ -74,51 +74,49 @@
                                 <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
                                 <span class="ml-2 mr-1">Cargar Archivos</span>
                             </button>
+                            <button class="ml-4"  mat-flat-button [color]="'primary'" (click)="crearCarpeta()">
+                                <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
+                                <span class="ml-2 mr-1">Crear Carpeta</span>
+                            </button>
                         </div>
                 </div>
-                <ng-container *ngIf="item && (item.files.length > 0)">
+                <ng-container *ngIf="items && (items.folderContract.length > 0)">
                     <div class="p-6 md:p-8 space-y-8">
-                        <ng-container *ngIf="item.files.length > 0">
-                            <div class="p-6 md:p-8 space-y-8">
-                                <!-- Files -->
-                                <ng-container *ngIf="item.files.length > 0">
-                                    <div>
-                                        <div class="font-medium">Archivos Del Contrato</div>
-                                        <div
-                                            class="flex flex-wrap -m-2 mt-2">
-                                            <ng-container *ngFor="let file of item; trackBy:trackByFn">
-                                                <a
-                                                    class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
-                                                    [routerLink]="['./details/file/', file.id]">
-                                                    <div class="aspect-w-9 aspect-h-6">
-                                                        <div class="flex items-center justify-center">
-                                                            <!-- Icons -->
-                                                            <div class="relative">
-                                                                <mat-icon
-                                                                    class="icon-size-14 text-hint"
-                                                                    [svgIcon]="'iconsmind:file'"></mat-icon>
-                                                                <div
-                                                                    class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                                                    [class.bg-red-600]="file.typeFile === 'PDF'"
-                                                                    [class.bg-blue-600]="file.typeFile === 'DOC'"
-                                                                    [class.bg-green-600]="file.typeFile === 'XLS'"
-                                                                    [class.bg-gray-600]="file.typeFile === 'TXT'"
-                                                                    [class.bg-amber-600]="file.typeFile === 'JPG'">
-                                                                    {{file.typeFile.toUpperCase()}}
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                        <ng-container *ngIf="items.folderContract.length > 0">
+                            <div>
+                                <div class="font-medium">Carpetas Contratistas</div>
+                                <div
+                                    class="flex flex-wrap -m-2 mt-2">
+                                    <ng-container *ngFor="let folder of items.folderContract | filter:searchText; trackBy:trackByFn">
+                                        <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
+                                            <a
+                                                class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
+                                                (click)="route(folder.id)">
+                                                <div class="aspect-w-9 aspect-h-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <!-- Icon -->
+                                                        <mat-icon
+                                                            class="icon-size-14 text-hint"
+                                                            [svgIcon]="'iconsmind:folder'"></mat-icon>
                                                     </div>
-                                                    <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                                        <div
-                                                            class="truncate"
-                                                            [matTooltip]="file.filesName">{{file.filesName}}</div>
+                                                </div>
+                                                <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                                    <div
+                                                        class="truncate"
+                                                        [matTooltip]="folder.folderName">{{folder.folderName}}
                                                     </div>
-                                                </a>
-                                            </ng-container>
+                                                    <div
+                                                        class="truncate"
+                                                        [matTooltip]="folder.numberProject">{{folder.numberProject}}
+                                                    </div>
+                                                    <ng-container *ngIf="folder.contents">
+                                                        <div class="text-secondary truncate">{{folder.contents}}</div>
+                                                    </ng-container>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </div>
-                                </ng-container>
+                                    </ng-container>
+                                </div>
                             </div>
                         </ng-container>
 
@@ -130,7 +128,7 @@
                         <!-- Folders -->
                         <ng-container *ngIf="items.folders.length > 0">
                             <div>
-                                <div class="font-medium">Carpetas</div>
+                                <div class="font-medium">Carpetas Contratistas</div>
                                 <div
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">

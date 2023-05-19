@@ -2,16 +2,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Item, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile, ItemsContract } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { RegisterFolderContractorComponent } from './register-folder-contractor/register-folder-contractor.component';
-import { ListFolderFileContractorService } from '../services/list-folder-file-contractor.service';
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { FileListManagerService } from '../services/list-file.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { ListFolderContractorService } from '../services/list-folder-contractor.service';
+import { RegisterFolderContractorComponent } from '../components/register-folder-contractor/register-folder-contractor.component';
 
 @Component({
     selector: 'list-folder-file-contractor',
@@ -22,7 +21,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
-    selectedItem: Item;
+    selectedItem: DataFile;
     items: any;
     fileList: Blob;
     searchText: any;
@@ -39,7 +38,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _fileManagerService: ListFolderFileContractorService,
+        private _fileManagerService: ListFolderContractorService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private router: ActivatedRoute,
         private _matDialog: MatDialog,
@@ -48,15 +47,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getData();
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     Files(id: any) {
@@ -111,7 +101,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             data: {
                 contractorId: this.contractorId,
                 contractId: this.contractId,
-                folderName: 'vacio'
+                folderName: 'vacio',
+                typeFolder: 'Contratista'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -141,9 +132,9 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             map(value => this._filter2(value)),
         );
         // Get the items
-        this._fileManagerService.itemsFC$
+        this._fileManagerService.foldersContractor$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items: ItemsC) => {
+            .subscribe((items: ItemsContract) => {
                 this.items = items;
                 if (items.folders.length > 0) {
                     this.contractorId = this.items.folders[0].contractorId;
@@ -166,7 +157,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     }
 
     getFilesFolder = async (id: any) => {
-        this._fileService.getItemById(this.contractId, this.contractorId, id).pipe(takeUntil(this._unsubscribeAll))
+        this._fileService.getItemById(this.contractId, this.contractorId, id)
+        .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((Response: any) => {
                 const jszip = new JSZip();
                 for (let i = 0; i < Response.length; i++) {
@@ -209,4 +201,12 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             });
     };
 
+        /**
+     * On destroy
+     */
+        ngOnDestroy(): void {
+            // Unsubscribe from all subscriptions
+            this._unsubscribeAll.next(null);
+            this._unsubscribeAll.complete();
+        }
 }

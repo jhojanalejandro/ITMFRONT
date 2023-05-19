@@ -119,10 +119,11 @@ export class ComponentesFormComponent implements OnInit {
         if (!this.componentForm.invalid) {
             this.nombreComponente = this.componentForm.value.componentName
             let model: Componente = {
-                idContrato: this._data.idContrato,
+                contractId: this._data.idContrato,
                 nombreComponente: this.nombreComponente,
                 id: this.id,
                 elementos: [],
+                activities: [],
             };
             this._planingService.addComponent(model).subscribe((response) => {
                 if (response) {

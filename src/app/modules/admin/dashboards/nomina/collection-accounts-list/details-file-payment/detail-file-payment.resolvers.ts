@@ -1,36 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class DetailFileManagerItemResolver implements Resolve<any>
-{
-    /**
-     * Constructor
-     */
-    constructor(private _fileManagerService: FileListManagerService)
-    {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
-    {
-        return this._fileManagerService.getItemByIdDetail();
-    }
-}
 
 
 @Injectable({
@@ -58,9 +31,9 @@ export class    DetailFileManagerItemFResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile>
     {
-        return this._fileManagerService.getItemByIdDetail(route.paramMap.get('id'))
+        return this._fileManagerService.getItemById(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {

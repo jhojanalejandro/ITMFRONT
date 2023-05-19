@@ -337,7 +337,7 @@ export class EstudioPrevioComponent implements OnInit {
           contractorId: this.contractorId,
           contractId: this.contractId,
           filesName: nombreMinuta,
-          typeFile: 'PDF',
+          fileType: 'PDF',
           descriptionFile: 'minuta del contratista generada',
           registerDate: registerDate,
           modifyDate: registerDate,

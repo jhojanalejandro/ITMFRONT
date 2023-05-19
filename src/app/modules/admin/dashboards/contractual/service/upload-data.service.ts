@@ -37,18 +37,18 @@ export class UploadDataService
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
     
-    addProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+    addContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    UpdateCostProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
+    UpdateCostContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
     DeleteContract(id: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.DeleteProjectFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.DeleteContractFolderEndpoint;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate, id);
     }
 

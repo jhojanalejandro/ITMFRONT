@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import swal from 'sweetalert2';
-import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
-import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { FileListManagerService } from '../services/list-file.service';
@@ -31,7 +31,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     selection = new SelectionModel<any>(true, []);
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
-    selectedItem: Items;
     items: any;
     value: any;
     searchText: any;
@@ -65,7 +64,6 @@ export class FileListComponent implements OnInit, OnDestroy {
      * On destroy
      */
     ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
@@ -73,9 +71,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     getId(id: any) {
         this.contractorId = id;
     }
-    /**
-     * On backdrop clicked
-     */
+
     onBackdropClicked(): void {
         // Go back to the list
         this._router.navigate(['./'], { relativeTo: this._activatedRoute });
@@ -125,7 +121,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 contractorId: this.contractorId,
                 contractId: this.contractId,
                 folderId: this.folderId,
-                typeFilePayment: 'Contrato'
+                typeFilePayment: 'Otros'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -229,7 +225,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         // Get the item
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
+            .subscribe((item: DataFile) => {
                 this.items = item;
                 this.items.forEach(element => {
                     if (element.passed) {

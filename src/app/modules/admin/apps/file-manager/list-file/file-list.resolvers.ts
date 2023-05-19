@@ -1,36 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FileListManagerService } from '../services/list-file.service';
-
-@Injectable({
-    providedIn: 'root'
-})
-export class FileManagerItemResolver implements Resolve<any>
-{
-    /**
-     * Constructor
-     */
-    constructor(private _fileManagerService: FileListManagerService)
-    {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
-    {
-        return this._fileManagerService.getItemById();
-    }
-}
 
 
 @Injectable({
@@ -58,7 +30,7 @@ export class FileManagerItemFResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile>
     {
         return this._fileManagerService.getItemById(route.paramMap.get('contractId'),route.paramMap.get('contractorId'),route.paramMap.get('folderId'))
                    .pipe(

@@ -18,7 +18,7 @@ export const PlaningRoutes: Route[] = [
                 path     : '',
                 component: ContrtactsComponent,
                 resolve  : {
-                    products  : ContractsPlaningResolver
+                    contract  : ContractsPlaningResolver
                 },
                 runGuardsAndResolvers: 'always'
             },

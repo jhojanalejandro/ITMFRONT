@@ -41,7 +41,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     viwFilesGenerated: boolean = false;
     filesCharged: boolean = false;
     fileContractorList: any;
-    chargeAccountData: PaymentAccount;
+    chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractIdList: any[] = [];
     minutesDocumentPdf: File;

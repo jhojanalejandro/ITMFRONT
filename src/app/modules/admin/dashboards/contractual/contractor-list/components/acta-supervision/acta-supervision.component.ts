@@ -8,7 +8,7 @@ import swal from 'sweetalert2';
 import { UploadDataService } from '../../../service/upload-data.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IHiringData } from '../../../models/hiring-data';
-import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 
 @Component({
@@ -46,9 +46,9 @@ export class ActaSupervisionComponent implements OnInit {
     identificacionSupervisor: '',
     cdp: '',
     caso: ''};
-  elementData: Elements = {
+  elementData: ElementComponent = {
     nombreElemento: '',
-    idComponente: '',
+    componentId: '',
     cantidadContratistas: 0,
     cantidadDias: 0,
     valorUnidad: 0,

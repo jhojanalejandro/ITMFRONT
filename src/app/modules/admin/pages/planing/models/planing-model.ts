@@ -2,7 +2,8 @@ export interface Activity{
     id: any;
     nombreActividad: string,
     idContrato: any;
-    idComponente: any;
+    componentId: any;
+    elementos? : [];
 }
 
 export interface Carro{
@@ -13,13 +14,29 @@ export interface Carro{
     cilindrje: string
 }
 
-export interface ProjectFolder{
-    id?: string;
+export interface ContractList{
+    id?: any;
     userId?: string;
     companyName: string;
     projectName: string;
     descriptionProject: string;
-    execution: any;
+    statusContract: string;
+    activate: boolean;
+    enableProject: boolean;
+    contractorsCant: number;
+    valorContrato: number;
+    numberProject: string;
+    project: string;
+    fechaFinalizacion: Date;
+    fechaContrato: Date;
+}
+export interface ContractFolder{
+    id?: string;
+    userId?: string;
+    companyName: string;
+    projectName: string;
+    objectContract: string;
+    statusContractId: string;
     activate: boolean;
     enableProject: boolean;
     contractorsCant: number;
@@ -29,14 +46,14 @@ export interface ProjectFolder{
     noAdicion: string;
     fechaInicioAmpliacion: Date | null;
     fechaDeTerminacionAmpliacion: Date | null;
-    detalleContratoDto?: DetailProjectFolder;
+    detalleContratoDto?: DetailContractFolder;
     numberProject: string;
     rubro: string;
     nombreRubro: string;
     project: string;
 }
 
-export interface DetailProjectFolder{
+export interface DetailContractFolder{
     id?: any;
     fechaContrato: Date;
     fechaFinalizacion: Date;
@@ -49,15 +66,39 @@ export interface DetailProjectFolder{
 export interface Componente{
     id: any;
     nombreComponente: string,
-    idContrato: number;
+    contractId: number;
     elementos? : [];
+    activities? : [];
+
 }
 
 
 export interface Elements{
     id?: any;
     nombreElemento: string;
-    idComponente: string;
+    componentId: string;
+    cantidadContratistas: number;
+    cantidadDias: number;
+    valorUnidad: any;
+    valorTotal: any;
+    valorPorDia: any;
+    valorTotalContratista: number;
+    valorPorDiaContratista: number;
+    cpcId: string;
+    modificacion: boolean;
+    tipoElemento: string;
+    recursos: any; 
+    consecutivo: string;
+    obligacionesEspecificas: string;
+    obligacionesGenerales: string;
+    objetoElemento: string;
+    activityId?: string;
+}
+
+export interface ElementComponent{
+    id?: any;
+    nombreElemento: string;
+    componentId: string;
     cantidadContratistas: number;
     cantidadDias: number;
     valorUnidad: any;
@@ -74,6 +115,7 @@ export interface Elements{
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
     objetoElemento: string;
+    activityId?: string;
 }
 
 export interface ListElements{
@@ -89,13 +131,13 @@ export interface DetalleContrato{
 	tipoContrato: string  
 }
 
-export interface ProjectFolders{
+export interface ContractFolders{
     id?: any;
     userId?: string;
     companyName: string;
     projectName: string;
     descriptionProject: string;
-    execution: any;
+    statusContract: string;
     activate: boolean;
     enableProject: boolean;
     contractorsCant: number;
@@ -141,3 +183,11 @@ export interface InventoryCategory
     name: string;
     slug: string;
 }
+
+export interface OptionTypeData{
+    id: any;
+    nombreComponente: string,
+    idContrato: number;
+    elementos? : [];
+}
+

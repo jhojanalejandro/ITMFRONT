@@ -39,7 +39,7 @@ export class ButtonsExportComponent implements OnInit {
         );
     }
 
-    exportarCdp() {
+    exportarSolicitudCdp() {
         this._service.getReportCdp(this.idContrato).subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
@@ -97,13 +97,13 @@ export class ButtonsExportComponent implements OnInit {
         );
     }
 
-    exportarDap() {
-        this._service.getReportDap(this.idContrato).subscribe(
+    exportarCdp() {
+        this._service.getReportDataCdp(this.idContrato).subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
                 link.href = downloadURL;
-                link.download = "SOLICITUD CONTRATACIÓN DAP";
+                link.download = "EXPORTAR CDP";
                 link.click();
                 if (res) {
                    Swal.fire({

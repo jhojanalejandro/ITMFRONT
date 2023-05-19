@@ -23,7 +23,6 @@ export class ObservationFileComponent implements OnInit {
   file: any = null; // Variable to store file
   indeterminate = false;
   showAlert: boolean = false;
-  tipoArchivos: any = GlobalConst.tipoArchivo;
   registerDate = new Date();
   disableButton: boolean = false;
   filteredOptions: Observable<string[]>;

@@ -2,20 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {
     BehaviorSubject,
-    filter,
-    map,
     Observable,
-    of,
-    switchMap,
-    take,
     tap,
-    throwError,
 } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
-import { Activity, Componente, Elements, InventoryPagination, ProjectFolder, ProjectFolders } from '../models/planing-model';
+import { Activity, Componente, Elements, InventoryPagination, ContractFolder, ContractFolders, ContractList, ElementComponent } from '../models/planing-model';
 
 @Injectable({
     providedIn: 'root',
@@ -24,9 +18,9 @@ export class PlaningService {
     // Private
     private _pagination: BehaviorSubject<InventoryPagination | null> =
         new BehaviorSubject(null);
-    private _economicChart: BehaviorSubject<ProjectFolders | null> =
+    private _economicChart: BehaviorSubject<ContractFolders | null> =
         new BehaviorSubject(null);
-    private _economicsChart: BehaviorSubject<ProjectFolders[] | null> =
+    private _contractList: BehaviorSubject<ContractFolders[] | null> =
         new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
@@ -45,15 +39,15 @@ export class PlaningService {
     /**
      * Getter for product
      */
-    get _economicChart$(): Observable<ProjectFolders> {
+    get _economicChart$(): Observable<ContractFolders> {
         return this._economicChart.asObservable();
     }
 
     /**
      * Getter for contracts
      */
-    get _economicsChart$(): Observable<ProjectFolders[]> {
-        return this._economicsChart.asObservable();
+    get _contractList$(): Observable<ContractList[]> {
+        return this._contractList.asObservable();
     }
 
     /**
@@ -66,33 +60,27 @@ export class PlaningService {
      * @param order
      * @param search
      */
-    getProjectData(): Observable<ProjectFolders[]> {
+    getProjectData(): Observable<ContractList[]> {
         const params = new HttpParams()
         .set('inProgress', false )
         .set('tipoModulo', 'planeacion');
 
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetAllContractEndpoint;
         return this._httpClient.get(urlEndPoint, { params}).pipe(
             tap((response: any) => {
                 response.forEach(element => {
-                    if(element.execution){
-                        if(element.valorContrato != null){
-                            element.valorContrato = (+element.valorContrato.toFixed(0)).toLocaleString();
-                        }
-                        element.execution = "EN Ejecución"
-                    }else{
-                        element.execution = "EN Proceso"
+                    if(element.valorContrato != null){
+                        element.valorContrato = (+element.valorContrato.toFixed(0)).toLocaleString();
                     }
-                    
                 });
-                this._economicsChart.next(response);
+                this._contractList.next(response);
             })
         );
     }
 
     addEconomicChart(data: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.addProjectFolderEndpoint;
+            this.apiUrl + environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
@@ -128,9 +116,6 @@ export class PlaningService {
     }
 
     getElementoComponente(id: any) {
-        // const params = new HttpParams()
-        // .set('contractorId', contractorId)
-        // .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.getElements;
         return this._httpClient.get<Elements[]>(urlEndpointGenerate + id);
@@ -145,9 +130,16 @@ export class PlaningService {
 
     getElementoById(id: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.geElementoById;
-        return this._httpClient.get<Elements>(urlEndpointGenerate + id);
+            this.apiUrl + environment.getElementoById;
+        return this._httpClient.get<ElementComponent>(urlEndpointGenerate + id);
     }
+
+    getActivityById(id: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.getActivityById;
+        return this._httpClient.get<Activity>(urlEndpointGenerate + id);
+    }
+
     asignmentData(data: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.asignmentData;
@@ -165,7 +157,6 @@ export class PlaningService {
     }
 
     sendEconomicdataContractor(model: EconomicContractor[]) {
-        
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
     }
@@ -182,6 +173,14 @@ export class PlaningService {
     getDataMinuteExtension(contractId: any,contractorId: string) {
         const params = new HttpParams()
         .set('contractorId', contractorId)
+        .set('contractId', contractId);
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetPdMinteExtension;
+        return this._httpClient.get<any>(urlEndpointGenerate, {params});
+    }
+
+    getDataMinuteMacroContract(contractId: any) {
+        const params = new HttpParams()
         .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPdMinteExtension;

@@ -20,16 +20,16 @@
                 <div>
                     <mat-form-field *ngIf="showToal" class="hiring" appearance="outline">
                         <mat-label>Valor contrato</mat-label>
-                        <input type="text" id="caso" [value]="valorContrato" formControlName="caso"
-                            autocomplete="off" matInput placeholder="caso">
+                        <input type="text" id="totalContrato" [(ngModel)]="valorTotalContrato" [value]="valorContrato" formControlName="totalContrato"
+                         matInput placeholder="total Contrato">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="nationality" >
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>{{componente}}</mat-label>
-                        <mat-select formControlName="elemento" [(ngModel)]="componentselectId"
-                            (selectionChange)="getElements()" name="componente">
+                        <mat-select formControlName="componente" [(ngModel)]="componentselectId"
+                            (selectionChange)="getElements('componente')" name="componente">
                             <mat-option *ngFor="let componente of componentes" [value]="componente.id">
                                 {{componente.nombreComponente}}
                             </mat-option>
@@ -37,9 +37,20 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                     </mat-form-field>
+                    <mat-form-field *ngIf="visibleActivity" class="hiring" appearance="outline">
+                        <mat-label>{{activity}}</mat-label>
+                        <mat-select formControlName="activity" [(ngModel)]="activitySelectId"
+                            (selectionChange)="asignActivity()" name="elemento">
+                            <mat-option *ngFor="let activity of activities" [value]="activity.id">
+                                {{activity.nombreActividad}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                    </mat-form-field>
                     <mat-form-field  class="hiring" appearance="outline">
                         <mat-label>{{elemento}}</mat-label>
-                        <mat-select formControlName="componente" [(ngModel)]="elementselectId"
+                        <mat-select formControlName="elemento" [(ngModel)]="elementselectId"
                             (selectionChange)="asignElement()" name="elemento">
                             <mat-option *ngFor="let element of elements" [value]="element.id">
                                 {{element.nombreElemento}}
@@ -47,12 +58,6 @@
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="shareData && update" class="hiring" appearance="outline">
-                        <mat-label>CDP</mat-label>
-                        <input type="text" id="cdp" [(ngModel)]="hinringData.cdp" formControlName="cdp"
-                            autocomplete="off" matInput placeholder="CDP">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="nationality" >
@@ -69,8 +74,6 @@
                             autocomplete="off" matInput placeholder="numeroActa">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
                     </mat-form-field>
-                </div>
-                <div class="nationality">
                     <mat-form-field (click)="pickerFC.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Comite</mat-label>
                         <input matInput id="fechaComite" [(ngModel)]="hinringData.fechaDeComite" autocomplete="off"
@@ -81,6 +84,9 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
+                </div>
+                <div class="nationality">
+
                     <mat-form-field (click)="pickerIR.open()" class="hiring" appearance="outline">
                         <mat-label>Fecha Inicio Real</mat-label>
                         <input matInput id="fechaInicioReal" [min]="detalleContrat.fechaContrato" (dateChange)="dateChange($event)" autocomplete="off"
@@ -203,10 +209,7 @@
         </mat-dialog-content>
         <mat-dialog-actions class="action" align="end">
             <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
-            <button mat-flat-button [color]="'primary'" [disabled]="formContractor.disabled"
-                *ngIf="!update" (click)="addDataHiring()">Guardar</button>
-                <button mat-flat-button *ngIf="update"  [color]="'primary'"  [disabled]="formContractor.disabled"
-                (click)="updateContractor()">Actualizar</button> 
+            <button mat-flat-button [color]="'primary'" [disabled]="formContractor.disabled" (click)="sendEconomicdataContractor()">{{title}}</button>
         </mat-dialog-actions>
     </div>
 </div>

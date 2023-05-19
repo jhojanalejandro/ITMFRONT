@@ -14,7 +14,7 @@
     <form [formGroup]="formProject" class="example-form">
         <div class="folder pt-8">
             <mat-form-field class="hiring" appearance="outline">
-                <mat-label>Nombre Archivo</mat-label>
+                <mat-label>Nombre Carpeta</mat-label>
                 <input type="text"  id="folderName" formControlName="folderName" autocomplete="off" matInput placeholder="Nombre Carpeta" >
                 <mat-icon
                 class="icon-size-5"
@@ -24,21 +24,6 @@
                     Este campo es requerido
                 </mat-error>
             </mat-form-field>
-            <mat-form-field class="hiring" appearance="outline">
-                <mat-label >Tipo Carpeta</mat-label>
-                <mat-select formControlName="typeFolder" name="typeFile">
-                    <mat-option *ngFor="let tipoCarpeta of tiposCarpeta" [value]="tipoCarpeta.viewValue">
-                        {{tipoCarpeta.viewValue}}
-                    </mat-option>
-                </mat-select>
-                <mat-icon
-                class="icon-size-5"
-                matSuffix
-                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
-                <mat-error *ngIf="formProject.get('typeFolder').hasError('required')">
-                    El Campo pension es requerido
-                </mat-error>
-            </mat-form-field> 
         </div>
         <div class="folder">
             <mat-form-field class="hiringD" appearance="outline">
@@ -57,6 +42,6 @@
 </div>
   <mat-dialog-actions align="end">
     <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
-    <button mat-flat-button [color]="'primary'" *ngIf="editData" (click)="editProjectFolder()" >Editar</button>
-    <button mat-flat-button [color]="'primary'" type="submit"  [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" (click)="addProjectFolder()">Guardar</button>
+    <button mat-flat-button [color]="'primary'" *ngIf="editData" (click)="editContractFolder()" >Editar</button>
+    <button mat-flat-button [color]="'primary'" type="submit"  [disabled]="formProject .disabled" *ngIf="!formProject.disabled && !editData" (click)="addFolder()">Guardar</button>
   </mat-dialog-actions>

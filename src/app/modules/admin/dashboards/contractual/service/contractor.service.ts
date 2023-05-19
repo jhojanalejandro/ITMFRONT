@@ -29,19 +29,7 @@ export class ContractorService {
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
         return this._httpClient.get(urlEndPoint + id).pipe(
             tap((response: any) => {
-                response.forEach(element => {
-                    if(element.habilitado){
-                        element.habilitado = 'habilitado'
-                    }else{
-                        element.habilitado = 'deshabilitado'
-                    }
-                    if(element.proccess){
-                        element.proccess = 'en proceso'
-                    }else{
-                        element.proccess = 'en espera'
-                    }
-                    
-                });
+                
                 this._contractorsByContract.next(response);
             })
         );
@@ -68,8 +56,8 @@ export class ContractorService {
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 
-    addProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
+    addContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
@@ -87,7 +75,7 @@ export class ContractorService {
         .set('contractorId', contractorId )
         .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetAllFileByContractEndpoint;
-        return this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+        return this._httpClient.get<any>(urlEndPoint, {params: params});
     }
 
     getContractorByContract(contractorId: string) {

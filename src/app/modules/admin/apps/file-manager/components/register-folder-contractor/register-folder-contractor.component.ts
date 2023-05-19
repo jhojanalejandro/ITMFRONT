@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { IFolderContractor } from 'app/layout/common/models/folder-contractor';
+import { FolderContract, IFolderContractor } from 'app/layout/common/models/folder-contractor';
 import { ActivatedRoute } from '@angular/router';
 import { FileManagerService } from '../../services/file-manager.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
@@ -21,6 +21,7 @@ export class RegisterFolderContractorComponent implements OnInit {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   indeterminate = false;
+
   numberOfTicks = 0;
   showAlert: boolean = false;
   registerDate = new Date();
@@ -48,7 +49,6 @@ export class RegisterFolderContractorComponent implements OnInit {
      }
 
   ngOnInit(): void {
-
     if(this._data.folderName != 'vacio'){
       this.editData = true;
       this.folderName = this._data.data.projectName;
@@ -59,7 +59,6 @@ export class RegisterFolderContractorComponent implements OnInit {
     this.formProject = this._formBuilder.group({
     folderName: new FormControl(this.folderName, Validators.required),      
     description: new FormControl(this.descript, Validators.required), 
-    typeFolder: new FormControl(this.descript, Validators.required), 
 
     });
 
@@ -67,7 +66,7 @@ export class RegisterFolderContractorComponent implements OnInit {
   ngAfterContentChecked() {
     this.ref.detectChanges();
   }
-  async addProjectFolder() {
+  addContractorFolder() {
     const registerGFolder: IFolderContractor={
       userId: this.authService.accessId,
       contractorId: this._data.contractorId,
@@ -76,7 +75,48 @@ export class RegisterFolderContractorComponent implements OnInit {
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
-      typeFolder: this.formProject.value.typeFolder,      
+      typeFolder: this._data.typeFolder,      
+    };  
+    this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
+        if(res){
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();  
+          this.cerrar();  
+        }
+
+    },(response) => {
+      this.formProject.enable();
+      // Set the alert
+      swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+      // Show the alert
+      this.showAlert = true;
+    });
+  }
+  addFolder(){
+    if(this._data.typeFolder === 'Contratista'){
+      this.addContractorFolder();
+    }else{
+      this.addContractFolder();
+    }
+  }
+  addContractFolder() {
+    const registerGFolder: FolderContract={
+      userId: this.authService.accessId,
+      contractId: this._data.contractId,
+      folderName: this.formProject.value.folderName,
+      descriptionProject: this.formProject.value.description,
+      registerDate: this.registerDate, 
+      modifyDate: this.registerDate,
+      typeFolder: this._data.typeFolder,      
     };  
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
@@ -103,8 +143,7 @@ export class RegisterFolderContractorComponent implements OnInit {
     });
   }
 
-
-  async editProjectFolder(){
+  editContractFolder(){
     const editProject: IFolderContractor={
       id: this._data.data.id,
       userId: this.authService.accessId,
@@ -116,7 +155,7 @@ export class RegisterFolderContractorComponent implements OnInit {
       modifyDate: this.registerDate,
       typeFolder: this.formProject.value.typeFolder,       
     };  
-    this._uploadService.UpdateProjectFolder(editProject).subscribe((res) => {   
+    this._uploadService.UpdateContractFolder(editProject).subscribe((res) => {   
         if(res){
           swal.fire({
             position: 'center',

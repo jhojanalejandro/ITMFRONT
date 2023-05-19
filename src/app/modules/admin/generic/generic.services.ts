@@ -5,6 +5,7 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { DetalleContrato } from '../pages/planing/models/planing-model';
 import { AuthService } from 'app/core/auth/auth.service';
+import { CpcType, ElementType, StatusContract } from './model/generic.model';
 
 @Injectable({
     providedIn: 'root'
@@ -28,15 +29,15 @@ export class GenericService {
     }
 
 
-    UpdateProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.UpdateProjectFolderEndpoint;
+    UpdateContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    UpdateStateProjectFolder(id: string) {
+    UpdateStateContractFolder(id: string) {
         const params = new HttpParams()
             .set('id', id);
-        let urlEndpointGenerate = this.apiUrl + environment.UpdateStateProjectFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.UpdateStateContractFolderEndpoint;
         return this._httpClient.get<any>(urlEndpointGenerate, { params });
     }
 
@@ -45,7 +46,7 @@ export class GenericService {
         const params = new HttpParams()
             .set('inProgress', inProgress)
             .set('tipoModulo', tipoModulo)
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetAllContractEndpoint;
         return this._httpClient.get(urlEndPoint, { params }).pipe(
             tap((response: any) => {
                 this._data.next(response);
@@ -75,4 +76,31 @@ export class GenericService {
         );
     }
 
+    getFileType(): Observable<DetalleContrato> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetByIdDetailByIdEndpoint;
+        return this._httpClient.get<DetalleContrato>(urlEndpointGenerate
+        );
+    }
+
+    getCpcType(): Observable<CpcType[]> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetCpcTypeEndpoint;
+        return this._httpClient.get<CpcType[]>(urlEndpointGenerate
+        );
+    }
+
+    getElementType(): Observable<ElementType[]> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetElementTypeEndpoint;
+        return this._httpClient.get<ElementType[]>(urlEndpointGenerate
+        );
+    }
+
+    getstatusContract(): Observable<StatusContract[]> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetStatusContractEndpoint;
+        return this._httpClient.get<StatusContract[]>(urlEndpointGenerate
+        );
+    }
 }

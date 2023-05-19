@@ -1,4 +1,4 @@
-import { TypeSelect, TypeSelectBool, TypeSelectString } from "../models/TypeSelect";
+import { TypeSelectBool, TypeSelectString } from "../models/TypeSelect";
 
 export class GlobalConst {
     public static encryptSecretKey = '576cf17b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae451f5a65ed1' 
@@ -46,11 +46,7 @@ export class GlobalConst {
         { viewValue: 'pago efectivo'},
         { viewValue: 'no pagado'}, 
     ] 
-    public static tipoElemento: TypeSelectString[]=[
-        { viewValue: 'Docente'},
-        { viewValue: 'Suministro'},
-        { viewValue: 'Contratista'}, 
-    ] 
+
     public static requierePoliza: TypeSelectString[]=[
         { viewValue: 'Si'},
         { viewValue: 'No'}, 
@@ -64,8 +60,6 @@ export class GlobalConst {
         { viewValue: 'Adición, Ampliación, Modificacion'},
         { viewValue: 'Ampliación y Modificacion'},
         { viewValue: 'Adición y Modificacion'},
-
-
     ] 
     
     public static editarData: TypeSelectString[]=[
@@ -82,14 +76,7 @@ export class GlobalConst {
 
     ] 
 
-    public static tipoArchivo: TypeSelectString[]=[
-        { viewValue: 'PDF'},
-        { viewValue: 'PNG'}, 
-        { viewValue: 'JPG'}, 
-        { viewValue: 'DOCX'}, 
-        { viewValue: 'XLSX'}, 
 
-    ] 
     public static tipoCarpeta: TypeSelectString[]=[
         { viewValue: 'Cargar a gmas'},
         { viewValue: 'Carpeta pagos'}, 
@@ -101,7 +88,6 @@ export class GlobalConst {
         { viewValue: 'Informe De Ejecucion'},
         { viewValue: 'Hoja de vida'},
         { viewValue: ''},
-
     ] 
 
     public static nivelSeguridad: TypeSelectString[]=[
@@ -111,20 +97,6 @@ export class GlobalConst {
         { viewValue: '4'}
     ] 
 
-    public static ejecucionContrato: TypeSelectBool[]=[
-        { value: true, viewValue: 'Ejecutar Contrato'},
-        { value: false,viewValue: 'En Proceso'}, 
-    ] 
-
-    public static estudios: TypeSelectString[]=[
-        { viewValue: 'Bachiller'},
-        { viewValue: 'Tecnico'}, 
-        { viewValue: 'Tecnologo'}, 
-        { viewValue: 'Pregrado'}, 
-        { viewValue: 'Especializacion'}, 
-        { viewValue: 'Maestria'}, 
-        { viewValue: 'Doctorado'}, 
-    ] 
     public static profesional: TypeSelectString[]=[
         { viewValue: 'Contractual'},
         { viewValue: 'Supervisor'}, 
@@ -132,7 +104,6 @@ export class GlobalConst {
         { viewValue: 'Planeación'}, 
         { viewValue: 'Juridico'}, 
         { viewValue: 'Comite'}, 
-
     ] 
     public static TipoUsuario: TypeSelectString[]=[
         { viewValue: 'Contractual'},

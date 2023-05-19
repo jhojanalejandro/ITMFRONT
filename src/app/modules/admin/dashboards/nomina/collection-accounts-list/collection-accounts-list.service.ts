@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
-import { cloneDeep } from 'lodash-es';
 import { IResponse } from 'app/layout/common/models/Response';
-import { IGetFilesPayments } from './models/GetFilesPaymentDto';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +11,8 @@ import { IGetFilesPayments } from './models/GetFilesPaymentDto';
 export class CollectionAccountsService
 {
     // Private
-    private _item: BehaviorSubject<Item | null> = new BehaviorSubject(null);
-    private _itemD: BehaviorSubject<Item | null> = new BehaviorSubject(null);
+    private _item: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
+    private _itemD: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
 
     apiUrl: any = environment.apiURL;
 
@@ -31,12 +29,12 @@ export class CollectionAccountsService
 
   
 
-    get itemD$(): Observable<Item>
+    get itemD$(): Observable<DataFile>
     {
         return this._itemD.asObservable();
     }
 
-    get item$(): Observable<Item>
+    get item$(): Observable<DataFile>
     {
         return this._item.asObservable();
     }
@@ -44,7 +42,7 @@ export class CollectionAccountsService
     /**
      * Get item by id
      */
-    getItemByTypeAndDate(type: any | null = null,contractId: any | null = null, date : any | null = null): Observable<Item>
+    getItemByTypeAndDate(type: any | null = null,contractId: any | null = null, date : any | null = null): Observable<DataFile>
     {
         if(type === 'documentos'){
             type = 'Cuenta De Cobro';
@@ -79,7 +77,7 @@ export class CollectionAccountsService
         );
     }
 
-    getItemByIdDetail(id: any | null = null): Observable<Item>
+    getItemByIdDetail(id: any | null = null): Observable<DataFile>
     {
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetByIdFileEndpoint;
@@ -102,8 +100,8 @@ export class CollectionAccountsService
         );
     }
 
-    UpdateProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
+    UpdateContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
   

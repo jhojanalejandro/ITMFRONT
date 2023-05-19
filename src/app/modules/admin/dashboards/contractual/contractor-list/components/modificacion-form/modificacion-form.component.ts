@@ -26,7 +26,7 @@ import { map, Observable, startWith, Subject } from 'rxjs';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DetalleContrato, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 
 
@@ -43,7 +43,7 @@ export class ModificacionFormComponent implements OnInit {
     showDate: boolean = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    elemento: Elements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
+    elemento: ElementComponent = { nombreElemento: null, componentId: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null, activityId: null }
     disableField: boolean = true;
     dateAdiction: DetalleContrato = {
         idcontrato: null,
@@ -58,7 +58,6 @@ export class ModificacionFormComponent implements OnInit {
         'Profesional Especializad',
         'Tecnologo',
     ];
-    tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
     calculo: boolean = true;
@@ -177,7 +176,7 @@ export class ModificacionFormComponent implements OnInit {
         }
         let item: Elements = {
             nombreElemento: this.modifyForm.value.nombreElemento,
-            idComponente: this._data.data.idComponente,
+            componentId: this._data.data.idComponente,
             cantidadContratistas: this.modifyForm.value.contractorCant,
             cantidadDias: this.modifyForm.value.cantDay,
             valorUnidad: this.modifyForm.value.unitValue,
@@ -185,15 +184,15 @@ export class ModificacionFormComponent implements OnInit {
             valorPorDia: this.modifyForm.value.unitValueDay,
             valorPorDiaContratista: this.modifyForm.value.valorDiaContratista,
             valorTotalContratista: 0,
-            cpc: this.modifyForm.value.cpc,
-            nombreCpc: this.modifyForm.value.nombreCpc,
+            cpcId: this.modifyForm.value.cpc,
             modificacion: modificacion,
             tipoElemento: this.modifyForm.value.tipoElemento,
             recursos: this.modifyForm.value.recursos,
             consecutivo: this.modifyForm.value.consecutivo,
             obligacionesEspecificas: this.modifyForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.modifyForm.value.obligacionesGenerales,
-            objetoElemento: this.modifyForm.value.objetoElemento
+            objetoElemento: this.modifyForm.value.objetoElemento,
+            activityId: this._data.data.activityId
 
         };
 
@@ -303,14 +302,14 @@ export class ModificacionFormComponent implements OnInit {
     getDateAdiction() {
         this._genericService.getDetalleContratoById(this._data.contract, true).subscribe(
             (resp)=>{
-                debugger
+                
                 this.dateAdiction = resp;
             }
         );
     }
     getDataElemento() {
         this._planingService.getElementoById(this._data.data.elementId).subscribe((resp) => {
-            debugger
+            
             if (resp.recursos == 0) {
                 swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
                 this.matDialogRef.close();

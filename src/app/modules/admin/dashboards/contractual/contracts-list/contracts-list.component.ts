@@ -13,7 +13,7 @@ import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { MatPaginator } from '@angular/material/paginator';
-import { RegisterProjectFolderComponent } from 'app/modules/admin/pages/planing/componentes/register-project-folder/register-project-folder.component';
+import { RegisterContractFolderComponent } from 'app/modules/admin/pages/planing/componentes/register-project-folder/register-project-folder.component';
 @Component({
   selector: 'app-contracts-list-contarctual',
   styleUrls: ['./contracts-list.component.scss'],
@@ -66,7 +66,7 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     //this.validateDinamycKey();
     switch (route) {
       case 'registerFolder':
-        const dialogRefPrroject = this._matDialog.open(RegisterProjectFolderComponent, {
+        const dialogRefPrroject = this._matDialog.open(RegisterContractFolderComponent, {
           disableClose: true,
           autoFocus: false,
         });
@@ -77,7 +77,7 @@ export class UploadDataComponent implements OnInit, OnDestroy {
         });
         break
       case 'editData':
-        const dialogRef = this._matDialog.open(RegisterProjectFolderComponent, {
+        const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
           disableClose: true,
           autoFocus: false,
           data: {
@@ -149,8 +149,10 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   }
 
   getContractsData() {
-    this._gerenicService.getAllContract(true, 'Contractual').pipe(takeUntil(this._unsubscribeAll))
+    this._gerenicService.getAllContract(true, 'Contractual')
+    .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
+        
         this.dataSource = new MatTableDataSource(Response);
         this.dataSource.sort = this.sort;
         this.dataSource.data = Response;

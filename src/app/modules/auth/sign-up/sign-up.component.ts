@@ -86,8 +86,8 @@ export class AuthSignUpComponent implements OnInit {
         this.showAlert = false;
         // Sign up
         (await this._authService.signUp(userRegister)).subscribe(
-            (response) => {
-
+            (response) => { 
+                
                 // Navigate to the confirmation required page
                 this._router.navigateByUrl('/confirmation-required');
             },

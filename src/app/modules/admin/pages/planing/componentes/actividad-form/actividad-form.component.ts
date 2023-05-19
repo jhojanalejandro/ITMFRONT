@@ -45,7 +45,7 @@ export class ActividadFormComponent implements OnInit {
     data: any;
     nombreActivivdad: string = null;
     update: boolean;
-    id: any = 0;
+    id: string = null;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     componentForm: FormGroup;
@@ -75,9 +75,9 @@ export class ActividadFormComponent implements OnInit {
                 fruit ? this._filter(fruit) : this.allFruits.slice()
             )
         );
-        if(this._data.componente != null){
-            this.id = this._data.componente.id;
-            this.nombreActivivdad = this._data.componente.nombreComponente;
+        if(this._data.activity != null){
+            this.id = this._data.activity.id;
+            this.nombreActivivdad = this._data.activity.nombreActividad;
             
         }
         this.componentForm = this._formBuilder.group({
@@ -124,9 +124,10 @@ export class ActividadFormComponent implements OnInit {
             this.data = this.componentForm.value;
             let model: Activity = {
                 idContrato: this._data.idContrato,
-                idComponente: this._data.idComponente,
+                componentId: this._data.idComponente,
                 nombreActividad: this.nombreActivivdad,
                 id: this.id,
+                elementos: [],
             };
             this._planingService.addActivity(model).subscribe((response) => {
                 if (response) {

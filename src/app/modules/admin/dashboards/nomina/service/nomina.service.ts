@@ -53,14 +53,7 @@ export class NominaService {
         return this._httpClient.get<any>(urlEndPoint + id);
     }  
 
-    getAllContractPayments(): Observable<any> {
-        let urlEndPoint = this.apiUrl + environment.GetAllProjectFolderEndpoint;
-        return this._httpClient.get(urlEndPoint).pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
-    }
+
     getByIdEconomicDataContractor(id: any) {
         let urlEndPoint = this.apiUrl + environment.GetByIdEconomicDataContractorEndpoint;
         return this._httpClient.post<EconomicContractor[]>(urlEndPoint, id);

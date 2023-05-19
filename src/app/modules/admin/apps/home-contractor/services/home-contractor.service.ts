@@ -45,13 +45,13 @@ export class HomeContractorService
         );
     }
     
-    addProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addProjectFolderEndpoint;
+    addContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    UpdateProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.UpdateProjectFolderEndpoint;
+    UpdateContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

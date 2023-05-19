@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDrawerToggleResult } from '@angular/material/sidenav';
 import { Subject, takeUntil } from 'rxjs';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
@@ -42,7 +42,7 @@ export class DetailFileComponent implements OnInit, OnDestroy
         // Get the item
         this._fileManagerService.itemD$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
+            .subscribe((item: DataFile) => {
 
                 this.id = item.id;
                 // Open the drawer in case it is closed

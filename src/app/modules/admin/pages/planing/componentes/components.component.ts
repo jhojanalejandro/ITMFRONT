@@ -31,14 +31,16 @@ export class AddComponentsComponent implements OnInit {
     tittle = 'Información';
     dataComponente: any = null;
     dataElemento: any;
+    dataActividad: any = null;;
     abrirDivComponente: boolean = false;
     abrirDivElemento: boolean = false;
+    abrirDivActivity: boolean = false;
+
     data: any;
-    activities: Activity[] = [];
     id: string = null;
     configForm: FormGroup;
-    subTotal: any = 0;
-    total: any = 0;
+    subTotal: number = 0;
+    total: number = 0;
     contractorCant: number = 0;
     elementosCant: number = 0;
     gastosOperativos: any = 0;
@@ -70,6 +72,8 @@ export class AddComponentsComponent implements OnInit {
         this.abrirDivElemento = false;
         this.dataComponente = e;
         this.abrirDivComponente = true;
+        this.abrirDivActivity = false;
+
         this.getActivity(e);
     }
 
@@ -78,8 +82,18 @@ export class AddComponentsComponent implements OnInit {
         this.abrirDivComponente = false;
         this.dataElemento = e;
         this.abrirDivElemento = true;
+        this.abrirDivActivity = false;
+
     }
 
+    
+    abrirDivActividad(e: any) {
+        this.tittle = 'Información Actividad';
+        this.abrirDivComponente = false;
+        this.abrirDivElemento = false;
+        this.dataActividad = e;
+        this.abrirDivActivity = true;
+    }
 
     chargeData() {
         this._planingService.getComponent(this.id).subscribe((response) => {
@@ -112,11 +126,25 @@ export class AddComponentsComponent implements OnInit {
                 });
             }
         });
+        this.data.forEach((element) => {
+            if (element.activities.length >= 1) {
+                element.activities.forEach((item) => {
+                    if(item.elementos.length >= 1){
+                        item.elementos.forEach((element) =>{
+                            this.subTotal += element.valorTotal;
+                            this.contractorCant += element.cantidadContratistas
+                        })
+                    }
+
+
+                });
+            }
+        });
         this.gastosOperativos = this.subTotal * 0.08;
         this.total = this.gastosOperativos + this.subTotal;
-        this.gastosOperativos = (+this.gastosOperativos.toFixed(0)).toLocaleString();
-        this.total = (+this.total.toFixed(0)).toLocaleString()
-        this.subTotal = (+this.subTotal.toFixed(0)).toLocaleString();
+        // this.gastosOperativos = (+this.gastosOperativos.toFixed(0)).toLocaleString();
+        // this.total = (+this.total.toFixed(0)).toLocaleString()
+        // this.subTotal = (+this.subTotal.toFixed(0)).toLocaleString();
 
     }
 
@@ -183,7 +211,7 @@ export class AddComponentsComponent implements OnInit {
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this._planingService
-                        .getComponent(this.id)
+                        .getActivityById(this.id)
                         .subscribe((response) => {
                             this.data = response;
                             this._changeDetectorRef.detectChanges();
@@ -195,14 +223,23 @@ export class AddComponentsComponent implements OnInit {
 
     }
 
-    addElements() {
+    addElements(e: string) {
+        let componentId = null;
+        let activityId = null;
+        if(e === 'activity'){
+            activityId = this.dataActividad.id;
+            componentId = this.dataActividad.componentId
+        }else{
+            componentId = this.dataComponente.id
+        }
         let elemento = { valorTotal: 0 }
         const dialogRef = this._matDialog.open(ElementCardComponent, {
             disableClose: true,
             autoFocus: false,
             data: {
                 elemento,
-                idComponente: this.dataComponente.id,
+                componentId: componentId,
+                activityId: activityId,
                 idElemento: null,
                 idContrato: this.id,
                 edit: false
@@ -249,6 +286,22 @@ export class AddComponentsComponent implements OnInit {
         });
     }
 
+    editActivity(activity: any) {
+        const dialogRef = this._matDialog.open(ActividadFormComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                activity,
+                idContrato: this.id
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.chargeData();
+            }
+        });
+    }
+
     openConfirmationDialog(): void {
         // Open the dialog and save the reference of it
         const dialogRef = this._fuseConfirmationService.open(
@@ -269,7 +322,8 @@ export class AddComponentsComponent implements OnInit {
             valorSubTotal: this.subTotal,
             gastosOperativos: this.gastosOperativos,
         };
-        this._contrtactService.UpdateCostProjectFolder(registerProject).subscribe((res) => {
+
+        this._contrtactService.UpdateCostContractFolder(registerProject).subscribe((res) => {
             if (res) {
                 Swal.fire({
                     position: 'center',
@@ -282,6 +336,8 @@ export class AddComponentsComponent implements OnInit {
             }
 
         }, (response) => {
+            console.log(response);
+            
             Swal.fire('Error', 'Error al Registrar la informacion', 'error');
         });
     }
@@ -289,7 +345,7 @@ export class AddComponentsComponent implements OnInit {
     private getActivity(e: any) {
         this._planingService.getActivity(e.id).subscribe((response) => {
             if (response.length != 0) {
-                this.activities = response;
+                this.dataActividad = response;
                 this._changeDetectorRef.detectChanges();
             }
         });

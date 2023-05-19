@@ -5,8 +5,8 @@ import * as CryptoJS from 'crypto-js';
 import { Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
-import { ListFolderFileContractorService } from '../../services/list-folder-file-contractor.service';
 import { ListFolderFileContractorComponent } from '../../list-folder-file-contractor/list-folder-file-contractor.component';
+import { ListFolderContractorService } from '../../services/list-folder-contractor.service';
 
 @Component({
     selector       : 'details-folder-contractor',
@@ -26,7 +26,7 @@ export class DetailsFolderFileContractorComponent implements OnInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fileManagerListComponent: ListFolderFileContractorComponent,
-        private _fileManagerService: ListFolderFileContractorService,
+        private _fileManagerService: ListFolderContractorService,
         private _router: Router,
         private _authService: AuthService
     ){}
@@ -38,7 +38,7 @@ export class DetailsFolderFileContractorComponent implements OnInit, OnDestroy
         this._fileManagerListComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.itemD$
+        this._fileManagerService.fileContractor$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 // Open the drawer in case it is closed

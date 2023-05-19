@@ -14,10 +14,11 @@ import swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { ProjectFolders } from '../models/planing-model';
+import { ContractFolders, ContractList } from '../models/planing-model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RegisterProjectFolderComponent } from '../componentes/register-project-folder/register-project-folder.component';
+import { RegisterContractFolderComponent } from '../componentes/register-project-folder/register-project-folder.component';
 import { PlaningService } from '../service/planing.service';
+import { OptionTypeDataComponent } from '../componentes/option-type-data/option-type-data.component';
 
 @Component({
   selector: 'contracts',
@@ -38,12 +39,12 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
-  contracts: ProjectFolders[];
+  contracts: ContractList[];
   typeContract: string; 
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
   showcontracts: boolean = false;
-  displayedColumns: string[] = ['numberProject','project', 'companyName', 'projectName', 'valorContrato', 'contractorsCant', 'action'];
+  displayedColumns: string[] = ['numberProject','project', 'companyName', 'projectName', 'valorContrato','statusContract', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -76,6 +77,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'VALOR CONTRATO', name: 'valorContrato' },
     { title: 'CANTIDAD CONTRATISTA', name: 'contractorsCant' },
+    { title: 'ESTADO', name: 'statusContract' },
     { title: 'ACCIONES', name: 'action' },
   ]
   ngOnInit(): void {
@@ -106,9 +108,10 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
   private getContracts(){
     this.cdref.detectChanges();
-    this._planingService._economicsChart$
+    this._planingService._contractList$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
+      
       this.contracts = response;
       this.dataSource = new MatTableDataSource(
         this.contracts
@@ -119,35 +122,43 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
 
   }
 
-  openDialog(route: any, data: any) {
-    //this.validateDinamycKey();
-    switch (route) {
-      case 'registerFolder':
-        const dialogRefProject = this._matDialog.open(RegisterProjectFolderComponent,  { 
-          disableClose: true,
-          autoFocus: false,
-         });
-        dialogRefProject.afterClosed().subscribe(datos => {
-          if (datos) {
-            this.getContracts();
-          }
-        });
-        break
-      case 'editData':
-        const dialogRef = this._matDialog.open(RegisterProjectFolderComponent, {
-          disableClose: true,
-          autoFocus: false,
-          data: {
-            data
-          }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-          if (result) {
-            this.getContracts();
-          }
-        });
-        break
-    }
+  SaveContract() {
+    const dialogRefProject = this._matDialog.open(RegisterContractFolderComponent,  { 
+      disableClose: true,
+      autoFocus: false,
+     });
+    dialogRefProject.afterClosed().subscribe(datos => {
+      if (datos) {
+        this.getContracts();
+      }
+    });
+  }
+
+  UpdateDataContract(data: any){
+    const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
+      disableClose: true,
+      autoFocus: false,
+      data: {
+        data
+      }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.getContracts();
+      }
+    });
+  }
+
+  SaveOptions() {
+    const dialogRefOption = this._matDialog.open(OptionTypeDataComponent,  { 
+      disableClose: true,
+      autoFocus: false,
+     });
+     dialogRefOption.afterClosed().subscribe(datos => {
+      if (datos) {
+        this.getContracts();
+      }
+    });
   }
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {

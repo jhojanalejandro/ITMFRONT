@@ -1,11 +1,12 @@
-import { Elements, ProjectFolder } from "app/modules/admin/pages/planing/models/planing-model";
+import { Elements, ContractFolder } from "app/modules/admin/pages/planing/models/planing-model";
 import { IHiringData } from "./hiring-data";
 
 export interface AsignmentData{
     contractId: string;
     id: string;
-    idContractor: string[];
-    type: string;   
+    contractorId: string[];
+    type: string; 
+	activityId?: string;  
 }
 
 
@@ -29,6 +30,7 @@ export interface Contractor{
 	proccess: any;
 	elementId: string;
 	componentId: string;
+	legalProccess: any;
 }
 
 
@@ -36,7 +38,7 @@ export interface Minuta{
     contractor: Contractor;
     elementosComponente: Elements;
     hiringData: IHiringData;
-    contract: ProjectFolder;
+    contract: ContractFolder;
 }
 
 

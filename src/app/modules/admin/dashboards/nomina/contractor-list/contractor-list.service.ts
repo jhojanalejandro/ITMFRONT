@@ -38,8 +38,8 @@ export class ContractorListService {
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 
-    addProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
+    addContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

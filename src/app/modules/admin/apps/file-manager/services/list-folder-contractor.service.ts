@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { Item, Items, ItemsC } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile, ItemsContract, ItemsContractor } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
 import { cloneDeep } from 'lodash-es';
 import { IResponse } from 'app/layout/common/models/Response';
@@ -9,52 +9,94 @@ import { IResponse } from 'app/layout/common/models/Response';
 @Injectable({
     providedIn: 'root'
 })
-export class ListFolderContractorService
-{
+export class ListFolderContractorService {
     // Private
 
-    private _item: BehaviorSubject<Item | null> = new BehaviorSubject(null);
+    private _filesContract: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
 
-    private _itemsC: BehaviorSubject<ItemsC | null> = new BehaviorSubject(null);
+    private _foldersContract: BehaviorSubject<ItemsContract | null> = new BehaviorSubject(null);
+
+    private _filesContractor: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
+
+    private _foldersContractor: BehaviorSubject<ItemsContractor | null> = new BehaviorSubject(null);
 
     apiUrl: any = environment.apiURL;
 
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient)
-    {
+    constructor(private _httpClient: HttpClient) {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Getter for items
      */
 
-    get itemsC$(): Observable<ItemsC>
-    {
-        return this._itemsC.asObservable();
+    get folderContract$(): Observable<ItemsContract> {
+        return this._foldersContract.asObservable();
     }
 
-    get item$(): Observable<Item>
+    get filesContract$(): Observable<DataFile> {
+        return this._filesContract.asObservable();
+    }
+
+    get foldersContractor$(): Observable<ItemsContractor>
     {
-        return this._item.asObservable();
+        return this._foldersContractor.asObservable();
     }
 
 
-    getItemById(idC: any): Observable<Item>
+    get fileContractor$(): Observable<DataFile>
     {
+        return this._filesContractor.asObservable();
+    }
+
+
+    getAllFolderContract(folderIds: string | null = null): Observable<ItemsContract> {
+        let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
+        return this._httpClient.get<ItemsContract>(urlEndPoint + folderIds).pipe(
+            tap((response: any) => {
+                // Clone the items
+                let items = cloneDeep(response);
+                const folders = items.folders;
+                const folderContract = items.folderContract;
+                const pathItems = cloneDeep(response);
+                const path = [];
+
+                // Prepare the current folder
+                let currentFolder = pathItems;
+
+                // Start traversing and storing the folders as a path array
+                // until we hit null on the folder id
+                while (currentFolder.folders.length == 0) {
+                    if (currentFolder) {
+                        path.unshift(currentFolder);
+                    }
+                }
+                const data =
+                {
+                    folders,
+                    folderContract,
+                    path
+                }
+                this._foldersContract.next(data);
+
+            })
+        );
+    }
+
+    getFileContractById(idC: any): Observable<DataFile> {
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl+ environment.GetAllFileContractByIdEndpoint;
-        return this._httpClient.get<any>(urlEndPoint+ idC).pipe(
-            tap((items) => {
+        let urlEndPoint = this.apiUrl + environment.GetAllFileContractByIdEndpoint;
+        return this._filesContract.pipe(
+            take(1),
+            tap((items: any) => {
                 // Update the item
-                const item = [...items.files] = items || null;
-                this._item.next(item);
-                
+                const item = [...items.folders, ...items.files].find(value => value.id === idC) || null;
+                // const item = [...items.folders, ...items.files].find(value => value.id === id) || null;
+
+                this._filesContract.next(item);
+
             }),
             switchMap((item) => {
 
@@ -68,37 +110,54 @@ export class ListFolderContractorService
         );
     }
 
-
-    getAllFolderContractor(folderIds: string | null = null): Observable<Item[]>
+    getAllFolderContractor(contractId: string | null = null,contractorId: string | null = null): Observable<ItemsContractor>
     {
-        let urlEndPoint = this.apiUrl+ environment.GetByContractorIdFolderEndpoint;
-        return  this._httpClient.get<ItemsC>(urlEndPoint+folderIds).pipe(
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('contractId', contractId);
+        let urlEndPoint = this.apiUrl+ environment.GetFolderFileContractorEndpoint;
+        return  this._httpClient.get<ItemsContractor>(urlEndPoint, {params: params}).pipe(
             tap((response: any) => {
         // Clone the items
         for (let index = 0; index < response.length; index++) {
             response[index].type = 'folder';
-            response[index].contractId = folderIds;
         }
-
-        let items = cloneDeep(response);        
+        let items = cloneDeep(response);
+        // See if a folder id exist
+        let folderId;
+        if(response.length > 0){
+            folderId = response[0].contractorId;
+        }else{
+            folderId = 0;
+        }
+        // Filter the items by folder id. If folder id is null,
+        // that means we want to root items which have folder id
+        // of null
+        items = items.filter(item => item.contractorId === folderId);
+        
         // Separate the items by folders and files
         const folders = items.filter(item => item.type === 'folder');
-
         // Sort the folders and files alphabetically by filename
-        folders.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        folders.sort((a, b) => a.folderName.localeCompare(b.folderName));
         // Figure out the path and attach it to the response
         // Prepare the empty paths array
         const pathItems = cloneDeep(response);
         const path = [];
 
         // Prepare the current folder
-        let currentFolder = pathItems;
+        let currentFolder = null;
 
+        // Get the current folder and add it as the first entry
+        if ( folderId )
+        {
+            currentFolder = pathItems.find(item => item.contractorId === folderId);
+            path.push(currentFolder);
+        }
         // Start traversing and storing the folders as a path array
         // until we hit null on the folder id
-        while ( currentFolder?.contractId )
+        while ( currentFolder?.folderId )
         {
-            currentFolder = pathItems.find(item => item.contractId === currentFolder.folderId);
+            currentFolder = pathItems.find(item => item.contractorId === currentFolder.folderId);
             if ( currentFolder )
             {
                 path.unshift(currentFolder);
@@ -106,11 +165,10 @@ export class ListFolderContractorService
         }
         const data = 
             {
-                folderIds,
                 folders,
                 path
             }
-            this._itemsC.next(data);
+            this._foldersContractor.next(data);
                 
             })
         ); 
@@ -119,5 +177,37 @@ export class ListFolderContractorService
     
     }
 
-  
+    getItemByIdDetailFolderContractor(id: any | null = null): Observable<DataFile>
+    {    
+        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
+        let urlEndPoint = this.apiUrl+ environment.GetByIdFolderFileContractorEndpoint;
+        return this._httpClient.get<any>(urlEndPoint + id).pipe(
+            tap((items) => {
+                // Update the item
+                const item = items.files = items || null;
+                this._filesContractor.next(item);
+                
+            }),
+            switchMap((item) => {
+
+                if ( !item )
+                {
+                    return throwError('Could not found the item with id of ' + id + '!');
+                }
+
+                return of(item);
+            })
+        );
+    }
+    
+    addFolderContractor(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addFolderFileContractorEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
+
+    
+    UpdateContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl+ environment.UpdateContractFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
 }

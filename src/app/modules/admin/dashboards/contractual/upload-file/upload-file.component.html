@@ -30,35 +30,8 @@
                     </mat-error>
                 </mat-form-field> 
                 <div>
-                    <mat-form-field *ngIf="!mostrarContrato" class="hiring" appearance="outline">
-                        <mat-label>Nombre Archivo</mat-label>
-                        <input type="text"  id="filesName" formControlName="filesName" autocomplete="off" matInput placeholder="Nombre Archivo" >
-                        <mat-icon
-                        class="icon-size-5"
-                        matSuffix
-                        [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                        <mat-error *ngIf="formFile.get('filesName').hasError('required')">
-                            El Campo Proyecto es requerido
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field *ngIf="!mostrarContrato"  class="hiring" appearance="outline">
-                        <mat-label >Tipo Archivo</mat-label>
-                        <mat-select [formControlName]="'typeFile'" name="typeFile">
-                            <mat-option *ngFor="let pension of tipoArchivos" [value]="pension.viewValue">
-                                {{pension.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon
-                        class="icon-size-5"
-                        matSuffix
-                        [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
-                        <mat-error *ngIf="formFile.get('typeFile').hasError('required')">
-                            El Campo pension es requerido
-                        </mat-error>
-                    </mat-form-field> 
-  
                 </div>
-                <div class="folder" *ngIf="!mostrarContrato">
+                <div class="folder" *ngIf="!mostrarContrato && !selectConttract">
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>Descripcion</mat-label>
                         <textarea type="text"  class="example-full-width" id="description" formControlName="description" autocomplete="off" matInput placeholder="Descripcion"></textarea>
@@ -69,6 +42,7 @@
                 </div>
                 <div class="text-center pt-8">
                     <input formControlName="file" type="file" 
+                    accept="image/jpeg, image/png, application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     mat-flat-button color="primary"  (change)="onChange($event)">
                 </div>
                 <!-- Shareable short link of  uploaded file -->

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
+import { RegisterFolderContractorComponent } from '../components/register-folder-contractor/register-folder-contractor.component';
 
 @Component({
     selector: 'list-folder-contractor',
@@ -18,13 +18,13 @@ import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/up
 export class ListFolderContractorComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
-    item: any;
+    fileSelect: any;
     items: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
-    contractId: String = null;
+    contractId: string = null;
 
     /**
      * Constructor
@@ -40,15 +40,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getData();
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     /**
@@ -68,7 +59,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
      * @param item
      */
     trackByFn(index: number, item: any): any {
-        if(item  > 0){
+        if (item > 0) {
             return item.id || index;
         }
     }
@@ -118,35 +109,22 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'number' ? value : value.numbers)),
-            map(numbers => (numbers ? this._filter(numbers) : this.items)),
-        );
+            map(numbers => (numbers ? this._filter(numbers) : this.items)),);
 
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => this._filter2(value)),
         );
         // Get the items
-        this._fileManagerService.itemsC$
+        this._fileManagerService.folderContract$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: any) => {
-                if(items.folders.length > 0){
+                
+                if (items.folders.length > 0) {
                     this.items = items;
-                    // Mark for check
                 }
                 this._changeDetectorRef.markForCheck();
             });
-
-        // Get the item
-        this._fileManagerService.item$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) => {
-                if(item != null){
-                    this.item = item;
-                }
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
@@ -160,8 +138,32 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             });
     }
 
-    route(route: any){
-        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId +'/contratista/' + route]);
-
+    route(route: any) {
+        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + route]);
     }
+
+    crearCarpeta() {
+        const dialogRef = this._matDialog.open(RegisterFolderContractorComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                contractId: this.contractId,
+                folderName: 'vacio',
+                typeFolder: 'Contrato'
+            }
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.getData();
+            }
+        });
+    }
+
+
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
 }

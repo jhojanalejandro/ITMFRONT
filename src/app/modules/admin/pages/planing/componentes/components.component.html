@@ -52,13 +52,6 @@
                 </svg>
                Nuevo Componente
             </button>
-            <button *ngIf="dataComponente != null" class="ml-3" mat-flat-button [color]="'primary'" (click)="addActividad()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                </svg>
-               Nueva Actividad
-            </button>
         </div>
     </div>
 
@@ -69,13 +62,21 @@
                 <!-- Budget distribution -->
                 <div
                     class="sm:col-span-3 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Lista de elementos y sus
-                        componentes</div>
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Lista de componentes, Actividades y sus
+                        elementos</div>
                     <div id="contenedor">
                         <igx-tree class="tree-root">
                             <igx-tree-node *ngFor="let type of data">
                                 <mat-icon (click)="abrirDivComponent(type)">visibility</mat-icon>
                                 Componente : {{ type.nombreComponente }}
+                                <igx-tree-node *ngFor="let valueActivity of type.activities">
+                                    <mat-icon (click)="abrirDivActividad(valueActivity)">visibility</mat-icon>
+                                    Actividad : {{ valueActivity.nombreActividad }}
+                                    <igx-tree-node *ngFor="let valueElement of valueActivity.elementos">
+                                        <mat-icon (click)="abrirDivElement(valueElement)">visibility</mat-icon>
+                                        Elemento : {{ valueElement.nombreElemento }}
+                                    </igx-tree-node>
+                                </igx-tree-node>
                                 <igx-tree-node *ngFor="let value of type.elementos">
                                     <mat-icon (click)="abrirDivElement(value)">visibility</mat-icon>
                                     Elemento : {{ value.nombreElemento }}
@@ -94,9 +95,13 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #listCard07Menu="matMenu">
-                                            <button mat-menu-item (click)="addElements()">
+                                            <button mat-menu-item (click)="addElements('component')">
                                                 <mat-icon svgIcon="add_circle"></mat-icon>
                                                 Agregar Elemento
+                                            </button>
+                                            <button mat-menu-item (click)="addActividad()">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Actividad
                                             </button>
                                             <button (click)="editComponent(dataComponente)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar Componente
@@ -105,23 +110,43 @@
                                     </div>
                                 </div>
                                 <div class="flex flex-col my-2">
-                                    <!-- <div class="my-2">
-                                        <div>Rubro: {{dataComponente.rubro}}</div>
-                                    </div>
-                                    <div class="my-2">
-                                        <div>Nombre Rubro: {{dataComponente.nombreRubro}}</div>
-                                    </div> -->
                                     <div class="my-2">
                                         <div>Cantidad de Elementos: {{dataComponente.elementos.length}} </div>
                                     </div>
-                                </div>
-                                <div class="flex flex-col my-2">
-                                    <span>Actividades:</span>
-                                    <div *ngFor="let item of activities" class="text-2xl font-semibold leading-tight">
-                                       Actividad: {{item.nombreActividad}}
+                                    <div class="my-2">
+                                        <div>Cantidad Actividades: {{dataComponente.activities.length}} </div>
                                     </div>
                                 </div>
 
+                            </fuse-card>
+                        </div>
+                        <div *ngIf="abrirDivActivity" style="width: 50%;">
+                            <fuse-card class="flex flex-col w-full p-8 pt-6 filter-list border">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-2xl font-semibold leading-tight">Nombre:
+                                        {{dataActividad.nombreActividad}}
+                                    </div>
+                                    <div class="-mr-4">
+                                        <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #listCard07Menu="matMenu">
+                                            <button mat-menu-item (click)="addElements('activity')">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Elemento
+                                            </button>
+                                            <button (click)="editActivity(dataActividad)" mat-menu-item>
+                                                <mat-icon svgIcon="edit"></mat-icon>Editar Actividad
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col my-2">
+                                    <div class="my-2">
+                                        <div>Cantidad de Elementos: {{dataActividad.elementos.length}} </div>
+                                    </div>
+                                </div>
                             </fuse-card>
                         </div>
                         <div *ngIf="abrirDivElemento" style="width: 50%;">
@@ -179,7 +204,7 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{subTotal}}
+                                    {{subTotal | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
@@ -217,7 +242,7 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{gastosOperativos}}
+                                    {{gastosOperativos | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
@@ -236,7 +261,7 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{total}}
+                                    {{total | currency:'COP '}}
                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"

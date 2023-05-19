@@ -430,7 +430,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
     }
 
     private downloadPDFInforme() {
-        debugger
+        
         this.validateValuesPDFInforme();
         let day = this.datepipe.transform(this.date, 'dd');
         let month = this.datepipe.transform(this.date, 'MM');

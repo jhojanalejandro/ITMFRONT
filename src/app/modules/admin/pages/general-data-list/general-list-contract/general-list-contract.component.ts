@@ -28,7 +28,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ProjectFolders } from '../../planing/models/planing-model';
+import { ContractFolders } from '../../planing/models/planing-model';
 import { GeneralListService } from '../services/general-list.service';
 
 @Component({
@@ -60,7 +60,7 @@ export class GeneralListContractComponent
     flashMessage: 'success' | 'error' | null = null;
     isLoading: boolean = false;
     searchInputControl: FormControl = new FormControl();
-    selectedProduct: ProjectFolders | null = null;
+    selectedProduct: ContractFolders | null = null;
     tagsEditMode: boolean = false;
 
     constructor(

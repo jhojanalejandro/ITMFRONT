@@ -674,7 +674,7 @@ export class MinutaContratoComponent implements OnInit {
             contractorId: data.contractorId,
             contractId: contractId,
             filesName: nombreMinuta,
-            typeFile: 'PDF',
+            fileType: 'PDF',
             descriptionFile: 'minuta del contratista generada',
             registerDate: registerDate,
             modifyDate: registerDate,

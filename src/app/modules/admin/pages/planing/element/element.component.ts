@@ -24,8 +24,10 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DetalleContrato, Elements, ListElements } from '../models/planing-model';
+import { DetalleContrato, ElementComponent, Elements, ListElements } from '../models/planing-model';
 import { PlaningService } from '../service/planing.service';
+import { CpcType, ElementType } from 'app/modules/admin/generic/model/generic.model';
+import { ElementTypeCode } from 'app/layout/common/enums/elementType';
 
 @Component({
     selector: 'app-alement',
@@ -42,6 +44,17 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     valorDiaContratista: number = 0;
+    maxDayContrac: number = 0;
+    cpcType: CpcType[];
+    elementTypes: ElementType[];
+
+    cpcName: string = '';
+    detailContract: DetalleContrato = {
+        idcontrato: null,
+        fechaContrato: null,
+        fechaFinalizacion: null,
+        tipoContrato: null,
+    };
     typeContractor: boolean = true;
     dateAdiction$: Observable<DetalleContrato[]>;
     filteredelementos: Observable<string[]>;
@@ -58,10 +71,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         'Apoyo Administrativo',
 
     ];
-    tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
-    elemento: Elements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
+    elemento: ElementComponent = { nombreElemento: null, componentId: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null, activityId: null }
     recursos: number = 0;
     totalV: number;
     totalExacto: number;
@@ -93,7 +105,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _planingService: PlaningService
     ) {
         if (this._data.edit === true) {
-            this.btnOpcion ='Actualizar';
+            this.btnOpcion = 'Actualizar';
             this.showDate = false;
             this.elemento = this._data.elemento;
             this.totalValue = this._data.elemento.valorTotal;
@@ -135,6 +147,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getDateAdiction();
+        this.getCdp();
+        this.getDetailContract();
+        this.getElementType();
     }
 
     private _filter(value: string): string[] {
@@ -185,7 +200,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         let item: Elements = {
             id: this._data.idElemento,
             nombreElemento: this.elementForm.value.nombreElemento,
-            idComponente: this._data.idComponente,
+            componentId: this._data.componentId,
             cantidadContratistas: this.elementForm.value.contractorCant,
             cantidadDias: this.elementForm.value.cantDay,
             valorUnidad: this.elementForm.value.unitValue,
@@ -193,15 +208,15 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             valorPorDia: this.elemento.valorPorDia,
             valorPorDiaContratista: this.elemento.valorPorDiaContratista,
             valorTotalContratista: this.totalValueContratista,
-            cpc: this.elementForm.value.cpc,
-            nombreCpc: this.elementForm.value.nombreCpc,
+            cpcId: this.elementForm.value.cpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
             recursos: this.recursos,
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
-            objetoElemento: this.elementForm.value.objetoElemento
+            objetoElemento: this.elementForm.value.objetoElemento,
+            activityId: this._data.activityId
         };
         this._planingService.addElementoComponente(item).subscribe((response) => {
             if (response) {
@@ -212,7 +227,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                     html: 'Información Registrada Exitosamente!',
                     showConfirmButton: false,
                     timer: 1500
-                  });
+                });
                 this.matDialogRef.close(true);
             }
             this._changeDetectorRef.detectChanges();
@@ -224,10 +239,12 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         });
     }
 
-    calculate = () => {
-        if(this.typeContractor){
-            if (this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === '') {
-                swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
+    calculate = (e: string) => {
+        if (this.typeContractor) {
+            if ((this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === '')) {
+                if (e === 'valor') {
+                    swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
+                }
             } else {
                 this.totalCalculate = false;
                 this.elemento.valorPorDiaContratista = this.elementForm.value.unitValue / 30;
@@ -236,7 +253,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                     this.elementForm.value.contractorCant
                 );
                 this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
-    
+
                 if (this.elementForm.value.totalValue === null || this.elemento.valorTotal === this.elementForm.value.totalValue) {
                     this.totalValue = Number(
                         this.elemento.valorPorDia * this.elementForm.value.cantDay
@@ -256,11 +273,11 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                     this.totalValueContratista = Number(
                         this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
                     );
-                    this.recursos =  this.elementForm.value.totalValue - this.totalExacto;
+                    this.recursos = this.elementForm.value.totalValue - this.totalExacto;
                 }
-    
+
             }
-        }else{
+        } else {
             this.elemento.valorPorDia = this.elementForm.value.unitValue;
             this.totalValue = this.elementForm.value.unitValue;
             this.elementForm.value.totalValue = this.elementForm.value.unitValue;
@@ -293,28 +310,86 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
     onChange(event) {
         this.totalV = Number(this.elementForm.value.totalValue.replace(/,/g, ""));
-        if(this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0){
-            if(this.totalValue != this.elementForm.value.totalValue){
-                if(this.totalValue < this.totalV){
-                    this.recursos = this.totalV -Number(this.totalValue);
-                }else if(this.totalValue > this.totalV){
-                    this.recursos =  Number(this.totalValue) - this.totalV;
+        if (this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0) {
+            if (this.totalValue != this.elementForm.value.totalValue) {
+                if (this.totalValue < this.totalV) {
+                    this.recursos = this.totalV - Number(this.totalValue);
+                } else if (this.totalValue > this.totalV) {
+                    this.recursos = Number(this.totalValue) - this.totalV;
                 }
             }
             this.totalValue = this.totalV
-        } else{
+        } else {
             this.totalValue = this.totalV
-        }       
+        }
 
     }
 
-    changeTypeElement(e: any){
-        if(e.value === 'Suministro'){
+    changeTypeElement(e: any) {
+        let selectCode: ElementType[] = this.elementTypes.filter(f => f.id == e.value)
+        let code = selectCode[0].code;
+        if (code === ElementTypeCode.SUMINISTRO) {
             this.typeContractor = false;
-        }else{
+        } else {
             this.typeContractor = true;
         }
 
     }
-    
+
+    calcularDiasEntreFechas(fechaInicio: string, fechaFin: string): number {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const diferenciaMilisegundos = fin.getTime() - inicio.getTime();
+        this.maxDayContrac = Math.floor(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
+        return this.maxDayContrac;
+    }
+
+    preventExceedingMax(event: KeyboardEvent) {
+        const inputElement = event.target as HTMLInputElement;
+        const inputValue = parseInt(inputElement.value, 10);
+
+        if (inputValue > this.maxDayContrac) {
+            swal.fire('', 'Los días no pueden exceder el tiempo del contrato!', 'warning');
+
+            event.preventDefault();
+            inputElement.value = this.maxDayContrac.toString();
+        }
+    }
+
+    getCdp() {
+        this._genericService.getCpcType().subscribe((response) => {
+            this.cpcType = response;
+        }, (response) => {
+            // Set the alert
+            console.log(response);
+
+            swal.fire('error', 'Error al registrar la información!', 'error');
+        });
+    }
+
+    getElementType() {
+        this._genericService.getElementType().subscribe((response) => {
+            this.elementTypes = response;
+        }, (response) => {
+            // Set the alert
+            console.log(response);
+
+            swal.fire('error', 'Error al registrar la información!', 'error');
+        });
+    }
+
+    changecpcType(e: any) {
+        let cpcN: CpcType[] = this.cpcType.filter(f => f.id == e.value)
+        this.elemento.nombreCpc = cpcN[0].cpcName;
+    }
+
+    getDetailContract() {
+        this._genericService.getDetalleContratoById(this._data.idContrato, true).subscribe(
+            (resp) => {
+                this.detailContract = resp;
+                this.calcularDiasEntreFechas(this.detailContract.fechaContrato, this.detailContract.fechaFinalizacion);
+            }
+        );
+    }
+
 }

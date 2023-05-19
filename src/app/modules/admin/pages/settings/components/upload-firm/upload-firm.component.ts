@@ -65,6 +65,8 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
 
   onChange(event) {
     this.file = event.target.files[0];
+    this.file = event.target.files[0];
+    // this.typeFile = this.file.type.split('/')[1].toUpperCase();
     const reader = new FileReader();
     reader.readAsDataURL(this.file);
     this.convertFile(this.file).subscribe(base64 => {
