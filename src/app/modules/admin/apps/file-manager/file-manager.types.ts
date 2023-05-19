@@ -1,25 +1,58 @@
-export interface Items
+export interface ItemsContract
 {
-    folders: Item[];
-    files: Item[];
+    folders: FolderContractor[];
+    folderContract?: FoldersByContract[];
     path: any[];
 }
-export interface ItemsC
+
+export interface ItemsContractor
 {
-    folders: Item[];
+    folders: FolderContractor[];
+    folderContract?: FoldersByContract[];
     path: any[];
 }
 
 export interface Item
 {
+    folders: FolderContract[];
+    path: any[];
+}
+
+
+export interface DataFile
+{
     id?: string;
-    folderId?: string;
-    name?: string;
-    createdBy?: string;
-    createdAt?: string;
-    modifiedAt?: string;
+    documentType?: string;
+    descriptionFile: string;
+    registerDate: string;
+    filesName?: string;
+    filedata?: string;
     size?: string;
     type?: string;
-    description?: string | null;
-    detailFile?: any
+    fileType?: string | null;
+    passed: any;
+}
+
+export interface FolderContractor
+{
+    id?: string;
+    Nombre: string;
+    Identificacion: string;
+    type: string;
+}
+
+export interface FolderContract
+{
+    id?: string;
+    nombreEmpresa: string;
+    nombreProyecto: string;
+    numeroContrato: string;
+}
+
+export interface FoldersByContract
+{
+    id?: string;
+    nombreEmpresa: string;
+    nombreProyecto: string;
+    numeroContrato: string;
 }

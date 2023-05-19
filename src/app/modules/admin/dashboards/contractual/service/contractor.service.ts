@@ -3,8 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, retry, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { PaymentAccount } from '../models/paymentAccount';
 import { ContractContractors, Contractor } from '../models/contractor';
+import { ChargeAccount } from 'app/modules/admin/apps/home-contractor/models/pdfDocument';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,6 @@ import { ContractContractors, Contractor } from '../models/contractor';
 export class ContractorService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     private _contractorsByContract: BehaviorSubject<any> = new BehaviorSubject(null);
-
     apiUrl: any = environment.apiURL;
 
     constructor(private _httpClient: HttpClient) {
@@ -30,6 +29,7 @@ export class ContractorService {
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
         return this._httpClient.get(urlEndPoint + id).pipe(
             tap((response: any) => {
+                
                 this._contractorsByContract.next(response);
             })
         );
@@ -38,9 +38,9 @@ export class ContractorService {
     getPaymentContractor(contractId: string, contractorId: string) {
         let urlEndPoint = this.apiUrl;
         const params = new HttpParams()
-        .set('contractId', contractId)
-        .set('contractorId', contractorId);
-        return this._httpClient.get(urlEndPoint+'Contractor/GetPaymentsContractorList', {params: params}).pipe(
+            .set('contractId', contractId)
+            .set('contractorId', contractorId);
+        return this._httpClient.get(urlEndPoint + 'Contractor/GetPaymentsContractorList', { params: params }).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
             })
@@ -56,17 +56,17 @@ export class ContractorService {
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 
-    addProjectFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
+    addContractFolder(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
     getPaymentAccount(contractorId: string, contractId: string) {
         const params = new HttpParams()
-        .set('contractorId', contractorId )
-        .set('contractId', contractId)
-        let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
-        return this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+            .set('contractorId', contractorId)
+            .set('contractId', contractId)
+        let urlEndPoint = this.apiUrl + environment.GetPdChargeAccountGetById;
+        return this._httpClient.get<ChargeAccount>(urlEndPoint, { params: params });
     }
 
     
@@ -75,12 +75,12 @@ export class ContractorService {
         .set('contractorId', contractorId )
         .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetAllFileByContractEndpoint;
-        return this._httpClient.get<PaymentAccount>(urlEndPoint, {params: params});
+        return this._httpClient.get<any>(urlEndPoint, {params: params});
     }
 
     getContractorByContract(contractorId: string) {
         let urlEndPoint = this.apiUrl + environment.GetContractsByContractors;
-        return this._httpClient.get<any>(urlEndPoint+ contractorId);
+        return this._httpClient.get<any>(urlEndPoint + contractorId);
     }
 
 
@@ -90,9 +90,9 @@ export class ContractorService {
     }
 
     addNewnessContractor(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addProjectFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.AddnewnessContractor;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
-        .pipe(retry(0));
+            .pipe(retry(0));
     }
 
 }

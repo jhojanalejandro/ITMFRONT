@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import {  Resolve } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/services/file-manager.service';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { AuthService } from 'app/core/auth/auth.service';
 
 @Injectable({
@@ -27,7 +26,7 @@ export class TeamsResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(): Observable<Item[]>
+    resolve(): Observable<DataFile[]>
     {
         return this._auth.getTeams();
     }

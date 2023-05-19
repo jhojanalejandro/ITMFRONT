@@ -6,6 +6,8 @@
                 <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                 <span class="ml-2">Volver</span>
             </a>
+            <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+              {{contractname}}!</div>
 
         </div>
         <div class="mt-4 sm:mt-0">
@@ -19,19 +21,20 @@
             <button (click)="registrarDatosContratacion(null)" class="ml-3" mat-flat-button [color]="'primary'"
                 [matTooltip]="'Shortcut: Ctrl + /'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                <span class="ml-2 mr-1">Agregar Datos</span>
+                <span class="ml-2 mr-1">Guardar Datos</span>
             </button>
+
+            <button (click)="uploadExcel()" class="ml-3" mat-flat-button [color]="'primary'"
+            [matTooltip]="'Shortcut: Ctrl + /'">
+            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
+        </button>
         </div>
     </div>
     <div class="flex-auto">
         <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
-            <mat-icon
-                class="icon-size-5"
-                matPrefix
-                [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input
-                matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input
-                [autocomplete]="'off'"
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
                 [placeholder]="'Buscar Contrato'">
         </mat-form-field>
     </div>
@@ -48,19 +51,20 @@
                             <mat-menu #summaryMenu="matMenu">
                                 <button *ngIf="visibleOption" mat-menu-item (click)="generarMinuta()">
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                        Generar Minuta
-                                    </button>
+                                    Generar Minuta
+                                </button>
                                 <button *ngIf="visibleOption" mat-menu-item>
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Acta de inicio</button>
                                 <button *ngIf="visibleOption" mat-menu-item (click)="generarEstudiosPrevios()">
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                        Generar Estudios Previos
-                                    </button>
-                                    <button mat-menu-item (click)="activateContarct()">
-                                        <mat-icon svgIcon="heroicons_solid:arrow-circle-right"></mat-icon>
-                                        Activar contrato
-                                    </button>
+                                    Generar Estudios Previos
+                                </button>
+                                <button mat-menu-item (click)="activateContarct()">
+                                    <mat-icon svgIcon="heroicons_solid:arrow-circle-right"></mat-icon>
+                                    Activar contrato
+                                </button>
+                                
                             </mat-menu>
                         </div>
                     </div>
@@ -96,10 +100,24 @@
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
                                     <p
-                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento">
-                                        {{element[columna.name]}}</p>
-                                    <p *ngIf="element[columna.name]== element.fechaNacimiento">{{element[columna.name] |
-                                        date}} </p>
+                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento && element[columna.name]!= element.statusContractor && element[columna.name]!= element.proccess">
+                                        {{element[columna.name]}}
+                                    </p>
+                                    <p *ngIf="element[columna.name]== element.fechaNacimiento">
+                                        {{element[columna.name] | date:'dd/MM/yyyy'}}
+                                    </p>
+                                    <span *ngIf="element[columna.name]== element.statusContractor;"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
+                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'EN REVISIÓN'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span *ngIf="element[columna.name]== element.proccess;"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.proccess === 'en espera',
+                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.proccess === 'en proceso'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
                                     <p *ngIf="columna.name=='acciones'">
 
                                         <button [matTooltip]="'Opciones Documentos'" mat-icon-button
@@ -108,8 +126,8 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #summaryMenu="matMenu">
-                                            <button [matTooltip]="'Agregar datos'" (click)="registrarDatosContratacion(element)"
-                                                mat-menu-item>
+                                            <button [matTooltip]="'Agregar datos'"
+                                                (click)="registrarDatosContratacion(element)" mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
                                                 Agregar datos
                                             </button>
@@ -131,7 +149,8 @@
                                                 Generar Minuta
                                             </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="generarEstudiosPrevios(element)" [color]="'primary'" mat-menu-item>
+                                                (click)="generarEstudiosPrevios(element)" [color]="'primary'"
+                                                mat-menu-item>
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Estudios Previos
                                             </button>
@@ -150,13 +169,16 @@
                                 (click)="selection.toggle(row); selectRowFull(row)">
                             </tr>
                         </table>
-                        <mat-paginator [pageSizeOptions]="[10, 30, 50, 100]" aria-label="Select page of contractors"></mat-paginator>
+                        <mat-paginator [pageSizeOptions]="[10, 30, 50, 100]"
+                            aria-label="Select page of contractors"></mat-paginator>
                     </div>
                 </div>
             </div>
         </div>
 
     </div>
-    <app-minuta-contrato [contractContractors]="contractContractors" *ngIf="contractContractors != null && minuta"></app-minuta-contrato>
-    <app-estudio-previo [contractContractors]="contractContractors" *ngIf="contractContractors != null && estudioPrevio"></app-estudio-previo>
+    <app-minuta-contrato [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && minuta"></app-minuta-contrato>
+    <app-estudio-previo [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && estudioPrevio"></app-estudio-previo>
     <app-minuta-adicion *ngIf="minutaAdicion"></app-minuta-adicion>

@@ -15,10 +15,10 @@ import { FileListComponent } from './list-file/file-list.component';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
 import { DetailFileComponent } from './components/details-file/detail-file.component';
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
-import { RegisterFolderContractorComponent } from './list-folder-file-contractor/register-folder-contractor/register-folder-contractor.component';
 import { DetailsFolderFileContractorComponent } from './components/details-folder-contractor/details-folder-contractor.component';
 import { DetailFileContractComponent } from './components/details-file-contract/detail-file-contract.component';
 import { ObservationFileComponent } from './list-file/observation-File/observation-file.component';
+import { RegisterFolderContractorComponent } from './components/register-folder-contractor/register-folder-contractor.component';
 
 @NgModule({
     declarations: [

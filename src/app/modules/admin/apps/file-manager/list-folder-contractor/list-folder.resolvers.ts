@@ -1,34 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile, ItemsContract } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class FileManagerItemsCResolver implements Resolve<any>
-{
-    /**
-     * Constructor
-     */
-    constructor(private _fileManagerService: ListFolderContractorService) {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]> {
-        return this._fileManagerService.getAllFolderContractor();
-    }
-}
 
 @Injectable({
     providedIn: 'root'
@@ -54,8 +29,8 @@ export class FileManagerFolderCResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]> {
-        return this._fileManagerService.getAllFolderContractor(route.paramMap.get('folderId'))
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ItemsContract> {
+        return this._fileManagerService.getAllFolderContract(route.paramMap.get('folderId'))
             .pipe(
                 // Error here means the requested task is not available
                 catchError((error) => {
@@ -81,7 +56,7 @@ export class FileManagerFolderCResolver implements Resolve<any>
 @Injectable({
     providedIn: 'root'
 })
-export class FileManagerItemResolverFile implements Resolve<any>
+export class    DetailFileManagerContractResolver implements Resolve<any>
 {
     /**
      * Constructor
@@ -103,9 +78,9 @@ export class FileManagerItemResolverFile implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile>
     {
-        return this._fileManagerService.getItemById(route.paramMap.get('folderId'))
+        return this._fileManagerService.getFileContractById(route.paramMap.get('id'))
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
@@ -125,8 +100,5 @@ export class FileManagerItemResolverFile implements Resolve<any>
                    );
     }
 }
-
-
-
 
 

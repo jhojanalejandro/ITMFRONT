@@ -4,7 +4,6 @@ import swal from 'sweetalert2';
 import { interval, Subject,takeUntil } from 'rxjs';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { ActivatedRoute } from '@angular/router';
-import { Item } from '../../file-manager.types';
 import { FileListManagerService } from '../../services/list-file.service';
 import { DomSanitizer } from '@angular/platform-browser';
 

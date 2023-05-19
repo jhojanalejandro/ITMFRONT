@@ -1,6 +1,5 @@
 import { Route } from '@angular/router';
 import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.component';
-import { CanDeactivateFileManagerDetails } from '../../apps/file-manager/file-manager.guards';
 import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
 import { CollectionAccountsItemFResolver } from './collection-accounts-list/collection-accounts-list.resolvers';
 import { DetailFilePaymentComponent } from './collection-accounts-list/details-file-payment/detail-file-payment.component';
@@ -10,35 +9,34 @@ import { ContractorPaymentListComponent } from './contractor-payment-list/contra
 
 export const nominaRoutes: Route[] = [
     {
-        path     : '',
+        path: '',
         component: NominaComponent,
         // resolve  : {
         //     data: NominaResolver
         // }
     },
     {
-        path     : ':type/:contractId',
+        path: ':type/:contractId',
         component: CollectionAccountsListComponent,
-        resolve  : {
+        resolve: {
             data: CollectionAccountsItemFResolver
         },
-        children : [
+        children: [
             {
-                path         : 'details/file/:id',
-                component    : DetailFilePaymentComponent,
-                resolve      : {
+                path: 'details/file/:id',
+                component: DetailFilePaymentComponent,
+                resolve: {
                     item: DetailFileManagerItemFResolver
-                },
-                canDeactivate: [CanDeactivateFileManagerDetails]
+                }
             }
         ]
     },
     {
-        path     : 'lista/contratistas/:id',
+        path: 'lista/contratistas/:id',
         component: ContractorListComponent,
     },
     {
-        path     : 'payment/Contractor/:contractId/:ContractorId',
+        path: 'payment/Contractor/:contractId/:ContractorId',
         component: ContractorPaymentListComponent,
     },
 ];

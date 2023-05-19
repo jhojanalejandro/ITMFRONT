@@ -65,11 +65,11 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-end">
-            <button mat-stroked-button type="button">
-                Cancelar
+            <button class="ml-4" mat-flat-button type="button" (click)="uploadFile()" [color]="'secondary'">Cargar Firma
             </button>
-            <button class="ml-4" mat-flat-button type="button" [color]="'primary'">Guardar
+            <button class="ml-4" mat-flat-button type="button" (click)="updateUser()" [color]="'primary'">Actualizar Información
             </button>
+
         </div>
     </form>
 

@@ -8,24 +8,28 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from '../model/user-model';
 
 @Component({
-    selector     : 'auth-sign-up',
-    templateUrl  : './sign-up.component.html',
+    selector: 'auth-sign-up',
+    templateUrl: './sign-up.component.html',
     styleUrls: ['./sign-up.component.css'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class AuthSignUpComponent implements OnInit
-{
+export class AuthSignUpComponent implements OnInit {
     @ViewChild('signUpNgForm') signUpNgForm: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
+        message: ''
+    };
+    alertPassword: { type: FuseAlertType; message: string } = {
+        type: 'success',
         message: ''
     };
     code: string = 'DTV';
     profesionales: any = GlobalConst.profesional;
     signUpForm: FormGroup;
     showAlert: boolean = false;
+    showAlertPassword: boolean = false;
 
     /**
      * Constructor
@@ -34,39 +38,33 @@ export class AuthSignUpComponent implements OnInit
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private _router: Router
-    )
-    {
+    ) {
+
     }
 
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-                name      : ['', Validators.required],
-                email     : ['', [Validators.required, Validators.email]],
-                password  : ['', Validators.required],
-                confirmPassword : ['', Validators.required],
-                professional : ['', Validators.required],
-                phoneNumber : ['', Validators.required],
-                identification: ['',Validators.required]
-            }
-        );
+            name: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', Validators.required],
+            confirmPassword: ['', Validators.required],
+            professional: ['', Validators.required],
+            phoneNumber: ['', Validators.required],
+            identification: ['', Validators.required]
+        });
+        this.validatePassword();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Sign up
      */
-    async signUp()
-    {
+    async signUp() {
 
-        const userRegister: IUserModel={
+        const userRegister: IUserModel = {
             userName: this.signUpForm.value.name,
             userPassword: this.signUpForm.value.password,
             avatar: 'assets/images/flags/user.png',
@@ -77,8 +75,7 @@ export class AuthSignUpComponent implements OnInit
 
         };
         // Do nothing if the form is invalid
-        if ( this.signUpForm.invalid )
-        {
+        if (this.signUpForm.invalid) {
             return;
         }
 
@@ -89,28 +86,42 @@ export class AuthSignUpComponent implements OnInit
         this.showAlert = false;
         // Sign up
         (await this._authService.signUp(userRegister)).subscribe(
-                (response) => {
+            (response) => { 
+                
+                // Navigate to the confirmation required page
+                this._router.navigateByUrl('/confirmation-required');
+            },
+            (response) => {
+                console.log(response);
 
-                    // Navigate to the confirmation required page
-                    this._router.navigateByUrl('/confirmation-required');
-                },
-                (response) => {
-                    console.log(response);
-                    
-                    // Re-enable the form
-                    this.signUpForm.enable();
-                    // Reset the form
-                    this.signUpNgForm.resetForm();
+                // Re-enable the form
+                this.signUpForm.enable();
+                // Reset the form
+                this.signUpNgForm.resetForm();
 
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Something went wrong, please try again.'
-                    };
+                // Set the alert
+                this.alert = {
+                    type: 'error',
+                    message: 'Algo salió mal. Por favor, vuelva a intentarlo.'
+                };
 
-                    // Show the alert
-                    this.showAlert = true;
-                }
-            );
+                // Show the alert
+                this.showAlert = true;
+            }
+        );
+    }
+    validatePassword() {
+        this.signUpForm.get('confirmPassword').valueChanges.subscribe((newValue) => {
+            this.alertPassword = {
+                type: 'error',
+                message: 'Las contraseñas no coinciden'
+            };
+            if (newValue != this.signUpForm.value.password) {
+                this.showAlertPassword = true;
+            }else{
+                this.showAlertPassword = false;
+            }
+        });
+
     }
 }

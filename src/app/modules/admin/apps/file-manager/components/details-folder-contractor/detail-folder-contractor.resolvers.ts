@@ -1,37 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
-import { FileListManagerService } from '../../services/list-file.service';
-import { ListFolderFileContractorService } from '../../services/list-folder-file-contractor.service';
-
-@Injectable({
-    providedIn: 'root'
-})
-export class DetailFolderContractorManagerItemResolver implements Resolve<any>
-{
-    /**
-     * Constructor
-     */
-    constructor(private _fileManagerService: ListFolderFileContractorService)
-    {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
-    {
-        return this._fileManagerService.getItemByIdDetailFolderContractor();
-    }
-}
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { ListFolderContractorService } from '../../services/list-folder-contractor.service';
 
 
 @Injectable({
@@ -44,7 +15,7 @@ export class DetailFolderContractorItemFResolver implements Resolve<any>
      */
     constructor(
         private _router: Router,
-        private _fileManagerService: ListFolderFileContractorService
+        private _fileManagerService: ListFolderContractorService
     )
     {
     }
@@ -59,7 +30,7 @@ export class DetailFolderContractorItemFResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile>
     {
         return this._fileManagerService.getItemByIdDetailFolderContractor(route.paramMap.get('id'))
                    .pipe(

@@ -1,0 +1,305 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 bg-default dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <div>
+                <div class="hidden sm:flex flex-wrap items-center font-medium">
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <a href="dashboards/inicio" class="ml-1 text-primary-500">Inicio</a>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <span class="ml-1 text-secondary">Planeación</span>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <a href="docs/ecommerce/cuadroEconomico" class="ml-1 text-primary-500">Cuadro Económico</a>
+                    </div>
+                    <div class="flex items-center ml-1 whitespace-nowrap">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-right'">
+                        </mat-icon>
+                        <span class="ml-1 text-secondary">Componentes</span>
+                    </div>
+                </div>
+                <div class="flex sm:hidden">
+                    <a class="inline-flex items-center -ml-1.5 text-secondary font-medium" [routerLink]="'./..'">
+                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-left'">
+                        </mat-icon>
+                        <span class="ml-1">Back</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    {{projectName}}
+                </h2>
+            </div>
+        </div>
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <button class="fuse-mat-button-rounded" mat-stroked-button color="accent" (click)="openDialog()">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog'"></mat-icon>
+                <span class="ml-2">Cambiar Porcentaje de Cálculo</span>
+            </button>
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addComponent()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                </svg>
+               Nuevo Componente
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div style="margin: 20px;">
+            <div class="grid grid-cols-1 sm:grid-cols-6 gap-6 w-full min-w-0">
+                <!-- Budget distribution -->
+                <div
+                    class="sm:col-span-3 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Lista de componentes, Actividades y sus
+                        elementos</div>
+                    <div id="contenedor">
+                        <igx-tree class="tree-root">
+                            <igx-tree-node *ngFor="let type of data">
+                                <mat-icon (click)="abrirDivComponent(type)">visibility</mat-icon>
+                                Componente : {{ type.nombreComponente }}
+                                <igx-tree-node *ngFor="let valueActivity of type.activities">
+                                    <mat-icon (click)="abrirDivActividad(valueActivity)">visibility</mat-icon>
+                                    Actividad : {{ valueActivity.nombreActividad }}
+                                    <igx-tree-node *ngFor="let valueElement of valueActivity.elementos">
+                                        <mat-icon (click)="abrirDivElement(valueElement)">visibility</mat-icon>
+                                        Elemento : {{ valueElement.nombreElemento }}
+                                    </igx-tree-node>
+                                </igx-tree-node>
+                                <igx-tree-node *ngFor="let value of type.elementos">
+                                    <mat-icon (click)="abrirDivElement(value)">visibility</mat-icon>
+                                    Elemento : {{ value.nombreElemento }}
+                                </igx-tree-node>
+                            </igx-tree-node>
+                        </igx-tree>
+                        <div *ngIf="abrirDivComponente" style="width: 50%;">
+                            <fuse-card class="flex flex-col w-full p-8 pt-6 filter-list border">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-2xl font-semibold leading-tight">Nombre:
+                                        {{dataComponente.nombreComponente}}
+                                    </div>
+                                    <div class="-mr-4">
+                                        <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #listCard07Menu="matMenu">
+                                            <button mat-menu-item (click)="addElements('component')">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Elemento
+                                            </button>
+                                            <button mat-menu-item (click)="addActividad()">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Actividad
+                                            </button>
+                                            <button (click)="editComponent(dataComponente)" mat-menu-item>
+                                                <mat-icon svgIcon="edit"></mat-icon>Editar Componente
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col my-2">
+                                    <div class="my-2">
+                                        <div>Cantidad de Elementos: {{dataComponente.elementos.length}} </div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Cantidad Actividades: {{dataComponente.activities.length}} </div>
+                                    </div>
+                                </div>
+
+                            </fuse-card>
+                        </div>
+                        <div *ngIf="abrirDivActivity" style="width: 50%;">
+                            <fuse-card class="flex flex-col w-full p-8 pt-6 filter-list border">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-2xl font-semibold leading-tight">Nombre:
+                                        {{dataActividad.nombreActividad}}
+                                    </div>
+                                    <div class="-mr-4">
+                                        <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #listCard07Menu="matMenu">
+                                            <button mat-menu-item (click)="addElements('activity')">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Elemento
+                                            </button>
+                                            <button (click)="editActivity(dataActividad)" mat-menu-item>
+                                                <mat-icon svgIcon="edit"></mat-icon>Editar Actividad
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col my-2">
+                                    <div class="my-2">
+                                        <div>Cantidad de Elementos: {{dataActividad.elementos.length}} </div>
+                                    </div>
+                                </div>
+                            </fuse-card>
+                        </div>
+                        <div *ngIf="abrirDivElemento" style="width: 50%;">
+                            <fuse-card class="flex flex-col w-full p-8 pt-6 filter-list border">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-2xl font-semibold leading-tight">Nombre CPC:
+                                        {{dataElemento.nombreCpc}}</div>
+                                    <div class="-mr-4">
+                                        <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #listCard07Menu="matMenu">
+                                            <button (click)="editElemento(dataElemento)" mat-menu-item>
+                                                <mat-icon svgIcon="edit"></mat-icon>Editar
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col my-2">
+                                    <div class="my-2">
+                                        <div>consecutivo: {{dataElemento.consecutivo}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>CPC: {{dataElemento.cpc}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Cantidad de Contratistas: {{dataElemento.cantidadContratistas}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Cantidad de Días: {{dataElemento.cantidadDias}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Valor Unidad: {{dataElemento.valorUnidad | currency:'COP '}} </div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Valor por Día: {{dataElemento.valorPorDia | currency:'COP '}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Valor Total: {{dataElemento.valorTotal | currency:'COP '}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>Recursos: {{dataElemento.recursos | currency:'COP '}}</div>
+                                    </div>
+                                </div>
+                            </fuse-card>
+                        </div>
+                    </div>
+                </div>
+                <div class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6">
+                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Sub Total</div>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    {{subTotal | currency:'COP '}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        Suma de los totales de los elementos de todos los componentes.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos operativos</div>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    {{gastosOperativos | currency:'COP '}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        Sub total * <span class="text-green-500">{{porcentajeCalculo}}%.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos Operativos</div>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    {{gastosOperativos | currency:'COP '}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Costo Contrato</div>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    {{total | currency:'COP '}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    Cantidad total Contratistas: {{contractorCant}}
+                                </div>
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                   <span>Cantidad total elementos: </span> {{elementosCant}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        Todos los elementos y contratistas
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                        <button class="ml-3" mat-flat-button [color]="'primary'" (click)="guardarCalculo()">
+                            <mat-icon svgIcon="mat_outline:save"></mat-icon>
+                           Guardar Calculos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

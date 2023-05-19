@@ -4,7 +4,6 @@ import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { PaymentAccount } from 'app/modules/admin/dashboards/contractual/models/paymentAccount';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs';
 import { ChargeAccount, ExecutionReport } from '../../models/pdfDocument';
@@ -22,10 +21,9 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
     @Input() generateChargeAccount: boolean;
     @Input() generateExecutionReport: boolean;
 
-    @Input() dataInforme: PaymentAccount;
     @Output() onGeneratePdf = new EventEmitter<boolean>();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    valueInitialDate: string = '';
     date: Date = new Date();
     valueLetter: any;
     listaData: any[] = [];
@@ -52,8 +50,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
             this.downloadPDFChargeAccount();
             this.onGeneratePdf.emit(false);
         }
-        this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
-
+        this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS');
     }
 
     public downloadPDF() {
@@ -92,7 +89,9 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         });
     }
     private downloadPDFChargeAccount() {
-        let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
+        let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd'); 
+        this.validateValuesPDFChargeAccount();
+
         this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
         const documentDefinition = {
             content: [
@@ -126,7 +125,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 text: latest_date,
                                 alignment: 'center',
                             }, {
-                                text: '3',
+                                text: this.chargeAccountData.chargeAccountNumber,
                                 alignment: 'center',
                             },],/*  */
 
@@ -264,7 +263,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: this.chargeAccountData.expeditionDate,
+                                    text: this.chargeAccountData.expeditionIdentification,
                                     alignment: 'center'
                                 },
                             ],
@@ -309,7 +308,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     colSpan: 2,
-                                    text: 'Contrato de prestación de servicios como contratista para el desarrollo de aplicativo para automatización del proceso de contratación',
+                                    text: 'Contrato de prestación de servicios como ' + this.chargeAccountData.elementName,
                                     alignment: 'center',
                                 },
                                 {
@@ -326,7 +325,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     alignment: 'center',
                                 },
                                 {
-                                    text: this.chargeAccountData.agreement,
+                                    text: this.chargeAccountData.contractName,
                                     alignment: 'center',
                                 },
                             ],
@@ -336,7 +335,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     colSpan: 2,
-                                    text: '29 de agosto al 30 de agosto del 2022',
+                                    text: 'del ' + this.chargeAccountData.periodExecutedInitialDate + ' al ' + this.chargeAccountData.periodExecutedFinalDate,
                                     alignment: 'center',
                                 },
                                 {
@@ -374,7 +373,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                             [
                                 {
                                     colSpan: 3,
-                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.typeAccount + this.chargeAccountData.accountName + ' N° ' + this.chargeAccountData.chargeAccountNumber,
+                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.typeAccount + this.chargeAccountData.bankingEntity + ' N° ' + this.chargeAccountData.accountNumber,
                                 },
                                 {
                                     text: '',
@@ -425,14 +424,21 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         };
         let test = pdfMake
             .createPdf(documentDefinition)
-            .download('Filenames.pdf');
+            .download(this.chargeAccountData.contractorName + 'CUENTADECOBRO.pdf');
         console.log(test);
         this.onGeneratePdf.emit(false);
     }
 
     private downloadPDFInforme() {
+        
+        this.validateValuesPDFInforme();
+        let day = this.datepipe.transform(this.date, 'dd');
+        let month = this.datepipe.transform(this.date, 'MM');
+        let year = this.datepipe.transform(this.date, 'YYYY');
+
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
-        debugger
+       
+        let plazo = this.calcularDiferencia(this.executionReportData.contractInitialDate, this.executionReportData.contractFinalDate)
         this.specificObligation = this.executionReportData.specificObligations.split('->');
         for (let index = 0; index < this.specificObligation.length; index++) {
             this.listaData[index] = [
@@ -449,7 +455,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                 }
             ]
         }
-        debugger
         const documentDefinition = {
             content: [
                 {
@@ -490,7 +495,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: 'FECHA DE INICIO',
                                     style: 'tableHeader',
                                 }, {
-                                    text: latest_date,
+                                    text: this.valueInitialDate,
                                 }
                             ],
                             [
@@ -498,7 +503,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: 'PLAZO',
                                     style: 'tableHeader',
                                 }, {
-                                    text: '3 MESES Y VEINTICINCO DÍAS',
+                                    text: plazo,
                                 }
                             ],
                             [
@@ -521,7 +526,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: 'VALOR DEL CONTRATO',
                                     style: 'tableHeader',
                                 }, {
-                                    text: '3 MESES Y VEINTICINCO DÍAS',
+                                    text: this.executionReportData.totalValue,
                                 }
                             ],
                             [
@@ -529,7 +534,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: 'SUPERVISOR ITM',
                                     style: 'tableHeader',
                                 }, {
-                                    text: 'DIEGO ALEJANDRO MARÍN CIFUENTES',
+                                    text: this.executionReportData.supervisorContract,
                                 }
                             ],
                         ],
@@ -704,12 +709,12 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                         ],
                     },
                 },
-                { text: '\n\n PERIODO EJECUTADO: \t\t\t del 29 de agosto al 30 de agosto: ' },
-                { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t VALOR' },
-                { text: '\n\n Para constancia se firma en Medellín a los 23 días del mes de septiembre del año 2022 \n\n' },
+                { text: '\n\n PERIODO EJECUTADO: \t\t\t' + 'del ' + this.executionReportData.periodExecutedInitialDate + ' al ' + this.executionReportData.periodExecutedFinalDate },
+                { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t' + this.executionReportData.totalValue },
+                { text: '\n\n Para constancia se firma en Medellín a los  ' + day + ' días del mes  ' + month + ' del año  ' + year + ' \n\n' },
                 { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
-                { text: 'JHOJAN ALEJANDRO HERNANDEZ YEPES\n' },
-                { text: 'C.C : \t' + '\n' },
+                { text: this.executionReportData.contractorName + '\n' },
+                { text: 'C.C :' + this.executionReportData.contractorIdentification + ' \t' + '\n' },
                 { text: 'Contratista ITM' }
 
             ],
@@ -748,9 +753,66 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         };
         let test = pdfMake
             .createPdf(documentDefinition)
-            .download('Filenames.pdf');
+            .download(this.executionReportData.contractorName + 'REPORTEDEEJECUCION.pdf');
         console.log(test);
         this.onGeneratePdf.emit(false);
+    }
+
+    private transformDate(value: string): string {
+        const meses = [
+            'enero',
+            'febrero',
+            'marzo',
+            'abril',
+            'mayo',
+            'junio',
+            'julio',
+            'agosto',
+            'septiembre',
+            'octubre',
+            'noviembre',
+            'diciembre'
+        ];
+
+        const fecha = new Date(value);
+        const dia = fecha.getDate();
+        const mes = meses[fecha.getMonth()];
+        const año = fecha.getFullYear();
+
+        return `${dia} de ${mes} del ${año}`;
+    }
+
+
+    private calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
+        let fechaInicios = new Date(fechaInicio);
+        let fechaFins = new Date(fechaFin);
+        const diferencia = fechaFins.getTime() - fechaInicios.getTime();
+        const diasTotales = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const meses = Math.floor(diasTotales / 30);
+        const dias = diasTotales % 30;
+        if (meses > 0 && meses == 1) {
+            return `${meses} mes y ${dias} días.`
+        } else if (meses > 0 && meses > 1) {
+            return `${meses} meses y ${dias} días.`
+        } else {
+            return `${dias} días.`
+        }
+    }
+
+    private validateValuesPDFInforme(){
+        this.executionReportData.totalValue = Number(this.executionReportData.totalValue).toFixed(0);
+        this.valueInitialDate = this.transformDate(this.executionReportData.contractInitialDate.toString());
+        this.executionReportData.periodExecutedInitialDate = this.transformDate(this.executionReportData.periodExecutedInitialDate);
+        this.executionReportData.periodExecutedFinalDate = this.transformDate(this.executionReportData.periodExecutedFinalDate);
+        this.executionReportData.totalValue = (+this.executionReportData.totalValue).toLocaleString();
+
+    }
+    private validateValuesPDFChargeAccount(){
+        this.chargeAccountData.totalValue = Number(this.chargeAccountData.totalValue).toFixed(0);
+        this.chargeAccountData.periodExecutedInitialDate = this.transformDate(this.chargeAccountData.periodExecutedInitialDate);
+        this.chargeAccountData.periodExecutedFinalDate = this.transformDate(this.chargeAccountData.periodExecutedFinalDate);
+        this.chargeAccountData.totalValue = (+this.chargeAccountData.totalValue).toLocaleString();
+
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();

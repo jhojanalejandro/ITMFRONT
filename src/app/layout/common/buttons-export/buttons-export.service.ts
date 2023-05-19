@@ -22,8 +22,8 @@ export class ButtonsExportService {
       };
       return this._httpClient.get<any>( urlEndPoint + idContrato, httpOptions);
     }
-    getReportDap(idContrato: number): Observable<Blob> {
-      let urlEndPoint = this.apiUrl + environment.exportarDap;
+    getReportDataCdp(idContrato: number): Observable<Blob> {
+      let urlEndPoint = this.apiUrl + environment.exportarCdp;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };
@@ -37,7 +37,7 @@ export class ButtonsExportService {
       return this._httpClient.get<any>( urlEndPoint+ idContrato, httpOptions);
     }
     getReportCdp(idContrato: number): Observable<Blob> {
-      let urlEndPoint = this.apiUrl + environment.exportarCdp;
+      let urlEndPoint = this.apiUrl + environment.exportarSoicitudCdp;
       const httpOptions = {
         responseType: 'blob' as 'json'
       };

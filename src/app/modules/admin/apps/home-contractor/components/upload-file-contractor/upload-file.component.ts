@@ -41,7 +41,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     file: any = null; // Variable to store file
     indeterminate = false;
     showAlert: boolean = false;
-    tipoArchivos: any = GlobalConst.tipoArchivo;
     registerDate = new Date();
     selectContract: any;
     typeDocs: any = GlobalConst.tipoDocumento;
@@ -77,7 +76,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     onChange(event) {
-      debugger
         this.file = event.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(this.file);
@@ -107,7 +105,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     addFileContractor(event) {
-        debugger;
         if (!this.formFile.valid) {
             return;
         }
@@ -162,7 +159,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     addFileContract(event) {
-      debugger
         const registerProject: any = {
             userId: this._auth.accessId,
             contractId: this._data.contractId,

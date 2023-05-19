@@ -1,11 +1,12 @@
-import { Elements, ProjectFolder } from "app/modules/admin/pages/planing/models/planing-model";
+import { Elements, ContractFolder } from "app/modules/admin/pages/planing/models/planing-model";
 import { IHiringData } from "./hiring-data";
 
 export interface AsignmentData{
     contractId: string;
-    id: any;
-    idContractor: string[];
-    type: string;   
+    id: string;
+    contractorId: string[];
+    type: string; 
+	activityId?: string;  
 }
 
 
@@ -16,49 +17,20 @@ export interface ContractContractors{
 
 export interface Contractor{
     id?: string;
-	tipoContratacion: string,
-	codigo: string,
-	convenio: string,
-	fechaInicio: string,
-	fechaFin: string,
 	nombre: string,
-	apellido: string,
+	habilitado: string;
 	identificacion: string,
 	lugarExpedicion: string,
-	tecnico?: string,
-	tecnologo?: string,
-	pregrado?: string,
-	especializacion?: string,
-	maestria?: string,
-	doctorado?: string,
-	genero?: string,
 	fechaNacimiento: Date,
-	nacionalidad?: string,
 	direccion: string,
-	departamento: string,
-	municipio?: string,
-	barrio?: string,
 	telefono: string,
 	celular: string,
 	correo: string,
-	tipoAdministradora?: string,
-	administradora?: string,
-	cuentaBancaria: string,
-	tipoCuenta: string,
-	entidadCuentaBancaria: string,
-	estado?: string,
 	userId?: string,
-	claveUsuario?: string,
-	contractId?: number,
-	fechaCreacion?: Date,
-	fechaActualizacion?: Date,
-	componenteId?: number,
-	elementId?: number,
-	objetoConvenio?: string,
-	unitValue: number;
-	company: string;
-	from: Date;
-	to: Date;
+	proccess: any;
+	elementId: string;
+	componentId: string;
+	legalProccess: any;
 }
 
 
@@ -66,14 +38,14 @@ export interface Minuta{
     contractor: Contractor;
     elementosComponente: Elements;
     hiringData: IHiringData;
-    contract: ProjectFolder;
+    contract: ContractFolder;
 }
 
 
 
 export interface NewnessContractor{
     contractorId: string;
-    id: any;
+    id?: string;
     descripcionNovedad: string;
     tipoNovedad: string;   
 	contractId: string;

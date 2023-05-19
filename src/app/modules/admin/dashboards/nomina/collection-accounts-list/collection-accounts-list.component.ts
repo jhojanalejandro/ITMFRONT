@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { Item, Items } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,7 +51,6 @@ export class CollectionAccountsListComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
   drawerMode: 'side' | 'over';
-  selectedItem: Items;
   tipoDocumentos: any[] = GlobalConst.tipoDocumento;
   items: any;
   value: any;
@@ -198,7 +197,7 @@ export class CollectionAccountsListComponent implements OnInit {
     // Get the item
     this._collectionAccounts.item$
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((item: Item) => {
+      .subscribe((item: DataFile) => {
         this.items = item;
         // Mark for check
         this._changeDetectorRef.markForCheck();

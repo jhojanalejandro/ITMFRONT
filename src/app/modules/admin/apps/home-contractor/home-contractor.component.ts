@@ -26,9 +26,8 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 import { Router } from '@angular/router';
-import { PaymentAccount } from '../../dashboards/contractual/models/paymentAccount';
 import swal from 'sweetalert2';
-import { ExecutionReport } from './models/pdfDocument';
+import { ChargeAccount, ExecutionReport } from './models/pdfDocument';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -42,7 +41,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     viwFilesGenerated: boolean = false;
     filesCharged: boolean = false;
     fileContractorList: any;
-    chargeAccountData: PaymentAccount;
+    chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractIdList: any[] = [];
     minutesDocumentPdf: File;

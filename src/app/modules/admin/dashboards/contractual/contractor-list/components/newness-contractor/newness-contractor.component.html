@@ -1,6 +1,6 @@
 <div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Cargar Archivos</div>
+        <div class="text-lg font-medium">Deshabilitar usuario</div>
         <button
             mat-icon-button
             (click)="cerrar()"
@@ -17,7 +17,7 @@
                 <mat-form-field  class="hiringD" appearance="outline">
                     <mat-label>Motivo Novedad</mat-label>
                     <input type="text" placeholder="Seleccione o Digite" aria-label="Motivo Novedad" matInput
-                        [formControlName]="'motivo'" [matAutocomplete]="auto">
+                        [formControlName]="'tipoNovedad'" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete">
                         <mat-option *ngFor="let option of tiponovedad" [value]="option.viewValue">
                             {{option.viewValue}}
@@ -27,9 +27,9 @@
             </div>
             <div class="folder">
                 <mat-form-field  class="hiringD" appearance="outline">
-                    <mat-label>Observación</mat-label>
-                    <textarea type="text"  class="example-full-width" id="observation" formControlName="observation" autocomplete="off" matInput placeholder="Observacion"></textarea>
-                    <mat-error *ngIf="formFile.get('observation').hasError('required')">
+                    <mat-label>descripción Novedad</mat-label>
+                    <textarea type="text"  class="example-full-width" id="descripcionNovedad" formControlName="descripcionNovedad" autocomplete="off" matInput placeholder="descripcion Novedad"></textarea>
+                    <mat-error *ngIf="formFile.get('descripcionNovedad').hasError('required')">
                         El Campo Descripcion es requerido
                     </mat-error>
                 </mat-form-field>

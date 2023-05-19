@@ -21,13 +21,13 @@ import {
 } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import * as moment from 'moment';
 import { map, Observable, startWith, Subject } from 'rxjs';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DetalleContrato, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 
 
 @Component({
@@ -40,12 +40,17 @@ export class ModificacionFormComponent implements OnInit {
     filteredOptions: Observable<string[]>;
     modificaciones: any = GlobalConst.requierePoliza;
     tipoModificacion: any = GlobalConst.tipoModificacion;
-
+    showDate: boolean = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    elemento: Elements = { nombreElemento: null, idComponente: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null }
+    elemento: ElementComponent = { nombreElemento: null, componentId: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null, activityId: null }
     disableField: boolean = true;
-    dateAdiction$: Observable<DetalleContrato[]>;
+    dateAdiction: DetalleContrato = {
+        idcontrato: null,
+        fechaContrato: null,
+        fechaFinalizacion: null,
+        tipoContrato: null,
+    };
     elementos: Elements[] = [];
     allelementos: string[] = [
         'Profesional En Sistemas',
@@ -53,20 +58,20 @@ export class ModificacionFormComponent implements OnInit {
         'Profesional Especializad',
         'Tecnologo',
     ];
-    tipoElementos: any = GlobalConst.tipoElemento;
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
-    element: string = null;
     numberOfTicks = 0;
-    update: boolean;
-    showDate: boolean = true;
     calculo: boolean = true;
     totalCalculate: boolean = true;
-    totalCost: any = null;
     elementselectId: any;
-    id: string = null;
+    showPayment: boolean = true;
+    showModify: boolean = true;
     configForm: FormGroup;
     @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
-    elementForm: FormGroup;
+    modifyForm: FormGroup;
+    minDate: Date;
+    maxdate: Date;
+    minDateFinal: Date;
+
     // Private
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -75,9 +80,9 @@ export class ModificacionFormComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA)
-        private _data: { data: any },
+        private _data: { data: any, contract: string },
         private _fuseConfirmationService: FuseConfirmationService,
-        private _economicService: EconomicChartService,
+        private _planingService: PlaningService,
         private _router: Router,
         private _genericService: GenericService
 
@@ -100,32 +105,33 @@ export class ModificacionFormComponent implements OnInit {
                 'precaución',
                 'El contratista debe tener un elemento asignado', 'warning'
             );
-            this._router.navigateByUrl('dashboards/lista-contratistas/' + this._data.data.contractId);
+            this._router.navigateByUrl('dashboards/lista-contratistas/' + this._data.contract);
             this.matDialogRef.close();
         }
 
 
-        this.elementForm = this._formBuilder.group({
+        this.modifyForm = this._formBuilder.group({
             contractorCant: new FormControl(this.elemento.cantidadContratistas, Validators.required),
             cantDay: new FormControl(this.elemento.cantidadDias, Validators.required),
-            unitValue: new FormControl(this.elemento.valorUnidad, Validators.required),
-            totalValue: new FormControl(this.elemento.valorTotal, Validators.required),
-            id: new FormControl(this.id),
-            unitValueDay: new FormControl(this.elemento.valorPorDia, Validators.required),
-            calculateValue: new FormControl(this.totalCost, Validators.required),
+            unitValue: new FormControl(null, Validators.required),
+            totalValue: new FormControl(null, Validators.required),
+            unitValueDay: new FormControl(null, Validators.required),
+            calculateValue: new FormControl(null, Validators.required),
             cpc: new FormControl(this.elemento.cpc, Validators.required),
             nombreCpc: new FormControl(this.elemento.nombreCpc, Validators.required),
             tipoElemento: new FormControl(null, Validators.required),
             nombreElemento: new FormControl(null, Validators.required),
             modificacion: new FormControl(null, Validators.required),
             recursos: new FormControl(null, Validators.required),
-            fechaModificacion: new FormControl(null, Validators.required),
+            fechaInicioAmpliacion: new FormControl(null),
+            fechaFinalAmpliacion: new FormControl(null),
             tipoModificacion: new FormControl(null, Validators.required),
             objetoElemento: new FormControl(null, Validators.required),
-
+            obligacionesEspecificas: new FormControl(null, Validators.required),
+            obligacionesGenerales: new FormControl(null, Validators.required),
         });
         this.filteredOptions =
-            this.elementForm.controls.nombreElemento.valueChanges.pipe(
+            this.modifyForm.controls.nombreElemento.valueChanges.pipe(
                 startWith(''),
                 map((value) => this._filter(value || ''))
             );
@@ -154,43 +160,43 @@ export class ModificacionFormComponent implements OnInit {
     }
 
     getElements() {
-        this._economicService
+        this._planingService
             .getElementoComponente(this._data)
             .subscribe((response) => {
                 this.elementos = response;
             });
     }
 
-    addElement() {
+    addModify() {
         let modificacion: any;
-        if (this.elementForm.value.modificacion === 'Si') {
+        if (this.modifyForm.value.modificacion === 'Si') {
             modificacion = true;
         } else {
             modificacion = true;
         }
         let item: Elements = {
-            nombreElemento: this.elementForm.value.nombreElemento,
-            idComponente: this._data.data.idComponente,
-            cantidadContratistas: this.elementForm.value.contractorCant,
-            cantidadDias: this.elementForm.value.cantDay,
-            valorUnidad: this.elementForm.value.unitValue,
-            valorTotal: this.elementForm.value.totalValue,
-            valorPorDia: this.elementForm.value.unitValueDay,
-            valorPorDiaContratista: this.elementForm.value.valorDiaContratista,
+            nombreElemento: this.modifyForm.value.nombreElemento,
+            componentId: this._data.data.idComponente,
+            cantidadContratistas: this.modifyForm.value.contractorCant,
+            cantidadDias: this.modifyForm.value.cantDay,
+            valorUnidad: this.modifyForm.value.unitValue,
+            valorTotal: this.modifyForm.value.totalValue,
+            valorPorDia: this.modifyForm.value.unitValueDay,
+            valorPorDiaContratista: this.modifyForm.value.valorDiaContratista,
             valorTotalContratista: 0,
-            cpc: this.elementForm.value.cpc,
-            nombreCpc: this.elementForm.value.nombreCpc,
+            cpcId: this.modifyForm.value.cpc,
             modificacion: modificacion,
-            tipoElemento: this.elementForm.value.tipoElemento,
-            recursos: this.elementForm.value.recursos,
-            consecutivo: this.elementForm.value.consecutivo,
-            obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
-            obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
-            objetoElemento: this.elementForm.value.objetoElemento
+            tipoElemento: this.modifyForm.value.tipoElemento,
+            recursos: this.modifyForm.value.recursos,
+            consecutivo: this.modifyForm.value.consecutivo,
+            obligacionesEspecificas: this.modifyForm.value.obligacionesEspecificas,
+            obligacionesGenerales: this.modifyForm.value.obligacionesGenerales,
+            objetoElemento: this.modifyForm.value.objetoElemento,
+            activityId: this._data.data.activityId
 
         };
 
-        this._economicService.addElementoComponente(item).subscribe((response) => {
+        this._planingService.addElementoComponente(item).subscribe((response) => {
             if (response) {
                 swal.fire({
                     position: 'center',
@@ -199,7 +205,7 @@ export class ModificacionFormComponent implements OnInit {
                     html: 'Información Registrada Exitosamente!',
                     showConfirmButton: false,
                     timer: 1500
-                  });
+                });
             }
             this._changeDetectorRef.detectChanges();
         }, (response) => {
@@ -210,20 +216,19 @@ export class ModificacionFormComponent implements OnInit {
     }
 
     calculate = () => {
-        const findEl = this.elementos.find((e) => e.nombreCpc == this.element);
         this.totalCalculate = false;
-        this.elementForm.value.unitValueDay = Number(
-            (this.elementForm.value.unitValue / 30) *
-            this.elementForm.value.contractorCant
+        this.modifyForm.value.unitValueDay = Number(
+            (this.modifyForm.value.unitValue / 30) *
+            this.modifyForm.value.contractorCant
         );
-        this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
-        this.elemento.valorTotal = this.elementForm.value.totalValue;
+        this.elemento.valorPorDia = this.modifyForm.value.unitValueDay;
+        this.elemento.valorTotal = this.modifyForm.value.totalValue;
         this.elemento.valorTotal = Number(
-            this.elemento.valorPorDia * this.elementForm.value.cantDay
+            this.elemento.valorPorDia * this.modifyForm.value.cantDay
         );
         let paymentDayContractor =
-            this.elementForm.value.unitValueDay / Number(this.elementForm.value.cantDay);
-        if (this.elementForm.value.cantDay >= '30') {
+            this.modifyForm.value.unitValueDay / Number(this.modifyForm.value.cantDay);
+        if (this.modifyForm.value.cantDay >= '30') {
             //   Swal.fire(
             //     'Advertencia!',
             //     'La cantidad de días!',
@@ -232,10 +237,53 @@ export class ModificacionFormComponent implements OnInit {
         }
     };
 
-    selectmodificacion() {
-        if (this.elementselectId === 'Si') {
-            this.showDate = false;
-        } else {
+    selectmodificacion(event) {
+        switch (event.value) {
+            case 'Modificación':
+                this.showDate = false;
+                this.showPayment = false;
+                this.showModify = true;
+                break;
+            case 'Ampliación':
+                this.showDate = true;
+                this.showPayment = false;
+                this.showModify = false;
+                break;
+            case 'Adición':
+                this.showDate = false;
+                this.showPayment = true;
+                this.showModify = false;
+                break;
+            case 'Adición, Ampliación, Modificacion':
+                this.showDate = true;
+                this.showPayment = true;
+                this.showModify = true;
+                break;
+            case 'Ampliación y Modificacion':
+                this.showDate = true;
+                this.showPayment = false;
+                this.showModify = true;
+                break;
+            case 'Ampliación y Adición':
+                this.showDate = true;
+                this.showPayment = true;
+                this.showModify = false;
+                break;
+            case 'Modificacion y Adición':
+                this.showDate = false;
+                this.showPayment = true;
+                this.showModify = true;
+                break;
+            default:
+                this.showDate = true;
+                this.showPayment = true;
+                this.showModify = true;
+                break;
+        }
+        if (event.value === 'Modificación' || event.value === 'Adición, Ampliación, Modificacion' || event.value === 'Ampliación y Modificacion' || event.value === 'Adición y Modificacion') {
+            this.showDate = true;
+        } else if (event.value === 'Ampliación' || event.value === 'Adición y Ampliación' || event.value === 'Adición, Ampliación, Modificacion') {
+            this.showPayment = true;
             this.showDate = true;
         }
 
@@ -252,16 +300,36 @@ export class ModificacionFormComponent implements OnInit {
         });
     }
     getDateAdiction() {
-        this.dateAdiction$ = this._genericService.getDetalleContrato(this._data.data.contractId, true);
+        this._genericService.getDetalleContratoById(this._data.contract, true).subscribe(
+            (resp)=>{
+                
+                this.dateAdiction = resp;
+            }
+        );
     }
     getDataElemento() {
-        this._economicService.getElementoById(this._data.data.elementId).subscribe((resp) => {
+        this._planingService.getElementoById(this._data.data.elementId).subscribe((resp) => {
+            
             if (resp.recursos == 0) {
                 swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
                 this.matDialogRef.close();
             } else {
                 this.elemento = resp;
+                this.elemento.valorUnidad = (+this.elemento.valorUnidad.toFixed(0)).toLocaleString();
+                this.elemento.valorPorDia = (+this.elemento.valorPorDia.toFixed(0)).toLocaleString();
+                this.elemento.valorTotal = (+this.elemento.valorTotal.toFixed(0)).toLocaleString();
+                this.elemento.recursos = (+this.elemento.recursos.toFixed(0)).toLocaleString();
             }
         })
+    }
+
+    dateChange(event) {
+
+        this.minDate = event.value;
+        var date2: any = new Date(this.minDate);
+        let day = 1 * 24;
+        var numberOfMlSeconds = date2.getTime();
+        var addMlSeconds = (1000 * 60 * 60 * day);
+        this.maxdate = new Date(numberOfMlSeconds + addMlSeconds);
     }
 }

@@ -29,7 +29,7 @@ export class MinutaContratoComponent implements OnInit {
   dataMinuta: any[] = [];
   constructor(private _economicService: ContractorService,
     private _upload: UploadFileDataService,
-    private ref: ChangeDetectorRef,
+    private _changeDetectorRef: ChangeDetectorRef,
     private _auth: AuthService) { }
 
   ngOnInit(): void {
@@ -482,11 +482,13 @@ export class MinutaContratoComponent implements OnInit {
 
   public downloadAsPDF() {
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
+
       let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
       if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.nombre == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null) {
         swal.fire('EI', 'los valoes de algunos contratistas no estan completos y no se puede generar minuta', 'warning');
       } else {
-
+        data.obligacionesEspecificas = data.obligacionesEspecificas.replaceAll('->',' ');
+        data.obligacionesGenerales = data.obligacionesGenerales.replaceAll('->',' ');
         const documentDefinition = {
           header: {
             columns: [
@@ -659,7 +661,7 @@ export class MinutaContratoComponent implements OnInit {
             // alignment: 'justify'
           },
         };
-        let nombreMinuta = 'minuta' + data.nombre;
+        let nombreMinuta = 'MINUTA' + data.nombre;
         let registerDate = this.registerDate;
         let userId = this._auth.accessId;
         let contractId = this.contractContractors.contractId;
@@ -672,11 +674,11 @@ export class MinutaContratoComponent implements OnInit {
             contractorId: data.contractorId,
             contractId: contractId,
             filesName: nombreMinuta,
-            typeFile: 'PDF',
+            fileType: 'PDF',
             descriptionFile: 'minuta del contratista generada',
             registerDate: registerDate,
             modifyDate: registerDate,
-            filedata: dataURL,
+            filedata: dataURL[1],
             passed: null,
             typeFilePayment: 'Minuta',
             monthPayment: null,
@@ -692,10 +694,9 @@ export class MinutaContratoComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 1500
               });
-              this.ref.detectChanges();
-              this.ref.markForCheck();
+
             }
-      
+
           },
             (response) => {
               console.log(response);
@@ -706,6 +707,8 @@ export class MinutaContratoComponent implements OnInit {
           .createPdf(documentDefinition)
           .download(nombreMinuta + '.pdf');
       }
+      this._changeDetectorRef.detectChanges();
+      this._changeDetectorRef.markForCheck();
     }
   }
 

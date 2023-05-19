@@ -5,11 +5,11 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
-import { EconomicChartService } from 'app/modules/admin/pages/planing/service/economic-chart.service';
 import { UploadDataService } from '../../../service/upload-data.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IHiringData } from '../../../models/hiring-data';
-import { Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
+import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 
 @Component({
   selector: 'app-estudio-previo',
@@ -46,9 +46,9 @@ export class EstudioPrevioComponent implements OnInit {
     cdp: '',
     caso: ''
   };
-    elementData: Elements = {
+    elementData: ElementComponent = {
     nombreElemento: '',
-    idComponente: '',
+    componentId: '',
     cantidadContratistas: 0,
     cantidadDias: 0,
     valorUnidad: 0,
@@ -67,7 +67,7 @@ export class EstudioPrevioComponent implements OnInit {
     objetoElemento: ''
   };
   dataMinuta: any[] = [];
-  constructor(private _economicService: EconomicChartService, private _uploadService: UploadDataService,
+  constructor(private _planingService: PlaningService, private _uploadService: UploadDataService,
 
   ) { }
 
@@ -75,7 +75,7 @@ export class EstudioPrevioComponent implements OnInit {
     console.log('contractors segundo', this.contractors);
     this.contractors.forEach(element => {
       let id = [element.id,element.elementId]
-      this._economicService.GetDataMinuta(id).subscribe((Response) => {
+      this._planingService.GetDataMinuta(id).subscribe((Response) => {
         this.dataMinuta.push(Response);
         this.hiringData = Response.hiringDataDto;
         this.elementData = Response.elementosComponenteDto;
