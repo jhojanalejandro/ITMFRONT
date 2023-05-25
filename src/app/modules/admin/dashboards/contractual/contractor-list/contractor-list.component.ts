@@ -59,7 +59,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   idSelected: string[]= [];
   contractname: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono','fechaNacimiento', 'statusContractor', 'juridic', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono','fechaNacimiento','hiringStatus', 'statusContractor', 'legalProccess', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
@@ -90,8 +90,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
     { title: 'ESTADO', name: 'proccess' },
     { title: 'REGISTRO', name: 'statusContractor' },
-    { title: 'JURIDICO', name: 'juridic' },
-    // { title: 'JURIDICO', name: 'legalProccess' },
+    { title: 'JURIDICO', name: 'legalProccess' },
+    { title: 'CONTRACTUAL', name: 'hiringStatus' },
     { title: 'OPCIONES', name: 'acciones' }
   ]
 
