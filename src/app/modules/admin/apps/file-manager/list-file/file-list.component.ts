@@ -58,6 +58,9 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
         this.folderId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
         this.getData();
+        this._fileManagerService.setContractId(this.contractId);
+        this._fileManagerService.setContractorId(this.contractorId);
+        this._fileManagerService.setFolderId(this.folderId);
     }
 
     /**
@@ -126,7 +129,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                window.location.reload();
+                this.getData();
             }
         });
     }
@@ -151,7 +154,6 @@ export class FileListComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            file.passed = true;
             let updateFile: IFileContractor = file;
 
             this._uploadService.UploadFileContractor(updateFile).subscribe((res) => {
@@ -223,9 +225,9 @@ export class FileListComponent implements OnInit, OnDestroy {
         );
 
         // Get the item
-        this._fileManagerService.item$
+        this._fileManagerService.getFileByContractor(this.contractId,this.contractorId, this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: DataFile) => {
+            .subscribe((item: any) => {
                 this.items = item;
                 this.items.forEach(element => {
                     if (element.passed) {

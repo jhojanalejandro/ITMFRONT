@@ -63,7 +63,10 @@ export class ObservationFileComponent implements OnInit {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
         reason: this.formFile.value.motivo,
-        files: null
+        files: null,
+        registerDate: new Date(),
+        passed: false
+
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
       if (res) {
@@ -104,7 +107,9 @@ export class ObservationFileComponent implements OnInit {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
         reason: this.formFile.value.motivo,
-        files: null
+        files: null,
+        registerDate: new Date(),
+        passed: false
     }
     this._uploadService.addDetailFile(detailFile).subscribe((res) => {
       if (res) {

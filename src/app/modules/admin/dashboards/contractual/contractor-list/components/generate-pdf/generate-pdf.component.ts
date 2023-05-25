@@ -342,7 +342,6 @@ export class EstudioPrevioComponent implements OnInit {
           registerDate: registerDate,
           modifyDate: registerDate,
           filedata: dataURL[1],
-          passed: null,
           typeFilePayment: 'Minuta',
           monthPayment: null,
           folderId: null

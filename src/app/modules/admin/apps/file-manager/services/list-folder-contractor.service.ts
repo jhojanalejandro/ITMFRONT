@@ -12,7 +12,6 @@ import { IResponse } from 'app/layout/common/models/Response';
 export class ListFolderContractorService {
     // Private
 
-    private _filesContract: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
 
     private _foldersContract: BehaviorSubject<ItemsContract | null> = new BehaviorSubject(null);
 
@@ -34,10 +33,6 @@ export class ListFolderContractorService {
 
     get folderContract$(): Observable<ItemsContract> {
         return this._foldersContract.asObservable();
-    }
-
-    get filesContract$(): Observable<DataFile> {
-        return this._filesContract.asObservable();
     }
 
     get foldersContractor$(): Observable<ItemsContractor>
@@ -81,31 +76,6 @@ export class ListFolderContractorService {
                 }
                 this._foldersContract.next(data);
 
-            })
-        );
-    }
-
-    getFileContractById(idC: any): Observable<DataFile> {
-        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl + environment.GetAllFileContractByIdEndpoint;
-        return this._filesContract.pipe(
-            take(1),
-            tap((items: any) => {
-                // Update the item
-                const item = [...items.folders, ...items.files].find(value => value.id === idC) || null;
-                // const item = [...items.folders, ...items.files].find(value => value.id === id) || null;
-
-                this._filesContract.next(item);
-
-            }),
-            switchMap((item) => {
-
-                if ( !item )
-                {
-                    return throwError('Could not found the item with id of ' + idC + '!');
-                }
-
-                return of(item);
             })
         );
     }
@@ -192,7 +162,7 @@ export class ListFolderContractorService {
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + id + '!');
+                    return throwError('No se pudo encontrar el artículo con id' + id + '!');
                 }
 
                 return of(item);

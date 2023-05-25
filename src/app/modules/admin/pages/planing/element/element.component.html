@@ -192,18 +192,18 @@
                 </div>
                 <div *ngIf="typeContractor" class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
-                        <mat-label>obligaciones Especificas</mat-label>
-                        <textarea type="text" class="example-full-width" id="obligacionesEspecificas"
+                        <mat-label>Obligaciones Especificas</mat-label>
+                        <textarea type="text" class="example-full-width" [value]="elemento.nombreElemento" id="obligacionesEspecificas"
                             formControlName="obligacionesEspecificas" autocomplete="off" matInput
-                            placeholder="Descripcion"></textarea>
+                            placeholder="Obligaciones Especificas"></textarea>
                     </mat-form-field>
                 </div>
                 <div *ngIf="typeContractor" class="folder">
                     <mat-form-field class="hiringD" appearance="outline">
-                        <mat-label>obligaciones Generales</mat-label>
+                        <mat-label>Obligaciones Generales</mat-label>
                         <textarea type="text" class="example-full-width" id="obligacionesGenerales"
                             formControlName="obligacionesGenerales" autocomplete="off" matInput
-                            placeholder="Descripcion"></textarea>
+                            placeholder="Obligaciones Generales"></textarea>
                     </mat-form-field>
                 </div>
                 <div *ngIf="typeContractor" class="folder">
@@ -211,7 +211,7 @@
                         <mat-label>Objeto</mat-label>
                         <textarea type="text" class="example-full-width" id="objetoElemento"
                             formControlName="objetoElemento" autocomplete="off" matInput
-                            placeholder="Descripcion"></textarea>
+                            placeholder="Objeto"></textarea>
                     </mat-form-field>
                 </div>
             </form>

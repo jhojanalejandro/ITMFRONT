@@ -3,19 +3,20 @@ import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@a
 import { catchError, Observable, throwError } from 'rxjs';
 import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { ListFolderContractorService } from '../../services/list-folder-contractor.service';
+import { FileListManagerService } from '../../services/list-file.service';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class    DetailFileManagerItemFResolver implements Resolve<any>
+export class    DetailFileContractResolver implements Resolve<any>
 {
     /**
      * Constructor
      */
     constructor(
         private _router: Router,
-        private _fileManagerService: ListFolderContractorService
+        private _fileManagerService: FileListManagerService
     )
     {
     }

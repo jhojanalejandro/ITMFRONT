@@ -6,14 +6,15 @@ import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager
 import { FileManagerFolderResolver, FileManagerItemResolver } from 'app/modules/admin/apps/file-manager/file-manager.resolvers';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
 import { ListFolderFileContractorComponent } from './list-folder-file-contractor/list-folder-file-contractor.component';
-import { DetailFileManagerContractResolver, FileManagerFolderCResolver } from './list-folder-contractor/list-folder.resolvers';
+import {  FileManagerFolderCResolver } from './list-folder-contractor/list-folder.resolvers';
 import { FileListComponent } from './list-file/file-list.component';
 import { FileManagerFolderCFResolver } from './list-folder-file-contractor/list-folder-file.resolvers';
-import { FileManagerItemFResolver } from './list-file/file-list.resolvers';
 import { DetailFileComponent } from './components/details-file/detail-file.component';
 import { DetailsFolderFileContractorComponent } from './components/details-folder-contractor/details-folder-contractor.component';
 import { DetailFolderContractorItemFResolver } from './components/details-folder-contractor/detail-folder-contractor.resolvers';
 import { DetailFileContractComponent } from './components/details-file-contract/detail-file-contract.component';
+import { FileListContractComponent } from './components/file-list-contract/file-list-contract.component';
+import { DetailFileContractResolver } from './components/details-file-contract/detail-file-contract.resolvers';
 
 export const fileManagerRoutes: Route[] = [
     {
@@ -78,30 +79,31 @@ export const fileManagerRoutes: Route[] = [
                     item: FileManagerFolderCResolver
                     
                 },
+            },
+            {
+                path     : 'file/contractor/:contractId/:contractorId/:folderId',
+                component: FileListComponent,
                 children : [
                     {
-                        path         : 'details/file/:id',
-                        component    : DetailFileContractComponent,
+                        path         : 'details/file-contractor/:id',
+                        component    : DetailFileComponent,
                         resolve      : {
-                            item: DetailFileManagerContractResolver
+                            item: DetailFileContractResolver
                         },
                         canDeactivate: [CanDeactivateFileManagerDetails]
                     }
                 ]
             },
             {
-                path     : 'file/contractor/:contractId/:contractorId/:folderId',
-                component: FileListComponent,
-                resolve  : {
-                    item: FileManagerItemFResolver
-                },
+                path     : 'file/contract/:contractId/:folderId',
+                component: FileListContractComponent,
                 children : [
                     {
-                        path         : 'details/fileContractor/:id',
-                        component    : DetailFileComponent,
-                        // resolve      : {
-                        //     item: DetailFileManagerItemFResolver
-                        // },
+                        path         : 'details/file-contract/:id',
+                        component    : DetailFileContractComponent,
+                        resolve      : {
+                            item: DetailFileContractResolver
+                        },
                         canDeactivate: [CanDeactivateFileManagerDetails]
                     }
                 ]

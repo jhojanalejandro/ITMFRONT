@@ -19,6 +19,7 @@ import { DetailsFolderFileContractorComponent } from './components/details-folde
 import { DetailFileContractComponent } from './components/details-file-contract/detail-file-contract.component';
 import { ObservationFileComponent } from './list-file/observation-File/observation-file.component';
 import { RegisterFolderContractorComponent } from './components/register-folder-contractor/register-folder-contractor.component';
+import { FileListContractComponent } from './components/file-list-contract/file-list-contract.component';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { RegisterFolderContractorComponent } from './components/register-folder-
         DetailsFolderFileContractorComponent,
         RegisterFolderContractorComponent,
         DetailFileContractComponent,
-        ObservationFileComponent
+        ObservationFileComponent,
+        FileListContractComponent
     ],
     imports     : [
         RouterModule.forChild(fileManagerRoutes),

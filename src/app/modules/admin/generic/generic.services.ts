@@ -76,12 +76,6 @@ export class GenericService {
         );
     }
 
-    getFileType(): Observable<DetalleContrato> {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.GetByIdDetailByIdEndpoint;
-        return this._httpClient.get<DetalleContrato>(urlEndpointGenerate
-        );
-    }
 
     getCpcType(): Observable<CpcType[]> {
         let urlEndpointGenerate =

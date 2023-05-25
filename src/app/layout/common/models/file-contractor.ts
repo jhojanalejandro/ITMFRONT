@@ -9,7 +9,6 @@ export interface IFileContractor{
     descriptionFile: string;
     registerDate: Date;
     modifyDate?: Date;
-    passed: boolean;
     typeFilePayment: string;
     monthPayment?: string;
     folderId: string;

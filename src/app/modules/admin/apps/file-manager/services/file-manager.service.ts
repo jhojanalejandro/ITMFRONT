@@ -56,7 +56,7 @@ export class FileManagerService {
             switchMap((item) => {
 
                 if (!item) {
-                    return throwError('Could not found the item with id of ' + id + '!');
+                    return throwError('No se pudo encontrar item con id' + id + '!');
                 }
 
                 return of(item);

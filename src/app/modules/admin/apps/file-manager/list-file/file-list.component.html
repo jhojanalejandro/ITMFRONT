@@ -66,10 +66,10 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items.files.length > 0; else noItems">
+                <ng-container *ngIf="items != null; else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Files -->
-                        <ng-container *ngIf="items.files.length > 0">
+                        <ng-container *ngIf="items.length > 0">
                             <div>
                                 <div class="font-medium">Archivos</div>
                                 <div
@@ -89,18 +89,18 @@
                                             <div class="aspect-w-9 aspect-h-4">
                                                 <div class="flex items-center justify-center">
                                                     <!-- Icons -->
-                                                    <div class="relative" [routerLink]="['./details/fileContractor/', file.id]">
+                                                    <div class="relative" [routerLink]="['./details/file-contractor/', file.id]">
                                                         <mat-icon
                                                             class="icon-size-14 text-hint"
                                                             [svgIcon]="'iconsmind:file'"></mat-icon>
                                                         <div
                                                             class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                                            [class.bg-red-600]="file.typeFile === 'PDF'"
-                                                            [class.bg-blue-600]="file.typeFile === 'DOC'"
-                                                            [class.bg-green-600]="file.typeFile === 'XLS'"
-                                                            [class.bg-gray-600]="file.typeFile === 'TXT'"
-                                                            [class.bg-amber-600]="file.typeFile === 'JPG'">
-                                                            {{file.typeFile.toUpperCase()}}
+                                                            [class.bg-red-600]="file.fileType === 'PDF'"
+                                                            [class.bg-blue-600]="file.fileType === 'DOC'"
+                                                            [class.bg-green-600]="file.fileType === 'XLS'"
+                                                            [class.bg-gray-600]="file.fileType === 'TXT'"
+                                                            [class.bg-amber-600]="file.fileType === 'JPG'">
+                                                            {{file.fileType.toUpperCase()}}
                                                         </div>
                                                     </div>
                                                 </div>

@@ -483,7 +483,7 @@ export class MinutaContratoMacroComponent implements OnInit {
   public downloadAsPDF() {
     let data = this.dataContract.find(ct => ct.contractId === this.contract)
     if (data.objeto === null) {
-      swal.fire('EI', 'los valoes de algunos contratistas no estan completos y no se puede generar minuta', 'warning');
+      swal.fire('EI', 'los valores de algunos contratistas no estan completos y no se puede generar minuta', 'warning');
     } else {
       const documentDefinition = {
         header: {
@@ -675,7 +675,6 @@ export class MinutaContratoMacroComponent implements OnInit {
             registerDate: registerDate,
             modifyDate: registerDate,
             filedata: dataURL[1],
-            passed: null,
             typeFilePayment: 'Minuta',
             monthPayment: null,
             folderId: null

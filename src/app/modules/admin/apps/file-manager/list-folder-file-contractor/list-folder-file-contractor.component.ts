@@ -157,7 +157,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     }
 
     getFilesFolder = async (id: any) => {
-        this._fileService.getItemById(this.contractId, this.contractorId, id)
+        this._fileService.getFileByContractor(this.contractId, this.contractorId, id)
         .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((Response: any) => {
                 const jszip = new JSZip();

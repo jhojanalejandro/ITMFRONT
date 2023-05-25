@@ -76,7 +76,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   onChange(event) {
     this.disableButton = false;
     this.file = event.target.files[0];
-    this.fileName = this.file.name;
+    this.fileName = this.file.name.split('.')[0].toUpperCase();
     this.typeFile = this.file.type.split('/')[1].toUpperCase();
     const reader = new FileReader();
     reader.readAsDataURL(this.file);
@@ -100,7 +100,6 @@ export class UploadFileComponent implements OnInit,OnDestroy{
       registerDate: this.registerDate,
       modifyDate: this.registerDate,
       filedata: event,
-      passed: null,
       typeFilePayment: this._data.typeFilePayment,
       monthPayment: null,
       folderId: this._data.folderId
@@ -134,7 +133,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   addFileContract(event) {
     const uploadFile: Files = {
       userId: this._auth.accessId,
-      folderId: null,
+      folderId: this._data.folderId,
       contractId: this._data.contractId,
       filesName: this.fileName,
       fileType: this.typeFile,
@@ -145,7 +144,14 @@ export class UploadFileComponent implements OnInit,OnDestroy{
     };
     this._upload.UploadFileContract(uploadFile).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información Registrada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();

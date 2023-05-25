@@ -20,7 +20,9 @@ export interface DetailFileContractor{
     fileId: any;
     reason: string;
     observation: string;
-    files: string[]
+    files: string[];
+    passed: boolean;
+    registerDate: Date;
 }
 
 export interface ContractsContractor{

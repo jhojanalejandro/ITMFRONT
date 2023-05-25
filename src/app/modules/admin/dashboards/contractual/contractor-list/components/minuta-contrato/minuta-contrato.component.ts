@@ -8,6 +8,7 @@ import { IFileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from '../../../upload-file/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ContractContractors } from '../../../models/contractor';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 
 @Component({
@@ -482,13 +483,16 @@ export class MinutaContratoComponent implements OnInit {
 
   public downloadAsPDF() {
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-
+      debugger
       let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
-      if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.nombre == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null) {
-        swal.fire('EI', 'los valoes de algunos contratistas no estan completos y no se puede generar minuta', 'warning');
+      let fechaLetras = this.calcularDiferencia(data.fechaRealDeInicio,data.fechaFinalizacionConvenio);
+      let valorLetras = GlobalConst.numeroALetras(data.valorTotal, 'PESOS');
+      let totalContrato = (+data.valorTotal.toFixed(0)).toLocaleString();
+      if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.nombre == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null || data.valorTotal === null) {
+        swal.fire('EI', 'los valores de algunos contratistas no estan completos y no se puede generar minuta', 'warning');
       } else {
-        data.obligacionesEspecificas = data.obligacionesEspecificas.replaceAll('->',' ');
-        data.obligacionesGenerales = data.obligacionesGenerales.replaceAll('->',' ');
+        data.obligacionesEspecificas = data.obligacionesEspecificas.replaceAll('->', ' ');
+        data.obligacionesGenerales = data.obligacionesGenerales.replaceAll('->', ' ');
         const documentDefinition = {
           header: {
             columns: [
@@ -513,9 +517,9 @@ export class MinutaContratoComponent implements OnInit {
               text: [
                 'Entre los suscritos, de una parte, ' + data.supervisorItm + ' con c.c. ' + data.identificacionSupervisor + ', actuando en calidad de ' + data.cargoSupervisorItm + 'del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
                 'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.nombre + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.identificacion + ' de ' + data.lugarExpedicion + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas: PRIMERA. -OBJETO DEL CONTRATO. Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No.4600095169 DE 2022, celebrado entre EL DISTRITO ESPECIAL DE CIENCIA',
-                'TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM. SEGUNDA. - DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de 03 MESES y 17 DIAS sin exceder la vigencia 2022, contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. 4600095169 DE 2022 . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo',
-                '217 decreto 019 del 2012. TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de Veintiún millones ochocientos quince mil cuatrocientos veintidós pesos m.l ($ 21815422) El I.T.M. cancelará al CONTRATISTA, pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestacion del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente. CUARTA. -OBLIGACIONES DEL CONTRATISTA. EL CONTRATISTA se obliga en forma especial a prestar el servicio objeto de este contrato en los',
-                'términos señalados y específicamente a cumplir las siguientes OBLIGACIONES GENERALES: ' + data.obligacionesGenerales + ' OBLIGACIONES ESPECIFICAS: ' + data.obligacionesEspecificas + '   QUINTA. -DERECHOS Y DEBERES. Las partes declaran conocer y desarrollar los derechos y deberes consagrados en la Ley 80 de 1993 y cumplir las obligaciones específicas consagradas en este contrato. SEXTA. - MODIFICACIÓN, INTERPRETACIÓN Y TERMINACIÓN DEL CONTRATO. EL INSTITUTO tendrá la dirección general y la responsabilidad de ejercer control y vigilancia de la ejecución del contrato. En consecuencia, este contrato se rige por los principios de modificación unilateral, interpretación unilateral y terminación unilateral por parte del Instituto Tecnológico Metropolitano',
+                'TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN - DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM. SEGUNDA. - DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de '+fechaLetras+' sin exceder la vigencia 2022, contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. 4600095169 DE 2022 . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo',
+                '217 decreto 019 del 2012. TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de '+valorLetras+' m.l ($ '+totalContrato+') El I.T.M. cancelará al CONTRATISTA, pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestacion del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente. CUARTA. -OBLIGACIONES DEL CONTRATISTA. EL CONTRATISTA se obliga en forma especial a prestar el servicio objeto de este contrato en los',
+                'términos señalados y específicamente a cumplir las siguientes OBLIGACIONES GENERALES: ' + data.obligacionesGenerales + ' OBLIGACIONES ESPECIFICAS: ' + data.obligacionesEspecificas + 'QUINTA. -DERECHOS Y DEBERES. Las partes declaran conocer y desarrollar los derechos y deberes consagrados en la Ley 80 de 1993 y cumplir las obligaciones específicas consagradas en este contrato. SEXTA. - MODIFICACIÓN, INTERPRETACIÓN Y TERMINACIÓN DEL CONTRATO. EL INSTITUTO tendrá la dirección general y la responsabilidad de ejercer control y vigilancia de la ejecución del contrato. En consecuencia, este contrato se rige por los principios de modificación unilateral, interpretación unilateral y terminación unilateral por parte del Instituto Tecnológico Metropolitano',
                 'conforme a las disposiciones contenidas en los Artículos 14, 15, 16 y 17 de la Ley 80 de 1993 (modificado por ley 1150 de 2007), la cual para todos los efectos legales hace parte integral de este contrato. SÉPTIMA. -CADUCIDAD. EL INSTITUTO, podrá declarar la caducidad si se presentan algunos de los hechos constitutivos del incumplimiento de las obligaciones a cargo del contratista, que afecta de manera grave y directa la ejecución del contrato, y evidencie que puede conducir a su paralización. La Entidad por acto administrativo debidamente motivado lo dará por terminado y ordenará su liquidación en el estado en que se encuentre. OCTAVA. -EFECTOS DE LA CADUCIDAD. Declarada la caducidad, no habrá lugar a la indemnización para el contratista, quien se hará acreedor a las sanciones e inhabilidades previstas en la Ley 80 de 1993, y las normas que la reglamentan y adicionan, Decreto 1082 de 2015. NOVENA. -MORA O INCUMPLIMIENTO PARCIAL. En caso de mora o incumplimiento parcial de las obligaciones adquiridas por EL CONTRATISTA, de acuerdo a las cláusulas del presente contrato, podrá EL INSTITUTO, mediante',
                 'Resolución motivada, imponer multas, las cuales deberán ser directamente proporcionales al valor del contrato y a los perjuicios que sufra EL INSTITUTO, sin exceder del cinco por mil (5 x 1.000) del valor del contrato cada vez que se impongan. DÉCIMA-CLÁUSULA PENAL PECUNIARIA. Sin perjuicio de lo dispuesto en las cláusulas anteriores, EL INSTITUTO podrá imponer al CONTRATISTA, en caso de declaratoria de caducidad o de incumplimiento como pena, una suma equivalente al diez por ciento (10%) del valor del contrato. El valor de la cláusula penal que se haga efectiva, se considera como pago parcial pero definitivo de los perjuicios causados al INSTITUTO. DECIMA PRIMERA. -DE LA APLICACIÓN DE LA MULTA Y LA CLÁUSULA PENAL PECUNIARIA. Una vez ejecutoriados los actos administrativos que la imponen podrán ser tomados dichos valores del saldo a favor del CONTRATISTA o de las garantías constituidas. Si no fuere',
                 'posible lo anterior, se cobrará por jurisdicción coactiva. DECIMA SEGUNDA. -DEL PROCEDIMIENTO PARA LA IMPOSICION DE LA MULTA: De conformidad con lo dispuesto en el artículo 86 de la Ley 1474 de 2011, en concordancia con los artículos 29 de la Constitución Política y 17 de la Ley 1150 de 2007 reglamentado por el Decreto 1082 de 2015, el procedimiento en caso de imposición de multas, sanciones o declaratoria de incumplimiento será el previsto en el artículo 86 de la ley. DECIMA TERCERA. -CESIÓN DEL CONTRATO. Los contratos de prestación de servicios estatales son "intuitupersona" y, en consecuencia, una vez celebrados no podrán cederse, salvo los casos en que medie autorización expedida por la Rectoría de la entidad, en acto administrativo debidamente sustentado. DÉCIMA CUARTA. -TERMINACIÓN DEL CONTRATO. - El presente contrato podrá darse por terminado cuando: a) Las partes de mutuo acuerdo decidan dar',
@@ -524,17 +528,17 @@ export class MinutaContratoComponent implements OnInit {
                 'CONTRATISTA se obliga por su cuenta y riesgo, a título de contratista independiente. EL CONTRATISTA se obliga por su cuenta y riesgo, a título de contratista independiente. EL INSTITUTO en consecuencia no adquiere ningún vínculo de carácter laboral ni administrativo con él. DÉCIMA SEPTIMA. -INHABILIDADES E INCOMPATIBILIDADES. El presente contrato está sujeto a las inhabilidades e incompatibilidades contempladas en la Ley 80 de 1993 (modificada por ley 1150 de 2007) y EL CONTRATISTA, para todos los efectos legales de este contrato, declara que no está incluido dentro de dichas inhabilidades e incompatibilidades legales. DÉCIMA OCTAVA. -SUPERVISIÓN: La Supervisión de este contrato estará a cargo del Jefe de Oficina – Unidad Estratégica de Negocios o quien el INSTITUTO delegue, quien ejercerá actividades de supervisión y vigilancia técnica, administrativa y financiera del contrato. Es responsabilidad del supervisor verificar que EL CONTRATISTA haya adecuado sus afiliaciones al Sistema Integral de Seguridad Social en Salud y Pensiones, conforme a lo establecido en el presente contrato. DÉCIMA NOVENA. -APROPIACIÓN PRESUPUESTAL. El pago de las',
                 'sumas de dinero que el INSTITUTO queda obligado en razón de éste contrato, se subordina a la apropiación presupuestal que de ella se haga en el respectivo presupuesto. VIGÉSIMA. -IMPUTACIÓN DE GASTOS. Los gastos que demanden la legalización del presente contrato correrán a cargo del CONTRATISTA, y los que impliquen para el INSTITUTO el cumplimiento del mismo durante la presente vigencia fiscal se hace con cargo al certificado de compromiso No. 6240, el cual hace parte integral de los Anexos de éste contrato. VIGÉSIMA PRIMERA. -AFILIACIÓN AL SISTEMA GENERAL DE SEGURIDAD SOCIAL. Con el objeto de dar cumplimiento a lo preceptuado en Ley 100 de 1993 y la Ley 789 de 2002, los Decretos 1990 de 2016, 780 de 1996, 1273 de 2018, Ley 1955 del 25 de mayo de 2019 el CONTRATISTA para la suscripción del contrato deberá presentar constancia de afiliación al sistema integral de seguridad social en Salud, Pensiones y ARL como trabajador independiente. El artículo 1 del Decreto 1273 de 2018,',
                 'por medio del cual se modifica el artículo 2.2.1.1.1.7 del Decreto 780 de 2016, establece lo siguiente: “El pago de las cotizaciones al Sistema de Seguridad Social Integral de los trabajadores independientes se efectuará mes vencido, por periodos mensuales, a través de la Planilla Integrada de Liquidación de Aportes (PILA) y teniendo en cuenta los ingresos percibidos en el periodo de cotización, esto es, el mes anterior.”, atendiendo lo contemplado en el artículo 3.2.7.6 del Decreto 1273 de 2018, sobre “Plazos”. Así mismo el Decreto 1273 de 2018, establece: 1. El Ingreso Base de Cotización (IBC) corresponde como mínimo al 40% del valor mensualizado en cada contrato de prestación de servicios, sin incluir el Impuesto al Valor Agregado(IVA) cuando a ello haya lugar, y en ningún caso el IBC podrá ser inferior al salario mínimo mensual legal vigente ni superior a 25 veces el salario mínimo mensual legal vigente; 5. Cuando no haya lugar al pago de los servicios contratados, de conformidad con lo dispuesto para el efecto en el contrato, estará a cargo del contratista el pago de los',
-                'aportes al Sistema de Seguridad Social Integral y los intereses moratorios a que hubiere lugar; en estos eventos excepcionales, el contratista deberá acredita al contratante el pago del periodo correspondiente; 7. Al contratista le corresponde pagar mes vencido el valor de la cotización al Sistema General de Riesgos Laborales, cuando la afiliación sea por riesgo I,II o III, conforme la clasificación de actividades económicas establecidas en el Decreto 1607 de 2002 o la norma que lo modifique , adicione o sustituya; en tanto que el contratante deberá pagar el valor de la cotización mes vencido, cuando la afiliación del contratista por riesgo IV y V. PARÁGRAFO PRIMERO: De conformidad con lo establecido en el artículo 3.2.2.1. del Decreto 1990 de diciembre de 2016, ha modificado los plazos para la autoliquidación y el pago de los aportes al Sistema de Seguridad Social Integral y Aportes Parafiscales, así: Todos los aportantes a los Sistemas de Salud, Pensiones y Riesgos Laborales del Sistema de Seguridad Social Integral, así como aquellos a favor del Servicio Nacional del Aprendizaje –SENA–, del Instituto Colombiano de Bienestar Familiar –ICBF– y',
-                'de las Cajas de Compensación Familiar, efectuarán sus aportes utilizando la Planilla Integrada de Liquidación de Aportes –PILA–, bien sea en su modalidad electrónica o asistida, a más tardar en las fechas que se indican a continuación:',
+                'aportes al Sistema de Seguridad Social Integral y los intereses moratorios a que hubiere lugar; en estos eventos excepcionales, el contratista deberá acredita al contratante el pago del periodo correspondiente; 7. Al contratista le corresponde pagar mes vencido el valor de la cotización al Sistema General de Riesgos Laborales, cuando la afiliación sea por riesgo I,II o III, conforme la clasificación de actividades económicas establecidas en el Decreto 1607 de 2002 o la norma que lo modifique , adicione o sustituya; en tanto que el contratante deberá pagar el valor de la cotización mes vencido, cuando la afiliación del contratista por riesgo IV y V. PARÁGRAFO PRIMERO: De conformidad con lo establecido en el artículo 3.2.2.1. del Decreto 1990 de diciembre de 2016, ha modificado los plazos para la autoliquidación y el pago de los aportes al Sistema de Seguridad Social Integral y Aportes Parafiscales, así: Todos los aportantes a los Sistemas de Salud, Pensiones y Riesgos Laborales del Sistema de Seguridad Social Integral, así como aquellos a favor del Servicio Nacional del Aprendizaje -SENA-, del Instituto Colombiano de Bienestar Familiar -ICBF- y',
+                'de las Cajas de Compensación Familiar, efectuarán sus aportes utilizando la Planilla Integrada de Liquidación de Aportes -PILA-, bien sea en su modalidad electrónica o asistida, a más tardar en las fechas que se indican a continuación:',
               ],
               style: 'header',
               bold: false
             },
             {
-              style: 'tableExample',
+              style: 'tableWorkers',
               color: '#444',
               table: {
-                widths: ['*', '*'],
+                widths: ['auto', 'auto'],
                 body: [
                   [
                     {
@@ -561,50 +565,140 @@ export class MinutaContratoComponent implements OnInit {
                   [
                     {
                       text: '00 al 07',
-                      style: 'tableHeader',
+                      style: 'tableData',
+                      aligment: 'center'
                     }, {
-                      text: data.numberProject,
+                      text: '2°',
+                      style: 'tableData',
                     }
                   ],
                   [
                     {
                       text: '08 al 14',
-                      style: 'tableHeader',
+                      style: 'tableData',
+                      aligment: 'center'
                     }, {
-                      text: new Date(),
+                      text: '3°',
+                      style: 'tableData',
                     }
                   ],
                   [
                     {
                       text: '15 al 21',
-                      style: 'tableHeader',
+                      style: 'tableData',
+                      aligment: 'center'
                     }, {
-                      text: '3 MESES Y VEINTICINCO DÍAS',
+                      text: '4°',
+                      style: 'tableData',
                     }
                   ],
                   [
                     {
                       text: '22 a 28',
-                      style: 'tableHeader',
+                      style: 'tableData',
                     },
                     {
-                      text: ''
+                      text: '5°',
+                      style: 'tableData',
                     }
                   ],
                   [
                     {
                       text: '29 al 35',
-                      style: 'tableHeader',
+                      style: 'tableData',
                     }, {
-                      text: '3 MESES Y VEINTICINCO DÍAS',
+                      text: '6°',
+                      style: 'tableData',
                     }
                   ],
                   [
                     {
                       text: '36 al 42',
-                      style: 'tableHeader',
+                      style: 'tableData',
                     }, {
-                      text: 'DIEGO ALEJANDRO MARÍN CIFUENTES',
+                      text: '7°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '43 al 49',
+                      style: 'tableData',
+                    }, {
+                      text: '8°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '50 al 56',
+                      style: 'tableData',
+                    }, {
+                      text: '9°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '57 al 63',
+                      style: 'tableData',
+                    }, {
+                      text: '10°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '64 al 69',
+                      style: 'tableData',
+                    }, {
+                      text: '11°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '70 al 75',
+                      style: 'tableData',
+                    }, {
+                      text: '12°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '76 al 81 ',
+                      style: 'tableData',
+                    }, {
+                      text: '13°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '82 al 87',
+                      style: 'tableData',
+                    }, {
+                      text: '14°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '88 al 93',
+                      style: 'tableData',
+                    }, {
+                      text: '15°',
+                      style: 'tableData',
+                    }
+                  ],
+                  [
+                    {
+                      text: '94 al 99',
+                      style: 'tableData',
+                    }, {
+                      text: '16°',
+                      style: 'tableData',
                     }
                   ],
                 ],
@@ -634,20 +728,22 @@ export class MinutaContratoComponent implements OnInit {
               bold: true,
               alignment: 'justify'
             },
-            subheader: {
-              fontSize: 16,
-              bold: true,
-              margin: [0, 10, 0, 5],
-            },
             tableHeader: {
               bold: true,
               fontSize: 13,
               color: 'black',
-              align: 'center',
-              margin: [0, 0, 10, 10],
+              alignment: 'center',
             },
-            tableExample: {
-              margin: [0, 5, 0, 15],
+            tableWorkers: {
+              alignment: 'center',
+              color: 'black',
+            },
+            tableData: {
+              bold: true,
+              fontSize: 13,
+              color: 'black',
+              alignment: 'center',
+              margin: [0, 0, 10, 10],
             },
             title: {
               bold: true,
@@ -661,48 +757,48 @@ export class MinutaContratoComponent implements OnInit {
             // alignment: 'justify'
           },
         };
+        debugger
         let nombreMinuta = 'MINUTA' + data.nombre;
         let registerDate = this.registerDate;
         let userId = this._auth.accessId;
         let contractId = this.contractContractors.contractId;
         let _uploadervice = this._upload;
         pdfMake.createPdf(documentDefinition)
-        .getDataUrl(function (dataURL) {
-          dataURL = dataURL.split('data:application/pdf;base64,')
-          const registerFile: IFileContractor = {
-            userId: userId,
-            contractorId: data.contractorId,
-            contractId: contractId,
-            filesName: nombreMinuta,
-            fileType: 'PDF',
-            descriptionFile: 'minuta del contratista generada',
-            registerDate: registerDate,
-            modifyDate: registerDate,
-            filedata: dataURL[1],
-            passed: null,
-            typeFilePayment: 'Minuta',
-            monthPayment: null,
-            folderId: null
-          };
-          _uploadervice.UploadFileBillContractors(registerFile).subscribe((res) => {
-            if (res) {
-              swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: '',
-                html: 'Información Registrada Exitosamente!',
-                showConfirmButton: false,
-                timer: 1500
+          .getDataUrl(function (dataURL) {
+            dataURL = dataURL.split('data:application/pdf;base64,')
+            const registerFile: IFileContractor = {
+              userId: userId,
+              contractorId: data.contractorId,
+              contractId: contractId,
+              filesName: nombreMinuta,
+              fileType: 'PDF',
+              descriptionFile: 'minuta del contratista generada',
+              registerDate: registerDate,
+              modifyDate: registerDate,
+              filedata: dataURL[1],
+              typeFilePayment: 'Minuta',
+              monthPayment: null,
+              folderId: null
+            };
+            _uploadervice.UploadFileBillContractors(registerFile).subscribe((res) => {
+              if (res) {
+                swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: '',
+                  html: 'Información Registrada Exitosamente!',
+                  showConfirmButton: false,
+                  timer: 1500
+                });
+
+              }
+
+            },
+              (response) => {
+                console.log(response);
+                swal.fire('Error', 'Error al Registrar la informacion!', 'error');
               });
-
-            }
-
-          },
-            (response) => {
-              console.log(response);
-              swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-            });
-        });
+          });
         pdfMake
           .createPdf(documentDefinition)
           .download(nombreMinuta + '.pdf');
@@ -723,6 +819,19 @@ export class MinutaContratoComponent implements OnInit {
       }));
   }
 
-  private guardarMinutas() {
+  private calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
+    let fechaInicios = new Date(fechaInicio);
+    let fechaFins = new Date(fechaFin);
+    const diferencia = fechaFins.getTime() - fechaInicios.getTime();
+    const diasTotales = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+    const meses = Math.floor(diasTotales / 30);
+    const dias = diasTotales % 30;
+    if (meses > 0 && meses == 1) {
+      return `${meses} mes y ${dias} días.`
+    } else if (meses > 0 && meses > 1) {
+      return `${meses} meses y ${dias} días.`
+    } else {
+      return `${dias} días.`
+    }
   }
 }

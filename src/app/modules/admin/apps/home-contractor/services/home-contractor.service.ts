@@ -80,7 +80,7 @@ export class HomeContractorService
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + idC + '!');
+                    return throwError('No se pudo encontrar el artículo con id ' + idC + '!');
                 }
 
                 return of(item);

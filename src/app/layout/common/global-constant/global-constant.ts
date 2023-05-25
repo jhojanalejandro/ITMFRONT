@@ -230,7 +230,7 @@ export class GlobalConst {
         let cientos = Math.floor(num / divisor)
         let resto = num - (cientos * divisor)
     
-        let strMillones = this.Seccion(num, divisor, 'UN MILLON DE', 'MILLONES DE');
+        let strMillones = this.Seccion(num, divisor, 'UN MILLON DE', 'MILLONES');
         let strMiles = this.Miles(resto);
     
         if(strMillones == '')
@@ -264,9 +264,9 @@ export class GlobalConst {
         if(data.enteros == 0)
             return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
         if (data.enteros == 1)
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + data.letrasCentavos;
+            return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular;
         else
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
+            return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural;
     };
 
     
