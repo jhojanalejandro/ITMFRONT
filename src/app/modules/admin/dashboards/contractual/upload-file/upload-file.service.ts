@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { DocumentTypeFile, Files, IFileContractor } from 'app/layout/common/models/file-contractor';
-import { DetailFileContractor } from 'app/modules/admin/apps/home-contractor/models/fileContractor';
+import { DetailFile, DocumentTypeFile, Files, FileContractor, DetailFileContractor } from 'app/layout/common/models/file-contractor';
 
 @Injectable({
     providedIn: 'root'
@@ -32,7 +31,7 @@ export class UploadFileDataService
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
-    UploadFileContractor(formdata: IFileContractor) {
+    UploadFileContractor(formdata: FileContractor) {
         let urlEndpointGenerate = this.apiUrl+ environment.addFileEndpoint;
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
@@ -47,7 +46,7 @@ export class UploadFileDataService
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
-    UploadFileBillContractors(formdata: IFileContractor) {
+    UploadFileBillContractors(formdata: FileContractor) {
         let urlEndpointGenerate = this.apiUrl+ environment.addFileBillsEndpoint;
          return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
@@ -55,5 +54,11 @@ export class UploadFileDataService
     getDocumentType() {
         let urlEndpointGenerate = this.apiUrl+ environment.GetDocumentTypeEndpoint;
          return this._httpClient.get<DocumentTypeFile[]>(urlEndpointGenerate);
+    }
+
+    
+    updateStatusFileContractor(detail: DetailFile) {
+        let urlEndpointGenerate = this.apiUrl+ environment.addDetailFileEndpoint;
+         return this._httpClient.post<IResponse>(urlEndpointGenerate, detail);
     }
 }

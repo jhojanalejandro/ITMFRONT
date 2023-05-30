@@ -3,10 +3,11 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
-import { IFileContractor } from 'app/layout/common/models/file-contractor';
+import { FileContractor } from 'app/layout/common/models/file-contractor';
 import { AuthService } from 'app/core/auth/auth.service';
 import { PlaningService } from '../../service/planing.service';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
+import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
 
 
 @Component({
@@ -21,15 +22,15 @@ export class MinutaContratoMacroComponent implements OnInit {
   registerDate = new Date();
   file: any;
   dataContract: any[] = [];
-  SaveMinuta: IFileContractor[] = []
+  SaveMinuta: FileContractor[] = []
   docDefinition: any;
   base64Output: any;
 
   dataMinuta: any[] = [];
   constructor(
-    private _planingService: PlaningService,
     private _upload: UploadFileDataService,
     private _changeDetectorRef: ChangeDetectorRef,
+    private _pdfdataService: PdfDataService,
     private _auth: AuthService) { }
 
   ngOnInit(): void {
@@ -665,7 +666,7 @@ export class MinutaContratoMacroComponent implements OnInit {
       pdfMake.createPdf(documentDefinition)
         .getDataUrl(function (dataURL) {
           dataURL = dataURL.split('data:application/pdf;base64,')
-          const registerFile: IFileContractor = {
+          const registerFile: FileContractor = {
             userId: userId,
             contractorId: null,
             contractId: contractId,
@@ -707,7 +708,7 @@ export class MinutaContratoMacroComponent implements OnInit {
   }
 
   private getHiringData() {
-    this._planingService
+    this._pdfdataService
       .getDataMinuteMacroContract(this.contract)
       .subscribe((response: any) => {
         this.dataContract = response;

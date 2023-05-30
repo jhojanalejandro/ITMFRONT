@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from './upload-file.service';
-import { DocumentTypeFile, Files, IFileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
@@ -90,7 +90,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
 
 
   addFileContractor(event) {
-    const registerFile: IFileContractor = {
+    const registerFile: FileContractor = {
       userId: this._auth.accessId,
       contractorId: this._data.contractorId,
       contractId: this._data.contractId,

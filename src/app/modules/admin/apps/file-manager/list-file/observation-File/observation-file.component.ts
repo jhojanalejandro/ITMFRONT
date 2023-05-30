@@ -4,12 +4,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { map, Observable, ReplaySubject, startWith, Subject, takeUntil } from 'rxjs';
-import { IFileContractor } from 'app/layout/common/models/file-contractor';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { map, Observable, startWith, Subject } from 'rxjs';
+import { DetailFileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
-import { DetailFileContractor } from '../../../home-contractor/models/fileContractor';
 
 @Component({
   selector: 'app-observation-file',
