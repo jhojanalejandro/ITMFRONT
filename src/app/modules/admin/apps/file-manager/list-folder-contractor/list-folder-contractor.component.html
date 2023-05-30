@@ -67,13 +67,6 @@
                         <!-- Actions -->
                         <div class="mt-4 sm:mt-0">
                             <!-- Upload button -->
-                            <button
-                                mat-flat-button
-                                (click)="uploadFileContract()"
-                                [color]="'primary'">
-                                <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
-                                <span class="ml-2 mr-1">Cargar Archivos</span>
-                            </button>
                             <button class="ml-4"  mat-flat-button [color]="'primary'" (click)="crearCarpeta()">
                                 <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
                                 <span class="ml-2 mr-1">Crear Carpeta</span>
@@ -84,14 +77,14 @@
                     <div class="p-6 md:p-8 space-y-8">
                         <ng-container *ngIf="items.folderContract.length > 0">
                             <div>
-                                <div class="font-medium">Carpetas Contratistas</div>
+                                <div class="font-medium">Carpetas Contrato</div>
                                 <div
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let folder of items.folderContract | filter:searchText; trackBy:trackByFn">
                                         <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                (click)="route(folder.id)">
+                                                [routerLink]="['/apps/file-manager/file/contract/'+contractId +'/'+ folder.id]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->

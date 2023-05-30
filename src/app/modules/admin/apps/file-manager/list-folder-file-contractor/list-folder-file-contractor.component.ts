@@ -10,7 +10,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { FileListManagerService } from '../services/list-file.service';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
-import { RegisterFolderContractorComponent } from '../components/register-folder-contractor/register-folder-contractor.component';
+import { RegisterFolderComponent } from '../components/register-folder/register-folder.component';
 
 @Component({
     selector: 'list-folder-file-contractor',
@@ -95,7 +95,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     }
 
     crearCarpeta() {
-        const dialogRef = this._matDialog.open(RegisterFolderContractorComponent, {
+        const dialogRef = this._matDialog.open(RegisterFolderComponent, {
             disableClose: true,
             autoFocus: false,
             data: {
@@ -157,7 +157,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     }
 
     getFilesFolder = async (id: any) => {
-        this._fileService.getItemById(this.contractId, this.contractorId, id)
+        this._fileService.getFileByContractor(this.contractId, this.contractorId, id)
         .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((Response: any) => {
                 const jszip = new JSZip();

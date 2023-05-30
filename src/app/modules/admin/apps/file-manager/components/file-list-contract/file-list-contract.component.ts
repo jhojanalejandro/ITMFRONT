@@ -2,27 +2,23 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import swal from 'sweetalert2';
 import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
-import { FileListManagerService } from '../services/list-file.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
-import { ObservationFileComponent } from './observation-File/observation-file.component';
-import { DetailFile, FileContractor } from 'app/layout/common/models/file-contractor';
-import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detail-file-enum';
+import { FileListManagerService } from '../../services/list-file.service';
 
 
 @Component({
-    selector: 'file-list',
-    templateUrl: './file-list.component.html',
+    selector: 'file-list-contract',
+    templateUrl: './file-list-contract.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileListComponent implements OnInit, OnDestroy {
+export class FileListContractComponent implements OnInit, OnDestroy {
     checked = false;
     indeterminate = false;
     posicion: any = 'revisar';
@@ -33,46 +29,31 @@ export class FileListComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     items: any;
-    statusFile: any;
     value: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
-    filteredStreets: Observable<string[]>;
-    contractorId: string;
+    filteredStreets: Observable<DataFile[]>;
     contractId: string;
     folderId: string;
-    detailFile: DetailFile = {
-        fileId: null,
-        registerDate: new Date(),
-        reason: null,
-        observation: null,
-        statusFileId: null,
-        passed: false,
-    }
+
+
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _uploadService: UploadFileDataService,
         private _fileManagerService: FileListManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _matDialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
-        this.getStatusFile();
-        this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
         this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
         this.folderId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
         this.getData();
         this._fileManagerService.setContractId(this.contractId);
-        this._fileManagerService.setContractorId(this.contractorId);
         this._fileManagerService.setFolderId(this.folderId);
-    }
 
-    getId(id: any) {
-        this.contractorId = id;
     }
 
     onBackdropClicked(): void {
@@ -95,7 +76,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private _normalizeValue(value: string): string {
         return value.toString().replace(/[0-9]/g, '');
     }
-    private _filter2(value: string): string[] {
+    private _filter2(value: string): DataFile[] {
         if (this.items != null) {
             const filterValue = this._normalizeValue(value);
             return this.items.filter(street => this._normalizeValue(street).includes(filterValue));
@@ -103,90 +84,30 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private _filter(number: any): any[] {
-        const filterValue = number;
-
         return this.items.filter(option => option === number);
     }
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         // let studentObj =  this.dataRandom.find(t=>t.fullname ===event);
         this.items.filter = filterValue;
-        // return this.dataRandom.number.find(number => number === event)
     }
+
     uploadFile() {
-        //this.validateDinamycKey();
         const dialogRef = this._matDialog.open(UploadFileComponent, {
             disableClose: true,
             autoFocus: false,
             data: {
                 show: false,
-                split: true,
-                contractorId: this.contractorId,
                 contractId: this.contractId,
                 folderId: this.folderId,
-                typeFilePayment: 'Otros'
+                typeFilePayment: 'contrato'
             }
         });
-        dialogRef.afterClosed()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((result) => {
+        dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this.getData();
             }
         });
-    }
-
-    onChange(event: any, file: FileContractor) {
-        debugger
-        let code = this.statusFile.find(f => f.code === DetailFileOption.RECHAZADO)
-        if (code.id === event.value) {
-            const dialogRef = this._matDialog.open(ObservationFileComponent, {
-                disableClose: true,
-                autoFocus: false,
-                data: file
-            });
-            dialogRef.afterClosed()
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((result) => {
-                    if (result) {
-                        swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información actualizada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
-        } else {
-            this.detailFile.fileId = file.id;
-            this.detailFile.registerDate = new Date();
-            this.detailFile.passed = true;
-            this.detailFile.statusFileId = event.value;
-
-            debugger
-            this._uploadService.updateStatusFileContractor(this.detailFile)
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((res) => {
-                if (res) {
-                    swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: '',
-                        html: 'Información actualizada Exitosamente!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            },
-                (response) => {
-                    console.log(response);
-
-                    swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-                });
-        }
-
     }
 
     isAllSelected() {
@@ -236,13 +157,15 @@ export class FileListComponent implements OnInit, OnDestroy {
             map(value => this._filter2(value)),
         );
 
-        this._fileManagerService.getFileByContractor(this.contractId, this.contractorId, this.folderId)
+        // Get the item
+        this._fileManagerService.getFileByContract(this.contractId,this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 this.items = item;
-                debugger
+                // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
@@ -255,19 +178,11 @@ export class FileListComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
             });
     }
-
-    private getStatusFile(){
-        this._fileManagerService.getStatusFile()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((item: any) => {
-            this.statusFile = item;
-            debugger
-        });
-    }
-
+    
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
+
 
 }

@@ -37,7 +37,7 @@ export class AddComponentsComponent implements OnInit {
     abrirDivActivity: boolean = false;
 
     data: any;
-    id: string = null;
+    contractId: string = null;
     configForm: FormGroup;
     subTotal: number = 0;
     total: number = 0;
@@ -57,8 +57,8 @@ export class AddComponentsComponent implements OnInit {
         private _matDialog: MatDialog,
         private _contrtactService: UploadDataService,
     ) {
-        this.id = this.route.snapshot.params.id;
-        if (this.id) {
+        this.contractId = this.route.snapshot.params.id;
+        if (this.contractId) {
             this.chargeData();
         }
     }
@@ -96,7 +96,7 @@ export class AddComponentsComponent implements OnInit {
     }
 
     chargeData() {
-        this._planingService.getComponent(this.id).subscribe((response) => {
+        this._planingService.getComponent(this.contractId).subscribe((response) => {
             if (response.length != 0) {
                 this.data = response;
                 this.totalesPlaneacion();
@@ -173,14 +173,14 @@ export class AddComponentsComponent implements OnInit {
             disableClose: true,
             autoFocus: false,
             data: {
-                idContrato: this.id,
+                idContrato: this.contractId,
                 show: true,
             },
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this._planingService
-                    .getComponent(this.id)
+                    .getComponent(this.contractId)
                     .subscribe((response) => {
                         this.data = response;
                         this._changeDetectorRef.detectChanges();
@@ -203,7 +203,7 @@ export class AddComponentsComponent implements OnInit {
                 disableClose: true,
                 autoFocus: false,
                 data: {
-                    idContrato: this.id,
+                    idContrato: this.contractId,
                     idComponente: this.dataComponente.id,
                     show: true,
                 },
@@ -211,7 +211,7 @@ export class AddComponentsComponent implements OnInit {
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this._planingService
-                        .getActivityById(this.id)
+                        .getActivityById(this.contractId)
                         .subscribe((response) => {
                             this.data = response;
                             this._changeDetectorRef.detectChanges();
@@ -241,7 +241,7 @@ export class AddComponentsComponent implements OnInit {
                 componentId: componentId,
                 activityId: activityId,
                 idElemento: null,
-                idContrato: this.id,
+                idContrato: this.contractId,
                 edit: false
             },
         });
@@ -258,9 +258,7 @@ export class AddComponentsComponent implements OnInit {
             autoFocus: false,
             data: {
                 elemento,
-                idComponente: elemento.idComponente,
-                idElemento: elemento.id,
-                idContrato: this.id,
+                contractId: this.contractId,
                 edit: true
             }
         });
@@ -276,7 +274,7 @@ export class AddComponentsComponent implements OnInit {
             autoFocus: false,
             data: {
                 componente,
-                idContrato: this.id
+                idContrato: this.contractId
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -292,7 +290,7 @@ export class AddComponentsComponent implements OnInit {
             autoFocus: false,
             data: {
                 activity,
-                idContrato: this.id
+                idContrato: this.contractId
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -316,7 +314,7 @@ export class AddComponentsComponent implements OnInit {
     }
     guardarCalculo() {
         const registerProject: any = {
-            id: this.id,
+            id: this.contractId,
             contractorsCant: this.contractorCant,
             valorContrato: this.total,
             valorSubTotal: this.subTotal,

@@ -26,10 +26,9 @@ export class ContractorService {
     }
 
     getContractorByIdProject(id: string | null = null) {
-        let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
         return this._httpClient.get(urlEndPoint + id).pipe(
             tap((response: any) => {
-                
                 this._contractorsByContract.next(response);
             })
         );

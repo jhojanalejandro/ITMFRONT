@@ -55,18 +55,11 @@ export class HomeContractorService
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-
-    UploadFileContractor(formdata: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addFileEndpoint;
-         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
-    }
-
-    getFileById(idC: any | null = null): Observable<any>
+    getFileById(contractor: string, contract: string): Observable<any>
     {
-        let arr = idC.split('/');
         const params = new HttpParams()
-        .set('contractorId', arr[0] )
-        .set('contractId', arr[1]);
+        .set('contractorId', contractor)
+        .set('contractId', contract);
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl+ environment.GetAllFileByContractEndpoint;
         return this._httpClient.get<any>(urlEndPoint, {params: params}).pipe(
@@ -80,7 +73,7 @@ export class HomeContractorService
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + idC + '!');
+                    return throwError('No se pudo encontrar el artículo con id ' + contract + '!');
                 }
 
                 return of(item);

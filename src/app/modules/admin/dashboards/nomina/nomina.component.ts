@@ -56,7 +56,6 @@ export class NominaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
-    console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
   }
 
   showFiles(data: any) {

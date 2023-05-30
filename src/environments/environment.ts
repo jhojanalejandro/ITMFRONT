@@ -29,7 +29,6 @@ export const environment = {
     //GetByContractorIdFolderEndpoint: 'Contractor/GetAllByFolder/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
     // GetContractorByIdEndpoint: 'Contractor/ChargeAccountGetById',
-    GetBillByContractIdEndpoint: 'Contractor/GetDataBill',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
     sendMails: 'MessageHandling/SendContractorAccount',
@@ -38,6 +37,7 @@ export const environment = {
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
     HistoryContractor: 'Contractor/GetHistoryContractor',
     AddnewnessContractor: 'Contractor/AddNewNess',
+    GetByContractorIdContractEndpoint: 'Contractor/GetAllByFolder/',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -74,14 +74,15 @@ export const environment = {
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
-    GetAllFileByFolderEndpoint: 'Files/GetFileContractorByFolder',
+    GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
+    GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
-    GetAllFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
+    GetFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
-
-
+    updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetById/',
-    DeleteFileEndpoint: 'Files/Delete',
+    DeleteFileEndpoint: 'Files/Delete/',
+
 
     addHiringEndpoint: 'HiringData/Add',
     UpdateHiringEndpoint: 'HiringData/Update',
@@ -107,20 +108,19 @@ export const environment = {
     getActivityByIdComponent: 'Componente/GetActivityByComponent/',
     getActivityById: 'Componente/GetActivityById/',
 
-
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
     GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
     GetPdMinteExtension: 'PdfData/ChargeAccountGetById',
-
+    GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
 
     addFileFirmEndpoint: 'UserFirm/SaveFirm',
-
 
     GetCpcTypeEndpoint: 'MasterData/GetAllCpcType',
     GetFileTypeEndpoint: 'MasterData/GetFileType',
     GetStatusContractEndpoint: 'MasterData/GetStatusContract',
     GetElementTypeEndpoint: 'MasterData/GetAllElementType',
     GetDocumentTypeEndpoint: 'MasterData/GetDocumentType',
+    GetStatusFileEndpoint: 'MasterData/GetStatusFile',
 
 
 };

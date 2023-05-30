@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from './upload-file.service';
-import { DocumentTypeFile, Files, IFileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
@@ -76,7 +76,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   onChange(event) {
     this.disableButton = false;
     this.file = event.target.files[0];
-    this.fileName = this.file.name;
+    this.fileName = this.file.name.split('.')[0].toUpperCase();
     this.typeFile = this.file.type.split('/')[1].toUpperCase();
     const reader = new FileReader();
     reader.readAsDataURL(this.file);
@@ -90,7 +90,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
 
 
   addFileContractor(event) {
-    const registerFile: IFileContractor = {
+    const registerFile: FileContractor = {
       userId: this._auth.accessId,
       contractorId: this._data.contractorId,
       contractId: this._data.contractId,
@@ -100,7 +100,6 @@ export class UploadFileComponent implements OnInit,OnDestroy{
       registerDate: this.registerDate,
       modifyDate: this.registerDate,
       filedata: event,
-      passed: null,
       typeFilePayment: this._data.typeFilePayment,
       monthPayment: null,
       folderId: this._data.folderId
@@ -134,7 +133,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   addFileContract(event) {
     const uploadFile: Files = {
       userId: this._auth.accessId,
-      folderId: null,
+      folderId: this._data.folderId,
       contractId: this._data.contractId,
       filesName: this.fileName,
       fileType: this.typeFile,
@@ -145,7 +144,14 @@ export class UploadFileComponent implements OnInit,OnDestroy{
     };
     this._upload.UploadFileContract(uploadFile).subscribe((res) => {
       if (res) {
-        swal.fire('Bien', 'informacion Registrada Exitosamente!', 'success');
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información Registrada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();

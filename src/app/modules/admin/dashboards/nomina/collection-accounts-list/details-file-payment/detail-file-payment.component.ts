@@ -39,7 +39,7 @@ export class DetailFilePaymentComponent implements OnInit, OnDestroy
         this._listComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.itemD$
+        this._fileManagerService.filesContract$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
                 this.id = item.id;

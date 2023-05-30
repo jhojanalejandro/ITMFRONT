@@ -4,20 +4,20 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { FolderContract, IFolderContractor } from 'app/layout/common/models/folder-contractor';
+import { Folder } from 'app/layout/common/models/folder-contractor';
 import { ActivatedRoute } from '@angular/router';
 import { FileManagerService } from '../../services/file-manager.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 
 @Component({
-    selector: 'app-register-contractor',
-    templateUrl: './register-folder-contractor.component.html',
-    styleUrls: ['./register-folder-contractor.component.scss'],
+    selector: 'app-register',
+    templateUrl: './register-folder.component.html',
+    styleUrls: ['./register-folder.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations
 })
-export class RegisterFolderContractorComponent implements OnInit {
+export class RegisterFolderComponent implements OnInit {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   indeterminate = false;
@@ -37,7 +37,7 @@ export class RegisterFolderContractorComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private authService: AuthService,
     private router: ActivatedRoute,
-    public matDialogRef: MatDialogRef<RegisterFolderContractorComponent>,
+    public matDialogRef: MatDialogRef<RegisterFolderComponent>,
     @Inject(MAT_DIALOG_DATA) private _data
     ) {
       setInterval(() => {
@@ -67,7 +67,7 @@ export class RegisterFolderContractorComponent implements OnInit {
     this.ref.detectChanges();
   }
   addContractorFolder() {
-    const registerGFolder: IFolderContractor={
+    const registerGFolder: Folder={
       userId: this.authService.accessId,
       contractorId: this._data.contractorId,
       contractId: this._data.contractId,
@@ -109,7 +109,7 @@ export class RegisterFolderContractorComponent implements OnInit {
     }
   }
   addContractFolder() {
-    const registerGFolder: FolderContract={
+    const registerGFolder: Folder={
       userId: this.authService.accessId,
       contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
@@ -144,7 +144,7 @@ export class RegisterFolderContractorComponent implements OnInit {
   }
 
   editContractFolder(){
-    const editProject: IFolderContractor={
+    const editProject: Folder={
       id: this._data.data.id,
       userId: this.authService.accessId,
       contractorId: this._data.contractId,

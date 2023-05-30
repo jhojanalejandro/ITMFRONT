@@ -7,7 +7,7 @@
                 <span class="ml-2">Volver</span>
             </a>
             <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
-              {{contractname}}!</div>
+                {{contractname}}!</div>
 
         </div>
         <div class="mt-4 sm:mt-0">
@@ -25,10 +25,10 @@
             </button>
 
             <button (click)="uploadExcel()" class="ml-3" mat-flat-button [color]="'primary'"
-            [matTooltip]="'Shortcut: Ctrl + /'">
-            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-            <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
-        </button>
+                [matTooltip]="'Shortcut: Ctrl + /'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
+            </button>
         </div>
     </div>
     <div class="flex-auto">
@@ -64,7 +64,7 @@
                                     <mat-icon svgIcon="heroicons_solid:arrow-circle-right"></mat-icon>
                                     Activar contrato
                                 </button>
-                                
+
                             </mat-menu>
                         </div>
                     </div>
@@ -100,22 +100,32 @@
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
                                     <p
-                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento && element[columna.name]!= element.statusContractor && element[columna.name]!= element.proccess">
+                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento && element[columna.name]!= element.legalProccess  && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor">
                                         {{element[columna.name]}}
                                     </p>
                                     <p *ngIf="element[columna.name]== element.fechaNacimiento">
                                         {{element[columna.name] | date:'dd/MM/yyyy'}}
                                     </p>
-                                    <span *ngIf="element[columna.name]== element.statusContractor;"
+                                    <span *ngIf="element[columna.name]=== element.statusContractor;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
-                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'EN REVISIÓN'}">
+                                        'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'INVITADO',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <span *ngIf="element[columna.name]== element.proccess;"
+                                    <span
+                                        *ngIf="element[columna.name]=== element.legalProccess;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                        [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.proccess === 'en espera',
-                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.proccess === 'en proceso'}">
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
+                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]=== element.hiringStatus;"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
+                             'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATANDO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <p *ngIf="columna.name=='acciones'">

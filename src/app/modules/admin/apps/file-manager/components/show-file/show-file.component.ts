@@ -32,12 +32,11 @@ export class ShowFileComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.router.snapshot.paramMap.get('id') || 'null';
 
-    this._fileManagerService.itemD$
+    this._fileManagerService.filesContract$
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((item: any) => {
         this.id = item.id;
         // Open the drawer in case it is closed
-        // Get the item
         this.getFile = item.filedata;
         // this.getFile = this.sanitizer.bypassSecurityTrustResourceUrl('data:application/pdf;base64,'+this.getFile);
     });

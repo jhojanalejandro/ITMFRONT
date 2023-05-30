@@ -6,35 +6,37 @@ import * as CryptoJS from 'crypto-js';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
-import { ListFolderContractorComponent } from '../../list-folder-contractor/list-folder-contractor.component';
-import { ListFolderContractorService } from '../../services/list-folder-contractor.service';
+import { FileListContractComponent } from '../file-list-contract/file-list-contract.component';
+import { FileListManagerService } from '../../services/list-file.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import swal from 'sweetalert2';
 
 @Component({
-    selector       : 'detail-file-contract',
-    templateUrl    : './detail-file-contract.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'detail-file-contract',
+    templateUrl: './detail-file-contract.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailFileContractComponent implements OnInit, OnDestroy
-{
+export class DetailFileContractComponent implements OnInit, OnDestroy {
     userName: any;
     item: any;
     id: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    /**
-     * Constructor
-     */
+    configForm: FormGroup;
+    contractId: string;
+    folderId: string;
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _listComponent: ListFolderContractorComponent,
-        private _fileManagerService: ListFolderContractorService,
+        private _listComponent: FileListContractComponent,
+        private _fileManagerService: FileListManagerService,
         private _router: Router,
-        private _authService: AuthService
-    ){}
+        private _authService: AuthService,
+        private _formBuilder: FormBuilder,
+        private _fuseConfirmationService: FuseConfirmationService,
+    ) { }
 
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this._listComponent.matDrawer.open();
 
         // Get the item
@@ -45,24 +47,38 @@ export class DetailFileContractComponent implements OnInit, OnDestroy
                 // Open the drawer in case it is closed
                 this._listComponent.matDrawer.open();
 
-                // Get the item
                 this.item = item;
                 this.userName = this._authService.accessName;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
+        this.configForm = this._formBuilder.group({
+            title: 'Eliminar Registro',
+            message: '¿Estás seguro de que desea eliminar este archivo de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
+            icon: this._formBuilder.group({
+                show: true,
+                name: 'heroicons_outline:exclamation',
+                color: 'warn'
+            }),
+            actions: this._formBuilder.group({
+                confirm: this._formBuilder.group({
+                    show: true,
+                    label: 'Eliminar',
+                    color: 'warn'
+                }),
+                cancel: this._formBuilder.group({
+                    show: true,
+                    label: 'Cancelar'
+                })
+            }),
+            dismissible: true
+        });
+        this.contractId = this._fileManagerService.getContractId();
+        this.folderId = this._fileManagerService.getFolderId();
     }
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void
-    {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-    closeDrawer(): Promise<MatDrawerToggleResult>
-    {
+
+    closeDrawer(): Promise<MatDrawerToggleResult> {
         return this._listComponent.matDrawer.close();
     }
 
@@ -72,13 +88,12 @@ export class DetailFileContractComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
     openDialog() {
         //this.validateDinamycKey();
-        this._router.navigate(['apps/archivo/'+ this.id]);
+        this._router.navigate(['apps/archivo/' + this.id]);
     }
     encryptData(data) {
         try {
@@ -88,5 +103,42 @@ export class DetailFileContractComponent implements OnInit, OnDestroy
         }
     }
 
+    openConfirmationDelete(): void {
+        // Open the dialog and save the reference of it
+        const dialogRef = this._fuseConfirmationService.open(this.configForm.value);
 
+        // Subscribe to afterClosed from the dialog reference
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result == 'confirmed') {
+                this._fileManagerService.DeleteFile(this.id).subscribe((res) => {
+                    if (res) {
+                        swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información Eliminada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        debugger
+                        this.closeDrawer();
+                        this._router.navigate(['/apps/file-manager/file/contract/' + this.contractId + '/' + this.folderId]);
+                        // Mark for check
+                        this._changeDetectorRef.markForCheck();
+                    }
+                },
+                    (response) => {
+                        console.log(response);
+                        swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
+                    });
+            }
+        });
+    }
+
+
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

@@ -92,7 +92,7 @@ export class CollectionAccountsService
 
                 if ( !item )
                 {
-                    return throwError('Could not found the item with id of ' + id + '!');
+                    return throwError('No se pudo encontrar el artículo con id' + id + '!');
                 }
 
                 return of(item);

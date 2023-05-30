@@ -4,7 +4,7 @@
     <div class="flex items-center justify-end">
         <button
             mat-icon-button
-            [routerLink]="['../../../']">
+            [routerLink]="['../../../../']">
             <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
@@ -90,6 +90,7 @@
             Ver documento
         </button>
         <button
+            (click)="openConfirmationDelete()"
             class="flex-auto"
             mat-stroked-button>
             Eliminar

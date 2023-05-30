@@ -7,6 +7,7 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs';
 import { ChargeAccount, ExecutionReport } from '../../models/pdfDocument';
+import { ShareService } from 'app/layout/common/share-service/share-service.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -34,7 +35,8 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
 
     // dataCuenta: Contractor = { tipoContratacion: '', codigo: '', convenio: '', fechaInicio: '', fechaFin: '', nombre: '', apellido: '', identificacion: '', lugarExpedicion: '', fechaNacimiento: new Date(), direccion: '', departamento: '', municipio: '', telefono: '', celular: '', correo: '', cuentaBancaria: '', tipoCuenta: '', entidadCuentaBancaria: '', from: new Date(), to: new Date(),uniTValue: 0, company: ''}
 
-    constructor(private datepipe: DatePipe) {
+    constructor(private datepipe: DatePipe,
+        private _shareService: ShareService) {
     }
 
     ngOnInit(): void {
@@ -50,7 +52,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
             this.downloadPDFChargeAccount();
             this.onGeneratePdf.emit(false);
         }
-        this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS');
+        this.valueLetter = this._shareService.numeroALetras(this.chargeAccountData.totalValue, 'PESOS');
     }
 
     public downloadPDF() {
@@ -92,7 +94,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd'); 
         this.validateValuesPDFChargeAccount();
 
-        this.valueLetter = GlobalConst.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
+        this.valueLetter = this._shareService.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
         const documentDefinition = {
             content: [
                 {

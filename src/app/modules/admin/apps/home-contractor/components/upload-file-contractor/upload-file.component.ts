@@ -18,13 +18,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { HomeContractorService } from '../../services/home-contractor.service';
-
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { FileContractor } from '../../models/fileContractor';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
+import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 
 const moment = _rollupMoment || _moment;
 
@@ -43,7 +42,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     showAlert: boolean = false;
     registerDate = new Date();
     selectContract: any;
-    typeDocs: any = GlobalConst.tipoDocumento;
+    typeDocs: DocumentTypeFile[] = [];
     base64Output: any;
     numberOfTicks = 0;
     formFile: FormGroup;
@@ -51,7 +50,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     constructor(
         private ref: ChangeDetectorRef,
-        private _upload: HomeContractorService,
+        private _uploadFileDataService: UploadFileDataService,
         private _auth: AuthService,
         public matDialogRef: MatDialogRef<UploadFileContractorComponent>,
         private _formBuilder: FormBuilder,
@@ -73,6 +72,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             typeFile: new FormControl(null, Validators.required),
             description: new FormControl(null, Validators.required),
         });
+        this.getDocumentType();
     }
 
     onChange(event) {
@@ -113,18 +113,16 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             contractId: this._data.contractId,
             typeFilePayment: this.formFile.value.typeDoc,
             filesName: this.formFile.value.filesName,
-            typeFile: this.formFile.value.typeFile,
+            fileType: this.formFile.value.typeFile,
             descriptionFile: this.formFile.value.description,
             registerDate: this.registerDate,
             modifyDate: this.registerDate,
             filedata: this.base64Output,
             monthPayment: this.monthYear,
-            passed: true,
-            DetailFileContractor: [],
+            userId: null,
+            folderId: null
         };
-        console.log(registerFile);
-
-        this._upload
+        this._uploadFileDataService
             .UploadFileContractor(registerFile)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -169,7 +167,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             fildata: this.file,
         };
 
-        this._upload
+        this._uploadFileDataService
             .UploadFileContractor(registerProject)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -231,6 +229,23 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         this.monthYear = normalizedYear.year();
         ctrlValue.year(normalizedYear.year());
         this.date.setValue(ctrlValue);
+    }
+
+    typeDocumentSelected(event: any) {
+        if (event.value) {
+
+        }
+    }
+    private getDocumentType() {
+        this._uploadFileDataService
+            .getDocumentType()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                    if (res != null) {
+                        this.typeDocs = res;
+                    }
+                }
+            );
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();

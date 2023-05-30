@@ -2,9 +2,7 @@
 
     <!-- Close button -->
     <div class="flex items-center justify-end">
-        <button
-            mat-icon-button
-            [routerLink]="['../../../']">
+        <button mat-icon-button [routerLink]="['../../../']">
             <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
@@ -13,9 +11,7 @@
     <div class="aspect-w-9 aspect-h-6 mt-8">
         <div class="flex items-center justify-center border rounded-lg bg-gray-50 dark:bg-card">
             <ng-container>
-                <mat-icon
-                    class="icon-size-14 text-hint"
-                    [svgIcon]="'iconsmind:file'"></mat-icon>
+                <mat-icon class="icon-size-14 text-hint" [svgIcon]="'iconsmind:file'"></mat-icon>
             </ng-container>
         </div>
     </div>
@@ -23,15 +19,11 @@
     <!-- Name & Type -->
     <div class="flex flex-col items-start mt-8">
         <div class="text-xl font-medium">{{item.filesName}}</div>
-        <div
-            class="mt-1 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-            [class.bg-indigo-600]="item.typeFile === 'folder'"
-            [class.bg-red-600]="item.typeFile === 'PDF'"
-            [class.bg-blue-600]="item.typeFile === 'DOC'"
-            [class.bg-green-600]="item.typeFile === 'XLS'"
-            [class.bg-gray-600]="item.typeFile === 'TXT'"
-            [class.bg-amber-600]="item.typeFile === 'JPG'">
-            {{item.typeFile.toUpperCase()}}
+        <div class="mt-1 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+            [class.bg-indigo-600]="item.fileType === 'folder'" [class.bg-red-600]="item.fileType === 'PDF'"
+            [class.bg-blue-600]="item.fileType === 'DOC'" [class.bg-green-600]="item.fileType === 'XLS'"
+            [class.bg-gray-600]="item.fileType === 'TXT'" [class.bg-amber-600]="item.fileType === 'JPG'">
+            {{item.fileType.toUpperCase()}}
         </div>
     </div>
 
@@ -62,12 +54,10 @@
     <div class="flex items-center justify-between mt-8">
         <div class="text-lg font-medium">Descripcion</div>
         <button mat-icon-button>
-            <mat-icon
-                class="icon-size-5"
-                [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
         </button>
     </div>
-    
+
     <div class="flex mt-2 border-t">
         <div class="py-3">
             <ng-container *ngIf="item.descriptionFile">
@@ -81,12 +71,10 @@
     <div class="flex items-center justify-between mt-8">
         <div class="text-lg font-medium">Observaciones</div>
         <button mat-icon-button>
-            <mat-icon
-                class="icon-size-5"
-                [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
         </button>
     </div>
-    
+
     <div class="flex mt-2 border-t">
         <div class="py-3">
             <ng-container *ngIf="item.detailFile">
@@ -115,9 +103,7 @@
         <button class="bg-green-500 flex-auto" [routerLink]="['/apps/archivo/', item.id]" mat-stroked-button>
             Ver documento
         </button>
-        <button
-            class="flex-auto"
-            mat-stroked-button>
+        <button (click)="openConfirmationDelete()" class="flex-auto" mat-stroked-button>
             Eliminar
         </button>
 

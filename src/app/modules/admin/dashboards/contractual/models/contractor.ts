@@ -31,6 +31,7 @@ export interface Contractor{
 	elementId: string;
 	componentId: string;
 	legalProccess: any;
+	hiringStatus: boolean;
 }
 
 

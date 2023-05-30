@@ -82,7 +82,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     calculo: boolean = true;
     totalCalculate: boolean = true;
     totalValue: any = null;
+    obligacionesEspecificas: any = null;
+    obligacionesGenerales: any = null;
     totalValueContratista: any = null;
+    objetoConvenio: any = null;
     unitValueMonth: any = null;
     unitValueMonthContractor: any = null;
 
@@ -104,11 +107,16 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _genericService: GenericService,
         private _planingService: PlaningService
     ) {
+        debugger
         if (this._data.edit === true) {
             this.btnOpcion = 'Actualizar';
             this.showDate = false;
             this.elemento = this._data.elemento;
             this.totalValue = this._data.elemento.valorTotal;
+            this.obligacionesEspecificas = this._data.elemento.obligacionesEspecificas;
+            this.obligacionesGenerales = this._data.elemento.obligacionesGenerales;
+            this.objetoConvenio = this._data.elemento.objetoElemento;
+
         }
         setInterval(() => {
             this.numberOfTicks++;
@@ -133,9 +141,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             fechamodificacion: [null],
             consecutivo: [this.elemento.consecutivo, Validators.required],
             valordiaContratista: [this.elemento.valorPorDiaContratista, Validators.required],
-            obligacionesEspecificas: [this.elemento.obligacionesEspecificas],
-            obligacionesGenerales: [this.elemento.obligacionesGenerales],
-            objetoElemento: [this.elemento.objetoElemento]
+            obligacionesEspecificas: [this.obligacionesEspecificas],
+            obligacionesGenerales: [this.obligacionesGenerales],
+            objetoElemento: [this.objetoConvenio]
 
         });
         this.filteredOptions =
@@ -174,6 +182,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getElements() {
+        debugger
         this._planingService
             .getElementoComponente(this._data)
             .subscribe((response) => {
@@ -198,9 +207,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             this.totalValueContratista = this.totalValue / this.elementForm.value.contractorCant;
         }
         let item: Elements = {
-            id: this._data.idElemento,
+            id: this._data.elemento.id,
             nombreElemento: this.elementForm.value.nombreElemento,
-            componentId: this._data.componentId,
+            componentId: this._data.elemento.componentId,
             cantidadContratistas: this.elementForm.value.contractorCant,
             cantidadDias: this.elementForm.value.cantDay,
             valorUnidad: this.elementForm.value.unitValue,
@@ -216,7 +225,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento,
-            activityId: this._data.activityId
+            activityId: this._data.elemento.activityId
         };
         this._planingService.addElementoComponente(item).subscribe((response) => {
             if (response) {
@@ -306,7 +315,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         });
     }
     getDateAdiction() {
-        this.dateAdiction$ = this._genericService.getDetalleContratoList(this._data.idContrato, true);
+        this.dateAdiction$ = this._genericService.getDetalleContratoList(this._data.contractId, true);
     }
     onChange(event) {
         this.totalV = Number(this.elementForm.value.totalValue.replace(/,/g, ""));
@@ -384,7 +393,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getDetailContract() {
-        this._genericService.getDetalleContratoById(this._data.idContrato, true).subscribe(
+        debugger
+        this._genericService.getDetalleContratoById(this._data.contractId, true).subscribe(
             (resp) => {
                 this.detailContract = resp;
                 this.calcularDiasEntreFechas(this.detailContract.fechaContrato, this.detailContract.fechaFinalizacion);

@@ -170,20 +170,5 @@ export class PlaningService {
         return this._httpClient.get<IHiringData>(urlEndpointGenerate, {params: params});
     }
 
-    getDataMinuteExtension(contractId: any,contractorId: string) {
-        const params = new HttpParams()
-        .set('contractorId', contractorId)
-        .set('contractId', contractId);
-        let urlEndpointGenerate =
-            this.apiUrl + environment.GetPdMinteExtension;
-        return this._httpClient.get<any>(urlEndpointGenerate, {params});
-    }
 
-    getDataMinuteMacroContract(contractId: any) {
-        const params = new HttpParams()
-        .set('contractId', contractId);
-        let urlEndpointGenerate =
-            this.apiUrl + environment.GetPdMinteExtension;
-        return this._httpClient.get<any>(urlEndpointGenerate, {params});
-    }
 }

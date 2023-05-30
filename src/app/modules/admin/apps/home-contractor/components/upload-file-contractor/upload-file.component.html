@@ -12,9 +12,9 @@
                 <div>
                     <mat-form-field class="hiring" appearance="outline">
                         <mat-label>Tipo documento</mat-label>
-                        <mat-select required id="IdProject" formControlName="typeDoc" name="IdProject">
-                            <mat-option *ngFor="let doc of typeDocs" [value]="doc.viewValue">
-                                {{doc.viewValue}}
+                        <mat-select (selectionChange)="typeDocumentSelected($event)" required id="IdProject" formControlName="typeDoc" name="IdProject">
+                            <mat-option *ngFor="let doc of typeDocs" [value]="doc.id">
+                                {{doc.documentType1}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
