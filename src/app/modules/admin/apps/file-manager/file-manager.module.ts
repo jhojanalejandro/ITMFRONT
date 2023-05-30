@@ -18,7 +18,7 @@ import { ListFolderFileContractorComponent } from './list-folder-file-contractor
 import { DetailsFolderFileContractorComponent } from './components/details-folder-contractor/details-folder-contractor.component';
 import { DetailFileContractComponent } from './components/details-file-contract/detail-file-contract.component';
 import { ObservationFileComponent } from './list-file/observation-File/observation-file.component';
-import { RegisterFolderContractorComponent } from './components/register-folder-contractor/register-folder-contractor.component';
+import { RegisterFolderComponent } from './components/register-folder/register-folder.component';
 import { FileListContractComponent } from './components/file-list-contract/file-list-contract.component';
 
 @NgModule({
@@ -31,7 +31,7 @@ import { FileListContractComponent } from './components/file-list-contract/file-
         FileListComponent,
         DetailFileComponent,
         DetailsFolderFileContractorComponent,
-        RegisterFolderContractorComponent,
+        RegisterFolderComponent,
         DetailFileContractComponent,
         ObservationFileComponent,
         FileListContractComponent

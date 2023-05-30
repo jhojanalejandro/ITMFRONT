@@ -45,7 +45,7 @@
                             <mat-form-field
                                 class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                                <input matInput [formControl]="searchInputControl" [(ngModel)]="searchText"
+                                <input matInput [formControl]="searchInputControl"
                                     [autocomplete]="'off'" [placeholder]="'Buscar contratacion'">
                             </mat-form-field>
 
@@ -56,8 +56,8 @@
                         <mat-form-field  class="hiring" appearance="outline">
                             <mat-label >Tipo Documento</mat-label>
                             <mat-select (selectionChange)="tipoSeleeccionado($event)" name="typeFile">
-                                <mat-option  *ngFor="let docuemnto of tipoDocumentos" [value]="docuemnto.viewValue">
-                                    {{docuemnto.viewValue}}
+                                <mat-option  *ngFor="let docuemnto of tipoDocumentos" [value]="docuemnto.id">
+                                    {{docuemnto.documentType1}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

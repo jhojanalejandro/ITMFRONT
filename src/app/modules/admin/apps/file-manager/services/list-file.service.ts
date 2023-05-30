@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, of, switchMap, take, tap, throwError } fro
 import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
+import { AnyAaaaRecord } from 'dns';
 
 @Injectable({
     providedIn: 'root'
@@ -58,7 +59,6 @@ export class FileListManagerService {
             .set('contractorId', contractorId)
             .set('folderId', folderId)
             .set('contractId', contractId);
-        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl + environment.GetAllFileByFolderContractorEndpoint;
         return this._httpClient.get<any>(urlEndPoint, { params: params }).pipe(
             tap((items) => {
@@ -130,6 +130,15 @@ export class FileListManagerService {
             .set('fileId', id)
         let urlEndpointGenerate = this.apiUrl + environment.DeleteFileEndpoint;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
+    }
+
+    getStatusFile(): Observable<any> {
+        let urlEndPoint = this.apiUrl + environment.GetStatusFileEndpoint;
+        return this._httpClient.get(urlEndPoint).pipe(
+            tap((statusFile: any) => {
+                this._filesContract.next(statusFile);
+            })
+        );
     }
 
 }

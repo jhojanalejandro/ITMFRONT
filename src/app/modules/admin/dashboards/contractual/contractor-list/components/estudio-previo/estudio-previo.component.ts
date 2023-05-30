@@ -79,7 +79,6 @@ export class EstudioPrevioComponent implements OnInit {
         this.dataMinuta.push(Response);
         this.hiringData = Response.hiringDataDto;
         this.elementData = Response.elementosComponenteDto;
-        console.log(GlobalConst.numeroALetras(58225, 'PESOS'));
 
       });
     },

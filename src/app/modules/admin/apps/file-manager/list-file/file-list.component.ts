@@ -12,7 +12,8 @@ import { FileListManagerService } from '../services/list-file.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { ObservationFileComponent } from './observation-File/observation-file.component';
-import { IFileContractor } from 'app/layout/common/models/file-contractor';
+import { DetailFile, FileContractor } from 'app/layout/common/models/file-contractor';
+import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detail-file-enum';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     items: any;
+    statusFile: any;
     value: any;
     searchText: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -40,9 +42,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     contractorId: string;
     contractId: string;
     folderId: string;
-    /**
-     * Constructor
-     */
+    detailFile: DetailFile = {
+        fileId: null,
+        registerDate: new Date(),
+        reason: null,
+        observation: null,
+        statusFileId: null,
+        passed: false,
+    }
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -54,6 +61,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
+        this.getStatusFile();
         this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
         this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
         this.folderId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
@@ -61,14 +69,6 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._fileManagerService.setContractId(this.contractId);
         this._fileManagerService.setContractorId(this.contractorId);
         this._fileManagerService.setFolderId(this.folderId);
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     getId(id: any) {
@@ -127,36 +127,48 @@ export class FileListComponent implements OnInit, OnDestroy {
                 typeFilePayment: 'Otros'
             }
         });
-        dialogRef.afterClosed().subscribe((result) => {
+        dialogRef.afterClosed()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((result) => {
             if (result) {
                 this.getData();
             }
         });
     }
 
-    onChange(event: any, file: IFileContractor) {
-        if (event.value === 'rechazado') {
+    onChange(event: any, file: FileContractor) {
+        debugger
+        let code = this.statusFile.find(f => f.code === DetailFileOption.RECHAZADO)
+        if (code.id === event.value) {
             const dialogRef = this._matDialog.open(ObservationFileComponent, {
                 disableClose: true,
                 autoFocus: false,
                 data: file
             });
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: '',
-                        html: 'Información actualizada Exitosamente!',
-                        showConfirmButton: false,
-                        timer: 1500
-                      });
-                }
-            });
+            dialogRef.afterClosed()
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((result) => {
+                    if (result) {
+                        swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información actualizada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                });
         } else {
-            let updateFile: IFileContractor = file;
+            this.detailFile.fileId = file.id;
+            this.detailFile.registerDate = new Date();
+            this.detailFile.passed = true;
+            this.detailFile.statusFileId = event.value;
 
-            this._uploadService.UploadFileContractor(updateFile).subscribe((res) => {
+            debugger
+            this._uploadService.updateStatusFileContractor(this.detailFile)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
                 if (res) {
                     swal.fire({
                         position: 'center',
@@ -165,7 +177,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                         html: 'Información actualizada Exitosamente!',
                         showConfirmButton: false,
                         timer: 1500
-                      });
+                    });
                 }
             },
                 (response) => {
@@ -224,24 +236,13 @@ export class FileListComponent implements OnInit, OnDestroy {
             map(value => this._filter2(value)),
         );
 
-        // Get the item
-        this._fileManagerService.getFileByContractor(this.contractId,this.contractorId, this.folderId)
+        this._fileManagerService.getFileByContractor(this.contractId, this.contractorId, this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 this.items = item;
-                this.items.forEach(element => {
-                    if (element.passed) {
-                        element.passed = 'aprobado'
-                    } else if (element.passed != null && element.passed === false) {
-                        element.passed = 'rechazado'
-                    } else {
-                        element.passed = 'revisar'
-                    }
-                });
-                // Mark for check
+                debugger
                 this._changeDetectorRef.markForCheck();
             });
-
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
@@ -253,6 +254,20 @@ export class FileListComponent implements OnInit, OnDestroy {
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+    }
+
+    private getStatusFile(){
+        this._fileManagerService.getStatusFile()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((item: any) => {
+            this.statusFile = item;
+            debugger
+        });
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 
 }

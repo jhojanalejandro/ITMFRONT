@@ -357,7 +357,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();
   }

@@ -1,4 +1,4 @@
-export interface IFileContractor{
+export interface FileContractor{
     id?: any;
     userId: string;
     contractorId?: string;
@@ -31,4 +31,30 @@ export interface DocumentTypeFile{
     id?: any;
     documentType1: string;
     code: string
+}
+
+export interface DetailFile{
+    id?: string;
+    fileId: string;
+    reason: string;
+    observation: string;
+    registerDate: Date;
+    statusFileId: string;
+    passed: any;
+}
+
+
+export interface DetailFileContractor{
+    id?: any;
+    fileId: any;
+    reason: string;
+    observation: string;
+    files: string[];
+    passed: boolean;
+    registerDate: Date;
+}
+
+export interface ContractsContractor{
+    id: any;
+    companyName: string;
 }

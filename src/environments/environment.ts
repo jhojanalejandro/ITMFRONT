@@ -79,10 +79,10 @@ export const environment = {
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
-
-
+    updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetById/',
     DeleteFileEndpoint: 'Files/Delete/',
+
 
     addHiringEndpoint: 'HiringData/Add',
     UpdateHiringEndpoint: 'HiringData/Update',
@@ -120,6 +120,7 @@ export const environment = {
     GetStatusContractEndpoint: 'MasterData/GetStatusContract',
     GetElementTypeEndpoint: 'MasterData/GetAllElementType',
     GetDocumentTypeEndpoint: 'MasterData/GetDocumentType',
+    GetStatusFileEndpoint: 'MasterData/GetStatusFile',
 
 
 };

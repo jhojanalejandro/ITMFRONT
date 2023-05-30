@@ -17,6 +17,9 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { UploadFileDataService } from '../../contractual/upload-file/upload-file.service';
+import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
@@ -51,19 +54,16 @@ export class CollectionAccountsListComponent implements OnInit {
   selection = new SelectionModel<any>(true, []);
   @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
   drawerMode: 'side' | 'over';
-  tipoDocumentos: any[] = GlobalConst.tipoDocumento;
   items: any;
   value: any;
-  searchText: any;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   searchInputControl: FormControl = new FormControl();
   filteredStreets: Observable<string[]>;
   type: any;
   contractId: any;
   dateSearch: any;
-  /**
-   * Constructor
-   */
+  tipoDocumentos: DocumentTypeFile[] = [];
+
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -71,17 +71,17 @@ export class CollectionAccountsListComponent implements OnInit {
     private _collectionAccounts: CollectionAccountsService,
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _matDialog: MatDialog,
+    private _uploadFileDataService: UploadFileDataService,
   ) { }
 
   ngOnInit(): void {
     this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
     this.getData();
+    this.getDocumentType();
 
   }
 
-  /**
-   * On destroy
-   */
+
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next(null);
@@ -216,14 +216,14 @@ export class CollectionAccountsListComponent implements OnInit {
   }
 
   tipoSeleeccionado(event) {
-    if(this.dateSearch === null || this.dateSearch === undefined ){
+    if (this.dateSearch === null || this.dateSearch === undefined) {
       let year = new Date().getFullYear();
-      let month = new Date().getMonth() + 1; 
-      this.dateSearch = year + '/'+ month;
+      let month = new Date().getMonth() + 1;
+      this.dateSearch = year + '/' + month;
 
     }
     this.type = event.value
-    this._collectionAccounts.getItemByTypeAndDate( this.type,this.contractId, this.dateSearch).subscribe((res) => {
+    this._collectionAccounts.getItemByTypeAndDate(this.type, this.contractId, this.dateSearch).subscribe((res) => {
       if (res != null) {
         this.items.files = res;
       } else {
@@ -247,7 +247,7 @@ export class CollectionAccountsListComponent implements OnInit {
 
     datepicker.close();
     this.dateSearch += '/' + month;
-    this._collectionAccounts.getItemByTypeAndDate(this.type,this.contractId, this.dateSearch).subscribe((res) => {
+    this._collectionAccounts.getItemByTypeAndDate(this.type, this.contractId, this.dateSearch).subscribe((res) => {
       if (res != null) {
         this.items.files = res;
       } else {
@@ -266,7 +266,19 @@ export class CollectionAccountsListComponent implements OnInit {
     ctrlValue.year(normalizedYear.year());
     this.dateSearch = normalizedYear.year();
     this.date.setValue(ctrlValue);
+  }
 
+  private getDocumentType() {
+    this._uploadFileDataService
+      .getDocumentType()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        if (res != null) {
+          debugger
+          this.tipoDocumentos = res.filter(f => f.code === DocumentTypeCode.CUENTACOBRO || f.code === DocumentTypeCode.PLANILLA || f.code === DocumentTypeCode.INFORMEEJECUCIÓN);
+        }
+      }
+      );
   }
 
 }

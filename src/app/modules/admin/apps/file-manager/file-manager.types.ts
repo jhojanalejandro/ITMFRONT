@@ -24,13 +24,13 @@ export interface DataFile
     id?: string;
     documentType?: string;
     descriptionFile: string;
-    registerDate: string;
+    registerDate: Date;
     filesName?: string;
     filedata?: string;
     size?: string;
     type?: string;
     fileType?: string | null;
-    passed: any;
+    statusFile: string;
 }
 
 export interface FolderContractor

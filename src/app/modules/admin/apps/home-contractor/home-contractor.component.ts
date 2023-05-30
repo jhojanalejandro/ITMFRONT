@@ -68,7 +68,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         private _auth: AuthService,
         private _router: Router,
         private _contractorListService: ContractorService
-    ) {}
+    ) { }
 
     /**
      * On init
@@ -98,11 +98,13 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     changeToViewFilesContract() {
         this.viewFilesContract = true;
         this.getFilesUserByContract();
+        this.getFilesUserByContract();
+
     }
 
-    getFilesFolder = async (id: any) => {
+    getFilesFolder = async () => {
         this._contractorService
-            .getFileById(id)
+            .getFileById(this._auth.accessId, this.contractSelected)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((Response: any) => {
                 const jszip = new JSZip();
@@ -172,6 +174,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             });
     }
 
+
+    /**
+ * Track by function for ngFor loops
+ *
+ * @param index
+ * @param item
+ */
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
     private getChargeAccount() {
         if (this.contractSelected != null) {
             this._contractorListService
@@ -179,6 +191,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
                     if (Response != null) {
+                        this.viwFilesGenerated = true;
                         this.chargeAccountData = Response;
                         this.chargeAccount = true;
                     }

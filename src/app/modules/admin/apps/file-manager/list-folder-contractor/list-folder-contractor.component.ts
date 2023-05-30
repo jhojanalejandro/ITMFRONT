@@ -7,7 +7,7 @@ import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
-import { RegisterFolderContractorComponent } from '../components/register-folder-contractor/register-folder-contractor.component';
+import { RegisterFolderComponent } from '../components/register-folder/register-folder.component';
 
 @Component({
     selector: 'list-folder-contractor',
@@ -126,7 +126,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
     }
 
     crearCarpeta() {
-        const dialogRef = this._matDialog.open(RegisterFolderContractorComponent, {
+        const dialogRef = this._matDialog.open(RegisterFolderComponent, {
             disableClose: true,
             autoFocus: false,
             data: {
