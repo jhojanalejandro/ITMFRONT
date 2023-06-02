@@ -1,7 +1,7 @@
 export interface Activity{
     id: any;
     nombreActividad: string,
-    idContrato: any;
+    contractId: any;
     componentId: any;
     elementos? : [];
 }
@@ -51,6 +51,7 @@ export interface ContractFolder{
     rubro: string;
     nombreRubro: string;
     project: string;
+    fuenteRubro: string;
 }
 
 export interface DetailContractFolder{
@@ -59,7 +60,7 @@ export interface DetailContractFolder{
     fechaFinalizacion: Date;
     adicion: boolean;
     tipoContrato: string;
-    idContrato?: any;
+    contractId?: any;
     update: boolean;
 }
 
@@ -125,7 +126,7 @@ export interface ListElements{
 
 export interface DetalleContrato{
 	id?: any,
-	idcontrato: any,
+	contractId: any,
 	fechaContrato: string,
 	fechaFinalizacion: string,
 	tipoContrato: string  
@@ -153,6 +154,7 @@ export interface ContractFolders{
     project: string;
     fechaFinalizacion: Date;
     fechaContrato: Date;
+    fuenteRubro: string;
 }
 
 

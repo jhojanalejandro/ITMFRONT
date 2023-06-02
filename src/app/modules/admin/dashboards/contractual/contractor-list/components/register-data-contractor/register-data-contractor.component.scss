@@ -3,9 +3,12 @@
     margin: 0 10px;
     //background-color: black;
 }
-.hiring{
+.hiringField{
     padding-left: 8px;
     width: 170px;
+}
+.folderFieldContractor{
+    text-align: center !important;
 }
 
 .option{
@@ -17,10 +20,6 @@ mat-form-field{
     width: 240px !important;
 }
 
-.text{
-    font-weight: bold;
-    font-size: 30px;
-}
 .actividad{
     margin-left: 15px !important;
     margin-right: 15px !important;

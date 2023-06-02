@@ -56,17 +56,18 @@ export class AddComponentsComponent implements OnInit {
         private _planingService: PlaningService,
         private _matDialog: MatDialog,
         private _contrtactService: UploadDataService,
+        private _loadrouter: Router
     ) {
         this.contractId = this.route.snapshot.params.id;
         if (this.contractId) {
             this.chargeData();
         }
     }
-    ngOnInit(): void { 
+    ngOnInit(): void {
         this.projectName = this.route.snapshot.params.projectName;
     }
 
-    
+
     abrirDivComponent(e: any) {
         this.tittle = 'Información Componente';
         this.abrirDivElemento = false;
@@ -86,7 +87,7 @@ export class AddComponentsComponent implements OnInit {
 
     }
 
-    
+
     abrirDivActividad(e: any) {
         this.tittle = 'Información Actividad';
         this.abrirDivComponente = false;
@@ -129,8 +130,8 @@ export class AddComponentsComponent implements OnInit {
         this.data.forEach((element) => {
             if (element.activities.length >= 1) {
                 element.activities.forEach((item) => {
-                    if(item.elementos.length >= 1){
-                        item.elementos.forEach((element) =>{
+                    if (item.elementos.length >= 1) {
+                        item.elementos.forEach((element) => {
                             this.subTotal += element.valorTotal;
                             this.contractorCant += element.cantidadContratistas
                         })
@@ -173,7 +174,7 @@ export class AddComponentsComponent implements OnInit {
             disableClose: true,
             autoFocus: false,
             data: {
-                idContrato: this.contractId,
+                contractId: this.contractId,
                 show: true,
             },
         });
@@ -203,7 +204,7 @@ export class AddComponentsComponent implements OnInit {
                 disableClose: true,
                 autoFocus: false,
                 data: {
-                    idContrato: this.contractId,
+                    contractId: this.contractId,
                     idComponente: this.dataComponente.id,
                     show: true,
                 },
@@ -226,10 +227,10 @@ export class AddComponentsComponent implements OnInit {
     addElements(e: string) {
         let componentId = null;
         let activityId = null;
-        if(e === 'activity'){
+        if (e === 'activity') {
             activityId = this.dataActividad.id;
             componentId = this.dataActividad.componentId
-        }else{
+        } else {
             componentId = this.dataComponente.id
         }
         let elemento = { valorTotal: 0 }
@@ -241,7 +242,7 @@ export class AddComponentsComponent implements OnInit {
                 componentId: componentId,
                 activityId: activityId,
                 idElemento: null,
-                idContrato: this.contractId,
+                contractId: this.contractId,
                 edit: false
             },
         });
@@ -258,6 +259,8 @@ export class AddComponentsComponent implements OnInit {
             autoFocus: false,
             data: {
                 elemento,
+                componentId: elemento.componentId,
+                activityId: elemento.activityId,
                 contractId: this.contractId,
                 edit: true
             }
@@ -274,7 +277,7 @@ export class AddComponentsComponent implements OnInit {
             autoFocus: false,
             data: {
                 componente,
-                idContrato: this.contractId
+                contractId: this.contractId
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -290,7 +293,7 @@ export class AddComponentsComponent implements OnInit {
             autoFocus: false,
             data: {
                 activity,
-                idContrato: this.contractId
+                contractId: this.contractId
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -330,22 +333,28 @@ export class AddComponentsComponent implements OnInit {
                     html: 'Información Registrada Exitosamente!',
                     showConfirmButton: false,
                     timer: 1500
-                  });
+                });
             }
 
         }, (response) => {
             console.log(response);
-            
+
             Swal.fire('Error', 'Error al Registrar la informacion', 'error');
         });
     }
 
     private getActivity(e: any) {
-        this._planingService.getActivity(e.id).subscribe((response) => {
+        this._planingService.getAllActivity(e.id).subscribe((response) => {
             if (response.length != 0) {
                 this.dataActividad = response;
                 this._changeDetectorRef.detectChanges();
             }
+        });
+    }
+    reloadResolve() {
+        const currentUrl: any = this._loadrouter.url;
+        this._loadrouter.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._loadrouter.navigateByUrl(currentUrl);
         });
     }
 }

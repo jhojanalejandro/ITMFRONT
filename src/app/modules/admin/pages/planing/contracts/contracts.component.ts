@@ -129,7 +129,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
      });
     dialogRefProject.afterClosed().subscribe(datos => {
       if (datos) {
-        this.getContracts();
+        this.reloadResolve();
       }
     });
   }
@@ -144,7 +144,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getContracts();
+        this.reloadResolve();
       }
     });
   }
@@ -252,6 +252,12 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
 
   addComponent(data: any) {
     this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id + '/'+ data.projectName);
+}
+reloadResolve() {
+  const currentUrl: any = this._router.url;
+  this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+    this._router.navigateByUrl(currentUrl);
+  });
 }
 
 

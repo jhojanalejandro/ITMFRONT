@@ -28,7 +28,7 @@ export class UploadFileDataService
 
     UploadCdpFileExcel(formdata: any) {
         let urlEndpointGenerate = this.apiUrl+ environment.addExcelCdpEndpoint;
-         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+         return this._httpClient.post(urlEndpointGenerate, formdata, { responseType: 'text' });
     }
 
     UploadFileContractor(formdata: FileContractor) {

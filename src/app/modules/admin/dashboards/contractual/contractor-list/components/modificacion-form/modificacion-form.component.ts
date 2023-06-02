@@ -46,7 +46,7 @@ export class ModificacionFormComponent implements OnInit {
     elemento: ElementComponent = { nombreElemento: null, componentId: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null, activityId: null }
     disableField: boolean = true;
     dateAdiction: DetalleContrato = {
-        idcontrato: null,
+        contractId: null,
         fechaContrato: null,
         fechaFinalizacion: null,
         tipoContrato: null,
@@ -80,7 +80,7 @@ export class ModificacionFormComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA)
-        private _data: { data: any, contract: string },
+        private _data: { data: any, contractId: string },
         private _fuseConfirmationService: FuseConfirmationService,
         private _planingService: PlaningService,
         private _router: Router,
@@ -105,7 +105,7 @@ export class ModificacionFormComponent implements OnInit {
                 'precaución',
                 'El contratista debe tener un elemento asignado', 'warning'
             );
-            this._router.navigateByUrl('dashboards/lista-contratistas/' + this._data.contract);
+            this._router.navigateByUrl('dashboards/lista-contratistas/' + this._data.contractId);
             this.matDialogRef.close();
         }
 
@@ -300,7 +300,7 @@ export class ModificacionFormComponent implements OnInit {
         });
     }
     getDateAdiction() {
-        this._genericService.getDetalleContratoById(this._data.contract, true).subscribe(
+        this._genericService.getDetalleContratoById(this._data.contractId, true).subscribe(
             (resp)=>{
                 
                 this.dateAdiction = resp;

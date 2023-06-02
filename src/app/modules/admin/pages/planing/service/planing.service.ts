@@ -102,9 +102,9 @@ export class PlaningService {
         return this._httpClient.get<Componente[]>(urlEndpointGenerate + id);
     }
 
-    getActivity(id: any) {
+    getAllActivity(id: any) {
         let urlEndpointGenerate =
-            this.apiUrl + environment.getActivity;
+            this.apiUrl + environment.getActivityByIdComponent;
         return this._httpClient.get<Activity[]>(urlEndpointGenerate + id);
     }
 

@@ -123,7 +123,7 @@ export class ActividadFormComponent implements OnInit {
             }
             this.data = this.componentForm.value;
             let model: Activity = {
-                idContrato: this._data.idContrato,
+                contractId: this._data.contractId,
                 componentId: this._data.idComponente,
                 nombreActividad: this.nombreActivivdad,
                 id: this.id,

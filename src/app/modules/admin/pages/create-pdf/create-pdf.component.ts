@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import { documentMinutaAdicion, documentMinutaAmpliacion, documentPreviousStudy, documentMinutaAdicion1YAmpliacion1, documentSolicitudComite, minutaModificacionMacro } from './dataPdf';
 import { DatePipe, LocationStrategy } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ShareService } from 'app/layout/common/share-service/share-service.service';
 
 @Component({

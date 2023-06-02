@@ -1,14 +1,14 @@
 export interface ItemsContract
 {
     folders: FolderContractor[];
-    folderContract?: FoldersByContract[];
+    folderContract?: FolderContract[];
     path: any[];
 }
 
 export interface ItemsContractor
 {
     folders: FolderContractor[];
-    folderContract?: FoldersByContract[];
+    folderContract?: FolderContract[];
     path: any[];
 }
 
@@ -44,15 +44,7 @@ export interface FolderContractor
 export interface FolderContract
 {
     id?: string;
-    nombreEmpresa: string;
-    nombreProyecto: string;
-    numeroContrato: string;
-}
-
-export interface FoldersByContract
-{
-    id?: string;
-    nombreEmpresa: string;
-    nombreProyecto: string;
-    numeroContrato: string;
+    companyName: string;
+    projectName: string;
+    projectNumber: string;
 }

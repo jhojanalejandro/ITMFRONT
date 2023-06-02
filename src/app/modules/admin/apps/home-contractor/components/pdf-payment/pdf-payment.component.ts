@@ -440,7 +440,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
 
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
        
-        let plazo = this.calcularDiferencia(this.executionReportData.contractInitialDate, this.executionReportData.contractFinalDate)
+        let plazo = this._shareService.calcularDiferencia(this.executionReportData.contractInitialDate, this.executionReportData.contractFinalDate)
         this.specificObligation = this.executionReportData.specificObligations.split('->');
         for (let index = 0; index < this.specificObligation.length; index++) {
             this.listaData[index] = [
@@ -784,22 +784,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         return `${dia} de ${mes} del ${año}`;
     }
 
-
-    private calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
-        let fechaInicios = new Date(fechaInicio);
-        let fechaFins = new Date(fechaFin);
-        const diferencia = fechaFins.getTime() - fechaInicios.getTime();
-        const diasTotales = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-        const meses = Math.floor(diasTotales / 30);
-        const dias = diasTotales % 30;
-        if (meses > 0 && meses == 1) {
-            return `${meses} mes y ${dias} días.`
-        } else if (meses > 0 && meses > 1) {
-            return `${meses} meses y ${dias} días.`
-        } else {
-            return `${dias} días.`
-        }
-    }
 
     private validateValuesPDFInforme(){
         this.executionReportData.totalValue = Number(this.executionReportData.totalValue).toFixed(0);
