@@ -8,6 +8,7 @@ import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from './upload-file.service';
 import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { IResponse } from 'app/layout/common/models/Response';
 
 @Component({
   selector: 'app-register-contractor',
@@ -22,7 +23,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   file: any = null; // Variable to store file
   indeterminate = false;
   showAlert: boolean = false;
-  selectConttract: boolean = false;
+  isSelectContract: boolean = false;
   registerDate = new Date();
   selectContract: any;
   contratos: any;
@@ -60,7 +61,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
     }
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
-      this.selectConttract = true;
+      this.isSelectContract = true;
     }
 
     this.formFile = this._formBuilder.group({
@@ -179,7 +180,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   }
 
   uploadTypeFile() {
-    if (this.selectConttract == true) {
+    if (this.isSelectContract == true) {
       this.uploadCdpFile();
     } else {
       this.uploadPdfFile();
@@ -194,7 +195,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
     formData.append('contractId', this._data.contractId);
     if (this._data.show) {
       // Should match the parameter name in backend
-      this._upload.UploadCdpFileExcel(formData).subscribe((res) => {
+      this._upload.UploadCdpFileExcel(formData).subscribe(res => {
         if (res) {
           swal.fire({
             position: 'center',

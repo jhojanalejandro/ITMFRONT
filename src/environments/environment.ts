@@ -93,7 +93,6 @@ export const environment = {
 
     addComponent: 'Componente/Add/',
     addActivity: 'Componente/AddActivity/',
-    getActivity: 'Componente/GetActivity/',
     getComponent: 'Componente/GetComponent/',
 
     getComponentById: 'Componente/GetById/',
@@ -112,6 +111,8 @@ export const environment = {
     GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
     GetPdMinteExtension: 'PdfData/ChargeAccountGetById',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
+    GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
+    GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',
 
     addFileFirmEndpoint: 'UserFirm/SaveFirm',
 

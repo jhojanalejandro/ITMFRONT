@@ -35,7 +35,7 @@ export class RegisterContractFolderComponent implements OnInit {
   tipoModificacion = GlobalConst.tipoModificacion;
   editarData = GlobalConst.editarData;
   editData: boolean = false;
-  dataProject: ContractFolders = { companyName: null, projectName: null, descriptionProject: null, statusContract: null, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, fechaFinalizacion: null,fechaContrato: null, numberProject: null, enableProject: true,project: null, rubro: null, nombreRubro: null }
+  dataProject: ContractFolders = { companyName: null, projectName: null, descriptionProject: null, statusContract: null, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, fechaFinalizacion: null,fechaContrato: null, numberProject: null, enableProject: true,project: null, rubro: null, nombreRubro: null, fuenteRubro: null }
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -55,7 +55,7 @@ export class RegisterContractFolderComponent implements OnInit {
     }, 1000);
     if (this._data != null) {
       this.editData = true;
-
+      debugger
       this.dataProject.fechaContrato = new Date(this._data.data.fechaContrato)
       this.dataProject.companyName = this._data.data.companyName;
       this.dataProject.projectName = this._data.data.projectName;
@@ -65,7 +65,6 @@ export class RegisterContractFolderComponent implements OnInit {
       this.dataProject.rubro = this._data.data.rubro;
       this.dataProject.project = this._data.data.project;
       this.dataProject.nombreRubro = this._data.data.nombreRubro;
-
 
     }
   }
@@ -87,6 +86,8 @@ export class RegisterContractFolderComponent implements OnInit {
       numberProject: new FormControl(this.dataProject.numberProject),
       rubro: new FormControl(this.dataProject.rubro),
       nombreRubro: new FormControl(this.dataProject.nombreRubro),
+      fuenteRubro: new FormControl(this.dataProject.fuenteRubro),
+
       project: new FormControl(this.dataProject.project)
     });
     this.getStatusContract();
@@ -124,7 +125,7 @@ export class RegisterContractFolderComponent implements OnInit {
         fechaFinalizacion: this.formProject.value.fechaFinalizacion,
         adicion: false,
         tipoContrato: 'Inicial',
-        idContrato: null,
+        contractId: null,
         update: this.formProject.value.updateData
       }
       const registerProject: ContractFolder = {
@@ -133,7 +134,7 @@ export class RegisterContractFolderComponent implements OnInit {
         projectName: this.formProject.value.projectName,
         objectContract: this.formProject.value.objectContract,
         statusContractId:  this.formProject.value.statusContract,
-        activate: true,
+        activate: false,
         enableProject: false,
         contractorsCant: 0,
         valorContrato: 0,
@@ -146,7 +147,8 @@ export class RegisterContractFolderComponent implements OnInit {
         numberProject: this.formProject.value.numberProject,
         project: this.formProject.value.project,
         rubro: this.formProject.value.rubro,
-        nombreRubro: this.formProject.value.nombreRubro
+        nombreRubro: this.formProject.value.nombreRubro,
+        fuenteRubro: this.formProject.value.fuenteRubro
       };
 
       this._upload.addContractFolder(registerProject)
@@ -197,7 +199,7 @@ export class RegisterContractFolderComponent implements OnInit {
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
       adicion: adicion,
       tipoContrato: this.formProject.value.tipoModificacion,
-      idContrato: this._data.data.id,
+      contractId: this._data.data.id,
       update: this.formProject.value.updateData
 
     }
@@ -222,6 +224,7 @@ export class RegisterContractFolderComponent implements OnInit {
       project: this.formProject.value.project,
       rubro: this.formProject.value.rubro,
       nombreRubro: this.formProject.value.nombreRubro,
+      fuenteRubro: this.formProject.value.fuenteRubro
     };
     this._upload.addContractFolder(registerProject)
     .pipe(takeUntil(this._unsubscribeAll))

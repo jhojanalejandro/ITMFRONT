@@ -41,6 +41,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   update: boolean = false;
   componentes: any;
   userList: any;
+  twoYearAgoExam: Date;
   componentselectId: any;
   activitySelectId: any;
   title: string = 'Guardar';
@@ -64,7 +65,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   hinringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
   private readonly _unsubscribe$ = new Subject<void>();
   detalleContrat: DetalleContrato = {
-    idcontrato: null,
+    contractId: null,
     fechaContrato: null,
     fechaFinalizacion: null,
     tipoContrato: null,
@@ -105,12 +106,14 @@ export class ContractorDataRegisterComponent implements OnInit {
         'Hay un error al ingresar, intenta de nuevo',
         'warning'
       );
-      this.matDialogRef.close(true);
     }
 
   }
 
   ngOnInit(): void {
+    if (this.datos.id != null) {
+      this.getHiring();
+    }
     this.getComponent();
     this.formContractor = this._formBuilder.group({
       contrato: new FormControl(this.hinringData.contrato),
@@ -137,6 +140,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     });
     this.getAdmins();
     this.getDetailProject();
+    this.validateDate();
   }
 
   async addDataHiring() {
@@ -575,6 +579,15 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.formContractor.value.totalContrato = this.valorContrato;
     this.showToal = true;
   }
+
+  private validateDate() {
+    const currentDate = new Date();
+    const minDate = new Date();
+    minDate.setFullYear(currentDate.getFullYear() - 2); // Resta dos años al año actual
+  
+    this.twoYearAgoExam = minDate; // Comprueba si la fecha es anterior a la mínima permitida
+  }
+  
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribe$.next(null);

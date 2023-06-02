@@ -119,7 +119,7 @@ export class ComponentesFormComponent implements OnInit {
         if (!this.componentForm.invalid) {
             this.nombreComponente = this.componentForm.value.componentName
             let model: Componente = {
-                contractId: this._data.idContrato,
+                contractId: this._data.contractId,
                 nombreComponente: this.nombreComponente,
                 id: this.id,
                 elementos: [],

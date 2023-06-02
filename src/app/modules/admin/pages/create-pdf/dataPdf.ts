@@ -1,6 +1,4 @@
 import { DatePipe } from '@angular/common';
-import { Component, Injectable, OnInit } from '@angular/core';
-import { GeneralListService } from '../general-data-list/services/general-list.service';
 import { Observable, ReplaySubject } from 'rxjs';
 
 export function getCurrentDate(): string {
@@ -21,7 +19,7 @@ export function convertFile(file: File): Observable<string> {
     reader.readAsBinaryString(file);
     reader.onload = (event) => result.next(btoa(event.target.result.toString()));
     return result;
-  }
+}
 
 
 
@@ -1618,10 +1616,34 @@ export const documentPreviousStudy = {
                             style: 'fontPeque',
                         },
                         {
+                            border: [false, true, false, false],
+                            aligment: 'center',
+                            canvas: [{ type: 'line', x1: 0, y1: 0, x2: 100, y2: 0, lineWidth: 1 }], style: 'signatureCell'
+                        },
+
+                        // {
+
+                        //     text: 'Maicol Yepes',
+                        //     style: 'fontPeque',
+                        // },
+                    ],
+                    [
+                        {
+
                             text: 'Maicol Yepes',
                             style: 'fontPeque',
                         },
-                    ],
+                        {
+
+                            text: 'Maicol Yepes',
+                            style: 'fontPeque',
+                        },
+                        {
+
+                            text: 'Maicol Yepes',
+                            style: 'fontPeque',
+                        },
+                    ]
                 ],
             },
         },
@@ -2245,7 +2267,7 @@ export const documentSolicitudComite = {
     pageOrientation: 'FOLIO',
     pageMargins: [40, 80, 40, 60],
     header: {
-        margin: [50, 20,0,30],
+        margin: [50, 20, 0, 30],
         table: {
             color: '#444',
             style: 'tableHeader',
@@ -2360,7 +2382,7 @@ export const documentSolicitudComite = {
         {
             margin: [10, 10, 10, 10],
             table: {
-                widths: [115, 100, 130,115],
+                widths: [115, 100, 130, 115],
                 body: [
                     [
                         {
@@ -2401,20 +2423,21 @@ export const documentSolicitudComite = {
                 ],
             },
         },
-        {             
+        {
             margin: [10, 0, 0, 0],
-            text: '\n\nFIRMA:' },
-        { 
-            margin: [10, 0, 0, 0],
-            text: 'contractorName' 
-        }, 
-        { 
-            margin: [10, 0, 0, 0],
-            text: 'Profesional Universitaria' 
+            text: '\n\nFIRMA:'
         },
-        { 
+        {
             margin: [10, 0, 0, 0],
-            text: 'Unidad Estratégica de Negocios' 
+            text: 'contractorName'
+        },
+        {
+            margin: [10, 0, 0, 0],
+            text: 'Profesional Universitaria'
+        },
+        {
+            margin: [10, 0, 0, 0],
+            text: 'Unidad Estratégica de Negocios'
         },
 
     ],
@@ -2608,7 +2631,7 @@ export const minutaModificacionMacro = {
         {
             margin: [10, 10, 10, 10],
             table: {
-                widths: [115, 100, 130,115],
+                widths: [115, 100, 130, 115],
                 body: [
                     [
                         {
@@ -2649,20 +2672,21 @@ export const minutaModificacionMacro = {
                 ],
             },
         },
-        {             
+        {
             margin: [10, 0, 0, 0],
-            text: '\n\nFIRMA:' },
-        { 
-            margin: [10, 0, 0, 0],
-            text: 'contractorName' 
-        }, 
-        { 
-            margin: [10, 0, 0, 0],
-            text: 'Profesional Universitaria' 
+            text: '\n\nFIRMA:'
         },
-        { 
+        {
             margin: [10, 0, 0, 0],
-            text: 'Unidad Estratégica de Negocios' 
+            text: 'contractorName'
+        },
+        {
+            margin: [10, 0, 0, 0],
+            text: 'Profesional Universitaria'
+        },
+        {
+            margin: [10, 0, 0, 0],
+            text: 'Unidad Estratégica de Negocios'
         },
 
     ],

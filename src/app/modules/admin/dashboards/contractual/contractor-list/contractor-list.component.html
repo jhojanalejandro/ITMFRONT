@@ -164,6 +164,11 @@
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Estudios Previos
                                             </button>
+                                            <button *ngIf="visibleOption" mat-menu-item>
+                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                                Generar Acta de inicio
+                                            </button>
+        
                                         </mat-menu>
                                     </p>
 
@@ -187,8 +192,7 @@
         </div>
 
     </div>
-    <app-minuta-contrato [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && minuta"></app-minuta-contrato>
-    <app-estudio-previo [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && estudioPrevio"></app-estudio-previo>
-    <app-minuta-adicion *ngIf="minutaAdicion"></app-minuta-adicion>
+    <app-minuta-contrato (pdfGenerated)="pdfGenerated($event)" [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
+    <app-estudio-previo (pdfGenerated)="pdfGenerated($event)" [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && generatePdf"></app-estudio-previo>

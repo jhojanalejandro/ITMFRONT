@@ -274,7 +274,6 @@ export class CollectionAccountsListComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         if (res != null) {
-          debugger
           this.tipoDocumentos = res.filter(f => f.code === DocumentTypeCode.CUENTACOBRO || f.code === DocumentTypeCode.PLANILLA || f.code === DocumentTypeCode.INFORMEEJECUCIÓN);
         }
       }

@@ -137,7 +137,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onChange(event: any, file: FileContractor) {
-        debugger
         let code = this.statusFile.find(f => f.code === DetailFileOption.RECHAZADO)
         if (code.id === event.value) {
             const dialogRef = this._matDialog.open(ObservationFileComponent, {
@@ -164,8 +163,6 @@ export class FileListComponent implements OnInit, OnDestroy {
             this.detailFile.registerDate = new Date();
             this.detailFile.passed = true;
             this.detailFile.statusFileId = event.value;
-
-            debugger
             this._uploadService.updateStatusFileContractor(this.detailFile)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
@@ -240,7 +237,6 @@ export class FileListComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 this.items = item;
-                debugger
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -261,7 +257,6 @@ export class FileListComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((item: any) => {
             this.statusFile = item;
-            debugger
         });
     }
 

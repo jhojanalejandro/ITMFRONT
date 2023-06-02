@@ -50,7 +50,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     cpcName: string = '';
     detailContract: DetalleContrato = {
-        idcontrato: null,
+        contractId: null,
         fechaContrato: null,
         fechaFinalizacion: null,
         tipoContrato: null,
@@ -107,7 +107,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _genericService: GenericService,
         private _planingService: PlaningService
     ) {
-        debugger
         if (this._data.edit === true) {
             this.btnOpcion = 'Actualizar';
             this.showDate = false;
@@ -182,7 +181,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getElements() {
-        debugger
         this._planingService
             .getElementoComponente(this._data)
             .subscribe((response) => {
@@ -209,7 +207,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         let item: Elements = {
             id: this._data.elemento.id,
             nombreElemento: this.elementForm.value.nombreElemento,
-            componentId: this._data.elemento.componentId,
+            componentId: this._data.componentId,
             cantidadContratistas: this.elementForm.value.contractorCant,
             cantidadDias: this.elementForm.value.cantDay,
             valorUnidad: this.elementForm.value.unitValue,
@@ -225,7 +223,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
             objetoElemento: this.elementForm.value.objetoElemento,
-            activityId: this._data.elemento.activityId
+            activityId: this._data.activityId
         };
         this._planingService.addElementoComponente(item).subscribe((response) => {
             if (response) {
@@ -356,7 +354,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     preventExceedingMax(event: KeyboardEvent) {
         const inputElement = event.target as HTMLInputElement;
         const inputValue = parseInt(inputElement.value, 10);
-
         if (inputValue > this.maxDayContrac) {
             swal.fire('', 'Los días no pueden exceder el tiempo del contrato!', 'warning');
 
@@ -392,8 +389,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this.elemento.nombreCpc = cpcN[0].cpcName;
     }
 
-    getDetailContract() {
-        debugger
+    private getDetailContract() {
         this._genericService.getDetalleContratoById(this._data.contractId, true).subscribe(
             (resp) => {
                 this.detailContract = resp;

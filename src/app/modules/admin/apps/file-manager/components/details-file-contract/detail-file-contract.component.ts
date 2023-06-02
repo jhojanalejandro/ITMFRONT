@@ -120,7 +120,6 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
                             showConfirmButton: false,
                             timer: 1500
                         });
-                        debugger
                         this.closeDrawer();
                         this._router.navigate(['/apps/file-manager/file/contract/' + this.contractId + '/' + this.folderId]);
                         // Mark for check

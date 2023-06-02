@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -22,8 +22,10 @@ import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service
 })
 export class MinutaContratoComponent implements OnInit {
   @ViewChild('pdfTable') pdfTable: ElementRef;
-  @Input('contractContractors') contractContractors: ContractContractors;
-  minuteExtensionData: MinuteExtension;
+  @Input() contractContractors: ContractContractors;
+  @Output() readonly pdfGenerated: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() pdfType: string;
+    minuteExtensionData: MinuteExtension;
   year = new Date('YYYY');
   registerDate = new Date();
   file: any;
@@ -497,7 +499,7 @@ export class MinutaContratoComponent implements OnInit {
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
       debugger
       let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
-      let fechaLetras = this.calcularDiferencia(data.fechaRealDeInicio,data.fechaFinalizacionConvenio);
+      let fechaLetras = this._shareService.calcularDiferencia(data.fechaRealDeInicio, data.fechaFinalizacionConvenio);
       let valorLetras = this._shareService.numeroALetras(data.valorTotal, 'PESOS');
       let totalContrato = (+data.valorTotal.toFixed(0)).toLocaleString();
       if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.nombre == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null || data.valorTotal === null) {
@@ -529,8 +531,8 @@ export class MinutaContratoComponent implements OnInit {
               text: [
                 'Entre los suscritos, de una parte, ' + data.supervisorItm + ' con c.c. ' + data.identificacionSupervisor + ', actuando en calidad de ' + data.cargoSupervisorItm + 'del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
                 'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.nombre + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.identificacion + ' de ' + data.lugarExpedicion + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas: PRIMERA. -OBJETO DEL CONTRATO. Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No.4600095169 DE 2022, celebrado entre EL DISTRITO ESPECIAL DE CIENCIA',
-                'TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN - DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM. SEGUNDA. - DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de '+fechaLetras+' sin exceder la vigencia 2022, contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. 4600095169 DE 2022 . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo',
-                '217 decreto 019 del 2012. TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de '+valorLetras+' m.l ($ '+totalContrato+') El I.T.M. cancelará al CONTRATISTA, pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestacion del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente. CUARTA. -OBLIGACIONES DEL CONTRATISTA. EL CONTRATISTA se obliga en forma especial a prestar el servicio objeto de este contrato en los',
+                'TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN - DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM. SEGUNDA. - DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + fechaLetras + ' sin exceder la vigencia 2022, contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. 4600095169 DE 2022 . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo',
+                '217 decreto 019 del 2012. TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de ' + valorLetras + ' m.l ($ ' + totalContrato + ') El I.T.M. cancelará al CONTRATISTA, pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestacion del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente. CUARTA. -OBLIGACIONES DEL CONTRATISTA. EL CONTRATISTA se obliga en forma especial a prestar el servicio objeto de este contrato en los',
                 'términos señalados y específicamente a cumplir las siguientes OBLIGACIONES GENERALES: ' + data.obligacionesGenerales + ' OBLIGACIONES ESPECIFICAS: ' + data.obligacionesEspecificas + 'QUINTA. -DERECHOS Y DEBERES. Las partes declaran conocer y desarrollar los derechos y deberes consagrados en la Ley 80 de 1993 y cumplir las obligaciones específicas consagradas en este contrato. SEXTA. - MODIFICACIÓN, INTERPRETACIÓN Y TERMINACIÓN DEL CONTRATO. EL INSTITUTO tendrá la dirección general y la responsabilidad de ejercer control y vigilancia de la ejecución del contrato. En consecuencia, este contrato se rige por los principios de modificación unilateral, interpretación unilateral y terminación unilateral por parte del Instituto Tecnológico Metropolitano',
                 'conforme a las disposiciones contenidas en los Artículos 14, 15, 16 y 17 de la Ley 80 de 1993 (modificado por ley 1150 de 2007), la cual para todos los efectos legales hace parte integral de este contrato. SÉPTIMA. -CADUCIDAD. EL INSTITUTO, podrá declarar la caducidad si se presentan algunos de los hechos constitutivos del incumplimiento de las obligaciones a cargo del contratista, que afecta de manera grave y directa la ejecución del contrato, y evidencie que puede conducir a su paralización. La Entidad por acto administrativo debidamente motivado lo dará por terminado y ordenará su liquidación en el estado en que se encuentre. OCTAVA. -EFECTOS DE LA CADUCIDAD. Declarada la caducidad, no habrá lugar a la indemnización para el contratista, quien se hará acreedor a las sanciones e inhabilidades previstas en la Ley 80 de 1993, y las normas que la reglamentan y adicionan, Decreto 1082 de 2015. NOVENA. -MORA O INCUMPLIMIENTO PARCIAL. En caso de mora o incumplimiento parcial de las obligaciones adquiridas por EL CONTRATISTA, de acuerdo a las cláusulas del presente contrato, podrá EL INSTITUTO, mediante',
                 'Resolución motivada, imponer multas, las cuales deberán ser directamente proporcionales al valor del contrato y a los perjuicios que sufra EL INSTITUTO, sin exceder del cinco por mil (5 x 1.000) del valor del contrato cada vez que se impongan. DÉCIMA-CLÁUSULA PENAL PECUNIARIA. Sin perjuicio de lo dispuesto en las cláusulas anteriores, EL INSTITUTO podrá imponer al CONTRATISTA, en caso de declaratoria de caducidad o de incumplimiento como pena, una suma equivalente al diez por ciento (10%) del valor del contrato. El valor de la cláusula penal que se haga efectiva, se considera como pago parcial pero definitivo de los perjuicios causados al INSTITUTO. DECIMA PRIMERA. -DE LA APLICACIÓN DE LA MULTA Y LA CLÁUSULA PENAL PECUNIARIA. Una vez ejecutoriados los actos administrativos que la imponen podrán ser tomados dichos valores del saldo a favor del CONTRATISTA o de las garantías constituidas. Si no fuere',
@@ -830,29 +832,15 @@ export class MinutaContratoComponent implements OnInit {
       }));
   }
 
-  private calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
-    let fechaInicios = new Date(fechaInicio);
-    let fechaFins = new Date(fechaFin);
-    const diferencia = fechaFins.getTime() - fechaInicios.getTime();
-    const diasTotales = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-    const meses = Math.floor(diasTotales / 30);
-    const dias = diasTotales % 30;
-    if (meses > 0 && meses == 1) {
-      return `${meses} mes y ${dias} días.`
-    } else if (meses > 0 && meses > 1) {
-      return `${meses} meses y ${dias} días.`
-    } else {
-      return `${dias} días.`
-    }
-  }
+
   private generateMinuteExtension() {
     this.valueLetter = this._shareService.numeroALetras(this.minuteExtensionData.initialTotalValue, 'PESOS');
-    let plazo = this._shareService.calcularDiferencia(this.minuteExtensionData.initialDateContract,this.minuteExtensionData.finalDateContract);
+    let plazo = this._shareService.calcularDiferencia(this.minuteExtensionData.initialDateContract, this.minuteExtensionData.finalDateContract);
     let fechaInicioContrato = this._shareService.transformDate(this.minuteExtensionData.initialDateContract.toString());
     let fechaFinalContrato = this._shareService.transformDate(this.minuteExtensionData.finalDateContract.toString());
     let fechaInicioAmpliacionContrato = this._shareService.transformDate(this.minuteExtensionData.initialDateContractExtension.toString());
     let fechaFinalAmpliacionContrato = this._shareService.transformDate(this.minuteExtensionData.finalDateContractExtension.toString());
-    let plazoAmpliacion = this._shareService.calcularDiferencia(this.minuteExtensionData.initialDateContractExtension,this.minuteExtensionData.finalDateContractExtension);
+    let plazoAmpliacion = this._shareService.calcularDiferencia(this.minuteExtensionData.initialDateContractExtension, this.minuteExtensionData.finalDateContractExtension);
 
     const documentMinutaAmpliacion = {
 
@@ -912,7 +900,7 @@ export class MinutaContratoComponent implements OnInit {
                 },
               ],
               [{ text: 'PLAZO', bold: true },
-               plazo
+                plazo
               ],
               [
                 { text: 'FECHA DE INICIO', bold: true },
@@ -980,7 +968,7 @@ export class MinutaContratoComponent implements OnInit {
               bold: true,
             },
             {
-              text: ' identificado con Cédula de Ciudadanía Nº '+this.minuteExtensionData.supervisorIdentification,
+              text: ' identificado con Cédula de Ciudadanía Nº ' + this.minuteExtensionData.supervisorIdentification,
               fontSize: 10,
             },
             {
@@ -1141,5 +1129,8 @@ export class MinutaContratoComponent implements OnInit {
     this._pdfdataService.getDataMinuteExtension(this.contractId, this.contractorId).subscribe((Response) => {
       this.minuteExtensionData = Response;
     });
+  }
+  hideComponent() {
+    this.pdfGenerated.emit(false);
   }
 }

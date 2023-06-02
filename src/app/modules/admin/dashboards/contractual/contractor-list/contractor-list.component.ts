@@ -11,7 +11,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
@@ -22,7 +22,6 @@ import { NewnessContractorComponent } from './components/newness-contractor/newn
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { DatePipe } from '@angular/common';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
-
 
 @Component({
   selector: 'contractor-list',
@@ -36,10 +35,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   data: any;
   userName: any;
   value: any;
-  minuta: boolean;
-  estudioPrevio: boolean;
-  cuentaCobro: boolean;
-  minutaAdicion: boolean;
+  generatePdfMinute: boolean;
+  generatePdf: boolean;
+  pdfType: string;
   disableElement: boolean = true;
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -77,10 +75,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private _liveAnnouncer: LiveAnnouncer,
     private router: ActivatedRoute,
     private _formBuilder: FormBuilder,
+    private _loadrouter: Router
   ) {
     this.getDataContractor();
     this.datePipe = new DatePipe('es');
-
   }
   columnas = [
     { title: 'NOMBRE', name: 'nombre' },
@@ -95,9 +93,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'OPCIONES', name: 'acciones' }
   ]
 
-  /**
-* On init
-*/
   ngOnInit(): void {
     this.userName = this.auth.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
@@ -242,8 +237,17 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this._contractorListService.sendmailsAccounts(ids)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response) => {
-        console.log(Response);
-
+        if(Response){
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Invitaciones enviadas exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+        this.reloadResolve();
       });
 
   }
@@ -256,14 +260,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       data: {
         idUser: this.auth.accessId,
         data,
-        contract:this.contractId
+        contractId:this.contractId
       }
     });
     dialogModificacion.afterClosed()
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((result) => {
         if (result) {
-          this.getDataContractor();
+          this.reloadResolve();
         }
       });
   }
@@ -289,7 +293,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.getDataContractor();
+        this.reloadResolve();
       }
       this.selection.clear();
       this.listId = [];
@@ -306,13 +310,13 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       });
     }
     this.contractContractors.contractId = this.contractId
-    this.minuta = true;
+    this.generatePdfMinute = true;
 
   }
   generarEstudiosPrevios(data: any = null) {
     this.contractContractors.contractors = [data.id];
     this.contractContractors.contractId = this.contractId
-    this.estudioPrevio = true;
+    this.generatePdf = true;
   }
 
   activateContarct() {
@@ -351,13 +355,26 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
     dialogUpload.afterClosed().subscribe((result) => {
       if (result) {
-
+        this.reloadResolve();
       }
     });
+  }
+
+  pdfGenerated(e : boolean){
+    this.generatePdf = e;
+    this.generatePdfMinute = e;
+
   }
 
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();
+  }
+  
+  reloadResolve() {
+    const currentUrl: any = this._loadrouter.url;
+    this._loadrouter.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this._loadrouter.navigateByUrl(currentUrl);
+    });
   }
 }
