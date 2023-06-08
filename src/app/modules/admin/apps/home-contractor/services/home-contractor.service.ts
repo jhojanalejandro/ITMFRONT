@@ -8,71 +8,51 @@ import { ExecutionReport } from '../models/pdfDocument';
 @Injectable({
     providedIn: 'root'
 })
-export class HomeContractorService
-{
+export class HomeContractorService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
-    constructor(private _httpClient: HttpClient)
-    {
+    constructor(private _httpClient: HttpClient) {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Getter for data
-     */
-    get data$(): Observable<any>
-    {
+    get data$(): Observable<any> {
         return this._data.asObservable();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Get data
-     */
-    getData(): Observable<any>
-    {
+    getData(): Observable<any> {
         return this._httpClient.get('api/dashboards/finance').pipe(
             tap((response: any) => {
                 this._data.next(response);
             })
         );
     }
-    
+
     addContractFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addContractFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
     UpdateContractFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl+ environment.UpdateContractFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    getFileById(contractor: string, contract: string): Observable<any>
-    {
+    getFileById(contractor: string, contract: string): Observable<any> {
         const params = new HttpParams()
-        .set('contractorId', contractor)
-        .set('contractId', contract);
+            .set('contractorId', contractor)
+            .set('contractId', contract);
         //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
-        let urlEndPoint = this.apiUrl+ environment.GetAllFileByContractEndpoint;
-        return this._httpClient.get<any>(urlEndPoint, {params: params}).pipe(
+        let urlEndPoint = this.apiUrl + environment.GetAllFileByContractEndpoint;
+        return this._httpClient.get<any>(urlEndPoint, { params: params }).pipe(
             tap((items) => {
                 // Update the item
                 const item = [...items.files] = items || null;
                 return item;
-                
+
             }),
             switchMap((item) => {
 
-                if ( !item )
-                {
+                if (!item) {
                     return throwError('No se pudo encontrar el artículo con id ' + contract + '!');
                 }
 
@@ -83,18 +63,29 @@ export class HomeContractorService
 
     GetMinutesPdfContractor(contractorId: string, contractId: string) {
         const params = new HttpParams()
-        .set('contractorId', contractorId)
-        .set('contractId', contractId);
-        let urlEndpointGenerate = this.apiUrl+ environment.GetMinutesPdf;
-         return this._httpClient.get<File>(urlEndpointGenerate, {params: params});
+            .set('contractorId', contractorId)
+            .set('contractId', contractId);
+        let urlEndpointGenerate = this.apiUrl + environment.GetMinutesPdf;
+        return this._httpClient.get<File>(urlEndpointGenerate, { params: params });
     }
 
     getExecutionReport(contractorId: string, contractId: string) {
         const params = new HttpParams()
-        .set('contractorId', contractorId )
-        .set('contractId', contractId)
+            .set('contractorId', contractorId)
+            .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetPdfDataExecutionReport;
-        return this._httpClient.get<ExecutionReport>(urlEndPoint, {params: params});
+        return this._httpClient.get<ExecutionReport>(urlEndPoint, { params: params });
+    }
+
+
+    saveContractorPersonalInformation(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
+
+    getDepartments() {
+        let urlEndPoint = environment.getDepartmentsColombia;
+        return this._httpClient.get<any>(urlEndPoint);
     }
 
 }

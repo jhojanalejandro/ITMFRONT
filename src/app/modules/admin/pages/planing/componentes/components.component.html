@@ -106,6 +106,9 @@
                                             <button (click)="editComponent(dataComponente)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar Componente
                                             </button>
+                                            <button (click)="deleteConfirmationDialog(dataComponente)" mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>Eliminar Componente
+                                            </button>
                                         </mat-menu>
                                     </div>
                                 </div>
@@ -277,11 +280,17 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    Cantidad total Contratistas: {{contractorCant}}
+                                    Cantidad Contratistas: {{contractorCant}}
                                 </div>
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                   <span>Cantidad total elementos: </span> {{elementosCant}}
+                                   <span>Cantidad Componentes: </span> {{componentCant}}
                                 </div>
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    <span>Cantidad Actividades: </span> {{activitiesCant}}
+                                 </div>
+                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    <span>Cantidad elementos: </span> {{elementosCant}}
+                                 </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>

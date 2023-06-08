@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
     MatSnackBarHorizontalPosition,
     MatSnackBarVerticalPosition,
@@ -28,6 +28,7 @@ import { ContractorService } from '../../dashboards/contractual/service/contract
 import { Router } from '@angular/router';
 import swal from 'sweetalert2';
 import { ChargeAccount, ExecutionReport } from './models/pdfDocument';
+import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -59,25 +60,21 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
 
-    /**
-     * Constructor
-     */
     constructor(
         private _contractorService: HomeContractorService,
         private _matDialog: MatDialog,
         private _auth: AuthService,
         private _router: Router,
-        private _contractorListService: ContractorService
+        private _contractorListService: ContractorService,
     ) { }
 
-    /**
-     * On init
-     */
+
     ngOnInit(): void {
         this.userName = this._auth.accessName;
         this.getContract();
+
     }
-    openDialog() {
+    uploadDialog() {
         const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
             autoFocus: false,
             data: {
@@ -252,6 +249,26 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         this.chargeAccount = e;
         this.executionReport = e;
     }
+
+    addPersonalData() {
+        const dialogRef = this._matDialog.open(ContractorPersonalDataComponent, {
+            autoFocus: false,
+            data: {
+                idUser: this._auth.accessId,
+                contractId: this.contractSelected,
+                contractorId: this._auth.accessId,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+                    // this.getDataContractor(this.id);
+                }
+            });
+    }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

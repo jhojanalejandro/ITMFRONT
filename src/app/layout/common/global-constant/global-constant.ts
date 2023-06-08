@@ -1,4 +1,4 @@
-import { TypeSelectBool, TypeSelectString } from "../models/TypeSelect";
+import { TypeSelectBool, TypeSelectNumber, TypeSelectString } from "../models/TypeSelect";
 
 export class GlobalConst {
     public static encryptSecretKey = '576cf17b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae451f5a65ed1' 
@@ -67,12 +67,12 @@ export class GlobalConst {
         { viewValue: 'Agregar Modificación'}, 
     ] 
 
-    public static Nivel: TypeSelectString[]=[
-        { viewValue: '1'},
-        { viewValue: '2'}, 
-        { viewValue: '3'}, 
-        { viewValue: '4'}, 
-        { viewValue: '5'}, 
+    public static Nivel: TypeSelectNumber[]=[
+        { viewValue: 1},
+        { viewValue: 2}, 
+        { viewValue: 3}, 
+        { viewValue: 4}, 
+        { viewValue: 5}, 
 
     ] 
 

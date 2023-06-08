@@ -84,17 +84,6 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this.contractId = this._fileManagerService.getContractId();
 
     }
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-    closeDrawer(): Promise<MatDrawerToggleResult> {
-        return this._listComponent.matDrawer.close();
-    }
 
     /**
      * Track by function for ngFor loops
@@ -136,7 +125,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
                             timer: 1500
                         });
                         this.closeDrawer();
-                        this._router.navigate(['/apps/file-manager/file/contractor/' + this.contractId + '/' + this.contractorId+ '/'+  this.folderId]);
+                        this._router.navigate(['/apps/file-manager/file/contractor/' + this.contractId + '/' + this.contractorId + '/' + this.folderId]);
                         // Mark for check
                         this._changeDetectorRef.markForCheck();
                     }
@@ -150,5 +139,13 @@ export class DetailFileComponent implements OnInit, OnDestroy {
 
     }
 
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+    closeDrawer(): Promise<MatDrawerToggleResult> {
+        return this._listComponent.matDrawer.close();
+    }
 
 }

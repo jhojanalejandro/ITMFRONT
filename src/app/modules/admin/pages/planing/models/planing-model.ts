@@ -29,6 +29,9 @@ export interface ContractList{
     project: string;
     fechaFinalizacion: Date;
     fechaContrato: Date;
+    rubro?: string;
+    fuenteRubro?: string;
+    nombreRubro?: string;
 }
 export interface ContractFolder{
     id?: string;

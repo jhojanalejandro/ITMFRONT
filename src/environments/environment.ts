@@ -26,7 +26,7 @@ export const environment = {
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
 
     UpdateContractorEndpoint: 'Contractor/Update',
-    //GetByContractorIdFolderEndpoint: 'Contractor/GetAllByFolder/',
+    SaveDataContractorEndpoint: 'Contractor/SaveDataContractor/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
     // GetContractorByIdEndpoint: 'Contractor/ChargeAccountGetById',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
@@ -44,10 +44,10 @@ export const environment = {
     GetAllContractFolderEndpoint: 'FileManager/GetAllContract',
 
 
-    addFolderFileContractorEndpoint: 'FolderContractor/Add',
-    UpdateFolderFileContractorEndpoint: 'FolderContractor/Update',
-    GetByIdFolderFileContractorEndpoint: 'FolderContractor/GetById/',
-    GetFolderFileContractorEndpoint: 'FolderContractor/GetAll/',
+    addFolderFileContractorEndpoint: 'Folder/Add',
+    UpdateFolderFileContractorEndpoint: 'Folder/Update',
+    GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
+    GetFolderFileContractorEndpoint: 'Folder/GetAll/',
 
     addContractFolderEndpoint: 'ContractFolder/Add',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
@@ -122,6 +122,8 @@ export const environment = {
     GetElementTypeEndpoint: 'MasterData/GetAllElementType',
     GetDocumentTypeEndpoint: 'MasterData/GetDocumentType',
     GetStatusFileEndpoint: 'MasterData/GetStatusFile',
+
+    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 
 
 };

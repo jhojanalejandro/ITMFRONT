@@ -12,7 +12,6 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { ContractorService } from '../service/contractor.service';
@@ -22,6 +21,7 @@ import { NewnessContractorComponent } from './components/newness-contractor/newn
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { DatePipe } from '@angular/common';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
+import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
 
 @Component({
   selector: 'contractor-list',
@@ -278,7 +278,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         this.listId.push(element.id);
       });
     }
-    const dialogRef = this._matDialog.open(ContractorDataRegisterComponent, {
+    const dialogRef = this._matDialog.open(ContractorDataHiringComponent, {
       disableClose: true,
       autoFocus: false,
       data: {

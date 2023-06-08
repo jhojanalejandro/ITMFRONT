@@ -51,23 +51,10 @@ export class ListFolderContractorService {
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdFolderEndpoint;
         return this._httpClient.get<ItemsContract>(urlEndPoint + folderIds).pipe(
             tap((response: any) => {
-                // Clone the items
                 let items = cloneDeep(response);
                 const folders = items.folders;
                 const folderContract = items.folderContract;
-                const pathItems = cloneDeep(response);
                 const path = [];
-
-                // Prepare the current folder
-                let currentFolder = pathItems;
-
-                // Start traversing and storing the folders as a path array
-                // until we hit null on the folder id
-                while (currentFolder.folders.length == 0) {
-                    if (currentFolder) {
-                        path.unshift(currentFolder);
-                    }
-                }
                 const data =
                 {
                     folders,

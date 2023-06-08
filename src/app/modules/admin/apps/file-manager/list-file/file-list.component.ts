@@ -128,12 +128,12 @@ export class FileListComponent implements OnInit, OnDestroy {
             }
         });
         dialogRef.afterClosed()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((result) => {
-            if (result) {
-                this.getData();
-            }
-        });
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+                    this.getData();
+                }
+            });
     }
 
     onChange(event: any, file: FileContractor) {
@@ -163,25 +163,26 @@ export class FileListComponent implements OnInit, OnDestroy {
             this.detailFile.registerDate = new Date();
             this.detailFile.passed = true;
             this.detailFile.statusFileId = event.value;
+            
             this._uploadService.updateStatusFileContractor(this.detailFile)
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((res) => {
-                if (res) {
-                    swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: '',
-                        html: 'Información actualizada Exitosamente!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            },
-                (response) => {
-                    console.log(response);
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((res) => {
+                    if (res) {
+                        swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información actualizada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                },
+                    (response) => {
+                        console.log(response);
 
-                    swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-                });
+                        swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+                    });
         }
 
     }
@@ -252,12 +253,12 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
 
-    private getStatusFile(){
+    private getStatusFile() {
         this._fileManagerService.getStatusFile()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((item: any) => {
-            this.statusFile = item;
-        });
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((item: any) => {
+                this.statusFile = item;
+            });
     }
 
     ngOnDestroy(): void {

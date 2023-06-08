@@ -1,0 +1,192 @@
+<div class="flex-col max-w-150 md:min-w-100 -m-6">
+    <div class="flex-col max-w-140 md:min-w-100">
+        <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+            <div class="text-lg font-medium">Rgistro datos de Contratación</div>
+            <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+                <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+            </button>
+        </div>
+        <mat-dialog-content style="margin: 0px; padding: 0px;">
+            <div class="option">
+                <!-- Alert -->
+                <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'outline'"
+                    [showIcon]="false" [type]="alert.type" [@shake]="alert.type === 'error'">
+                    {{alert.message}}
+                </fuse-alert>
+            </div>
+            <!-- Sign Up form -->
+            <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="contractorinformationStepperForm">
+                <mat-horizontal-stepper [linear]="true" #horizontalStepper>
+                    <mat-step [formGroupName]="'step1'" [stepControl]="contractorinformationStepperForm.get('step1')"
+                        #horizontalStepperStep1>
+                        <ng-template matStepLabel>Información básica</ng-template>
+                        <p class="my-6 font-medium">
+                            Complete su información básica para validarte como ganador
+                        </p>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto">
+                                <input id="email" matInput [formControlName]="'email'"
+                                    [placeholder]="'Correo electronico'" required>
+                                <mat-error>
+                                    Se requiere Dirección de correo electrónico
+                                </mat-error>
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <mat-form-field class="w-full" appearance="fill" (click)="getDepartamento()">
+                                <mat-label>departamentos</mat-label>
+                                <mat-select [formControlName]="'departamento'" name="raffles"
+                                    (selectionChange)="getMunicipios($event)">
+                                    <mat-option *ngFor="let department of departments" [value]="department.id">
+                                        {{department.departamento}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-full" appearance="fill">
+                                <mat-label>Municipios</mat-label>
+                                <mat-select [formControlName]="'Municipality'" name="municipality">
+                                    <mat-option *ngFor="let municipios of municipio" [value]="municipios">
+                                        {{municipios}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="px-8" mat-flat-button [color]="'primary'"
+                                [disabled]="horizontalStepperStep1.stepControl.pristine || horizontalStepperStep1.stepControl.invalid"
+                                type="button" matStepperNext>
+                                Siguiente
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step [formGroupName]="'step2'" [stepControl]="contractorinformationStepperForm.get('step2')"
+                        #horizontalStepperStep2>
+                        <ng-template matStepLabel>Profile</ng-template>
+                        <p class="my-6 font-medium">
+                            la informacion ingresada en este formulario, es privada, nadie puede acceder a ella, solo
+                            sera validada cuando vayas a reclamar tu premio
+                        </p>
+                        <div class="flex flex-col gt-xs:flex-row">
+                            <mat-form-field class="flex-auto gt-xs:pr-3">
+                                <input id="userName" matInput [formControlName]="'userName'"
+                                    [placeholder]="'Nombre de usuario'" autocomplete="off" required>
+                                <mat-error>
+                                    Nombre de usuario
+                                </mat-error>
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            </mat-form-field>
+                            <mat-form-field class="flex-auto gt-xs:pl-3">
+                                <input matInput [formControlName]="'lastName'" [placeholder]="'Apellido'" required>
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto">
+                                <input matInput [formControlName]="'phoneNumber'" [placeholder]="'Telefono'"
+                                    autocomplete="off" type="text" required>
+                                <span matPrefix>+57/</span>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex">
+                            <mat-form-field class="flex-auto">
+                                <input matInput [formControlName]="'cedula'" [placeholder]="'cedula'" type="text"
+                                    autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
+                                matStepperPrevious>
+                                Volver
+                            </button>
+                            <button class="px-8" mat-flat-button [color]="'primary'"
+                                [disabled]="horizontalStepperStep2.stepControl.pristine || horizontalStepperStep2.stepControl.invalid"
+                                type="button" matStepperNext>
+                                Siguiente
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step [formGroupName]="'step3'" [stepControl]="contractorinformationStepperForm.get('step3')">
+                        <ng-template matStepLabel>Notifications</ng-template>
+                        <p class="my-6 font-medium">
+                            We'll always let you know about important changes, but you pick what else you want to hear
+                            about.
+                        </p>
+                        <div class="flex flex-col gt-sm:flex-row">
+                            <div class="flex flex-col">
+                                <mat-form-field class="w-full">
+                                    <mat-label>Contraseña</mat-label>
+                                    <input id="password" matInput type="password" [formControlName]="'password'"
+                                        #passwordField>
+                                    <button mat-icon-button type="button"
+                                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                                        matSuffix>
+                                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                    </button>
+                                    <mat-error>
+                                        la Contraseña es requerida
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-col mt-8 gt-sm:mt-0 gt-sm:ml-16">
+                                <mat-checkbox [color]="'primary'" [formControlName]="'agreements'">
+                                    <span>Estoy de acuerdo con</span>
+                                    <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']"> Términos de
+                                        servicio
+                                    </a>
+                                    <span>Y</span>
+                                    <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']"> Políticas de
+                                        privacidad
+                                    </a>
+                                </mat-checkbox>
+
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-8">
+                            <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
+                                matStepperPrevious>
+                                Volver
+                            </button>
+                            <button class="px-8" mat-flat-button [color]="'primary'" type="button" matStepperNext>
+                                Siguiente
+                            </button>
+                        </div>
+                    </mat-step>
+
+                    <mat-step>
+                        <ng-template matStepLabel>Done</ng-template>
+                        <p class="my-6 font-medium">
+                            ¡Gracias por completar nuestro formulario! Puede restablecer el formulario si desea cambiar
+                            su información. </p>
+                        <div class="inline-flex items-end w-full mt-1.5">
+
+                        </div>
+                        <div class="flex justify-end mt-8">
+                            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'accent'"
+                                type="button" matStepperPrevious>
+                                Volver
+                            </button>
+                            <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
+                            <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
+                                [disabled]="contractorinformationStepperForm.disabled" (click)="saveContractorDataInformation()">
+                                <span *ngIf="!contractorinformationStepperForm.disabled">
+                                    {{title}}
+                                </span>
+                                <mat-progress-spinner *ngIf="contractorinformationStepperForm.disabled" [diameter]="24"
+                                    [mode]="'indeterminate'"></mat-progress-spinner>
+                            </button>
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
+            </form>
+        </mat-dialog-content>
+    </div>
+</div>

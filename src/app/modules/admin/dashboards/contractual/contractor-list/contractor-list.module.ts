@@ -7,7 +7,7 @@ import { ContractorListComponent } from './contractor-list.component';
 import { contractorListRoutes } from './contractor-list.routing';
 import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
-import { ContractorDataRegisterComponent } from './components/register-data-contractor/register-data-contractor.component';
+import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
 import { MinutaContratoComponent } from './components/minutas-contrato/minuta-contrato.component';
 import { EstudioPrevioComponent } from './components/estudio-previo/estudio-previo.component';
 import { ActaSupervisionComponent } from './components/acta-supervision/acta-supervision.component';
@@ -17,7 +17,7 @@ import { NewnessContractorComponent } from './components/newness-contractor/newn
 @NgModule({
     declarations: [
         ContractorListComponent,
-        ContractorDataRegisterComponent,
+        ContractorDataHiringComponent,
         ModificacionFormComponent,
         MinutaContratoComponent,
         EstudioPrevioComponent,
