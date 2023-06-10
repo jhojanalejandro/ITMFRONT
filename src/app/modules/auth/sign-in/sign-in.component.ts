@@ -25,24 +25,13 @@ export class AuthSignInComponent implements OnInit {
     signInForm: FormGroup;
     showAlert: boolean = false;
 
-    /**
-     * Constructor
-     */
     constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _authService: AuthService,
-        private _formBuilder: FormBuilder,
-        private _router: Router
+        private _authService?: AuthService,
+        private _formBuilder?: FormBuilder,
+        private _router?: Router
     ) {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
