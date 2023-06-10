@@ -75,8 +75,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
     }
 
     private _filter(number: any): any[] {
-        const filterValue = number;
-
         return this.items.filter(option => option === number);
     }
     applyFilter(event: Event) {
@@ -102,7 +100,6 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         this._fileManagerService.folderContract$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: any) => {
-                
                 if (items.folders.length > 0) {
                     this.items = items;
                 }
@@ -137,12 +134,17 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                this.getData();
+                this.reloadResolve();
             }
         });
     }
 
-
+    reloadResolve() {
+        const currentUrl: any = this._router.url;
+        this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this._router.navigateByUrl(currentUrl);
+        });
+    }
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);

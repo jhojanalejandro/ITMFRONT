@@ -14,7 +14,7 @@ import swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { ContractFolders, ContractList } from '../models/planing-model';
+import { ContractList } from '../models/planing-model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegisterContractFolderComponent } from '../componentes/register-project-folder/register-project-folder.component';
 import { PlaningService } from '../service/planing.service';
@@ -32,6 +32,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   data: any;
   userName: any;
   configForm: FormGroup;
+  generateMinutre: boolean = false; 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -40,11 +41,11 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   contracts: ContractList[];
-  typeContract: string; 
+  typeContract: string;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
   showcontracts: boolean = false;
-  displayedColumns: string[] = ['numberProject','project', 'companyName', 'projectName', 'valorContrato','statusContract', 'contractorsCant', 'action'];
+  displayedColumns: string[] = ['numberProject', 'project', 'companyName', 'projectName', 'valorContrato', 'statusContract', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -62,17 +63,17 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
 
   ) {
     this.typeContract = this.router.snapshot.paramMap.get('tipo') || null;
-    if(this.typeContract === 'register'){
+    if (this.typeContract === 'register') {
       this.showcontracts = true;
 
-    }else if(this.typeContract === 'economic'){
+    } else if (this.typeContract === 'economic') {
       this.showcontracts = false;
     }
 
   }
   columnas = [
     { title: 'NÚMERO CONTRATO', name: 'numberProject' },
-    { title: 'NÚMERO PROYECTO', name: 'project' },
+    { title: 'PROYECTO', name: 'project' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'VALOR CONTRATO', name: 'valorContrato' },
@@ -106,27 +107,27 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     });
 
   }
-  private getContracts(){
-    this.cdref.detectChanges();
+  private getContracts() {
     this._planingService._contractList$
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe(response => {
-      
-      this.contracts = response;
-      this.dataSource = new MatTableDataSource(
-        this.contracts
-    );
-    this.dataSource.sort = this.sort;
-    this.getContractsData();
-    });
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(response => {
+        debugger
+        this.contracts = response;
+        this.dataSource = new MatTableDataSource(
+          this.contracts
+        );
+        this.dataSource.sort = this.sort;
+        this.getContractsData();
+        this.cdref.detectChanges();
+      });
 
   }
 
   SaveContract() {
-    const dialogRefProject = this._matDialog.open(RegisterContractFolderComponent,  { 
+    const dialogRefProject = this._matDialog.open(RegisterContractFolderComponent, {
       disableClose: true,
       autoFocus: false,
-     });
+    });
     dialogRefProject.afterClosed().subscribe(datos => {
       if (datos) {
         this.reloadResolve();
@@ -134,7 +135,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     });
   }
 
-  UpdateDataContract(data: any){
+  UpdateDataContract(data: any) {
     const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
       disableClose: true,
       autoFocus: false,
@@ -150,11 +151,11 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
 
   SaveOptions() {
-    const dialogRefOption = this._matDialog.open(OptionTypeDataComponent,  { 
+    const dialogRefOption = this._matDialog.open(OptionTypeDataComponent, {
       disableClose: true,
       autoFocus: false,
-     });
-     dialogRefOption.afterClosed().subscribe(datos => {
+    });
+    dialogRefOption.afterClosed().subscribe(datos => {
       if (datos) {
         this.getContracts();
       }
@@ -229,7 +230,8 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     // Subscribe to afterClosed from the dialog reference
     dialogRef.afterClosed().subscribe((result) => {
       if (result == 'confirmed') {
-        this._uploadData.DeleteContract(element.id).subscribe((res) => {
+        this._uploadData.finalContract(element.id).subscribe((res) => {
+          debugger
           if (res) {
             swal.fire({
               position: 'center',
@@ -251,14 +253,18 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
 
   addComponent(data: any) {
-    this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id + '/'+ data.projectName);
-}
-reloadResolve() {
-  const currentUrl: any = this._router.url;
-  this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-    this._router.navigateByUrl(currentUrl);
-  });
-}
+    this._router.navigateByUrl("/docs/ecommerce/Componentes/" + data.id + '/' + data.projectName);
+  }
+
+  generarMinuta(){
+    this.generateMinutre = true;
+  }
+  reloadResolve() {
+    const currentUrl: any = this._router.url;
+    this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this._router.navigateByUrl(currentUrl);
+    });
+  }
 
 
 } 

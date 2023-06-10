@@ -55,7 +55,6 @@ export class RegisterContractFolderComponent implements OnInit {
     }, 1000);
     if (this._data != null) {
       this.editData = true;
-      debugger
       this.dataProject.fechaContrato = new Date(this._data.data.fechaContrato)
       this.dataProject.companyName = this._data.data.companyName;
       this.dataProject.projectName = this._data.data.projectName;
@@ -166,7 +165,7 @@ export class RegisterContractFolderComponent implements OnInit {
           //this.matDialogRef.close();  
           this.ref.detectChanges();
           this.ref.markForCheck();
-          this.cerrar();
+          this.matDialogRef.close(true);
         }
 
       },
@@ -241,7 +240,7 @@ export class RegisterContractFolderComponent implements OnInit {
         //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
-        this.cerrar();
+        this.matDialogRef.close(true);
       }
 
     },
@@ -256,7 +255,7 @@ export class RegisterContractFolderComponent implements OnInit {
 
   }
   cerrar(): void {
-    this.matDialogRef.close(true);
+    this.matDialogRef.close(false);
   }
 
   dateChange(event) {

@@ -6,6 +6,7 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
+    FormBuilder,
     FormGroup,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,8 +18,9 @@ import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { ActividadFormComponent } from './actividad-form/actividad-form.component';
-import { Activity } from '../models/planing-model';
+import swal from 'sweetalert2';
 import { PlaningService } from '../service/planing.service';
+import { MatDrawerToggleResult } from '@angular/material/sidenav';
 
 @Component({
     selector: 'components-card',
@@ -43,6 +45,9 @@ export class AddComponentsComponent implements OnInit {
     total: number = 0;
     contractorCant: number = 0;
     elementosCant: number = 0;
+    componentCant: number = 0;
+    activitiesCant: number = 0;
+
     gastosOperativos: any = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
@@ -56,7 +61,8 @@ export class AddComponentsComponent implements OnInit {
         private _planingService: PlaningService,
         private _matDialog: MatDialog,
         private _contrtactService: UploadDataService,
-        private _loadrouter: Router
+        private _loadrouter: Router,
+        private _formBuilder: FormBuilder,
     ) {
         this.contractId = this.route.snapshot.params.id;
         if (this.contractId) {
@@ -118,6 +124,7 @@ export class AddComponentsComponent implements OnInit {
     totalesPlaneacion() {
         this.subTotal = 0;
         this.elementosCant = 0;
+        this.componentCant = this.data.length;
         this.data.forEach((element) => {
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
@@ -126,12 +133,12 @@ export class AddComponentsComponent implements OnInit {
                     this.contractorCant += item.cantidadContratistas
                 });
             }
-        });
-        this.data.forEach((element) => {
             if (element.activities.length >= 1) {
                 element.activities.forEach((item) => {
+                    this.activitiesCant++;
                     if (item.elementos.length >= 1) {
                         item.elementos.forEach((element) => {
+                            this.elementosCant++;
                             this.subTotal += element.valorTotal;
                             this.contractorCant += element.cantidadContratistas
                         })
@@ -287,6 +294,7 @@ export class AddComponentsComponent implements OnInit {
         });
     }
 
+
     editActivity(activity: any) {
         const dialogRef = this._matDialog.open(ActividadFormComponent, {
             disableClose: true,
@@ -304,12 +312,9 @@ export class AddComponentsComponent implements OnInit {
     }
 
     openConfirmationDialog(): void {
-        // Open the dialog and save the reference of it
         const dialogRef = this._fuseConfirmationService.open(
             this.configForm.value
         );
-
-        // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
             }
@@ -357,4 +362,61 @@ export class AddComponentsComponent implements OnInit {
             this._loadrouter.navigateByUrl(currentUrl);
         });
     }
+
+    deleteComponent(componente: any) {
+        this._planingService.deleteComponent(componente.id).subscribe((response) => {
+            if(response){
+                Swal.fire(
+                    {
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Elimina Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                      }
+                );
+                this.reloadResolve();
+            }else{
+                Swal.fire(
+                    'Error!',
+                    'Algo sucedio, vuelve a intentarlo!',
+                    'error'
+                );
+            }
+        });
+    }
+
+    deleteConfirmationDialog(component: any): void {
+        this.configForm = this._formBuilder.group({
+            title: 'Eliminar Componente',
+            message: '¿Está seguro de que desea eliminar el componente?  <span class="font-medium">¡Esta acción no se puede deshacer!</span>',
+            icon: this._formBuilder.group({
+                show: true,
+                name: 'heroicons_outline:exclamation',
+                color: 'warn',
+            }),
+            actions: this._formBuilder.group({
+                confirm: this._formBuilder.group({
+                    show: true,
+                    label: 'Eliminar',
+                    color: 'warn',
+                }),
+                cancel: this._formBuilder.group({
+                    show: true,
+                    label: 'Cancelar'
+                })
+            }),
+            dismissible: true
+        });
+        // Open the dialog and save the reference of it
+        const dialogRef = this._fuseConfirmationService.open(this.configForm.value);
+        // Subscribe to afterClosed from the dialog reference
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result == 'confirmed') {
+                this.deleteComponent(component);
+            }
+        });
+    }
+
 }

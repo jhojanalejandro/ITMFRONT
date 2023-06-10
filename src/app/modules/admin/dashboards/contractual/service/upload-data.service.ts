@@ -43,7 +43,7 @@ export class UploadDataService
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    DeleteContract(id: any) {
+    finalContract(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.DeleteContractFolderEndpoint;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate, id);
     }

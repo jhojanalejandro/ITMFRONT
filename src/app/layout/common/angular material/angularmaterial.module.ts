@@ -36,7 +36,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTreeModule } from '@angular/material/tree';
-
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations:[
@@ -82,7 +82,8 @@ import { MatTreeModule } from '@angular/material/tree';
     NgApexchartsModule,
     MatRippleModule,
     MatChipsModule,
-    MatTreeModule
+    MatTreeModule,
+    MatExpansionModule
   ],
   exports: [
     MatButtonModule,
@@ -124,7 +125,8 @@ import { MatTreeModule } from '@angular/material/tree';
     NgApexchartsModule,
     MatRippleModule,
     MatChipsModule,
-    MatTreeModule
+    MatTreeModule,
+    MatExpansionModule
   ],
 })
 

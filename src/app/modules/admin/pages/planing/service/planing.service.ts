@@ -151,7 +151,7 @@ export class PlaningService {
             this.apiUrl + environment.GetDataMinutaHiringEndpoint;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
-    DeleteComponent(id: any) {
+    deleteComponent(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }

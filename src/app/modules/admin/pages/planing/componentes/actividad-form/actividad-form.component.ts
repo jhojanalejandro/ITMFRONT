@@ -143,7 +143,7 @@ export class ActividadFormComponent implements OnInit {
                     );
                 }else{
                     Swal.fire(
-                        'Ei!',
+                        'error!',
                         'Algo sucedio, vuelve a intentarlo!',
                         'error'
                     );

@@ -60,10 +60,20 @@
                             &nbsp;
                             &nbsp;
                             &nbsp;
-                            <button (click)="openDialog()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                            <button (click)="uploadDialog()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
                                 [routerLink]="['./']">
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
                                 <span>Cargar Archivo</span>
+                            </button>
+                        </div>
+                        <div class="text-xl font-semibold">
+                            &nbsp;
+                            &nbsp;
+                            &nbsp;
+                            <button (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                                [routerLink]="['./']">
+                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                <span>Información Personal</span>
                             </button>
                         </div>
                         <div class="flex flex-col sm:flex-row items-start mt-8">

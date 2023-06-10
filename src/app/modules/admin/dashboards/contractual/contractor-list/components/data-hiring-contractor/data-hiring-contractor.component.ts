@@ -17,11 +17,11 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 
 @Component({
-  selector: 'app-register-contractor',
-  templateUrl: './register-data-contractor.component.html',
-  styleUrls: ['./register-data-contractor.component.scss'],
+  selector: 'app-data-hiring-contractor',
+  templateUrl: './data-hiring-contractor.component.html',
+  styleUrls: ['./data-hiring-contractor.component.scss'],
 })
-export class ContractorDataRegisterComponent implements OnInit {
+export class ContractorDataHiringComponent implements OnInit {
   shareData: boolean = false;
   durationInSeconds = 3;
   registerDate: Date = new Date();
@@ -40,7 +40,7 @@ export class ContractorDataRegisterComponent implements OnInit {
   economicDataList: EconomicContractor[] = [];
   update: boolean = false;
   componentes: any;
-  userList: any;
+  supervisorList: any;
   twoYearAgoExam: Date;
   componentselectId: any;
   activitySelectId: any;
@@ -52,17 +52,16 @@ export class ContractorDataRegisterComponent implements OnInit {
     type: 'warn',
     message: ''
   };
-  nivel: string = 'Nivel ARL';
-  supervisor: string = 'Supervisor';
   showAlert: boolean = false;
   requierePoliza: any = GlobalConst.requierePoliza
   niveles: any = GlobalConst.Nivel;
   valorContrato: any;
   valorTotalContrato: string = null;
-  showToal: boolean = false;
+  showTotal: boolean = false;
   formContractor: FormGroup;
   visibleActivity: boolean = false;
-  hinringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
+  supervisor: string = 'Supervisor';
+  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
   private readonly _unsubscribe$ = new Subject<void>();
   detalleContrat: DetalleContrato = {
     contractId: null,
@@ -77,7 +76,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     private _planingService: PlaningService,
     private _auth: AuthService,
     private _snackBar: MatSnackBar,
-    public matDialogRef: MatDialogRef<ContractorDataRegisterComponent>,
+    public matDialogRef: MatDialogRef<ContractorDataHiringComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
     if (this.datos.id != null) {
@@ -111,26 +110,27 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAdmins();
     if (this.datos.id != null) {
       this.getHiring();
     }
     this.getComponent();
     this.formContractor = this._formBuilder.group({
-      contrato: new FormControl(this.hinringData.contrato),
-      compromiso: new FormControl(this.hinringData.compromiso),
-      fechaInicioReal: new FormControl(this.hinringData.fechaRealDeInicio, Validators.required),
-      numeroActa: new FormControl(this.hinringData.numeroActa),
-      fechaComite: new FormControl(this.hinringData.fechaDeComite),
-      requierePoliza: new FormControl(this.hinringData.requierePoliza),
-      noPoliza: new FormControl(this.hinringData.noPoliza),
-      vigenciaInicial: new FormControl(this.hinringData.vigenciaInicial),
-      vigenciaFinal: new FormControl(this.hinringData.vigenciaFinal),
-      fechaExPedicionPoliza: new FormControl(this.hinringData.fechaExpedicionPoliza),
-      valorAsegurado: new FormControl(this.hinringData.valorAsegurado),
-      fechaExamenPreocupacional: new FormControl(this.hinringData.fechaExaPreocupacional),
-      nivel: new FormControl(this.hinringData.nivel),
-      supervisorItm: new FormControl(this.hinringData.supervisorItm),
-      fechaFinalizacionConvenio: new FormControl(this.hinringData.fechaFinalizacionConvenio, Validators.required),
+      contrato: new FormControl(this.hiringData.contrato),
+      compromiso: new FormControl(this.hiringData.compromiso),
+      fechaInicioReal: new FormControl(this.hiringData.fechaRealDeInicio, Validators.required),
+      numeroActa: new FormControl(this.hiringData.numeroActa),
+      fechaComite: new FormControl(this.hiringData.fechaDeComite),
+      requierePoliza: new FormControl(this.hiringData.requierePoliza),
+      noPoliza: new FormControl(this.hiringData.noPoliza),
+      vigenciaInicial: new FormControl(this.hiringData.vigenciaInicial),
+      vigenciaFinal: new FormControl(this.hiringData.vigenciaFinal),
+      fechaExPedicionPoliza: new FormControl(this.hiringData.fechaExpedicionPoliza),
+      valorAsegurado: new FormControl(this.hiringData.valorAsegurado),
+      fechaExamenPreocupacional: new FormControl(this.hiringData.fechaExaPreocupacional),
+      nivel: new FormControl(this.hiringData.nivel),
+      supervisorItm: new FormControl(this.hiringData.supervisorItm),
+      fechaFinalizacionConvenio: new FormControl(this.hiringData.fechaFinalizacionConvenio, Validators.required),
       elemento: new FormControl(null, Validators.required),
       componente: new FormControl(null, Validators.required),
       totalContrato: new FormControl(null),
@@ -138,18 +138,17 @@ export class ContractorDataRegisterComponent implements OnInit {
       cdp: new FormControl(null),
       caso: new FormControl(null),
     });
-    this.getAdmins();
     this.getDetailProject();
     this.validateDate();
   }
 
-  async addDataHiring() {
+  addDataHiring() {
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
       this.formContractor.value.requierePoliza = false;
     }
-    let dataAdmin = this.userList.find(x => x.id === this.formContractor.value.supervisorItm);
+    let dataAdmin = this.supervisorList.find(x => x.userName === this.formContractor.value.supervisorItm);
     if (this.formContractor.value.cuentabancaria == null) {
       this.formContractor.value.cuentabancaria = '0'
     }
@@ -246,7 +245,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.hiringDataList = [];
   }
 
-  async updateContractor() {
+  updateContractor() {
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
@@ -258,7 +257,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    let dataAdmin = this.userList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
+    let dataAdmin = this.supervisorList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
@@ -483,9 +482,7 @@ export class ContractorDataRegisterComponent implements OnInit {
         if (response.id != null) {
           this.title = 'Actualizar'
           this.update = true;
-          this.hinringData = response;
-          this.supervisor = response.supervisorItm;
-          this.nivel = response.nivel;
+          this.hiringData = response;    
         }
       });
   }
@@ -502,7 +499,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     this._auth.getAdmins()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((teams: any) => {
-        this.userList = teams;
+        this.supervisorList = teams;
       });
   }
 
@@ -537,10 +534,10 @@ export class ContractorDataRegisterComponent implements OnInit {
   }
   calculateDaysBetweenDates(startDate: Date, endDate: Date): number {
     if(startDate == null){
-      startDate = this.hinringData.fechaRealDeInicio;
+      startDate = this.hiringData.fechaRealDeInicio;
     }
     if(endDate == null){
-      endDate = this.hinringData.fechaFinalizacionConvenio;
+      endDate = this.hiringData.fechaFinalizacionConvenio;
     }
     let dateInitial = new Date(startDate);
     let dateFinal = new Date(endDate);
@@ -577,7 +574,7 @@ export class ContractorDataRegisterComponent implements OnInit {
     this.valorContrato = element.valorPorDiaContratista * cantidadDias;
     this.valorTotalContrato = (+this.valorContrato.toFixed(0)).toLocaleString();
     this.formContractor.value.totalContrato = this.valorContrato;
-    this.showToal = true;
+    this.showTotal = true;
   }
 
   private validateDate() {
