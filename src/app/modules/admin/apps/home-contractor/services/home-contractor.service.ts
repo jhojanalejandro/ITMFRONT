@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { ExecutionReport } from '../models/pdfDocument';
+import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ export class HomeContractorService {
     get data$(): Observable<any> {
         return this._data.asObservable();
     }
+
 
     getData(): Observable<any> {
         return this._httpClient.get('api/dashboards/finance').pipe(
@@ -83,7 +85,7 @@ export class HomeContractorService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    getDepartments() {
+    getBanks(): Observable<any> {
         let urlEndPoint = environment.getDepartmentsColombia;
         return this._httpClient.get<any>(urlEndPoint);
     }

@@ -1,25 +1,51 @@
-.drop{
+.drop {
     display: inline-block;
     margin: 0 10px;
-    //background-color: black;
 }
-.hiringField{
+
+.hiringField {
     padding-left: 8px;
     width: 170px;
 }
-.folderFieldContractor{
+
+.folderFieldContractor {
     text-align: center !important;
 }
 
-.option{
+.option {
     justify-items: center;
     text-align: center;
 }
 
-mat-form-field{
-    width: 240px !important;
+mat-form-field {
+    width: 250px !important;
 }
 
-.action{
-    margin-right: 10px !important;
+.example-margin {
+    margin: 0 10px;
 }
+
+.example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+}
+
+.checkRadio {
+    text-align: center !important;
+    margin: 10px !important;
+}
+.example-headers-align .mat-expansion-panel-header-description {
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+}
+  
+  .example-headers-align .mat-mdc-form-field + .mat-mdc-form-field {
+    margin-left: 8px !important;
+  }
+  .mat-mdc-form-field + .mat-mdc-form-field {
+    margin-left: 8px;
+  }

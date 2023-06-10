@@ -3,13 +3,15 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 import { ContractorPersonalInformation } from '../../models/contractor-personal-data.model';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { AccountType, Bank } from '../../models/mater.model';
 
 @Component({
   selector: 'app-contractor-personal-data',
@@ -17,6 +19,7 @@ import { FuseAlertType } from '@fuse/components/alert';
   styleUrls: ['./contractor-personal-data.component.scss'],
 })
 export class ContractorPersonalDataComponent implements OnInit {
+
   alert: { type: FuseAlertType; message: string } = {
     type: 'warn',
     message: ''
@@ -29,12 +32,36 @@ export class ContractorPersonalDataComponent implements OnInit {
   twoYearAgoExam: Date;
   title: string = 'Guardar';
   formContractor: FormGroup;
-  departments: any;
+  departments: any = GlobalConst.departments;
   municipio: any;
+  eps: any[] = [
+    'COOSALUD',
+    'NUEVA EPS',
+    'ALIANSALUD',
+    'SALUD TOTAL',
+    'EPS SANITAS',
+    'EPS SURA',
+    'SALUD MIA',
+    'CAPITAL SALUD',
+    'SAVIA SALUD',
+    'SAVIA SALUD',
+  ];
+  arl: any[] = GlobalConst.arl;
+  afp: any[] = GlobalConst.afp;
+  banks: Bank;
+  accountType: AccountType;
+  step = 0;
   contractorPersonalInformation: ContractorPersonalInformation;
   contractorinformationStepperForm: FormGroup;
+  nacionalities: any = GlobalConst.nacionality
+  labelPosition: string;
+  numberOfTicks = 0;
 
   private readonly _unsubscribe$ = new Subject<void>();
+  filteredOptionsEps: Observable<string[]>;
+  filteredOptionsAfp: Observable<string[]>;
+  filteredOptionsArl: Observable<string[]>;
+
   constructor(
     private _homeService: HomeContractorService,
     private ref: ChangeDetectorRef,
@@ -43,65 +70,80 @@ export class ContractorPersonalDataComponent implements OnInit {
     public matDialogRef: MatDialogRef<ContractorPersonalDataComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
-    // if (this.datos.id != null) {
-    //   this.getHiring();
-    // } else if (this.datos.idContractors.length == 0) {
-    //   Swal.fire(
-    //     'Ei!',
-    //     'Si quires agregar información compartida debes seleccionar regisrtos',
-    //     'question'
-    //   );
-    //   this.matDialogRef.close(true);
-    // } else if (this.datos.idContractors.length == 0 && this.datos.id == null) {
-    //   Swal.fire(
-    //     'Ei!',
-    //     'Hay un error al ingresar, intenta de nuevo',
-    //     'warning'
-    //   );
-    // }
 
   }
 
   ngOnInit(): void {
     if (this.datos.id != null) {
       this.getHiring();
-    }
 
-        // Horizontal stepper form
-        this.contractorinformationStepperForm = this._formBuilder.group({
-          step1: this._formBuilder.group({
-              email: ['', [Validators.required, Validators.email]],
-              country: ['', Validators.required],
-              Municipality: ['', Validators.required],
-              departamento: ['', Validators.required],
-          }),
-          step2: this._formBuilder.group({
-              userName: ['', Validators.required],
-              lastName: ['', Validators.required],
-              phoneNumber: ['', Validators.required],
-              cedula: ['', Validators.required],
-          }),
-          step3: this._formBuilder.group({
-              password: ['', Validators.required],
-              agreements: ['', Validators.requiredTrue]
-          })
-      });
+    }
+    setInterval(() => {
+      this.numberOfTicks++;
+      this.ref.detectChanges();
+      this.ref.markForCheck();
+    }, 1000);
+    // Horizontal stepper form
+    this.contractorinformationStepperForm = this._formBuilder.group({
+      // step1: this._formBuilder.group({
+      //   userName: ['', Validators.required],
+      //   identification: ['', Validators.required],
+      //   lastName: ['', Validators.required],
+      //   birthDate: ['', Validators.required],
+      //   expeditionPlace: ['', Validators.required],
+      //   phoneNumber: ['', Validators.required],
+      //   movilPhoneNumber: ['', Validators.required],
+      //   Municipality: ['MEDELLIN', Validators.required],
+      //   nacionality: ['', Validators.required],
+      //   departamento: ['aNTIOQUIA', Validators.required],
+      //   address: ['', Validators.required],
+      //   neiberhood: ['', Validators.required],
+
+      // }),
+      step1: this._formBuilder.group({
+        technical: [''],
+        technologist: [''],
+        technologistInstitution: [''],
+        technicalInstitution: [''],
+        undergraduate: [''],
+        undergraduateInstitution: [''],
+        specialization: [''],
+        specializationInstitution: [''],
+        master: [''],
+        masterInstitution: [''],
+        doctorate: [''],
+        doctorateInstitution: [''],
+      }),
+      step3: this._formBuilder.group({
+        bank: ['', Validators.required],
+        accountType: ['', Validators.required],
+        accountNumber: ['', Validators.required],
+      }),
+      step4: this._formBuilder.group({
+        eps: ['', Validators.required],
+        arl: ['', Validators.required],
+        afp: ['', Validators.required],
+        // password: ['', Validators.required],
+        // agreements: ['', Validators.requiredTrue]
+      })
+    });
     this.validateDate();
+    this.filteredOptionsEps = this.contractorinformationStepperForm.get('step4.eps').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterEps(value || ''))
+    );
+    this.filteredOptionsAfp = this.contractorinformationStepperForm.get('step4.afp').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterAfp(value || ''))
+    );
+    this.filteredOptionsArl = this.contractorinformationStepperForm.get('step4.arl').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterArl(value || ''))
+    );
   }
 
 
   saveContractorDataInformation() {
-    if (this.formContractor.value.requierePoliza == 'si') {
-      this.formContractor.value.requierePoliza = true;
-    } else {
-      this.formContractor.value.requierePoliza = false;
-    }
-    if (this.formContractor.value.cuentabancaria == null) {
-      this.formContractor.value.cuentabancaria = '0'
-    }
-    if (this.formContractor.value.nivel == null) {
-      this.formContractor.value.nivel = '0'
-    }
     // let dataAdmin = this.supervisorList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
     const registerContractor: any = {
       userId: this._auth.accessId,
@@ -142,7 +184,6 @@ export class ContractorPersonalDataComponent implements OnInit {
           this.ref.markForCheck();
           this.matDialogRef.close(true);
         }
-
       },
         (response) => {
           this.formContractor.enable();
@@ -154,12 +195,13 @@ export class ContractorPersonalDataComponent implements OnInit {
           this.showAlert = true;
         });
 
+
+
   }
 
   cerrar(): void {
     this.matDialogRef.close();
   }
-
 
   private getHiring() {
     this._planingService
@@ -212,18 +254,65 @@ export class ContractorPersonalDataComponent implements OnInit {
     this.twoYearAgoExam = minDate; // Comprueba si la fecha es anterior a la mínima permitida
   }
 
-  getDepartamento() {
-    this._homeService.getDepartments().subscribe((Response) => {
-      this.departments = Response;
-    })
-  }
-
   getMunicipios(e: any) {
     this.municipio = this.departments.find(f => f.id === e.value).ciudades;
   }
 
+  private getBanks() {
+    this._homeService
+      .getBanks()
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((response: Bank) => {
+        if (response != null) {
+          this.banks = response
+        }
+      });
+  }
+
+  private getAccountType() {
+    this._homeService
+      .getBanks()
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((response: AccountType) => {
+        if (response != null) {
+          this.accountType = response
+        }
+      });
+  }
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
+  }
+
+
+  private _filterEps(value: any): string[] {
+    return this.eps.filter((option) =>
+      option.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  private _filterAfp(value: any): string[] {
+    return this.afp.filter((option) =>
+      option.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  private _filterArl(value: any): string[] {
+    return this.arl.filter((option) =>
+      option.toLowerCase().includes(value.toLowerCase())
+    );
+  }
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();
   }
+
+
 }
