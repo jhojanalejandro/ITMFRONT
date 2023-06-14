@@ -25,4 +25,5 @@ export interface IHiringData{
     identificacionSupervisor: string;
     cdp: string;
     caso: string;
+    statusContractor?: string;
 }

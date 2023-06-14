@@ -1,15 +1,9 @@
 export interface ContractorPersonalInformation{
-    nombre: string;
-    apellido: string;
+    id: string;
     identificacion: string;
     lugarExpedicion: string;
-    totalValue: string;
-    tecnico: string;
-    tecnologo: string;
-    pregrado: string;
-    especializacion: string;
-    maestria: string;
-    doctorado: string;
+    telefono: string;
+    academicInformation: AcademicInformation[];
     genero: string;
     fechaNacimiento: Date;
     nacionalidad: string;
@@ -17,13 +11,18 @@ export interface ContractorPersonalInformation{
     departamento: string;
     municipio: string;
     barrio: string;
-    telefono: string;
     celular: string;
-    correo: string;
-    tipoAdministradora: string;
-    administradora: string;
+    eps: string;
+    arl: string;
+    afp: string;
     cuentaBancaria: string;
     tipoCuenta: string;
     entidadCuentaBancaria: string;
-    fechaActualizacion: string;
+    fechaActualizacion: Date;
+}
+
+export interface AcademicInformation{
+    type: string;
+    Institution: string;
+    collegeDegree: string;
 }

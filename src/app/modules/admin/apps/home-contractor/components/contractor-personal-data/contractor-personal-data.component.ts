@@ -6,12 +6,12 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
-import { ContractorPersonalInformation } from '../../models/contractor-personal-data.model';
+import { AcademicInformation, ContractorPersonalInformation } from '../../models/contractor-personal-data.model';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { AccountType, Bank } from '../../models/mater.model';
+import {  Bank } from '../../models/mater.model';
 
 @Component({
   selector: 'app-contractor-personal-data',
@@ -31,7 +31,6 @@ export class ContractorPersonalDataComponent implements OnInit {
   update: boolean = false;
   twoYearAgoExam: Date;
   title: string = 'Guardar';
-  formContractor: FormGroup;
   departments: any = GlobalConst.departments;
   municipio: any;
   eps: any[] = [
@@ -48,20 +47,33 @@ export class ContractorPersonalDataComponent implements OnInit {
   ];
   arl: any[] = GlobalConst.arl;
   afp: any[] = GlobalConst.afp;
-  banks: Bank;
-  accountType: AccountType;
+  banks: Bank[];
+  accountType: any = GlobalConst.accountType;
   step = 0;
   contractorPersonalInformation: ContractorPersonalInformation;
   contractorinformationStepperForm: FormGroup;
   nacionalities: any = GlobalConst.nacionality
   labelPosition: string;
   numberOfTicks = 0;
-
+  academicInformationList: AcademicInformation[] = [];
+  academicInformation: AcademicInformation = {
+    collegeDegree: '',
+    type: '',
+    Institution: ''
+  };
+  genero: string;
   private readonly _unsubscribe$ = new Subject<void>();
   filteredOptionsEps: Observable<string[]>;
   filteredOptionsAfp: Observable<string[]>;
   filteredOptionsArl: Observable<string[]>;
-
+  filteredOptionsAccountType: Observable<string[]>;
+  filteredOptionsBanks: Observable<Bank[]>;
+  generos: string[]= [
+    'Masculino',
+    'Femenino',
+    'Indefinido'
+  ]
+  minBirth: Date;
   constructor(
     private _homeService: HomeContractorService,
     private ref: ChangeDetectorRef,
@@ -74,10 +86,12 @@ export class ContractorPersonalDataComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getBanks();
     if (this.datos.id != null) {
       this.getHiring();
 
     }
+    this.validarFechaNacimiento();
     setInterval(() => {
       this.numberOfTicks++;
       this.ref.detectChanges();
@@ -85,22 +99,20 @@ export class ContractorPersonalDataComponent implements OnInit {
     }, 1000);
     // Horizontal stepper form
     this.contractorinformationStepperForm = this._formBuilder.group({
-      // step1: this._formBuilder.group({
-      //   userName: ['', Validators.required],
-      //   identification: ['', Validators.required],
-      //   lastName: ['', Validators.required],
-      //   birthDate: ['', Validators.required],
-      //   expeditionPlace: ['', Validators.required],
-      //   phoneNumber: ['', Validators.required],
-      //   movilPhoneNumber: ['', Validators.required],
-      //   Municipality: ['MEDELLIN', Validators.required],
-      //   nacionality: ['', Validators.required],
-      //   departamento: ['aNTIOQUIA', Validators.required],
-      //   address: ['', Validators.required],
-      //   neiberhood: ['', Validators.required],
-
-      // }),
       step1: this._formBuilder.group({
+        identification: ['', Validators.required],
+        birthDate: ['', Validators.required],
+        expeditionPlace: ['', Validators.required],
+        phoneNumber: ['', Validators.required],
+        movilPhoneNumber: ['', Validators.required],
+        Municipality: ['MEDELLIN', Validators.required],
+        nacionality: ['', Validators.required],
+        departamento: ['aNTIOQUIA', Validators.required],
+        address: ['', Validators.required],
+        neiberhood: ['', Validators.required],
+
+      }),
+      step2: this._formBuilder.group({
         technical: [''],
         technologist: [''],
         technologistInstitution: [''],
@@ -128,6 +140,7 @@ export class ContractorPersonalDataComponent implements OnInit {
       })
     });
     this.validateDate();
+
     this.filteredOptionsEps = this.contractorinformationStepperForm.get('step4.eps').valueChanges.pipe(
       startWith(''),
       map((value) => this._filterEps(value || ''))
@@ -140,35 +153,97 @@ export class ContractorPersonalDataComponent implements OnInit {
       startWith(''),
       map((value) => this._filterArl(value || ''))
     );
+
+    this.filteredOptionsAccountType = this.contractorinformationStepperForm.get('step3.accountType').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filterAccountType(value || ''))
+    );
   }
 
 
   saveContractorDataInformation() {
-    // let dataAdmin = this.supervisorList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
-    const registerContractor: any = {
-      userId: this._auth.accessId,
-      contractorId: this.datos.id,
-      contractId: this.datos.contractId,
-      contrato: 'vacio',
-      compromiso: 'vacio',
-      fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
-      numeroActa: this.formContractor.value.numeroActa,
-      fechaDeComite: this.formContractor.value.fechaComite,
-      requierePoliza: this.formContractor.value.requierePoliza,
-      noPoliza: this.formContractor.value.noPoliza,
-      vigenciaInicial: this.formContractor.value.vigenciaInicial,
-      vigenciaFinal: this.formContractor.value.vigenciaFinal,
-      fechaExpedicionPoliza: this.formContractor.value.fechaExPedicionPoliza,
-      valorAsegurado: Number(this.formContractor.value.valorAsegurado),
-      fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
-      nivel: Number(this.formContractor.value.nivel),
-      fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-      actaComite: 'vacio',
-      cdp: this.formContractor.value.cdp,
-      caso: this.formContractor.value.caso
+    for (let index = 0; index < 5; index++) {
+      switch (index) {
+        case 0:
+          if (this.contractorinformationStepperForm.controls['step2'].value.technical != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
+            this.academicInformation.type = 'Tecnico',
+            this.academicInformation.Institution =  this.contractorinformationStepperForm.controls['step2'].value.technicalInstitution,
+            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technical
+            
+          }
+          break;
+        case 1:
+          if (this.contractorinformationStepperForm.controls['step2'].value.technologist != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
+              this.academicInformation.type = 'Tecnologo',
+              this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.technologistInstitution,
+              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technologist
+            
+          }
+          break;
+        case 2:
+          if (this.contractorinformationStepperForm.controls['step2'].value.undergraduate != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
+            this.academicInformation.type = 'Pregrado',
+            this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.undergraduateInstitution,
+            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.undergraduate
+          }
+          break;
+        case 3:
+          if (this.contractorinformationStepperForm.controls['step2'].value.specialization != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
+            this.academicInformation.type = 'Especialización'
+            this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.specializationInstitution
+            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.specialization
+          }
+          break;
+        case 4:
+          if (this.contractorinformationStepperForm.controls['step2'].value.master != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
+            this.academicInformation.type = 'Maestria',
+              this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.masterInstitution,
+              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.master
+          }
+          break;
+        case 5:
+          if (this.contractorinformationStepperForm.controls['step2'].value.doctorate != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
+            this.academicInformation.type = 'Doctorado',
+              this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.doctorateInstitution,
+              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.doctorate
+
+          }
+          break;
+      }
+      if(this.academicInformation.Institution != '' && this.academicInformation.collegeDegree != ''){
+        this.academicInformationList.push(this.academicInformation)
+      }
+
+    }
+
+    let bank = this.banks.find(x => x.bankName == this.contractorinformationStepperForm.controls['step3'].value.bank).id;
+    let departamento = this.departments.find(x => x.id == this.contractorinformationStepperForm.controls['step1'].value.departamento).departamento;
+
+    const registerpersonalInfoirmation: ContractorPersonalInformation = {
+      id: this._auth.accessId,
+      fechaNacimiento: this.contractorinformationStepperForm.controls['step1'].value.birthDate,
+      telefono: this.contractorinformationStepperForm.controls['step1'].value.phoneNumber,
+      celular: this.contractorinformationStepperForm.controls['step1'].value.movilPhoneNumber.toString(),
+      identificacion: this.contractorinformationStepperForm.controls['step1'].value.identification,
+      direccion: this.contractorinformationStepperForm.controls['step1'].value.address,
+      lugarExpedicion: this.contractorinformationStepperForm.controls['step1'].value.expeditionPlace,
+      genero: this.genero,
+      nacionalidad: this.contractorinformationStepperForm.controls['step1'].value.nacionality,
+      departamento: departamento,
+      municipio: this.contractorinformationStepperForm.controls['step1'].value.Municipality,
+      barrio: this.contractorinformationStepperForm.controls['step1'].value.neiberhood,
+      eps: this.contractorinformationStepperForm.controls['step4'].value.eps,
+      arl: this.contractorinformationStepperForm.controls['step4'].value.arl,
+      afp: this.contractorinformationStepperForm.controls['step4'].value.afp,
+      cuentaBancaria: this.contractorinformationStepperForm.controls['step3'].value.accountNumber.toString(),
+      tipoCuenta: this.contractorinformationStepperForm.controls['step3'].value.accountType,
+      entidadCuentaBancaria: bank,
+      fechaActualizacion: new Date(),
+      academicInformation: this.academicInformationList
     };
+    debugger
     this._homeService
-      .saveContractorPersonalInformation(registerContractor)
+      .saveContractorPersonalInformation(registerpersonalInfoirmation)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res) {
@@ -186,11 +261,10 @@ export class ContractorPersonalDataComponent implements OnInit {
         }
       },
         (response) => {
-          this.formContractor.enable();
-          // Set the alert
+
           console.log(response);
 
-          Swal.fire('Error', 'Información no Actualizada!', 'error');
+          Swal.fire('Error', 'Información no Guardada!', 'error');
           // Show the alert
           this.showAlert = true;
         });
@@ -211,7 +285,6 @@ export class ContractorPersonalDataComponent implements OnInit {
         if (response.id != null) {
           this.title = 'Actualizar'
           this.update = true;
-          // this.hiringData = response;
         }
       });
   }
@@ -224,15 +297,6 @@ export class ContractorPersonalDataComponent implements OnInit {
     // }
   }
 
-  dateChange(event) {
-    // this.minDate = event.value;
-    // var date2: any = new Date(this.minDate);
-    // let day = this.cantDayContract * 24;
-    // var numberOfMlSeconds = date2.getTime();
-    // var addMlSeconds = (1000 * 60 * 60 * day);
-    // this.maxdate = new Date(numberOfMlSeconds + addMlSeconds);
-    // this.ref.markForCheck();
-  }
 
   obtenerMesesCon31Dias(fechaInicio: Date, fechaFin: Date): number {
     let dias = 0;
@@ -262,23 +326,18 @@ export class ContractorPersonalDataComponent implements OnInit {
     this._homeService
       .getBanks()
       .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response: Bank) => {
+      .subscribe((response: Bank[]) => {
         if (response != null) {
-          this.banks = response
+          this.banks = response;
+          this.filteredOptionsBanks = this.contractorinformationStepperForm.get('step3.bank').valueChanges.pipe(
+            startWith(''),
+            map((value) => this._filterBanks(value || ''))
+          );
+      
         }
       });
   }
 
-  private getAccountType() {
-    this._homeService
-      .getBanks()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response: AccountType) => {
-        if (response != null) {
-          this.accountType = response
-        }
-      });
-  }
   setStep(index: number) {
     this.step = index;
   }
@@ -308,6 +367,26 @@ export class ContractorPersonalDataComponent implements OnInit {
     return this.arl.filter((option) =>
       option.toLowerCase().includes(value.toLowerCase())
     );
+  }
+  
+  private _filterBanks(value: any): Bank[] {
+    return this.banks.filter((option: Bank) =>
+      option.bankName.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+
+  private _filterAccountType(value: any): string[] {
+    return this.accountType.filter((option) =>
+      option.toLowerCase().includes(value.toLowerCase())
+    );
+  }
+  validarFechaNacimiento() {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    this.minBirth = eighteenYearsAgo;
+  }
+  onChange(event: any) {
+    this.genero = event.value
   }
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);

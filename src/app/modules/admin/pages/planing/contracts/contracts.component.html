@@ -25,12 +25,12 @@
                 </div>
                 <!-- Actions -->
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
-                    <button (click)="SaveContract()" class="fuse-mat-button-rounded"
+                    <button *ngIf="showcontracts" (click)="SaveContract()" class="fuse-mat-button-rounded"
                         mat-flat-button [color]="'accent'">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
                         <span class="ml-2">Registrar Projecto</span>
                     </button>
-                    <button (click)="SaveOptions()" class="fuse-mat-button-rounded"
+                    <button  *ngIf="showcontracts" (click)="SaveOptions()" class="fuse-mat-button-rounded"
                         mat-flat-button [color]="'primary'">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
                         <span class="ml-2">Agregar Opciones</span>

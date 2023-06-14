@@ -222,10 +222,10 @@ export class AuthService
      *
      * @param user
      */
-     async signUp(user: any): Promise<Observable<any>>
+    signUp(user: any)
     {
         let urlEndpointupdate = this.apiUrl+ environment.sigUpEndpoint;
-        return await  this._httpClient.post<IResponse>(urlEndpointupdate, user);
+        return this._httpClient.post(urlEndpointupdate, user, { responseType: 'text' });
     }
 
     /**

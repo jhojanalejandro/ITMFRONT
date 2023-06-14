@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuseAlertType } from '@fuse/components/alert';
@@ -21,7 +21,7 @@ import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
   templateUrl: './data-hiring-contractor.component.html',
   styleUrls: ['./data-hiring-contractor.component.scss'],
 })
-export class ContractorDataHiringComponent implements OnInit {
+export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   shareData: boolean = false;
   durationInSeconds = 3;
   registerDate: Date = new Date();
@@ -79,6 +79,7 @@ export class ContractorDataHiringComponent implements OnInit {
     public matDialogRef: MatDialogRef<ContractorDataHiringComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
+    debugger
     if (this.datos.id != null) {
       this.getHiring();
       this.shareData = true;
@@ -180,7 +181,8 @@ export class ContractorDataHiringComponent implements OnInit {
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           actaComite: 'vacio',
           cdp: this.formContractor.value.cdp,
-          caso: this.formContractor.value.caso
+          caso: this.formContractor.value.caso,
+          statusContractor: this.datos.statusContractor
 
         });
       }
@@ -208,7 +210,9 @@ export class ContractorDataHiringComponent implements OnInit {
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         actaComite: 'vacio',
         cdp: this.formContractor.value.cdp,
-        caso: this.formContractor.value.caso
+        caso: this.formContractor.value.caso,
+        statusContractor: this.datos.statusContractor
+
       }];
     }
     this._uploadService
@@ -258,6 +262,7 @@ export class ContractorDataHiringComponent implements OnInit {
       this.formContractor.value.nivel = '0'
     }
     let dataAdmin = this.supervisorList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
+    
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,

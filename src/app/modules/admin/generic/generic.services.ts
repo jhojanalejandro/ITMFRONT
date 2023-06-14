@@ -97,4 +97,26 @@ export class GenericService {
         return this._httpClient.get<StatusContract[]>(urlEndpointGenerate
         );
     }
+
+    getTypeMinutesContract(): Observable<any[]> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetMinuteTypeContractEndpoint;
+        return this._httpClient.get<any>(urlEndpointGenerate
+        );
+    }
+
+    
+    getBanksContract(): Observable<any[]> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetBanksContractEndpoint;
+        return this._httpClient.get<any>(urlEndpointGenerate
+        );
+    }
+
+    getRubrosContract(): Observable<any[]> {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetGetAllRubrosContractEndpoint;
+        return this._httpClient.get<any>(urlEndpointGenerate
+        );
+    }
 }

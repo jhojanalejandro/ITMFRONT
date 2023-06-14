@@ -18,12 +18,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { HomeContractorService } from '../../services/home-contractor.service';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 const moment = _rollupMoment || _moment;
 
@@ -46,6 +46,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     base64Output: any;
     numberOfTicks = 0;
     formFile: FormGroup;
+    showDate: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -67,15 +68,15 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.formFile = this._formBuilder.group({
             file: new FormControl(null, Validators.required),
-            filesName: new FormControl(null, Validators.required),
+            filesName: new FormControl(null),
             typeDoc: new FormControl(null, Validators.required),
-            typeFile: new FormControl(null, Validators.required),
-            description: new FormControl(null, Validators.required),
+            description: new FormControl(null),
         });
         this.getDocumentType();
     }
 
     onChange(event) {
+        debugger
         this.file = event.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(this.file);
@@ -105,15 +106,17 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     addFileContractor(event) {
+        debugger
         if (!this.formFile.valid) {
             return;
         }
+        let name = this.file.name.split('.pdf')
         const registerFile: FileContractor = {
             contractorId: this._auth.accessId,
             contractId: this._data.contractId,
-            typeFilePayment: this.formFile.value.typeDoc,
-            filesName: this.formFile.value.filesName,
-            fileType: this.formFile.value.typeFile,
+            typeFilePayment: null,
+            filesName: name,
+            fileType: this.formFile.value.typeDoc,
             descriptionFile: this.formFile.value.description,
             registerDate: this.registerDate,
             modifyDate: this.registerDate,
@@ -216,6 +219,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         normalizedMonth: Moment,
         datepicker: MatDatepicker<Moment>
     ) {
+        debugger
         const ctrlValue = this.date.value;
         let month = normalizedMonth.month() + 1;
         ctrlValue.month(normalizedMonth.month());
@@ -232,8 +236,11 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     typeDocumentSelected(event: any) {
-        if (event.value) {
-
+        let type =  this.typeDocs.find(f => f.id === event.value).code
+        if (type === DocumentTypeCodes.CUENTACOBRO || type === DocumentTypeCodes.PLANILLA|| type === DocumentTypeCodes.INFORMEEJECUCIÓN) {
+            this.showDate = true;
+        }else{
+            this.showDate = false;
         }
     }
     private getDocumentType() {

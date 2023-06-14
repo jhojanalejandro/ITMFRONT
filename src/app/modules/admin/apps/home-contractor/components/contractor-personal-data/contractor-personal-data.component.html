@@ -17,40 +17,21 @@
             <!-- Sign Up form -->
             <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="contractorinformationStepperForm">
                 <mat-vertical-stepper [linear]="true" #horizontalStepper>
-                    <!-- <mat-step [formGroupName]="'step1'" [stepControl]="contractorinformationStepperForm.get('step1')"
+                    <mat-step [formGroupName]="'step1'" [stepControl]="contractorinformationStepperForm.get('step1')"
                         #horizontalStepperStep1>
                         <ng-template matStepLabel>Información Personal</ng-template>
                         <div class="folderFieldContractor">
-                            <mat-form-field class="hiringField" appearance="outline">
-                                <input id="userName" autocomplete="off" matInput [formControlName]="'userName'"
-                                    [placeholder]="'Nombres'" required>
-                                <mat-error>
-                                    Se requiere Nombre
-                                </mat-error>
-                                <mat-icon class="icon-size-5" matSuffix
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            </mat-form-field>
-                            <mat-form-field class="hiringField" appearance="outline">
-                                <input id="lastName" matInput [formControlName]="'lastName'" autocomplete="off"
-                                    [placeholder]="'Apellidos'" required>
-                                <mat-error>
-                                    Se requiere Apellidos
-                                </mat-error>
-                                <mat-icon class="icon-size-5" matSuffix
-                                    [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                            </mat-form-field>
                             <mat-form-field (click)="pickerFC.open()" class="hiringField" appearance="outline">
                                 <mat-label>Fecha Nacimiento</mat-label>
-                                <input matInput id="birthDate" autocomplete="off" formControlName="birthDate"
-                                    [matDatepicker]="pickerFC" required>
+                                <input matInput id="birthDate" [max]="minBirth" autocomplete="off"
+                                    formControlName="birthDate" [matDatepicker]="pickerFC" required>
                                 <mat-datepicker #pickerFC></mat-datepicker>
                                 <mat-datepicker-toggle matSuffix [for]="pickerFC"></mat-datepicker-toggle>
                                 <mat-error>
                                     Se requiere fecha nacimiento
                                 </mat-error>
                             </mat-form-field>
-                        </div>
-                        <div class="folderFieldContractor">
+                            <mat-datepicker #pickerFC touchUi [startAt]="minBirth"></mat-datepicker>
                             <mat-form-field class="hiringField" appearance="outline">
                                 <input id="identification" matInput autocomplete="off"
                                     [formControlName]="'identification'" [placeholder]="'Número de Cedula'" required>
@@ -65,11 +46,13 @@
                                     [formControlName]="'expeditionPlace'" [placeholder]="'Lugar de expedición'"
                                     required>
                                 <mat-error>
-                                    Se requiere Luger Expedición
+                                    Se requiere Lugar Expedición
                                 </mat-error>
                                 <mat-icon class="icon-size-5" matSuffix
                                     [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
                             </mat-form-field>
+                        </div>
+                        <div class="folderFieldContractor">
                             <mat-form-field class="hiringField" appearance="outline">
                                 <mat-label>Nacionalidad</mat-label>
                                 <mat-select [formControlName]="'nacionality'" name="raffles">
@@ -79,41 +62,42 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </div>
-                        <div class="folderFieldContractor">
                             <mat-form-field class="hiringField" appearance="outline">
                                 <input id="phoneNumber" matInput [formControlName]="'phoneNumber'"
                                     [placeholder]="'Número Telefono'" required>
                                 <mat-error>
                                     Se requiere Telefono
                                 </mat-error>
-                                <mat-icon class="icon-size-5" matSuffix
-                                    [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                             </mat-form-field>
                             <mat-form-field class="hiringField" appearance="outline">
-                                <input id="movilPhoneNumber" matInput [formControlName]="'movilPhoneNumber'"
-                                    [placeholder]="'Número Celular'" required>
+                                <input type="number" id="movilPhoneNumber" matInput
+                                    [formControlName]="'movilPhoneNumber'" [placeholder]="'Número Celular'" required>
                                 <mat-error>
-                                    Se requiere Luger Expedición
+                                    Se requiere Celular
                                 </mat-error>
-                                <mat-icon class="icon-size-5" matSuffix
-                                    [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                             </mat-form-field>
                         </div>
+
                         <div class="folderFieldContractor">
                             <div class="flex flex-col mt-8">
                                 <span class="font-semibold mb-2">Selecionar Genero</span>
-                                <mat-radio-group class="checkRadio" [color]="'primary'" [value]="'just-good'">
-                                    <mat-radio-button class="m-5" [value]="'everything'">
-                                        Masculino
-                                    </mat-radio-button>
-                                    <mat-radio-button class="m-5" [value]="'just-good'">
-                                        Femenino
-                                    </mat-radio-button>
-                                    <mat-radio-button [value]="'no-push'">
-                                        Indefinido
-                                    </mat-radio-button>
+                                <mat-radio-group class="checkRadio" [color]="'primary'" [disabled]="false">
+                                    <mat-radio-button *ngFor="let genero of generos" [matTooltip]="genero" class="mr-4"
+                                        (change)="onChange($event,file)" [value]="genero">{{genero}}</mat-radio-button>
                                 </mat-radio-group>
+                                <!-- <mat-radio-group class="checkRadio" [color]="'primary'" [value]="'genero'">
+                                    <mat-radio-button class="m-5" [value]="'Masculino'">
+                                        genero
+                                    </mat-radio-button>
+                                    <mat-radio-button class="m-5" [value]="'Femenino'">
+                                        genero
+                                    </mat-radio-button>
+                                    <mat-radio-button [value]="'indefinido'">
+                                        genero
+                                    </mat-radio-button>
+                                </mat-radio-group> -->
                             </div>
 
                         </div>
@@ -166,11 +150,11 @@
                             </button>
                         </div>
                     </mat-step>
- -->
-                    <mat-step [formGroupName]="'step1'" [stepControl]="contractorinformationStepperForm.get('step1')"
+
+                    <mat-step [formGroupName]="'step2'" [stepControl]="contractorinformationStepperForm.get('step2')"
                         #horizontalStepperStep2>
                         <ng-template class="mb-5" matStepLabel>Información Academica</ng-template>
-                        
+
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
                                 <mat-expansion-panel-header>
@@ -180,13 +164,13 @@
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="technical" matInput [formControlName]="'technical'"
-                                        [placeholder]="'Tecnico'" autocomplete="off">
+                                        [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
                                 <mat-form-field class="hiringField" appearance="outline">
-                                    <input id="technicalInstitution" matInput
-                                        [formControlName]="'technicalInstitution'" [placeholder]="'Institución'">
+                                    <input id="technicalInstitution" matInput [formControlName]="'technicalInstitution'"
+                                        [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:clipboard'"></mat-icon>
                                 </mat-form-field>
@@ -204,7 +188,7 @@
 
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="technologist" matInput [formControlName]="'technologist'"
-                                        [placeholder]="'Tecnologo'" autocomplete="off">
+                                        [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
@@ -228,7 +212,7 @@
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="undergraduate" matInput [formControlName]="'undergraduate'"
-                                        [placeholder]="'Tecnologo'" autocomplete="off">
+                                        [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
@@ -245,7 +229,7 @@
                                 </mat-action-row>
                             </mat-expansion-panel>
 
-                            <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)" >
+                            <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)">
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
                                         Información de Especialización
@@ -253,14 +237,13 @@
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="specialization" matInput [formControlName]="'specialization'"
-                                        [placeholder]="'Especialización'" autocomplete="off">
+                                        [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="undergraduateInstitution" matInput
-                                        [formControlName]="'specializationInstitution'"
-                                        [placeholder]="'Institución'">
+                                        [formControlName]="'specializationInstitution'" [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:clipboard'"></mat-icon>
                                 </mat-form-field>
@@ -279,13 +262,12 @@
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="master" matInput [formControlName]="'master'"
-                                        [placeholder]="'Maestría'" autocomplete="off">
+                                        [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
                                 <mat-form-field class="hiringField" appearance="outline">
-                                    <input id="masterInstitution" matInput
-                                        [formControlName]="'masterInstitution'"
+                                    <input id="masterInstitution" matInput [formControlName]="'masterInstitution'"
                                         [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:clipboard'"></mat-icon>
@@ -295,8 +277,8 @@
                                     <button mat-button color="primary" (click)="nextStep()">Siguiente</button>
                                 </mat-action-row>
                             </mat-expansion-panel>
-          
-                            <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)" >
+
+                            <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)">
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
                                         información de Doctorado
@@ -304,13 +286,12 @@
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <input id="doctorate" matInput [formControlName]="'doctorate'"
-                                        [placeholder]="'Doctorado'" autocomplete="off">
+                                        [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
                                 <mat-form-field class="hiringField" appearance="outline">
-                                    <input id="doctorateInstitution" matInput
-                                        [formControlName]="'doctorateInstitution'"
+                                    <input id="doctorateInstitution" matInput [formControlName]="'doctorateInstitution'"
                                         [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:clipboard'"></mat-icon>
@@ -321,24 +302,34 @@
                                 </mat-action-row>
                             </mat-expansion-panel>
                         </mat-accordion>
-                        <div class="flex justify-end mt-5">
+                        <div class="flex justify-end mt-8">
                             <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
                                 matStepperPrevious>
                                 Volver
                             </button>
-                            <button class="px-8" mat-flat-button [color]="'primary'"
-                                [disabled]="horizontalStepperStep2.stepControl.pristine || horizontalStepperStep2.stepControl.invalid"
-                                type="button" matStepperNext>
+                            <button class="px-8" mat-flat-button [color]="'primary'" type="button" matStepperNext>
                                 Siguiente
                             </button>
                         </div>
                     </mat-step>
 
-                    <mat-step [formGroupName]="'step3'" [stepControl]="contractorinformationStepperForm.get('step3')">
+                    <mat-step [formGroupName]="'step3'" [stepControl]="contractorinformationStepperForm.get('step3')"
+                        #horizontalStepperStep3>
                         <ng-template matStepLabel>Información Bancaria</ng-template>
                         <div class="flex flex-col gt-sm:flex-row">
                             <div class="folderFieldContractor">
                                 <mat-form-field class="hiringField" appearance="outline">
+                                    <mat-label>Bancos</mat-label>
+                                    <input type="text" placeholder="Seleccione o Digite" aria-label="bank" matInput
+                                        formControlName="bank" [matAutocomplete]="bankAutoComplete">
+                                    <mat-autocomplete #bankAutoComplete="matAutocomplete">
+                                        <mat-option *ngFor="let option of filteredOptionsBanks | async"
+                                            [value]="option.bankName">
+                                            {{ option.bankName }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <!-- <mat-form-field class="hiringField" appearance="outline">
                                     <mat-label>Bancos</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite"
                                         aria-label="Nombre del Elemento" matInput [formControlName]="'bank'"
@@ -348,15 +339,16 @@
                                             {{bank.bankName}}
                                         </mat-option>
                                     </mat-autocomplete>
-                                </mat-form-field>
+                                </mat-form-field> -->
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <mat-label>Tipo Cuenta</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite"
                                         aria-label="Nombre del Elemento" matInput [formControlName]="'accountType'"
                                         [matAutocomplete]="auto">
                                     <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let account of accountType | async" [value]="account.id">
-                                            {{account.accountType1}}
+                                        <mat-option *ngFor="let account of filteredOptionsAccountType | async"
+                                            [value]="account">
+                                            {{account}}
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
@@ -381,20 +373,22 @@
 
                             </div> -->
                         </div>
-                        <div class="flex justify-end mt-8">
+                        <div class="flex justify-end mt-5">
                             <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
                                 matStepperPrevious>
                                 Volver
                             </button>
-                            <button class="px-8" mat-flat-button [color]="'primary'" type="button" matStepperNext>
+                            <button class="px-8" mat-flat-button [color]="'primary'"
+                                [disabled]="horizontalStepperStep3.stepControl.pristine || horizontalStepperStep3.stepControl.invalid"
+                                type="button" matStepperNext>
                                 Siguiente
                             </button>
                         </div>
                     </mat-step>
                     <mat-step [formGroupName]="'step4'" [stepControl]="contractorinformationStepperForm.get('step4')"
-                        #horizontalStepperStep2>
+                        #horizontalStepperStep4>
                         <ng-template class="mb-5" matStepLabel>Información Seguridad Social</ng-template>
-                        
+
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
                                 <mat-expansion-panel-header>
@@ -425,7 +419,7 @@
                                         información de AFP
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
- 
+
                                 <mat-form-field class="hiringField" appearance="outline">
                                     <mat-label>AFP</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
@@ -463,7 +457,7 @@
                                     <button mat-button color="primary" (click)="nextStep()">Siguiente</button>
                                 </mat-action-row>
                             </mat-expansion-panel>
-        
+
                         </mat-accordion>
                         <div class="flex justify-end mt-5">
                             <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
@@ -471,7 +465,7 @@
                                 Volver
                             </button>
                             <button class="px-8" mat-flat-button [color]="'primary'"
-                                [disabled]="horizontalStepperStep2.stepControl.pristine || horizontalStepperStep2.stepControl.invalid"
+                                [disabled]="horizontalStepperStep4.stepControl.pristine || horizontalStepperStep4.stepControl.invalid"
                                 type="button" matStepperNext>
                                 Siguiente
                             </button>
@@ -482,7 +476,7 @@
                         <p class="my-6 font-medium">
                             ¡Gracias por completar nuestro formulario! Puede restablecer el formulario si desea cambiar
                             su información. </p>
-                            <!-- <div class="flex flex-col">
+                        <!-- <div class="flex flex-col">
                                 <mat-form-field class="w-full">
                                     <mat-label>Contraseña</mat-label>
                                     <input id="password" matInput type="password" [formControlName]="'password'"
@@ -501,8 +495,7 @@
                                 </mat-form-field>
                             </div> -->
                         <div class="flex justify-end mt-8">
-                            <button mat-flat-button [color]="'accent'"
-                                type="button" matStepperPrevious>
+                            <button mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
                                 Volver
                             </button>
                             <button mat-flat-button [color]="'primary'"

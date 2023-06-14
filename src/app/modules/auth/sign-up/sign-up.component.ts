@@ -31,9 +31,6 @@ export class AuthSignUpComponent implements OnInit {
     showAlert: boolean = false;
     showAlertPassword: boolean = false;
 
-    /**
-     * Constructor
-     */
     constructor(
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
@@ -42,9 +39,6 @@ export class AuthSignUpComponent implements OnInit {
 
     }
 
-    /**
-     * On init
-     */
     ngOnInit(): void {
         // Create the form
         this.signUpForm = this._formBuilder.group({
@@ -59,10 +53,7 @@ export class AuthSignUpComponent implements OnInit {
         this.validatePassword();
     }
 
-    /**
-     * Sign up
-     */
-    async signUp() {
+    signUp() {
 
         const userRegister: IUserModel = {
             userName: this.signUpForm.value.name,
@@ -85,9 +76,9 @@ export class AuthSignUpComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
         // Sign up
-        (await this._authService.signUp(userRegister)).subscribe(
-            (response) => { 
-                
+        this._authService.signUp(userRegister).subscribe(
+            (response) => {
+
                 // Navigate to the confirmation required page
                 this._router.navigateByUrl('/confirmation-required');
             },
@@ -118,7 +109,7 @@ export class AuthSignUpComponent implements OnInit {
             };
             if (newValue != this.signUpForm.value.password) {
                 this.showAlertPassword = true;
-            }else{
+            } else {
                 this.showAlertPassword = false;
             }
         });

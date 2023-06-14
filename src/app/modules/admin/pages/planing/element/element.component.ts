@@ -39,7 +39,7 @@ import { ElementTypeCode } from 'app/layout/common/enums/elementType';
 export class ElementCardComponent implements OnInit, OnDestroy {
     filteredOptions: Observable<string[]>;
     modificaciones: any = GlobalConst.requierePoliza;
-    tipoModificaciones: any = GlobalConst.tipoModificacion;
+    tipoModificaciones: any;
     btnOpcion: string = 'Guardar';
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
@@ -157,6 +157,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this.getCdp();
         this.getDetailContract();
         this.getElementType();
+        this.getTypeMinuteContract();
     }
 
     private _filter(value: string): string[] {
@@ -165,11 +166,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         return this.allelementos.filter((option) =>
             option.toLowerCase().includes(filterValue)
         );
-    }
-
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
     }
 
     isOverdue(date: string): boolean {
@@ -183,6 +179,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     getElements() {
         this._planingService
             .getElementoComponente(this._data)
+            .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
                 this.elementos = response;
             });
@@ -225,7 +222,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             objetoElemento: this.elementForm.value.objetoElemento,
             activityId: this._data.activityId
         };
-        this._planingService.addElementoComponente(item).subscribe((response) => {
+        this._planingService.addElementoComponente(item)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((response) => {
             if (response) {
                 swal.fire({
                     position: 'center',
@@ -363,7 +362,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getCdp() {
-        this._genericService.getCpcType().subscribe((response) => {
+        this._genericService.getCpcType()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((response) => {
             this.cpcType = response;
         }, (response) => {
             // Set the alert
@@ -374,7 +375,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     getElementType() {
-        this._genericService.getElementType().subscribe((response) => {
+        this._genericService.getElementType()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((response) => {
             this.elementTypes = response;
         }, (response) => {
             // Set the alert
@@ -390,7 +393,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     private getDetailContract() {
-        this._genericService.getDetalleContratoById(this._data.contractId, true).subscribe(
+        this._genericService.getDetalleContratoById(this._data.contractId, true)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(
             (resp) => {
                 this.detailContract = resp;
                 this.calcularDiasEntreFechas(this.detailContract.fechaContrato, this.detailContract.fechaFinalizacion);
@@ -398,4 +403,19 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         );
     }
 
+    private getTypeMinuteContract() {
+        this._genericService.getTypeMinutesContract()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(
+            (resp) => {
+                this.modificaciones = resp;
+            }
+        );
+    }
+
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

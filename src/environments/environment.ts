@@ -49,7 +49,7 @@ export const environment = {
     GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
     GetFolderFileContractorEndpoint: 'Folder/GetAll/',
 
-    addContractFolderEndpoint: 'ContractFolder/Add',
+    addContractFolderEndpoint: 'Contractor/SaveDataContractor',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
     GetAllContractEndpoint: 'ContractFolder/GetAll',
     GetAllHistoryProjectEndpoint: 'ContractFolder/GetAllHistory',
@@ -84,7 +84,7 @@ export const environment = {
     DeleteFileEndpoint: 'Files/Delete/',
 
 
-    addHiringEndpoint: 'HiringData/Add',
+    addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
     GetAllHiringEndpoint: 'HiringData/GetAll',
     GetByIdHiringEndpoint: 'HiringData/GetById/',
@@ -97,8 +97,8 @@ export const environment = {
 
     getComponentById: 'Componente/GetById/',
 
-    addElement: 'ElementosComponente/Add/',
-    getElements: 'ElementosComponente/Get/',
+    addElement: 'ElementosComponente/SaveElement',
+    getElements: 'ElementosComponente/GetElementsByComponent/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',
@@ -122,6 +122,10 @@ export const environment = {
     GetElementTypeEndpoint: 'MasterData/GetAllElementType',
     GetDocumentTypeEndpoint: 'MasterData/GetDocumentType',
     GetStatusFileEndpoint: 'MasterData/GetStatusFile',
+    GetMinuteTypeContractEndpoint: 'MasterData/GetMinutes',
+    GetBanksContractEndpoint: 'MasterData/GetBanks',
+    GetGetAllRubrosContractEndpoint: 'MasterData/GetAllRubros',
+
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 

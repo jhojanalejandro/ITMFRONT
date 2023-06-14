@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxj
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { ExecutionReport } from '../models/pdfDocument';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
+import { Bank } from '../models/mater.model';
 
 @Injectable({
     providedIn: 'root'
@@ -85,9 +85,9 @@ export class HomeContractorService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    getBanks(): Observable<any> {
-        let urlEndPoint = environment.getDepartmentsColombia;
-        return this._httpClient.get<any>(urlEndPoint);
+    getBanks(): Observable<Bank[]> {
+        let urlEndPoint =  this.apiUrl +environment.GetBanksContractEndpoint;
+        return this._httpClient.get<Bank[]>(urlEndPoint);
     }
 
 }

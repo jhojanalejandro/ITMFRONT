@@ -14,3 +14,10 @@ export interface ElementType{
     elementType: string,
     code: string;
 }
+export interface RubroType{
+    id: string;
+    rubro: string,
+    rubroNumber: string;
+    rubroOrigin: string;
+
+}

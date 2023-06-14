@@ -8,7 +8,6 @@ import { FileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from '../../../upload-file/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ContractContractors } from '../../../models/contractor';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { ShareService } from 'app/layout/common/share-service/share-service.service';
 import { MinuteExtension } from '../../../models/generate-pdf';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';

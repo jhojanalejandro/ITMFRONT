@@ -22,7 +22,7 @@ import {
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import * as moment from 'moment';
-import { map, Observable, startWith, Subject } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
@@ -39,7 +39,7 @@ export class ModificacionFormComponent implements OnInit {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
     modificaciones: any = GlobalConst.requierePoliza;
-    tipoModificacion: any = GlobalConst.tipoModificacion;
+    tipoModificacion: any;
     showDate: boolean = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
@@ -146,11 +146,6 @@ export class ModificacionFormComponent implements OnInit {
         );
     }
 
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
-
     isOverdue(date: string): boolean {
         return moment(date, moment.ISO_8601).isBefore(moment(), 'days');
     }
@@ -162,6 +157,7 @@ export class ModificacionFormComponent implements OnInit {
     getElements() {
         this._planingService
             .getElementoComponente(this._data)
+            .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
                 this.elementos = response;
             });
@@ -196,7 +192,9 @@ export class ModificacionFormComponent implements OnInit {
 
         };
 
-        this._planingService.addElementoComponente(item).subscribe((response) => {
+        this._planingService.addElementoComponente(item)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((response) => {
             if (response) {
                 swal.fire({
                     position: 'center',
@@ -294,13 +292,17 @@ export class ModificacionFormComponent implements OnInit {
             this.configForm.value
         );
         // Subscribe to afterClosed from the dialog reference
-        dialogRef.afterClosed().subscribe((result) => {
+        dialogRef.afterClosed()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((result) => {
             if (result == 'confirmed') {
             }
         });
     }
     getDateAdiction() {
-        this._genericService.getDetalleContratoById(this._data.contractId, true).subscribe(
+        this._genericService.getDetalleContratoById(this._data.contractId, true)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(
             (resp)=>{
                 
                 this.dateAdiction = resp;
@@ -308,7 +310,9 @@ export class ModificacionFormComponent implements OnInit {
         );
     }
     getDataElemento() {
-        this._planingService.getElementoById(this._data.data.elementId).subscribe((resp) => {
+        this._planingService.getElementoById(this._data.data.elementId)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((resp) => {
             
             if (resp.recursos == 0) {
                 swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
@@ -324,7 +328,6 @@ export class ModificacionFormComponent implements OnInit {
     }
 
     dateChange(event) {
-
         this.minDate = event.value;
         var date2: any = new Date(this.minDate);
         let day = 1 * 24;
@@ -332,4 +335,20 @@ export class ModificacionFormComponent implements OnInit {
         var addMlSeconds = (1000 * 60 * 60 * day);
         this.maxdate = new Date(numberOfMlSeconds + addMlSeconds);
     }
+
+    private getTypeMinuteContract() {
+        this._genericService.getTypeMinutesContract()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe(
+            (resp) => {
+                this.modificaciones = resp;
+            }
+        );
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
 }

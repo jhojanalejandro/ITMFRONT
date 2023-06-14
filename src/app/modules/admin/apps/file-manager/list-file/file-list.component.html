@@ -80,7 +80,7 @@
                                             >
                                             <section class="example-section">
                                                 <mat-radio-group   [disabled]="false">
-                                                  <mat-radio-button *ngFor="let status of statusFile"  [matTooltip]="status.statusFile1" class="mr-4" [checked]="file.statusFile === status.id" (change)="onChange($event,file)" [value]="status.id">{{status.code}}</mat-radio-button>
+                                                  <mat-radio-button *ngFor="let status of statusFile"  [matTooltip]="status.statusFile1" class="mr-4" [checked]="file.statusFile === status.id" (change)="onChange($event)" [value]="status.id">{{status.code}}</mat-radio-button>
                                                 </mat-radio-group>
                                               </section>
 

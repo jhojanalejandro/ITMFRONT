@@ -87,7 +87,7 @@ export class FileListManagerService {
                 // Update the item
                 const item = [...items.files] = items || null;
                 this._listFileContract.next(item);
-
+                
             }),
             switchMap((item) => {
 
