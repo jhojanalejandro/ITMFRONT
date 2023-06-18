@@ -12,6 +12,7 @@ import { MinutaContratoComponent } from './components/minutas-contrato/minuta-co
 import { EstudioPrevioComponent } from './components/estudio-previo/estudio-previo.component';
 import { ActaSupervisionComponent } from './components/acta-supervision/acta-supervision.component';
 import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
+import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { NewnessContractorComponent } from './components/newness-contractor/newn
         MinutaContratoComponent,
         EstudioPrevioComponent,
         ActaSupervisionComponent,
-        NewnessContractorComponent
+        NewnessContractorComponent,
+        GeneratePdfComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

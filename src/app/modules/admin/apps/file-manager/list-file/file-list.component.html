@@ -76,15 +76,15 @@
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <a
-                                            class="flex flex-col w-55 h-50 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+                                            class="flex flex-col w-55 h-55 m-2 p-2 shadow rounded-2xl cursor-pointer bg-card"
                                             >
                                             <section class="example-section">
                                                 <mat-radio-group   [disabled]="false">
-                                                  <mat-radio-button *ngFor="let status of statusFile"  [matTooltip]="status.statusFile1" class="mr-4" [checked]="file.statusFile === status.id" (change)="onChange($event)" [value]="status.id">{{status.code}}</mat-radio-button>
+                                                  <mat-radio-button *ngFor="let status of statusFile"  [matTooltip]="status.statusFile1" class="mr-4" [checked]="file.statusFile === status.id" (change)="onChange($event,file)" [value]="status.id">{{status.code}}</mat-radio-button>
                                                 </mat-radio-group>
                                               </section>
 
-                                            <div class="aspect-w-9 aspect-h-4">
+                                            <div class="aspect-w-9 aspect-h-2">
                                                 <div class="flex items-center justify-center">
                                                     <!-- Icons -->
                                                     <div class="relative" [routerLink]="['./details/file-contractor/', file.id]">
@@ -93,11 +93,11 @@
                                                             [svgIcon]="'iconsmind:file'"></mat-icon>
                                                         <div
                                                             class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                                            [class.bg-red-600]="file.fileType === 'PDF'"
-                                                            [class.bg-blue-600]="file.fileType === 'DOC'"
-                                                            [class.bg-green-600]="file.fileType === 'XLS'"
-                                                            [class.bg-gray-600]="file.fileType === 'TXT'"
-                                                            [class.bg-amber-600]="file.fileType === 'JPG'">
+                                                            [class.bg-red-600]="file.fileType === 'pdf'"
+                                                            [class.bg-blue-600]="file.fileType === 'doc'"
+                                                            [class.bg-green-600]="file.fileType === 'xls'"
+                                                            [class.bg-gray-600]="file.fileType === 'txt'"
+                                                            [class.bg-amber-600]="file.fileType === 'jpg'">
                                                             {{file.fileType.toUpperCase()}}
                                                         </div>
                                                     </div>

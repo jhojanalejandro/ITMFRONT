@@ -1,7 +1,5 @@
 export enum DetailFileOption{
-    APROBADO = 'AP',
-    RECHAZADO = 'RE',
-    REMITIDO = 'RE',
-    PROCESO = 'PR',
-
+    APROBADO = 'APD',
+    REMITIDO = 'RTD',
+    PROCESO = 'PRCS',
 }

@@ -53,9 +53,6 @@
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Minuta
                                 </button>
-                                <button *ngIf="visibleOption" mat-menu-item>
-                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                    Generar Acta de inicio</button>
                                 <button *ngIf="visibleOption" mat-menu-item (click)="generarEstudiosPrevios()">
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Estudios Previos
@@ -110,19 +107,18 @@
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
                                         'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
-                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'INVITADO',
-                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO'}">
+                                        'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.statusContractor === 'INVITADO',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'CONTRATANDO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <span
-                                        *ngIf="element[columna.name]=== element.legalProccess;"
+                                    <span *ngIf="element[columna.name]=== element.legalProccess;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
                                  'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <span
-                                        *ngIf="element[columna.name]=== element.hiringStatus;"
+                                    <span *ngIf="element[columna.name]=== element.hiringStatus;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
                              'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATANDO'}">
@@ -168,7 +164,7 @@
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Acta de inicio
                                             </button>
-        
+
                                         </mat-menu>
                                     </p>
 
@@ -192,7 +188,7 @@
         </div>
 
     </div>
-    <app-minuta-contrato (pdfGenerated)="pdfGenerated($event)" [contractContractors]="contractContractors"
+    <app-minuta-contrato  [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)" [contractContractors]="contractContractors"
         *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
-    <app-estudio-previo (pdfGenerated)="pdfGenerated($event)" [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && generatePdf"></app-estudio-previo>
+    <app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)" [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>

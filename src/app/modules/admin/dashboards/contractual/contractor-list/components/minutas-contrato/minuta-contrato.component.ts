@@ -4,7 +4,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
 import { ContractorService } from '../../../service/contractor.service';
-import { FileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from '../../../upload-file/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ContractContractors } from '../../../models/contractor';
@@ -12,6 +12,7 @@ import { ShareService } from 'app/layout/common/share-service/share-service.serv
 import { MinuteExtension } from '../../../models/generate-pdf';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class MinutaContratoComponent implements OnInit {
   @Input() contractId: string;
   @Input() generateType: string;
   valueLetter: any;
+  typeDocs: DocumentTypeFile[] = [];
 
   dataMinuta: any[] = [];
   constructor(private _economicService: ContractorService,
@@ -775,6 +777,8 @@ export class MinutaContratoComponent implements OnInit {
         let userId = this._auth.accessId;
         let contractId = this.contractContractors.contractId;
         let _uploadervice = this._upload;
+        let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
+
         pdfMake.createPdf(documentDefinition)
           .getDataUrl(function (dataURL) {
             dataURL = dataURL.split('data:application/pdf;base64,')
@@ -784,6 +788,7 @@ export class MinutaContratoComponent implements OnInit {
               contractId: contractId,
               filesName: nombreMinuta,
               fileType: 'PDF',
+              documentType: typeId,
               descriptionFile: 'minuta del contratista generada',
               registerDate: registerDate,
               modifyDate: registerDate,
@@ -1080,6 +1085,8 @@ export class MinutaContratoComponent implements OnInit {
         },
       ],
     };
+    let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
+
     let nombreMinuta = 'MINUTAAMPLIACION_' + this.minuteExtensionData.contractorName;
     let registerDate = new Date();
     let userId = this._auth.accessId;
@@ -1093,6 +1100,7 @@ export class MinutaContratoComponent implements OnInit {
           contractId: this.contractId,
           filesName: nombreMinuta,
           fileType: 'PDF',
+          documentType: typeId,
           descriptionFile: 'minuta del contratista generada',
           registerDate: registerDate,
           modifyDate: registerDate,

@@ -6,12 +6,12 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
-import { AcademicInformation, ContractorPersonalInformation } from '../../models/contractor-personal-data.model';
+import { AcademicInformation, ContractorPersonalInformation, EmptityHealth, PersonalInformation } from '../../models/contractor-personal-data.model';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import {  Bank } from '../../models/mater.model';
+import { Bank } from '../../models/mater.model';
 
 @Component({
   selector: 'app-contractor-personal-data',
@@ -56,10 +56,13 @@ export class ContractorPersonalDataComponent implements OnInit {
   labelPosition: string;
   numberOfTicks = 0;
   academicInformationList: AcademicInformation[] = [];
+  emptityHealth: EmptityHealth[] = [];
+
   academicInformation: AcademicInformation = {
     collegeDegree: '',
-    type: '',
-    Institution: ''
+    typeAcademicInformation: '',
+    institution: '',
+    contractor: ''
   };
   genero: string;
   private readonly _unsubscribe$ = new Subject<void>();
@@ -68,7 +71,7 @@ export class ContractorPersonalDataComponent implements OnInit {
   filteredOptionsArl: Observable<string[]>;
   filteredOptionsAccountType: Observable<string[]>;
   filteredOptionsBanks: Observable<Bank[]>;
-  generos: string[]= [
+  generos: string[] = [
     'Masculino',
     'Femenino',
     'Indefinido'
@@ -162,56 +165,70 @@ export class ContractorPersonalDataComponent implements OnInit {
 
 
   saveContractorDataInformation() {
+    this.academicInformationList =[];
     for (let index = 0; index < 5; index++) {
+      this.academicInformation = {
+        collegeDegree: '',
+        typeAcademicInformation: '',
+        institution: '',
+        contractor: ''
+      }
       switch (index) {
         case 0:
           if (this.contractorinformationStepperForm.controls['step2'].value.technical != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-            this.academicInformation.type = 'Tecnico',
-            this.academicInformation.Institution =  this.contractorinformationStepperForm.controls['step2'].value.technicalInstitution,
-            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technical
-            
-          }
-          break;
-        case 1:
-          if (this.contractorinformationStepperForm.controls['step2'].value.technologist != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-              this.academicInformation.type = 'Tecnologo',
-              this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.technologistInstitution,
-              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technologist
-            
-          }
-          break;
-        case 2:
-          if (this.contractorinformationStepperForm.controls['step2'].value.undergraduate != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-            this.academicInformation.type = 'Pregrado',
-            this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.undergraduateInstitution,
-            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.undergraduate
-          }
-          break;
-        case 3:
-          if (this.contractorinformationStepperForm.controls['step2'].value.specialization != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-            this.academicInformation.type = 'Especialización'
-            this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.specializationInstitution
-            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.specialization
-          }
-          break;
-        case 4:
-          if (this.contractorinformationStepperForm.controls['step2'].value.master != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-            this.academicInformation.type = 'Maestria',
-              this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.masterInstitution,
-              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.master
-          }
-          break;
-        case 5:
-          if (this.contractorinformationStepperForm.controls['step2'].value.doctorate != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-            this.academicInformation.type = 'Doctorado',
-              this.academicInformation.Institution = this.contractorinformationStepperForm.controls['step2'].value.doctorateInstitution,
-              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.doctorate
+            this.academicInformation.typeAcademicInformation = 'Tecnico',
+              this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.technicalInstitution,
+              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technical
 
           }
           break;
+        case 1:
+          if (this.contractorinformationStepperForm.controls['step2'].value.technologist != null && this.contractorinformationStepperForm.controls['step2'].value.technologist != '') {
+            this.academicInformation.typeAcademicInformation = 'Tecnologo',
+              this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.technologistInstitution,
+              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technologist
+
+          }
+          break;
+        case 2:
+          if (this.contractorinformationStepperForm.controls['step2'].value.undergraduate != null && this.contractorinformationStepperForm.controls['step2'].value.undergraduate != '') {
+            this.academicInformation.typeAcademicInformation = 'Pregrado',
+              this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.undergraduateInstitution,
+              this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.undergraduate
+          }
+          break;
+        case 3:
+          if (this.contractorinformationStepperForm.controls['step2'].value.specialization != null && this.contractorinformationStepperForm.controls['step2'].value.specialization != '') {
+            this.academicInformation.typeAcademicInformation = 'Especialización'
+            this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.specializationInstitution
+            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.specialization;
+            this.academicInformation.contractor = this._auth.accessId;
+          }
+          break;
+        case 4:
+          if (this.contractorinformationStepperForm.controls['step2'].value.master != null && this.contractorinformationStepperForm.controls['step2'].value.master != '') {
+            this.academicInformation.typeAcademicInformation = 'Maestria';
+            this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.masterInstitution;
+            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.master
+            this.academicInformation.contractor = this._auth.accessId
+          }
+          break;
+        case 5:
+          if (this.contractorinformationStepperForm.controls['step2'].value.doctorate != null && this.contractorinformationStepperForm.controls['step2'].value.doctorate != '') {
+            this.academicInformation.typeAcademicInformation = 'Doctorado';
+            this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.doctorateInstitution;
+            this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.doctorate;
+            this.academicInformation.contractor = this._auth.accessId;
+          }
+          break;
       }
-      if(this.academicInformation.Institution != '' && this.academicInformation.collegeDegree != ''){
-        this.academicInformationList.push(this.academicInformation)
+      if (this.academicInformation.institution != '' && this.academicInformation.collegeDegree != '') {
+        let technologist = this.academicInformationList.findIndex(f => f.typeAcademicInformation === this.academicInformation.typeAcademicInformation);
+        if(technologist < 0){
+          this.academicInformation.contractor = this._auth.accessId;
+          this.academicInformationList.push(this.academicInformation)
+        }
+
       }
 
     }
@@ -219,7 +236,7 @@ export class ContractorPersonalDataComponent implements OnInit {
     let bank = this.banks.find(x => x.bankName == this.contractorinformationStepperForm.controls['step3'].value.bank).id;
     let departamento = this.departments.find(x => x.id == this.contractorinformationStepperForm.controls['step1'].value.departamento).departamento;
 
-    const registerpersonalInfoirmation: ContractorPersonalInformation = {
+    const personalInfoirmation: ContractorPersonalInformation = {
       id: this._auth.accessId,
       fechaNacimiento: this.contractorinformationStepperForm.controls['step1'].value.birthDate,
       telefono: this.contractorinformationStepperForm.controls['step1'].value.phoneNumber,
@@ -232,14 +249,33 @@ export class ContractorPersonalDataComponent implements OnInit {
       departamento: departamento,
       municipio: this.contractorinformationStepperForm.controls['step1'].value.Municipality,
       barrio: this.contractorinformationStepperForm.controls['step1'].value.neiberhood,
-      eps: this.contractorinformationStepperForm.controls['step4'].value.eps,
-      arl: this.contractorinformationStepperForm.controls['step4'].value.arl,
-      afp: this.contractorinformationStepperForm.controls['step4'].value.afp,
       cuentaBancaria: this.contractorinformationStepperForm.controls['step3'].value.accountNumber.toString(),
       tipoCuenta: this.contractorinformationStepperForm.controls['step3'].value.accountType,
       entidadCuentaBancaria: bank,
       fechaActualizacion: new Date(),
-      academicInformation: this.academicInformationList
+    };
+    let saludEps: EmptityHealth = {
+      contractor: this._auth.accessId,
+      typeEmptity: 'EPS',
+      emptity: this.contractorinformationStepperForm.controls['step4'].value.eps
+    }
+    this.emptityHealth.push(saludEps)
+    let saludArl: EmptityHealth = {
+      contractor: this._auth.accessId,
+      typeEmptity: 'ARL',
+      emptity: this.contractorinformationStepperForm.controls['step4'].value.arl
+    }
+    this.emptityHealth.push(saludArl)
+    let saludAfp: EmptityHealth = {
+      contractor: this._auth.accessId,
+      typeEmptity: 'AFP',
+      emptity: this.contractorinformationStepperForm.controls['step4'].value.afp
+    }
+    this.emptityHealth.push(saludAfp)
+    const registerpersonalInfoirmation: PersonalInformation = {
+      contractorPersonalInformation: personalInfoirmation,
+      academicInformation: this.academicInformationList,
+      emptityHealth: this.emptityHealth
     };
     debugger
     this._homeService
@@ -333,7 +369,7 @@ export class ContractorPersonalDataComponent implements OnInit {
             startWith(''),
             map((value) => this._filterBanks(value || ''))
           );
-      
+
         }
       });
   }
@@ -368,7 +404,7 @@ export class ContractorPersonalDataComponent implements OnInit {
       option.toLowerCase().includes(value.toLowerCase())
     );
   }
-  
+
   private _filterBanks(value: any): Bank[] {
     return this.banks.filter((option: Bank) =>
       option.bankName.toLowerCase().includes(value.toLowerCase())

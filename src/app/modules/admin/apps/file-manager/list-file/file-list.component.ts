@@ -137,7 +137,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     onChange(event: any, file: FileContractor) {
-        let code = this.statusFile.find(f => f.code === DetailFileOption.RECHAZADO)
+        debugger
+        let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
             const dialogRef = this._matDialog.open(ObservationFileComponent, {
                 disableClose: true,

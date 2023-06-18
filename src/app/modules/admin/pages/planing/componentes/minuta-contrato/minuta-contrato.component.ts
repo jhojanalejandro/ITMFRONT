@@ -3,11 +3,13 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
-import { FileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { AuthService } from 'app/core/auth/auth.service';
 import { PlaningService } from '../../service/planing.service';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
+import { Subject, takeUntil } from 'rxjs';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 
 @Component({
@@ -25,16 +27,19 @@ export class MinutaContratoMacroComponent implements OnInit {
   SaveMinuta: FileContractor[] = []
   docDefinition: any;
   base64Output: any;
-
+  typeDocs: DocumentTypeFile[] = [];
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
   dataMinuta: any[] = [];
   constructor(
     private _upload: UploadFileDataService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _pdfdataService: PdfDataService,
+    private _uploadFileDataService: UploadFileDataService,
     private _auth: AuthService) { }
 
   ngOnInit(): void {
     this.getHiringData();
+    this.getDocumentType();
     //console.log('contractors segundo', this.contractors);
   }
 
@@ -663,6 +668,7 @@ export class MinutaContratoMacroComponent implements OnInit {
       let userId = this._auth.accessId;
       let contractId = this.contract;
       let _uploadervice = this._upload;
+      let idType = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
       pdfMake.createPdf(documentDefinition)
         .getDataUrl(function (dataURL) {
           dataURL = dataURL.split('data:application/pdf;base64,')
@@ -671,6 +677,7 @@ export class MinutaContratoMacroComponent implements OnInit {
             contractorId: null,
             contractId: contractId,
             filesName: nombreMinuta,
+            documentType:idType,
             fileType: 'PDF',
             descriptionFile: 'minuta del contratista generada',
             registerDate: registerDate,
@@ -707,6 +714,17 @@ export class MinutaContratoMacroComponent implements OnInit {
     this._changeDetectorRef.markForCheck();
   }
 
+  private getDocumentType() {
+    this._uploadFileDataService
+      .getDocumentType()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        if (res != null) {
+          this.typeDocs = res;
+        }
+      }
+      );
+  }
   private getHiringData() {
     this._pdfdataService
       .getDataMinuteMacroContract(this.contract)
@@ -720,4 +738,10 @@ export class MinutaContratoMacroComponent implements OnInit {
 
   private guardarMinutas() {
   }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.complete();
+    this._unsubscribeAll.next(true);
+  }
+
 }

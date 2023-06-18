@@ -36,14 +36,14 @@
                     <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>Descripcion</mat-label>
                         <textarea type="text" class="example-full-width" id="description" formControlName="description"
-                            autocomplete="off" matInput placeholder="Descripcion"></textarea>
-                        <mat-error *ngIf="formFile.get('description').hasError('required')">
+                            autocomplete="off" matInput placeholder="Descripcion" required></textarea>
+                        <mat-error >
                             El Campo Descripcion es requerido
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="text-center pt-8">
-                    <input formControlName="file" type="file" mat-flat-button color="primary"
+                    <input formControlName="file" type="file" mat-flat-button color="primary" accept=".jpg, .jpeg, .png, .pdf"
                         (change)="onChange($event)">
                 </div>
                 <!-- Shareable short link of  uploaded file -->

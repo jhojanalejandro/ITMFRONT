@@ -24,6 +24,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { fuseAnimations } from '@fuse/animations';
 
 const moment = _rollupMoment || _moment;
 
@@ -31,6 +32,8 @@ const moment = _rollupMoment || _moment;
     selector: 'app-upload-file',
     templateUrl: './upload-file.component.html',
     styleUrls: ['./upload-file.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    animations: fuseAnimations
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
     date = new FormControl(moment());
@@ -54,8 +57,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         private _uploadFileDataService: UploadFileDataService,
         private _auth: AuthService,
         public matDialogRef: MatDialogRef<UploadFileContractorComponent>,
-        private _formBuilder: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) private _data
+        @Inject(MAT_DIALOG_DATA) private _data,
+        private _formBuilder?: FormBuilder,
     ) {
         setInterval(() => {
             this.numberOfTicks++;
@@ -66,17 +69,17 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
         this.formFile = this._formBuilder.group({
-            file: new FormControl(null, Validators.required),
-            filesName: new FormControl(null),
-            typeDoc: new FormControl(null, Validators.required),
-            description: new FormControl(null),
+            file:[null, Validators.required],
+            filesName: [null],
+            typeDoc: [null, Validators.required],
+            description: [null, Validators.required],
         });
         this.getDocumentType();
     }
 
     onChange(event) {
-        debugger
         this.file = event.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(this.file);
@@ -107,16 +110,17 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     addFileContractor(event) {
         debugger
-        if (!this.formFile.valid) {
+        if (this.formFile.invalid) {
             return;
         }
-        let name = this.file.name.split('.pdf')
+        let name = this.file.name.split('.')
         const registerFile: FileContractor = {
             contractorId: this._auth.accessId,
             contractId: this._data.contractId,
-            typeFilePayment: null,
-            filesName: name,
-            fileType: this.formFile.value.typeDoc,
+            typeFilePayment: 'vacio',
+            filesName: name[0],
+            documentType: this.formFile.value.typeDoc,
+            fileType: name[1],
             descriptionFile: this.formFile.value.description,
             registerDate: this.registerDate,
             modifyDate: this.registerDate,
@@ -125,6 +129,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             userId: null,
             folderId: null
         };
+        this.formFile.disable();
         this._uploadFileDataService
             .UploadFileContractor(registerFile)
             .pipe(takeUntil(this._unsubscribeAll))
@@ -219,7 +224,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         normalizedMonth: Moment,
         datepicker: MatDatepicker<Moment>
     ) {
-        debugger
         const ctrlValue = this.date.value;
         let month = normalizedMonth.month() + 1;
         ctrlValue.month(normalizedMonth.month());

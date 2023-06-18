@@ -62,7 +62,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
   visibleOption: boolean = false;
-  datePipe: DatePipe
+  datePipe: DatePipe;
+  generateType: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private readonly _unsubscribe$ = new Subject<void>();
 
@@ -318,9 +319,12 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
   generarEstudiosPrevios(data: any = null) {
+    debugger
     this.contractContractors.contractors = [data.id];
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
+    this.generateType = 'ESTUDIOSPREVIOS '
+
   }
 
   activateContarct() {
