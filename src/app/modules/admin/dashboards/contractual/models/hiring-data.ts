@@ -9,7 +9,6 @@ export interface IHiringData{
     contrato: string;
     compromiso: string;
     fechaRealDeInicio: Date;
-    actaComite: any;
     numeroActa: string;    
     fechaDeComite: Date;
     requierePoliza: boolean;

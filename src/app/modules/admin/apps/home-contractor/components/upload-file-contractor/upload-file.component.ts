@@ -21,10 +21,10 @@ import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { fuseAnimations } from '@fuse/animations';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 
 const moment = _rollupMoment || _moment;
 
@@ -109,7 +109,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     addFileContractor(event) {
-        debugger
         if (this.formFile.invalid) {
             return;
         }

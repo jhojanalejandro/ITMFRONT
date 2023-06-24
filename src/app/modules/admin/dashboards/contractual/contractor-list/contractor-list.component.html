@@ -103,7 +103,7 @@
                                     <p *ngIf="element[columna.name]== element.fechaNacimiento">
                                         {{element[columna.name] | date:'dd/MM/yyyy'}}
                                     </p>
-                                    <span *ngIf="element[columna.name]=== element.statusContractor;"
+                                    <span *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
                                         'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
@@ -118,7 +118,7 @@
                                  'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <span *ngIf="element[columna.name]=== element.hiringStatus;"
+                                    <span *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
                              'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATANDO'}">

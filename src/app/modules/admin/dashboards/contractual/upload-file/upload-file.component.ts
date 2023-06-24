@@ -5,11 +5,10 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { UploadFileDataService } from './upload-file.service';
 import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { IResponse } from 'app/layout/common/models/Response';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { UploadFileDataService } from './service/upload-file.service';
 
 @Component({
   selector: 'app-register-contractor',
@@ -37,6 +36,10 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   documentType: string;
   formFile: FormGroup;
   typeDocs: DocumentTypeFile[] = [];
+  aceptFile: string;
+  aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  aceptfile: string = 'image/jpeg, image/png, application/pdf';
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -60,10 +63,12 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   ngOnInit(): void {
     if (this._data.show) {
       this.mostrarContrato = true;
+      this.aceptFile = this.aceptExcel;
     }
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
       this.isSelectContract = true;
+      this.aceptFile = this.aceptFile;
     }
 
     this.formFile = this._formBuilder.group({

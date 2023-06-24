@@ -49,7 +49,7 @@ export const environment = {
     GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
     GetFolderFileContractorEndpoint: 'Folder/GetAll/',
 
-    addContractFolderEndpoint: 'Contractor/SaveDataContractor',
+    addContractFolderEndpoint: 'ContractFolder/SaveContract',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
     GetAllContractEndpoint: 'ContractFolder/GetAll',
     GetAllHistoryProjectEndpoint: 'ContractFolder/GetAllHistory',
@@ -96,13 +96,11 @@ export const environment = {
     getComponent: 'Componente/GetComponent/',
 
     getComponentById: 'Componente/GetById/',
-
-    addElement: 'ElementosComponente/SaveElement',
     getElements: 'ElementosComponente/GetElementsByComponent/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',
-    addElementosComponent: 'ElementosComponente/Add',
+    addElementosComponent: 'ElementosComponente/SaveElement',
     getElementoById: 'ElementosComponente/GetById/',
     getActivityByIdComponent: 'Componente/GetActivityByComponent/',
     getActivityById: 'Componente/GetActivityById/',
@@ -115,6 +113,7 @@ export const environment = {
     GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',
 
     addFileFirmEndpoint: 'UserFirm/SaveFirm',
+    GetRollsEndpoint: 'UserFirm/GetAllRolls',
 
     GetCpcTypeEndpoint: 'MasterData/GetAllCpcType',
     GetFileTypeEndpoint: 'MasterData/GetFileType',

@@ -17,9 +17,9 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { UploadFileDataService } from '../../contractual/upload-file/upload-file.service';
 import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
+import { UploadFileDataService } from '../../contractual/upload-file/service/upload-file.service';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {

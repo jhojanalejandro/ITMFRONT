@@ -22,7 +22,7 @@ import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.com
         MinutaContratoComponent,
         ActaSupervisionComponent,
         NewnessContractorComponent,
-        GeneratePdfComponent
+        GeneratePdfComponent,
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

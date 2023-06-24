@@ -61,7 +61,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   formContractor: FormGroup;
   visibleActivity: boolean = false;
   supervisor: string = 'Supervisor';
-  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
+  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
   private readonly _unsubscribe$ = new Subject<void>();
   detalleContrat: DetalleContrato = {
     contractId: null,
@@ -79,7 +79,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     public matDialogRef: MatDialogRef<ContractorDataHiringComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
-    debugger
     if (this.datos.id != null) {
       this.getHiring();
       this.shareData = true;
@@ -162,8 +161,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           userId: this._auth.accessId,
           contractorId: this.datos.idContractors[index],
           contractId: this.datos.contractId,
-          contrato: 'vacio',
-          compromiso: 'vacio',
+          contrato: null,
+          compromiso: null,
           fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
           numeroActa: this.formContractor.value.numeroActa,
           fechaDeComite: this.formContractor.value.fechaComite,
@@ -179,7 +178,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           cargoSupervisorItm: dataAdmin.professionalposition,
           identificacionSupervisor: dataAdmin.identification,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-          actaComite: 'vacio',
           cdp: this.formContractor.value.cdp,
           caso: this.formContractor.value.caso,
           statusContractor: this.datos.statusContractor
@@ -208,7 +206,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         cargoSupervisorItm: dataAdmin.Professionalposition,
         identificacionSupervisor: dataAdmin.identificacionSupervisor,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-        actaComite: 'vacio',
         cdp: this.formContractor.value.cdp,
         caso: this.formContractor.value.caso,
         statusContractor: this.datos.statusContractor
@@ -284,7 +281,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       cargoSupervisorItm: dataAdmin.professionalposition,
       identificacionSupervisor: dataAdmin.identification,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-      actaComite: 'vacio',
       cdp: this.formContractor.value.cdp,
       caso: this.formContractor.value.caso
 

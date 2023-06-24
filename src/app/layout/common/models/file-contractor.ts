@@ -42,6 +42,7 @@ export interface DetailFile{
     registerDate: Date;
     statusFileId: string;
     passed: any;
+    userId: string;
 }
 
 

@@ -68,7 +68,7 @@ export const environment = {
     getComponent: 'Componente/Get/',
     getComponentById: 'Componente/GetById/',
 
-    addElement: 'ElementosComponente/Add/',
+    addElement: 'ElementosComponente/SaveElement/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',

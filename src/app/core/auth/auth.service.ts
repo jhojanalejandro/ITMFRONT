@@ -295,7 +295,18 @@ export class AuthService
 
     UploadFileFirm(formdata: UserFirm) {
         let urlEndpointGenerate = this.apiUrl+ environment.addFileFirmEndpoint;
-         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+         return this._httpClient.post<any>(urlEndpointGenerate, formdata);
+    }
+
+    getRolls(): Observable<any>
+    {
+        return this._httpClient.get<any>(this.apiUrl + environment.GetRollsEndpoint).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
     }
 
 }

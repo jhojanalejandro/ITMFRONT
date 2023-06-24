@@ -5,11 +5,10 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
 import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { AuthService } from 'app/core/auth/auth.service';
-import { PlaningService } from '../../service/planing.service';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 
 
 @Component({
@@ -34,7 +33,6 @@ export class MinutaContratoMacroComponent implements OnInit {
     private _upload: UploadFileDataService,
     private _changeDetectorRef: ChangeDetectorRef,
     private _pdfdataService: PdfDataService,
-    private _uploadFileDataService: UploadFileDataService,
     private _auth: AuthService) { }
 
   ngOnInit(): void {
@@ -715,7 +713,7 @@ export class MinutaContratoMacroComponent implements OnInit {
   }
 
   private getDocumentType() {
-    this._uploadFileDataService
+    this._upload
       .getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {

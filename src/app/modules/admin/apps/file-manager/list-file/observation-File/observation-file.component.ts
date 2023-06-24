@@ -1,12 +1,11 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
-import { AuthService } from 'app/core/auth/auth.service';
-import { map, Observable, startWith, Subject } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { DetailFileContractor } from 'app/layout/common/models/file-contractor';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 
 @Component({
   selector: 'app-observation-file',
@@ -15,7 +14,7 @@ import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class ObservationFileComponent implements OnInit {
+export class ObservationFileComponent implements OnInit, OnDestroy {
   loading: boolean = false; // Flag variable
   file: any = null; // Variable to store file
   indeterminate = false;
@@ -32,7 +31,6 @@ export class ObservationFileComponent implements OnInit {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
-    private ref: ChangeDetectorRef,
     private _uploadService: UploadFileDataService,
     public matDialogRef: MatDialogRef<ObservationFileComponent>,
     private _formBuilder: FormBuilder,
@@ -65,7 +63,9 @@ export class ObservationFileComponent implements OnInit {
         passed: false
 
     }
-    this._uploadService.addDetailFile(detailFile).subscribe((res) => {
+    this._uploadService.addDetailFile(detailFile)
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((res) => {
       if (res) {
         swal.fire({
           position: 'center',
@@ -108,7 +108,9 @@ export class ObservationFileComponent implements OnInit {
         registerDate: new Date(),
         passed: false
     }
-    this._uploadService.addDetailFile(detailFile).subscribe((res) => {
+    this._uploadService.addDetailFile(detailFile)
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((res) => {
       if (res) {
         swal.fire({
           position: 'center',
@@ -124,4 +126,9 @@ export class ObservationFileComponent implements OnInit {
         swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
       });
   }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.complete();
+    this._unsubscribeAll.next(true);
+}
 }

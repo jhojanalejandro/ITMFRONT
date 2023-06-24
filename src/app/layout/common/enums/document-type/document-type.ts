@@ -11,6 +11,7 @@ export enum DocumentTypeCodes{
     REGISTROSECOP = 'RSC',
     HOJADEVIDA = 'HV',
     EXAMENESPREOCUPACIONALES = 'EXPNL',
-    MINUTA = 'MNTA'
-
+    MINUTACONTRATISTA = 'MCNT',
+    MINUTA = 'MNT',
+    MINUTAMACRO = 'MMCR'
 }

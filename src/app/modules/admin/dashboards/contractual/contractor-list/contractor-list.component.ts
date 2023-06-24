@@ -234,7 +234,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     for (let index = 0; index < this.selection.selected.length; index++) {
       this.idSelected[index] = this.selection.selected[index].id
     }
-    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.idSelected }
+    let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected }
     this._contractorListService.sendmailsAccounts(ids)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response) => {
@@ -279,7 +279,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         this.listId.push(element.id);
       });
     }
-    debugger
     const dialogRef = this._matDialog.open(ContractorDataHiringComponent, {
       disableClose: true,
       autoFocus: false,
@@ -319,11 +318,10 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
   generarEstudiosPrevios(data: any = null) {
-    debugger
     this.contractContractors.contractors = [data.id];
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
-    this.generateType = 'ESTUDIOSPREVIOS '
+    this.generateType = 'ESTUDIOS PREVIOS'
 
   }
 
@@ -374,15 +372,15 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy(): void {
-    this._unsubscribe$.next(null);
-    this._unsubscribe$.complete();
-  }
-
   reloadResolve() {
     const currentUrl: any = this._loadrouter.url;
     this._loadrouter.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._loadrouter.navigateByUrl(currentUrl);
     });
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
   }
 }

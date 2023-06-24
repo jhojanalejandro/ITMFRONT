@@ -277,7 +277,6 @@ export class ContractorPersonalDataComponent implements OnInit {
       academicInformation: this.academicInformationList,
       emptityHealth: this.emptityHealth
     };
-    debugger
     this._homeService
       .saveContractorPersonalInformation(registerpersonalInfoirmation)
       .pipe(takeUntil(this._unsubscribe$))

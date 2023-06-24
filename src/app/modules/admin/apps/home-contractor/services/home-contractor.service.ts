@@ -81,7 +81,7 @@ export class HomeContractorService {
 
 
     saveContractorPersonalInformation(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.SaveDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 

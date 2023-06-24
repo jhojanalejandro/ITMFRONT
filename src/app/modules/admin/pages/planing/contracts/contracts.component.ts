@@ -111,7 +111,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     this._planingService._contractList$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(response => {
-        debugger
         this.contracts = response;
         this.dataSource = new MatTableDataSource(
           this.contracts
@@ -231,7 +230,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result == 'confirmed') {
         this._uploadData.finalContract(element.id).subscribe((res) => {
-          debugger
           if (res) {
             swal.fire({
               position: 'center',

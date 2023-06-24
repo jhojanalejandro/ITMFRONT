@@ -6,7 +6,6 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import swal from 'sweetalert2';
 import { FileContractor } from 'app/layout/common/models/file-contractor';
-import { UploadFileDataService } from '../../../upload-file/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ShareService } from 'app/layout/common/share-service/share-service.service';
 import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
@@ -14,6 +13,9 @@ import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service
 import { ContractContractors } from '../../../models/contractor';
 import { CommitteeRequest, PreviusStudy } from '../../../models/generate-pdf';
 import { PdfTypeGenerate } from 'app/layout/common/enums/document-type/pdf-type';
+import { UploadFileDataService } from '../../../upload-file/service/upload-file.service';
+import { take } from 'lodash';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-generate-pdf',
@@ -31,7 +33,7 @@ export class GeneratePdfComponent implements OnInit {
     currentDate: string;
     fechaActual: any = new Date();
     anioActual: any = this.fechaActual.getFullYear();
-    anioAnterior: any = this.anioActual - 1;    
+    anioAnterior: any = this.anioActual - 1;
     file: any;
     docDefinition: any;
     base64Output: any;
@@ -40,8 +42,9 @@ export class GeneratePdfComponent implements OnInit {
     itmImageBase654: any;
     alcaldiaImageBase654: any;
     committeeRequestData: CommitteeRequest[];
-    previusStudyData: PreviusStudy[];
+    previusStudyData: PreviusStudy[] = [];
     dateTransform: any = new Date();
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private _shareService: ShareService,
@@ -52,13 +55,10 @@ export class GeneratePdfComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        debugger
         this.dateTransform = this._shareService.transformDate(this.dateTransform);
         switch (this.generateType) {
             case PdfTypeGenerate.PREVIUSSTUDY:
                 this.gePreviusStudyData();
-                this.generatePreviusStudy();
-                this.hideComponent();
                 break;
             case PdfTypeGenerate.COMMITTEEREQUEST:
                 this.getcommitteeRequestData();
@@ -70,10 +70,11 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generatePreviusStudy() {
+    private generatePreviusStudy(previusStudyData: PreviusStudy[]) {
+        debugger
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-            let data = this.previusStudyData.find(ct => ct.contractorId === this.contractContractors.contractors[index]);
-            if(data.totalValue != null && data.contractInitialDate != null  && data.contractFinalDate != null ){
+            let data = previusStudyData.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
+            if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
                 let totalContrato = (+data.totalValue.toFixed(0)).toLocaleString();
@@ -118,7 +119,7 @@ export class GeneratePdfComponent implements OnInit {
                             ],
                         },
                     },
-        
+
                     footer: {
                         margin: [10, 10],
                         text: 'Medellín - Colombia',
@@ -186,7 +187,7 @@ export class GeneratePdfComponent implements OnInit {
                                     fontSize: 10,
                                 },
                                 {
-                                    text: this.anioActual+', ',
+                                    text: this.anioActual + ', ',
                                     fontSize: 11,
                                 },
                                 {
@@ -305,7 +306,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 margin: [10, 10, 10, 10],
                                                 text: [
                                                     {
-                                                        text: 'El Plan de Desarrollo Institucional “ITM: A Otro Nivel”, '+this.anioAnterior+'-'+this.anioActual+', está orientado a trascender de la innovación competitiva a la que transforma, a partir de la articulación de la ciencia, la tecnología, la innovación y la producción artística, aportando desde su vocación tecnológica y compromiso social al logro de un modelo sostenible para la humanidad. El Plan de Desarrollo Institucional fue aprobado el día 29 de mayo de 2020 por El Consejo Directivo del Instituto Tecnológico Metropolitano Institución Universitaria, en ejercicio de sus atribuciones legales y estatutarias. La Unidad Estratégica de Negocios, observado la nueva propuesta rectoral, en especial el Gran Pilar No. 4, denominado “Modelo de gestión flexible, eficiente y sostenible” y con el fin de dar cumplimiento a objeto contractual fijado en el Contrato interadministrativo número '+data.contractNumber+' cuyo objeto es ',
+                                                        text: 'El Plan de Desarrollo Institucional “ITM: A Otro Nivel”, ' + this.anioAnterior + '-' + this.anioActual + ', está orientado a trascender de la innovación competitiva a la que transforma, a partir de la articulación de la ciencia, la tecnología, la innovación y la producción artística, aportando desde su vocación tecnológica y compromiso social al logro de un modelo sostenible para la humanidad. El Plan de Desarrollo Institucional fue aprobado el día 29 de mayo de 2020 por El Consejo Directivo del Instituto Tecnológico Metropolitano Institución Universitaria, en ejercicio de sus atribuciones legales y estatutarias. La Unidad Estratégica de Negocios, observado la nueva propuesta rectoral, en especial el Gran Pilar No. 4, denominado “Modelo de gestión flexible, eficiente y sostenible” y con el fin de dar cumplimiento a objeto contractual fijado en el Contrato interadministrativo número ' + data.contractNumber + ' cuyo objeto es ',
                                                         fontSize: 10,
                                                     },
                                                     {
@@ -404,11 +405,11 @@ export class GeneratePdfComponent implements OnInit {
                                                         bold: true,
                                                     },
                                                     {
-                                                        text: ' Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar '+data.elementObject+' del Contrato Interadministrativo No ',
+                                                        text: ' Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar ' + data.elementObject + ' del Contrato Interadministrativo No ',
                                                         fontSize: 9,
                                                     },
                                                     {
-                                                        text: data.contractNumber+' DE ' +this.anioActual +',',
+                                                        text: data.contractNumber + ' DE ' + this.anioActual + ',',
                                                         fontSize: 10,
                                                     },
                                                     {
@@ -550,7 +551,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 margin: [10, 5, 10, 10],
                                             },
                                             {
-                                                text: fechaLetras+'sin exceder la vigencia '+this.anioActual,
+                                                text: fechaLetras + 'sin exceder la vigencia ' + this.anioActual,
                                                 style: 'fontSegundapagPeque',
                                                 margin: [10, 5, 10, 10],
                                             },
@@ -760,7 +761,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: valorLetras+ 'm.l($'+totalContrato+').',
+                                                            text: valorLetras + 'm.l($' + totalContrato + ').',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -833,7 +834,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: ' “'+ data.contractorName,
+                                                            text: ' “' + data.contractorName,
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -842,7 +843,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: data.contractorIdentification+'”,',
+                                                            text: data.contractorIdentification + '”,',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -856,7 +857,7 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 8, 0, 0],
                                                     text: [
                                                         {
-                                                            text: ' “'+ data.contractorName+'” ',
+                                                            text: ' “' + data.contractorName + '” ',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -1262,7 +1263,7 @@ export class GeneratePdfComponent implements OnInit {
                                     ],
                                 ],
                             },
-        
+
                             layout: {
                                 hLineWidth: function (i, node) {
                                     return i === 0 || i === node.table.body.length ? 2 : 1;
@@ -1410,17 +1411,17 @@ export class GeneratePdfComponent implements OnInit {
                                         {
                                             text: 'Elaborado Por',
                                             style: 'fontPeque',
-                                            bold : true,
+                                            bold: true,
                                         },
                                         {
                                             text: 'Revisado Por',
                                             style: 'fontPeque',
-                                            bold : true,
+                                            bold: true,
                                         },
                                         {
                                             text: 'Aprobado Por',
                                             style: 'fontPeque',
-                                            bold : true,
+                                            bold: true,
                                         },
                                     ],
                                     [
@@ -1433,10 +1434,10 @@ export class GeneratePdfComponent implements OnInit {
                                             style: 'fontPeque',
                                         },
                                         {
-                                            text : [
+                                            text: [
                                                 { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
                                                 { text: 'Maicol Yepes' },
-        
+
                                             ],
                                         },
                                         {
@@ -1444,7 +1445,7 @@ export class GeneratePdfComponent implements OnInit {
                                             style: 'fontPeque',
                                         },
                                         // { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
-    
+
                                     ],
                                 ],
                             },
@@ -1511,15 +1512,15 @@ export class GeneratePdfComponent implements OnInit {
                             fontSize: 9,
                         },
                     },
-        
+
                     defaultStyle: {
                         // alignment: 'justify'
                     },
                 };
-                this.savePdfGenerated(documentPreviousStudy, data.contractorName,'ESTUDIOS PREVIOS');
-    
-            }else{
-                
+                this.savePdfGenerated(documentPreviousStudy, data.contractorName, 'ESTUDIOS PREVIOS');
+
+            } else {
+
             }
 
         }
@@ -1641,7 +1642,7 @@ export class GeneratePdfComponent implements OnInit {
                                 fontSize: 10,
                             },
                             {
-                                text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN, IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP.',
+                                text: data.elementObject,
                                 fontSize: 11,
                             },
                         ],
@@ -1672,11 +1673,11 @@ export class GeneratePdfComponent implements OnInit {
                                 ],
                                 [
                                     {
-                                        text: 'Maicol Yepes',
+                                        text: data.contractorName,
                                         style: 'fontPeque',
                                     },
                                     {
-                                        text: '1000189631',
+                                        text: data.contractorIdentification,
                                         style: 'fontPeque',
                                     },
                                     {
@@ -1793,11 +1794,23 @@ export class GeneratePdfComponent implements OnInit {
     }
 
     private gePreviusStudyData() {
-        this._pdfdataService.getPreviusStudy(this.contractContractors).subscribe((Response) => {
-            this.committeeRequestData = Response;
-        });
         this.headerImageBase654 = this.getBase64Image(RouteImageEnum.HEADER);
         this.footerImageBase654 = this.getBase64Image(RouteImageEnum.FOOTER);
+        this.itmImageBase654 = this.getBase64Image(RouteImageEnum.LOGOITM);
+
+        this._pdfdataService.getPreviusStudy(this.contractContractors)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((Response) => {
+                this.previusStudyData = Response;
+                if (Response.length == 0) {
+                    this.hideComponent();
+                }
+                if (this.previusStudyData.length > 0) {
+                    this.generatePreviusStudy(this.previusStudyData);
+                }
+            });
+
+
     }
 
     private getBase64Image(route: string): string {
@@ -1815,7 +1828,7 @@ export class GeneratePdfComponent implements OnInit {
         this.pdfGenerated.emit(false);
     }
 
-    private savePdfGenerated(pdfDocument: any, contractorName: string, documentType){
+    private savePdfGenerated(pdfDocument: any, contractorName: string, documentType) {
         let nombreMinuta = 'SolicitudComite' + contractorName;
         let date = this.currentDate;
         let userId = this._auth.accessId;
@@ -1860,5 +1873,10 @@ export class GeneratePdfComponent implements OnInit {
         pdfMake
             .createPdf(pdfDocument)
             .download(nombreMinuta + '.pdf');
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
     }
 }

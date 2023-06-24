@@ -31,7 +31,6 @@ export class ActaSupervisionComponent implements OnInit {
     compromiso: '',
     fechaRealDeInicio: new Date(),
     numeroActa: '',
-    actaComite: '',
     fechaDeComite: new Date(),
     requierePoliza: false,
     noPoliza: '0',
