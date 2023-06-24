@@ -9,7 +9,6 @@ import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-ex
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
 import { MinutaContratoComponent } from './components/minutas-contrato/minuta-contrato.component';
-import { ActaSupervisionComponent } from './components/acta-supervision/acta-supervision.component';
 import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
 import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.component';
 
@@ -20,9 +19,8 @@ import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.com
         ContractorDataHiringComponent,
         ModificacionFormComponent,
         MinutaContratoComponent,
-        ActaSupervisionComponent,
         NewnessContractorComponent,
-        GeneratePdfComponent,
+        GeneratePdfComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),
