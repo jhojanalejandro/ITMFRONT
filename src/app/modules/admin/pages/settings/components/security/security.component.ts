@@ -6,16 +6,16 @@ import swal from 'sweetalert2';
 
 
 @Component({
-    selector       : 'settings-security',
-    templateUrl    : './security.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'settings-security',
+    templateUrl: './security.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsSecurityComponent implements OnInit
-{
+export class SettingsSecurityComponent implements OnInit {
     securityForm: FormGroup;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     password: string;
+    passwordMail: string;
 
     /**
      * Constructor
@@ -24,48 +24,48 @@ export class SettingsSecurityComponent implements OnInit
         private _formBuilder: FormBuilder,
         private _authService: AuthService
 
-    )
-    {
+    ) {
     }
 
 
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this._authService.user$
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((data) => {
-            // Store the data
-            this.password = data.userPassword
-     
-        });
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((data) => {
+                // Store the data
+                this.password = data.userPassword
+                this.passwordMail = data.passwordMail
+
+            });
         // Create the form
         this.securityForm = this._formBuilder.group({
-            currentPassword  : [this.password],
-            newPassword      : [''],
-            twoStep          : [true],
+            currentPassword: [this.password],
+            passwordMail: [this.passwordMail],
+            newPassword: [''],
+            twoStep: [true],
             askPasswordChange: [false]
         });
     }
 
-    updateUser(){
+    updateUser() {
         // Return if the form is invalid
-        if ( this.securityForm.invalid )
-        {
+        if (this.securityForm.invalid) {
             return;
         }
 
-        const updateUser: any={
+        const updateUser: any = {
             id: this._authService.accessId,
             userPassword: this.securityForm.value.newPassword,
-        };          
+            passwordMail: this.securityForm.value.passwordMail,
+        };
         // Sign in
         this._authService.updatePasswordUser(updateUser)
             .subscribe(
-                (data : any) => {
-                    if(data){
+                (data: any) => {
+                    if (data) {
                         this.securityForm.enable();
                         // Set the alert
                         swal.fire({
@@ -75,15 +75,15 @@ export class SettingsSecurityComponent implements OnInit
                             html: 'Información Registrada Exitosamente!',
                             showConfirmButton: false,
                             timer: 1500
-                          });
+                        });
 
                     }
                 },
-            (response) => {
-              this.securityForm.enable();
-              // Set the alert
-              swal.fire('Error', 'Error al Actualizar la informacion! intente mas tarde', 'error');
-              // Show the alert
-            });
+                (response) => {
+                    this.securityForm.enable();
+                    // Set the alert
+                    swal.fire('Error', 'Error al Actualizar la informacion! intente mas tarde', 'error');
+                    // Show the alert
+                });
     }
 }

@@ -10,7 +10,7 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { DetailContractFolder, ContractFolder, ContractFolders } from '../../models/planing-model';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { Subject, takeUntil } from 'rxjs';
-import { StatusContract } from 'app/modules/admin/generic/model/generic.model';
+import { RubroType, StatusContract } from 'app/modules/admin/generic/model/generic.model';
 import { CodeStatusContract } from 'app/layout/common/enums/statusContract';
 
 @Component({
@@ -32,10 +32,13 @@ export class RegisterContractFolderComponent implements OnInit {
   minDate: Date;
   statusContract: StatusContract[] = [];
   formProject: FormGroup;
-  tipoModificacion = GlobalConst.tipoModificacion;
+  tipoModificacion: any;
+  rubros: RubroType[] = [];
+  rubroNumber: string;
   editarData = GlobalConst.editarData;
   editData: boolean = false;
-  dataProject: ContractFolders = { companyName: null, projectName: null, descriptionProject: null, statusContract: null, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, fechaFinalizacion: null,fechaContrato: null, numberProject: null, enableProject: true,project: null, rubro: null, nombreRubro: null, fuenteRubro: null }
+  AddeditData: boolean = false;
+  dataProject: ContractFolders = { companyName: null, projectName: null, descriptionProject: null, statusContract: null, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, fechaFinalizacion: null, fechaContrato: null, numberProject: null, enableProject: true, project: null, rubro: null, nombreRubro: null, fuenteRubro: null }
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -59,7 +62,7 @@ export class RegisterContractFolderComponent implements OnInit {
       this.dataProject.companyName = this._data.data.companyName;
       this.dataProject.projectName = this._data.data.projectName;
       this.dataProject.descriptionProject = this._data.data.descriptionProject;
-      this.dataProject.fechaFinalizacion =  new Date(this._data.data.fechaFinalizacion);
+      this.dataProject.fechaFinalizacion = new Date(this._data.data.fechaFinalizacion);
       this.dataProject.numberProject = this._data.data.numberProject;
       this.dataProject.rubro = this._data.data.rubro;
       this.dataProject.project = this._data.data.project;
@@ -90,6 +93,8 @@ export class RegisterContractFolderComponent implements OnInit {
       project: new FormControl(this.dataProject.project)
     });
     this.getStatusContract();
+    this.getTypeMinuteContract();
+    this.getRubroContract();
   }
   ngAfterContentChecked() {
     this.ref.detectChanges();
@@ -106,16 +111,16 @@ export class RegisterContractFolderComponent implements OnInit {
 
       // Show the alert
       this.showAlert = true;
-      return 
+      return
     } else {
-      
-      if(this.formProject.value.statusContract == null){
+
+      if (this.formProject.value.statusContract == null) {
         let status: StatusContract[] = this.statusContract.filter(f => f.code == CodeStatusContract.INICIADO)
         this.formProject.value.statusContract = status[0].id;
       }
       if (this.formProject.value.updateData === 'Solo Editar') {
         this.formProject.value.updateData = true;
-  
+
       } else {
         this.formProject.value.updateData = false;
       }
@@ -132,8 +137,8 @@ export class RegisterContractFolderComponent implements OnInit {
         companyName: this.formProject.value.companyName,
         projectName: this.formProject.value.projectName,
         objectContract: this.formProject.value.objectContract,
-        statusContractId:  this.formProject.value.statusContract,
-        activate: false,
+        statusContractId: this.formProject.value.statusContract,
+        activate: true,
         enableProject: false,
         contractorsCant: 0,
         valorContrato: 0,
@@ -151,30 +156,30 @@ export class RegisterContractFolderComponent implements OnInit {
       };
 
       this._upload.addContractFolder(registerProject)
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((res) => {
-        if (res) {
-          swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Información Registrada Exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          //this.matDialogRef.close();  
-          this.ref.detectChanges();
-          this.ref.markForCheck();
-          this.matDialogRef.close(true);
-        }
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((res) => {
+          if (res) {
+            swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Información Registrada Exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+            //this.matDialogRef.close();  
+            this.ref.detectChanges();
+            this.ref.markForCheck();
+            this.matDialogRef.close(true);
+          }
 
-      },
-        (response) => {
-          this.formProject.enable();
-          // Set the alert
-          console.log(response);
-          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-        });
+        },
+          (response) => {
+            this.formProject.enable();
+            // Set the alert
+            console.log(response);
+            swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+          });
     }
 
   }
@@ -226,32 +231,32 @@ export class RegisterContractFolderComponent implements OnInit {
       fuenteRubro: this.formProject.value.fuenteRubro
     };
     this._upload.addContractFolder(registerProject)
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((res) => {
-      if (res) {
-        swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '',
-          html: 'Información actualizada Exitosamente!',
-          showConfirmButton: false,
-          timer: 1500
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        if (res) {
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información actualizada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();
+          this.matDialogRef.close(true);
+        }
+
+      },
+        (response) => {
+          this.formProject.enable();
+          // Set the alert
+          console.log(response);
+
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+          // Show the alert
         });
-        //this.matDialogRef.close();  
-        this.ref.detectChanges();
-        this.ref.markForCheck();
-        this.matDialogRef.close(true);
-      }
-
-    },
-      (response) => {
-        this.formProject.enable();
-        // Set the alert
-        console.log(response);
-
-        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-        // Show the alert
-      });
 
   }
   cerrar(): void {
@@ -264,27 +269,61 @@ export class RegisterContractFolderComponent implements OnInit {
 
   }
 
-  getStatusContract(){
+  getStatusContract() {
     this._genericService.getstatusContract()
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((res) => {
-      this.statusContract = res;
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        this.statusContract = res;
 
-    });
+      });
   }
 
-  statusSelectContract(){
+  statusSelectContract() {
     this._genericService.getstatusContract()
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((res) => {
-      this.statusContract = res;
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        this.statusContract = res;
 
-    });
+      });
   }
 
-  changeEdit(){
-    
+  changeEdit() {
 
+
+  }
+
+  changeRubro(e: any) {
+    let dataRubro = this.rubros.find(f => f.id == e.value)
+    this.dataProject.rubro = dataRubro.rubroNumber;
+    this.dataProject.nombreRubro = dataRubro.rubro;
+    this.dataProject.fuenteRubro = dataRubro.rubroOrigin;
+  }
+
+  private getRubroContract() {
+    this._genericService.getRubrosContract()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(
+        (resp) => {
+          this.rubros = resp;
+        }
+      );
+  }
+
+  changeTipe(e: any) {
+    if(e.value === 'Agregar Modificación'){
+      this.AddeditData = true;
+    }else{
+      this.AddeditData = false;
+    }
+  }
+  private getTypeMinuteContract() {
+    this._genericService.getTypeMinutesContract()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe(
+        (resp) => {
+          this.tipoModificacion = resp;
+        }
+      );
   }
 
 }

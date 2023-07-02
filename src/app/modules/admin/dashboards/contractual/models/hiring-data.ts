@@ -9,7 +9,6 @@ export interface IHiringData{
     contrato: string;
     compromiso: string;
     fechaRealDeInicio: Date;
-    actaComite: any;
     numeroActa: string;    
     fechaDeComite: Date;
     requierePoliza: boolean;
@@ -25,4 +24,5 @@ export interface IHiringData{
     identificacionSupervisor: string;
     cdp: string;
     caso: string;
+    statusContractor?: string;
 }

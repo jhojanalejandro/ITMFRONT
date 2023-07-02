@@ -5,10 +5,10 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { UploadFileDataService } from './upload-file.service';
 import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { IResponse } from 'app/layout/common/models/Response';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { UploadFileDataService } from './service/upload-file.service';
 
 @Component({
   selector: 'app-register-contractor',
@@ -35,6 +35,11 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   numberOfTicks = 0;
   documentType: string;
   formFile: FormGroup;
+  typeDocs: DocumentTypeFile[] = [];
+  aceptFile: string;
+  aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  aceptfile: string = 'image/jpeg, image/png, application/pdf';
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -58,10 +63,12 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   ngOnInit(): void {
     if (this._data.show) {
       this.mostrarContrato = true;
+      this.aceptFile = this.aceptExcel;
     }
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
       this.isSelectContract = true;
+      this.aceptFile = this.aceptFile;
     }
 
     this.formFile = this._formBuilder.group({
@@ -71,6 +78,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
     });
     this.getContractsData();
     this.privateGetFileType();
+    this.getDocumentType();
 
   }
 
@@ -91,12 +99,15 @@ export class UploadFileComponent implements OnInit,OnDestroy{
 
 
   addFileContractor(event) {
+    let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
+
     const registerFile: FileContractor = {
       userId: this._auth.accessId,
       contractorId: this._data.contractorId,
       contractId: this._data.contractId,
       filesName: this.fileName,
       fileType: this.typeFile,
+      documentType: typeId,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate,
       modifyDate: this.registerDate,
@@ -291,7 +302,17 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   closeModal(): void {
     this.matDialogRef.close(true);
   }
-
+  private getDocumentType() {
+    this._upload
+      .getDocumentType()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        if (res != null) {
+          this.typeDocs = res;
+        }
+      }
+      );
+  }
 
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions

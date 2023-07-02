@@ -222,10 +222,10 @@ export class AuthService
      *
      * @param user
      */
-     async signUp(user: any): Promise<Observable<any>>
+    signUp(user: any)
     {
         let urlEndpointupdate = this.apiUrl+ environment.sigUpEndpoint;
-        return await  this._httpClient.post<IResponse>(urlEndpointupdate, user);
+        return this._httpClient.post(urlEndpointupdate, user, { responseType: 'text' });
     }
 
     /**
@@ -295,7 +295,28 @@ export class AuthService
 
     UploadFileFirm(formdata: UserFirm) {
         let urlEndpointGenerate = this.apiUrl+ environment.addFileFirmEndpoint;
-         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+         return this._httpClient.post<any>(urlEndpointGenerate, formdata);
     }
 
+    getRolls(): Observable<any>
+    {
+        return this._httpClient.get<any>(this.apiUrl + environment.GetRollsEndpoint).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
+    }
+
+    getTypeUserFile(): Observable<any>
+    {
+        return this._httpClient.get<any>(this.apiUrl + environment.GetTypeUserFileEndpoint).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
+    }
 }

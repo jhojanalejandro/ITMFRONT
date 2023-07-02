@@ -54,15 +54,16 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
-  idSelected: string[]= [];
+  idSelected: string[] = [];
   contractname: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono','fechaNacimiento','hiringStatus', 'statusContractor', 'legalProccess', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'hiringStatus', 'statusContractor', 'legalProccess', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
   visibleOption: boolean = false;
-  datePipe: DatePipe
+  datePipe: DatePipe;
+  generateType: string;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private readonly _unsubscribe$ = new Subject<void>();
 
@@ -164,7 +165,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
    * @param item
    */
   trackByFn(index: number, item: any): any {
-    if(item != null ){
+    if (item != null) {
       return item.id || index;
     }
   }
@@ -220,24 +221,24 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed()
-    .pipe(takeUntil(this._unsubscribe$))
-    .subscribe((result) => {
-      if (result) {
-        this.getDataContractor();
-      }
-      this.selection.clear();
-    });
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((result) => {
+        if (result) {
+          this.getDataContractor();
+        }
+        this.selection.clear();
+      });
   }
 
   SendMailsAccounts() {
     for (let index = 0; index < this.selection.selected.length; index++) {
       this.idSelected[index] = this.selection.selected[index].id
     }
-    let ids: any = { 'idContrato': this.contractId, 'idContratistas': this.idSelected }
+    let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected, 'userId':  this.auth.accessId}
     this._contractorListService.sendmailsAccounts(ids)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response) => {
-        if(Response){
+        if (Response) {
           swal.fire({
             position: 'center',
             icon: 'success',
@@ -260,7 +261,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       data: {
         idUser: this.auth.accessId,
         data,
-        contractId:this.contractId
+        contractId: this.contractId
       }
     });
     dialogModificacion.afterClosed()
@@ -273,7 +274,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
   registrarDatosContratacion(data: any) {
     if (data == null) {
-      data = { id: null, contractId: null, componenteId: null, elementId: null }
+      data = { id: null, contractId: null, componentId: null, elementId: null }
       this.selection.selected.forEach(element => {
         this.listId.push(element.id);
       });
@@ -288,16 +289,19 @@ export class ContractorListComponent implements OnInit, OnDestroy {
         componentId: data.componentId,
         elementId: data.elementId,
         activityId: data.activityId,
-        idContractors: this.listId
+        idContractors: this.listId,
+        statusContractor: data.statusContractor
       }
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.reloadResolve();
-      }
-      this.selection.clear();
-      this.listId = [];
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((result) => {
+        if (result) {
+          this.reloadResolve();
+        }
+        this.selection.clear();
+        this.listId = [];
+      });
 
   }
 
@@ -313,10 +317,12 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.generatePdfMinute = true;
 
   }
-  generarEstudiosPrevios(data: any = null) {
+  generarEstudiosPrevios(data: any = null,type: string) {
     this.contractContractors.contractors = [data.id];
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
+    this.generateType = type;
+
   }
 
   activateContarct() {
@@ -360,21 +366,21 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     });
   }
 
-  pdfGenerated(e : boolean){
+  pdfGenerated(e: boolean) {
     this.generatePdf = e;
     this.generatePdfMinute = e;
 
   }
 
-  ngOnDestroy(): void {
-    this._unsubscribe$.next(null);
-    this._unsubscribe$.complete();
-  }
-  
   reloadResolve() {
     const currentUrl: any = this._loadrouter.url;
     this._loadrouter.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._loadrouter.navigateByUrl(currentUrl);
     });
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
   }
 }

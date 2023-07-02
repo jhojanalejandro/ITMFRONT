@@ -1,15 +1,13 @@
+export interface PersonalInformation{
+    contractorPersonalInformation: ContractorPersonalInformation;
+    academicInformation: AcademicInformation[];
+    emptityHealth: EmptityHealth[];
+}
 export interface ContractorPersonalInformation{
-    nombre: string;
-    apellido: string;
+    id: string;
     identificacion: string;
     lugarExpedicion: string;
-    totalValue: string;
-    tecnico: string;
-    tecnologo: string;
-    pregrado: string;
-    especializacion: string;
-    maestria: string;
-    doctorado: string;
+    telefono: string;
     genero: string;
     fechaNacimiento: Date;
     nacionalidad: string;
@@ -17,13 +15,24 @@ export interface ContractorPersonalInformation{
     departamento: string;
     municipio: string;
     barrio: string;
-    telefono: string;
     celular: string;
-    correo: string;
-    tipoAdministradora: string;
-    administradora: string;
     cuentaBancaria: string;
     tipoCuenta: string;
     entidadCuentaBancaria: string;
-    fechaActualizacion: string;
+    fechaActualizacion: Date;
 }
+
+export interface AcademicInformation{
+    typeAcademicInformation: string;
+    institution: string;
+    collegeDegree: string;
+    contractor: string;
+}
+
+export interface EmptityHealth{
+    contractor: string;
+    typeEmptity: string;
+    emptity: string;
+}
+
+

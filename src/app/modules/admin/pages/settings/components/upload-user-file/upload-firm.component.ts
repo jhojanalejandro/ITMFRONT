@@ -9,6 +9,7 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { UserFirm } from '../../models/setting.model';
+import { CodeUser } from 'app/core/enums/enumAuth';
 
 const moment = _rollupMoment || _moment;
 
@@ -31,6 +32,8 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   base64Output: any;
   numberOfTicks = 0;
   formFile: FormGroup;
+  members: any[];
+  typeUserFile: any[];
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -38,6 +41,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<UploadFirmComponent>,
     private _formBuilder: FormBuilder,
+    private _authService: AuthService,
     @Inject(MAT_DIALOG_DATA) private _data
   ) {
 
@@ -60,6 +64,8 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
       userCharge: new FormControl(null),
 
     });
+    this.getRolls();
+    this.getTypeUserFile();
 
   }
 
@@ -98,6 +104,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     this._auth.UploadFileFirm(registerFile)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
+        debugger
         if (res) {
           swal.fire({
             position: 'center',
@@ -140,6 +147,23 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
       this.userId = this._auth.accessId;
 
     }
+  }
+
+  private getRolls(){
+    this._authService.getRolls()
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((teams: any) => {
+        // Mark for check
+        this.members = teams;
+    });
+  }
+  private getTypeUserFile() {
+    this._auth
+      .getTypeUserFile()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((response) => {
+        this.typeUserFile = response;
+      });
   }
 
   ngOnDestroy(): void {

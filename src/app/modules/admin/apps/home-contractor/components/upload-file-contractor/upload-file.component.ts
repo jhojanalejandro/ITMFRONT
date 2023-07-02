@@ -18,12 +18,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { HomeContractorService } from '../../services/home-contractor.service';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { fuseAnimations } from '@fuse/animations';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
+import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
+import { Contractor } from 'app/modules/admin/dashboards/contractual/models/contractor';
 
 const moment = _rollupMoment || _moment;
 
@@ -31,6 +34,8 @@ const moment = _rollupMoment || _moment;
     selector: 'app-upload-file',
     templateUrl: './upload-file.component.html',
     styleUrls: ['./upload-file.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    animations: fuseAnimations
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
     date = new FormControl(moment());
@@ -41,20 +46,22 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     indeterminate = false;
     showAlert: boolean = false;
     registerDate = new Date();
-    selectContract: any;
     typeDocs: DocumentTypeFile[] = [];
+    dataContractor: Contractor;
     base64Output: any;
     numberOfTicks = 0;
     formFile: FormGroup;
+    showDate: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private ref: ChangeDetectorRef,
         private _uploadFileDataService: UploadFileDataService,
         private _auth: AuthService,
+        private _contractorListService: ContractorService,
         public matDialogRef: MatDialogRef<UploadFileContractorComponent>,
-        private _formBuilder: FormBuilder,
-        @Inject(MAT_DIALOG_DATA) private _data
+        @Inject(MAT_DIALOG_DATA) private _data,
+        private _formBuilder?: FormBuilder,
     ) {
         setInterval(() => {
             this.numberOfTicks++;
@@ -65,14 +72,14 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
         this.formFile = this._formBuilder.group({
-            file: new FormControl(null, Validators.required),
-            filesName: new FormControl(null, Validators.required),
-            typeDoc: new FormControl(null, Validators.required),
-            typeFile: new FormControl(null, Validators.required),
-            description: new FormControl(null, Validators.required),
+            file: [null, Validators.required],
+            filesName: [null],
+            typeDoc: [null, Validators.required],
+            description: [null, Validators.required],
         });
-        this.getDocumentType();
+        this.getDaTaContractor();
     }
 
     onChange(event) {
@@ -105,15 +112,17 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     addFileContractor(event) {
-        if (!this.formFile.valid) {
+        if (this.formFile.invalid) {
             return;
         }
+        let name = this.file.name.split('.')
         const registerFile: FileContractor = {
             contractorId: this._auth.accessId,
             contractId: this._data.contractId,
-            typeFilePayment: this.formFile.value.typeDoc,
-            filesName: this.formFile.value.filesName,
-            fileType: this.formFile.value.typeFile,
+            typeFilePayment: 'vacio',
+            filesName: name[0],
+            documentType: this.formFile.value.typeDoc,
+            fileType: name[1],
             descriptionFile: this.formFile.value.description,
             registerDate: this.registerDate,
             modifyDate: this.registerDate,
@@ -122,6 +131,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             userId: null,
             folderId: null
         };
+        this.formFile.disable();
         this._uploadFileDataService
             .UploadFileContractor(registerFile)
             .pipe(takeUntil(this._unsubscribeAll))
@@ -232,21 +242,49 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     typeDocumentSelected(event: any) {
-        if (event.value) {
-
+        let type = this.typeDocs.find(f => f.id === event.value).code
+        if (type === DocumentTypeCodes.CUENTACOBRO || type === DocumentTypeCodes.PLANILLA || type === DocumentTypeCodes.INFORMEEJECUCIÓN) {
+            this.showDate = true;
+        } else {
+            this.showDate = false;
         }
     }
-    private getDocumentType() {
+    private getDocumentType(filter: boolean) {
         this._uploadFileDataService
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
-                    if (res != null) {
-                        this.typeDocs = res;
+                debugger
+                if (res != null) {
+                    this.typeDocs = res;
+                    if (filter) {
+                        this.typeDocs = this.typeDocs.filter(f => f.code === DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code === DocumentTypeCodes.HOJADEVIDA || f.code === DocumentTypeCodes.REGISTROSECOP)
+                    } else {
+                        this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
                     }
                 }
+            }
             );
     }
+
+    private getDaTaContractor(): any {
+        debugger
+        this._contractorListService
+            .getContractorByIdProject(this._data.contractId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((resp) => {
+                debugger
+                this.dataContractor = resp;
+                if (resp != null) {
+                    this.getDocumentType(true);
+                } else {
+                    this.getDocumentType(false);
+                }
+            }
+            );
+        return this.dataContractor;
+    }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();
         this._unsubscribeAll.next(true);

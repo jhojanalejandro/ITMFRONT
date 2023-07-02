@@ -22,6 +22,7 @@ export const environment = {
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarCdp: 'ExportToExcel/ExportToExcelCdp/',
     exportarPpa: 'ExportToExcel/GetSolicitudPpa/',
+    exportElements: 'ExportToExcel/ExportElement/',
     addExcelContractorEndpoint: 'ImportExcel/AddExcel',
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
 
@@ -49,7 +50,7 @@ export const environment = {
     GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
     GetFolderFileContractorEndpoint: 'Folder/GetAll/',
 
-    addContractFolderEndpoint: 'ContractFolder/Add',
+    addContractFolderEndpoint: 'ContractFolder/SaveContract',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
     GetAllContractEndpoint: 'ContractFolder/GetAll',
     GetAllHistoryProjectEndpoint: 'ContractFolder/GetAllHistory',
@@ -84,7 +85,7 @@ export const environment = {
     DeleteFileEndpoint: 'Files/Delete/',
 
 
-    addHiringEndpoint: 'HiringData/Add',
+    addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
     GetAllHiringEndpoint: 'HiringData/GetAll',
     GetByIdHiringEndpoint: 'HiringData/GetById/',
@@ -96,13 +97,11 @@ export const environment = {
     getComponent: 'Componente/GetComponent/',
 
     getComponentById: 'Componente/GetById/',
-
-    addElement: 'ElementosComponente/Add/',
-    getElements: 'ElementosComponente/Get/',
+    getElements: 'ElementosComponente/GetElementsByComponent/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
     deleteComponent: 'Componente/Delete/',
-    addElementosComponent: 'ElementosComponente/Add',
+    addElementosComponent: 'ElementosComponente/SaveElement',
     getElementoById: 'ElementosComponente/GetById/',
     getActivityByIdComponent: 'Componente/GetActivityByComponent/',
     getActivityById: 'Componente/GetActivityById/',
@@ -115,6 +114,9 @@ export const environment = {
     GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',
 
     addFileFirmEndpoint: 'UserFirm/SaveFirm',
+    GetRollsEndpoint: 'UserFirm/GetAllRolls',
+    GetTypeUserFileEndpoint: 'UserFirm/GetAllTypeUserFile',
+
 
     GetCpcTypeEndpoint: 'MasterData/GetAllCpcType',
     GetFileTypeEndpoint: 'MasterData/GetFileType',
@@ -122,6 +124,10 @@ export const environment = {
     GetElementTypeEndpoint: 'MasterData/GetAllElementType',
     GetDocumentTypeEndpoint: 'MasterData/GetDocumentType',
     GetStatusFileEndpoint: 'MasterData/GetStatusFile',
+    GetMinuteTypeContractEndpoint: 'MasterData/GetMinutes',
+    GetBanksContractEndpoint: 'MasterData/GetBanks',
+    GetGetAllRubrosContractEndpoint: 'MasterData/GetAllRubros',
+
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 

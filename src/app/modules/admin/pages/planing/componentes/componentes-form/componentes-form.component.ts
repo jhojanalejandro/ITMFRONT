@@ -22,7 +22,7 @@ import {
 } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import * as moment from 'moment';
-import { map, Observable, startWith, Subject } from 'rxjs';
+import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
 import { Componente } from '../../models/planing-model';
 import { PlaningService } from '../../service/planing.service';
@@ -92,11 +92,6 @@ export class ComponentesFormComponent implements OnInit {
 
     }
 
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
 
     /**
      * Check if the given date is overdue
@@ -125,7 +120,9 @@ export class ComponentesFormComponent implements OnInit {
                 elementos: [],
                 activities: [],
             };
-            this._planingService.addComponent(model).subscribe((response) => {
+            this._planingService.addComponent(model)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response) => {
                 if (response) {
                     Swal.fire({
                             position: 'center',
@@ -197,4 +194,9 @@ export class ComponentesFormComponent implements OnInit {
         );
     }
 
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

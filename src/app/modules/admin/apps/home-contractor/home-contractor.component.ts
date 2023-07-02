@@ -76,6 +76,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
     uploadDialog() {
         const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 idUser: this._auth.accessId,
@@ -252,6 +253,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
     addPersonalData() {
         const dialogRef = this._matDialog.open(ContractorPersonalDataComponent, {
+            disableClose: true,
             autoFocus: false,
             data: {
                 idUser: this._auth.accessId,

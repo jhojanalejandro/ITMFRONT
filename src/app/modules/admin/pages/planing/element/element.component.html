@@ -114,9 +114,6 @@
                         <input type="mail" id="nombreCpc" [value]="elemento.nombreCpc" formControlName="nombreCpc"
                             autocomplete="off" matInput placeholder="Nombre Cpc">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
-                        <mat-error *ngIf="elementForm.get('nombreCpc').hasError('required')">
-                            El Campo nombre cpc es requerido
-                        </mat-error>
                     </mat-form-field>
                     <mat-form-field *ngIf="typeContractor" appearance="outline">
                         <mat-label>Cantidad Contratista</mat-label>

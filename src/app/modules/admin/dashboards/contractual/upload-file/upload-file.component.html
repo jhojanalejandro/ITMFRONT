@@ -42,7 +42,7 @@
                 </div>
                 <div class="text-center pt-8">
                     <input formControlName="file" type="file" 
-                    accept="image/jpeg, image/png, application/pdf, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    accept="{{aceptFile}}"
                     mat-flat-button color="primary"  (change)="onChange($event)">
                 </div>
                 <!-- Shareable short link of  uploaded file -->

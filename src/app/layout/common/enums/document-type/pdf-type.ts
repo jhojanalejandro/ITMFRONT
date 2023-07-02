@@ -1,6 +1,6 @@
 export enum PdfTypeGenerate{
-    Minute = 'Minute',
-    COMMITTEEREQUEST = 'CommitteeRequest',
-    PREVIUSSTUDY = 'PreviusStudy',
+    Minute = 'NINUTA',
+    COMMITTEEREQUEST = 'SOLICITUD COMITE',
+    PREVIUSSTUDY = 'ESTUDIOS PREVIOS',
 
 }

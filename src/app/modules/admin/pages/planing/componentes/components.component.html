@@ -41,7 +41,15 @@
             </div>
         </div>
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-            <button class="fuse-mat-button-rounded" mat-stroked-button color="accent" (click)="openDialog()">
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="exportarElementos()">
+                <mat-icon svgIcon="mat_solid:upload_file"></mat-icon>
+                Importar Elementos
+            </button>
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="exportarElementos()">
+                <mat-icon svgIcon="mat_solid:file_download"></mat-icon>
+                Exportar Elementos
+            </button>
+            <button class="ml-3 fuse-mat-button-rounded" mat-stroked-button color="accent" (click)="openDialog()">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:cog'"></mat-icon>
                 <span class="ml-2">Cambiar Porcentaje de Cálculo</span>
             </button>

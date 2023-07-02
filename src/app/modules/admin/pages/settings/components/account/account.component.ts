@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
 import { IUserModel } from 'app/modules/auth/model/user-model';
 import { Subject, takeUntil } from 'rxjs';
-import { UploadFirmComponent } from '../upload-firm/upload-firm.component';
+import { UploadFirmComponent } from '../upload-user-file/upload-firm.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -19,7 +19,7 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
     alert: any;
     dataUser: IUserModel = {
         id: null, userName: null, phoneNumber: null, professionalposition: null, userEmail: null,
-        identification: null
+        identification: null, passwordMail: null
     }
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -41,6 +41,7 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
             phone: [this.dataUser.phoneNumber],
             profesionalPosistion: [this.dataUser.professionalposition],
             identification: [this.dataUser.identification],
+            passwordMail: [this.dataUser.identification],
         });
     }
 
@@ -52,7 +53,9 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
             professionalposition: this.accountForm.value.profesionalPosistion,
             phoneNumber: this.accountForm.value.phoneNumber,
             userEmail: this.accountForm.value.email,
-            identification: this.accountForm.value.identification
+            identification: this.accountForm.value.identification,
+            passwordMail: this.accountForm.value.passwordMail
+
         };
         // Sign in
         this._authService.updateUser(updateUser)

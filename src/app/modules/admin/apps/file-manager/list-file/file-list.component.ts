@@ -10,10 +10,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { FileListManagerService } from '../services/list-file.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.service';
 import { ObservationFileComponent } from './observation-File/observation-file.component';
 import { DetailFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detail-file-enum';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
+import { AuthService } from 'app/core/auth/auth.service';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         observation: null,
         statusFileId: null,
         passed: false,
+        userId: null,
     }
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -58,6 +60,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         private _fileManagerService: FileListManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _matDialog: MatDialog,
+        private _auth: AuthService
     ) { }
 
     ngOnInit(): void {
@@ -136,8 +139,8 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
 
-    onChange(event: any, file: FileContractor) {
-        let code = this.statusFile.find(f => f.code === DetailFileOption.RECHAZADO)
+    updateFile(event: any, file: FileContractor) {
+        let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
             const dialogRef = this._matDialog.open(ObservationFileComponent, {
                 disableClose: true,
@@ -163,7 +166,8 @@ export class FileListComponent implements OnInit, OnDestroy {
             this.detailFile.registerDate = new Date();
             this.detailFile.passed = true;
             this.detailFile.statusFileId = event.value;
-            
+            this.detailFile.userId = this._auth.accessId;
+
             this._uploadService.updateStatusFileContractor(this.detailFile)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((res) => {

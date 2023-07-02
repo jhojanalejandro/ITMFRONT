@@ -6,6 +6,7 @@ export interface FileContractor{
     filesName: string;
     filedata: string;
     fileType: string;
+    documentType: string;
     descriptionFile: string;
     registerDate: any;
     modifyDate?: any;
@@ -41,6 +42,7 @@ export interface DetailFile{
     registerDate: Date;
     statusFileId: string;
     passed: any;
+    userId: string;
 }
 
 

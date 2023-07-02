@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuseAlertType } from '@fuse/components/alert';
@@ -21,7 +21,7 @@ import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
   templateUrl: './data-hiring-contractor.component.html',
   styleUrls: ['./data-hiring-contractor.component.scss'],
 })
-export class ContractorDataHiringComponent implements OnInit {
+export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   shareData: boolean = false;
   durationInSeconds = 3;
   registerDate: Date = new Date();
@@ -61,7 +61,7 @@ export class ContractorDataHiringComponent implements OnInit {
   formContractor: FormGroup;
   visibleActivity: boolean = false;
   supervisor: string = 'Supervisor';
-  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, actaComite: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
+  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
   private readonly _unsubscribe$ = new Subject<void>();
   detalleContrat: DetalleContrato = {
     contractId: null,
@@ -161,8 +161,8 @@ export class ContractorDataHiringComponent implements OnInit {
           userId: this._auth.accessId,
           contractorId: this.datos.idContractors[index],
           contractId: this.datos.contractId,
-          contrato: 'vacio',
-          compromiso: 'vacio',
+          contrato: null,
+          compromiso: null,
           fechaRealDeInicio: this.formContractor.value.fechaInicioReal,
           numeroActa: this.formContractor.value.numeroActa,
           fechaDeComite: this.formContractor.value.fechaComite,
@@ -178,9 +178,9 @@ export class ContractorDataHiringComponent implements OnInit {
           cargoSupervisorItm: dataAdmin.professionalposition,
           identificacionSupervisor: dataAdmin.identification,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-          actaComite: 'vacio',
           cdp: this.formContractor.value.cdp,
-          caso: this.formContractor.value.caso
+          caso: this.formContractor.value.caso,
+          statusContractor: this.datos.statusContractor
 
         });
       }
@@ -206,9 +206,10 @@ export class ContractorDataHiringComponent implements OnInit {
         cargoSupervisorItm: dataAdmin.Professionalposition,
         identificacionSupervisor: dataAdmin.identificacionSupervisor,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-        actaComite: 'vacio',
         cdp: this.formContractor.value.cdp,
-        caso: this.formContractor.value.caso
+        caso: this.formContractor.value.caso,
+        statusContractor: this.datos.statusContractor
+
       }];
     }
     this._uploadService
@@ -258,6 +259,7 @@ export class ContractorDataHiringComponent implements OnInit {
       this.formContractor.value.nivel = '0'
     }
     let dataAdmin = this.supervisorList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
+    
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
@@ -279,7 +281,6 @@ export class ContractorDataHiringComponent implements OnInit {
       cargoSupervisorItm: dataAdmin.professionalposition,
       identificacionSupervisor: dataAdmin.identification,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
-      actaComite: 'vacio',
       cdp: this.formContractor.value.cdp,
       caso: this.formContractor.value.caso
 
@@ -524,7 +525,7 @@ export class ContractorDataHiringComponent implements OnInit {
   }
 
   private getDetailProject() {
-    this._genericService.getDetalleContratoById(this.datos.contractId, true)
+    this._genericService.getDetalleContractById(this.datos.contractId, true)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         if (response) {

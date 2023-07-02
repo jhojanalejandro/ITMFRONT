@@ -98,6 +98,14 @@
                             Por favor, introduce una dirección de correo electrónico válida
                         </mat-error>
                     </mat-form-field>
+                    <div class="text-2xl text-warn-500 ">Para el envío de correos es necesario la clave de su Correo Corporativo</div>
+                    <mat-form-field class="w-full">
+                        <mat-label>Contraseña Correo</mat-label>
+                        <input id="password" matInput type="passwordMail" [formControlName]="'passwordMail'">
+                        <mat-error>
+                            se requiere contraseña
+                        </mat-error>
+                    </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Descripción del cargo</mat-label>
                         <textarea matInput [formControlName]="'professional'" [rows]="1" cdkTextareaAutosize
