@@ -300,7 +300,7 @@ export class ModificacionFormComponent implements OnInit {
         });
     }
     getDateAdiction() {
-        this._genericService.getDetalleContratoById(this._data.contractId, true)
+        this._genericService.getDetalleContractById(this._data.contractId, true)
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe(
             (resp)=>{

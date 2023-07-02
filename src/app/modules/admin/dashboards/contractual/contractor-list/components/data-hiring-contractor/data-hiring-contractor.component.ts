@@ -525,7 +525,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   }
 
   private getDetailProject() {
-    this._genericService.getDetalleContratoById(this.datos.contractId, true)
+    this._genericService.getDetalleContractById(this.datos.contractId, true)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         if (response) {

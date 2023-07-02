@@ -18,9 +18,9 @@ import Swal from 'sweetalert2';
 import { DialogChangePercentajeComponent } from './DialogChangePercentaje/DialogChangePercentaje.component';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { ActividadFormComponent } from './actividad-form/actividad-form.component';
-import swal from 'sweetalert2';
 import { PlaningService } from '../service/planing.service';
-import { MatDrawerToggleResult } from '@angular/material/sidenav';
+import { ButtonsExportService } from 'app/layout/common/buttons-export/buttons-export.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'components-card',
@@ -53,6 +53,7 @@ export class AddComponentsComponent implements OnInit {
     nuevoPorcentage: number = 0;
     totalCalculado: number = 0;
     projectName: string = '';
+    private readonly _unsubscribe$ = new Subject<void>();
 
     constructor(
         private route: ActivatedRoute,
@@ -63,6 +64,7 @@ export class AddComponentsComponent implements OnInit {
         private _contrtactService: UploadDataService,
         private _loadrouter: Router,
         private _formBuilder: FormBuilder,
+        private _service: ButtonsExportService
     ) {
         this.contractId = this.route.snapshot.params.id;
         if (this.contractId) {
@@ -329,7 +331,9 @@ export class AddComponentsComponent implements OnInit {
             gastosOperativos: this.gastosOperativos,
         };
 
-        this._contrtactService.UpdateCostContractFolder(registerProject).subscribe((res) => {
+        this._contrtactService.UpdateCostContractFolder(registerProject)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((res) => {
             if (res) {
                 Swal.fire({
                     position: 'center',
@@ -349,7 +353,9 @@ export class AddComponentsComponent implements OnInit {
     }
 
     private getActivity(e: any) {
-        this._planingService.getAllActivity(e.id).subscribe((response) => {
+        this._planingService.getAllActivity(e.id)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((response) => {
             if (response.length != 0) {
                 this.dataActividad = response;
                 this._changeDetectorRef.detectChanges();
@@ -364,8 +370,10 @@ export class AddComponentsComponent implements OnInit {
     }
 
     deleteComponent(componente: any) {
-        this._planingService.deleteComponent(componente.id).subscribe((response) => {
-            if(response){
+        this._planingService.deleteComponent(componente.id)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((response) => {
+            if (response) {
                 Swal.fire(
                     {
                         position: 'center',
@@ -374,10 +382,10 @@ export class AddComponentsComponent implements OnInit {
                         html: 'Información Elimina Exitosamente!',
                         showConfirmButton: false,
                         timer: 1500
-                      }
+                    }
                 );
                 this.reloadResolve();
-            }else{
+            } else {
                 Swal.fire(
                     'Error!',
                     'Algo sucedio, vuelve a intentarlo!',
@@ -417,6 +425,39 @@ export class AddComponentsComponent implements OnInit {
                 this.deleteComponent(component);
             }
         });
+    }
+
+    exportarElementos() {
+        this._service.getElementsContract(this.contractId)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "EXPORTAR ELEMENTOS";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Elementos descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    console.log(response);
+                    
+                    Swal.fire('', 'error al exportar los elementos', 'error');
+                }
+            );
+    }
+
+    ngOnDestroy(): void {
+        this._unsubscribe$.next(null);
+        this._unsubscribe$.complete();
     }
 
 }

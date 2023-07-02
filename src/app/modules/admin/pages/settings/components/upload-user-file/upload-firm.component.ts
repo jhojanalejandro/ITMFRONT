@@ -33,6 +33,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   numberOfTicks = 0;
   formFile: FormGroup;
   members: any[];
+  typeUserFile: any[];
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -64,6 +65,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
 
     });
     this.getRolls();
+    this.getTypeUserFile();
 
   }
 
@@ -155,6 +157,15 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
         this.members = teams;
     });
   }
+  private getTypeUserFile() {
+    this._auth
+      .getTypeUserFile()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((response) => {
+        this.typeUserFile = response;
+      });
+  }
+
   ngOnDestroy(): void {
     this._unsubscribeAll.complete();
     this._unsubscribeAll.next(true);

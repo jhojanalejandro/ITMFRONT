@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ButtonsExportService } from './buttons-export.service';
 import swal from 'sweetalert2';
 import Swal from 'sweetalert2';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-buttons-export',
@@ -9,13 +10,17 @@ import Swal from 'sweetalert2';
     styleUrls: ['./buttons-export.component.scss'],
 })
 export class ButtonsExportComponent implements OnInit {
-    @Input() idContrato: number;
+    @Input() contractId: string;
+    private readonly _unsubscribe$ = new Subject<void>();
+
     constructor(private _service: ButtonsExportService) { }
 
     ngOnInit() { }
 
     exportarViabilidad() {
-        this._service.getReport(this.idContrato).subscribe(
+        this._service.getReport(this.contractId)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
@@ -40,7 +45,9 @@ export class ButtonsExportComponent implements OnInit {
     }
 
     exportarSolicitudCdp() {
-        this._service.getReportCdp(this.idContrato).subscribe(
+        this._service.getReportCdp(this.contractId)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
@@ -64,8 +71,9 @@ export class ButtonsExportComponent implements OnInit {
     }
 
     exportarPaa() {
-        this._service.getReportPpa(this.idContrato).subscribe(
+        this._service.getReportPpa(this.contractId).subscribe(
             (res) => {
+                debugger
                 if (res) {
                     var downloadURL = window.URL.createObjectURL(res);
                     var link = document.createElement('a');
@@ -98,7 +106,9 @@ export class ButtonsExportComponent implements OnInit {
     }
 
     exportarCdp() {
-        this._service.getReportDataCdp(this.idContrato).subscribe(
+        this._service.getReportDataCdp(this.contractId)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe(
             (res) => {
                 var downloadURL = window.URL.createObjectURL(res);
                 var link = document.createElement('a');
@@ -121,4 +131,10 @@ export class ButtonsExportComponent implements OnInit {
             }
         );
     }
+
+    ngOnDestroy(): void {
+        this._unsubscribe$.next(null);
+        this._unsubscribe$.complete();
+      }
+    
 }

@@ -234,7 +234,6 @@ export class ShareService {
                 textoCentenas += ' y ' + this.unidades[unidades];
             }
         }
-
         return textoCentenas;
     }
     transformDate(value: string): string {

@@ -74,7 +74,7 @@ export class ContractorPersonalDataComponent implements OnInit {
   generos: string[] = [
     'Masculino',
     'Femenino',
-    'Indefinido'
+    'Otro'
   ]
   minBirth: Date;
   constructor(
@@ -165,7 +165,7 @@ export class ContractorPersonalDataComponent implements OnInit {
 
 
   saveContractorDataInformation() {
-    this.academicInformationList =[];
+    this.academicInformationList = [];
     for (let index = 0; index < 5; index++) {
       this.academicInformation = {
         collegeDegree: '',
@@ -224,7 +224,7 @@ export class ContractorPersonalDataComponent implements OnInit {
       }
       if (this.academicInformation.institution != '' && this.academicInformation.collegeDegree != '') {
         let technologist = this.academicInformationList.findIndex(f => f.typeAcademicInformation === this.academicInformation.typeAcademicInformation);
-        if(technologist < 0){
+        if (technologist < 0) {
           this.academicInformation.contractor = this._auth.accessId;
           this.academicInformationList.push(this.academicInformation)
         }
@@ -427,6 +427,5 @@ export class ContractorPersonalDataComponent implements OnInit {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();
   }
-
 
 }

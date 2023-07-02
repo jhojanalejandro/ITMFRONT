@@ -22,6 +22,17 @@
                         type="password"
                         matInput>
                 </mat-form-field>
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Contraseña actual Correo</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'passwordMail'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
             </div>
             <!-- New password -->
             <div class="sm:col-span-4">

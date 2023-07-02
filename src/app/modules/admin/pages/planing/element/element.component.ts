@@ -28,6 +28,7 @@ import { DetalleContrato, ElementComponent, Elements, ListElements } from '../mo
 import { PlaningService } from '../service/planing.service';
 import { CpcType, ElementType } from 'app/modules/admin/generic/model/generic.model';
 import { ElementTypeCode } from 'app/layout/common/enums/elementType';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-alement',
@@ -223,26 +224,26 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             activityId: this._data.activityId
         };
         this._planingService.addElementoComponente(item)
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((response) => {
-            if (response) {
-                swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: '',
-                    html: 'Información Registrada Exitosamente!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                this.matDialogRef.close(true);
-            }
-            this._changeDetectorRef.detectChanges();
-        }, (response) => {
-            // Set the alert
-            console.log(response);
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response) => {
+                if (response) {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.matDialogRef.close(true);
+                }
+                this._changeDetectorRef.detectChanges();
+            }, (response) => {
+                // Set the alert
+                console.log(response);
 
-            swal.fire('error', 'Error al registrar la información!', 'error');
-        });
+                swal.fire('error', 'Error al registrar la información!', 'error');
+            });
     }
 
     calculate = (e: string) => {
@@ -363,28 +364,28 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
     getCdp() {
         this._genericService.getCpcType()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((response) => {
-            this.cpcType = response;
-        }, (response) => {
-            // Set the alert
-            console.log(response);
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response) => {
+                this.cpcType = response;
+            }, (response) => {
+                // Set the alert
+                console.log(response);
 
-            swal.fire('error', 'Error al registrar la información!', 'error');
-        });
+                swal.fire('error', 'Error al registrar la información!', 'error');
+            });
     }
 
     getElementType() {
         this._genericService.getElementType()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((response) => {
-            this.elementTypes = response;
-        }, (response) => {
-            // Set the alert
-            console.log(response);
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response) => {
+                this.elementTypes = response;
+            }, (response) => {
+                // Set the alert
+                console.log(response);
 
-            swal.fire('error', 'Error al registrar la información!', 'error');
-        });
+                swal.fire('error', 'Error al registrar la información!', 'error');
+            });
     }
 
     changecpcType(e: any) {
@@ -393,24 +394,34 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     private getDetailContract() {
-        this._genericService.getDetalleContratoById(this._data.contractId, true)
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(
-            (resp) => {
-                this.detailContract = resp;
-                this.calcularDiasEntreFechas(this.detailContract.fechaContrato, this.detailContract.fechaFinalizacion);
-            }
-        );
+        this._genericService.getDetalleContractById(this._data.contractId, true)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                (resp) => {
+                    debugger
+                    if (resp != null) {
+                        this.detailContract = resp;
+                        this.calcularDiasEntreFechas(this.detailContract.fechaContrato, this.detailContract.fechaFinalizacion);
+                    } else {
+                        Swal.fire(
+                            'Ei',
+                            'No se encuentran fechas del contrato',
+                            'question'
+                        );
+                    }
+
+                }
+            );
     }
 
     private getTypeMinuteContract() {
         this._genericService.getTypeMinutesContract()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(
-            (resp) => {
-                this.modificaciones = resp;
-            }
-        );
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                (resp) => {
+                    this.modificaciones = resp;
+                }
+            );
     }
 
 

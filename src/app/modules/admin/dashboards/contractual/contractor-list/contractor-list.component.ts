@@ -234,7 +234,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     for (let index = 0; index < this.selection.selected.length; index++) {
       this.idSelected[index] = this.selection.selected[index].id
     }
-    let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected }
+    let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected, 'userId':  this.auth.accessId}
     this._contractorListService.sendmailsAccounts(ids)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response) => {
@@ -317,11 +317,11 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.generatePdfMinute = true;
 
   }
-  generarEstudiosPrevios(data: any = null) {
+  generarEstudiosPrevios(data: any = null,type: string) {
     this.contractContractors.contractors = [data.id];
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
-    this.generateType = 'ESTUDIOS PREVIOS'
+    this.generateType = type;
 
   }
 

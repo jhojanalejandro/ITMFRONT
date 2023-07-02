@@ -15,7 +15,7 @@ import { SettingsAccountComponent } from 'app/modules/admin/pages/settings/compo
 import { SettingsSecurityComponent } from 'app/modules/admin/pages/settings/components/security/security.component';
 import { settingsRoutes } from 'app/modules/admin/pages/settings/settings.routing';
 import { SettingsTeamComponent } from './components/team/team.component';
-import { UploadFirmComponent } from './components/upload-firm/upload-firm.component';
+import { UploadFirmComponent } from './components/upload-user-file/upload-firm.component';
 
 @NgModule({
     declarations: [

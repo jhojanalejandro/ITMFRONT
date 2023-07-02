@@ -10,4 +10,5 @@ export interface IUserModel{
     phoneNumber?: string;
     identification?: string;
     status?: string;
+    passwordMail: string;
 }

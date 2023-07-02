@@ -22,6 +22,7 @@ export const environment = {
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarCdp: 'ExportToExcel/ExportToExcelCdp/',
     exportarPpa: 'ExportToExcel/GetSolicitudPpa/',
+    exportElements: 'ExportToExcel/ExportElement/',
     addExcelContractorEndpoint: 'ImportExcel/AddExcel',
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
 
@@ -114,6 +115,8 @@ export const environment = {
 
     addFileFirmEndpoint: 'UserFirm/SaveFirm',
     GetRollsEndpoint: 'UserFirm/GetAllRolls',
+    GetTypeUserFileEndpoint: 'UserFirm/GetAllTypeUserFile',
+
 
     GetCpcTypeEndpoint: 'MasterData/GetAllCpcType',
     GetFileTypeEndpoint: 'MasterData/GetFileType',

@@ -65,7 +65,7 @@ export class GenericService {
         );
     }
 
-    getDetalleContratoById(id: any, tipo: boolean): Observable<DetalleContrato> {
+    getDetalleContractById(id: any, tipo: boolean): Observable<DetalleContrato> {
         const params = new HttpParams()
             .set('id', id)
             .set('tipoConsulta', tipo);

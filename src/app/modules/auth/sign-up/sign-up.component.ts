@@ -48,7 +48,8 @@ export class AuthSignUpComponent implements OnInit {
             confirmPassword: ['', Validators.required],
             professional: ['', Validators.required],
             phoneNumber: ['', Validators.required],
-            identification: ['', Validators.required]
+            identification: ['', Validators.required],
+            passwordMail: ['', Validators.required]
         });
         this.validatePassword();
     }
@@ -62,7 +63,8 @@ export class AuthSignUpComponent implements OnInit {
             professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
             phoneNumber: this.signUpForm.value.phoneNumber.toString(),
-            identification: this.signUpForm.value.identification.toString()
+            identification: this.signUpForm.value.identification.toString(),
+            passwordMail: this.signUpForm.value.passwordMail
 
         };
         // Do nothing if the form is invalid

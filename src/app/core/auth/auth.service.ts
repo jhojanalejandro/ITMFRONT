@@ -309,4 +309,14 @@ export class AuthService
         );
     }
 
+    getTypeUserFile(): Observable<any>
+    {
+        return this._httpClient.get<any>(this.apiUrl + environment.GetTypeUserFileEndpoint).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
+    }
 }

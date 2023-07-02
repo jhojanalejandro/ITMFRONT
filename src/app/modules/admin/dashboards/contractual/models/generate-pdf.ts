@@ -45,6 +45,7 @@ export interface PreviusStudy{
     contractNumber: string;
     supervisorIdentification: string;
     supervisorFirm: string;
+    supervisorItmName: string;
     elementObject: string;
     elementName: string;
     user: string;

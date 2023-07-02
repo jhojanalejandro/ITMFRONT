@@ -33,6 +33,14 @@
                     </mat-form-field>
                 </div>
 
+                <mat-form-field  class="hiring" appearance="outline">
+                    <mat-label >Tipo Imagen</mat-label>
+                    <mat-select formControlName="userCharge"  name="typeFile">
+                        <mat-option  *ngFor="let type of typeUserFile" [value]="type.id">
+                            {{type.typeFile}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field> 
                 <div *ngIf="isOwner">
 
                     <mat-form-field  class="hiring" appearance="outline">

@@ -1,6 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import html2canvas from 'html2canvas';
-import htmlToPdfmake from 'html-to-pdfmake';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -14,8 +12,8 @@ import { ContractContractors } from '../../../models/contractor';
 import { CommitteeRequest, PreviusStudy } from '../../../models/generate-pdf';
 import { PdfTypeGenerate } from 'app/layout/common/enums/document-type/pdf-type';
 import { UploadFileDataService } from '../../../upload-file/service/upload-file.service';
-import { take } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
+import { year } from '@igniteui/material-icons-extended';
 
 @Component({
     selector: 'app-generate-pdf',
@@ -62,8 +60,6 @@ export class GeneratePdfComponent implements OnInit {
                 break;
             case PdfTypeGenerate.COMMITTEEREQUEST:
                 this.getcommitteeRequestData();
-                this.generateCommitteeRequest();
-                this.hideComponent();
                 break;
         }
         this.currentDate = this._shareService.getCurrentDate();
@@ -96,7 +92,7 @@ export class GeneratePdfComponent implements OnInit {
                                     {
                                         rowSpan: 3,
                                         image: this.itmImageBase654,
-                                        style: 'title',
+                                        alignment: 'center',
                                         fit: [100, 100],
                                     },
                                     {
@@ -115,21 +111,15 @@ export class GeneratePdfComponent implements OnInit {
                                     },
                                 ],
                                 ['', '', '', 'Versión', '09'],
-                                ['', '', '', 'Fecha ', this.currentDate],
+                                ['', '', '', 'Fecha', this.currentDate],
                             ],
                         },
-                    },
-
-                    footer: {
-                        margin: [10, 10],
-                        text: 'Medellín - Colombia',
-                        alignment: 'center',
                     },
                     content: [
                         {
                             text: 'Fecha de Elaboración: ' + this.dateTransform,
                             style: 'subheader',
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 10, 15, 0],
                         },
                         {
                             text: 'Rector',
@@ -177,17 +167,19 @@ export class GeneratePdfComponent implements OnInit {
                                 {
                                     text: 'La Unidad Estratégica de Negocios del ITM, requiere celebrar un contrato de prestación de servicios en la gestión como Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública correspondientes al Contrato Interadministrativo No.',
                                     fontSize: 10,
+                                    alignment: 'justify'
                                 },
                                 {
-                                    text: data.contractNumber,
+                                    text: ' 4600095169',
                                     fontSize: 11,
+                                    alignment: 'justify'
                                 },
                                 {
                                     text: ' de ',
                                     fontSize: 10,
                                 },
                                 {
-                                    text: this.anioActual + ', ',
+                                    text: '2023, ',
                                     fontSize: 11,
                                 },
                                 {
@@ -195,7 +187,7 @@ export class GeneratePdfComponent implements OnInit {
                                     fontSize: 10,
                                 },
                                 {
-                                    text: ' CONTRATO INTERADMINISTRATIVO PARA ' + data.elementObject.toUpperCase(),
+                                    text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN, IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP.',
                                     fontSize: 11,
                                 },
                             ],
@@ -306,8 +298,9 @@ export class GeneratePdfComponent implements OnInit {
                                                 margin: [10, 10, 10, 10],
                                                 text: [
                                                     {
-                                                        text: 'El Plan de Desarrollo Institucional “ITM: A Otro Nivel”, ' + this.anioAnterior + '-' + this.anioActual + ', está orientado a trascender de la innovación competitiva a la que transforma, a partir de la articulación de la ciencia, la tecnología, la innovación y la producción artística, aportando desde su vocación tecnológica y compromiso social al logro de un modelo sostenible para la humanidad. El Plan de Desarrollo Institucional fue aprobado el día 29 de mayo de 2020 por El Consejo Directivo del Instituto Tecnológico Metropolitano Institución Universitaria, en ejercicio de sus atribuciones legales y estatutarias. La Unidad Estratégica de Negocios, observado la nueva propuesta rectoral, en especial el Gran Pilar No. 4, denominado “Modelo de gestión flexible, eficiente y sostenible” y con el fin de dar cumplimiento a objeto contractual fijado en el Contrato interadministrativo número ' + data.contractNumber + ' cuyo objeto es ',
+                                                        text: 'El Plan de Desarrollo Institucional “ITM: A Otro Nivel”, 2020-2023, está orientado a trascender de la innovación competitiva a la que transforma, a partir de la articulación de la ciencia, la tecnología, la innovación y la producción artística, aportando desde su vocación tecnológica y compromiso social al logro de un modelo sostenible para la humanidad. El Plan de Desarrollo Institucional fue aprobado el día 29 de mayo de 2020 por El Consejo Directivo del Instituto Tecnológico Metropolitano Institución Universitaria, en ejercicio de sus atribuciones legales y estatutarias. La Unidad Estratégica de Negocios, observado la nueva propuesta rectoral, en especial el Gran Pilar No. 4, denominado “Modelo de gestión flexible, eficiente y sostenible” y con el fin de dar cumplimiento a objeto contractual fijado en el Contrato interadministrativo número 4600095169 cuyo objeto es ',
                                                         fontSize: 10,
+                                                        alignment: 'justify'
                                                     },
                                                     {
                                                         text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN,IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP., ',
@@ -321,7 +314,6 @@ export class GeneratePdfComponent implements OnInit {
                                             },
                                             {
                                                 margin: [20, 10, 20, 10],
-                                                style: 'tableExample',
                                                 table: {
                                                     headerRows: 2,
                                                     widths: [180, 180],
@@ -372,7 +364,6 @@ export class GeneratePdfComponent implements OnInit {
                         {
                             margin: [10, 10, 10, 10],
                             pageBreak: 'before',
-                            style: 'tableExample',
                             table: {
                                 widths: [100, '*'],
                                 body: [
@@ -405,11 +396,12 @@ export class GeneratePdfComponent implements OnInit {
                                                         bold: true,
                                                     },
                                                     {
-                                                        text: ' Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar ' + data.elementObject + ' del Contrato Interadministrativo No ',
+                                                        text: ' Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No ',
                                                         fontSize: 9,
+                                                        alignment: 'justify'
                                                     },
                                                     {
-                                                        text: data.contractNumber + ' DE ' + this.anioActual + ',',
+                                                        text: '4600095169 DE 2022, ',
                                                         fontSize: 10,
                                                     },
                                                     {
@@ -417,7 +409,7 @@ export class GeneratePdfComponent implements OnInit {
                                                         fontSize: 9,
                                                     },
                                                     {
-                                                        text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN - DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
+                                                        text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
                                                         fontSize: 9,
                                                     },
                                                 ],
@@ -458,7 +450,7 @@ export class GeneratePdfComponent implements OnInit {
                                                         style: 'fontSegundapagPeque',
                                                     },
                                                     {
-                                                        text: data.specificObligations + data.generalObligations,
+                                                        text: '1) Presentar el informe de gestión de manera mensual al ITM de las actividades realizadas con el visto bueno requerido. 2) Presentar el Informe final de las actividades realizadas durante la ejecución del contrato. 3)',
                                                         style: 'fontSegundapagPeque',
                                                     },
                                                     {
@@ -495,7 +487,6 @@ export class GeneratePdfComponent implements OnInit {
                         {
                             margin: [10, 10, 10, 10],
                             pageBreak: 'before',
-                            style: 'tableExample',
                             table: {
                                 widths: [100, '*'],
                                 body: [
@@ -551,7 +542,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 margin: [10, 5, 10, 10],
                                             },
                                             {
-                                                text: fechaLetras + 'sin exceder la vigencia ' + this.anioActual,
+                                                text: '03 MESES y 17 DIAS sin exceder la vigencia 2022',
                                                 style: 'fontSegundapagPeque',
                                                 margin: [10, 5, 10, 10],
                                             },
@@ -566,7 +557,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 margin: [0, 10, 0, 0],
                                             },
                                             {
-                                                text: 'Jefe Oficina - Unidad Estratégica de Negocios',
+                                                text: 'Jefe Oficina– Unidad Estratégica de Negocios',
                                                 style: 'fontSegundapagPeque',
                                                 margin: [10, 10, 10, 10],
                                             },
@@ -577,7 +568,6 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         {
                             margin: [10, 10, 10, 10],
-                            style: 'tableExample',
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -633,7 +623,6 @@ export class GeneratePdfComponent implements OnInit {
                         {
                             margin: [10, 10, 10, 10],
                             pageBreak: 'before',
-                            style: 'tableExample',
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -761,7 +750,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: valorLetras + 'm.l($' + totalContrato + ').',
+                                                            text: ' Veintiún millones ochocientos quince mil cuatrocientos veintidós pesos m.l($ 21815422).',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -794,7 +783,6 @@ export class GeneratePdfComponent implements OnInit {
                         {
                             pageBreak: 'before',
                             margin: [10, 10, 10, 10],
-                            style: 'tableExample',
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -834,7 +822,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: ' “' + data.contractorName,
+                                                            text: ' “DANIELA DIAZ CALLE ',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -843,7 +831,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: data.contractorIdentification + '”,',
+                                                            text: '1152690770”,',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -857,7 +845,7 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 8, 0, 0],
                                                     text: [
                                                         {
-                                                            text: ' “' + data.contractorName + '” ',
+                                                            text: '“DANIELA DIAZ CALLE” ',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -903,7 +891,6 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         {
                             margin: [10, 10, 10, 10],
-                            style: 'tableExample',
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -1285,7 +1272,6 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         {
                             margin: [10, 10, 10, 10],
-                            style: 'tableExample',
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -1335,7 +1321,6 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         {
                             margin: [10, 10, 10, 10],
-                            style: 'tableExample',
                             table: {
                                 widths: ['*', '*'],
                                 body: [
@@ -1345,8 +1330,7 @@ export class GeneratePdfComponent implements OnInit {
                                             text: 'RESPONSABLE',
                                             style: 'titleTable2',
                                             fillColor: '#4FAACD',
-                                        },
-                                        {},
+                                        }
                                     ],
                                     [
                                         {
@@ -1358,7 +1342,7 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 5, 0, 0],
                                                 },
                                                 {
-                                                    text: data.user,
+                                                    text: 'OLGA LUCIA GOMEZ HOYOS',
                                                     style: 'fontSegundapagPeque',
                                                     margin: [0, 5, 0, 0],
                                                 },
@@ -1369,14 +1353,14 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 8, 0, 0],
                                                 },
                                                 {
-                                                    text: data.userCharge,
+                                                    text: 'Jefe Oficina – Unidad Estratégica de Negocios',
                                                     style: 'fontSegundapagPeque',
                                                     margin: [0, 8, 0, 0],
                                                 },
                                             ],
                                         },
                                         {
-                                            image: data.userFirm,
+                                            image: 'data:image/png;base64,' + data.userFirm,
                                             style: 'title',
                                             fit: [100, 100],
                                         },
@@ -1411,17 +1395,14 @@ export class GeneratePdfComponent implements OnInit {
                                         {
                                             text: 'Elaborado Por',
                                             style: 'fontPeque',
-                                            bold: true,
                                         },
                                         {
                                             text: 'Revisado Por',
                                             style: 'fontPeque',
-                                            bold: true,
                                         },
                                         {
                                             text: 'Aprobado Por',
                                             style: 'fontPeque',
-                                            bold: true,
                                         },
                                     ],
                                     [
@@ -1434,23 +1415,26 @@ export class GeneratePdfComponent implements OnInit {
                                             style: 'fontPeque',
                                         },
                                         {
-                                            text: [
-                                                { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
-                                                { text: 'Maicol Yepes' },
-
-                                            ],
-                                        },
-                                        {
+                                            border: [false, true, false, false],
+                                            aligment: 'center',
                                             text: 'Maicol Yepes',
-                                            style: 'fontPeque',
                                         },
-                                        // { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
 
-                                    ],
+                                        // {
+
+                                        //     text: 'Maicol Yepes',
+                                        //     style: 'fontPeque',
+                                        // },
+                                    ]
                                 ],
                             },
                         },
                     ],
+                    footer: {
+                        margin: [10, 10],
+                        text: 'Medellín - Colombia',
+                        alignment: 'center',
+                    },
                     styles: {
                         header: {
                             fontSize: 18,
@@ -1510,6 +1494,7 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         fontSegundapagPeque: {
                             fontSize: 9,
+                            alignment: 'justify'
                         },
                     },
 
@@ -1517,6 +1502,7 @@ export class GeneratePdfComponent implements OnInit {
                         // alignment: 'justify'
                     },
                 };
+
                 this.savePdfGenerated(documentPreviousStudy, data.contractorName, 'ESTUDIOS PREVIOS');
 
             } else {
@@ -1527,9 +1513,10 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generateCommitteeRequest() {
+    private generateCommitteeRequest(committeeRequestData: any) {
+        debugger
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-            let data = this.committeeRequestData.find(ct => ct.contractorId === this.contractContractors.contractors[index])
+            let data = committeeRequestData.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase())
 
             const documentSolicitudComite = {
                 pageSize: 'A4',
@@ -1621,29 +1608,9 @@ export class GeneratePdfComponent implements OnInit {
                         margin: [10, 10, 10, 10],
                         text: [
                             {
-                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo 4600096644 de 2023, cuyo objeto es Contrato interadministrativo para la implementación de estrategias de promoción de la convivencia y fortalecimiento del Gobierno Local en la ciudad.',
+                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo '+ data.contractNumber+ 'de 2023, cuyo objeto es '+data.elementObject,
                                 fontSize: 10,
                                 alignment: 'justify'
-                            },
-                            {
-                                text: ' 4600095169',
-                                fontSize: 11,
-                            },
-                            {
-                                text: ' de ',
-                                fontSize: 10,
-                            },
-                            {
-                                text: '2023, ',
-                                fontSize: 11,
-                            },
-                            {
-                                text: 'cuyo objeto es',
-                                fontSize: 10,
-                            },
-                            {
-                                text: data.elementObject,
-                                fontSize: 11,
                             },
                         ],
                     },
@@ -1681,7 +1648,7 @@ export class GeneratePdfComponent implements OnInit {
                                         style: 'fontPeque',
                                     },
                                     {
-                                        text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Enlace Convive La Noche en ejecución del Contrato Interadministrativo No. 4600096644 de 2023, celebrado  entre el Distrito Especial de Ciencia, Tecnología e Innovación de Medellín , Secretaría de Seguridad y Convivencia y el ITM.',
+                                        text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de '+data.elementName+' ejecución del Contrato Interadministrativo No. '+data.contractNumber+' de '+year+' , celebrado  entre '+data.contractName+' y el ITM.',
                                         style: 'fontPeque',
                                     },
                                     {
@@ -1698,7 +1665,7 @@ export class GeneratePdfComponent implements OnInit {
                     },
                     {
                         margin: [10, 0, 0, 0],
-                        text: 'contractorName'
+                        text: data.contractorName
                     },
                     {
                         margin: [10, 0, 0, 0],
@@ -1773,6 +1740,7 @@ export class GeneratePdfComponent implements OnInit {
                     },
                     fontSegundapagPeque: {
                         fontSize: 9,
+                        alignment: 'justify'
                     },
                 },
 
@@ -1788,14 +1756,19 @@ export class GeneratePdfComponent implements OnInit {
     private getcommitteeRequestData() {
         this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response) => {
             this.committeeRequestData = Response;
+            if (this.committeeRequestData.length == 0) {
+                this.hideComponent();
+            }
+            if (this.committeeRequestData.length > 0) {
+                this.generateCommitteeRequest(this.committeeRequestData);
+            }
         });
         this.itmImageBase654 = this.getBase64Image(RouteImageEnum.LOGOITM);
 
     }
 
     private gePreviusStudyData() {
-        this.headerImageBase654 = this.getBase64Image(RouteImageEnum.HEADER);
-        this.footerImageBase654 = this.getBase64Image(RouteImageEnum.FOOTER);
+
         this.itmImageBase654 = this.getBase64Image(RouteImageEnum.LOGOITM);
 
         this._pdfdataService.getPreviusStudy(this.contractContractors)
@@ -1817,7 +1790,7 @@ export class GeneratePdfComponent implements OnInit {
         let base64Image;
         this._shareService.loadAndConvertImageToBase64(route)
             .then(base64Data => {
-                base64Image = base64Data;
+                this.itmImageBase654 = base64Data;
             })
             .catch(error => {
                 console.error('Error al cargar y convertir la imagen:', error);
@@ -1829,7 +1802,7 @@ export class GeneratePdfComponent implements OnInit {
     }
 
     private savePdfGenerated(pdfDocument: any, contractorName: string, documentType) {
-        let nombreMinuta = 'SolicitudComite' + contractorName;
+        let nombreMinuta = documentType + contractorName;
         let date = this.currentDate;
         let userId = this._auth.accessId;
         let _uploadervice = this._upload;
@@ -1873,7 +1846,9 @@ export class GeneratePdfComponent implements OnInit {
         pdfMake
             .createPdf(pdfDocument)
             .download(nombreMinuta + '.pdf');
+        this.hideComponent();
     }
+
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
