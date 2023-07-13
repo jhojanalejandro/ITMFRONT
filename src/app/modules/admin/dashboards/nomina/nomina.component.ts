@@ -2,18 +2,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {  Router } from '@angular/router';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { UploadDataService } from '../contractual/service/upload-data.service';
 import { GenericService } from '../../generic/generic.services';
+
 @Component({
   selector: 'nomina',
   styleUrls: ['./nomina.component.css'],
@@ -59,10 +56,10 @@ export class NominaComponent implements OnInit, OnDestroy {
   }
 
   showFiles(data: any) {
-    return this._router.navigate(['/dashboards/nomina/documentos/'+ data.id]);
+    return this._router.navigate(['/dashboards/nomina/documentos/']);
   }
   contractorList( data: any){
-    return  this._router.navigate(['/dashboards/nomina/lista/contratistas/' + data.id]);
+    return  this._router.navigate(['/dashboards/lista-contratistas/nomina/' + data.id +'/' +data.contractname]);
 
   }
   announceSortChange(sortState: Sort) {

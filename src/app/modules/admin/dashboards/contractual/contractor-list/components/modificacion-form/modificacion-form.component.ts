@@ -28,6 +28,8 @@ import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
+import { UploadFileDataService } from '../../../upload-file/service/upload-file.service';
+import { MinuteTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 
 @Component({
@@ -84,8 +86,8 @@ export class ModificacionFormComponent implements OnInit {
         private _fuseConfirmationService: FuseConfirmationService,
         private _planingService: PlaningService,
         private _router: Router,
-        private _genericService: GenericService
-
+        private _genericService: GenericService,
+        private _uploadFileDataService: UploadFileDataService,
     ) {
         setInterval(() => {
             this.numberOfTicks++;
@@ -135,7 +137,7 @@ export class ModificacionFormComponent implements OnInit {
                 startWith(''),
                 map((value) => this._filter(value || ''))
             );
-
+            this.getDocumentType();
     }
 
     private _filter(value: string): string[] {
@@ -193,23 +195,23 @@ export class ModificacionFormComponent implements OnInit {
         };
 
         this._planingService.addElementoComponente(item)
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((response) => {
-            if (response) {
-                swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: '',
-                    html: 'Información Registrada Exitosamente!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
-            this._changeDetectorRef.detectChanges();
-        }, (response) => {
-            // Set the alert
-            swal.fire('Error', 'Error al registrar la información!', 'error');
-        });
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((response) => {
+                if (response) {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+                this._changeDetectorRef.detectChanges();
+            }, (response) => {
+                // Set the alert
+                swal.fire('Error', 'Error al registrar la información!', 'error');
+            });
         this.matDialogRef.close();
     }
 
@@ -236,38 +238,40 @@ export class ModificacionFormComponent implements OnInit {
     };
 
     selectmodificacion(event) {
-        switch (event.value) {
-            case 'Modificación':
+        let codeMinute = this.tipoModificacion.find(f =>f.id == event.value).code;
+        
+        switch (codeMinute) {
+            case MinuteTypeCodes.MC:
                 this.showDate = false;
                 this.showPayment = false;
                 this.showModify = true;
                 break;
-            case 'Ampliación':
+            case MinuteTypeCodes.AC:
                 this.showDate = true;
                 this.showPayment = false;
                 this.showModify = false;
                 break;
-            case 'Adición':
+            case MinuteTypeCodes.ADC:
                 this.showDate = false;
                 this.showPayment = true;
                 this.showModify = false;
                 break;
-            case 'Adición, Ampliación, Modificacion':
+            case MinuteTypeCodes.AAM:
                 this.showDate = true;
                 this.showPayment = true;
                 this.showModify = true;
                 break;
-            case 'Ampliación y Modificacion':
-                this.showDate = true;
+            case MinuteTypeCodes.AM:
+                this.showDate = false;
                 this.showPayment = false;
                 this.showModify = true;
                 break;
-            case 'Ampliación y Adición':
+            case MinuteTypeCodes.AA:
                 this.showDate = true;
                 this.showPayment = true;
                 this.showModify = false;
                 break;
-            case 'Modificacion y Adición':
+            case MinuteTypeCodes.ADMC:
                 this.showDate = false;
                 this.showPayment = true;
                 this.showModify = true;
@@ -293,38 +297,40 @@ export class ModificacionFormComponent implements OnInit {
         );
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((result) => {
-            if (result == 'confirmed') {
-            }
-        });
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result == 'confirmed') {
+                }
+            });
     }
     getDateAdiction() {
-        this._genericService.getDetalleContractById(this._data.contractId, true)
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(
-            (resp)=>{
-                
-                this.dateAdiction = resp;
-            }
-        );
+        this._genericService.getDetalleContractById(this._data.contractId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                (resp) => {
+
+                    this.dateAdiction = resp;
+                }
+            );
     }
     getDataElemento() {
         this._planingService.getElementoById(this._data.data.elementId)
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe((resp) => {
-            
-            if (resp.recursos == 0) {
-                swal.fire('EI', 'los recursos deben  ser mayores a 0!', 'warning');
-                this.matDialogRef.close();
-            } else {
-                this.elemento = resp;
-                this.elemento.valorUnidad = (+this.elemento.valorUnidad.toFixed(0)).toLocaleString();
-                this.elemento.valorPorDia = (+this.elemento.valorPorDia.toFixed(0)).toLocaleString();
-                this.elemento.valorTotal = (+this.elemento.valorTotal.toFixed(0)).toLocaleString();
-                this.elemento.recursos = (+this.elemento.recursos.toFixed(0)).toLocaleString();
-            }
-        })
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((resp) => {
+                if (resp !=  null) {
+                    this.elemento = resp;
+                    if(this.elemento.cpc == undefined){
+                        this.elemento.cpc = null;
+                    }
+                    if(this.elemento.nombreCpc == undefined){
+                        this.elemento.nombreCpc = null;
+                    }
+                    this.elemento.valorUnidad = this.elemento.valorUnidad;
+                    this.elemento.valorPorDia = this.elemento.valorPorDia;
+                    this.elemento.valorTotal = this.elemento.valorTotal;
+                    this.elemento.recursos = this.elemento.recursos;
+                }
+            })
     }
 
     dateChange(event) {
@@ -338,14 +344,25 @@ export class ModificacionFormComponent implements OnInit {
 
     private getTypeMinuteContract() {
         this._genericService.getTypeMinutesContract()
-        .pipe(takeUntil(this._unsubscribeAll))
-        .subscribe(
-            (resp) => {
-                this.modificaciones = resp;
-            }
-        );
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                (resp) => {
+                    this.modificaciones = resp;
+                }
+            );
     }
 
+    private getDocumentType() {
+        this._uploadFileDataService
+          .getMinuteType()
+          .pipe(takeUntil(this._unsubscribeAll))
+          .subscribe((res) => {
+            
+            if (res != null) {
+              this.tipoModificacion = res;
+            }
+        });
+      }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
