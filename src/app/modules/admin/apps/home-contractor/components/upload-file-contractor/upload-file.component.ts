@@ -254,7 +254,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
-                debugger
+                
                 if (res != null) {
                     this.typeDocs = res;
                     if (filter) {
@@ -268,12 +268,10 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     private getDaTaContractor(): any {
-        debugger
         this._contractorListService
             .getContractorByIdProject(this._data.contractId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                debugger
                 this.dataContractor = resp;
                 if (resp != null) {
                     this.getDocumentType(true);
