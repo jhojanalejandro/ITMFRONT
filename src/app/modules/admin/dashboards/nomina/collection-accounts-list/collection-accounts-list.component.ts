@@ -9,9 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CollectionAccountsService } from './collection-accounts-list.service';
-import { IGetFilesPayments } from './models/GetFilesPaymentDto';
 import swal from 'sweetalert2';
-import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as _moment from 'moment';
@@ -20,6 +18,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 import { UploadFileDataService } from '../../contractual/upload-file/service/upload-file.service';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
@@ -63,6 +62,7 @@ export class CollectionAccountsListComponent implements OnInit {
   contractId: any;
   dateSearch: any;
   tipoDocumentos: DocumentTypeFile[] = [];
+  contratos: any;
 
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -72,13 +72,14 @@ export class CollectionAccountsListComponent implements OnInit {
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _matDialog: MatDialog,
     private _uploadFileDataService: UploadFileDataService,
+    private _gerenicService: GenericService,
   ) { }
 
   ngOnInit(): void {
     this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
     this.getData();
     this.getDocumentType();
-
+    this.getContractsData();
   }
 
 
@@ -215,15 +216,21 @@ export class CollectionAccountsListComponent implements OnInit {
       });
   }
 
-  tipoSeleeccionado(event) {
+  tipoSeleeccionado(event: any, type: string) {
+
     if (this.dateSearch === null || this.dateSearch === undefined) {
       let year = new Date().getFullYear();
       let month = new Date().getMonth() + 1;
       this.dateSearch = year + '/' + month;
 
     }
-    this.type = event.value
+    if(type == 'contract'){
+      this.contractId = event.value;
+    }else{
+      this.type = event.value
+    }
     this._collectionAccounts.getItemByTypeAndDate(this.type, this.contractId, this.dateSearch).subscribe((res) => {
+      
       if (res != null) {
         this.items.files = res;
       } else {
@@ -273,6 +280,7 @@ export class CollectionAccountsListComponent implements OnInit {
       .getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
+        
         if (res != null) {
           this.tipoDocumentos = res.filter(f => f.code === DocumentTypeCode.CUENTACOBRO || f.code === DocumentTypeCode.PLANILLA || f.code === DocumentTypeCode.INFORMEEJECUCIÓN);
         }
@@ -280,4 +288,13 @@ export class CollectionAccountsListComponent implements OnInit {
       );
   }
 
+  getContractsData() {
+    // Get the data
+    this._gerenicService.getAllContract(true, 'Contractual')
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((data) => {
+        this.contratos = data;
+
+      });
+  }
 }

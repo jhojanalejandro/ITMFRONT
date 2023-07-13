@@ -13,7 +13,7 @@ import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { MatPaginator } from '@angular/material/paginator';
-import { RegisterContractFolderComponent } from 'app/modules/admin/pages/planing/componentes/register-project-folder/register-project-folder.component';
+
 @Component({
   selector: 'app-contracts-list-contarctual',
   styleUrls: ['./contracts-list.component.scss'],
@@ -38,9 +38,7 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  /**
-   * Constructor
-   */
+ 
   constructor(
     private _gerenicService: GenericService,
     private _matDialog: MatDialog,
@@ -56,45 +54,15 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
     { title: 'CONTRATISTAS', name: 'action' },
+    // { title: 'CONVENIO', name: 'assignment' },
   ]
   ngOnInit(): void {
     this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
   }
 
-  openDialog(route: any, data: any) {
-    //this.validateDinamycKey();
-    switch (route) {
-      case 'registerFolder':
-        const dialogRefPrroject = this._matDialog.open(RegisterContractFolderComponent, {
-          disableClose: true,
-          autoFocus: false,
-        });
-        dialogRefPrroject.afterClosed().subscribe(datos => {
-          if (datos) {
-            this.getContractsData();
-          }
-        });
-        break
-      case 'editData':
-        const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
-          disableClose: true,
-          autoFocus: false,
-          data: {
-            data
-          }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-          if (result) {
-            this.getContractsData();
-          }
-        });
-        break
-      case 'registerData':
-        this._router.navigate(['/dashboards/lista-contratistas/' + data.id + '/' +data.projectName]);
-        break
-
-    }
+  navigateToContractors(data: any) {
+    this._router.navigate(['/dashboards/lista-contratistas/contractual/' + data.id + '/' +data.projectName]);
   }
 
   uploadExcel() {

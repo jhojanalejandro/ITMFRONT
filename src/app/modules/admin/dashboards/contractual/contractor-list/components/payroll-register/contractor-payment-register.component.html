@@ -8,7 +8,7 @@
     <mat-dialog-content style="margin: 0px; padding: 0px;">
         <div class="option">
             <!-- Alert -->
-            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'" [showIcon]="false"
                 [type]="alert.type" [@shake]="alert.type === 'error'">
                 {{alert.message}}
             </fuse-alert>
@@ -18,22 +18,21 @@
         <form [formGroup]="formContractorPayment" class="example-form overflow-y-auto">
 
             <div class="folder">
-                <mat-form-field *ngIf="shareData" class="hiring" appearance="outline">
-                    <mat-label>{{datos.nombre}}</mat-label>
-                    <input disabled="true" type="number" id="ejecucion" [formControlName]="'contractorName'"
-                        autocomplete="off" matInput>
+                <mat-form-field *ngIf="shareData" class="hiring" appearance="fill">
+                    <mat-label>Nombre Contratista</mat-label>
+                    <input [disabled]="true"  id="contractorName"  [formControlName]="'contractorName'" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user'"></mat-icon>
                 </mat-form-field>
-                <mat-form-field class="hiring" appearance="outline">
+                <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Cantidad Contratista</mat-label>
-                    <input disabled="true" type="number" id="ejecucion" [(ngModel)]="cantidadContratistas"
+                    <input disabled="true" id="ejecucion" 
                         formControlName="cantidadContratistas" autocomplete="off" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
                 </mat-form-field>
 
             </div>
             <div class="folder" *ngIf="shareData">
-                <mat-form-field class="hiring" appearance="outline">
+                <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Cantidad A pagar</mat-label>
                     <input type="text" id="compromiso" [ngModel]="economicContractor[0].unitValue | number :'1.0-0'"
                         formControlName="cashPaymentTotal" autocomplete="off" matInput placeholder="Cantidad A pagar">
@@ -42,7 +41,7 @@
                         El Campo pago es requerido
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field class="hiring" appearance="outline">
+                <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Total Se debe</mat-label>
                     <input type="text" id="compromiso" [ngModel]="economicContractor[0].debt | number :'1.0-0'"
                         formControlName="totalDebt" autocomplete="off" matInput placeholder="Compromiso">
@@ -51,7 +50,7 @@
                         El Campo cedula es requerido
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field class="hiring" appearance="outline">
+                <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Valor Contrato</mat-label>
                     <input type="text" id="compromiso" [ngModel]="economicContractor[0].totalValue | number :'1.0-0'"
                         formControlName="paymentcant" autocomplete="off" matInput placeholder="Compromiso">
@@ -62,8 +61,8 @@
                 </mat-form-field>
             </div>
             <div class="folder">
-                <mat-form-field (click)="pickerFrom.open()" class="hiring" appearance="outline">
-                    <mat-label>Desde</mat-label>
+                <mat-form-field (click)="pickerFrom.open()" class="hiring" appearance="fill">
+                    <mat-label>Fecha Desde</mat-label>
                     <input matInput id="from" autocomplete="off" formControlName="from" [matDatepicker]="pickerFrom">
                     <mat-datepicker #pickerFrom></mat-datepicker>
                     <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
@@ -71,8 +70,8 @@
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field (click)="pickerTo.open()" class="hiring" appearance="outline">
-                    <mat-label>Hasta</mat-label>
+                <mat-form-field (click)="pickerTo.open()" class="hiring" appearance="fill">
+                    <mat-label>Fecha Hasta</mat-label>
                     <input matInput id="to" autocomplete="off" formControlName="to" [matDatepicker]="pickerTo">
                     <mat-datepicker #pickerTo></mat-datepicker>
                     <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
@@ -80,7 +79,7 @@
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field class="hiring" appearance="outline">
+                <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Tipo Pago</mat-label>
                     <mat-select [formControlName]="'cashPayment'" name="cashPayment">
                         <mat-option *ngFor="let pago of pagos" [value]="pago.viewValue">
@@ -95,7 +94,7 @@
                 </mat-form-field>
             </div>
             <div class="folder">
-                <mat-form-field class="hiringD" appearance="outline">
+                <mat-form-field class="hiringD" appearance="fill">
                     <textarea type="text" class="example-full-width" id="description" formControlName="description"
                         autocomplete="off" matInput placeholder="Descripción"></textarea>
                     <mat-error *ngIf="formContractorPayment.get('description').hasError('required')">

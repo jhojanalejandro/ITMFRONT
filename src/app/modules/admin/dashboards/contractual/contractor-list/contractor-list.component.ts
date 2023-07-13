@@ -22,6 +22,7 @@ import { Componente, Elements } from 'app/modules/admin/pages/planing/models/pla
 import { DatePipe } from '@angular/common';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
+import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
 
 @Component({
   selector: 'contractor-list',
@@ -56,6 +57,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<any>();
   idSelected: string[] = [];
   contractname: string;
+  origin: string;
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'hiringStatus', 'statusContractor', 'legalProccess', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
@@ -98,6 +100,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.userName = this.auth.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
     this.contractname = this.router.snapshot.paramMap.get('contractname') || 'null';
+    this.origin = this.router.snapshot.paramMap.get('origin') || 'null';
+
     this.configForm = this._formBuilder.group({
       title: 'Eliminar Registro',
       message: '¿Estás seguro de que desea eliminar este contacto de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
@@ -355,6 +359,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       disableClose: true,
       autoFocus: false,
       data: {
+        origin: 'cdp',
         contractId: this.contractId,
         show: true,
       }
@@ -377,6 +382,41 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this._loadrouter.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._loadrouter.navigateByUrl(currentUrl);
     });
+  }
+
+  registerPayment(data: any) {
+    if (this.selection.selected.length > 0 || data != null) {
+      if (data == null) {
+        data = { id: 0, contractId: null, componenteId: null, elementId: null }
+        this.selection.selected.forEach(element => {
+          this.listId.push(element.id);
+        });
+      }
+      const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
+        width: '900px',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          idUser: this.auth.accessId,
+          id: data.id,
+          nombre: data.nombre,
+          idContractors: this.listId,
+          contractId: this.contractId
+        }
+      });
+      dialogRefPayment.afterClosed().subscribe((result) => {
+        if (result) {
+          this.getDataContractor();
+        }
+        this.listId = [];
+      });
+    } else {
+      swal.fire('Ei', 'Debes seleccionar registros!', 'warning');
+
+    }
+  }
+  historicalPayment(item: any) {
+    this._loadrouter.navigate(['/dashboards/nomina/payment/Contractor/' + this.contractId+'/' + item.id]);
   }
 
   ngOnDestroy(): void {
