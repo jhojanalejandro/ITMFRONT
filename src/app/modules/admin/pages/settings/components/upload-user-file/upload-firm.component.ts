@@ -10,6 +10,7 @@ import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { UserFirm } from '../../models/setting.model';
 import { CodeUser } from 'app/core/enums/enumAuth';
+import { TypeFileUserCode } from 'app/layout/common/enums/document-type/document-type';
 
 const moment = _rollupMoment || _moment;
 
@@ -22,20 +23,23 @@ const moment = _rollupMoment || _moment;
 })
 export class UploadFirmComponent implements OnInit, OnDestroy {
   shortLink: string = "";
-  isOwner: boolean = true;
+  isOwner: boolean = false;
   loading: boolean = false;
   userId: string = null;
   file: any = null;
   indeterminate = false;
   showAlert: boolean = false;
-  propietario: any = GlobalConst.requierePoliza;
   base64Output: any;
   numberOfTicks = 0;
   formFile: FormGroup;
   members: any[];
+  typeImageB: boolean = true;
+  propietario: any = GlobalConst.requierePoliza;
   typeUserFile: any[];
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+  disableButton: boolean = true;
+  fileName: string;
+  typeFile: string;
   constructor(
     private ref: ChangeDetectorRef,
     private _auth: AuthService,
@@ -58,9 +62,9 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
 
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
-      ownerValidate: new FormControl(null, Validators.required),
+      ownerValidate: new FormControl(null),
       ownerFirm: new FormControl(null),
-      typeFile: new FormControl(null),
+      typeUserFile: new FormControl(null),
       userCharge: new FormControl(null),
 
     });
@@ -69,17 +73,22 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
 
   }
 
+ 
   onChange(event) {
+    
+    this.disableButton = false;
     this.file = event.target.files[0];
-    this.file = event.target.files[0];
-    // this.typeFile = this.file.type.split('/')[1].toUpperCase();
+    this.fileName = this.file.name.split('.')[0].toUpperCase();
+    this.typeFile = this.file.name.split('.')[1].toUpperCase();
     const reader = new FileReader();
     reader.readAsDataURL(this.file);
     this.convertFile(this.file).subscribe(base64 => {
       this.base64Output = base64;
     });
+    // reader.onload = () => {
+    //     this.file = reader.result;
+    // };
   }
-
 
   cerrar(): void {
     this.matDialogRef.close();
@@ -94,17 +103,19 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     }
     const registerFile: UserFirm = {
       userId: this.userId,
-      firmData: this.base64Output,
+      fileData: this.base64Output,
       userCharge: this.formFile.value.userCharge,
       ownerFirm: this.formFile.value.ownerFirm,
       isOwner: this.isOwner,
+      typeUserFile: this.formFile.value.typeUserFile,
+      typeFile: this.typeFile,
+      fileNameC: this.fileName
     };
     console.log(registerFile);
 
     this._auth.UploadFileFirm(registerFile)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        debugger
         if (res) {
           swal.fire({
             position: 'center',
@@ -138,15 +149,24 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  owner(event) {
+  owner(event: any) {
     if (event.value === 'Si') {
       this.isOwner = false;
-      this.userId = this._auth.accessId;
     } else {
       this.isOwner = true;
-      this.userId = this._auth.accessId;
-
     }
+    this.userId = this._auth.accessId;
+  }
+
+  
+  typeImage(event: any) {
+    let typeId = this.typeUserFile.find(f => f.code == TypeFileUserCode.FIRMA).id;
+    if (event.value === typeId) {
+      this.typeImageB = false;
+    } else{
+      this.typeImageB = true;
+    }
+    this.userId = this._auth.accessId;
   }
 
   private getRolls(){
