@@ -19,7 +19,6 @@ export interface ContractList{
     userId?: string;
     companyName: string;
     projectName: string;
-    descriptionProject: string;
     statusContract: string;
     activate: boolean;
     enableProject: boolean;
@@ -32,6 +31,7 @@ export interface ContractList{
     rubro?: string;
     fuenteRubro?: string;
     nombreRubro?: string;
+    objectContract: string;
 }
 export interface ContractFolder{
     id?: string;
@@ -105,16 +105,16 @@ export interface ElementComponent{
     componentId: string;
     cantidadContratistas: number;
     cantidadDias: number;
-    valorUnidad: any;
-    valorTotal: any;
-    valorPorDia: any;
+    valorUnidad: number;
+    valorTotal: number;
+    valorPorDia: number;
     valorTotalContratista: number;
     valorPorDiaContratista: number;
     cpc: string;
     nombreCpc: string;
     modificacion: boolean;
     tipoElemento: string;
-    recursos: any; 
+    recursos: number; 
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
@@ -140,7 +140,6 @@ export interface ContractFolders{
     userId?: string;
     companyName: string;
     projectName: string;
-    descriptionProject: string;
     statusContract: string;
     activate: boolean;
     enableProject: boolean;
@@ -153,11 +152,15 @@ export interface ContractFolders{
     fechaDeTerminacionAmpliacion: Date | null;
     numberProject: string;
     rubro: string;
+    rubroId?: string;
     nombreRubro: string;
     project: string;
     fechaFinalizacion: Date;
     fechaContrato: Date;
     fuenteRubro: string;
+    objectContract: string;
+    statusContractId?: string;
+
 }
 
 
