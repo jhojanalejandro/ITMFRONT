@@ -9,7 +9,7 @@ export const environment = {
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/SignUp',
     retrieveEndpoint: 'User/retrievePassword',
-    updateUserEndpoint: 'User/Update',
+    updateUserEndpoint: 'User/UpdateTeamRoll',
     updatePasswordUserEndpoint: 'User/UpdatePassword',
     getAllUserEndpoint: 'User/GetAll',
     getAllAdminsEndpoint: 'User/GetAll',
@@ -25,6 +25,7 @@ export const environment = {
     exportElements: 'ExportToExcel/ExportElement/',
     addExcelContractorEndpoint: 'ImportExcel/AddExcel',
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
+    addExcelElementEndpoint: 'ImportExcel/ImportExcelElement',
 
     UpdateContractorEndpoint: 'Contractor/Update',
     SaveDataContractorEndpoint: 'Contractor/SaveDataContractor/',
@@ -54,18 +55,18 @@ export const environment = {
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
     GetAllContractEndpoint: 'ContractFolder/GetAll',
     GetAllHistoryProjectEndpoint: 'ContractFolder/GetAllHistory',
-    UpdateStateContractFolderEndpoint: 'ContractFolder/UpdateState/',
+    UpdateStateContractFolderEndpoint: 'ContractFolder/UpdateStateContract/',
 
     GetByIdContractFolderEndpoint: 'ContractFolder/GetById/',
     DeleteContractFolderEndpoint: 'ContractFolder/Delete',
     GetByIdDetailListEndpoint: 'ContractFolder/GetByIdDetailList',
-    GetByIdDetailByIdEndpoint: 'ContractFolder/GetByIdDetail',
+    GetByIdDetailByIdEndpoint: 'ContractFolder/GetDetailByIdContract',
     addContractorPaymentsEndpoint: 'ContractorPayments/Add',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/Delete',
 
-    addEconomicDataContractorEndpoint: 'EconomicDataContractor/Add',
+    addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/Update',
     GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
     GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetById',
@@ -88,7 +89,7 @@ export const environment = {
     addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
     GetAllHiringEndpoint: 'HiringData/GetAll',
-    GetByIdHiringEndpoint: 'HiringData/GetById/',
+    GetByIdHiringEndpoint: 'HiringData/GetByIdHinringData',
     DeleteHiringEndpoint: 'HiringData/Delete',
     GetDataMinutaHiringEndpoint: 'HiringData/GetByIdMinuta',
 
@@ -96,7 +97,7 @@ export const environment = {
     addActivity: 'Componente/AddActivity/',
     getComponent: 'Componente/GetComponent/',
 
-    getComponentById: 'Componente/GetById/',
+    getComponentById: 'Componente/GetByIdComponent',
     getElements: 'ElementosComponente/GetElementsByComponent/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
@@ -113,7 +114,7 @@ export const environment = {
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
     GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',
 
-    addFileFirmEndpoint: 'UserFirm/SaveFirm',
+    addFileFirmEndpoint: 'UserFirm/SaveUserDocument',
     GetRollsEndpoint: 'UserFirm/GetAllRolls',
     GetTypeUserFileEndpoint: 'UserFirm/GetAllTypeUserFile',
 
