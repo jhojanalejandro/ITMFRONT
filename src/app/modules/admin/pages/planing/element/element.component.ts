@@ -27,8 +27,10 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato, ElementComponent, Elements, ListElements } from '../models/planing-model';
 import { PlaningService } from '../service/planing.service';
 import { CpcType, ElementType } from 'app/modules/admin/generic/model/generic.model';
-import { ElementTypeCode } from 'app/layout/common/enums/elementType';
 import Swal from 'sweetalert2';
+import { ElementTypeCode } from 'app/layout/common/enums/elementType';
+import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
     selector: 'app-alement',
@@ -48,7 +50,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     maxDayContrac: number = 0;
     cpcType: CpcType[];
     elementTypes: ElementType[];
-
     cpcName: string = '';
     detailContract: DetalleContrato = {
         contractId: null,
@@ -106,7 +107,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _data,
         private _fuseConfirmationService: FuseConfirmationService,
         private _genericService: GenericService,
-        private _planingService: PlaningService
+        private _planingService: PlaningService,
+        private _authService: AuthService,
     ) {
         if (this._data.edit === true) {
             this.btnOpcion = 'Actualizar';
@@ -141,9 +143,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             fechamodificacion: [null],
             consecutivo: [this.elemento.consecutivo, Validators.required],
             valordiaContratista: [this.elemento.valorPorDiaContratista, Validators.required],
-            obligacionesEspecificas: [this.obligacionesEspecificas],
-            obligacionesGenerales: [this.obligacionesGenerales],
-            objetoElemento: [this.objetoConvenio]
+            obligacionesEspecificas: [this.obligacionesEspecificas,[Validators.pattern(/[^\r\n]+/)]],
+            obligacionesGenerales: [this.obligacionesGenerales,[Validators.pattern(/[^\r\n]+/)]],
+            objetoElemento: [this.objetoConvenio,[Validators.pattern(/[^\r\n]+/)]]
 
         });
         this.filteredOptions =
