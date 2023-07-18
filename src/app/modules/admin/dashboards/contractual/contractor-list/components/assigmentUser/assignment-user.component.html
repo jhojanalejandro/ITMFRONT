@@ -1,0 +1,55 @@
+<div class="flex-col max-w-220 md:min-w-140 -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Asignación de contratos</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content style="margin: 0px; padding: 0px;">
+        <!-- <h1>Nombre Contratista</h1> -->
+        <form  class="example-form overflow-y-auto">
+
+            <div class="folderAsigment">
+                <mat-form-field class="hiringAsigment" appearance="fill">
+                    <mat-label>Contratos</mat-label>
+                    <mat-select  (selectionChange)="selectionChageContract($event)"  name="raffles">
+                        <mat-option *ngFor="let contract of contracts"
+                            [value]="contract.id">
+                            {{contract.projectName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="showContractual" class="folderAsigment" >
+                <span class="font-semibold mb-2">Asignar Contractista</span>
+                <div class="flex flex-col">
+                    <mat-checkbox *ngFor="let user of users" [value]="user.id" (change)="assignmentUserselected(user)"
+                        class="mb-2"
+                        [color]="'primary'">
+                        {{user.userName}}
+                    </mat-checkbox>
+                
+                </div>
+
+            </div>
+            <div *ngIf="showSupervisors" class="folderAsigment">
+                <div class="flex flex-col gt-sm:flex-row">
+                    <div class="flex flex-col">
+                        <span class="font-semibold mb-2">Selecionar Supervisor</span>
+                        <mat-radio-group class="checkRadio" [color]="'primary'" [disabled]="false">
+                            <mat-radio-button *ngFor="let user of supervisors" [matTooltip]="Supervisores" class="mr-4"
+                                (change)="onChangeAdmin(user)" [value]="user.id">{{user.userName}}</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions class="action" align="end">
+        <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
+        <button mat-flat-button [color]="'primary'" type="submit" 
+             (click)="addAssignmentUsers()">Asignar</button>
+    </mat-dialog-actions>
+</div>
