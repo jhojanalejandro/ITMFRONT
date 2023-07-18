@@ -9,7 +9,6 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { UserFirm } from '../../models/setting.model';
-import { CodeUser } from 'app/core/enums/enumAuth';
 import { TypeFileUserCode } from 'app/layout/common/enums/document-type/document-type';
 
 const moment = _rollupMoment || _moment;

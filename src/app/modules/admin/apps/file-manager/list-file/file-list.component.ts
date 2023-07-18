@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import swal from 'sweetalert2';
-import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import Swal from 'sweetalert2';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +14,7 @@ import { DetailFile, FileContractor } from 'app/layout/common/models/file-contra
 import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detail-file-enum';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 
 @Component({
@@ -37,6 +37,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     statusFile: any;
     value: any;
     searchText: any;
+    permission: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
@@ -64,6 +65,11 @@ export class FileListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
+        this.permission = this._auth.validateRoll(CodeUser.JURIDICO,null);
+        // this.getAdmins();
+        if(!this.permission){
+          Swal.fire('', 'No tienes permisos para aprobar documentos!', 'warning');
+        }
         this.getStatusFile();
         this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
         this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
@@ -127,7 +133,6 @@ export class FileListComponent implements OnInit, OnDestroy {
                 contractorId: this.contractorId,
                 contractId: this.contractId,
                 folderId: this.folderId,
-                typeFilePayment: 'Otros'
             }
         });
         dialogRef.afterClosed()
@@ -151,7 +156,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((result) => {
                     if (result) {
-                        swal.fire({
+                        Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: '',
@@ -172,7 +177,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((res) => {
                     if (res) {
-                        swal.fire({
+                        Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: '',
@@ -184,8 +189,7 @@ export class FileListComponent implements OnInit, OnDestroy {
                 },
                     (response) => {
                         console.log(response);
-
-                        swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+                        Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
                     });
         }
 

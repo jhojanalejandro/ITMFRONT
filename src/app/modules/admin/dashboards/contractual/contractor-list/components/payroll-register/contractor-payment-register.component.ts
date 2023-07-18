@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
@@ -9,6 +9,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { ContractorPayments } from 'app/modules/admin/dashboards/nomina/models/contractor-payments';
 import { NominaService } from 'app/modules/admin/dashboards/nomina/service/nomina.service';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
+import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/e
   animations: fuseAnimations
 })
 
-export class ContractorPaymentRegisterComponent implements OnInit {
+export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
   indeterminate = true;
   cantidadContratistas: number = 1;
   paymentDataList: ContractorPayments[] = [];
@@ -38,6 +39,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
   registerDate = new Date();
   formContractorPayment: FormGroup;
   pagos: any = GlobalConst.nomina;
+  private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(private _nominaService: NominaService,
     private ref: ChangeDetectorRef,
@@ -125,6 +127,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
     }
     this._nominaService
       .addContractorPayments(this.paymentDataList)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res) {
           this.updateEconomicContractorPayment();
@@ -153,13 +156,17 @@ export class ContractorPaymentRegisterComponent implements OnInit {
   }
 
   getContractorPayment() {
-    this._nominaService.getByIdContractorPayments(this.datos.id).subscribe((Response) => {
+    this._nominaService.getByIdContractorPayments(this.datos.id)
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((Response) => {
       this._nominaService = Response;
     });
   }
 
   getEconomicContractorPayment(ids: any[]) {
-    this._nominaService.getByIdEconomicDataContractor(ids).subscribe((Response) => {
+    this._nominaService.getByIdEconomicDataContractor(ids)
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((Response) => {
       if (Response === null || Response.length === 0) {
         Swal.fire('ups', 'No se puede ingresar a esta vista debido a que los valores estan en cero', 'warning');
         this.matDialogRef.close();
@@ -206,7 +213,9 @@ export class ContractorPaymentRegisterComponent implements OnInit {
         }
       ]
     }
-    this._nominaService.UpdateEconomicContractorPayment(this.economicDataList).subscribe((Response: any) => {
+    this._nominaService.UpdateEconomicContractorPayment(this.economicDataList)
+    .pipe(takeUntil(this._unsubscribe$))
+    .subscribe((Response: any) => {
       if (Response) {
         Swal.fire({
           position: 'center',
@@ -236,6 +245,12 @@ export class ContractorPaymentRegisterComponent implements OnInit {
       // Show the alert
       this.showAlert = true;
     });
+  }
+
+  
+  ngOnDestroy(): void {
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
   }
 }
 

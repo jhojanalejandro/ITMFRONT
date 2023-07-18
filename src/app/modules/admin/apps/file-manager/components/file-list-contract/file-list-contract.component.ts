@@ -99,7 +99,6 @@ export class FileListContractComponent implements OnInit, OnDestroy {
                 show: false,
                 contractId: this.contractId,
                 folderId: this.folderId,
-                typeFilePayment: 'contrato'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {

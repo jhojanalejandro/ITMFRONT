@@ -69,7 +69,7 @@
                             <mat-label >Tipo Documento</mat-label>
                             <mat-select (selectionChange)="tipoSeleeccionado($event,'document')" name="typeFile">
                                 <mat-option  *ngFor="let docuemnto of tipoDocumentos" [value]="docuemnto.id">
-                                    {{docuemnto.documentType1}}
+                                    {{docuemnto.documentTypeDescription}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

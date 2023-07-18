@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, Change
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
@@ -13,6 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { RubroType, StatusContract } from 'app/modules/admin/generic/model/generic.model';
 import { CodeStatusContract } from 'app/layout/common/enums/statusContract';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
   selector: 'app-register-contractor',
@@ -39,8 +40,9 @@ export class RegisterContractFolderComponent implements OnInit {
   editarData = GlobalConst.editarData;
   editData: boolean = false;
   AddeditData: boolean = false;
-  dataProject: ContractFolders = { companyName: null, projectName: null, statusContract: null, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, fechaFinalizacion: null, fechaContrato: null, numberProject: null, enableProject: true, project: null, rubro: null, nombreRubro: null, fuenteRubro: null,objectContract: null }
+  dataProject: ContractFolders = { companyName: null, projectName: null, statusContract: null, activate: null, contractorsCant: null, valorContrato: null, gastosOperativos: null, valorSubTotal: null, noAdicion: null, fechaInicioAmpliacion: null, fechaDeTerminacionAmpliacion: null, fechaFinalizacion: null, fechaContrato: null, numberProject: null, enableProject: true, project: null, rubro: null, nombreRubro: null, fuenteRubro: null, objectContract: null }
   private _unsubscribeAll: Subject<any> = new Subject<any>();
+  permission: boolean = false;
 
   constructor(
     private _upload: UploadDataService,
@@ -78,6 +80,12 @@ export class RegisterContractFolderComponent implements OnInit {
 
   ngOnInit(): void {
     // this.getDepartamento();
+    this.permission = this.authService.validateRoll(CodeUser.PLANEACION, null);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+
+    }
+
     this.formProject = this._formBuilder.group({
       projectName: new FormControl(this.dataProject.projectName, Validators.required),
       companyName: new FormControl(this.dataProject.companyName, Validators.required),
@@ -158,14 +166,14 @@ export class RegisterContractFolderComponent implements OnInit {
         rubro: this.formProject.value.rubro,
         nombreRubro: this.formProject.value.nombreRubro,
         fuenteRubro: this.formProject.value.fuenteRubro
-        
+
       };
 
       this._upload.addContractFolder(registerProject)
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((res) => {
           if (res) {
-            swal.fire({
+            Swal.fire({
               position: 'center',
               icon: 'success',
               title: '',
@@ -184,7 +192,7 @@ export class RegisterContractFolderComponent implements OnInit {
             this.formProject.enable();
             // Set the alert
             console.log(response);
-            swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+            Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
           });
     }
 
@@ -240,7 +248,7 @@ export class RegisterContractFolderComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         if (res) {
-          swal.fire({
+          Swal.fire({
             position: 'center',
             icon: 'success',
             title: '',
@@ -260,7 +268,7 @@ export class RegisterContractFolderComponent implements OnInit {
           // Set the alert
           console.log(response);
 
-          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+          Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
           // Show the alert
         });
 
@@ -275,27 +283,12 @@ export class RegisterContractFolderComponent implements OnInit {
 
   }
 
-  getStatusContract() {
+  private getStatusContract() {
     this._genericService.getstatusContract()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         this.statusContract = res;
-
       });
-  }
-
-  statusSelectContract() {
-    this._genericService.getstatusContract()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((res) => {
-        this.statusContract = res;
-
-      });
-  }
-
-  changeEdit() {
-
-
   }
 
   changeRubro(e: any) {
@@ -316,9 +309,9 @@ export class RegisterContractFolderComponent implements OnInit {
   }
 
   changeTipe(e: any) {
-    if(e.value === 'Agregar Modificación'){
+    if (e.value === 'Agregar Modificación') {
       this.AddeditData = true;
-    }else{
+    } else {
       this.AddeditData = false;
     }
   }
@@ -327,7 +320,7 @@ export class RegisterContractFolderComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(
         (resp) => {
-          this.tipoModificacion = resp.filter(f => f.code=== DocumentTypeFileCodes.MC);
+          this.tipoModificacion = resp.filter(f => f.code === DocumentTypeFileCodes.MC);
         }
       );
   }

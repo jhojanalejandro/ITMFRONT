@@ -55,17 +55,24 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id   : 'apps.file-manager',
-                title: 'Contratación',
+                title: 'Archivos Contratos',
                 type : 'basic',
-                icon : 'heroicons_outline:cloud',
+                icon : 'mat_outline:file_present',
                 link : '/apps/file-manager'
             },
+            {
+                id   : 'apps.maintainers-list',
+                title: 'Mantenedores',
+                type : 'basic',
+                icon : 'heroicons_outline:cloud',
+                link : '/apps/maintainers-list'
+            }
         ]
     },
     {
         id      : 'list',
         title   : 'INFORMACIÓN GENERAL',
-        subtitle: 'Información Genral contratación',
+        subtitle: 'Información historica de contratación',
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [

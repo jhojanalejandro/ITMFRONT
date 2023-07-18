@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { CodeUser } from 'app/core/enums/enumAuth';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUser } from 'app/layout/common/models/userAuthenticate';
 

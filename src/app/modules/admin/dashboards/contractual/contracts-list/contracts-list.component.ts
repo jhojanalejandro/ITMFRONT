@@ -13,6 +13,9 @@ import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { MatPaginator } from '@angular/material/paginator';
+import { AssignmentUserComponent } from '../contractor-list/components/assigmentUser/assignment-user.component';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contracts-list-contarctual',
@@ -21,7 +24,7 @@ import { MatPaginator } from '@angular/material/paginator';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UploadDataComponent implements OnInit, OnDestroy {
+export class ContractListComponent implements OnInit, OnDestroy {
   selectContract: any;
   data: any;
   userName: any;
@@ -34,11 +37,12 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant', 'action'];
+  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant','isAssigmentUser', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  contracts: any;
+  permission: boolean = false;
 
- 
   constructor(
     private _gerenicService: GenericService,
     private _matDialog: MatDialog,
@@ -54,7 +58,7 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
     { title: 'CONTRATISTAS', name: 'action' },
-    // { title: 'CONVENIO', name: 'assignment' },
+    { title: 'CONVENIO', name: 'isAssigmentUser' },
   ]
   ngOnInit(): void {
     this.getContractsData();
@@ -66,18 +70,24 @@ export class UploadDataComponent implements OnInit, OnDestroy {
   }
 
   uploadExcel() {
-    const dialogUpload = this._matDialog.open(UploadFileComponent, {
-      disableClose: true,
-      autoFocus: false,
-      data: {
-        show: true
-      }
-    });
-    dialogUpload.afterClosed().subscribe((result) => {
-      if (result) {
+    this.permission = this.auth.validateRoll(CodeUser.RECRUITER,null);
+    if(!this.permission){
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    }else{
+      const dialogUpload = this._matDialog.open(UploadFileComponent, {
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          show: true
+        }
+      });
+      dialogUpload.afterClosed().subscribe((result) => {
+        if (result) {
+          this.getContractsData();
+        }
+      });
+    }
 
-      }
-    });
   }
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -110,20 +120,16 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.recentTransactionsTableMatSort;
   }
 
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next(null);
-    this._unsubscribeAll.complete();
-  }
 
-  getContractsData() {
+
+ private getContractsData() {
     this._gerenicService.getAllContract(true, 'Contractual')
     .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
-        
         this.dataSource = new MatTableDataSource(Response);
         this.dataSource.sort = this.sort;
         this.dataSource.data = Response;
+        this.contracts = Response;
       });
   }
   /**
@@ -136,6 +142,30 @@ export class UploadDataComponent implements OnInit, OnDestroy {
     return item.id || index;
   }
 
+  AsssigmentUser() {
+    this.permission = this.auth.validateRoll(CodeUser.SUPERVISORAREAC);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos para asignar contratos!', 'warning');
+    }else{
+      const dialogUpload = this._matDialog.open(AssignmentUserComponent, {
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          contracts: this.contracts
+        }
+      });
+      dialogUpload.afterClosed().subscribe((result) => {
+        if (result) {
+          this.getContractsData();
+        }
+      });
+    }
 
+  }
 
+  ngOnDestroy(): void {
+    // Unsubscribe from all subscriptions
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
+  }
 }

@@ -59,7 +59,6 @@ export class AuthSignUpComponent implements OnInit {
         const userRegister: IUserModel = {
             userName: this.signUpForm.value.name,
             userPassword: this.signUpForm.value.password,
-            avatar: 'assets/images/flags/user.png',
             professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
             phoneNumber: this.signUpForm.value.phoneNumber.toString(),

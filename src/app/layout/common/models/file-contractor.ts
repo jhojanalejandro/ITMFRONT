@@ -10,7 +10,6 @@ export interface FileContractor{
     descriptionFile: string;
     registerDate: any;
     modifyDate?: any;
-    typeFilePayment: string;
     monthPayment?: string;
     folderId: string;
 }
@@ -30,7 +29,7 @@ export interface Files{
 
 export interface DocumentTypeFile{
     id?: any;
-    documentType1: string;
+    documentTypeDescription: string;
     code: string
 }
 

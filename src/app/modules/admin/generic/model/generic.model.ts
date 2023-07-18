@@ -6,7 +6,7 @@ export interface CpcType{
 
 export interface StatusContract{
     id?: string;
-    statusContract1: string,
+    statusContractDescription: string,
     code: string;
 }
 export interface ElementType{

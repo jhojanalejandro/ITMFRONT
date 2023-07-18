@@ -49,7 +49,6 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
         const updateUser: IUserModel = {
             id: this._authService.accessId,
             userName: this.accountForm.value.name,
-            avatar: 'assets/images/flags/user.png',
             professionalposition: this.accountForm.value.profesionalPosistion,
             phoneNumber: this.accountForm.value.phoneNumber,
             userEmail: this.accountForm.value.email,

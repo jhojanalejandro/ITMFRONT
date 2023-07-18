@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'app/core/auth/auth.service';
-import { CodeUser } from 'app/core/enums/enumAuth';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
+import { TeamModel } from 'app/modules/auth/model/user-model';
 import { Subject, takeUntil } from 'rxjs';
 import swal from 'sweetalert2';
 
@@ -16,51 +17,21 @@ export class SettingsTeamComponent implements OnInit {
     durationInSeconds = 5;
 
     members: any[];
-    roles: any = GlobalConst.roles;
+    roles: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(private _authService: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _snackBar: MatSnackBar,
     ) {
     }
 
-    /**
-     * On init
-     */
     ngOnInit(): void {
-        this._authService.teams$
+        this.getRolls();
+        this._authService.getTeams()
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((teams: any) => {
+            .subscribe((teams: TeamModel[]) => {
                 // Mark for check
-                teams.forEach(element => {
-                    switch (element.code) {
-                        case CodeUser.ADMIN:
-                            element.code = 'ADMIN'
-                            break;
-                        case CodeUser.PLANEACION:
-                            element.code = 'PLANEACIÓN'
-                            break;
-                        case CodeUser.RECRUITER:
-                            element.code = 'CONTRACTUAL'
-                            break;
-                        case CodeUser.NOMINA:
-                            element.code = 'NOMINA'
-                            break;
-                        case CodeUser.JURIDICO:
-                            element.code = 'JURIDICO'
-                            break;
-                        case CodeUser.SUPERVISOR:
-                            element.code = 'SUPERVISOR'
-                            break;
-                        case CodeUser.DESACTIVADO:
-                            element.code = 'DESACTIVADO'
-                            break;
-                    }
-                });
                 this.members = teams;
                 this._changeDetectorRef.markForCheck();
             });
@@ -77,14 +48,13 @@ export class SettingsTeamComponent implements OnInit {
     }
 
     onChange(rolCode: any, user: any) {
-        user.code = rolCode.value
+        user.rollId = rolCode.value
         this._authService
             .updateUser(user)
             .subscribe((res) => {
                 if (res) {
                     this.openSnackBar(user.userName);
                 }
-
             },
                 (response) => {
                     console.log('error', response);
@@ -97,4 +67,12 @@ export class SettingsTeamComponent implements OnInit {
         });
     }
    
+  private getRolls() {
+    this._authService.getRoll()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        this.roles = res;
+      });
+  }
+
 }

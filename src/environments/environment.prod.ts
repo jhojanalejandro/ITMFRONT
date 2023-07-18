@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
+    production: true,
     apiURL: 'http://172.30.1.20:8080/swagger/index.html',
     // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',

@@ -121,10 +121,14 @@ export class PlaningService {
         return this._httpClient.get<Elements[]>(urlEndpointGenerate + id);
     }
 
-    getComponentById(id: any) {
+    getComponentById(id: any,activityId: string,elementId: string) {
+        const params = new HttpParams()
+        .set('id', id)
+        .set('activityId', activityId)        
+        .set('elementId', elementId);
         let urlEndpointGenerate =
             this.apiUrl + environment.getComponentById;
-        return this._httpClient.get<Componente>(urlEndpointGenerate + id);
+        return this._httpClient.get<Componente>(urlEndpointGenerate,{params});
     }
 
 

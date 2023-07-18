@@ -100,9 +100,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
         this._fileManagerService.folderContract$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: any) => {
-                if (items.folders.length > 0) {
-                    this.items = items;
-                }
+                this.items = items;
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -129,7 +127,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             data: {
                 contractId: this.contractId,
                 folderName: 'vacio',
-                typeFolder: 'Contrato'
+                folderType: 'Contrato'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {

@@ -7,5 +7,5 @@ export interface Folder{
     descriptionProject: string;
     registerDate: Date;
     modifyDate: Date;
-    typeFolder: string;
+    folderType: string;
 }

@@ -501,7 +501,7 @@ export class MinutaContratoComponent implements OnInit {
 
   public downloadAsPDF() {
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-      debugger
+      
       let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
       let fechaLetras = this._shareService.calcularDiferencia(data.fechaRealDeInicio, data.fechaFinalizacionConvenio);
       let valorLetras = this._shareService.numeroALetras(data.valorTotal, 'PESOS');
@@ -793,7 +793,6 @@ export class MinutaContratoComponent implements OnInit {
               registerDate: registerDate,
               modifyDate: registerDate,
               filedata: dataURL[1],
-              typeFilePayment: 'Minuta',
               monthPayment: null,
               folderId: null
             };
@@ -827,7 +826,7 @@ export class MinutaContratoComponent implements OnInit {
 
   private getHiringData() {
     this.headerImageBase654 = this.getBase64Image(RouteImageEnum.HEADER,'HEADER');
-    debugger
+    
     this.footerImageBase654 = this.getBase64Image(RouteImageEnum.FOOTER, 'FOOTER');
     this._economicService
       .getDataMinute(this.contractContractors)
@@ -1112,7 +1111,6 @@ export class MinutaContratoComponent implements OnInit {
           registerDate: registerDate,
           modifyDate: registerDate,
           filedata: dataURL[1],
-          typeFilePayment: 'Minuta',
           monthPayment: null,
           folderId: null
         };
@@ -1154,7 +1152,6 @@ export class MinutaContratoComponent implements OnInit {
     let base64Image;
     this._shareService.loadAndConvertImageToBase64(route)
       .then(base64Data => {
-        debugger
         if(type == 'HEADER'){
           this.headerImageBase654 = base64Data;
         }else{
