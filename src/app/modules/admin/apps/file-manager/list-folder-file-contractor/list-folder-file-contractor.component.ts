@@ -102,7 +102,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
                 contractorId: this.contractorId,
                 contractId: this.contractId,
                 folderName: 'vacio',
-                typeFolder: 'Contratista'
+                folderType: 'Contratista'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {

@@ -76,7 +76,7 @@
                         <mat-label>Tipo Modidicacion</mat-label>
                         <mat-select [formControlName]="'tipoModificacion'" (selectionChange)="selectmodificacion($event)" name="modificacion">
                             <mat-option *ngFor="let tipo of tipoModificacion" [value]="tipo.id">
-                                {{tipo.minuteType1}}
+                                {{tipo.minuteTypeDescription}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">

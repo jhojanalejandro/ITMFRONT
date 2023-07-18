@@ -15,7 +15,7 @@
                         <mat-select (selectionChange)="typeDocumentSelected($event)" required id="IdProject"
                             formControlName="typeDoc" name="IdProject">
                             <mat-option *ngFor="let doc of typeDocs" [value]="doc.id">
-                                {{doc.documentType1}}
+                                {{doc.documentTypeDescription}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix

@@ -7,4 +7,6 @@ export enum CodeUser{
     JURIDICO = 'JURD',
     SUPERVISOR = 'SPV',
     DESACTIVADO = 'DTV',
+    SUPERVISORAREAC= 'SPVAC',
+    SUPERVISORAREAN = 'SPVAN',
 }

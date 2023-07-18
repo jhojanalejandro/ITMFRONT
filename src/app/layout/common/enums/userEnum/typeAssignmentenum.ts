@@ -1,0 +1,6 @@
+export enum AssignmentTypeEnumCode{
+    SUPERVISORCONTRATOCODE = 'SPVC',
+    JIRIDICOCONTRATOCODE = 'JRDCC',
+    RESPONSABLECONTRATOCODE = 'RPSC',
+
+}

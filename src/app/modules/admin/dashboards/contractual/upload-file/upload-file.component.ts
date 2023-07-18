@@ -9,6 +9,7 @@ import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/model
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { UploadFileDataService } from './service/upload-file.service';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
   selector: 'app-register-contractor',
@@ -28,7 +29,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   selectContract: any;
   contratos: any;
   fileName: string;
-  typeFile: string;
+  fileType: string;
   base64Output: any;
   disableButton: boolean = true;
   mostrarContrato = false;
@@ -39,6 +40,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   aceptFile: string;
   aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   aceptfile: string = 'image/jpeg, image/png, application/pdf';
+  permission: boolean = false;
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -61,6 +63,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     if (this._data.show) {
       this.mostrarContrato = true;
       this.aceptFile = this.aceptExcel;
@@ -86,7 +89,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
     this.disableButton = false;
     this.file = event.target.files[0];
     this.fileName = this.file.name.split('.')[0].toUpperCase();
-    this.typeFile = this.file.type.split('/')[1].toUpperCase();
+    this.fileType = this.file.type.split('/')[1].toUpperCase();
     const reader = new FileReader();
     reader.readAsDataURL(this.file);
     this.convertFile(this.file).subscribe(base64 => {
@@ -106,13 +109,12 @@ export class UploadFileComponent implements OnInit, OnDestroy {
       contractorId: this._data.contractorId,
       contractId: this._data.contractId,
       filesName: this.fileName,
-      fileType: this.typeFile,
+      fileType: this.fileType,
       documentType: typeId,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate,
       modifyDate: this.registerDate,
       filedata: event,
-      typeFilePayment: this._data.typeFilePayment,
       monthPayment: null,
       folderId: this._data.folderId
     };
@@ -148,7 +150,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
       folderId: this._data.folderId,
       contractId: this._data.contractId,
       filesName: this.fileName,
-      fileType: this.typeFile,
+      fileType: this.fileType,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate,
       filedata: event,
@@ -289,6 +291,13 @@ export class UploadFileComponent implements OnInit, OnDestroy {
 
   }
 
+  selectionChageContract(contract: any) {
+    contract.value;
+    this.permission = this._auth.validateRoll(CodeUser.RECRUITER,this._data.assignmentUser);
+    if(!this.permission){
+
+    }
+  }
   convertFile(file: File): Observable<string> {
     const result = new ReplaySubject<string>(1);
     const reader = new FileReader();

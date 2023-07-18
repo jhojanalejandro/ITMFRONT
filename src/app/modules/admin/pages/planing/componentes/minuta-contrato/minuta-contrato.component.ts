@@ -681,7 +681,6 @@ export class MinutaContratoMacroComponent implements OnInit {
             registerDate: registerDate,
             modifyDate: registerDate,
             filedata: dataURL[1],
-            typeFilePayment: 'Minuta',
             monthPayment: null,
             folderId: null
           };

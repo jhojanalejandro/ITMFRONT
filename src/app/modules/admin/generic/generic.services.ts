@@ -65,11 +65,9 @@ export class GenericService {
         );
     }
 
-    getDetalleContractById(id: any, tipo: boolean): Observable<DetalleContrato> {
+    getDetalleContractById(id: any): Observable<DetalleContrato> {
         const params = new HttpParams()
             .set('id', id)
-            .set('tipoConsulta', tipo);
-
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdDetailByIdEndpoint;
         return this._httpClient.get<DetalleContrato>(urlEndpointGenerate, { params: params }

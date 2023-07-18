@@ -15,6 +15,7 @@ import { Activity, DetalleContrato, ElementComponent, Elements } from 'app/modul
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
   selector: 'app-data-hiring-contractor',
@@ -27,10 +28,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   registerDate: Date = new Date();
   minDate: Date;
   maxdate: Date;
-  elemento: any = 'Seleccionar elemento';
+  nombreElemento: any;
   elementAsignado: ElementComponent;
-  componente: any = 'Seleccionar compoente';
-  activity: any = 'Seleccionar Actividad';
   elements: any = [];
   activities: Activity[] = [];
   cantDayContract: any;
@@ -39,7 +38,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   hiringDataList: IHiringData[] = [];
   economicDataList: EconomicContractor[] = [];
   update: boolean = false;
-  componentes: any;
+  componentes: any[] = [];
   supervisorList: any;
   twoYearAgoExam: Date;
   componentselectId: any;
@@ -61,7 +60,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   formContractor: FormGroup;
   visibleActivity: boolean = false;
   supervisor: string = 'Supervisor';
-  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, supervisorItm: null, cargoSupervisorItm: null, cdp: null, numeroActa: null, identificacionSupervisor: null, caso: null }
+  permission: boolean = false;
+  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, cdp: null, numeroActa: null, caso: null }
   private readonly _unsubscribe$ = new Subject<void>();
   detalleContrat: DetalleContrato = {
     contractId: null,
@@ -79,19 +79,26 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     public matDialogRef: MatDialogRef<ContractorDataHiringComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
+
+
+  }
+
+  ngOnInit(): void {
     if (this.datos.id != null) {
       this.getHiring();
       this.shareData = true;
-      if(this.datos.elementId != null && this.datos.idContractors.length == 0){
-        this.getElementById(this.datos.elementId);
-      }
       if(this.datos.componentId != null && this.datos.idContractors.length == 0){
-        this.getComponentById(this.datos.componentId);
+        this.getComponentById(this.datos.componentId,this.datos.activityId,this.datos.elementId);
       }
+      if(this.datos.elementId != null && this.datos.idContractors.length == 0){
+        this.elementselectId = this.datos.elementId;
+      }
+
       if(this.datos.activityId != null && this.datos.idContractors.length == 0){
-        this.getActivityById(this.datos.activityId);
+        this.activitySelectId = this.datos.activityId;
+        this.visibleActivity= true;
       }
-      this.datos.idContractors.push(datos.id);
+      this.datos.idContractors.push(this.datos.id);
     } else if (this.datos.idContractors.length == 0) {
       Swal.fire(
         'Ei!',
@@ -106,11 +113,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         'warning'
       );
     }
-
-  }
-
-  ngOnInit(): void {
-    this.getAdmins();
+    this.permission = this._auth.validateRoll(CodeUser.RECRUITER,this.datos.assignmentUser);
+    // this.getAdmins();
+    if(!this.permission){
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    }
+    
     if (this.datos.id != null) {
       this.getHiring();
     }
@@ -129,14 +137,14 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       valorAsegurado: new FormControl(this.hiringData.valorAsegurado),
       fechaExamenPreocupacional: new FormControl(this.hiringData.fechaExaPreocupacional),
       nivel: new FormControl(this.hiringData.nivel),
-      supervisorItm: new FormControl(this.hiringData.supervisorItm),
+      // supervisorItm: new FormControl(this.hiringData.supervisorId),
       fechaFinalizacionConvenio: new FormControl(this.hiringData.fechaFinalizacionConvenio, Validators.required),
-      elemento: new FormControl(null, Validators.required),
-      componente: new FormControl(null, Validators.required),
+      elemento: new FormControl(this.datos.elementId, Validators.required),
+      componente: new FormControl(this.datos.componentId, Validators.required),
       totalContrato: new FormControl(null),
-      activity: new FormControl(null),
-      cdp: new FormControl(null),
-      caso: new FormControl(null),
+      activity: new FormControl(this.datos.activityId),
+      cdp: new FormControl(this.hiringData.cdp),
+      caso: new FormControl(this.hiringData.caso),
     });
     this.getDetailProject();
     this.validateDate();
@@ -148,7 +156,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     } else {
       this.formContractor.value.requierePoliza = false;
     }
-    let dataAdmin = this.supervisorList.find(x => x.userName === this.formContractor.value.supervisorItm);
     if (this.formContractor.value.cuentabancaria == null) {
       this.formContractor.value.cuentabancaria = '0'
     }
@@ -174,9 +181,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           valorAsegurado: Number(this.formContractor.value.valorAsegurado),
           fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
           nivel: Number(this.formContractor.value.nivel),
-          supervisorItm: dataAdmin.userName,
-          cargoSupervisorItm: dataAdmin.professionalposition,
-          identificacionSupervisor: dataAdmin.identification,
+          // supervisorId: this.formContractor.value.supervisorItm,
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           cdp: this.formContractor.value.cdp,
           caso: this.formContractor.value.caso,
@@ -202,9 +207,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         valorAsegurado: Number(this.formContractor.value.valorAsegurado),
         fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
         nivel: Number(this.formContractor.value.nivel),
-        supervisorItm: dataAdmin.userName,
-        cargoSupervisorItm: dataAdmin.Professionalposition,
-        identificacionSupervisor: dataAdmin.identificacionSupervisor,
+        // supervisorId: this.formContractor.value.supervisorItm,
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         cdp: this.formContractor.value.cdp,
         caso: this.formContractor.value.caso,
@@ -258,7 +261,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    let dataAdmin = this.supervisorList.find(x => x.id == this.formContractor.value.supervisorItm || x.userName == this.formContractor.value.supervisorItm);
     
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
@@ -277,9 +279,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       valorAsegurado: Number(this.formContractor.value.valorAsegurado),
       fechaExaPreocupacional: this.formContractor.value.fechaExamenPreocupacional,
       nivel: Number(this.formContractor.value.nivel),
-      supervisorItm: dataAdmin.userName,
-      cargoSupervisorItm: dataAdmin.professionalposition,
-      identificacionSupervisor: dataAdmin.identification,
+      // supervisorId: this.formContractor.value.supervisorItm,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       cdp: this.formContractor.value.cdp,
       caso: this.formContractor.value.caso
@@ -329,45 +329,32 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getComponentById(id: any) {
+  private getComponentById(id: any, activityId: string, elementId: string) {
     this._planingService
-      .getComponentById(id)
+      .getComponentById(id,activityId,elementId)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
-        this.componente = response.nombreComponente;
-      });
-  }
-
-  private getElementById(id: any) {
-    this._planingService
-      .getElementoById(id)
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response) => {
-        this.elementAsignado = response;
-        this.elemento = response.nombreElemento
-        this.cantDayContract = response.cantidadDias
-      });
-  }
-
-  private getActivityById(id: any) {
-    this._planingService
-      .getActivityById(id)
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response) => {
-        if(response != null){
-          this.visibleActivity = true;
+        
+        this.componentes.push(response);
+        if(this.componentes[0].activities.length > 0 ){
+          this.activities = this.componentes[0].activities;
         }
-        this.activity = response.nombreActividad;
+        if(this.componentes[0].elementos.length > 0 ){
+          this.elements = this.componentes[0].elementos;
+        }
       });
   }
 
-  asignActivity() {
-    let actividades = this.activities.find(f => f.id == this.activitySelectId);
+
+  asignActivity(e: any) {
+    this.activitySelectId = e.value;
+    let actividades = this.activities.find(f => f.id == e.value);
     this.elements = actividades.elementos;
   }
 
-  getElements = (e: string) => {
-    if (e == 'componente') {
+  getElements = (e: string, valueComponent) => {
+    this.componentselectId = valueComponent.value;
+    if (e == 'COMPONENTE') {
       let actividades = this.componentes.find(f => f.id == this.componentselectId);
       this.activities = actividades.activities;
     }
@@ -397,7 +384,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
 
   }
 
-  asignElement = () => {
+  asignElement = (e: any) => {
+    this.elementselectId = e.value;
     if (this.datos.idContractors.length == 0) {
       this.datos.idContractors[0] = this.datos.id
     }
@@ -481,6 +469,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response: IHiringData) => {
         if (response.id != null) {
+          
           this.title = 'Actualizar'
           this.update = true;
           this.hiringData = response;    
@@ -496,13 +485,13 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getAdmins() {
-    this._auth.getAdmins()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((teams: any) => {
-        this.supervisorList = teams;
-      });
-  }
+  // private getAdmins() {
+  //   this._auth.getTeams()
+  //     .pipe(takeUntil(this._unsubscribeAll))
+  //     .subscribe((teams: any) => {
+  //       this.supervisorList = teams;
+  //     });
+  // }
 
   dateChange(event) {
     this.minDate = event.value;
@@ -525,7 +514,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   }
 
   private getDetailProject() {
-    this._genericService.getDetalleContractById(this.datos.contractId, true)
+    this._genericService.getDetalleContractById(this.datos.contractId)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
         if (response) {
@@ -566,7 +555,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     let element: Elements;
     if(this.elements == null || this.elements.length == 0 || this.elementAsignado != null){
       this.elements.push(this.elementAsignado)
-      element = this.elements.find(item => item.nombreElemento === this.elemento);
+      element = this.elements.find(item => item.nombreElemento === this.nombreElemento);
       this.elementselectId = element.id
     }else{
       element = this.elements.find(item => item.id === this.elementselectId);

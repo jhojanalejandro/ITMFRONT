@@ -33,7 +33,7 @@
                                         class="text-primary cursor-pointer"
                                         [routerLink]="['/apps/file-manager']">Inicio
                                     </a>
-                                    <div class="">/ Archivos</div>
+                                    <div class="">/ Archivos Contratista</div>
                                 </div>
                             </ng-container>
                         </div>
@@ -80,7 +80,7 @@
                                             >
                                             <section class="example-section">
                                                 <mat-radio-group   [disabled]="false">
-                                                  <mat-radio-button *ngFor="let status of statusFile"  [matTooltip]="status.statusFile1" class="mr-4" [checked]="file.statusFile === status.id" (change)="updateFile($event,file)" [value]="status.id">{{status.code}}</mat-radio-button>
+                                                  <mat-radio-button *ngFor="let status of statusFile"  [matTooltip]="status.statusFileDescription" class="mr-4" [checked]="file.statusFile === status.id" (change)="updateFile($event,file)" [value]="status.id">{{status.code}}</mat-radio-button>
                                                 </mat-radio-group>
                                               </section>
 

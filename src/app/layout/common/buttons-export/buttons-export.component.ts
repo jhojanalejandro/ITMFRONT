@@ -73,7 +73,7 @@ export class ButtonsExportComponent implements OnInit {
     exportarPaa() {
         this._service.getReportPpa(this.contractId).subscribe(
             (res) => {
-                debugger
+                
                 if (res) {
                     var downloadURL = window.URL.createObjectURL(res);
                     var link = document.createElement('a');

@@ -4,14 +4,14 @@ import { BehaviorSubject, catchError, Observable, of, ReplaySubject, switchMap, 
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { IUserModel } from 'app/modules/auth/model/user-model';
+import { IUserModel, TeamModel } from 'app/modules/auth/model/user-model';
 import { UserFirm } from 'app/modules/admin/pages/settings/models/setting.model';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Injectable()
-export class AuthService
-{
+export class AuthService {
     private _authenticated: boolean = false;
-    encryptText: string = 'encrypt';  
+    encryptText: string = 'encrypt';
     private _teams: BehaviorSubject<any> = new BehaviorSubject(null);
     private _user: ReplaySubject<IUserModel> = new ReplaySubject<IUserModel>(1);
 
@@ -21,8 +21,7 @@ export class AuthService
      * Constructor
      */
     constructor(
-        private _httpClient: HttpClient)
-    {
+        private _httpClient: HttpClient) {
     }
 
     /**
@@ -30,75 +29,55 @@ export class AuthService
      *
      * @param value
      */
-    set user(value: IUserModel)
-    {
+    set user(value: IUserModel) {
         // Store the value
         this._user.next(value);
     }
 
-    get user$(): Observable<IUserModel>
-    {
+    get user$(): Observable<IUserModel> {
         return this._user.asObservable();
     }
 
-    
-    get teams$(): Observable<any>
-    {
+
+    get teams$(): Observable<any> {
         return this._teams.asObservable();
     }
     /**
      * Setter & getter for access token
      */
-    set codeC(codeC: string)
-    {
+    set codeC(codeC: string) {
         sessionStorage.setItem('codeC', codeC);
     }
 
-    set accessToken(token: string)
-    {
+    set accessToken(token: string) {
         sessionStorage.setItem('accessToken', token);
     }
 
-    set accessId(id: string)
-    {
+    set accessId(id: string) {
         sessionStorage.setItem('accessId', id);
     }
 
-    set accessName(name: string)
-    {
+    set accessName(name: string) {
         sessionStorage.setItem('accessName', name);
     }
-    get accessToken(): string
-    {
+    get accessToken(): string {
         return sessionStorage.getItem('accessToken') ?? '';
     }
 
-    get codeC(): string
-    {
+    get codeC(): string {
         return sessionStorage.getItem('codeC') ?? '';
     }
-    set accessEmail(name: string)
-    {
+    set accessEmail(name: string) {
         sessionStorage.setItem('accessEmail', name);
     }
-    get accessEmail(): string
-    {
+    get accessEmail(): string {
         return sessionStorage.getItem('accessEmail') ?? '';
     }
-    set accessAvatar(name: string)
-    {
-        sessionStorage.setItem('accessAvatar', name);
-    }
-    get accessAvatar(): string
-    {
-        return sessionStorage.getItem('accessAvatar') ?? '';
-    }
-    get accessId(): string
-    {
+
+    get accessId(): string {
         return sessionStorage.getItem('accessId') ?? '';
     }
-    get accessName(): string
-    {
+    get accessName(): string {
         return sessionStorage.getItem('accessName') ?? '';
     }
 
@@ -107,8 +86,7 @@ export class AuthService
      *
      * @param email
      */
-    forgotPassword(model: any): Observable<any>
-    {
+    forgotPassword(model: any): Observable<any> {
         return this._httpClient.post(this.apiUrl + environment.retrieveEndpoint, model);
     }
 
@@ -117,21 +95,20 @@ export class AuthService
      *
      * @param credentials
      */
-    signIn(credentials: any): Observable<any>
-    {
+    signIn(credentials: any): Observable<any> {
         // Throw error, if the user is already logged in
-        if ( this._authenticated )
-        {
+        if (this._authenticated) {
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post<IResponse>(this.apiUrl  + environment.authenticateEndpoint, credentials).pipe(
+        return this._httpClient.post<IResponse>(this.apiUrl + environment.authenticateEndpoint, credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
                 this.accessId = response.id;
                 this.accessName = response.userName
-                this.accessEmail = response.userEmail 
+                this.accessEmail = response.userEmail
+                this.codeC = response.code
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true
@@ -142,12 +119,11 @@ export class AuthService
         );
     }
 
-    getUser(): Observable<IUserModel>
-    {
+    getUser(): Observable<IUserModel> {
         // Throw error, if the user is already logged in
         // let plainText:string;
         // let id = crypto.AES.decrypt(plainText, this.accessId).toString();
-        
+
         // let plainText:string;
         // let encrypt:string;
         // encrypt= crypto.AES.encrypt(plainText, this.accessId).toString();
@@ -161,17 +137,16 @@ export class AuthService
         );
     }
 
-    updateUser(data: any){
-        let urlEndPoint = this.apiUrl+ environment.updateUserEndpoint;
-        return this._httpClient.post<IResponse>(urlEndPoint, data).pipe(
-            switchMap((response: any) => {        
+    updateUser(data: any) {
+        let urlEndPoint = this.apiUrl + environment.updateUserEndpoint;
+        return this._httpClient.post<any>(urlEndPoint, data).pipe(
+            switchMap((response: any) => {
                 return of(response);
             })
         );
     }
 
-     signInUsingToken(): Observable<any>
-    {  
+    signInUsingToken(): Observable<any> {
         // Renew token
         return this._httpClient.post(this.apiUrl + environment.validateTokenEndpoint + this.accessToken, {
             // accessToken: this.accessToken
@@ -181,13 +156,13 @@ export class AuthService
                 of(false)
             ),
             switchMap((response: any) => {
-                
-                if(response){
+
+                if (response) {
                     // Set the authenticated flag to true
                     this._authenticated = true;
                     // Return true
                     return of(true);
-                    }else{
+                } else {
                     this._authenticated = false;
 
                     this.accessToken = '';
@@ -203,13 +178,13 @@ export class AuthService
     /**
      * Sign out
      */
-    signOut(): Observable<any>
-    {
-        
+    signOut(): Observable<any> {
+
         // Remove the access token from the local storage
         sessionStorage.removeItem('accessToken');
         sessionStorage.removeItem('accessId');
         sessionStorage.removeItem('accessName');
+        sessionStorage.removeItem('codeC');
         // Set the authenticated flag to false
         this._authenticated = false;
 
@@ -222,9 +197,8 @@ export class AuthService
      *
      * @param user
      */
-    signUp(user: any)
-    {
-        let urlEndpointupdate = this.apiUrl+ environment.sigUpEndpoint;
+    signUp(user: any) {
+        let urlEndpointupdate = this.apiUrl + environment.sigUpEndpoint;
         return this._httpClient.post(urlEndpointupdate, user, { responseType: 'text' });
     }
 
@@ -233,30 +207,25 @@ export class AuthService
      *
      * @param credentials
      */
-    unlockSession(credentials: { email: string; password: string }): Observable<any>
-    {
+    unlockSession(credentials: { email: string; password: string }): Observable<any> {
         return this._httpClient.post('api/auth/unlock-session', credentials);
     }
 
     /**
      * Check the authentication status
      */
-    check(): Observable<boolean>
-    {
+    check(): Observable<boolean> {
         // Check if the user is logged in
-        if ( this._authenticated )
-        {
+        if (this._authenticated) {
             return of(true);
         }
         // Check the access token availability
-        if ( !this.accessToken )
-        {
+        if (!this.accessToken) {
             return of(false);
         }
 
         // Check the access token expire date
-        if ( AuthUtils.isTokenExpired(this.accessToken) )
-        {
+        if (AuthUtils.isTokenExpired(this.accessToken)) {
             return of(false);
         }
 
@@ -264,17 +233,16 @@ export class AuthService
         return this.signInUsingToken();
     }
 
-    updatePasswordUser(data: any){
+    updatePasswordUser(data: any) {
         return this._httpClient.post<IResponse>(environment.apiURL + environment.updatePasswordUserEndpoint, data).pipe(
-            switchMap((response: any) => {        
+            switchMap((response: any) => {
                 return of(response);
             })
         );
     }
 
-    getTeams(): Observable<any>
-    {
-        return this._httpClient.get<IResponse>(this.apiUrl + environment.getAllUserEndpoint ).pipe(
+    getTeams(): Observable<TeamModel[]> {
+        return this._httpClient.get<TeamModel[]>(this.apiUrl + environment.getAllUserEndpoint).pipe(
             switchMap((response: any) => {
                 // Return a new observable with the response
                 this._teams.next(response);
@@ -283,23 +251,13 @@ export class AuthService
         );
     }
 
-    getAdmins(): Observable<any>
-    {
-        return this._httpClient.get<IResponse>(this.apiUrl + environment.getAllAdminsEndpoint ).pipe(
-            switchMap((response: any) => {
-                // Return a new observable with the response
-                return of(response);
-            })
-        );
-    }
 
     UploadFileFirm(formdata: UserFirm) {
-        let urlEndpointGenerate = this.apiUrl+ environment.addFileFirmEndpoint;
-         return this._httpClient.post<any>(urlEndpointGenerate, formdata);
+        let urlEndpointGenerate = this.apiUrl + environment.addFileFirmEndpoint;
+        return this._httpClient.post<any>(urlEndpointGenerate, formdata);
     }
 
-    getRolls(): Observable<any>
-    {
+    getRolls(): Observable<any> {
         return this._httpClient.get<any>(this.apiUrl + environment.GetRollsEndpoint).pipe(
             switchMap((response: any) => {
                 // Return a new observable with the response
@@ -309,9 +267,58 @@ export class AuthService
         );
     }
 
-    getTypeUserFile(): Observable<any>
-    {
+    getTypeUserFile(): Observable<any> {
         return this._httpClient.get<any>(this.apiUrl + environment.GetTypeUserFileEndpoint).pipe(
+            switchMap((response: any) => {
+                // Return a new observable with the response
+                this._teams.next(response);
+                return of(response);
+            })
+        );
+    }
+
+    validateRoll(area: any, assigned?: string[] | null): boolean {
+        let result = false;
+        switch (area) {
+            case CodeUser.RECRUITER:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.RECRUITER || this.codeC == CodeUser.SUPERVISORAREAC) {
+                    if (assigned != null && this.codeC == CodeUser.RECRUITER) {
+                        let isAssigned = assigned.findIndex(f => f == this.accessId);
+                        if (isAssigned >= 0) {
+                            result = true;
+                        }
+                    } else {
+                        result = true;
+                    }
+                }
+                break;
+            case CodeUser.NOMINA:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.NOMINA || this.codeC == CodeUser.SUPERVISORAREAN) {
+                    result = true;
+                }
+                break
+            case CodeUser.PLANEACION:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.PLANEACION) {
+                    result = true;
+                }
+                break
+            case CodeUser.SUPERVISORAREAC:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.SUPERVISORAREAC) {
+                    result = true;
+                }
+                break
+            case CodeUser.JURIDICO:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.JURIDICO) {
+                    result = true;
+                }
+                break
+        }
+        return result;
+    }
+
+
+    getRoll(): Observable<any[]> {
+        return this._httpClient.get<any[]>(this.apiUrl + environment.GetRollsEndpoint).pipe(
             switchMap((response: any) => {
                 // Return a new observable with the response
                 this._teams.next(response);

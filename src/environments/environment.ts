@@ -11,8 +11,7 @@ export const environment = {
     retrieveEndpoint: 'User/retrievePassword',
     updateUserEndpoint: 'User/UpdateTeamRoll',
     updatePasswordUserEndpoint: 'User/UpdatePassword',
-    getAllUserEndpoint: 'User/GetAll',
-    getAllAdminsEndpoint: 'User/GetAll',
+    getAllUserEndpoint: 'User/GetTeam',
     getAllUserEmployeesEndpoint: 'User/GetAllEmployees',
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
@@ -53,14 +52,16 @@ export const environment = {
 
     addContractFolderEndpoint: 'ContractFolder/SaveContract',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
-    GetAllContractEndpoint: 'ContractFolder/GetAll',
+    GetAllContractEndpoint: 'ContractFolder/GetAllContracts',
     GetAllHistoryProjectEndpoint: 'ContractFolder/GetAllHistory',
     UpdateStateContractFolderEndpoint: 'ContractFolder/UpdateStateContract/',
-
     GetByIdContractFolderEndpoint: 'ContractFolder/GetById/',
     DeleteContractFolderEndpoint: 'ContractFolder/Delete',
     GetByIdDetailListEndpoint: 'ContractFolder/GetByIdDetailList',
     GetByIdDetailByIdEndpoint: 'ContractFolder/GetDetailByIdContract',
+    AssignmentUserContractEndpoint: 'ContractFolder/AssignmentUserContract',
+    SaveTermFileContractEndpoint: 'ContractFolder/SaveTermFileContract',
+
     addContractorPaymentsEndpoint: 'ContractorPayments/Add',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
@@ -128,6 +129,8 @@ export const environment = {
     GetMinuteTypeContractEndpoint: 'MasterData/GetMinutes',
     GetBanksContractEndpoint: 'MasterData/GetBanks',
     GetGetAllRubrosContractEndpoint: 'MasterData/GetAllRubros',
+    GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
+    GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
 
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

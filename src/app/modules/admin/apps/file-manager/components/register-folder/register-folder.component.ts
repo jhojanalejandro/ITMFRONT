@@ -75,7 +75,7 @@ export class RegisterFolderComponent implements OnInit {
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
-      typeFolder: this._data.typeFolder,      
+      folderType: this._data.folderType,      
     };  
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
@@ -102,7 +102,7 @@ export class RegisterFolderComponent implements OnInit {
     });
   }
   addFolder(){
-    if(this._data.typeFolder === 'Contratista'){
+    if(this._data.folderType === 'Contratista'){
       this.addContractorFolder();
     }else{
       this.addContractFolder();
@@ -116,7 +116,7 @@ export class RegisterFolderComponent implements OnInit {
       descriptionProject: this.formProject.value.description,
       registerDate: this.registerDate, 
       modifyDate: this.registerDate,
-      typeFolder: this._data.typeFolder,      
+      folderType: this._data.folderType,      
     };  
     this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
         if(res){
@@ -153,7 +153,7 @@ export class RegisterFolderComponent implements OnInit {
       descriptionProject: this.formProject.value.description,
       registerDate: this._data.data.registerDate, 
       modifyDate: this.registerDate,
-      typeFolder: this.formProject.value.typeFolder,       
+      folderType: this.formProject.value.typeFolder,       
     };  
     this._uploadService.UpdateContractFolder(editProject).subscribe((res) => {   
         if(res){

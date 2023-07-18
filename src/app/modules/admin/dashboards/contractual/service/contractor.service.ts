@@ -5,6 +5,7 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { ContractContractors, Contractor } from '../models/contractor';
 import { ChargeAccount } from 'app/modules/admin/apps/home-contractor/models/pdfDocument';
+import { AssignmentType } from '../models/assignment-user.model';
 
 @Injectable({
     providedIn: 'root'
@@ -94,4 +95,27 @@ export class ContractorService {
             .pipe(retry(0));
     }
 
+    
+    assignmentUser(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.AssignmentUserContractEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
+            .pipe(retry(0));
+    }
+
+    getAssignmentType(): Observable<AssignmentType[]> {
+        let urlEndPoint = this.apiUrl + environment.GetAllAssignmentTypeEndpoint;
+        return this._httpClient.get<AssignmentType[]>(urlEndPoint);
+    }
+
+        
+    saveTermFileContract(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.SaveTermFileContractEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
+            .pipe(retry(0));
+    }
+
+    getTermType(): Observable<any[]> {
+        let urlEndPoint = this.apiUrl + environment.GetAllTermTypeEndpoint;
+        return this._httpClient.get<any[]>(urlEndPoint);
+    }
 }

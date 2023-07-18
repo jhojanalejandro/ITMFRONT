@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
@@ -17,8 +17,9 @@ import { Bank } from '../../models/mater.model';
   selector: 'app-contractor-personal-data',
   templateUrl: './contractor-personal-data.component.html',
   styleUrls: ['./contractor-personal-data.component.scss'],
+  
 })
-export class ContractorPersonalDataComponent implements OnInit {
+export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
 
   alert: { type: FuseAlertType; message: string } = {
     type: 'warn',
@@ -60,7 +61,7 @@ export class ContractorPersonalDataComponent implements OnInit {
 
   academicInformation: AcademicInformation = {
     collegeDegree: '',
-    typeAcademicInformation: '',
+    academicInformationtype: '',
     institution: '',
     contractor: ''
   };
@@ -104,13 +105,13 @@ export class ContractorPersonalDataComponent implements OnInit {
     this.contractorinformationStepperForm = this._formBuilder.group({
       step1: this._formBuilder.group({
         identification: ['', Validators.required],
-        birthDate: ['', Validators.required],
+        birthDate: [null, Validators.required],
         expeditionPlace: ['', Validators.required],
         phoneNumber: ['', Validators.required],
         movilPhoneNumber: ['', Validators.required],
-        Municipality: ['MEDELLIN', Validators.required],
+        Municipality: ['', Validators.required],
         nacionality: ['', Validators.required],
-        departamento: ['aNTIOQUIA', Validators.required],
+        departamento: ['', Validators.required],
         address: ['', Validators.required],
         neiberhood: ['', Validators.required],
 
@@ -169,14 +170,14 @@ export class ContractorPersonalDataComponent implements OnInit {
     for (let index = 0; index < 5; index++) {
       this.academicInformation = {
         collegeDegree: '',
-        typeAcademicInformation: '',
+        academicInformationtype: '',
         institution: '',
         contractor: ''
       }
       switch (index) {
         case 0:
           if (this.contractorinformationStepperForm.controls['step2'].value.technical != null && this.contractorinformationStepperForm.controls['step2'].value.technical != '') {
-            this.academicInformation.typeAcademicInformation = 'Tecnico',
+            this.academicInformation.academicInformationtype = 'Tecnico',
               this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.technicalInstitution,
               this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technical
 
@@ -184,7 +185,7 @@ export class ContractorPersonalDataComponent implements OnInit {
           break;
         case 1:
           if (this.contractorinformationStepperForm.controls['step2'].value.technologist != null && this.contractorinformationStepperForm.controls['step2'].value.technologist != '') {
-            this.academicInformation.typeAcademicInformation = 'Tecnologo',
+            this.academicInformation.academicInformationtype = 'Tecnologo',
               this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.technologistInstitution,
               this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.technologist
 
@@ -192,14 +193,14 @@ export class ContractorPersonalDataComponent implements OnInit {
           break;
         case 2:
           if (this.contractorinformationStepperForm.controls['step2'].value.undergraduate != null && this.contractorinformationStepperForm.controls['step2'].value.undergraduate != '') {
-            this.academicInformation.typeAcademicInformation = 'Pregrado',
+            this.academicInformation.academicInformationtype = 'Pregrado',
               this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.undergraduateInstitution,
               this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.undergraduate
           }
           break;
         case 3:
           if (this.contractorinformationStepperForm.controls['step2'].value.specialization != null && this.contractorinformationStepperForm.controls['step2'].value.specialization != '') {
-            this.academicInformation.typeAcademicInformation = 'Especialización'
+            this.academicInformation.academicInformationtype = 'Especialización'
             this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.specializationInstitution
             this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.specialization;
             this.academicInformation.contractor = this._auth.accessId;
@@ -207,7 +208,7 @@ export class ContractorPersonalDataComponent implements OnInit {
           break;
         case 4:
           if (this.contractorinformationStepperForm.controls['step2'].value.master != null && this.contractorinformationStepperForm.controls['step2'].value.master != '') {
-            this.academicInformation.typeAcademicInformation = 'Maestria';
+            this.academicInformation.academicInformationtype = 'Maestria';
             this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.masterInstitution;
             this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.master
             this.academicInformation.contractor = this._auth.accessId
@@ -215,7 +216,7 @@ export class ContractorPersonalDataComponent implements OnInit {
           break;
         case 5:
           if (this.contractorinformationStepperForm.controls['step2'].value.doctorate != null && this.contractorinformationStepperForm.controls['step2'].value.doctorate != '') {
-            this.academicInformation.typeAcademicInformation = 'Doctorado';
+            this.academicInformation.academicInformationtype = 'Doctorado';
             this.academicInformation.institution = this.contractorinformationStepperForm.controls['step2'].value.doctorateInstitution;
             this.academicInformation.collegeDegree = this.contractorinformationStepperForm.controls['step2'].value.doctorate;
             this.academicInformation.contractor = this._auth.accessId;
@@ -223,7 +224,7 @@ export class ContractorPersonalDataComponent implements OnInit {
           break;
       }
       if (this.academicInformation.institution != '' && this.academicInformation.collegeDegree != '') {
-        let technologist = this.academicInformationList.findIndex(f => f.typeAcademicInformation === this.academicInformation.typeAcademicInformation);
+        let technologist = this.academicInformationList.findIndex(f => f.academicInformationtype === this.academicInformation.academicInformationtype);
         if (technologist < 0) {
           this.academicInformation.contractor = this._auth.accessId;
           this.academicInformationList.push(this.academicInformation)
@@ -256,19 +257,19 @@ export class ContractorPersonalDataComponent implements OnInit {
     };
     let saludEps: EmptityHealth = {
       contractor: this._auth.accessId,
-      typeEmptity: 'EPS',
+      emptitytype: 'EPS',
       emptity: this.contractorinformationStepperForm.controls['step4'].value.eps
     }
     this.emptityHealth.push(saludEps)
     let saludArl: EmptityHealth = {
       contractor: this._auth.accessId,
-      typeEmptity: 'ARL',
+      emptitytype: 'ARL',
       emptity: this.contractorinformationStepperForm.controls['step4'].value.arl
     }
     this.emptityHealth.push(saludArl)
     let saludAfp: EmptityHealth = {
       contractor: this._auth.accessId,
-      typeEmptity: 'AFP',
+      emptitytype: 'AFP',
       emptity: this.contractorinformationStepperForm.controls['step4'].value.afp
     }
     this.emptityHealth.push(saludAfp)

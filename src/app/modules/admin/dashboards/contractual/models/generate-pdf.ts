@@ -27,7 +27,7 @@ export interface CommitteeRequest{
     userIdentification: string;
     totalValue: any;
     userFirm: string;
-
+    profileRequire: string;
 }
 
 
@@ -54,4 +54,5 @@ export interface PreviusStudy{
     totalValue: any;
     userFirm: string;
     userCharge: string;
+    supervisorCharge: string;
 }

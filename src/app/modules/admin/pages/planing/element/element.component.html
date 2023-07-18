@@ -82,7 +82,7 @@
                         <mat-label>Tipo Elemento</mat-label>
                         <mat-select [formControlName]="'tipoElemento'" (selectionChange)="changeTypeElement($event)" name="tipoElemento">
                             <mat-option *ngFor="let tipo of elementTypes" [value]="tipo.id">
-                                {{tipo.elementType1}}
+                                {{tipo.elementTypeDescription}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
@@ -98,15 +98,6 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                     </mat-form-field>
-                    <!-- <mat-form-field appearance="fill">
-                        <mat-label>CPC</mat-label>
-                        <input type="text" id="cpc" [value]="elemento.cpc" formControlName="cpc" autocomplete="off"
-                            matInput placeholder="CPC">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                        <mat-error *ngIf="elementForm.get('cpc').hasError('required')">
-                            El Campo cpc es requerido
-                        </mat-error>
-                    </mat-form-field> -->
                 </div>
                 <div class="folder">
                     <mat-form-field appearance="fill">

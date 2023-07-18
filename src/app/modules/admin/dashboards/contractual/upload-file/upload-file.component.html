@@ -16,7 +16,7 @@
             <div  class="folder">
                 <mat-form-field *ngIf="mostrarContrato" class="flex-auto gt-xs:pl-3" appearance="fill">
                     <mat-label >CONTRATOS</mat-label>
-                    <mat-select required id="IdProject" formControlName="IdProject"  name="IdProject">
+                    <mat-select required id="IdProject" (selectionChange)="selectionChageContract($event)" formControlName="IdProject"  name="IdProject">
                         <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
                             {{contarto.projectName}}
                         </mat-option>

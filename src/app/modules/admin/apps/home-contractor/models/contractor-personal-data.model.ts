@@ -23,7 +23,7 @@ export interface ContractorPersonalInformation{
 }
 
 export interface AcademicInformation{
-    typeAcademicInformation: string;
+    academicInformationtype: string;
     institution: string;
     collegeDegree: string;
     contractor: string;
@@ -31,7 +31,7 @@ export interface AcademicInformation{
 
 export interface EmptityHealth{
     contractor: string;
-    typeEmptity: string;
+    emptitytype: string;
     emptity: string;
 }
 

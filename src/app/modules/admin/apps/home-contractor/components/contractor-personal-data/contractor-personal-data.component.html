@@ -9,30 +9,29 @@
         <mat-dialog-content style="margin: 0px; padding: 0px;">
             <div class="option">
                 <!-- Alert -->
-                <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'outline'"
+                <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'"
                     [showIcon]="false" [type]="alert.type" [@shake]="alert.type === 'error'">
                     {{alert.message}}
                 </fuse-alert>
             </div>
             <!-- Sign Up form -->
             <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="contractorinformationStepperForm">
-                <mat-vertical-stepper [linear]="true" #horizontalStepper>
+                <mat-vertical-stepper [linear]="true" #stepper>
                     <mat-step [formGroupName]="'step1'" [stepControl]="contractorinformationStepperForm.get('step1')"
                         #horizontalStepperStep1>
                         <ng-template matStepLabel>Información Personal</ng-template>
                         <div class="folderFieldContractor">
-                            <mat-form-field (click)="pickerFC.open()" class="hiringField" appearance="outline">
+                            <mat-form-field (click)="pickerFC.open()" class="hiringField" appearance="fill">
                                 <mat-label>Fecha Nacimiento</mat-label>
                                 <input matInput id="birthDate" [max]="minBirth" autocomplete="off"
-                                    formControlName="birthDate" [matDatepicker]="pickerFC" required>
+                                    formControlName="birthDate" [matDatepicker]="pickerFC" matDatepickerFormat="dd/MM/yyyy"  required>
                                 <mat-datepicker #pickerFC></mat-datepicker>
                                 <mat-datepicker-toggle matSuffix [for]="pickerFC"></mat-datepicker-toggle>
                                 <mat-error>
                                     Se requiere fecha nacimiento
                                 </mat-error>
                             </mat-form-field>
-                            <mat-datepicker #pickerFC touchUi [startAt]="minBirth"></mat-datepicker>
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <input id="identification" matInput autocomplete="off"
                                     [formControlName]="'identification'" [placeholder]="'Número de Cedula'" required>
                                 <mat-error>
@@ -41,7 +40,7 @@
                                 <mat-icon class="icon-size-5" matSuffix
                                     [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                             </mat-form-field>
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <input id="expeditionPlace" autocomplete="off" matInput
                                     [formControlName]="'expeditionPlace'" [placeholder]="'Lugar de expedición'"
                                     required>
@@ -53,7 +52,7 @@
                             </mat-form-field>
                         </div>
                         <div class="folderFieldContractor">
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <mat-label>Nacionalidad</mat-label>
                                 <mat-select [formControlName]="'nacionality'" name="raffles">
                                     <mat-option *ngFor="let nacionality of nacionalities"
@@ -62,7 +61,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <input id="phoneNumber" matInput [formControlName]="'phoneNumber'"
                                     [placeholder]="'Número Telefono'" required>
                                 <mat-error>
@@ -70,7 +69,7 @@
                                 </mat-error>
                                 <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                             </mat-form-field>
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <input type="number" id="movilPhoneNumber" matInput
                                     [formControlName]="'movilPhoneNumber'" [placeholder]="'Número Celular'" required>
                                 <mat-error>
@@ -87,23 +86,12 @@
                                     <mat-radio-button *ngFor="let genero of generos" [matTooltip]="genero" class="mr-4"
                                         (change)="onChange($event,file)" [value]="genero">{{genero}}</mat-radio-button>
                                 </mat-radio-group>
-                                <!-- <mat-radio-group class="checkRadio" [color]="'primary'" [value]="'genero'">
-                                    <mat-radio-button class="m-5" [value]="'Masculino'">
-                                        genero
-                                    </mat-radio-button>
-                                    <mat-radio-button class="m-5" [value]="'Femenino'">
-                                        genero
-                                    </mat-radio-button>
-                                    <mat-radio-button [value]="'indefinido'">
-                                        genero
-                                    </mat-radio-button>
-                                </mat-radio-group> -->
                             </div>
 
                         </div>
 
                         <div class="folderFieldContractor">
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <mat-label>departamentos</mat-label>
                                 <mat-select [formControlName]="'departamento'" name="raffles"
                                     (selectionChange)="getMunicipios($event)">
@@ -113,7 +101,7 @@
                                 </mat-select>
                             </mat-form-field>
 
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <mat-label>Municipios</mat-label>
                                 <mat-select [formControlName]="'Municipality'" name="municipality">
                                     <mat-option *ngFor="let municipios of municipio" [value]="municipios">
@@ -121,7 +109,7 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="hiringField" appearance="outline">
+                            <mat-form-field class="hiringField" appearance="fill">
                                 <input id="neiberhood" matInput [formControlName]="'neiberhood'"
                                     [placeholder]="'Barrio'" required>
                                 <mat-error>
@@ -162,13 +150,13 @@
                                         información de estudios tecnicos
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="technical" matInput [formControlName]="'technical'"
                                         [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="technicalInstitution" matInput [formControlName]="'technicalInstitution'"
                                         [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -186,13 +174,13 @@
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
 
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="technologist" matInput [formControlName]="'technologist'"
                                         [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="technologistInstitution" matInput
                                         [formControlName]="'technologistInstitution'" [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -210,13 +198,13 @@
                                         información de estudios de pregrado
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="undergraduate" matInput [formControlName]="'undergraduate'"
                                         [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="undergraduateInstitution" matInput
                                         [formControlName]="'undergraduateInstitution'" [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -235,13 +223,13 @@
                                         Información de Especialización
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="specialization" matInput [formControlName]="'specialization'"
                                         [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="undergraduateInstitution" matInput
                                         [formControlName]="'specializationInstitution'" [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -260,13 +248,13 @@
                                         información de Maestría
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="master" matInput [formControlName]="'master'"
                                         [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="masterInstitution" matInput [formControlName]="'masterInstitution'"
                                         [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -284,13 +272,13 @@
                                         información de Doctorado
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="doctorate" matInput [formControlName]="'doctorate'"
                                         [placeholder]="'Titulo Obtenido'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
                                         [svgIcon]="'heroicons_solid:academic-cap'"></mat-icon>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input id="doctorateInstitution" matInput [formControlName]="'doctorateInstitution'"
                                         [placeholder]="'Institución'">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -318,7 +306,7 @@
                         <ng-template matStepLabel>Información Bancaria</ng-template>
                         <div class="flex flex-col gt-sm:flex-row">
                             <div class="folderFieldContractor">
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>Bancos</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite" aria-label="bank" matInput
                                         formControlName="bank" [matAutocomplete]="bankAutoComplete">
@@ -329,7 +317,7 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                <!-- <mat-form-field class="hiringField" appearance="outline">
+                                <!-- <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>Bancos</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite"
                                         aria-label="Nombre del Elemento" matInput [formControlName]="'bank'"
@@ -340,7 +328,7 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field> -->
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>Tipo Cuenta</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite"
                                         aria-label="Nombre del Elemento" matInput [formControlName]="'accountType'"
@@ -352,7 +340,7 @@
                                         </mat-option>
                                     </mat-autocomplete>
                                 </mat-form-field>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <input type="number" id="accountNumber" matInput [formControlName]="'accountNumber'"
                                         [placeholder]="'Número cuenta'" autocomplete="off">
                                     <mat-icon class="icon-size-5" matSuffix
@@ -397,7 +385,7 @@
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
 
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>EPS</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite" aria-label="EPS" matInput
                                         formControlName="eps" [matAutocomplete]="epsAutoComplete">
@@ -420,7 +408,7 @@
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
 
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>AFP</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
                                         formControlName="afp" [matAutocomplete]="afpAutoComplete">
@@ -442,7 +430,7 @@
                                         información ARL
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <mat-form-field class="hiringField" appearance="outline">
+                                <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>ALR</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
                                         formControlName="arl" [matAutocomplete]="arlAutoComplete">
@@ -494,7 +482,7 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div> -->
-                        <div class="flex justify-end mt-8">
+                        <div class="flex justify-end m-5">
                             <button mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
                                 Volver
                             </button>

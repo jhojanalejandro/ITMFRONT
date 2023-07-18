@@ -21,6 +21,9 @@ import { ActividadFormComponent } from './actividad-form/actividad-form.componen
 import { PlaningService } from '../service/planing.service';
 import { ButtonsExportService } from 'app/layout/common/buttons-export/buttons-export.service';
 import { Subject, takeUntil } from 'rxjs';
+import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
     selector: 'components-card',
@@ -47,7 +50,7 @@ export class AddComponentsComponent implements OnInit {
     elementosCant: number = 0;
     componentCant: number = 0;
     activitiesCant: number = 0;
-
+    permission: boolean = false;
     gastosOperativos: any = 0;
     porcentajeCalculo: number = 8;
     nuevoPorcentage: number = 0;
@@ -64,7 +67,8 @@ export class AddComponentsComponent implements OnInit {
         private _contrtactService: UploadDataService,
         private _loadrouter: Router,
         private _formBuilder: FormBuilder,
-        private _service: ButtonsExportService
+        private _service: ButtonsExportService,
+        private _authService: AuthService
     ) {
         this.contractId = this.route.snapshot.params.id;
         if (this.contractId) {
@@ -73,6 +77,10 @@ export class AddComponentsComponent implements OnInit {
     }
     ngOnInit(): void {
         this.projectName = this.route.snapshot.params.projectName;
+        this.permission = this._authService.validateRoll(CodeUser.PLANEACION);
+        if (!this.permission) {
+            this.messagePermission()
+        }
     }
 
 
@@ -112,7 +120,7 @@ export class AddComponentsComponent implements OnInit {
                 this._changeDetectorRef.detectChanges();
             } else {
                 Swal.fire(
-                    'Ei',
+                    '',
                     'Sin Información para mostrar',
                     'question'
                 );
@@ -127,6 +135,9 @@ export class AddComponentsComponent implements OnInit {
         this.subTotal = 0;
         this.elementosCant = 0;
         this.componentCant = this.data.length;
+        this.contractorCant = 0;
+        this.activitiesCant = 0;
+        this.elementosCant = 0;
         this.data.forEach((element) => {
             if (element.elementos.length >= 1) {
                 element.elementos.forEach((item) => {
@@ -158,7 +169,7 @@ export class AddComponentsComponent implements OnInit {
 
     }
 
-    openDialog(): void {
+    changeCalculo(): void {
         const dialogRef = this._matDialog.open(DialogChangePercentajeComponent, {
             disableClose: true,
             autoFocus: false,
@@ -179,49 +190,21 @@ export class AddComponentsComponent implements OnInit {
     }
 
     addComponent() {
-        const dialogRef = this._matDialog.open(ComponentesFormComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                contractId: this.contractId,
-                show: true,
-            },
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this._planingService
-                    .getComponent(this.contractId)
-                    .subscribe((response) => {
-                        this.data = response;
-                        this._changeDetectorRef.detectChanges();
-                    });
-                this.chargeData();
-            }
-        });
-    }
-
-    addActividad() {
-        if (this.dataComponente === null) {
-
-            Swal.fire(
-                'Ei',
-                'Debes seleccionar un componente',
-                'question'
-            );
+        if (!this.permission) {
+            this.messagePermission();
         } else {
-            const dialogRef = this._matDialog.open(ActividadFormComponent, {
+            const dialogRef = this._matDialog.open(ComponentesFormComponent, {
                 disableClose: true,
                 autoFocus: false,
                 data: {
                     contractId: this.contractId,
-                    idComponente: this.dataComponente.id,
                     show: true,
                 },
             });
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this._planingService
-                        .getActivityById(this.contractId)
+                        .getComponent(this.contractId)
                         .subscribe((response) => {
                             this.data = response;
                             this._changeDetectorRef.detectChanges();
@@ -230,90 +213,148 @@ export class AddComponentsComponent implements OnInit {
                 }
             });
         }
+    }
+
+    addActividad() {
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            if (this.dataComponente === null) {
+
+                Swal.fire(
+                    'Ei',
+                    'Debes seleccionar un componente',
+                    'question'
+                );
+            } else {
+                const dialogRef = this._matDialog.open(ActividadFormComponent, {
+                    disableClose: true,
+                    autoFocus: false,
+                    data: {
+                        contractId: this.contractId,
+                        idComponente: this.dataComponente.id,
+                        show: true,
+                    },
+                });
+                dialogRef.afterClosed().subscribe((result) => {
+                    if (result) {
+                        this._planingService
+                            .getActivityById(this.contractId)
+                            .subscribe((response) => {
+                                this.data = response;
+                                this._changeDetectorRef.detectChanges();
+                            });
+                        this.chargeData();
+                    }
+                });
+            }
+        }
+
 
     }
 
     addElements(e: string) {
-        let componentId = null;
-        let activityId = null;
-        if (e === 'activity') {
-            activityId = this.dataActividad.id;
-            componentId = this.dataActividad.componentId
+        if (!this.permission) {
+            this.messagePermission();
         } else {
-            componentId = this.dataComponente.id
-        }
-        let elemento = { valorTotal: 0 }
-        const dialogRef = this._matDialog.open(ElementCardComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                elemento,
-                componentId: componentId,
-                activityId: activityId,
-                idElemento: null,
-                contractId: this.contractId,
-                edit: false
-            },
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            this._changeDetectorRef.detectChanges();
-            if (result) {
-                this.chargeData();
+            let componentId = null;
+            let activityId = null;
+            if (e === 'activity') {
+                activityId = this.dataActividad.id;
+                componentId = this.dataActividad.componentId
+            } else {
+                componentId = this.dataComponente.id
             }
-        });
+            let elemento = { valorTotal: 0 }
+            const dialogRef = this._matDialog.open(ElementCardComponent, {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    elemento,
+                    componentId: componentId,
+                    activityId: activityId,
+                    idElemento: null,
+                    contractId: this.contractId,
+                    edit: false
+                },
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                this._changeDetectorRef.detectChanges();
+                if (result) {
+                    this.chargeData();
+                }
+            });
+        }
+
     }
     editElemento(elemento: any) {
-        const dialogRef = this._matDialog.open(ElementCardComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                elemento,
-                componentId: elemento.componentId,
-                activityId: elemento.activityId,
-                contractId: this.contractId,
-                edit: true
-            }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this.chargeData();
-            }
-        });
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            const dialogRef = this._matDialog.open(ElementCardComponent, {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    elemento,
+                    componentId: elemento.componentId,
+                    activityId: elemento.activityId,
+                    contractId: this.contractId,
+                    edit: true
+                }
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.chargeData();
+                }
+            });
+        }
+
     }
     editComponent(componente: any) {
-        const dialogRef = this._matDialog.open(ComponentesFormComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                componente,
-                contractId: this.contractId
-            }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this.chargeData();
-            }
-        });
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            const dialogRef = this._matDialog.open(ComponentesFormComponent, {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    componente,
+                    contractId: this.contractId
+                }
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.chargeData();
+                }
+            });
+        }
+
     }
 
 
     editActivity(activity: any) {
-        const dialogRef = this._matDialog.open(ActividadFormComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                activity,
-                contractId: this.contractId
-            }
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this.chargeData();
-            }
-        });
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            const dialogRef = this._matDialog.open(ActividadFormComponent, {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    activity,
+                    contractId: this.contractId
+                }
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.chargeData();
+                }
+            });
+        }
+
     }
 
     openConfirmationDialog(): void {
+
         const dialogRef = this._fuseConfirmationService.open(
             this.configForm.value
         );
@@ -323,44 +364,49 @@ export class AddComponentsComponent implements OnInit {
         });
     }
     guardarCalculo() {
-        const registerProject: any = {
-            id: this.contractId,
-            contractorsCant: this.contractorCant,
-            valorContrato: this.total,
-            valorSubTotal: this.subTotal,
-            gastosOperativos: this.gastosOperativos,
-        };
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            const saveCalculo: any = {
+                id: this.contractId,
+                contractorsCant: this.contractorCant,
+                valorContrato: this.total,
+                valorSubTotal: this.subTotal,
+                gastosOperativos: this.gastosOperativos,
+            };
 
-        this._contrtactService.UpdateCostContractFolder(registerProject)
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe((res) => {
-            if (res) {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: '',
-                    html: 'Información Registrada Exitosamente!',
-                    showConfirmButton: false,
-                    timer: 1500
+            this._contrtactService.UpdateCostContractFolder(saveCalculo)
+                .pipe(takeUntil(this._unsubscribe$))
+                .subscribe((res) => {
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Información Registrada Exitosamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+
+                }, (response) => {
+                    console.log(response);
+
+                    Swal.fire('Error', 'Error al Registrar la informacion', 'error');
                 });
-            }
+        }
 
-        }, (response) => {
-            console.log(response);
-
-            Swal.fire('Error', 'Error al Registrar la informacion', 'error');
-        });
     }
 
     private getActivity(e: any) {
         this._planingService.getAllActivity(e.id)
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe((response) => {
-            if (response.length != 0) {
-                this.dataActividad = response;
-                this._changeDetectorRef.detectChanges();
-            }
-        });
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe((response) => {
+                if (response.length != 0) {
+                    this.dataActividad = response;
+                    this._changeDetectorRef.detectChanges();
+                }
+            });
     }
     reloadResolve() {
         const currentUrl: any = this._loadrouter.url;
@@ -370,29 +416,34 @@ export class AddComponentsComponent implements OnInit {
     }
 
     deleteComponent(componente: any) {
-        this._planingService.deleteComponent(componente.id)
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe((response) => {
-            if (response) {
-                Swal.fire(
-                    {
-                        position: 'center',
-                        icon: 'success',
-                        title: '',
-                        html: 'Información Elimina Exitosamente!',
-                        showConfirmButton: false,
-                        timer: 1500
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            this._planingService.deleteComponent(componente.id)
+                .pipe(takeUntil(this._unsubscribe$))
+                .subscribe((response) => {
+                    if (response) {
+                        Swal.fire(
+                            {
+                                position: 'center',
+                                icon: 'success',
+                                title: '',
+                                html: 'Información Elimina Exitosamente!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }
+                        );
+                        this.reloadResolve();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Algo sucedio, vuelve a intentarlo!',
+                            'error'
+                        );
                     }
-                );
-                this.reloadResolve();
-            } else {
-                Swal.fire(
-                    'Error!',
-                    'Algo sucedio, vuelve a intentarlo!',
-                    'error'
-                );
-            }
-        });
+                });
+        }
+
     }
 
     deleteConfirmationDialog(component: any): void {
@@ -449,12 +500,38 @@ export class AddComponentsComponent implements OnInit {
                 },
                 (response) => {
                     console.log(response);
-                    
+
                     Swal.fire('', 'error al exportar los elementos', 'error');
                 }
             );
     }
 
+
+    uploadExcel() {
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            const dialogUpload = this._matDialog.open(UploadFileComponent, {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    origin: 'element',
+                    contractId: this.contractId,
+                    show: true,
+                }
+            });
+            dialogUpload.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.reloadResolve();
+                }
+            });
+        }
+
+    }
+
+    private messagePermission() {
+        Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    }
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();

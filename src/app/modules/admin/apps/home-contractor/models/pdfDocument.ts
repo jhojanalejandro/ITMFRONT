@@ -26,7 +26,7 @@ export interface ChargeAccount{
     periodExecutedFinalDate: string;
     accountNumber: string;
     bankingEntity: string;
-    typeAccount: string;
+    accountType: string;
     contractName: string;
     chargeAccountNumber: string
 }

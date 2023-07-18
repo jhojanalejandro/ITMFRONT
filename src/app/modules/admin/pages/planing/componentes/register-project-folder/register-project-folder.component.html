@@ -41,9 +41,6 @@
                         <input type="text" id="project" formControlName="project" autocomplete="off" matInput
                             placeholder="Projecto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                        <mat-error *ngIf="formProject.get('project').hasError('required')">
-                            El Campo Proyecto es requerido
-                        </mat-error>
                     </mat-form-field>
                     <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
                         <mat-label>Tipo Actualización</mat-label>
@@ -53,9 +50,6 @@
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
-                        <mat-error *ngIf="formProject.get('updateData').hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Rubro</mat-label>
@@ -83,12 +77,9 @@
                 <div class="folderField pt-2">
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Numero Contrato</mat-label>
-                        <input type="text" id="numberProject" formControlName="numberProject" autocomplete="off"
-                            matInput placeholder="Numero Contrato">
+                        <input type="text" id="numberProject" formControlName="numberProject"
+                        autocomplete="off" matInput placeholder="Numero Contrato">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                        <mat-error *ngIf="formProject.get('numberProject').hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
                     </mat-form-field>
                     <mat-form-field (click)="pickerContrato.open()" class="contractField" appearance="fill">
                         <mat-label>Fecha Contrato</mat-label>
@@ -130,7 +121,7 @@
                         <mat-label>Estado contrato</mat-label>
                         <mat-select [formControlName]="'statusContract'"  name="statusContract">
                             <mat-option *ngFor="let state of statusContract" [value]="state.id">
-                                {{state.statusContract1}}
+                                {{state.statusContractDescription}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
@@ -187,9 +178,9 @@
         </mat-dialog-content>
         <mat-dialog-actions align="end">
             <button mat-flat-button color="warn" class="m-2" type="button" [mat-dialog-close]="false">Cancelar</button>
-            <button class="m-2" mat-flat-button [color]="'primary'" color="primary" *ngIf="editData"
+            <button class="m-2" mat-flat-button [color]="'primary'"  [disabled]="!permission" color="primary" *ngIf="editData"
                 (click)="editContractFolder()">Editar</button>
-            <button class="m-2" mat-flat-button [color]="'primary'" type="submit" [disabled]="formProject .disabled"
+            <button class="m-2" mat-flat-button [color]="'primary'" type="submit" [disabled]="!permission"
                 *ngIf="!formProject.disabled && !editData" (click)="addContractFolder()">Guardar</button>
         </mat-dialog-actions>
     </div>
