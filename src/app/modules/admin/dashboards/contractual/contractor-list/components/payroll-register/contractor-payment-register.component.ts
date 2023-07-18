@@ -6,9 +6,9 @@ import { FuseAlertType } from '@fuse/components/alert';
 import Swal from 'sweetalert2';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { AuthService } from 'app/core/auth/auth.service';
-import { NominaService } from '../../service/nomina.service';
 import { ContractorPayments } from 'app/modules/admin/dashboards/nomina/models/contractor-payments';
-import { EconomicContractor } from '../../models/economic-data-contractor';
+import { NominaService } from 'app/modules/admin/dashboards/nomina/service/nomina.service';
+import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 
 
 @Component({
@@ -78,7 +78,7 @@ export class ContractorPaymentRegisterComponent implements OnInit {
       cashPayment: new FormControl(null, Validators.required),
       totalDebt: new FormControl(null, Validators.required),
       registerDate: new FormControl(null, Validators.required),
-      contractorName: new FormControl({ value: this.datos.nombre, disabled: true }, Validators.required),
+      contractorName: new FormControl({ value:  this.datos.nombre, disabled: true }, Validators.required),
       description: new FormControl(null, Validators.required),
       cantidadContratistas: new FormControl({ value: this.cantidadContratistas, disabled: true }),
 

@@ -9,7 +9,7 @@
         </div>
         <div class="option">
             <!-- Alert -->
-            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'" [showIcon]="false"
                 [type]="alert.type" [@shake]="alert.type === 'error'">
                 {{alert.message}}
             </fuse-alert>
@@ -17,7 +17,7 @@
         <mat-dialog-content style="margin: 0px; padding: 0px;">
             <form [formGroup]="formProject" class="example-form">
                 <div class="folderField pt-8">
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Nombre Empresa</mat-label>
                         <input type="text" id="companyName" formControlName="companyName" autocomplete="off" matInput
                             placeholder="Nombre empresa">
@@ -27,7 +27,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Nombre projecto</mat-label>
                         <input type="text" id="projectName" formControlName="projectName" autocomplete="off" matInput
                             placeholder="Nombre projecto">
@@ -36,7 +36,7 @@
                             El Campo Proyecto es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Projecto</mat-label>
                         <input type="text" id="project" formControlName="project" autocomplete="off" matInput
                             placeholder="Projecto">
@@ -45,8 +45,8 @@
                             El Campo Proyecto es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="editData" class="contractField" appearance="outline">
-                        <mat-label>Tipo</mat-label>
+                    <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
+                        <mat-label>Tipo Actualización</mat-label>
                         <mat-select [formControlName]="'updateData'" (selectionChange)="changeTipe($event)" name="updateData">
                             <mat-option *ngFor="let exe of editarData" [value]="exe.viewValue">
                                 {{exe.viewValue}}
@@ -57,9 +57,9 @@
                             Este campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Rubro</mat-label>
-                        <mat-select [formControlName]="'rubro'"  (selectionChange)="changeRubro($event)" name="rubro">
+                        <mat-select [formControlName]="'rubro'" (selectionChange)="changeRubro($event)" name="rubro">
                             <mat-option *ngFor="let tipo of rubros" [value]="tipo.id">
                                 {{tipo.rubroNumber}}
                             </mat-option>
@@ -67,21 +67,21 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                     </mat-form-field>
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Nombre Rubro</mat-label>
                         <input type="mail" id="nombreRubro" [value]="dataProject.nombreRubro" formControlName="nombreRubro"
-                            autocomplete="off" matInput placeholder="Nombre Cpc">
+                            autocomplete="off" matInput placeholder="Nombre Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                     </mat-form-field>
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Fuente Rubro</mat-label>
-                        <input type="text" id="nombreRubro" formControlName="fuenteRubro" autocomplete="off" matInput
-                            placeholder="Nombre Rubro">
+                        <input type="text" id="fuenteRubro"  [value]="dataProject.fuenteRubro" formControlName="fuenteRubro" autocomplete="off" matInput
+                            placeholder="Fuente Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="folderField pt-2">
-                    <mat-form-field class="contractField" appearance="outline">
+                    <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Numero Contrato</mat-label>
                         <input type="text" id="numberProject" formControlName="numberProject" autocomplete="off"
                             matInput placeholder="Numero Contrato">
@@ -90,7 +90,7 @@
                             Este campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field (click)="pickerContrato.open()" class="contractField" appearance="outline">
+                    <mat-form-field (click)="pickerContrato.open()" class="contractField" appearance="fill">
                         <mat-label>Fecha Contrato</mat-label>
                         <input matInput id="fechaContrato" [min]="registerDate" (dateChange)="dateChange($event)"
                             autocomplete="off" formControlName="fechaContrato" [matDatepicker]="pickerContrato">
@@ -100,7 +100,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field (click)="pickerF.open()" class="contractField" appearance="outline">
+                    <mat-form-field (click)="pickerF.open()" class="contractField" appearance="fill">
                         <mat-label>Fecha de Finalizacion</mat-label>
                         <input matInput id="fechaFinalizacion" [min]="minDate" autocomplete="off"
                             formControlName="fechaFinalizacion" [matDatepicker]="pickerF">
@@ -113,11 +113,11 @@
                 </div>
 
                 <div class="folderField">
-                    <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="outline">
+                    <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="fill">
                         <mat-label>Tipo Modificacion</mat-label>
                         <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion"
                             (selectionChange)="changeEdit()">
-                            <mat-option *ngFor="let modifica of tipoModificacion" [value]="modifica.viewValue">
+                            <mat-option *ngFor="let modifica of tipoModificacion" [value]="modifica.id">
                                 {{modifica.viewValue}}
                             </mat-option>
                         </mat-select>
@@ -126,9 +126,9 @@
                             Este campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="editData" class="contractField" appearance="outline">
+                    <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
                         <mat-label>Estado contrato</mat-label>
-                        <mat-select [formControlName]="'statusContract'" name="statusContract">
+                        <mat-select [formControlName]="'statusContract'"  name="statusContract">
                             <mat-option *ngFor="let state of statusContract" [value]="state.id">
                                 {{state.statusContract1}}
                             </mat-option>
@@ -138,7 +138,7 @@
                             Este campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="outline">
+                    <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="fill">
                         <mat-label>Numero Adicion</mat-label>
                         <input type="text" id="noAdicion" formControlName="noAdicion" autocomplete="off" matInput
                             placeholder="no Adicion">
@@ -151,7 +151,7 @@
                 </div>
 
                 <div class="folderField">
-                    <mat-form-field *ngIf="editData && AddeditData" (click)="pickerIA.open()" class="contractField" appearance="outline">
+                    <mat-form-field *ngIf="editData && AddeditData" (click)="pickerIA.open()" class="contractField" appearance="fill">
                         <mat-label>Fecha Inicio Ampliacion</mat-label>
                         <input matInput id="fechaInicioAmpliacion" autocomplete="off"
                             formControlName="fechaInicioAmpliacion" [matDatepicker]="pickerIA">
@@ -161,7 +161,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="editData && AddeditData" (click)="pickerTA.open()" class="contractField" appearance="outline">
+                    <mat-form-field *ngIf="editData && AddeditData" (click)="pickerTA.open()" class="contractField" appearance="fill">
                         <mat-label>Fecha terminacion Ampliacion</mat-label>
                         <input matInput id="fechaDeTerminacionAmpliacion" autocomplete="off"
                             formControlName="fechaDeTerminacionAmpliacion" [matDatepicker]="pickerTA">
@@ -174,12 +174,12 @@
                 </div>
 
                 <div class="folderField">
-                    <mat-form-field class="hiringD" appearance="outline">
+                    <mat-form-field class="hiringD" appearance="fill">
                         <mat-label>Objeto Convenio</mat-label>
                         <textarea type="text" class="example-full-width" id="objectContract" formControlName="objectContract"
                             autocomplete="off" matInput placeholder="Objeto"></textarea>
                         <mat-error *ngIf="formProject.get('objectContract').hasError('required')">
-                            El Campo Descripcion es requerido
+                            El Campo Objeto Convenio es requerido
                         </mat-error>
                     </mat-form-field>
                 </div>

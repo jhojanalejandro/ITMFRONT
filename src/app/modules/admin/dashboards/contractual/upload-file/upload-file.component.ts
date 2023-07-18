@@ -17,7 +17,7 @@ import { UploadFileDataService } from './service/upload-file.service';
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class UploadFileComponent implements OnInit,OnDestroy{
+export class UploadFileComponent implements OnInit, OnDestroy {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file: any = null; // Variable to store file
@@ -77,7 +77,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
       description: new FormControl(null, Validators.required),
     });
     this.getContractsData();
-    this.privateGetFileType();
+    this.GetFileType();
     this.getDocumentType();
 
   }
@@ -191,8 +191,13 @@ export class UploadFileComponent implements OnInit,OnDestroy{
   }
 
   uploadTypeFile() {
+    
     if (this.isSelectContract == true) {
-      this.uploadCdpFile();
+      if(this._data.origin === 'cdp'){
+        this.uploadCdpFile();
+      }else{
+        this.uploadElementFile();
+      }
     } else {
       this.uploadPdfFile();
     }
@@ -283,6 +288,7 @@ export class UploadFileComponent implements OnInit,OnDestroy{
 
 
   }
+
   convertFile(file: File): Observable<string> {
     const result = new ReplaySubject<string>(1);
     const reader = new FileReader();
@@ -291,12 +297,56 @@ export class UploadFileComponent implements OnInit,OnDestroy{
     return result;
   }
 
-  privateGetFileType() {
+  private GetFileType() {
     this._upload.getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((type: DocumentTypeFile[]) => {
         this.documentType = type.find(f => f.code === 'MMCR').id;
       });
+  }
+
+
+  uploadElementFile() {
+    let fileToUpload = <File>this.file;
+    const formData = new FormData();
+    formData.append('excel', fileToUpload, fileToUpload.name);
+    formData.append('userId', this._auth.accessId.toString());
+    formData.append('contractId', this._data.contractId);
+    if (this._data.show) {
+      // Should match the parameter name in backend
+      this._upload.UploadElementFileExcel(formData).subscribe(res => {
+        if (res) {
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();
+          this.closeModal();
+        }
+
+      },
+        (response) => {
+          console.log(response);
+
+          this.formFile.enable();
+          // Set the alert
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+          // Show the alert
+          this.showAlert = true;
+        });
+    } else if (this._data.contractorId != null) {
+      this.addFileContractor(this.base64Output);
+    } else {
+      this.addFileContract(this.base64Output);
+    }
+
+
   }
 
   closeModal(): void {

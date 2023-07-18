@@ -91,7 +91,7 @@ export class CreatePdfComponent implements OnInit {
 
     downloadMinutaMacropdf() {
 
-        debugger
+        
         let dat = this.getCurrentDate();
         const minutaModificacionMacro = {
             pageSize: 'A4',

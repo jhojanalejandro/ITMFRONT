@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
@@ -22,6 +22,9 @@ import { Componente, Elements } from 'app/modules/admin/pages/planing/models/pla
 import { DatePipe } from '@angular/common';
 import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
+import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 
 @Component({
   selector: 'contractor-list',
@@ -56,6 +59,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<any>();
   idSelected: string[] = [];
   contractname: string;
+  origin: string;
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'hiringStatus', 'statusContractor', 'legalProccess', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
@@ -64,6 +68,8 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   visibleOption: boolean = false;
   datePipe: DatePipe;
   generateType: string;
+  permission: boolean = false;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private readonly _unsubscribe$ = new Subject<void>();
 
@@ -71,7 +77,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private _contractorListService: ContractorService,
     private _genericService: GenericService,
     private _matDialog: MatDialog,
-    private auth: AuthService,
+    private _authService: AuthService,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private router: ActivatedRoute,
@@ -95,9 +101,12 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   ]
 
   ngOnInit(): void {
-    this.userName = this.auth.accessName
+
+    this.userName = this._authService.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
     this.contractname = this.router.snapshot.paramMap.get('contractname') || 'null';
+    this.origin = this.router.snapshot.paramMap.get('origin') || 'null';
+
     this.configForm = this._formBuilder.group({
       title: 'Eliminar Registro',
       message: '¿Estás seguro de que desea eliminar este contacto de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
@@ -211,66 +220,84 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   openConfirmationDelete(element: any): void {
-    const dialogRef = this._matDialog.open(NewnessContractorComponent, {
-      disableClose: true,
-      autoFocus: false,
-      data: {
-        id: null,
-        contractId: this.contractId,
-        contractorId: element.id,
-      }
-    });
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((result) => {
-        if (result) {
-          this.getDataContractor();
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      const dialogRef = this._matDialog.open(NewnessContractorComponent, {
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          id: null,
+          contractId: this.contractId,
+          contractorId: element.id,
         }
-        this.selection.clear();
       });
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((result) => {
+          if (result) {
+            this.getDataContractor();
+          }
+          this.selection.clear();
+        });
+    }
+
   }
 
   SendMailsAccounts() {
-    for (let index = 0; index < this.selection.selected.length; index++) {
-      this.idSelected[index] = this.selection.selected[index].id
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      for (let index = 0; index < this.selection.selected.length; index++) {
+        this.idSelected[index] = this.selection.selected[index].id
+      }
+      let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected, 'userId': this._authService.accessId }
+      this._contractorListService.sendmailsAccounts(ids)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((Response) => {
+          if (Response) {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Invitaciones enviadas exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+          this.reloadResolve();
+        });
     }
-    let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected, 'userId':  this.auth.accessId}
-    this._contractorListService.sendmailsAccounts(ids)
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((Response) => {
-        if (Response) {
-          swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Invitaciones enviadas exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
-        this.reloadResolve();
-      });
+
 
   }
 
   modificacionContrato(data: any) {
-    const dialogModificacion = this._matDialog.open(ModificacionFormComponent, {
-      width: '900px',
-      disableClose: true,
-      autoFocus: false,
-      data: {
-        idUser: this.auth.accessId,
-        data,
-        contractId: this.contractId
-      }
-    });
-    dialogModificacion.afterClosed()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((result) => {
-        if (result) {
-          this.reloadResolve();
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      const dialogModificacion = this._matDialog.open(ModificacionFormComponent, {
+        width: '900px',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          idUser: this._authService.accessId,
+          data,
+          contractId: this.contractId
         }
       });
+      dialogModificacion.afterClosed()
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((result) => {
+          if (result) {
+            this.reloadResolve();
+          }
+        });
+    }
+
   }
   registrarDatosContratacion(data: any) {
     if (data == null) {
@@ -283,14 +310,15 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       disableClose: true,
       autoFocus: false,
       data: {
-        idUser: this.auth.accessId,
+        idUser: this._authService.accessId,
         contractId: this.contractId,
         id: data.id,
         componentId: data.componentId,
         elementId: data.elementId,
         activityId: data.activityId,
         idContractors: this.listId,
-        statusContractor: data.statusContractor
+        statusContractor: data.statusContractor,
+        assignmentUser: data.assignmentUser
       }
     });
     dialogRef.afterClosed()
@@ -317,7 +345,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this.generatePdfMinute = true;
 
   }
-  generarEstudiosPrevios(data: any = null,type: string) {
+  generarEstudiosPrevios(data: any = null, type: string) {
     this.contractContractors.contractors = [data.id];
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
@@ -326,44 +354,57 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   activateContarct() {
-    this._genericService.UpdateStateContractFolder(this.contractId)
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((resp) => {
-        if (resp) {
-          swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Contrato activado exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-        } else {
-          swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
-        }
-      },
-        (response) => {
-          // Set the alert
-          console.log(response);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      this._genericService.UpdateStateContractFolder(this.contractId)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((resp) => {
+          if (resp) {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Contrato activado exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          } else {
+            Swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
+          }
+        },
+          (response) => {
+            // Set the alert
+            console.log(response);
 
-          swal.fire('Error', 'Error al activar el contrato!', 'error');
-        })
+            Swal.fire('Error', 'Error al activar el contrato!', 'error');
+          })
+    }
+
   }
 
   uploadExcel() {
-    const dialogUpload = this._matDialog.open(UploadFileComponent, {
-      disableClose: true,
-      autoFocus: false,
-      data: {
-        contractId: this.contractId,
-        show: true,
-      }
-    });
-    dialogUpload.afterClosed().subscribe((result) => {
-      if (result) {
-        this.reloadResolve();
-      }
-    });
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      const dialogUpload = this._matDialog.open(UploadFileComponent, {
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          origin: 'cdp',
+          contractId: this.contractId,
+          show: true,
+        }
+      });
+      dialogUpload.afterClosed().subscribe((result) => {
+        if (result) {
+          this.reloadResolve();
+        }
+      });
+    }
+
   }
 
   pdfGenerated(e: boolean) {
@@ -377,6 +418,65 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     this._loadrouter.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this._loadrouter.navigateByUrl(currentUrl);
     });
+  }
+
+  registerPayment(data: any) {
+    if (this.selection.selected.length > 0 || data != null) {
+      if (data == null) {
+        data = { id: 0, contractId: null, componenteId: null, elementId: null }
+        this.selection.selected.forEach(element => {
+          this.listId.push(element.id);
+        });
+      }
+      const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
+        width: '900px',
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          idUser: this._authService.accessId,
+          id: data.id,
+          nombre: data.nombre,
+          idContractors: this.listId,
+          contractId: this.contractId
+        }
+      });
+      dialogRefPayment.afterClosed().subscribe((result) => {
+        if (result) {
+          this.getDataContractor();
+        }
+        this.listId = [];
+      });
+    } else {
+      Swal.fire('', 'Debes seleccionar registros!', 'warning');
+
+    }
+  }
+  historicalPayment(item: any) {
+    this._loadrouter.navigate(['/dashboards/nomina/payment/Contractor/' + this.contractId + '/' + item.id]);
+  }
+
+  addTermFileContract(): void {
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      const dialogRef = this._matDialog.open(TermFileContractComponent, {
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          contractId: this.contractId,
+        }
+      });
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((result) => {
+          if (result) {
+            this.getDataContractor();
+          }
+          this.selection.clear();
+        });
+    }
+
   }
 
   ngOnDestroy(): void {

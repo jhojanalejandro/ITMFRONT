@@ -1,6 +1,6 @@
 <div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Cargar Firma</div>
+        <div class="text-lg font-medium">Cargar Archivos Usario</div>
         <button mat-icon-button (click)="cerrar()" [tabIndex]="-1">
             <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
@@ -10,19 +10,21 @@
         <form [formGroup]="formFile" class="example-form">
             <div class="folder">
                 <div>
-                    <mat-form-field class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="!typeImageB" class="hiring" appearance="outline">
                         <mat-label>Firma propia</mat-label>
-                        <mat-select (selectionChange)="owner($event)" required id="ownerValidate" formControlName="ownerValidate" name="ownerValidate">
+                        <mat-select (selectionChange)="owner($event)" required id="ownerValidate"
+                            formControlName="ownerValidate" name="ownerValidate">
                             <mat-option *ngFor="let doc of propietario" [value]="doc.viewValue">
                                 {{doc.viewValue}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                        <mat-icon class="icon-size-5" matSuffix
+                            [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                         <mat-error *ngIf="formFile.get('ownerValidate').hasError('required')">
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="isOwner" class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="isOwner && !typeImageB" class="hiring" appearance="outline">
                         <mat-label>Nombre Propietario</mat-label>
                         <input type="text" id="ownerFirm" formControlName="ownerFirm" autocomplete="off" matInput
                             placeholder="Nombre Propietario">
@@ -33,24 +35,25 @@
                     </mat-form-field>
                 </div>
 
-                <mat-form-field  class="hiring" appearance="outline">
-                    <mat-label >Tipo Imagen</mat-label>
-                    <mat-select formControlName="userCharge"  name="typeFile">
-                        <mat-option  *ngFor="let type of typeUserFile" [value]="type.id">
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Tipo Archivo</mat-label>
+                    <mat-select formControlName="typeUserFile" (selectionChange)="typeImage($event)" name="typeFile">
+                        <mat-option *ngFor="let type of typeUserFile" [value]="type.id">
                             {{type.typeFile}}
                         </mat-option>
                     </mat-select>
-                </mat-form-field> 
+                </mat-form-field>
                 <div *ngIf="isOwner">
 
-                    <mat-form-field  class="hiring" appearance="outline">
-                        <mat-label >Cargo Propietario</mat-label>
-                        <mat-select formControlName="userCharge" (selectionChange)="onChange($event,member)" name="typeFile">
-                            <mat-option  *ngFor="let role of members" [value]="role.id">
+                    <mat-form-field *ngIf="!typeImageB" class="hiring" appearance="outline">
+                        <mat-label>Cargo Propietario</mat-label>
+                        <mat-select formControlName="userCharge" (selectionChange)="onChange($event,member)"
+                            name="userCharge">
+                            <mat-option *ngFor="let role of members" [value]="role.id">
                                 {{role.rollName}}
                             </mat-option>
                         </mat-select>
-                    </mat-form-field> 
+                    </mat-form-field>
                     <!-- <mat-form-field class="hiringD" appearance="outline">
                         <mat-label>Cargo Propietario</mat-label>
                         <textarea type="text" class="example-full-width" id="userCharge" formControlName="userCharge"
@@ -64,8 +67,7 @@
 
                 <div class="text-center pt-8">
                     <input formControlName="file" type="file" mat-flat-button color="primary"
-                    accept="image/jpeg, image/png, image/jpg"
-                        (change)="onChange($event)">
+                        accept=".jpg, .jpeg, .png, .pdf, .docx" (change)="onChange($event)">
                 </div>
                 <!-- Shareable short link of  uploaded file -->
                 <div class="container text-center jumbotron" *ngIf="shortLink">
@@ -83,6 +85,6 @@
 </div>
 <mat-dialog-actions align="end" class="pt-8">
     <button mat-flat-button type="button" [mat-dialog-close]="true" [color]="'warn'">Cancelar</button>
-    <button mat-flat-button [color]="'primary'" type="submit" [disabled]="formFile .disabled"
-        *ngIf="!formFile.disabled" (click)="uploadFirm($event)">Cargar Firma</button>
+    <button mat-flat-button [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"
+        (click)="uploadFirm($event)">Cargar Archivo</button>
 </mat-dialog-actions>

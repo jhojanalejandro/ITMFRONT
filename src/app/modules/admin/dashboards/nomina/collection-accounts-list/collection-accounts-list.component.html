@@ -53,15 +53,27 @@
                     </div>
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0">
-                        <mat-form-field  class="hiring" appearance="outline">
+                        <mat-form-field class="hiringFile" appearance="fill">
+                            <mat-label >CONTRATOS</mat-label>
+                            <mat-select required id="IdProject" (selectionChange)="tipoSeleeccionado($event,'contract')" formControlName="IdProject"  name="IdProject">
+                                <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
+                                    {{contarto.projectName}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-icon
+                            class="icon-size-5"
+                            matSuffix
+                            [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                        </mat-form-field> 
+                        <mat-form-field  class="hiringFile" appearance="fill">
                             <mat-label >Tipo Documento</mat-label>
-                            <mat-select (selectionChange)="tipoSeleeccionado($event)" name="typeFile">
+                            <mat-select (selectionChange)="tipoSeleeccionado($event,'document')" name="typeFile">
                                 <mat-option  *ngFor="let docuemnto of tipoDocumentos" [value]="docuemnto.id">
                                     {{docuemnto.documentType1}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field (click)="dp.open()" class="full-width" appearance="outline">
+                        <mat-form-field (click)="dp.open()" class="full-width" appearance="fill">
                             <mat-label>Selecciona La Fecha</mat-label>
                             <input matInput [matDatepicker]="dp" placeholder="Month and Year" [formControl]="date">
                             <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>

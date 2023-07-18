@@ -27,8 +27,10 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato, ElementComponent, Elements, ListElements } from '../models/planing-model';
 import { PlaningService } from '../service/planing.service';
 import { CpcType, ElementType } from 'app/modules/admin/generic/model/generic.model';
-import { ElementTypeCode } from 'app/layout/common/enums/elementType';
 import Swal from 'sweetalert2';
+import { ElementTypeCode } from 'app/layout/common/enums/elementType';
+import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
     selector: 'app-alement',
@@ -48,7 +50,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     maxDayContrac: number = 0;
     cpcType: CpcType[];
     elementTypes: ElementType[];
-
     cpcName: string = '';
     detailContract: DetalleContrato = {
         contractId: null,
@@ -106,7 +107,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _data,
         private _fuseConfirmationService: FuseConfirmationService,
         private _genericService: GenericService,
-        private _planingService: PlaningService
+        private _planingService: PlaningService,
+        private _authService: AuthService,
     ) {
         if (this._data.edit === true) {
             this.btnOpcion = 'Actualizar';
@@ -141,9 +143,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             fechamodificacion: [null],
             consecutivo: [this.elemento.consecutivo, Validators.required],
             valordiaContratista: [this.elemento.valorPorDiaContratista, Validators.required],
-            obligacionesEspecificas: [this.obligacionesEspecificas],
-            obligacionesGenerales: [this.obligacionesGenerales],
-            objetoElemento: [this.objetoConvenio]
+            obligacionesEspecificas: [this.obligacionesEspecificas,[Validators.pattern(/[^\r\n]+/)]],
+            obligacionesGenerales: [this.obligacionesGenerales,[Validators.pattern(/[^\r\n]+/)]],
+            objetoElemento: [this.objetoConvenio,[Validators.pattern(/[^\r\n]+/)]]
 
         });
         this.filteredOptions =
@@ -253,41 +255,44 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                     swal.fire('Precaución', 'El valor unitario debe ser mayor a 0', 'warning');
                 }
             } else {
+                
                 this.totalCalculate = false;
                 this.elemento.valorPorDiaContratista = this.elementForm.value.unitValue / 30;
                 this.elementForm.value.unitValueDay = Number(
                     (this.elementForm.value.unitValue / 30) *
                     this.elementForm.value.contractorCant
                 );
-                this.elemento.valorPorDia = this.elementForm.value.unitValueDay;
+                this.elemento.valorPorDia = Math.round(this.elementForm.value.unitValueDay);
 
                 if (this.elementForm.value.totalValue === null || this.elemento.valorTotal === this.elementForm.value.totalValue) {
-                    this.totalValue = Number(
+                    this.totalValue =  Math.round(Number(
                         this.elemento.valorPorDia * this.elementForm.value.cantDay
-                    );
-                    this.totalValueContratista = Number(
+                    ));
+                    this.totalValueContratista =  Math.round(Number(
                         this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                    );
-                    this.totalExacto = this.totalValue;
+                    ));
+                    this.totalExacto =  Math.round(this.totalValue);
                 } else if (this.elemento.valorTotal != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
-                    this.totalExacto = Number(
+                    this.totalExacto =  Math.round(Number(
                         this.elemento.valorPorDia * this.elementForm.value.cantDay
-                    );
-                    this.totalValueContratista = Number(
+                    ));
+                    this.totalValueContratista =  Math.round(Number(
                         this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                    );
+                    ));
                     this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                    this.totalValueContratista = Number(
+                    this.totalValueContratista =  Math.round(Number(
                         this.elemento.valorPorDiaContratista * this.elementForm.value.cantDay
-                    );
-                    this.recursos = this.elementForm.value.totalValue - this.totalExacto;
+                    ));
+                    
+                    this.recursos =  Math.round(this.elementForm.value.totalValue - this.totalExacto);
                 }
 
             }
         } else {
-            this.elemento.valorPorDia = this.elementForm.value.unitValue;
-            this.totalValue = this.elementForm.value.unitValue;
-            this.elementForm.value.totalValue = this.elementForm.value.unitValue;
+            
+            this.elemento.valorPorDia =  Math.round(this.elementForm.value.unitValue);
+            this.totalValue =  Math.round(this.elementForm.value.unitValue);
+            this.elementForm.value.totalValue =  Math.round(this.elementForm.value.unitValue);
         }
 
 
@@ -320,14 +325,16 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         if (this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0) {
             if (this.totalValue != this.elementForm.value.totalValue) {
                 if (this.totalValue < this.totalV) {
-                    this.recursos = this.totalV - Number(this.totalValue);
+                    this.recursos =  Math.round(this.totalV - Number(this.totalValue));
                 } else if (this.totalValue > this.totalV) {
-                    this.recursos = Number(this.totalValue) - this.totalV;
+                    this.recursos = Math.round(Number(this.totalValue) - this.totalV);
                 }
             }
-            this.totalValue = this.totalV
+            
+            this.totalValue =  Math.round(this.totalV)
         } else {
-            this.totalValue = this.totalV
+            
+            this.totalValue =  Math.round(this.totalV)
         }
 
     }
@@ -394,11 +401,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     private getDetailContract() {
-        this._genericService.getDetalleContractById(this._data.contractId, true)
+        this._genericService.getDetalleContractById(this._data.contractId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (resp) => {
-                    debugger
                     if (resp != null) {
                         this.detailContract = resp;
                         this.calcularDiasEntreFechas(this.detailContract.fechaContrato, this.detailContract.fechaFinalizacion);

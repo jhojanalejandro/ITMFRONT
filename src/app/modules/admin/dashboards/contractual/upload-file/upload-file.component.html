@@ -14,7 +14,7 @@
     <div class="modal-body pt-6">
         <form [formGroup]="formFile" class="example-form">
             <div  class="folder">
-                <mat-form-field *ngIf="mostrarContrato" class="flex-auto gt-xs:pl-3" appearance="outline">
+                <mat-form-field *ngIf="mostrarContrato" class="flex-auto gt-xs:pl-3" appearance="fill">
                     <mat-label >CONTRATOS</mat-label>
                     <mat-select required id="IdProject" formControlName="IdProject"  name="IdProject">
                         <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
@@ -32,7 +32,7 @@
                 <div>
                 </div>
                 <div class="folder" *ngIf="!mostrarContrato && !isSelectContract">
-                    <mat-form-field class="hiringD" appearance="outline">
+                    <mat-form-field class="hiringD" appearance="fill">
                         <mat-label>Descripcion</mat-label>
                         <textarea type="text"  class="example-full-width" id="description" formControlName="description" autocomplete="off" matInput placeholder="Descripcion"></textarea>
                         <mat-error *ngIf="formFile.get('description').hasError('required')">

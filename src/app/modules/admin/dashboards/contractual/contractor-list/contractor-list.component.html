@@ -10,11 +10,16 @@
                 {{contractname}}!</div>
 
         </div>
-        <div class="mt-4 sm:mt-0">
+        <div class="mt-4 sm:mt-0" *ngIf="origin == 'contractual'">
             <!-- Add section button -->
-            <button mat-flat-button [color]="'accent'" (click)="SendMailsAccounts()"
+            <button mat-flat-button [color]="'accent'" (click)="addTermFileContract()"
                 [matTooltip]="'Shortcut: Ctrl + .'">
-                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                <span class="ml-2 mr-1">Tiempo entrega</span>
+            </button>
+            <button mat-flat-button class="ml-3" [color]="'accent'" (click)="SendMailsAccounts()"
+                [matTooltip]="'Shortcut: Ctrl + .'">
+                <mat-icon [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
@@ -26,9 +31,18 @@
 
             <button (click)="uploadExcel()" class="ml-3" mat-flat-button [color]="'primary'"
                 [matTooltip]="'Shortcut: Ctrl + /'">
-                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <mat-icon [svgIcon]="'heroicons_solid:save'"></mat-icon>
                 <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
             </button>
+        </div>
+        <div class="mt-4 sm:mt-0" *ngIf="origin == 'nomina'">
+            <!-- Add section button -->
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="registerPayment(null)"
+                [matTooltip]="'Agregar Varios pagos'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Agregar Pagos</span>
+            </button>
+            <!-- Add task button -->
         </div>
     </div>
     <div class="flex-auto">
@@ -44,7 +58,7 @@
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
                         <div class="text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
-                        <div class="ml-2 -mt-2 -mr-3">
+                        <div class="ml-2 -mt-2 -mr-3" *ngIf="origin == 'contractual'">
                             <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
@@ -68,7 +82,7 @@
                     <!-- <div class="p-6">
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
                 </div> -->
-                    <div class="inputsearch p-8 pl-20">
+                    <div *ngIf="origin == 'contractual'" class="inputsearch p-8 pl-20">
                         <app-buttons-export [contractId]="contractId"></app-buttons-export>
                     </div>
 
@@ -100,7 +114,7 @@
                                         *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento && element[columna.name]!= element.legalProccess  && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor">
                                         {{element[columna.name]}}
                                     </p>
-                                    <p *ngIf="element[columna.name]== element.fechaNacimiento">
+                                    <p *ngIf="element[columna.name]=== element.fechaNacimiento">
                                         {{element[columna.name] | date:'dd/MM/yyyy'}}
                                     </p>
                                     <span
@@ -126,7 +140,7 @@
                              'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATANDO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <p *ngIf="columna.name=='acciones'">
+                                    <p *ngIf="columna.name==='acciones' && origin == 'contractual'">
 
                                         <button [matTooltip]="'Opciones Documentos'" mat-icon-button
                                             [matMenuTriggerFor]="summaryMenu">
@@ -157,17 +171,38 @@
                                                 Generar Minuta
                                             </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="generarEstudiosPrevios(element,'ESTUDIOS PREVIOS')" [color]="'primary'"
-                                                mat-menu-item>
+                                                (click)="generarEstudiosPrevios(element,'ESTUDIOS PREVIOS')"
+                                                [color]="'primary'" mat-menu-item>
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Estudios Previos
                                             </button>
                                             <button [matTooltip]="'Generar Modificacion'"
-                                                (click)="generarEstudiosPrevios(element,'SOLICITUD COMITE')" mat-menu-item>
+                                                (click)="generarEstudiosPrevios(element,'SOLICITUD COMITE')"
+                                                mat-menu-item>
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Solicitud de comite
                                             </button>
 
+                                        </mat-menu>
+                                    </p>
+                                    <p *ngIf="columna.name=='acciones' && origin == 'nomina'">
+
+                                        <button [matTooltip]="'Opciones Documentos'" mat-icon-button
+                                            [matMenuTriggerFor]="summaryMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #summaryMenu="matMenu">
+                                            <button [matTooltip]="'Guardar datos'" (click)="registerPayment(element)"
+                                                mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+                                                Agregar Pago
+                                            </button>
+                                            <button [matTooltip]="'Historial de pagos'"
+                                                (click)="historicalPayment(element)" mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_solid:clipboard-list"></mat-icon>
+                                                Historial de pagos
+                                            </button>
                                         </mat-menu>
                                     </p>
 

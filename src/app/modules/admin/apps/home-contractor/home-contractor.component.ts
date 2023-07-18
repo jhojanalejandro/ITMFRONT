@@ -29,6 +29,7 @@ import { Router } from '@angular/router';
 import swal from 'sweetalert2';
 import { ChargeAccount, ExecutionReport } from './models/pdfDocument';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
+import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -42,6 +43,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     viwFilesGenerated: boolean = false;
     filesCharged: boolean = false;
     fileContractorList: any;
+    fileContractorListGeneral: any = [];
     chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractIdList: any[] = [];
@@ -156,18 +158,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
     private getFilesUserByContract() {
         this._contractorListService
-            .getFilesContractorByContractId(
-                this._auth.accessId,
-                this.contractSelected
-            )
+            .getFilesContractorByContractId(this._auth.accessId,this.contractSelected)
             .subscribe((Response: any) => {
+                
                 if (Response.length > 0) {
-                    this.fileContractorList = Response;
+                    this.fileContractorListGeneral = Response;
+                    this.fileContractorList = Response.filter(f => f.documentTypesCode == DocumentTypeCode.PLANILLA || f.documentTypesCode == DocumentTypeCode.CUENTACOBRO || f.documentTypesCode == DocumentTypeCode.INFORMEEJECUCIÓN );
                     return (this.filesCharged = true);
                 }
                 if (Response.length <= 0) {
                     this.filesCharged = false;
-                    return (this.fileContractorList = []);
                 }
             });
     }
