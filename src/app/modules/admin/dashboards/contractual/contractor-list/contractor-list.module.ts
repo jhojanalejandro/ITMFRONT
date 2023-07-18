@@ -12,6 +12,8 @@ import { MinutaContratoComponent } from './components/minutas-contrato/minuta-co
 import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
 import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.component';
 import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
+import { AssignmentUserComponent } from './components/assigmentUser/assignment-user.component';
+import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 
 
 @NgModule({
@@ -22,7 +24,9 @@ import { ContractorPaymentRegisterComponent } from './components/payroll-registe
         MinutaContratoComponent,
         NewnessContractorComponent,
         GeneratePdfComponent,
-        ContractorPaymentRegisterComponent
+        ContractorPaymentRegisterComponent,
+        AssignmentUserComponent,
+        TermFileContractComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),
