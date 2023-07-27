@@ -15,7 +15,7 @@
                 </fuse-alert>
             </div>
 
-            <form [formGroup]="formContractor" class="items-start w-full p-4 sm:p-8 space-y-6 overflow-y-auto">
+            <form [formGroup]="formContractor" class="items-start w-full p-4 sm:p-8 space-y-6 overflow-y-auto"  #signInNgForm="ngForm">
                 <div>
                     <mat-form-field *ngIf="showTotal" class="hiringField" appearance="fill">
                         <mat-label>Valor contrato</mat-label>
@@ -188,7 +188,9 @@
         <mat-dialog-actions class="action" align="end">
             <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
             <button mat-flat-button [color]="'primary'" [disabled]="!permission"
-                (click)="sendEconomicdataContractor()">{{title}}</button>
+                (click)="sendEconomicdataContractor()"> <span  *ngIf="!formContractor.disabled" >{{title}}</span>
+                <mat-progress-spinner *ngIf="formContractor.disabled" [diameter]="24"
+                [mode]="'indeterminate'"></mat-progress-spinner></button>
         </mat-dialog-actions>
     </div>
 </div>
