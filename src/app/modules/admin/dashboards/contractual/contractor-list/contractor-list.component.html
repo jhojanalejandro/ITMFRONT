@@ -2,10 +2,10 @@
     <!-- Main -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between py-8 px-6 md:px-8">
         <div>
-            <a mat-flat-button [routerLink]="['/dashboards/inicio']" [color]="'primary'">
+            <!-- <a mat-flat-button [routerLink]="['/dashboards/inicio']" [color]="'primary'">
                 <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                 <span class="ml-2">Volver</span>
-            </a>
+            </a> -->
             <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
                 {{contractname}}!</div>
 
@@ -51,9 +51,27 @@
             <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
                 [placeholder]="'Buscar Contrato'">
         </mat-form-field>
+        <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
+            <mat-select placeholder="TIPO ESTADO" (selectionChange)="changeTypeStatus($event)" name="status">
+                <mat-option *ngFor="let typeStatus of typeStatusContractor" [value]="typeStatus.value">
+                    {{typeStatus.viewValue}}
+                </mat-option>
+            </mat-select>
+            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:cursor-click'">
+            </mat-icon>
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
+            <mat-select placeholder="ESTADOS" (selectionChange)="applyFilterByStatus($event)" name="status">
+                <mat-option *ngFor="let status of statusContractor" [value]="status.viewValue">
+                    {{status.viewValue}}
+                </mat-option>
+            </mat-select>
+            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:adjustments'">
+            </mat-icon>
+        </mat-form-field>
     </div>
-    <div class="flex-auto border-t -mt-px pt-4 pl-4 pr-4 sm:pt-6">
-        <div class="w-full max-w-screen-xl mx-auto">
+    <div class="flex-auto border-t -mt-px pt-4 pl-2 pr-2 sm:pt-6">
+        <div class="w-full  mx-auto">
             <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
                 <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                     <div class="flex items-start justify-between">
@@ -80,8 +98,8 @@
                         </div>
                     </div>
                     <!-- <div class="p-6">
-                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
-                </div> -->
+                        <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
+                    </div> -->
                     <div *ngIf="origin == 'contractual'" class="inputsearch p-8 pl-20">
                         <app-buttons-export [contractId]="contractId"></app-buttons-export>
                     </div>
@@ -111,11 +129,10 @@
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
                                     <p
-                                        *ngIf="element[columna.name]!= element.acciones && element[columna.name]!= element.elementId && element[columna.name]!= element.componenteId && element[columna.name]!= element.fechaNacimiento && element[columna.name]!= element.legalProccess  && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor">
+                                        *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
+                                         && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
+                                         && element[columna.name]!=element.comiteGenerated">
                                         {{element[columna.name]}}
-                                    </p>
-                                    <p *ngIf="element[columna.name]=== element.fechaNacimiento">
-                                        {{element[columna.name] | date:'dd/MM/yyyy'}}
                                     </p>
                                     <span
                                         *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus"
@@ -130,14 +147,28 @@
                                     <span *ngIf="element[columna.name]=== element.legalProccess;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
-                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
                                         *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
-                             'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATANDO'}">
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATANDO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name] != element.comiteGenerated"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated == 'GENERADA'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]===element.comiteGenerated"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'GENERADA'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <p *ngIf="columna.name==='acciones' && origin == 'contractual'">
@@ -214,12 +245,11 @@
                             </tr>
 
                             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                            <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"
-                                (click)="selection.toggle(row); selectRowFull(row)">
+                            <tr mat-row *matRowDef="let row; columns: columnsToDisplay;">
                             </tr>
                         </table>
                         <mat-paginator [pageSizeOptions]="[10, 30, 50, 100]"
-                            aria-label="Select page of contractors"></mat-paginator>
+                            aria-label="Select page of contractorsList"></mat-paginator>
                     </div>
                 </div>
             </div>
