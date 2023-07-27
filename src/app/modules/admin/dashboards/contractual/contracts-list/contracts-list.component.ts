@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -16,6 +14,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { AssignmentUserComponent } from '../contractor-list/components/assigmentUser/assignment-user.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import Swal from 'sweetalert2';
+import { ContractList } from 'app/modules/admin/pages/planing/models/planing-model';
+import { ModuloEnum } from 'app/layout/common/enums/modulo-enum/modulo';
 
 @Component({
   selector: 'app-contracts-list-contarctual',
@@ -24,23 +24,16 @@ import Swal from 'sweetalert2';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractListComponent implements OnInit, OnDestroy {
-  selectContract: any;
-  data: any;
+export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
   userName: any;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<any>;
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
-  accountBalanceOptions: ApexOptions;
-  dataSource = new MatTableDataSource<any>();
-  selection = new SelectionModel<any>(true, []);
+  dataSource = new MatTableDataSource<ContractList[]>();
   displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant','isAssigmentUser', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  contracts: any;
+  contracts: ContractList[];
   permission: boolean = false;
 
   constructor(
@@ -123,7 +116,7 @@ export class ContractListComponent implements OnInit, OnDestroy {
 
 
  private getContractsData() {
-    this._gerenicService.getAllContract(true, 'Contractual')
+    this._gerenicService.getAllContract(true, ModuloEnum.CONTARCTUAL)
     .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
