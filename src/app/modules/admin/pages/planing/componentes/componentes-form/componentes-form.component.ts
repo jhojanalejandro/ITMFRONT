@@ -124,6 +124,7 @@ export class ComponentesFormComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
                 if (response) {
+                    
                     Swal.fire({
                             position: 'center',
                             icon: 'success',

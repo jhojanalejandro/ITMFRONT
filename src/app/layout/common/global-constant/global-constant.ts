@@ -1,4 +1,4 @@
-import { TypeSelectBool, TypeSelectNumber, TypeSelectString } from "../models/TypeSelect";
+import { TypeSelect, TypeSelectBool, TypeSelectNumber, TypeSelectString } from "../models/TypeSelect";
 
 export class GlobalConst {
     public static encryptSecretKey = '576cf17b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae451f5a65ed1'
@@ -26,7 +26,6 @@ export class GlobalConst {
         { viewValue: 5 },
 
     ]
-
 
     public static tipoCarpeta: TypeSelectString[] = [
         { viewValue: 'Cargar a gmas' },
@@ -154,6 +153,24 @@ export class GlobalConst {
     public static accountType: string[] = [
         'AHORROS',
         'CORRIENTE',
+    ]
+
+    public static StatusContractor: TypeSelect[] = [
+        { viewValue: 'CONTRATANDO', value: 1 },
+        { viewValue: 'EN PROCESO', value: 3 },
+        { viewValue: 'CONTRATADO', value: 1 },
+        { viewValue: 'EN ESPERA', value: 1 },
+        { viewValue: 'EN REVISIÓN' ,value: 2},
+        { viewValue: 'APROBADO', value: 3 },
+        { viewValue: 'REMITIDO', value: 3 },
+        { viewValue: 'INVITADO', value: 2 },
+        { viewValue: 'CONTRATANDO', value: 2 },
+
+    ]
+    public static TypeStatusContractor: TypeSelect[] = [
+        { viewValue: 'JURIDICO', value: 3  },
+        { viewValue: 'REGISTRO', value: 2  },
+        { viewValue: 'CONTRACTUAL', value: 1  },
     ]
 }
 

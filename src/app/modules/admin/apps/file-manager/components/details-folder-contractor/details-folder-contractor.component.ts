@@ -20,9 +20,6 @@ export class DetailsFolderFileContractorComponent implements OnInit, OnDestroy
     userName: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fileManagerListComponent: ListFolderFileContractorComponent,

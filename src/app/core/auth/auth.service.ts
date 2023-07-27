@@ -5,8 +5,8 @@ import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { IUserModel, TeamModel } from 'app/modules/auth/model/user-model';
-import { UserFirm } from 'app/modules/admin/pages/settings/models/setting.model';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { UserFile } from 'app/modules/admin/pages/settings/models/setting.model';
 
 @Injectable()
 export class AuthService {
@@ -14,14 +14,21 @@ export class AuthService {
     encryptText: string = 'encrypt';
     private _teams: BehaviorSubject<any> = new BehaviorSubject(null);
     private _user: ReplaySubject<IUserModel> = new ReplaySubject<IUserModel>(1);
-
+    private isAuthenticated: boolean = false;
     apiUrl: any = environment.apiURL;
 
-    /**
-     * Constructor
-     */
     constructor(
         private _httpClient: HttpClient) {
+    }
+
+    // Método para establecer el estado de autenticación
+    setAuthenticated(status: boolean) {
+        this.isAuthenticated = status;
+    }
+
+    // Método para obtener el estado de autenticación
+    isAuthenticatedUser(): boolean {
+        return this.isAuthenticated;
     }
 
     /**
@@ -252,7 +259,7 @@ export class AuthService {
     }
 
 
-    UploadFileFirm(formdata: UserFirm) {
+    UploadFileFirm(formdata: UserFile) {
         let urlEndpointGenerate = this.apiUrl + environment.addFileFirmEndpoint;
         return this._httpClient.post<any>(urlEndpointGenerate, formdata);
     }

@@ -38,17 +38,18 @@ export const environment = {
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
     HistoryContractor: 'Contractor/GetHistoryContractor',
     AddnewnessContractor: 'Contractor/AddNewNess',
-    GetByContractorIdContractEndpoint: 'Contractor/GetAllByFolder/',
+    GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
+    ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
     GetAllContractFolderEndpoint: 'FileManager/GetAllContract',
 
 
-    addFolderFileContractorEndpoint: 'Folder/Add',
+    addFolderFileContractorEndpoint: 'Folder/SaveFolderContract',
     UpdateFolderFileContractorEndpoint: 'Folder/Update',
     GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
-    GetFolderFileContractorEndpoint: 'Folder/GetAll/',
+    GetFolderFileContractorEndpoint: 'Folder/GetAllFolderById/',
 
     addContractFolderEndpoint: 'ContractFolder/SaveContract',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
@@ -66,6 +67,7 @@ export const environment = {
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/Delete',
+    GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/Update',
@@ -94,9 +96,9 @@ export const environment = {
     DeleteHiringEndpoint: 'HiringData/Delete',
     GetDataMinutaHiringEndpoint: 'HiringData/GetByIdMinuta',
 
-    addComponent: 'Componente/Add/',
+    addComponent: 'Componente/SaveComponentContract',
     addActivity: 'Componente/AddActivity/',
-    getComponent: 'Componente/GetComponent/',
+    getComponent: 'Componente/GetComponentsByContract/',
 
     getComponentById: 'Componente/GetByIdComponent',
     getElements: 'ElementosComponente/GetElementsByComponent/',
@@ -131,6 +133,7 @@ export const environment = {
     GetGetAllRubrosContractEndpoint: 'MasterData/GetAllRubros',
     GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
+    GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
 
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',

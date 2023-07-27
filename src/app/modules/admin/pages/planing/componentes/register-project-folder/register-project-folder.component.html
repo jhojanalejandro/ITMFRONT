@@ -44,9 +44,9 @@
                     </mat-form-field>
                     <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
                         <mat-label>Tipo Actualización</mat-label>
-                        <mat-select [formControlName]="'updateData'" (selectionChange)="changeTipe($event)" name="updateData">
-                            <mat-option *ngFor="let exe of editarData" [value]="exe.viewValue">
-                                {{exe.viewValue}}
+                        <mat-select [formControlName]="'tipoModificacion'" (selectionChange)="changeTipe($event)" name="updateData">
+                            <mat-option *ngFor="let exe of tipoContrato" [value]="exe.id">
+                                {{exe.detailTypeDescripcion}}
                             </mat-option>
                         </mat-select>
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
@@ -104,19 +104,7 @@
                 </div>
 
                 <div class="folderField">
-                    <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="fill">
-                        <mat-label>Tipo Modificacion</mat-label>
-                        <mat-select [formControlName]="'tipoModificacion'" name="tipoModificacion"
-                            (selectionChange)="changeEdit()">
-                            <mat-option *ngFor="let modifica of tipoModificacion" [value]="modifica.id">
-                                {{modifica.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
-                        <mat-error *ngIf="formProject.get('tipoModificacion').hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
+
                     <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
                         <mat-label>Estado contrato</mat-label>
                         <mat-select [formControlName]="'statusContract'"  name="statusContract">

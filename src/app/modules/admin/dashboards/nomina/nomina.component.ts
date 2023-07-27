@@ -56,7 +56,7 @@ export class NominaComponent implements OnInit, OnDestroy {
   }
 
   showFiles(data: any) {
-    return this._router.navigate(['/dashboards/nomina/documentos/']);
+    return this._router.navigate(['/dashboards/nomina/documentos/'+data.id]);
   }
   contractorList( data: any){
     return  this._router.navigate(['/dashboards/lista-contratistas/nomina/' + data.id +'/' +data.contractname]);

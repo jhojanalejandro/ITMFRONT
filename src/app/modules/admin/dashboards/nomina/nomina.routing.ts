@@ -20,7 +20,7 @@ export const nominaRoutes: Route[] = [
         }
     },
     {
-        path: 'payment/Contractor/:contractId/:ContractorId',
+        path: 'payment-contractor/:contractId/:ContractorId',
         component: ContractorPaymentListComponent,
     },
 ];

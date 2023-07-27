@@ -777,7 +777,7 @@ export class MinutaContratoComponent implements OnInit {
         let userId = this._auth.accessId;
         let contractId = this.contractContractors.contractId;
         let _uploadervice = this._upload;
-        let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTACONTRATISTA).id
+        let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
 
         pdfMake.createPdf(documentDefinition)
           .getDataUrl(function (dataURL) {

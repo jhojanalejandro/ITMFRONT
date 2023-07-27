@@ -11,9 +11,7 @@ export enum DocumentTypeCodes{
     REGISTROSECOP = 'RSC',
     HOJADEVIDA = 'HV',
     EXAMENESPREOCUPACIONALES = 'EXPNL',
-    MINUTACONTRATISTA = 'MNT',
     MINUTA = 'MNT',
-    MINUTAMACRO = 'MMCR'
 }
 
 export enum TypeFileUserCode{
@@ -39,4 +37,9 @@ export enum MinuteTypeCodes{
     AAM = 'AAM',
     AM = 'AM',
     ADMC = 'ADMC',
+}
+export enum DetailTypeCodes{
+    MFC = 'MFC',
+    MC = 'CTIL',
+
 }

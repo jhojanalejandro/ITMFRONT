@@ -100,7 +100,7 @@ export const appRoutes: Route[] = [
 
             // Pages
             {path: 'paginas', children: [
-                {path: 'crear/pdf', loadChildren: () => import('app/modules/admin/pages/create-pdf/create-pdf.module').then(m => m.CreatePdfModule)},
+                {path: 'crear-pdf', loadChildren: () => import('app/modules/admin/pages/create-pdf/create-pdf.module').then(m => m.CreatePdfModule)},
 
                 // Error
                 {path: 'error', children: [
