@@ -23,9 +23,23 @@
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
-                                    <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">Inicio
+                                    <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">
+                                        Contratos
                                     </a>
-                                    <div class="">/ Archivos</div>
+                                    <div class="">/</div>
+                                    <ng-container>
+                                        <ng-container>
+                                            <a class="text-primary cursor-pointer"
+                                                [routerLink]="['/apps/file-manager/folders/contract/', contractId]">Carpetas contratato </a>
+                                        </ng-container>
+                                        <ng-container>
+                                            <div class="">/</div>
+                                        </ng-container>
+                                        <ng-container>
+                                            <div>Archivos contratato</div>
+                                        </ng-container>
+                                    </ng-container>
+
                                 </div>
                             </ng-container>
                         </div>
@@ -43,7 +57,7 @@
                         <!-- Upload button -->
                         <button (click)="uploadFile()" mat-flat-button [color]="'primary'">
                             <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
-                            <span class="ml-2 mr-1">Cargar Archivos</span>
+                            <span class="ml-2 mr-1">Cargar Archivos contrato</span>
                         </button>
                     </div>
                 </div>

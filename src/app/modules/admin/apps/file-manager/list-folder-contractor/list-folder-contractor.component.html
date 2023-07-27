@@ -23,29 +23,23 @@
 
                     <!-- Title -->
                     <div>
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratistas</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contrato</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
-                                    <a
-                                        class="text-primary cursor-pointer"
-                                        [routerLink]="['/apps/file-manager']">Inicio
+                                    <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">
+                                       Contratos
                                     </a>
-                                    <div class="">/</div>
-                                    <ng-container *ngFor="let path of items.path; let last = last; trackBy: trackByFn">
-                                        <ng-container *ngIf="!last">
-                                            <a
-                                                class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/contractor/', path.id]">{{path.nombre}}</a>
-                                        </ng-container>
-                                        <ng-container *ngIf="last">
-                                            <div>{{path.nombre}}</div>
-                                        </ng-container>
-                                        <ng-container *ngIf="!last">
+                                    <ng-container >
+                                        <ng-container >
                                             <div class="">/</div>
                                         </ng-container>
+                                        <ng-container >
+                                            <div>Carpetas contratato</div>
+                                        </ng-container>
                                     </ng-container>
+
                                 </div>
                             </ng-container>
                         </div>

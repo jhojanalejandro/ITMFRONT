@@ -31,9 +31,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     contractId: string;
     contractorId: string;
 
-    /**
-     * Constructor
-     */
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -46,6 +43,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
+        this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
+        this.contractId = this.router.snapshot.paramMap.get('contractId') || 'null';
         this.getData();
     }
 
@@ -102,7 +101,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
                 contractorId: this.contractorId,
                 contractId: this.contractId,
                 folderName: 'vacio',
-                folderType: 'Contratista'
+                folderType: 'CTT'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -118,9 +117,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
         // };
     }
     getData() {
-        this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
-        this.contractId = this.router.snapshot.paramMap.get('contractId') || 'null';
-
         this.filteredStreets = this.searchInputControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'number' ? value : value.numbers)),
@@ -136,9 +132,6 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((items: ItemsContract) => {
                 this.items = items;
-                if (items.folders.length > 0) {
-                    this.contractorId = this.items.folders[0].contractorId;
-                }
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
@@ -156,9 +149,9 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
 
     }
 
-    getFilesFolder = async (id: any) => {
-        this._fileService.getFileByContractor(this.contractId, this.contractorId, id)
-        .pipe(takeUntil(this._unsubscribeAll))
+    getFilesFolder(folder: any) {
+        this._fileService.getFileByContractor(this.contractId, this.contractorId, folder.id)
+            .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((Response: any) => {
                 const jszip = new JSZip();
                 for (let i = 0; i < Response.length; i++) {
@@ -171,42 +164,20 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
                     let pdf = new Blob([new Uint8Array(array)], {
                         type: 'application/pdf'
                     });
-                    jszip.folder("pruebaCarpeta").file(`${Response[i].filesName}.pdf`, pdf);
+                    jszip.folder(folder.folderName).file(`${Response[i].filesName}.pdf`, pdf);
                     if (i === (Response.length - 1)) {
                         jszip.generateAsync({ type: 'blob' }).then(function (content) {
                             // see FileSaver.js
-                            saveAs(content, 'pruebaDescarga.zip');
+                            saveAs(content, folder.folderName + folder.contractorName + '.zip');
                         });
                     }
                 }
             })
     }
 
-    download = async () => {
-        const zip = new JSZip();
-        // create a file
-
-        zip.file("hello.txt", "Hello[p my)6cxsw2q");
-        // oops, cat on keyboard. Fixing !
-        zip.file("hello.txt", "Hello World\n");
-
-        // create a file and a folder
-        zip.file("nested/hello.txt", "Hello World\n");
-        // same as
-        zip.folder("nested").file("hello.txt", "Hello World\n");
-        zip.generateAsync({ type: "blob" })
-            .then(function (content) {
-                // see FileSaver.js
-                saveAs(content, "example.zip");
-            });
-    };
-
-        /**
-     * On destroy
-     */
-        ngOnDestroy(): void {
-            // Unsubscribe from all subscriptions
-            this._unsubscribeAll.next(null);
-            this._unsubscribeAll.complete();
-        }
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

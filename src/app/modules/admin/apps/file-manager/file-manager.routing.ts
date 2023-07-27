@@ -73,7 +73,7 @@ export const fileManagerRoutes: Route[] = [
                 ]
             },
             {
-                path     : 'folders/contractors/:folderId',
+                path     : 'folders/contract/:folderId',
                 component: ListFolderContractorComponent,
                 resolve  : {
                     item: FileManagerFolderCResolver

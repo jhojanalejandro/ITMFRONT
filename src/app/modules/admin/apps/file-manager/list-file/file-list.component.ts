@@ -65,10 +65,17 @@ export class FileListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.permission = this._auth.validateRoll(CodeUser.JURIDICO,null);
+        const isAuthenticated = this._auth.isAuthenticatedUser();
+        this.permission = this._auth.validateRoll(CodeUser.JURIDICO, null);
         // this.getAdmins();
-        if(!this.permission){
-          Swal.fire('', 'No tienes permisos para aprobar documentos!', 'warning');
+        if (!this.permission) {
+            Swal.fire('', 'No tienes permisos para aprobar documentos!', 'warning');
+        } else {
+            if (isAuthenticated) {
+                Swal.fire('', 'Hay otro usuario juridico interactuando!', 'warning');
+            }else{
+                this._auth.setAuthenticated(true);
+            }
         }
         this.getStatusFile();
         this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
