@@ -1,37 +1,19 @@
-.drop{
+.drop {
     display: inline-block;
     margin: 0 5px;
     //background-color: black;
 }
-.hiringAsigment{
-    width: 200px;
+
+.hiringAsigment {
+    width: 250px;
     margin: 5px;
 }
 
-.option{
-    justify-items: center;
+.checkBox {
     text-align: center;
+    margin-left: 20px;
 }
 
-mat-form-field{
-    width: 240px !important;
-}
-
-.text{
-    font-weight: bold;
-    font-size: 30px;
-}
-
-.action{
-    margin-right: 10px !important;
-}
-
-
-.hiringD{
-    padding-left: 20px;
-    width: 810PX !important;
-    max-width: 810px !important;
-}
-.folderAsigment{
+.folderAsigment {
     text-align: center;
 }
