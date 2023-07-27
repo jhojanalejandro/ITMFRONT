@@ -12,7 +12,7 @@ import { UploadFileDataService } from './service/upload-file.service';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
-  selector: 'app-register-contractor',
+  selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -310,7 +310,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
     this._upload.getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((type: DocumentTypeFile[]) => {
-        this.documentType = type.find(f => f.code === 'MMCR').id;
+        this.documentType = type.find(f => f.code === 'MNT').id;
       });
   }
 

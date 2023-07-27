@@ -72,7 +72,11 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
+        swal.fire(
+            '',
+            'Si cargas un archivo y lo guardas, no podras modificar, ni volver a cargarlo',
+            'question'
+        );
         this.formFile = this._formBuilder.group({
             file: [null, Validators.required],
             filesName: [null],
@@ -261,6 +265,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     } else {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
                     }
+                    this.gevalidateDocument();
                 }
             }
             );
@@ -282,6 +287,34 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         return this.dataContractor;
     }
 
+    private gevalidateDocument() {
+        debugger
+        this._contractorListService
+            .getValidateDocumentUploadEndpoint(this._data.contractId,this._data.contractorId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((resp) => {
+                if(!resp.hv && !resp.secop && !resp.exam) {
+                    swal.fire(
+                        '',
+                        'ya se cargaron los tres documentos no puedes cargar mas!',
+                        'warning'
+                    );
+                    this.cerrar();
+                }
+                if(!resp.hv){
+                    this.typeDocs = this.typeDocs.filter(f =>  f.code != DocumentTypeCodes.HOJADEVIDA)
+
+                } if(!resp.exam){
+                    this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES)
+
+                } if(!resp.secop ){
+                    this.typeDocs = this.typeDocs.filter(f =>  f.code != DocumentTypeCodes.REGISTROSECOP)
+
+                }
+            }
+            );
+        return this.dataContractor;
+    }
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();
         this._unsubscribeAll.next(true);

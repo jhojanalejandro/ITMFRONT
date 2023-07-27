@@ -5,10 +5,9 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { UserFirm } from '../../models/setting.model';
+import { UserFile } from '../../models/setting.model';
 import { TypeFileUserCode } from 'app/layout/common/enums/document-type/document-type';
 
 const moment = _rollupMoment || _moment;
@@ -100,14 +99,14 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     if (!this.formFile.valid) {
       return
     }
-    const registerFile: UserFirm = {
+    const registerFile: UserFile = {
       userId: this.userId,
       fileData: this.base64Output,
       userCharge: this.formFile.value.userCharge,
       ownerFirm: this.formFile.value.ownerFirm,
       isOwner: this.isOwner,
-      typeUserFile: this.formFile.value.typeUserFile,
-      typeFile: this.typeFile,
+      userFileType: this.formFile.value.typeUserFile,
+      fileType: this.typeFile,
       fileNameC: this.fileName
     };
     console.log(registerFile);
