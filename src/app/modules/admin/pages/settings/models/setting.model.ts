@@ -1,12 +1,12 @@
 
-export interface UserFirm{
+export interface UserFile{
     id?: string
     userId: string;
     fileData: string;
     userCharge: Date;
     ownerFirm: string;
     isOwner: boolean;
-    typeUserFile: boolean;
+    userFileType: boolean;
     fileNameC: string;
-    typeFile: string;
+    fileType: string;
 }

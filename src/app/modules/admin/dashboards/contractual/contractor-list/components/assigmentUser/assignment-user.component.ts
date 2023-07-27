@@ -32,6 +32,7 @@ export class AssignmentUserComponent implements OnInit {
   typesAssignment: AssignmentType[] = [];
   contractSelected: string = null;
   typeAsignmentSelected: string = null;
+  userPrincipalSelected: AssignmentUser = null;
   private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(private _contractorService: ContractorService,
@@ -60,7 +61,9 @@ export class AssignmentUserComponent implements OnInit {
       if(this.supervisorSelected != null){
         this.assignmentUser.push(this.supervisorSelected);
       }
-  
+      if(this.userPrincipalSelected != null){
+        this.assignmentUser.push(this.userPrincipalSelected);
+      }
       this._contractorService
         .assignmentUser(this.assignmentUser)
         .pipe(takeUntil(this._unsubscribe$))
@@ -97,23 +100,35 @@ export class AssignmentUserComponent implements OnInit {
       if(this.users.length == 0 && this.supervisors.length ==0){
         Swal.fire('', 'No hay usuarios con roles Asignados!', 'warning');
       }
-      if(this.users.length == 0 && this.supervisors.length >0){
+      if(this.users.length == 0){
         Swal.fire('', 'No hay contractuales Registrados!', 'warning');
-        this.showSupervisors = true;
-      }
-      if(this.users.length > 0 && this.supervisors.length ==0){
-        Swal.fire('', 'No hay supervisores registrados!', 'warning');
+      }else{
         this.showContractual = true;
+      }
+      if( this.supervisors.length ==0){
+        Swal.fire('', 'No hay supervisores registrados!', 'warning');
+      }else{
+        this.showSupervisors = true;
       }
 
     });
   }
-  assignmentUserselected(usuario: any) {
+  assignmentUserselectedPrincipal(usuario: any) {
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
       rollId: usuario.rollId,
       assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.RESPONSABLECONTRATOCODE).id
+    }
+    this.userPrincipalSelected = assignmwntUser;
+  }
+
+  assignmentUserselectedSecond(usuario: any) {
+    let assignmwntUser: AssignmentUser = {
+      contractId: this.contractSelected,
+      userId: usuario.id,
+      rollId: usuario.rollId,
+      assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
     }
     let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
     if(indexUser < 0){

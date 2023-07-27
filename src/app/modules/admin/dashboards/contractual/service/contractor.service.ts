@@ -6,41 +6,53 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { ContractContractors, Contractor } from '../models/contractor';
 import { ChargeAccount } from 'app/modules/admin/apps/home-contractor/models/pdfDocument';
 import { AssignmentType } from '../models/assignment-user.model';
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ContractorService {
-    private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     private _contractorsByContract: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
     constructor(private _httpClient: HttpClient) {
     }
 
-    get data$(): Observable<any> {
-        return this._data.asObservable();
-    }
-
-    get _contractors$(): Observable<Contractor[]> {
-        return this._contractorsByContract.asObservable();
-    }
-
-    getContractorByIdProject(id: string | null = null) {
+    getContractorByIdProject(contractId: string) {
+        const params = new HttpParams()
+        .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
-        return this._httpClient.get(urlEndPoint + id).pipe(
+        return this._httpClient.get<IResponse>(urlEndPoint, {params}).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
-            })
+            }),
+            catchError(this.handleError) // Manejo de errores, si es necesario
         );
     }
 
+    // Método para manejar errores (opcional)
+    private handleError(error: any): Observable<any> {
+        debugger
+        // Implementa el manejo de errores aquí, si es necesario
+        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: error.error.message,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        return new Observable<any>();
+    }
     getPaymentContractor(contractId: string, contractorId: string) {
         let urlEndPoint = this.apiUrl;
         const params = new HttpParams()
             .set('contractId', contractId)
             .set('contractorId', contractorId);
-        return this._httpClient.get(urlEndPoint + 'Contractor/GetPaymentsContractorList', { params: params }).pipe(
+        let urlEndpointGenerate = this.apiUrl + environment.GetPaymentsContractorListEndpoint;
+
+        return this._httpClient.get<IResponse>(urlEndPoint + urlEndpointGenerate, { params: params }).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
             })
@@ -49,7 +61,9 @@ export class ContractorService {
 
     sendmailsAccounts(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.sendMails;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+            );
     }
     DeleteContractor(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.DeleteContractorByIdEndpoint;
@@ -69,13 +83,13 @@ export class ContractorService {
         return this._httpClient.get<ChargeAccount>(urlEndPoint, { params: params });
     }
 
-    
+
     getFilesContractorByContractId(contractorId: string, contractId: string) {
         const params = new HttpParams()
-        .set('contractorId', contractorId )
-        .set('contractId', contractId)
+            .set('contractorId', contractorId)
+            .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetAllFileByContractEndpoint;
-        return this._httpClient.get<any>(urlEndPoint, {params: params});
+        return this._httpClient.get<any>(urlEndPoint, { params: params });
     }
 
     getContractorByContract(contractorId: string) {
@@ -95,7 +109,7 @@ export class ContractorService {
             .pipe(retry(0));
     }
 
-    
+
     assignmentUser(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.AssignmentUserContractEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
@@ -107,7 +121,7 @@ export class ContractorService {
         return this._httpClient.get<AssignmentType[]>(urlEndPoint);
     }
 
-        
+
     saveTermFileContract(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.SaveTermFileContractEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
@@ -118,4 +132,18 @@ export class ContractorService {
         let urlEndPoint = this.apiUrl + environment.GetAllTermTypeEndpoint;
         return this._httpClient.get<any[]>(urlEndPoint);
     }
+
+    getValidateDocumentUploadEndpoint(contractId: string, contractorId: string) {
+        const params = new HttpParams()
+        .set('contractId', contractId)
+        .set('contractorId', contractorId);
+        let urlEndPoint = this.apiUrl + environment.ValidateDocumentUploadEndpoint;
+        return this._httpClient.get<IResponse>(urlEndPoint, {params}).pipe(
+            tap((response: any) => {
+                this._contractorsByContract.next(response);
+            }),
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
+    }
+
 }

@@ -12,12 +12,6 @@
 
             <!-- Main -->
             <div class="flex flex-col flex-auto bg-card dark:bg-transparent">
-                <div class="ml-4 sm:mt-2">
-                    <a mat-flat-button [routerLink]="['../../../']" [color]="'primary'">
-                        <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                        <span class="ml-2">Volver</span>
-                    </a>
-                </div>
                 <!-- Header -->
                 <div
                     class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between p-4 sm:py-12 md:px-8 border-b bg-card dark:bg-transparent">
@@ -29,20 +23,23 @@
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">
                                 <div class="flex items-center space-x-2">
-                                    <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">Inicio
+                                    <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">
+                                        Contratos
                                     </a>
-                                    <ng-container *ngFor="let path of items.path; let last = last; trackBy:trackByFn">
-                                        <ng-container *ngIf="!last">
+                                    <div class="">/</div>
+                                    <ng-container>
+                                        <ng-container>
                                             <a class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/file/contractor/', folder.id]">{{path.folderName}}</a>
+                                                [routerLink]="['/apps/file-manager/folders/contract/', contractId]">Carpetas contratato </a>
                                         </ng-container>
-                                        <ng-container *ngIf="last">
-                                            <div>{{path.folderName}}</div>
-                                        </ng-container>
-                                        <ng-container *ngIf="!last">
+                                        <ng-container>
                                             <div class="">/</div>
                                         </ng-container>
+                                        <ng-container>
+                                            <div>Carpetas contratista</div>
+                                        </ng-container>
                                     </ng-container>
+
                                 </div>
                             </ng-container>
                         </div>
@@ -77,7 +74,7 @@
                                         *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
                                         <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
                                             <a class="absolute z-20 top-1.5 right-2.0 w-8 h-8 min-h-8"
-                                                (click)="getFilesFolder(folder.id)" mat-icon-button>
+                                                (click)="getFilesFolder(folder)" mat-icon-button>
                                                 <mat-icon class="icon-size-5"
                                                     [svgIcon]="'heroicons_solid:arrow-circle-down'"></mat-icon>
                                             </a>

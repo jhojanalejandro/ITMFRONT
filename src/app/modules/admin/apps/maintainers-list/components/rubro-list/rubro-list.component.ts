@@ -34,7 +34,7 @@ export class RubroListComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant','isAssigmentUser', 'action'];
+  displayedColumns: string[] = ['rubroNumber', 'rubro', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   permission: boolean = false;
@@ -49,19 +49,16 @@ export class RubroListComponent implements OnInit, OnDestroy {
   ) {
   }
   columnas = [
-    { title: 'NUMERO CONTRATO', name: 'numberProject' },
-    { title: 'NOMBRE EMPRESA', name: 'companyName' },
-    { title: 'NOMBRE PROYECTO', name: 'projectName' },
-    { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
+    { title: 'NUMERO RUBRO', name: 'rubroNumber' },
+    { title: 'NOMBRE RUBRO', name: 'rubro' },
     { title: 'CONTRATISTAS', name: 'action' },
-    { title: 'CONVENIO', name: 'isAssigmentUser' },
   ]
   ngOnInit(): void {
-    this.getContractsData();
+    this.getRubroList();
   }
 
   navigateToContractors(data: any) {
-    this._router.navigate(['/dashboards/lista-contratistas/contractual/' + data.id + '/' +data.projectName]);
+    this._router.navigate(['/dashboards/lista-contratistas/contractual/' + data.id + '/' + data.projectName]);
   }
 
   announceSortChange(sortState: Sort) {
@@ -97,9 +94,9 @@ export class RubroListComponent implements OnInit, OnDestroy {
 
 
 
- private getContractsData() {
-    this._gerenicService.getAllContract(true, 'Contractual')
-    .pipe(takeUntil(this._unsubscribeAll))
+  private getRubroList() {
+    this._gerenicService.getRubrosContract()
+      .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         this.dataSource.sort = this.sort;
@@ -120,7 +117,7 @@ export class RubroListComponent implements OnInit, OnDestroy {
     this.permission = this.auth.validateRoll(CodeUser.SUPERVISORAREAC);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos para asignar contratos!', 'warning');
-    }else{
+    } else {
       const dialogUpload = this._matDialog.open(AssignmentUserComponent, {
         disableClose: true,
         autoFocus: false,
@@ -130,7 +127,7 @@ export class RubroListComponent implements OnInit, OnDestroy {
       });
       dialogUpload.afterClosed().subscribe((result) => {
         if (result) {
-          this.getContractsData();
+          this.getRubroList();
         }
       });
     }

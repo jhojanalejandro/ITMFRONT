@@ -7,40 +7,44 @@
     </div>
     <mat-dialog-content style="margin: 0px; padding: 0px;">
         <!-- <h1>Nombre Contratista</h1> -->
-        <form  class="example-form overflow-y-auto">
+        <form class="example-form overflow-y-auto">
 
             <div class="folderAsigment">
                 <mat-form-field class="hiringAsigment" appearance="fill">
                     <mat-label>Contratos</mat-label>
-                    <mat-select  (selectionChange)="selectionChageContract($event)"  name="raffles">
-                        <mat-option *ngFor="let contract of contracts"
-                            [value]="contract.id">
+                    <mat-select (selectionChange)="selectionChageContract($event)" name="raffles">
+                        <mat-option *ngFor="let contract of contracts" [value]="contract.id">
                             {{contract.projectName}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="showContractual" class="folderAsigment" >
-                <span class="font-semibold mb-2">Asignar Contractista</span>
-                <div class="flex flex-col">
-                    <mat-checkbox *ngFor="let user of users" [value]="user.id" (change)="assignmentUserselected(user)"
-                        class="mb-2"
-                        [color]="'primary'">
+            <div *ngIf="showContractual" class="checkBox">
+                <span >Contractual encargado</span>
+                <div class="checkBox">
+                    <mat-radio-group [color]="'primary'" [disabled]="false">
+                        <mat-radio-button *ngFor="let user of users" [matTooltip]="usualrios" class="mr-4"
+                            (change)="assignmentUserselectedPrincipal(user)"
+                            [value]="user.id">{{user.userName}}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div *ngIf="showContractual" class="checkBox">
+                <span >Contractual apoyo</span>
+                <div class="checkBox">
+                    <mat-checkbox *ngFor="let user of users" [value]="user.id"
+                        (change)="assignmentUserselectedSecond(user)" [color]="'primary'">
                         {{user.userName}}
                     </mat-checkbox>
-                
                 </div>
-
             </div>
-            <div *ngIf="showSupervisors" class="folderAsigment">
-                <div class="flex flex-col gt-sm:flex-row">
-                    <div class="flex flex-col">
-                        <span class="font-semibold mb-2">Selecionar Supervisor</span>
-                        <mat-radio-group class="checkRadio" [color]="'primary'" [disabled]="false">
-                            <mat-radio-button *ngFor="let user of supervisors" [matTooltip]="Supervisores" class="mr-4"
-                                (change)="onChangeAdmin(user)" [value]="user.id">{{user.userName}}</mat-radio-button>
-                        </mat-radio-group>
-                    </div>
+            <div *ngIf="showSupervisors" class="checkBox">
+                <span >Supervisor contrato</span>
+                <div class="checkBox">
+                    <mat-radio-group [color]="'primary'" [disabled]="false">
+                        <mat-radio-button *ngFor="let user of supervisors" [matTooltip]="Supervisores" class="mr-4"
+                            (change)="onChangeAdmin(user)" [value]="user.id">{{user.userName}}</mat-radio-button>
+                    </mat-radio-group>
                 </div>
 
             </div>
@@ -49,7 +53,7 @@
     </mat-dialog-content>
     <mat-dialog-actions class="action" align="end">
         <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
-        <button mat-flat-button [color]="'primary'" type="submit" 
-             (click)="addAssignmentUsers()">Asignar</button>
+        <button mat-flat-button [color]="'primary'" type="submit" class="mr-3"
+            (click)="addAssignmentUsers()">Asignar</button>
     </mat-dialog-actions>
 </div>

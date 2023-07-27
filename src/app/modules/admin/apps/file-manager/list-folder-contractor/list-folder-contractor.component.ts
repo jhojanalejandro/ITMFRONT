@@ -127,7 +127,7 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             data: {
                 contractId: this.contractId,
                 folderName: 'vacio',
-                folderType: 'Contrato'
+                folderTypeCode: 'CTT'
             }
         });
         dialogRef.afterClosed().subscribe((result) => {

@@ -39,7 +39,7 @@
                     <mat-label>Tipo Archivo</mat-label>
                     <mat-select formControlName="typeUserFile" (selectionChange)="typeImage($event)" name="typeFile">
                         <mat-option *ngFor="let type of typeUserFile" [value]="type.id">
-                            {{type.filetypeDescription}}
+                            {{type.fileTypeDescription}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

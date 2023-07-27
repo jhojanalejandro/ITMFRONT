@@ -5,7 +5,7 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { DetalleContrato } from '../pages/planing/models/planing-model';
 import { AuthService } from 'app/core/auth/auth.service';
-import { CpcType, ElementType, StatusContract } from './model/generic.model';
+import { CpcType, ElementType, RubroType, StatusContract } from './model/generic.model';
 
 @Injectable({
     providedIn: 'root'
@@ -111,10 +111,18 @@ export class GenericService {
         );
     }
 
-    getRubrosContract(): Observable<any[]> {
+    getRubrosContract(): Observable<RubroType[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetGetAllRubrosContractEndpoint;
+        return this._httpClient.get<RubroType[]>(urlEndpointGenerate
+        );
+    }
+
+    
+    getDetailType(): Observable<any[]> {
+        let urlEndpointGenerate = this.apiUrl + environment.GetDetailTypeEndpoint;
         return this._httpClient.get<any>(urlEndpointGenerate
         );
     }
+
 }

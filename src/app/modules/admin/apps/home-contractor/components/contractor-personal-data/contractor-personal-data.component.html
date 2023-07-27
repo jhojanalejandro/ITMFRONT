@@ -462,8 +462,7 @@
                     <mat-step>
                         <ng-template matStepLabel>Terminado</ng-template>
                         <p class="my-6 font-medium">
-                            ¡Gracias por completar nuestro formulario! Puede restablecer el formulario si desea cambiar
-                            su información. </p>
+                            ¡Gracias por completar nuestro formulario! </p>
                         <!-- <div class="flex flex-col">
                                 <mat-form-field class="w-full">
                                     <mat-label>Contraseña</mat-label>
@@ -482,11 +481,11 @@
                                     </mat-error>
                                 </mat-form-field>
                             </div> -->
-                        <div class="flex justify-end m-5">
-                            <button mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
+                        <div class="flex justify-end mt-6 ml-5">
+                            <button mat-flat-button [color]="'accent'" type="button" class="mt-2 ml-2 mt-6" matStepperPrevious>
                                 Volver
                             </button>
-                            <button mat-flat-button [color]="'primary'"
+                            <button mat-flat-button [color]="'primary'" class="mt-2 ml-2  mt-6"
                                 [disabled]="contractorinformationStepperForm.disabled"
                                 (click)="saveContractorDataInformation()">
                                 <span *ngIf="!contractorinformationStepperForm.disabled">

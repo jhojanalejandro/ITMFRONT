@@ -1,16 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -27,19 +25,14 @@ import { OptionTypeDataComponent } from '../componentes/option-type-data/option-
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContrtactsComponent implements OnInit, OnDestroy {
-  selectContract: any;
-  data: any;
+export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
   userName: any;
   configForm: FormGroup;
-  generateMinutre: boolean = false; 
+  generateMinute: boolean = false; 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
-  horizontalPosition: MatSnackBarHorizontalPosition = 'center';
-  verticalPosition: MatSnackBarVerticalPosition = 'top';
-  accountBalanceOptions: ApexOptions;
   contracts: ContractList[];
   typeContract: string;
   dataSource = new MatTableDataSource<any>();
@@ -135,6 +128,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
 
   UpdateDataContract(data: any) {
+    debugger
     const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
       disableClose: true,
       autoFocus: false,
@@ -196,11 +190,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }
-  selectRowFull(data: any, type: any) {
-    if (type === 'register') {
-    }
 
-  }
 
   getContractsData() {
     for (let index = 0; index < this.contracts.length; index++) {
@@ -231,7 +221,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
       if (result == 'confirmed') {
         this._uploadData.finalContract(element.id).subscribe((res) => {
           if (res) {
-            swal.fire({
+            Swal.fire({
               position: 'center',
               icon: 'success',
               title: '',
@@ -244,7 +234,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
         },
           (response) => {
             console.log(response);
-            swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
+            Swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
           });
       }
     });
@@ -255,7 +245,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy {
   }
 
   generarMinuta(){
-    this.generateMinutre = true;
+    this.generateMinute = true;
   }
   reloadResolve() {
     const currentUrl: any = this._router.url;

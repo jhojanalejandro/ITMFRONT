@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import Swal from 'sweetalert2';
@@ -16,7 +16,7 @@ import { ModificacionFormComponent } from './components/modificacion-form/modifi
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { ContractorService } from '../service/contractor.service';
 import { MatPaginator } from '@angular/material/paginator';
-import { ContractContractors } from '../models/contractor';
+import { ContractContractors, Contractor } from '../models/contractor';
 import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { DatePipe } from '@angular/common';
@@ -25,6 +25,7 @@ import { ContractorDataHiringComponent } from './components/data-hiring-contract
 import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 @Component({
   selector: 'contractor-list',
@@ -33,7 +34,7 @@ import { TermFileContractComponent } from './components/term-file-contract/term-
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorListComponent implements OnInit, OnDestroy {
+export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit {
   contractId: string;
   data: any;
   userName: any;
@@ -48,7 +49,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   elements: Elements[];
   componentes: Componente[];
   listId: any[] = [];
-  contractors: any;
+  contractorsList: Contractor[] = [];
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
@@ -61,7 +62,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   contractname: string;
   origin: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'fechaNacimiento', 'hiringStatus', 'statusContractor', 'legalProccess', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'hiringStatus', 'statusContractor', 'legalProccess','minuteGnenerated','comiteGenerated', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   enterAnimationDuration: any = '2000ms';
   exitAnimationDuration: string = '1500ms';
@@ -69,6 +70,9 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   datePipe: DatePipe;
   generateType: string;
   permission: boolean = false;
+  statusContractor: any = GlobalConst.StatusContractor;
+  typeStatusContractor: any = GlobalConst.TypeStatusContractor;
+  statusSelected: any = GlobalConst.StatusContractor;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private readonly _unsubscribe$ = new Subject<void>();
@@ -84,7 +88,6 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder,
     private _loadrouter: Router
   ) {
-    this.getDataContractor();
     this.datePipe = new DatePipe('es');
   }
   columnas = [
@@ -92,11 +95,13 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     { title: 'CEDULA', name: 'identificacion' },
     { title: 'CORREO', name: 'correo' },
     { title: 'TELEFONO', name: 'telefono' },
-    { title: 'FECHA NACIMIENTO', name: 'fechaNacimiento' },
     { title: 'ESTADO', name: 'proccess' },
     { title: 'REGISTRO', name: 'statusContractor' },
     { title: 'JURIDICO', name: 'legalProccess' },
     { title: 'CONTRACTUAL', name: 'hiringStatus' },
+    { title: 'MINUTA', name: 'minuteGnenerated' },
+    { title: 'COMITE', name: 'comiteGenerated' },
+
     { title: 'OPCIONES', name: 'acciones' }
   ]
 
@@ -128,6 +133,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
       }),
       dismissible: true
     });
+    this.getDataContractor();
   }
 
 
@@ -181,10 +187,23 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
 
   getDataContractor() {
-    this.contractors = this._contractorListService._contractors$;
-    this.dataSource = new MatTableDataSource(
-      this.contractors.source._value
-    );
+    this._contractorListService.getContractorByIdProject(this.contractId).subscribe(contractorsListResponse => {
+      if (contractorsListResponse.success) {
+        this.dataSource = new MatTableDataSource(contractorsListResponse.data);
+        this.contractorsList = contractorsListResponse.data;
+      } else {
+        Swal.fire({
+          position: 'center',
+          icon: 'warning',
+          title: '',
+          html: contractorsListResponse.message,
+          showConfirmButton: false,
+          timer: 2000
+        });
+      }
+
+    });
+
   }
   isAllSelected() {
     if (this.selection.selected.length > 1) {
@@ -220,7 +239,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   openConfirmationDelete(element: any): void {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
@@ -246,7 +265,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   SendMailsAccounts() {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
@@ -275,7 +294,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   modificacionContrato(data: any) {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
@@ -354,7 +373,7 @@ export class ContractorListComponent implements OnInit, OnDestroy {
   }
 
   activateContarct() {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
@@ -378,14 +397,14 @@ export class ContractorListComponent implements OnInit, OnDestroy {
             // Set the alert
             console.log(response);
 
-            Swal.fire('Error', 'Error al activar el contrato!', 'error');
+            Swal.fire('', 'Error al activar el contrato!', 'error');
           })
     }
 
   }
 
   uploadExcel() {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors[0].assignmentUser);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
@@ -452,11 +471,11 @@ export class ContractorListComponent implements OnInit, OnDestroy {
     }
   }
   historicalPayment(item: any) {
-    this._loadrouter.navigate(['/dashboards/nomina/payment/Contractor/' + this.contractId + '/' + item.id]);
+    this._loadrouter.navigate(['/dashboards/nomina/payment-contractor/' + this.contractId + '/' + item.id]);
   }
 
   addTermFileContract(): void {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractors.source._value[0].assignmentUser);
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
@@ -479,6 +498,16 @@ export class ContractorListComponent implements OnInit, OnDestroy {
 
   }
 
+  changeTypeStatus(e: any) {
+      this.statusContractor= this.statusSelected.filter(f => f.value == e.value)
+  }
+  applyFilterByStatus(filterValue: any) {
+    this.dataSource.filter = filterValue.value.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();

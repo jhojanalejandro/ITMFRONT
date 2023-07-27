@@ -929,6 +929,344 @@ export class CreatePdfComponent implements OnInit {
         };
         pdfMake.createPdf(minutaModificacionMacro).download('test');
     }
+
+    // private downloadPDFInforme() {
+        
+    //     this.validateValuesPDFInforme();
+    //     let day = this.datepipe.transform(this.date, 'dd');
+    //     let month = this.datepipe.transform(this.date, 'MM');
+    //     let year = this.datepipe.transform(this.date, 'YYYY');
+
+    //     let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
+       
+    //     let plazo = this._shareService.calcularDiferencia(this.executionReportData.contractInitialDate, this.executionReportData.contractFinalDate)
+    //     this.specificObligation = this.executionReportData.specificObligations.split('->');
+    //     for (let index = 0; index < this.specificObligation.length; index++) {
+    //         this.listaData[index] = [
+    //             {
+    //                 text: this.specificObligation[index],
+    //             },
+    //             {
+    //                 text: '',
+    //                 alignment: 'center',
+    //             },
+    //             {
+    //                 text: 'Correos electrónicos',
+    //                 alignment: 'center',
+    //             }
+    //         ]
+    //     }
+    //     const documentDefinition = {
+    //         content: [
+    //             {
+    //                 style: 'tableExample',
+    //                 color: '#444',
+    //                 table: {
+    //                     widths: ['*', '*'],
+    //                     body: [
+    //                         [
+    //                             {
+    //                                 colSpan: 2,
+    //                                 text: 'INFORME DE EJECUCIÓN MENSUAL OFICINA UNIDAD ESTRATEGICA DE NEGOCIOS ITM',
+    //                                 style: 'tableHeader',
+    //                                 alignment: 'center',
+    //                             },
+    //                             {
+    //                                 text: '',
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'NOMBRE DEL CONTRATISTA',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: this.executionReportData.contractorName,
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'NÚMERO DEL CONTRATO',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: this.executionReportData.contractNumber,
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'FECHA DE INICIO',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: this.valueInitialDate,
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'PLAZO',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: plazo,
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'OBJETO',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: ['Prestación de servicios como contratista',
+    //                                     'independiente, sin vínculo laboral por su propia cuenta',
+    //                                     'y riesgo para realizar la gestión de Apoyo asistencial',
+    //                                     'de logística y procesos administrativos en ejecución',
+    //                                     'del Contrato Interadministrativo No. 4600094924 de',
+    //                                     '2022, celebrado entre el Distrito Especial de Ciencia',
+    //                                     'Tecnología e Innovación de Medellín y el',
+    //                                     'Departamento Administrativo de Planeación']
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'VALOR DEL CONTRATO',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: this.executionReportData.totalValue,
+    //                             }
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: 'SUPERVISOR ITM',
+    //                                 style: 'tableHeader',
+    //                             }, {
+    //                                 text: this.executionReportData.supervisorContract,
+    //                             }
+    //                         ],
+    //                     ],
+    //                 },
+    //             },
+    //             {
+    //                 style: 'tableExample',
+    //                 color: '#444',
+    //                 table: {
+    //                     widths: ['*', '*', '*'],
+    //                     body: [
+    //                         [
+    //                             {
+    //                                 text: 'OBLIGACIONES ESPECIFICAS SEGÚN CONTRATO',
+    //                                 alignment: 'center',
+    //                                 style: 'tableHeader',
+
+    //                             },
+    //                             {
+    //                                 text: 'EJECUCION O DESARROLLO DE LAS OBLIGACIONES ESPECIFICAS SEGÚN CONTRATO',
+    //                                 alignment: 'center',
+    //                                 style: 'tableHeader',
+    //                             },
+    //                             {
+    //                                 text: 'EVIDENCIAS DE LAS OBLIGACIONES CENTRALES DEL CONTRATO',
+    //                                 alignment: 'center',
+    //                                 style: 'tableHeader',
+    //                             },
+    //                         ],
+    //                     ].concat(this.listaData),
+    //                 },
+    //             },
+    //             {
+    //                 style: 'tableExample',
+    //                 color: '#444',
+    //                 table: {
+    //                     widths: ['*'],
+    //                     body: [
+    //                         [
+    //                             {
+    //                                 rowSpan: 12,
+    //                                 text: 'OBSERVACIONES (En caso de tenerlas)',
+    //                                 alignment: 'center',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                     ],
+    //                 },
+    //             },
+    //             {
+    //                 style: 'tableExample',
+    //                 color: '#444',
+    //                 table: {
+    //                     widths: ['*'],
+    //                     body: [
+    //                         [
+    //                             {
+    //                                 rowSpan: 12,
+    //                                 text: 'DIFICULTADES (En caso de tenerlas)',
+    //                                 alignment: 'center',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                         [
+    //                             {
+    //                                 text: '',
+    //                             },
+    //                         ],
+    //                     ],
+    //                 },
+    //             },
+    //             { text: '\n\n PERIODO EJECUTADO: \t\t\t' + 'del ' + this.executionReportData.periodExecutedInitialDate + ' al ' + this.executionReportData.periodExecutedFinalDate },
+    //             { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t' + this.executionReportData.totalValue },
+    //             { text: '\n\n Para constancia se firma en Medellín a los  ' + day + ' días del mes  ' + month + ' del año  ' + year + ' \n\n' },
+    //             { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
+    //             { text: this.executionReportData.contractorName + '\n' },
+    //             { text: 'C.C :' + this.executionReportData.contractorIdentification + ' \t' + '\n' },
+    //             { text: 'Contratista ITM' }
+
+    //         ],
+    //         styles: {
+    //             header: {
+    //                 fontSize: 18,
+    //                 bold: true,
+    //                 margin: [0, 0, 0, 10],
+    //             },
+    //             subheader: {
+    //                 fontSize: 16,
+    //                 bold: true,
+    //                 margin: [0, 10, 0, 5],
+    //             },
+    //             tableHeader: {
+    //                 bold: true,
+    //                 fontSize: 13,
+    //                 color: 'black',
+    //                 align: 'center',
+    //                 margin: [0, 0, 10, 10],
+    //             },
+    //             tableExample: {
+    //                 margin: [0, 5, 0, 15],
+    //             },
+    //             title: {
+    //                 bold: true,
+    //                 fontSize: 13,
+    //                 color: 'black',
+    //                 alignment: 'center',
+    //                 margin: [0, 10, 0, 0],
+    //             },
+    //         },
+    //         defaultStyle: {
+    //             // alignment: 'justify'
+    //         },
+    //     };
+    //     let test = pdfMake
+    //         .createPdf(documentDefinition)
+    //         .download(this.executionReportData.contractorName + 'REPORTEDEEJECUCION.pdf');
+    //     console.log(test);
+    //     this.onGeneratePdf.emit(false);
+    // }
+
+    // private validateValuesPDFInforme(){
+    //     this.executionReportData.totalValue = Number(this.executionReportData.totalValue).toFixed(0);
+    //     this.valueInitialDate = this.transformDate(this.executionReportData.contractInitialDate.toString());
+    //     this.executionReportData.periodExecutedInitialDate = this.transformDate(this.executionReportData.periodExecutedInitialDate);
+    //     this.executionReportData.periodExecutedFinalDate = this.transformDate(this.executionReportData.periodExecutedFinalDate);
+    //     this.executionReportData.totalValue = (+this.executionReportData.totalValue).toLocaleString();
+
+    // }
     getCurrentDate(): string {
         const datePipe = new DatePipe('en-US');
         const currentDate = new Date();

@@ -166,6 +166,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
 
 
   saveContractorDataInformation() {
+    debugger
     this.academicInformationList = [];
     for (let index = 0; index < 5; index++) {
       this.academicInformation = {

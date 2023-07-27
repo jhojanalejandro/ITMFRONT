@@ -69,7 +69,7 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generatePreviusStudy(previusStudyData: PreviusStudy[]) {
+    private generatePreviusStudyWithoutPolicy(previusStudyData: PreviusStudy[]) {
         if (this.itmImageBase64 == null || this.itmImageBase64 == undefined) {
             this.itmImageBase64 = this.getBase64Image(RouteImageEnum.LOGOITM);
         }
@@ -1746,7 +1746,7 @@ export class GeneratePdfComponent implements OnInit {
                     this.hideComponent();
                 }
                 if (this.previusStudyData.length > 0) {
-                    this.generatePreviusStudy(this.previusStudyData);
+                    this.generatePreviusStudyWithoutPolicy(this.previusStudyData);
                 }
             });
 

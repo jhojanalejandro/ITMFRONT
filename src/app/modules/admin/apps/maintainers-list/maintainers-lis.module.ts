@@ -18,12 +18,14 @@ import { maintainersListComponent } from './maintainers-list.component';
 import { RubroListComponent } from './components/rubro-list/rubro-list.component';
 import { CpcListComponent } from './components/cpc-list/cpc-list.component';
 import { maintainersListRoutes } from './maintainers-list.routing';
+import { BanksListComponent } from './components/banks-list/banks-list.component';
 
 @NgModule({
     declarations: [
         maintainersListComponent,
         RubroListComponent,
-        CpcListComponent
+        CpcListComponent,
+        BanksListComponent
     ],
     imports     : [
         RouterModule.forChild(maintainersListRoutes),

@@ -36,9 +36,13 @@ export interface DataFile
 export interface FolderContractor
 {
     id?: string;
-    Nombre: string;
-    Identificacion: string;
-    type: string;
+    folderName: string;
+    registerDate: string;
+    modifyDate: string;
+    folderDescription: string
+    consutive: string;
+    descriptionProject: string;
+    contractorName: string;
 }
 
 export interface FolderContract

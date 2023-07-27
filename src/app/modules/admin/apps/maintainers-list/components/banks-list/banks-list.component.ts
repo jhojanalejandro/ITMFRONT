@@ -17,14 +17,13 @@ import Swal from 'sweetalert2';
 import { AssignmentUserComponent } from 'app/modules/admin/dashboards/contractual/contractor-list/components/assigmentUser/assignment-user.component';
 
 @Component({
-  selector: 'app-cpc-list',
-  styleUrls: ['./cpc-list.component.scss'],
-  templateUrl: './cpc-list.component.html',
+  selector: 'app-banks-list',
+  styleUrls: ['./banks-list.component.scss'],
+  templateUrl: './banks-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CpcListComponent implements OnInit, OnDestroy {
-  data: any;
+export class BanksListComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -34,10 +33,9 @@ export class CpcListComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['cpcNumber', 'cpcName', 'action'];
+  displayedColumns: string[] = [ 'bankName', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  contracts: any;
   permission: boolean = false;
 
   constructor(
@@ -46,17 +44,17 @@ export class CpcListComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
-    private _router: Router
   ) {
   }
   columnas = [
-    { title: 'NUMERO CPC', name: 'cpcNumber' },
-    { title: 'NOMBRE CPC', name: 'cpcName' },
+    // { title: 'IDENTIFICADOR', name: 'id' },
+    { title: 'NOMBRE BANCO', name: 'bankName' },
     { title: 'OPCIÓN', name: 'action' },
   ]
   ngOnInit(): void {
-    this.getCpcpList();
+    this.getBanksList();
   }
+
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -91,14 +89,13 @@ export class CpcListComponent implements OnInit, OnDestroy {
 
 
 
- private getCpcpList() {
-    this._gerenicService.getCpcType()
+ private getBanksList() {
+    this._gerenicService.getBanksContract()
     .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         this.dataSource.sort = this.sort;
         this.dataSource.data = Response;
-        this.contracts = Response;
       });
   }
   /**
@@ -111,7 +108,7 @@ export class CpcListComponent implements OnInit, OnDestroy {
     return item.id || index;
   }
 
-  Addcpc(cpc: any) {
+  AddBank(bank: any) {
     this.permission = this.auth.validateRoll(CodeUser.SUPERVISORAREAC);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos para asignar contratos!', 'warning');
@@ -119,13 +116,12 @@ export class CpcListComponent implements OnInit, OnDestroy {
       const dialogUpload = this._matDialog.open(AssignmentUserComponent, {
         disableClose: true,
         autoFocus: false,
-        data: {
-          contracts: this.contracts
-        }
+        data: bank
+        
       });
       dialogUpload.afterClosed().subscribe((result) => {
         if (result) {
-          this.getCpcpList();
+          this.getBanksList();
         }
       });
     }

@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {
     BehaviorSubject,
     Observable,
+    catchError,
     tap,
 } from 'rxjs';
 import { environment } from 'environments/environment';
@@ -10,6 +11,8 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { Activity, Componente, Elements, InventoryPagination, ContractFolder, ContractFolders, ContractList, ElementComponent } from '../models/planing-model';
+import Swal from 'sweetalert2';
+import { ModuloEnum } from 'app/layout/common/enums/modulo-enum/modulo';
 
 @Injectable({
     providedIn: 'root',
@@ -62,14 +65,14 @@ export class PlaningService {
      */
     getProjectData(): Observable<ContractList[]> {
         const params = new HttpParams()
-        .set('inProgress', false )
-        .set('tipoModulo', 'planeacion');
+            .set('inProgress', false)
+            .set('tipoModulo', ModuloEnum.PLANEACION);
 
         let urlEndPoint = this.apiUrl + environment.GetAllContractEndpoint;
-        return this._httpClient.get(urlEndPoint, { params}).pipe(
+        return this._httpClient.get(urlEndPoint, { params }).pipe(
             tap((response: any) => {
                 response.forEach(element => {
-                    if(element.valorContrato != null){
+                    if (element.valorContrato != null) {
                         element.valorContrato = (+element.valorContrato.toFixed(0)).toLocaleString();
                     }
                 });
@@ -87,10 +90,12 @@ export class PlaningService {
     addComponent(data: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addComponent;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
     }
 
-    
+
     addActivity(data: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addActivity;
@@ -121,14 +126,14 @@ export class PlaningService {
         return this._httpClient.get<Elements[]>(urlEndpointGenerate + id);
     }
 
-    getComponentById(id: any,activityId: string,elementId: string) {
+    getComponentById(id: any, activityId: string, elementId: string) {
         const params = new HttpParams()
-        .set('id', id)
-        .set('activityId', activityId)        
-        .set('elementId', elementId);
+            .set('id', id)
+            .set('activityId', activityId)
+            .set('elementId', elementId);
         let urlEndpointGenerate =
             this.apiUrl + environment.getComponentById;
-        return this._httpClient.get<Componente>(urlEndpointGenerate,{params});
+        return this._httpClient.get<Componente>(urlEndpointGenerate, { params });
     }
 
 
@@ -145,8 +150,7 @@ export class PlaningService {
     }
 
     asignmentData(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.asignmentData;
+        let urlEndpointGenerate = this.apiUrl + environment.asignmentData;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
 
@@ -167,11 +171,27 @@ export class PlaningService {
 
     getHiringDataById(contractorId: any, contractId) {
         const params = new HttpParams()
-        .set('contractorId', contractorId)
-        .set('contractId', contractId);
+            .set('contractorId', contractorId)
+            .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdHiringEndpoint;
-        return this._httpClient.get<IHiringData>(urlEndpointGenerate, {params: params});
+        return this._httpClient.get<IHiringData>(urlEndpointGenerate, { params: params });
+    }
+
+
+    // Método para manejar errores (opcional)
+    private handleError(error: any): Observable<any> {
+        // Implementa el manejo de errores aquí, si es necesario
+        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: 'Error del sistema Intenta nuevamente!',
+            showConfirmButton: false,
+            timer: 1500
+        });
+        return new Observable<any>();
     }
 
 

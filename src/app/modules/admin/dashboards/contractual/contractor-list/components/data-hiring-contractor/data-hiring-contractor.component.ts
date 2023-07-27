@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuseAlertType } from '@fuse/components/alert';
 import Swal from 'sweetalert2';
@@ -16,13 +16,17 @@ import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { fuseAnimations } from '@fuse/animations';
 
 @Component({
   selector: 'app-data-hiring-contractor',
   templateUrl: './data-hiring-contractor.component.html',
   styleUrls: ['./data-hiring-contractor.component.scss'],
+  encapsulation: ViewEncapsulation.None,
+  animations: fuseAnimations
 })
 export class ContractorDataHiringComponent implements OnInit, OnDestroy {
+  @ViewChild('formContractorNgForm') formContractorNgForm: NgForm;
   shareData: boolean = false;
   durationInSeconds = 3;
   registerDate: Date = new Date();
@@ -378,7 +382,14 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     }
     this._planingService.asignmentData(asignar).subscribe((response) => {
       if (response) {
-        this.openSnackBar('Componente asignado al contartista', "Exitoso")
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Componente asignado al Exitosamente!',
+          showConfirmButton: false,
+          timer: 1000
+        });
       }
     })
 
@@ -401,6 +412,16 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     this._planingService.asignmentData(asignar)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(resp => {
+        if(resp != null && resp == true){
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Asignación al Exitosa!',
+            showConfirmButton: false,
+            timer: 1000
+          });
+        }
         if (resp && this.formContractor.value.fechaFinalizacionConvenio != null) {
           this.calculateContratcValue();
         }
@@ -408,6 +429,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   }
 
   sendEconomicdataContractor() {
+    this.formContractor.disable();
     if (this.elementselectId != null ) {
       let element: Elements = this.elements.find(item => item.id === this.elementselectId);
 
@@ -431,7 +453,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       this._planingService.sendEconomicdataContractor(this.economicDataList)
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((response) => {
-          this.openSnackBar('asignacion al contartista', "Exitoso")
+          Swal.fire('', 'informacíon economica asignada exitosamente!', 'success');
           if (response != null) {
             if(this.update){
               this.updateContractor();
