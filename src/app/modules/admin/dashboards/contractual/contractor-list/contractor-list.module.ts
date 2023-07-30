@@ -14,6 +14,7 @@ import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.com
 import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
 import { AssignmentUserComponent } from './components/assigmentUser/assignment-user.component';
 import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
+import { DetailContractorComponent } from './components/detail-contractor/detail-contractor.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { TermFileContractComponent } from './components/term-file-contract/term-
         GeneratePdfComponent,
         ContractorPaymentRegisterComponent,
         AssignmentUserComponent,
-        TermFileContractComponent
+        TermFileContractComponent,
+        DetailContractorComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

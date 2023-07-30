@@ -12,9 +12,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ObservationFileComponent } from './observation-File/observation-file.component';
 import { DetailFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detail-file-enum';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 
 @Component({
@@ -44,6 +45,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     contractorId: string;
     contractId: string;
     folderId: string;
+    disableButnObservation: boolean = true;
+    filesObservation : FileContractor[] = [];  
     detailFile: DetailFile = {
         fileId: null,
         registerDate: new Date(),
@@ -151,29 +154,45 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
 
+    addObservationFile(){
+        let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
+        const dialogRef = this._matDialog.open(ObservationFileComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                files: this.filesObservation,
+                statusFile: code.id,
+                contractId:this.contractId,
+                contractorId: this.contractorId
+            }
+        });
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+    }
     updateFile(event: any, file: FileContractor) {
         let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
-            const dialogRef = this._matDialog.open(ObservationFileComponent, {
-                disableClose: true,
-                autoFocus: false,
-                data: file
-            });
-            dialogRef.afterClosed()
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((result) => {
-                    if (result) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información actualizada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
+            this.disableButnObservation = false;
+            this.filesObservation = this.filesObservation.filter(objeto => objeto.id !== file.id);
+
+           this.filesObservation.push(file)
         } else {
+            this.filesObservation = this.filesObservation.filter(objeto => objeto.id !== file.id);
+            if(this.filesObservation.length > 0){
+                this.disableButnObservation = true;
+            }
             this.detailFile.fileId = file.id;
             this.detailFile.registerDate = new Date();
             this.detailFile.passed = true;
@@ -252,6 +271,13 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._fileManagerService.getFileByContractor(this.contractId, this.contractorId, this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
+                item.forEach(element => {
+                    if(element.documentTypeCode == DocumentTypeCodes.HOJADEVIDA || element.documentTypeCode == DocumentTypeCodes.REGISTROSECOP || element.documentTypeCode == DocumentTypeCodes.EXAMENESPREOCUPACIONALES){
+                        element.disable = false;
+                    }else{
+                        element.disable = true;
+                    }
+                });
                 this.items = item;
                 this._changeDetectorRef.markForCheck();
             });

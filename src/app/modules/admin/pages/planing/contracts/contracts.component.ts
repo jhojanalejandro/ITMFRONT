@@ -128,7 +128,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
   }
 
   UpdateDataContract(data: any) {
-    debugger
     const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
       disableClose: true,
       autoFocus: false,

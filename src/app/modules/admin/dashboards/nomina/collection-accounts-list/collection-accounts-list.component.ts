@@ -6,7 +6,6 @@ import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CollectionAccountsService } from './collection-accounts-list.service';
 import swal from 'sweetalert2';
@@ -17,8 +16,9 @@ import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
-import { UploadFileDataService } from '../../contractual/upload-file/service/upload-file.service';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { UploadFileDataService } from '../../contractual/service/upload-file.service';
+import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
@@ -131,7 +131,7 @@ export class CollectionAccountsListComponent implements OnInit {
   }
   openDialog() {
     //this.validateDinamycKey();
-    const dialogRef = this._matDialog.open(UploadFileComponent, {
+    const dialogRef = this._matDialog.open(UploadFileContractComponent, {
       disableClose: true,
       autoFocus: false,
       data: {

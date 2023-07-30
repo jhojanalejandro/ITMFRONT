@@ -8,7 +8,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 
 
 @Component({
@@ -684,7 +684,7 @@ export class MinutaContratoMacroComponent implements OnInit {
             monthPayment: null,
             folderId: null
           };
-          _uploadervice.UploadFileBillContractors(registerFile).subscribe((res) => {
+          _uploadervice.UploadFileMinuteGenrateContract(registerFile).subscribe((res) => {
             if (res) {
               swal.fire({
                 position: 'center',

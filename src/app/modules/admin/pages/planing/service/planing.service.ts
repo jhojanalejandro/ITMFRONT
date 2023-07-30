@@ -166,7 +166,9 @@ export class PlaningService {
 
     sendEconomicdataContractor(model: EconomicContractor[]) {
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, model).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
     }
 
     getHiringDataById(contractorId: any, contractId) {

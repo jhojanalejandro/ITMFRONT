@@ -11,9 +11,9 @@ import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service
 import { ContractContractors } from '../../../models/contractor';
 import { CommitteeRequest, PreviusStudy } from '../../../models/generate-pdf';
 import { PdfTypeGenerate } from 'app/layout/common/enums/document-type/pdf-type';
-import { UploadFileDataService } from '../../../upload-file/service/upload-file.service';
 import { Subject, takeUntil } from 'rxjs';
-import { year } from '@igniteui/material-icons-extended';
+import { UploadFileDataService } from '../../../service/upload-file.service';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 @Component({
     selector: 'app-generate-pdf',
@@ -43,7 +43,9 @@ export class GeneratePdfComponent implements OnInit {
     previusStudyData: PreviusStudy[] = [];
     dateTransform: any = new Date();
     typeDocs: DocumentTypeFile[] = [];
+    documentSolicitudComiteList: any[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    year: Date = new Date();
 
     constructor(
         private _shareService: ShareService,
@@ -54,15 +56,21 @@ export class GeneratePdfComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.itmImageBase64 = this.getBase64Image(RouteImageEnum.LOGOITM);
+        debugger
+        console.log('fecha',this.year.getFullYear());
+        
         this.getDocumentType();
         this.dateTransform = this._shareService.transformDate(this.dateTransform);
         switch (this.generateType) {
             case PdfTypeGenerate.PREVIUSSTUDY:
-                this.gePreviusStudyData();
+                this.gePreviusStudyData().then(
+                    () => this.getBase64Image(RouteImageEnum.LOGOITM, 'study')
+                );
                 break;
             case PdfTypeGenerate.COMMITTEEREQUEST:
-                this.getcommitteeRequestData();
+                this.getcommitteeRequestData().then(
+                    () => this.getBase64Image(RouteImageEnum.LOGOITM, 'comite')
+                )
                 break;
         }
         this.currentDate = this._shareService.getCurrentDate();
@@ -70,9 +78,7 @@ export class GeneratePdfComponent implements OnInit {
     }
 
     private generatePreviusStudyWithoutPolicy(previusStudyData: PreviusStudy[]) {
-        if (this.itmImageBase64 == null || this.itmImageBase64 == undefined) {
-            this.itmImageBase64 = this.getBase64Image(RouteImageEnum.LOGOITM);
-        }
+
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let data = previusStudyData.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
@@ -122,7 +128,7 @@ export class GeneratePdfComponent implements OnInit {
                         },
                     },
                     content: [
-                        
+
                         {
                             text: 'Fecha de Elaboración: ' + this.dateTransform,
                             style: 'subheader',
@@ -205,7 +211,7 @@ export class GeneratePdfComponent implements OnInit {
                             margin: [10, 10, 10, 10],
                         },
                         {
-                            
+
                             table: {
                                 widths: [100, '*'],
                                 style: 'marginTable',
@@ -565,7 +571,7 @@ export class GeneratePdfComponent implements OnInit {
                                         },
 
                                         {
-                                            text: data.supervisorCharge+' - Unidad Estratégica de Negocios',
+                                            text: data.supervisorCharge + ' - Unidad Estratégica de Negocios',
                                             style: 'fontSegundapagPeque',
                                         }
                                     ]
@@ -965,7 +971,7 @@ export class GeneratePdfComponent implements OnInit {
                                                                         alignment: 'center',
                                                                         margin: [5, 30, 5, 5],
                                                                     },
-                                                                    {}                                                                
+                                                                    {}
                                                                 ],
                                                                 [
                                                                     {},
@@ -1465,13 +1471,62 @@ export class GeneratePdfComponent implements OnInit {
                     },
                 };
 
-                this.savePdfGenerated(documentPreviousStudy, data.contractorName, 'ESTUDIOS PREVIOS', data.contractorId, this.contractContractors.contractId);
-
+                let SolicitudComite = {
+                    documentPreviousStudy: documentPreviousStudy,
+                    contractorName: data.contractorName,
+                    contractorId: data.contractorId
+                }
+                this.documentSolicitudComiteList.push(SolicitudComite);
             } else {
-                swal.fire('informe', 'Algunos archivos no se generarán porque Faltan datos', 'warning');
-                this.hideComponent();
+                if (this.itmImageBase64 == null || this.itmImageBase64 == '' || this.itmImageBase64 == undefined) {
+                    swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
+                    this.hideComponent();
+                    return;
+                }
+                else if (data.generalObligations == null || data.generalObligations == '' || data.specificObligations == null || data.specificObligations == '') {
+                    swal.fire('', 'no se encontraron las obligaciones del contratista para el contratista ' + data.contractorName, 'warning');
+                }
+                else if (data.totalValue == null || data.totalValue == '') {
+                    swal.fire('', 'no se encontro el valor del contrato para el contratista ' + data.contractorName, 'warning');
+                } else if (data.userJuridicFirm != null || data.userJuridicFirm == '') {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'No se  se encontro la firma del juridico para el contratista ' + data.contractorName,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                } else if (data.supervisorFirm == null || data.supervisorFirm == '') {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'No se encontro la firma del supervisor para el contratista ' + data.contractorName,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    this.hideComponent();
+                } else if (data.userFirm == null || data.userFirm == '') {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'No se encontro la firma del contratual para el contratista ' + data.contractorName,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    this.hideComponent();
+                    return;
+                }
+                if (this.contractContractors.contractors.length == 1) {
+                    this.hideComponent();
+                }
             }
 
+        }
+        if (this.documentSolicitudComiteList.length > 0) {
+            this.savePdfGenerated(this.documentSolicitudComiteList, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS);
         }
 
     }
@@ -1479,7 +1534,6 @@ export class GeneratePdfComponent implements OnInit {
     private generateCommitteeRequest(committeeRequestData: any) {
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let data = committeeRequestData.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
-            debugger
             if (this.itmImageBase64 != null && data.profileRequire != null && data.contractorName != null && data.contractorIdentification != null) {
                 const documentSolicitudComite = {
                     pageSize: 'A4',
@@ -1611,7 +1665,7 @@ export class GeneratePdfComponent implements OnInit {
                                             style: 'fontPeque',
                                         },
                                         {
-                                            text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + data.contractNumber + ' de ' + year + ' , celebrado  entre ' + data.contractorName + ' y el ITM.',
+                                            text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + data.contractNumber + ' de ' + this.year.getFullYear(),
                                             style: 'fontPeque',
                                         },
                                         {
@@ -1711,108 +1765,134 @@ export class GeneratePdfComponent implements OnInit {
                         // alignment: 'justify'
                     },
                 };
-                this.savePdfGenerated(documentSolicitudComite, data.contractorName, 'SOLICITUD COMITE', data.contractorId, this.contractContractors.contractId);
+                let SolicitudComite = {
+                    document: documentSolicitudComite,
+                    contractorName: data.contractorName,
+                    contractorId: data.contractorId
+                }
+                this.documentSolicitudComiteList.push(SolicitudComite);
             } else {
-                swal.fire('', 'Algunos archivos no se generarán porque Faltan datos', 'warning');
+                if (this.itmImageBase64 == null || this.itmImageBase64 == '') {
+                    swal.fire('', 'Error al cargar la imagen ', 'warning');
+                }
+                else if (data.profileRequire == null || data.profileRequire == '') {
+                    swal.fire('', 'no se ha cargado el perfil requerido', 'warning');
+                }
+                else if (data.contractorIdentification == null || data.contractorIdentification == '') {
+                    swal.fire('', 'no se encontro la identificacion del contratista', 'warning');
+                }
                 this.hideComponent();
             }
         }
+        if (this.documentSolicitudComiteList.length > 0) {
+            this.savePdfGenerated(this.documentSolicitudComiteList, this.contractContractors.contractId, DocumentTypeCodes.SOLICITUDCOMITE);
+        }
+
     }
 
 
-    private getcommitteeRequestData() {
-        this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response) => {
-            this.committeeRequestData = Response;
-            if (this.committeeRequestData.length == 0) {
-                this.hideComponent();
-            }
-            if (this.committeeRequestData.length > 0) {
-                this.generateCommitteeRequest(this.committeeRequestData);
-            }
+    private async getcommitteeRequestData(): Promise<void> {
+        return await new Promise((rslv) => {
+            this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response) => {
+                this.committeeRequestData = Response;
+                if (this.committeeRequestData.length == 0) {
+                    this.hideComponent();
+                }
+
+                rslv();
+            });
         });
 
     }
 
-    private gePreviusStudyData() {
-        if (this.itmImageBase64 != null) {
-            this.itmImageBase64 = this.getBase64Image(RouteImageEnum.LOGOITM);
-        }
+    private async gePreviusStudyData(): Promise<void> {
+        return await new Promise((rslv) => {
 
-        this._pdfdataService.getPreviusStudy(this.contractContractors)
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((Response) => {
-                this.previusStudyData = Response;
-                if (Response.length == 0) {
-                    this.hideComponent();
-                }
-                if (this.previusStudyData.length > 0) {
-                    this.generatePreviusStudyWithoutPolicy(this.previusStudyData);
-                }
-            });
+            this._pdfdataService.getPreviusStudy(this.contractContractors)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((Response) => {
+                    this.previusStudyData = Response;
+                    if (Response.length == 0) {
+                        this.hideComponent();
+                    }
+                    rslv();
+                });
 
-
+        });
     }
 
-    private getBase64Image(route: string): string {
+
+    private getBase64Image(route: string, origin: string) {
         this._shareService.loadAndConvertImageToBase64(route)
             .then(base64Data => {
-                return this.itmImageBase64 = base64Data;
+                this.itmImageBase64 = base64Data;
+                if (origin == 'comite') {
+                    this.generateCommitteeRequest(this.committeeRequestData);
+                } else {
+                    this.generatePreviusStudyWithoutPolicy(this.previusStudyData);
+                }
             })
             .catch(error => {
                 console.error('Error al cargar y convertir la imagen:', error);
             });
-        return this.itmImageBase64;
     }
     hideComponent() {
         this.pdfGenerated.emit(false);
     }
 
-    private savePdfGenerated(pdfDocument: any, contractorName: string, documentType: string, contractorId: string, contractId: string) {
-        let document = this.typeDocs.find(f => f.documentTypeDescription == documentType).id
-        let nombreMinuta = documentType + contractorName;
-        let date = this.currentDate;
-        let userId = this._auth.accessId;
-        let _uploadervice = this._upload;
-        pdfMake.createPdf(pdfDocument)
-            .getDataUrl(function (dataURL) {
-                dataURL = dataURL.split('data:application/pdf;base64,')
-                const registerFile: FileContractor = {
-                    userId: userId,
-                    contractorId: contractorId,
-                    contractId: contractId,
-                    filesName: nombreMinuta,
-                    fileType: 'PDF',
-                    descriptionFile: 'minuta del contratista generada',
-                    registerDate: date,
-                    documentType: document,
-                    modifyDate: date,
-                    filedata: dataURL[1],
-                    monthPayment: null,
-                    folderId: null
-                };
-                _uploadervice.UploadFileBillContractors(registerFile)
-                    .subscribe((res) => {
-                        if (res) {
-                            swal.fire({
-                                position: 'center',
-                                icon: 'success',
-                                title: '',
-                                html: 'Información Registrada Exitosamente!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-
-                        }
-
-                    },
-                        (response) => {
-                            console.log(response);
-                            swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-                        });
+    private async savePdfGenerated(pdfDocument: any, contractId: string, origin: string) {
+        let registerFileLis: FileContractor[] = [];
+        debugger
+        for (let index = 0; index < pdfDocument.length; index++) {
+            let documentType = this.typeDocs.find(f => f.code == origin)
+            let nombreDocumento = documentType.documentTypeDescription + pdfDocument[index].contractorName;
+            let date = this.currentDate;
+            let userId = this._auth.accessId;
+            const pdf = pdfMake.createPdf(pdfDocument[index].document);
+            const dataURL = await new Promise<string>((resolve, reject) => {
+                pdf.getDataUrl((dataURL) => resolve(dataURL));
             });
-        pdfMake
-            .createPdf(pdfDocument)
-            .download(nombreMinuta + '.pdf');
+
+            debugger
+            const registerFile: FileContractor = {
+                userId: userId,
+                contractorId: pdfDocument[index].contractorId,
+                contractId: contractId,
+                filesName: nombreDocumento,
+                fileType: 'PDF',
+                descriptionFile: documentType.documentTypeDescription +' generada',
+                registerDate: date,
+                documentType: documentType.id,
+                modifyDate: date,
+                filedata: dataURL.split('data:application/pdf;base64,')[1],
+                monthPayment: null,
+                folderId: null,
+                origin: origin
+            };
+            registerFileLis.push(registerFile)
+        }
+
+        debugger
+        this._upload.UploadFileBillContractors(registerFileLis)
+            .subscribe((res) => {
+                if (res) {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                }
+
+            },
+                (response) => {
+                    console.log(response);
+                    swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+                });
+
         this.hideComponent();
     }
 

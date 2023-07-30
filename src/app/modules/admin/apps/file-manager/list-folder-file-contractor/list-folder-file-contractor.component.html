@@ -18,7 +18,7 @@
                     <!-- Title -->
                     <div>
 
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">Carpetas Contratista</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">{{items.folders[0].contractorName}}</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">
@@ -30,7 +30,8 @@
                                     <ng-container>
                                         <ng-container>
                                             <a class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/contract/', contractId]">Carpetas contratato </a>
+                                                [routerLink]="['/apps/file-manager/folders/contract/', contractId]">Carpetas
+                                                contratato </a>
                                         </ng-container>
                                         <ng-container>
                                             <div class="">/</div>

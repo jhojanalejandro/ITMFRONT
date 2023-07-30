@@ -50,7 +50,7 @@
                     <mat-form-field class="hiringField" appearance="fill">
                         <mat-label>Lista Elementos</mat-label>
                         <mat-select formControlName="elemento" (selectionChange)="asignElement($event)" name="elemento">
-                            <mat-option *ngFor="let element of elements" [value]="element.id">
+                            <mat-option *ngFor="let element of elements" [value]="element.id" [disabled]="element.cantidadEnable==0" >
                                 {{element.nombreElemento}}
                             </mat-option>
                         </mat-select>

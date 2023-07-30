@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { DetailFileContractor } from 'app/layout/common/models/file-contractor';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 
 @Component({
   selector: 'app-observation-file',
@@ -28,6 +28,8 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     'Error en la información',
     'Error Ortografico',
   ];
+  observationfile: any;
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -38,9 +40,12 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {    
+    console.log(this._data);
+    this.observationfile = this._data.files;
     this.formFile = this._formBuilder.group({
       motivo: new FormControl(null, Validators.required),
       observation: new FormControl(null, Validators.required),
+      termDate: new FormControl(null, Validators.required),
     });
     this.filteredOptions =
       this.formFile.controls.motivo.valueChanges.pipe(
@@ -53,17 +58,25 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     this.matDialogRef.close();
   }
 
-  AddDetailFile() {
+  AddObservationFile() {
+    // let termFileDocument: TermContract = {
+    //   detailContract: this.data.contractId,
+    //   startDate: this.registerDate,
+    //   termDate: this.formTerm.value.termType,
+    //   termType: this.termTypeId
+    // }
     let detailFile: DetailFileContractor = {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
         reason: this.formFile.value.motivo,
-        files: null,
+        files: this.observationfile,
         registerDate: new Date(),
-        passed: false
-
+        passed: false,
+        statusFileId: this._data.statusFile,
+        contractId: this._data.contractId,
+        contractorId: this._data.contractorId
     }
-    this._uploadService.addDetailFile(detailFile)
+    this._uploadService.addObservationDetailFile(detailFile)
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe((res) => {
       if (res) {
@@ -99,33 +112,7 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     }
   }
 
-  UpdateDetailFile() {
-    let detailFile: DetailFileContractor = {
-        fileId: this._data.id,
-        observation: this.formFile.value.observation,
-        reason: this.formFile.value.motivo,
-        files: null,
-        registerDate: new Date(),
-        passed: false
-    }
-    this._uploadService.addDetailFile(detailFile)
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((res) => {
-      if (res) {
-        swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '',
-          html: 'Información actualizada Exitosamente!',
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }
-    },
-      (response) => {
-        swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-      });
-  }
+
 
   ngOnDestroy(): void {
     this._unsubscribeAll.complete();

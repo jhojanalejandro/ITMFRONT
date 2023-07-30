@@ -18,7 +18,7 @@ import {
     MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { HomeContractorService } from './services/home-contractor.service';
-import { UploadFileContractorComponent } from './components/upload-file-contractor/upload-file.component';
+import { UploadFileContractorComponent } from './components/upload-file-contractor/upload-file-contractor.component';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
 import htmlToPdfmake from 'html-to-pdfmake';

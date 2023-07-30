@@ -32,7 +32,6 @@ export class ContractorService {
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
-        debugger
         // Implementa el manejo de errores aquí, si es necesario
         // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
         Swal.fire({

@@ -5,20 +5,19 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeFile, Files } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
-import { UploadFileDataService } from '../service/upload-file.service';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 
 @Component({
-  selector: 'app-upload-file',
-  templateUrl: './upload-file.component.html',
-  styleUrls: ['./upload-file.component.scss'],
+  selector: 'app-upload-file-contract',
+  templateUrl: './upload-file-contract.component.html',
+  styleUrls: ['./upload-file-contract.component.scss'],
   encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
-export class UploadFileComponent implements OnInit, OnDestroy {
+export class UploadFileContractComponent implements OnInit, OnDestroy {
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file: any = null; // Variable to store file
@@ -49,7 +48,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
     private _upload: UploadFileDataService,
     private _gerenicService: GenericService,
     private _auth: AuthService,
-    public matDialogRef: MatDialogRef<UploadFileComponent>,
+    public matDialogRef: MatDialogRef<UploadFileContractComponent>,
     private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) private _data
   ) {
@@ -101,24 +100,19 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   }
 
 
-  addFileContractor(event) {
-    let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
-
-    const registerFile: FileContractor = {
+  addFileContract(event) {
+    const uploadFile: Files = {
       userId: this._auth.accessId,
-      contractorId: this._data.contractorId,
+      folderId: this._data.folderId,
       contractId: this._data.contractId,
       filesName: this.fileName,
       fileType: this.fileType,
-      documentType: typeId,
       descriptionFile: this.formFile.value.description,
       registerDate: this.registerDate,
-      modifyDate: this.registerDate,
       filedata: event,
-      monthPayment: null,
-      folderId: this._data.folderId
+      documentType: this.documentType
     };
-    this._upload.UploadFileContractor(registerFile).subscribe((res) => {
+    this._upload.UploadFileContract(uploadFile).subscribe((res) => {
       if (res) {
         swal.fire({
           position: 'center',
@@ -128,6 +122,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
           showConfirmButton: false,
           timer: 1500
         });
+        //this.matDialogRef.close();  
         this.ref.detectChanges();
         this.ref.markForCheck();
         this.closeModal();
@@ -143,8 +138,6 @@ export class UploadFileComponent implements OnInit, OnDestroy {
         this.showAlert = true;
       });
   }
-
-
   getContractsData() {
     // Get the data
     this._gerenicService.getAllContract(true, 'Contractual')
@@ -158,12 +151,55 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   uploadTypeFile() {
     
     if (this.isSelectContract == true) {
-
+      if(this._data.origin === 'cdp'){
+        this.uploadCdpFile();
+      }else{
+        this.uploadElementFile();
+      }
     } else {
       this.uploadPdfFile();
     }
   }
 
+  uploadCdpFile() {
+    let fileToUpload = <File>this.file;
+    const formData = new FormData();
+    formData.append('excel', fileToUpload, fileToUpload.name);
+    formData.append('userId', this._auth.accessId.toString());
+    formData.append('contractId', this._data.contractId);
+    if (this._data.show) {
+      // Should match the parameter name in backend
+      this._upload.UploadCdpFileExcel(formData).subscribe(res => {
+        if (res) {
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();
+          this.closeModal();
+        }
+
+      },
+        (response) => {
+          console.log(response);
+
+          this.formFile.enable();
+          // Set the alert
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+          // Show the alert
+          this.showAlert = true;
+        });
+    } else {
+      this.addFileContract(this.base64Output);
+    }
+
+  }
 
   uploadPdfFile() {
     let fileToUpload = <File>this.file;
@@ -200,10 +236,8 @@ export class UploadFileComponent implements OnInit, OnDestroy {
           this.showAlert = true;
         });
     } else {
-      this.addFileContractor(this.base64Output);
+      this.addFileContract(this.base64Output);
     }
-
-
   }
 
   selectionChageContract(contract: any) {
@@ -229,6 +263,46 @@ export class UploadFileComponent implements OnInit, OnDestroy {
       });
   }
 
+
+  uploadElementFile() {
+    let fileToUpload = <File>this.file;
+    const formData = new FormData();
+    formData.append('excel', fileToUpload, fileToUpload.name);
+    formData.append('userId', this._auth.accessId.toString());
+    formData.append('contractId', this._data.contractId);
+    if (this._data.show) {
+      // Should match the parameter name in backend
+      this._upload.UploadElementFileExcel(formData).subscribe(res => {
+        if (res) {
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información Registrada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          //this.matDialogRef.close();  
+          this.ref.detectChanges();
+          this.ref.markForCheck();
+          this.closeModal();
+        }
+
+      },
+        (response) => {
+          console.log(response);
+
+          this.formFile.enable();
+          // Set the alert
+          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+          // Show the alert
+          this.showAlert = true;
+        });
+    } else if (this._data.contractorId != null) {
+      this.addFileContract(this.base64Output);
+    }
+
+  }
 
   closeModal(): void {
     this.matDialogRef.close(true);

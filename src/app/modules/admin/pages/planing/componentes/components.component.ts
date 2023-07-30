@@ -21,9 +21,9 @@ import { ActividadFormComponent } from './actividad-form/actividad-form.componen
 import { PlaningService } from '../service/planing.service';
 import { ButtonsExportService } from 'app/layout/common/buttons-export/buttons-export.service';
 import { Subject, takeUntil } from 'rxjs';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { AuthService } from 'app/core/auth/auth.service';
+import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 
 @Component({
     selector: 'components-card',
@@ -511,7 +511,7 @@ export class AddComponentsComponent implements OnInit {
         if (!this.permission) {
             this.messagePermission();
         } else {
-            const dialogUpload = this._matDialog.open(UploadFileComponent, {
+            const dialogUpload = this._matDialog.open(UploadFileContractComponent, {
                 disableClose: true,
                 autoFocus: false,
                 data: {

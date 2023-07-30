@@ -27,9 +27,6 @@ export class ListFolderContractorService {
     constructor(private _httpClient: HttpClient) {
     }
 
-    /**
-     * Getter for items
-     */
 
     get folderContract$(): Observable<ItemsContract> {
         return this._foldersContract.asObservable();
@@ -52,6 +49,7 @@ export class ListFolderContractorService {
         return this._httpClient.get<ItemsContract>(urlEndPoint + folderIds).pipe(
             tap((response: any) => {
                 let items = cloneDeep(response);
+                const contractName = items.contractName;
                 const folders = items.folders;
                 const folderContract = items.folderContract;
                 const path = [];
@@ -59,7 +57,8 @@ export class ListFolderContractorService {
                 {
                     folders,
                     folderContract,
-                    path
+                    path,
+                    contractName
                 }
                 this._foldersContract.next(data);
 

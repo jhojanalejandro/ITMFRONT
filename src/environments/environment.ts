@@ -79,6 +79,8 @@ export const environment = {
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
+    CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
+
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
@@ -112,7 +114,7 @@ export const environment = {
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
     GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
-    GetPdMinteExtension: 'PdfData/ChargeAccountGetById',
+    GetPdMinteExtension: 'PdfData/GetDataminuteExtension',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
     GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',

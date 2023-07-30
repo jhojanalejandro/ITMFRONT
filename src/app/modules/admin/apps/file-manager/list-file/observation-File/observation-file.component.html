@@ -1,45 +1,68 @@
 <div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Novedad</div>
-        <button
-            mat-icon-button
-            (click)="cerrar()"
-            [tabIndex]="-1">
-            <mat-icon
-                class="text-current"
-                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        <div class="text-lg font-medium">Novedad Archivos Cargados</div>
+        <button mat-icon-button (click)="cerrar()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
     <!-- <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Cargar Archivo</p> -->
     <div class="modal-body pt-6">
         <form [formGroup]="formFile" class="example-form">
-            <div class="folder">
-                <mat-form-field  class="hiringD" appearance="outline">
+            <div class="observatationFolder">
+                <mat-form-field class="fieldObservation" appearance="outline">
                     <mat-label>Motivo rechazo</mat-label>
                     <input type="text" placeholder="Seleccione o Digite" aria-label="Motivo Rechazo" matInput
                         [formControlName]="'motivo'" [matAutocomplete]="auto">
                     <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option" checked="true">
                             {{option}}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
             </div>
-            <div class="folder">
-                <mat-form-field  class="hiringD" appearance="outline">
+            <div class="checkbox-list">
+                <!-- <mat-radio-group [disabled]="true" aria-labelledby="example-radio-group-label" class="example-radio-group"
+                > -->
+                <span>Documentos seleccionados</span>
+
+                <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of observationfile" class="mr-4"
+                    [value]="file.id" [color]="'primary'">
+                    {{file.documentTypes}}
+                </mat-checkbox>
+
+                <!-- <mat-radio-button  *ngFor="let file of observationfile" class="example-radio-button" [value]="file">
+                    {{file.documentTypes}}
+                </mat-radio-button>
+            </mat-radio-group> -->
+            </div>
+
+
+            <div class="observatationFolder">
+                <mat-form-field class="fieldObservation" appearance="outline">
                     <mat-label>Observación</mat-label>
-                    <textarea type="text"  class="example-full-width" id="observation" formControlName="observation" autocomplete="off" matInput placeholder="Observacion"></textarea>
+                    <textarea type="text" class="example-full-width" id="observation" formControlName="observation"
+                        autocomplete="off" matInput placeholder="Observacion"></textarea>
                     <mat-error *ngIf="formFile.get('observation').hasError('required')">
                         El Campo Descripcion es requerido
                     </mat-error>
                 </mat-form-field>
             </div>
+            <div class="observatationFolder">
+                <mat-form-field (click)="pickerTo.open()" class="hiringTerm" appearance="fill">
+                    <mat-label>Fecha Limite Entrega Documentos</mat-label>
+                    <input matInput [min]="registerDate" id="dateTo" autocomplete="off" formControlName="termDate"
+                        [matDatepicker]="pickerTo">
+                    <mat-datepicker #pickerTo></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                </mat-form-field>
+            </div>
 
-        </form>      
+        </form>
     </div>
 
 </div>
-  <mat-dialog-actions align="end" class="pt-8">
+<mat-dialog-actions align="end" class="pt-8">
     <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">Cancelar</button>
-    <button mat-flat-button  [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"  (click)="AddDetailFile()">Enviar</button>
-  </mat-dialog-actions>
+    <button mat-flat-button [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"
+        (click)="AddObservationFile()">Enviar</button>
+</mat-dialog-actions>

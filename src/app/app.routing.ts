@@ -94,7 +94,6 @@ export const appRoutes: Route[] = [
             {path: 'apps', children: [
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
                 {path: 'archivo/:id', loadChildren: () => import('app/modules/admin/apps/file-manager/components/show-file/show-file.module').then(m => m.ShowFileModule)},
-                {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)},
                 {path: 'maintainers-list', loadChildren: () => import('app/modules/admin/apps/maintainers-list/maintainers-lis.module').then(m => m.MaintainersListModule)}
             ]},
 

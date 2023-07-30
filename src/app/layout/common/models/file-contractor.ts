@@ -12,6 +12,7 @@ export interface FileContractor{
     modifyDate?: any;
     monthPayment?: string;
     folderId: string;
+    origin?: string;
 }
 
 export interface Files{
@@ -50,9 +51,12 @@ export interface DetailFileContractor{
     fileId: any;
     reason: string;
     observation: string;
-    files: string[];
+    files: any[];
     passed: boolean;
     registerDate: Date;
+    statusFileId: string;
+    contractId: string;
+    contractorId: string;
 }
 
 export interface ContractsContractor{

@@ -1,0 +1,44 @@
+.drop{
+    display: inline-block;
+    margin: 0 10px;
+    //background-color: black;
+}
+.hiring{
+    padding-left: 15px;
+    margin-right: 10px;
+    width: 170px;
+}
+
+.option{
+    justify-items: center;
+    text-align: center;
+}
+
+mat-form-field{
+    width: 300px !important;
+}
+.folder{
+    text-align: center;
+}
+.direction{
+    width: 500px !important;
+}
+::-webkit-file-upload-button {
+    background: rgb(83, 69, 237);
+    padding: 0.2em;
+    border-radius: 25px;
+    width: 150px;
+    height: 40px;
+}
+.modal-body{
+    margin-bottom: 15px;
+}
+.folder{
+    text-align: center;
+}
+.hiringD{
+    padding-left: 15px;
+    margin-right: 10px;
+    width: 620PX !important;
+    max-width: 800px;
+}
