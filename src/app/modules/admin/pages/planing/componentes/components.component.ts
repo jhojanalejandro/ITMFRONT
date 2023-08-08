@@ -364,37 +364,33 @@ export class AddComponentsComponent implements OnInit {
         });
     }
     guardarCalculo() {
-        if (!this.permission) {
-            this.messagePermission();
-        } else {
-            const saveCalculo: any = {
-                id: this.contractId,
-                contractorsCant: this.contractorCant,
-                valorContrato: this.total,
-                valorSubTotal: this.subTotal,
-                gastosOperativos: this.gastosOperativos,
-            };
+        const saveCalculo: any = {
+            id: this.contractId,
+            contractorsCant: this.contractorCant,
+            valorContrato: this.total,
+            valorSubTotal: this.subTotal,
+            gastosOperativos: this.gastosOperativos,
+        };
 
-            this._contrtactService.UpdateCostContractFolder(saveCalculo)
-                .pipe(takeUntil(this._unsubscribe$))
-                .subscribe((res) => {
-                    if (res) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información Registrada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
+        this._contrtactService.UpdateCostContractFolder(saveCalculo)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
 
-                }, (response) => {
-                    console.log(response);
+            }, (response) => {
+                console.log(response);
 
-                    Swal.fire('Error', 'Error al Registrar la informacion', 'error');
-                });
-        }
+                Swal.fire('Error', 'Error al Registrar la informacion', 'error');
+            });
 
     }
 
@@ -422,7 +418,7 @@ export class AddComponentsComponent implements OnInit {
             this._planingService.deleteComponent(componente.id)
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((response) => {
-                    if (response) {
+                    if (response.success) {
                         Swal.fire(
                             {
                                 position: 'center',
