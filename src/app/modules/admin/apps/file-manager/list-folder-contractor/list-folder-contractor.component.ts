@@ -6,7 +6,6 @@ import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { RegisterFolderComponent } from '../components/register-folder/register-folder.component';
 
 @Component({

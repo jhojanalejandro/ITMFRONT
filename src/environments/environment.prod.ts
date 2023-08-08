@@ -11,8 +11,7 @@ export const environment = {
     retrieveEndpoint: 'User/retrievePassword',
     updateUserEndpoint: 'User/UpdateTeamRoll',
     updatePasswordUserEndpoint: 'User/UpdatePassword',
-    getAllUserEndpoint: 'User/GetAll',
-    getAllAdminsEndpoint: 'User/GetAll',
+    getAllUserEndpoint: 'User/GetTeam',
     getAllUserEmployeesEndpoint: 'User/GetAllEmployees',
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
@@ -39,50 +38,56 @@ export const environment = {
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
     HistoryContractor: 'Contractor/GetHistoryContractor',
     AddnewnessContractor: 'Contractor/AddNewNess',
-    GetByContractorIdContractEndpoint: 'Contractor/GetAllByFolder/',
+    GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
+    ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
     GetAllContractFolderEndpoint: 'FileManager/GetAllContract',
 
 
-    addFolderFileContractorEndpoint: 'Folder/Add',
+    addFolderFileContractorEndpoint: 'Folder/SaveFolderContract',
     UpdateFolderFileContractorEndpoint: 'Folder/Update',
     GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
-    GetFolderFileContractorEndpoint: 'Folder/GetAll/',
+    GetFolderFileContractorEndpoint: 'Folder/GetAllFolderById/',
 
     addContractFolderEndpoint: 'ContractFolder/SaveContract',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
-    GetAllContractEndpoint: 'ContractFolder/GetAll',
+    GetAllContractEndpoint: 'ContractFolder/GetAllContracts',
     GetAllHistoryProjectEndpoint: 'ContractFolder/GetAllHistory',
-    UpdateStateContractFolderEndpoint: 'ContractFolder/UpdateState/',
-
+    UpdateStateContractFolderEndpoint: 'ContractFolder/UpdateStateContract/',
     GetByIdContractFolderEndpoint: 'ContractFolder/GetById/',
     DeleteContractFolderEndpoint: 'ContractFolder/Delete',
     GetByIdDetailListEndpoint: 'ContractFolder/GetByIdDetailList',
-    GetByIdDetailByIdEndpoint: 'ContractFolder/GetByIdDetail',
+    GetByIdDetailByIdEndpoint: 'ContractFolder/GetDetailByIdContract',
+    AssignmentUserContractEndpoint: 'ContractFolder/AssignmentUserContract',
+    SaveTermFileContractEndpoint: 'ContractFolder/SaveTermFileContract',
+
     addContractorPaymentsEndpoint: 'ContractorPayments/Add',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/Delete',
+    GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
-    UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/Update',
+    UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
-    GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetById',
+    GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetEconiomicDataById',
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
 
     addFileEndpoint: 'Files/AddFileContractor',
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
+    CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
+
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
     updateStatusFileEndpoint: 'Files/AddFileContractor',
-    GetByIdFileEndpoint: 'Files/GetById/',
+    GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/Delete/',
 
 
@@ -93,9 +98,9 @@ export const environment = {
     DeleteHiringEndpoint: 'HiringData/Delete',
     GetDataMinutaHiringEndpoint: 'HiringData/GetByIdMinuta',
 
-    addComponent: 'Componente/Add/',
+    addComponent: 'Componente/SaveComponentContract',
     addActivity: 'Componente/AddActivity/',
-    getComponent: 'Componente/GetComponent/',
+    getComponent: 'Componente/GetComponentsByContract/',
 
     getComponentById: 'Componente/GetByIdComponent',
     getElements: 'ElementosComponente/GetElementsByComponent/',
@@ -109,7 +114,7 @@ export const environment = {
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
     GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
-    GetPdMinteExtension: 'PdfData/ChargeAccountGetById',
+    GetPdMinteExtension: 'PdfData/GetDataminuteExtension',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
     GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',
@@ -117,6 +122,7 @@ export const environment = {
     addFileFirmEndpoint: 'UserFirm/SaveUserDocument',
     GetRollsEndpoint: 'UserFirm/GetAllRolls',
     GetTypeUserFileEndpoint: 'UserFirm/GetAllTypeUserFile',
+
 
     GetCpcTypeEndpoint: 'MasterData/GetAllCpcType',
     GetFileTypeEndpoint: 'MasterData/GetFileType',
@@ -127,6 +133,9 @@ export const environment = {
     GetMinuteTypeContractEndpoint: 'MasterData/GetMinutes',
     GetBanksContractEndpoint: 'MasterData/GetBanks',
     GetGetAllRubrosContractEndpoint: 'MasterData/GetAllRubros',
+    GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
+    GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
+    GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 
 };

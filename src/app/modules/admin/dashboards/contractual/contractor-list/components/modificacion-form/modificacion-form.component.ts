@@ -28,8 +28,8 @@ import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
-import { UploadFileDataService } from '../../../upload-file/service/upload-file.service';
-import { MinuteTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
+import { UploadFileDataService } from '../../../service/upload-file.service';
 
 
 @Component({
@@ -241,37 +241,37 @@ export class ModificacionFormComponent implements OnInit {
         let codeMinute = this.tipoModificacion.find(f =>f.id == event.value).code;
         
         switch (codeMinute) {
-            case MinuteTypeCodes.MC:
+            case DocumentTypeFileCodes.MC:
                 this.showDate = false;
                 this.showPayment = false;
                 this.showModify = true;
                 break;
-            case MinuteTypeCodes.AC:
+            case DocumentTypeFileCodes.APC:
                 this.showDate = true;
                 this.showPayment = false;
                 this.showModify = false;
                 break;
-            case MinuteTypeCodes.ADC:
+            case DocumentTypeFileCodes.ADC:
                 this.showDate = false;
                 this.showPayment = true;
                 this.showModify = false;
                 break;
-            case MinuteTypeCodes.AAM:
+            case DocumentTypeFileCodes.AAM:
                 this.showDate = true;
                 this.showPayment = true;
                 this.showModify = true;
                 break;
-            case MinuteTypeCodes.AM:
+            case DocumentTypeFileCodes.AM:
                 this.showDate = false;
                 this.showPayment = false;
                 this.showModify = true;
                 break;
-            case MinuteTypeCodes.AA:
+            case DocumentTypeFileCodes.AA:
                 this.showDate = true;
                 this.showPayment = true;
                 this.showModify = false;
                 break;
-            case MinuteTypeCodes.ADMC:
+            case DocumentTypeFileCodes.ADMC:
                 this.showDate = false;
                 this.showPayment = true;
                 this.showModify = true;

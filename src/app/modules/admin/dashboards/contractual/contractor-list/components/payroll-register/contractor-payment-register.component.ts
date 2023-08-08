@@ -39,6 +39,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
   registerDate = new Date();
   formContractorPayment: FormGroup;
   pagos: any = GlobalConst.nomina;
+  contractId: string;
   private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(private _nominaService: NominaService,
@@ -47,6 +48,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
     public matDialogRef: MatDialogRef<ContractorPaymentRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
+    this.contractId =this.datos.contractId
     if (this.datos.id != null  && this.datos.idContractors.length == 0) {
       this.shareData = true;
       this.getEconomicContractorPayment([this.datos.id]);
@@ -97,6 +99,12 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
 
     if (this.datos.idContractors.length > 0) {
       for (let index = 0; index < this.datos.idContractors.length; index++) {
+        if(this.formContractorPayment.value.from == null){
+          this.formContractorPayment.value.from = this.economicContractor[index].periodFrom
+        }
+        if(this.formContractorPayment.value.to == null){
+          this.formContractorPayment.value.to = this.economicContractor[index].periodTo
+        }
         let payment = this.economicContractor.findIndex(x => x.contractorId === this.datos.idContractors[index]);
         if (payment != null && payment > 0) {
           this.paymentDataList.push({
@@ -108,11 +116,18 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
             cashPayment: this.formContractorPayment.value.cashPayment,
             fromDate: this.formContractorPayment.value.from,
             toDate: this.formContractorPayment.value.to,
-            descriptionPayment: this.formContractorPayment.value.description
+            descriptionPayment: this.formContractorPayment.value.description,
+            registerDate: new Date()
           });
         }
       }
     } else {
+      if(this.formContractorPayment.value.from == null){
+        this.formContractorPayment.value.from = this.economicContractor[0].periodFrom
+      }
+      if(this.formContractorPayment.value.to == null){
+        this.formContractorPayment.value.to = this.economicContractor[0].periodTo
+      }
       this.paymentDataList = [{
         userId: this._auth.accessId,
         contractorId: this.datos.id,
@@ -122,14 +137,16 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
         cashPayment: this.formContractorPayment.value.cashPayment,
         fromDate: this.formContractorPayment.value.from,
         toDate: this.formContractorPayment.value.to,
-        descriptionPayment: this.formContractorPayment.value.description
+        descriptionPayment: this.formContractorPayment.value.description,
+        registerDate: new Date()
       }]
     }
+    debugger  
     this._nominaService
       .addContractorPayments(this.paymentDataList)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
-        if (res) {
+        if (res.success) {
           this.updateEconomicContractorPayment();
         }
 
@@ -163,15 +180,27 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
     });
   }
 
-  getEconomicContractorPayment(ids: any[]) {
-    this._nominaService.getByIdEconomicDataContractor(ids)
+  getEconomicContractorPayment(ids: string[]) {
+    let  economicData = {
+      contractors: ids,
+      contractId: this.contractId
+    }
+    debugger
+    this._nominaService.getByIdEconomicDataContractor(economicData)
     .pipe(takeUntil(this._unsubscribe$))
     .subscribe((Response) => {
       if (Response === null || Response.length === 0) {
         Swal.fire('ups', 'No se puede ingresar a esta vista debido a que los valores estan en cero', 'warning');
         this.matDialogRef.close();
       } else {
-        return this.economicContractor = Response;
+        debugger
+        this.economicContractor = Response;
+        if(this.economicContractor[0].periodFrom == null){
+          this.economicContractor[0].periodFrom = new Date();
+        } 
+        let oneMonthLater = new Date(this.economicContractor[0].periodFrom);
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+        this.economicContractor[0].periodTo = oneMonthLater;
       }
     });
   }
@@ -215,8 +244,8 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
     }
     this._nominaService.UpdateEconomicContractorPayment(this.economicDataList)
     .pipe(takeUntil(this._unsubscribe$))
-    .subscribe((Response: any) => {
-      if (Response) {
+    .subscribe((response: any) => {
+      if (response.success) {
         Swal.fire({
           position: 'center',
           icon: 'success',

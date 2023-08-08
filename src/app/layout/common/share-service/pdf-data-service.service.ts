@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ContractContractors } from "app/modules/admin/dashboards/contractual/models/contractor";
-import { PreviusStudy } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
+import { MinuteExtension, PreviusStudy } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
 import { environment } from "environments/environment";
-import { Observable } from "rxjs";
+import { Observable, catchError } from "rxjs";
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,9 @@ export class PdfDataService {
     getDataMinuteExtension(contractors: ContractContractors) {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPdMinteExtension;
-        return this._httpClient.post<any>(urlEndpointGenerate, contractors);
+        return this._httpClient.post<any>(urlEndpointGenerate, contractors).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
     }
 
     getDataMinuteMacroContract(contractId: any) {
@@ -39,5 +42,18 @@ export class PdfDataService {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPreviusStudyContractIdEndpoint;
         return this._httpClient.post<PreviusStudy[]>(urlEndpointGenerate, contractors);
+    }
+
+    // Método para manejar errores (opcional)
+    private handleError(error: any): Observable<any> {
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: error.error.message,
+            showConfirmButton: false,
+            timer: 2000
+        });
+        return new Observable<any>();
     }
 }

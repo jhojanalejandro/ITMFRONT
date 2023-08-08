@@ -165,12 +165,17 @@ export class GlobalConst {
         { viewValue: 'REMITIDO', value: 3 },
         { viewValue: 'INVITADO', value: 2 },
         { viewValue: 'CONTRATANDO', value: 2 },
+        { viewValue: 'PENDIENTE', value: 4 },
+        { viewValue: 'GENERADO', value: 4 },
 
     ]
     public static TypeStatusContractor: TypeSelect[] = [
         { viewValue: 'JURIDICO', value: 3  },
         { viewValue: 'REGISTRO', value: 2  },
         { viewValue: 'CONTRACTUAL', value: 1  },
+        { viewValue: 'MINUTA', value: 4  },
+        { viewValue: 'COMITE', value: 4  },
+
     ]
 }
 

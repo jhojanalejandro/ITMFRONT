@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { DataFile, ItemsContract } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { DataFile, ItemsContract, ItemsContractor } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -130,7 +130,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
         // Get the items
         this._fileManagerService.foldersContractor$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items: ItemsContract) => {
+            .subscribe((items: ItemsContractor) => {
                 this.items = items;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

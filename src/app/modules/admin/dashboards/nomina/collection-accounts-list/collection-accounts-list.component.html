@@ -20,33 +20,11 @@
                     <div>
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Archivos Nomina
                         </div>
-                        <div class="flex items-center mt-0.5 font-medium text-secondary">
-                            <!-- Breadcrumbs -->
-                            <ng-container *ngIf="items">
-                                <div class="flex items-center space-x-2">
-                                    <a class="text-primary cursor-pointer" [routerLink]="['/apps/file-manager']">Inicio
-                                    </a>
-                                    <ng-container *ngFor="let path of items.files; let last = last; trackBy: trackByFn">
-                                        <ng-container *ngIf="!last">
-                                            <a class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]">{{path.filesName}}</a>
-                                        </ng-container>
-                                        <ng-container *ngIf="last">
-                                            <div>{{path.filesName}}</div>
-                                        </ng-container>
-                                        <ng-container *ngIf="!last">
-                                            <div class="">/</div>
-                                        </ng-container>
-                                    </ng-container>
-                                </div>
-                            </ng-container>
-                        </div>
                         <div class="flex-auto">
                             <mat-form-field
-                                class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
+                                class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-150">
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                                <input matInput [formControl]="searchInputControl"
-                                    [autocomplete]="'off'" [placeholder]="'Buscar contratacion'">
+                                <input matInput [formControl]="searchInputControl" [placeholder]="'Buscar documento'">
                             </mat-form-field>
 
                         </div>
@@ -55,7 +33,7 @@
                     <div class="mt-4 sm:mt-0">
                         <mat-form-field class="hiringFile" appearance="fill">
                             <mat-label >CONTRATOS</mat-label>
-                            <mat-select required id="IdProject" (selectionChange)="tipoSeleeccionado($event,'contract')" formControlName="IdProject"  name="IdProject">
+                            <mat-select required id="IdProject" (selectionChange)="tipoSeleeccionado($event,'contract')" name="IdProject">
                                 <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
                                     {{contarto.projectName}}
                                 </mat-option>
@@ -84,13 +62,6 @@
                                             panelClass="example-month-picker">
                             </mat-datepicker>
                           </mat-form-field>
-                        <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                        </button>
-                        <mat-menu #summaryMenu="matMenu">
-                            <button mat-menu-item>Subir Archivo</button>
-                            <button mat-menu-item>Otra</button>
-                        </mat-menu>
                     </div>
                 </div>
 

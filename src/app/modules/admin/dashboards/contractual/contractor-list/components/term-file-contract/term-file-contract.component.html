@@ -19,16 +19,9 @@
                     </mat-form-field>
                 </div>
                 <div class="folderAsigment">
-                    <mat-form-field (click)="pickerFrom.open()" class="hiringTerm" appearance="fill">
-                        <mat-label>Fecha Inicio Entrega Documentos</mat-label>
-                        <input matInput id="fechaComite" autocomplete="off" formControlName="dateFrom"
-                            [matDatepicker]="pickerFrom">
-                        <mat-datepicker #pickerFrom></mat-datepicker>
-                        <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-                    </mat-form-field>
                     <mat-form-field (click)="pickerTo.open()" class="hiringTerm" appearance="fill">
                         <mat-label>Fecha Cierre Entrega Documentos</mat-label>
-                        <input matInput id="dateTo" autocomplete="off" formControlName="dateTo"
+                        <input matInput id="dateTo" [min]="registerDate" autocomplete="off" formControlName="dateTo"
                             [matDatepicker]="pickerTo">
                         <mat-datepicker #pickerTo></mat-datepicker>
                         <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>

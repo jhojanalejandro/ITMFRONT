@@ -26,8 +26,15 @@ export class TermFileContractComponent implements OnInit {
   formTerm: FormGroup;
   termType: string;
   termTypeId: string;
+  registerDate: Date = new Date();
   private readonly _unsubscribe$ = new Subject<void>();
-
+  termFileDocument: TermContract = {
+    termDate: null,
+    termType: '',
+    contractId: '',
+    contractorId: '',
+    startDate: null,
+  }
   constructor(private _contractorService: ContractorService,
     public matDialogRef: MatDialogRef<TermFileContractComponent>,
     _authService: AuthService,
@@ -38,7 +45,6 @@ export class TermFileContractComponent implements OnInit {
   ngOnInit(): void {
     this.getTypeAssigment();
     this.formTerm = this._formBuilder.group({
-      dateFrom: new FormControl(null, Validators.required),
       dateTo: new FormControl(null, Validators.required),
       termType: new FormControl({ value: this.termType, disabled: true }, Validators.required),
     });
@@ -46,14 +52,19 @@ export class TermFileContractComponent implements OnInit {
   }
 
   async addTermFileContract() {
-    let termFileDocument: TermContract = {
-      detailContract: this.data.contractId,
-      fechaInicio: this.formTerm.value.dateFrom,
-      fechaTermino: this.formTerm.value.termType,
-      termType: this.termTypeId
+    if(this.data.onlyContractor){
+      this.termFileDocument.termDate = this.formTerm.value.dateTo
+      this.termFileDocument.termType = this.termTypeId
+      this.termFileDocument.contractorId = this.data.contractorId
+      this.termFileDocument.contractId = this.data.contractId
+    }else{
+      this.termFileDocument.startDate = this.registerDate
+      this.termFileDocument.termDate = this.formTerm.value.dateTo
+      this.termFileDocument.termType = this.termTypeId
+      this.termFileDocument.contractId = this.data.contractId
     }
     this._contractorService
-      .saveTermFileContract(termFileDocument)
+      .saveTermFileContract(this.termFileDocument)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res) {
@@ -84,8 +95,8 @@ export class TermFileContractComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response: any) => {
         if (Response.length > 0) {
-          this.termType = Response.find(f => f.code === 'CINC').termDescription;
-          this.termTypeId = Response.find(f => f.code === 'CINC').id;
+          this.termType = Response.find(f => f.code === 'DCCT').termDescription;
+          this.termTypeId = Response.find(f => f.code === 'DCCT').id;
         } else {
           Swal.fire('', 'No es posible asignar fechas sin tipos !', 'warning');
           this.closePopup();

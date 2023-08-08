@@ -1,7 +1,10 @@
 export interface TermContract{
     id?: string;
-    fechaTermino: Date;
-    fechaInicio: Date; 
+    termDate: Date | null;
+    startDate?: Date | null; 
 	termType: string;  
-    detailContract: string;
+    detailContractor?: string;
+    contractorId: string;
+    contractId: string;
+
 }

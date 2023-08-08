@@ -3,11 +3,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { UploadFileComponent } from '../upload-file/upload-file.component';
 import { Router } from '@angular/router';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { MatPaginator } from '@angular/material/paginator';
@@ -16,6 +14,7 @@ import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import Swal from 'sweetalert2';
 import { ContractList } from 'app/modules/admin/pages/planing/models/planing-model';
 import { ModuloEnum } from 'app/layout/common/enums/modulo-enum/modulo';
+import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 
 @Component({
   selector: 'app-contracts-list-contarctual',
@@ -67,7 +66,7 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
     if(!this.permission){
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     }else{
-      const dialogUpload = this._matDialog.open(UploadFileComponent, {
+      const dialogUpload = this._matDialog.open(UploadFileContractComponent, {
         disableClose: true,
         autoFocus: false,
         data: {

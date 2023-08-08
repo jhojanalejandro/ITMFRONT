@@ -12,6 +12,8 @@ export enum DocumentTypeCodes{
     HOJADEVIDA = 'HV',
     EXAMENESPREOCUPACIONALES = 'EXPNL',
     MINUTA = 'MNT',
+    ESTUDIOSPREVIOS = 'ETPR',
+    SOLICITUDCOMITE = 'SLCMT'
 }
 
 export enum TypeFileUserCode{
@@ -26,18 +28,10 @@ export enum DocumentTypeFileCodes{
     AM = 'AM',
     AA = 'AA',
     MC = 'MC',
-    AC = 'AC'
-}
-
-export enum MinuteTypeCodes{
-    ADC = 'ADC',
-    MC = 'MC',
-    AC = 'AC',
-    AA = 'AA',
-    AAM = 'AAM',
-    AM = 'AM',
+    APC = 'APC',
     ADMC = 'ADMC',
 }
+
 export enum DetailTypeCodes{
     MFC = 'MFC',
     MC = 'CTIL',

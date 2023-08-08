@@ -6,9 +6,9 @@ import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FileListManagerService } from '../../services/list-file.service';
+import { UploadFileContractComponent } from '../upload-file-contract/upload-file-contract.component';
 
 
 @Component({
@@ -92,7 +92,7 @@ export class FileListContractComponent implements OnInit, OnDestroy {
     }
 
     uploadFile() {
-        const dialogRef = this._matDialog.open(UploadFileComponent, {
+        const dialogRef = this._matDialog.open(UploadFileContractComponent, {
             disableClose: true,
             autoFocus: false,
             data: {

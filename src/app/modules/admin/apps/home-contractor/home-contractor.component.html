@@ -33,8 +33,8 @@
                             <mat-label>Contractos</mat-label>
                             <mat-select [(ngModel)]="contractSelected" name="contract"
                                 (selectionChange)="changeToViewFilesContract()">
-                                <mat-option *ngFor="let contract of contractIdList" [value]="contract.id">
-                                    {{contract.companyName}}
+                                <mat-option *ngFor="let contract of contractList" [value]="contract.id">
+                                    {{contract.projectName}}
                                 </mat-option>
                             </mat-select>
                             <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">

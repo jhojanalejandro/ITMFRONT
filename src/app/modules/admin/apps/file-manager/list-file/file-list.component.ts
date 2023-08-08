@@ -12,9 +12,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ObservationFileComponent } from './observation-File/observation-file.component';
 import { DetailFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detail-file-enum';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 import { AuthService } from 'app/core/auth/auth.service';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 
 @Component({
@@ -44,6 +45,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     contractorId: string;
     contractId: string;
     folderId: string;
+    disableButnObservation: boolean = true;
+    filesObservation : FileContractor[] = [];  
     detailFile: DetailFile = {
         fileId: null,
         registerDate: new Date(),
@@ -52,6 +55,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         statusFileId: null,
         passed: false,
         userId: null,
+        contractId: '',
     }
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -151,62 +155,78 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
 
+    addObservationFile(){
+        let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
+        const dialogRef = this._matDialog.open(ObservationFileComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                files: this.filesObservation,
+                statusFile: code.id,
+                contractId:this.contractId,
+                contractorId: this.contractorId
+            }
+        });
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+    }
     updateFile(event: any, file: FileContractor) {
         let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
-            const dialogRef = this._matDialog.open(ObservationFileComponent, {
-                disableClose: true,
-                autoFocus: false,
-                data: file
-            });
-            dialogRef.afterClosed()
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((result) => {
-                    if (result) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información actualizada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                });
-        } else {
-            this.detailFile.fileId = file.id;
-            this.detailFile.registerDate = new Date();
-            this.detailFile.passed = true;
-            this.detailFile.statusFileId = event.value;
-            this.detailFile.userId = this._auth.accessId;
+            this.disableButnObservation = false;
+            this.filesObservation = this.filesObservation.filter(objeto => objeto.id !== file.id);
 
-            this._uploadService.updateStatusFileContractor(this.detailFile)
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((res) => {
-                    if (res) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información actualizada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                },
-                    (response) => {
-                        console.log(response);
-                        Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-                    });
+           this.filesObservation.push(file)
+        } else {
+            this.filesObservation = this.filesObservation.filter(objeto => objeto.id !== file.id);
+            if(this.filesObservation.length > 0){
+                this.disableButnObservation = true;
+            }
         }
+        this.detailFile.fileId = file.id;
+        this.detailFile.registerDate = new Date();
+        this.detailFile.passed = true;
+        this.detailFile.statusFileId = event.value;
+        this.detailFile.userId = this._auth.accessId;
+        this.detailFile.contractId = this.contractId;
+        this.detailFile.contractorId = this.contractorId;
+
+        this._uploadService.updateStatusFileContractor(this.detailFile)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+                (response) => {
+                    console.log(response);
+                    Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+                });
 
     }
 
     isAllSelected() {
         const numSelected = this.selection.selected.length;
         const numRows = this.selection.selected.length;
-        console.log(this.selection.selected);
-
         //esta validacion nos permite mostrar y ocltar los detalles de una operacion
         return numSelected === numRows;
 
@@ -232,8 +252,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     selectRow($event: any, dataSource: any) {
         if ($event.checked) {
             this.value = dataSource;
-            console.log(this.value);
-
         }
     }
     getData() {
@@ -252,6 +270,13 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._fileManagerService.getFileByContractor(this.contractId, this.contractorId, this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
+                item.forEach(element => {
+                    if(element.documentTypeCode == DocumentTypeCodes.HOJADEVIDA || element.documentTypeCode == DocumentTypeCodes.REGISTROSECOP || element.documentTypeCode == DocumentTypeCodes.EXAMENESPREOCUPACIONALES){
+                        element.disable = false;
+                    }else{
+                        element.disable = true;
+                    }
+                });
                 this.items = item;
                 this._changeDetectorRef.markForCheck();
             });
@@ -276,6 +301,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
 
+    
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

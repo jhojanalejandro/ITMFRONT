@@ -63,29 +63,31 @@ export const environment = {
     AssignmentUserContractEndpoint: 'ContractFolder/AssignmentUserContract',
     SaveTermFileContractEndpoint: 'ContractFolder/SaveTermFileContract',
 
-    addContractorPaymentsEndpoint: 'ContractorPayments/Add',
+    addContractorPaymentsEndpoint: 'ContractorPayments/SaveContractorPayment',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
-    DeleteContractorPaymentsEndpoint: 'ContractorPayments/Delete',
+    DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
-    UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/Update',
+    UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
-    GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetById',
+    GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetEconiomicDataById',
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
 
     addFileEndpoint: 'Files/AddFileContractor',
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
+    CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
+
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
     updateStatusFileEndpoint: 'Files/AddFileContractor',
-    GetByIdFileEndpoint: 'Files/GetById/',
+    GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/Delete/',
 
 
@@ -104,7 +106,7 @@ export const environment = {
     getElements: 'ElementosComponente/GetElementsByComponent/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
-    deleteComponent: 'Componente/Delete/',
+    deleteComponent: 'Componente/DeleteComponentContract/',
     addElementosComponent: 'ElementosComponente/SaveElement',
     getElementoById: 'ElementosComponente/GetById/',
     getActivityByIdComponent: 'Componente/GetActivityByComponent/',
@@ -112,7 +114,7 @@ export const environment = {
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
     GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
-    GetPdMinteExtension: 'PdfData/ChargeAccountGetById',
+    GetPdMinteExtension: 'PdfData/GetDataminuteExtension',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
     GetCommitteeRequestdEndpoint: 'PdfData/GetCommitteeRequest',

@@ -58,7 +58,7 @@
                     stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                 </svg>
-               Nuevo Componente
+                Nuevo Componente
             </button>
         </div>
     </div>
@@ -70,7 +70,8 @@
                 <!-- Budget distribution -->
                 <div
                     class="sm:col-span-3 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Lista de componentes, Actividades y sus
+                    <div class="text-lg font-medium tracking-tight leading-6 truncate">Lista de componentes, Actividades
+                        y sus
                         elementos</div>
                     <div id="contenedor">
                         <igx-tree class="tree-root">
@@ -103,13 +104,13 @@
                                             </mat-icon>
                                         </button>
                                         <mat-menu #listCard07Menu="matMenu">
-                                            <button mat-menu-item (click)="addElements('component')">
-                                                <mat-icon svgIcon="add_circle"></mat-icon>
-                                                Agregar Elemento
-                                            </button>
                                             <button mat-menu-item (click)="addActividad()">
                                                 <mat-icon svgIcon="add_circle"></mat-icon>
                                                 Agregar Actividad
+                                            </button>
+                                            <button mat-menu-item (click)="addElements('component')">
+                                                <mat-icon svgIcon="add_circle"></mat-icon>
+                                                Agregar Elemento
                                             </button>
                                             <button (click)="editComponent(dataComponente)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar Componente
@@ -163,15 +164,15 @@
                         <div *ngIf="abrirDivElemento" style="width: 50%;">
                             <fuse-card class="flex flex-col w-full p-8 pt-6 filter-list border">
                                 <div class="flex items-center justify-between">
-                                    <div class="text-2xl font-semibold leading-tight">Nombre CPC:
-                                        {{dataElemento.nombreCpc}}</div>
+                                    <div class="text-2xl font-semibold leading-tight">Nombre Elemento:
+                                        {{dataElemento.nombreElemento}}</div>
                                     <div class="-mr-4">
                                         <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
                                             </mat-icon>
                                         </button>
                                         <mat-menu #listCard07Menu="matMenu">
-                                            <button (click)="editElemento(dataElemento  )" mat-menu-item>
+                                            <button (click)="editElemento(dataElemento)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar
                                             </button>
                                         </mat-menu>
@@ -182,10 +183,10 @@
                                         <div>consecutivo: {{dataElemento.consecutivo}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>CPC: {{dataElemento.cpc}}</div>
+                                        <div>CPC: {{dataElemento.cpcNumber}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>Cantidad de Contratistas: {{dataElemento.cantidadContratistas}}</div>
+                                        <div>cantidad a Contratar: {{dataElemento.cantidadContratistas}}</div>
                                     </div>
                                     <div class="my-2">
                                         <div>Cantidad de Días: {{dataElemento.cantidadDias}}</div>
@@ -194,13 +195,16 @@
                                         <div>Valor Unidad: {{dataElemento.valorUnidad | currency:'COP '}} </div>
                                     </div>
                                     <div class="my-2">
-                                        <div>Valor por Día: {{dataElemento.valorPorDia | currency:'COP '}}</div>
+                                        <div>Valor por Día Contratistas: {{dataElemento.valorPorDia | currency:'COP '}}</div>
                                     </div>
                                     <div class="my-2">
                                         <div>Valor Total: {{dataElemento.valorTotal | currency:'COP '}}</div>
                                     </div>
                                     <div class="my-2">
                                         <div>Recursos: {{dataElemento.recursos | currency:'COP '}}</div>
+                                    </div>
+                                    <div class="my-2">
+                                        <div>cantidad habilitada: {{dataElemento.cantidadEnable}}</div>
                                     </div>
                                 </div>
                             </fuse-card>
@@ -291,14 +295,14 @@
                                     Cantidad Contratistas: {{contractorCant}}
                                 </div>
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                   <span>Cantidad Componentes: </span> {{componentCant}}
+                                    <span>Cantidad Componentes: </span> {{componentCant}}
                                 </div>
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
                                     <span>Cantidad Actividades: </span> {{activitiesCant}}
-                                 </div>
-                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                </div>
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
                                     <span>Cantidad elementos: </span> {{elementosCant}}
-                                 </div>
+                                </div>
                                 <div class="flex items-center">
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
@@ -310,9 +314,10 @@
                         </div>
                     </div>
                     <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-                        <button class="ml-3" mat-flat-button [color]="'primary'" (click)="guardarCalculo()">
+                        <button [disabled]="!permission" class="ml-3" mat-flat-button [color]="'primary'"
+                            (click)="guardarCalculo()">
                             <mat-icon svgIcon="mat_outline:save"></mat-icon>
-                           Guardar Calculos
+                            Guardar
                         </button>
                     </div>
                 </div>

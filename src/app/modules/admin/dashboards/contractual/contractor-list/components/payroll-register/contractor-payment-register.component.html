@@ -62,8 +62,8 @@
             </div>
             <div class="folder">
                 <mat-form-field (click)="pickerFrom.open()" class="hiring" appearance="fill">
-                    <mat-label>Fecha Desde</mat-label>
-                    <input matInput id="from" autocomplete="off" formControlName="from" [matDatepicker]="pickerFrom">
+                    <mat-label>Periodo a pagar Desde</mat-label>
+                    <input matInput id="from" autocomplete="off" [value]="economicContractor[0].periodFrom" formControlName="from" [matDatepicker]="pickerFrom">
                     <mat-datepicker #pickerFrom></mat-datepicker>
                     <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
                     <mat-error *ngIf="formContractorPayment.get('from').hasError('required')">
@@ -71,8 +71,8 @@
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field (click)="pickerTo.open()" class="hiring" appearance="fill">
-                    <mat-label>Fecha Hasta</mat-label>
-                    <input matInput id="to" autocomplete="off" formControlName="to" [matDatepicker]="pickerTo">
+                    <mat-label>Periodo a pagar hasta</mat-label>
+                    <input matInput id="to" autocomplete="off" [value]="economicContractor[0].periodTo" formControlName="to" [matDatepicker]="pickerTo">
                     <mat-datepicker #pickerTo></mat-datepicker>
                     <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                     <mat-error *ngIf="formContractorPayment.get('to').hasError('required')">

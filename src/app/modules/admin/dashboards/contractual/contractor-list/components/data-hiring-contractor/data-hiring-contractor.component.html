@@ -50,7 +50,7 @@
                     <mat-form-field class="hiringField" appearance="fill">
                         <mat-label>Lista Elementos</mat-label>
                         <mat-select formControlName="elemento" (selectionChange)="asignElement($event)" name="elemento">
-                            <mat-option *ngFor="let element of elements" [value]="element.id">
+                            <mat-option *ngFor="let element of elements" [value]="element.id" [disabled]="element.cantidadEnable==0" >
                                 {{element.nombreElemento}}
                             </mat-option>
                         </mat-select>
@@ -66,8 +66,8 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field *ngIf="shareData" class="hiringField" appearance="fill">
-                        <mat-label>Numero Acta</mat-label>
+                    <mat-form-field  class="hiringField" appearance="fill">
+                        <mat-label>Numero de Acta</mat-label>
                         <input matInput id="numeroActa" [(ngModel)]="hiringData.numeroActa" formControlName="numeroActa"
                             autocomplete="off" matInput placeholder="numeroActa">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>

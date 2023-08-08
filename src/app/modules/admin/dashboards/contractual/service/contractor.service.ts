@@ -32,7 +32,6 @@ export class ContractorService {
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
-        debugger
         // Implementa el manejo de errores aquí, si es necesario
         // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
         Swal.fire({
@@ -41,7 +40,7 @@ export class ContractorService {
             title: '',
             html: error.error.message,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2500
           });
         return new Observable<any>();
     }
@@ -92,7 +91,7 @@ export class ContractorService {
         return this._httpClient.get<any>(urlEndPoint, { params: params });
     }
 
-    getContractorByContract(contractorId: string) {
+    getContractByContractor(contractorId: string) {
         let urlEndPoint = this.apiUrl + environment.GetContractsByContractors;
         return this._httpClient.get<any>(urlEndPoint + contractorId);
     }

@@ -24,16 +24,16 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { fuseAnimations } from '@fuse/animations';
-import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/upload-file/service/upload-file.service';
 import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
 import { Contractor } from 'app/modules/admin/dashboards/contractual/models/contractor';
+import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 
 const moment = _rollupMoment || _moment;
 
 @Component({
-    selector: 'app-upload-file',
-    templateUrl: './upload-file.component.html',
-    styleUrls: ['./upload-file.component.scss'],
+    selector: 'app-upload-file-contractor',
+    templateUrl: './upload-file-contractor.component.html',
+    styleUrls: ['./upload-file-contractor.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
@@ -93,9 +93,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         this.convertFile(this.file).subscribe((base64) => {
             this.base64Output = base64;
         });
-        // reader.onload = () => {
-        //     this.file = reader.result;
-        // };
     }
 
     cerrar(): void {
@@ -140,12 +137,13 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (res) => {
-                    if (res) {
+                    debugger
+                    if (res.success) {
                         swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: '',
-                            html: 'Información Registrada Exitosamente!',
+                            html: res.message,
                             showConfirmButton: false,
                             timer: 1500,
                         });
@@ -157,53 +155,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                 (response) => {
                     this.formFile.enable();
                     console.log(response);
-                    // Set the alert
-                    swal.fire(
-                        'Error',
-                        'Error al Registrar la informacion!',
-                        'error'
-                    );
-                    // Show the alert
-                    this.showAlert = true;
-                }
-            );
-    }
-
-    addFileContract(event) {
-        const registerProject: any = {
-            userId: this._auth.accessId,
-            contractId: this._data.contractId,
-            filesName: this.formFile.value.filesName,
-            fileType: this.formFile.value.typeFile,
-            descriptionFile: this.formFile.value.description,
-            registerDate: this.registerDate,
-            fildata: this.file,
-        };
-
-        this._uploadFileDataService
-            .UploadFileContractor(registerProject)
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(
-                (res) => {
-                    if (res) {
-                        swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información Registrada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                        //this.matDialogRef.close();
-                        this.ref.detectChanges();
-                        this.ref.markForCheck();
-                        this.matDialogRef.close();
-                    }
-                },
-                (response) => {
-                    this.formFile.enable();
-                    console.log(response);
-
                     // Set the alert
                     swal.fire(
                         'Error',
@@ -257,14 +208,10 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
-                
+
                 if (res != null) {
                     this.typeDocs = res;
-                    if (filter) {
-                        this.typeDocs = this.typeDocs.filter(f => f.code === DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code === DocumentTypeCodes.HOJADEVIDA || f.code === DocumentTypeCodes.REGISTROSECOP)
-                    } else {
-                        this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
-                    }
+
                     this.gevalidateDocument();
                 }
             }
@@ -288,12 +235,19 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     }
 
     private gevalidateDocument() {
-        debugger
         this._contractorListService
-            .getValidateDocumentUploadEndpoint(this._data.contractId,this._data.contractorId)
+            .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                if(!resp.hv && !resp.secop && !resp.exam) {
+                if (!resp.activateTermContract && !resp.activateTermPayments) {
+                    swal.fire(
+                        '',
+                        'ya ha terminado la fecha de entrega, comunicate con el personal encargado, para habilitar la  carga de documentos!',
+                        'warning'
+                    );
+                    this.cerrar();
+                }
+                if (resp.hv && resp.secop && resp.exam) {
                     swal.fire(
                         '',
                         'ya se cargaron los tres documentos no puedes cargar mas!',
@@ -301,20 +255,27 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     );
                     this.cerrar();
                 }
-                if(!resp.hv){
-                    this.typeDocs = this.typeDocs.filter(f =>  f.code != DocumentTypeCodes.HOJADEVIDA)
+                if (resp.activateTermContract) {
+                    this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code == DocumentTypeCodes.HOJADEVIDA || f.code == DocumentTypeCodes.REGISTROSECOP)
+                    if (resp.hv) {
+                        this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.HOJADEVIDA)
+                    } if (resp.exam) {
+                        this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES)
 
-                } if(!resp.exam){
-                    this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES)
-
-                } if(!resp.secop ){
-                    this.typeDocs = this.typeDocs.filter(f =>  f.code != DocumentTypeCodes.REGISTROSECOP)
-
+                    } if (resp.secop) {
+                        this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.REGISTROSECOP)
+                    }
                 }
+                 else if (resp.activateTermPayments) {
+                    this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
+                }
+
             }
             );
         return this.dataContractor;
     }
+
+    
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();
         this._unsubscribeAll.next(true);

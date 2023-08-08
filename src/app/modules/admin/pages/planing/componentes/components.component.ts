@@ -21,9 +21,9 @@ import { ActividadFormComponent } from './actividad-form/actividad-form.componen
 import { PlaningService } from '../service/planing.service';
 import { ButtonsExportService } from 'app/layout/common/buttons-export/buttons-export.service';
 import { Subject, takeUntil } from 'rxjs';
-import { UploadFileComponent } from 'app/modules/admin/dashboards/contractual/upload-file/upload-file.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { AuthService } from 'app/core/auth/auth.service';
+import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 
 @Component({
     selector: 'components-card',
@@ -364,37 +364,33 @@ export class AddComponentsComponent implements OnInit {
         });
     }
     guardarCalculo() {
-        if (!this.permission) {
-            this.messagePermission();
-        } else {
-            const saveCalculo: any = {
-                id: this.contractId,
-                contractorsCant: this.contractorCant,
-                valorContrato: this.total,
-                valorSubTotal: this.subTotal,
-                gastosOperativos: this.gastosOperativos,
-            };
+        const saveCalculo: any = {
+            id: this.contractId,
+            contractorsCant: this.contractorCant,
+            valorContrato: this.total,
+            valorSubTotal: this.subTotal,
+            gastosOperativos: this.gastosOperativos,
+        };
 
-            this._contrtactService.UpdateCostContractFolder(saveCalculo)
-                .pipe(takeUntil(this._unsubscribe$))
-                .subscribe((res) => {
-                    if (res) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información Registrada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
+        this._contrtactService.UpdateCostContractFolder(saveCalculo)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
 
-                }, (response) => {
-                    console.log(response);
+            }, (response) => {
+                console.log(response);
 
-                    Swal.fire('Error', 'Error al Registrar la informacion', 'error');
-                });
-        }
+                Swal.fire('Error', 'Error al Registrar la informacion', 'error');
+            });
 
     }
 
@@ -422,7 +418,7 @@ export class AddComponentsComponent implements OnInit {
             this._planingService.deleteComponent(componente.id)
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((response) => {
-                    if (response) {
+                    if (response.success) {
                         Swal.fire(
                             {
                                 position: 'center',
@@ -511,7 +507,7 @@ export class AddComponentsComponent implements OnInit {
         if (!this.permission) {
             this.messagePermission();
         } else {
-            const dialogUpload = this._matDialog.open(UploadFileComponent, {
+            const dialogUpload = this._matDialog.open(UploadFileContractComponent, {
                 disableClose: true,
                 autoFocus: false,
                 data: {

@@ -1,9 +1,10 @@
 export interface MinuteExtension{
     contractId: string;
+    contractorId: string;
 	contractorName: string;
     contractorIdentification: string;
 	contractorExpeditionPlace: string;
-    initialTotalValue: string;
+    totalValueContract: string;
     initialDateContract: Date;
     finalDateContract: Date;
     initialDateContractExtension: Date;
@@ -11,6 +12,10 @@ export interface MinuteExtension{
     object: string;
     supervisor: string;
     supervisorIdentification: string
+    consecutive: number;
+    contractNumber: string;
+    supervisorCharge: string;
+
 }
 
 export interface CommitteeRequest{

@@ -33,7 +33,7 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
-  contracts: ContractList[];
+  contracts: ContractList[] = [];
   typeContract: string;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
@@ -128,7 +128,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
   }
 
   UpdateDataContract(data: any) {
-    debugger
     const dialogRef = this._matDialog.open(RegisterContractFolderComponent, {
       disableClose: true,
       autoFocus: false,

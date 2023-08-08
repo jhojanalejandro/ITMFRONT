@@ -42,12 +42,12 @@
             <div class="text-secondary">Modificado el</div>
             <div>{{item.registerDate | date}}</div>
         </div>
-        <ng-container *ngIf="item.contents">
+        <!-- <ng-container >
             <div class="flex items-center justify-between py-3">
                 <div class="text-secondary">Contenido</div>
                 <div>{{item.contents}}</div>
             </div>
-        </ng-container>
+        </ng-container> -->
     </div>
 
     <!-- Description -->
@@ -77,8 +77,8 @@
 
     <div class="flex mt-2 border-t">
         <div class="py-3">
-            <ng-container *ngIf="item.detailFile">
-                <div>1: {{item.detailFile.observation}}</div>
+            <ng-container>
+                <div>1: {{item.observation}}</div>
             </ng-container>
         </div>
     </div>
@@ -87,8 +87,8 @@
     </div>
     <div class="flex mt-2 border-t">
         <div class="py-3">
-            <ng-container *ngIf="item.detailFile">
-                <div>{{item.detailFile.reason}}</div>
+            <ng-container>
+                <div>{{item.reason}}</div>
             </ng-container>
         </div>
     </div>
@@ -100,7 +100,7 @@
             [color]="'primary'">
             Descargar
         </button> -->
-        <button class="bg-green-500 flex-auto" [routerLink]="['/apps/archivo/', item.id]" mat-stroked-button>
+        <button class="bg-green-500 flex-auto" (click)="showFile()" mat-stroked-button>
             Ver documento
         </button>
         <button (click)="openConfirmationDelete()" class="flex-auto" mat-stroked-button>

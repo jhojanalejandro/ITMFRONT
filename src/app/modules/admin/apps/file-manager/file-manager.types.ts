@@ -1,5 +1,6 @@
 export interface ItemsContract
 {
+    contractName: string;
     folders: FolderContractor[];
     folderContract?: FolderContract[];
     path: any[];
@@ -7,6 +8,7 @@ export interface ItemsContract
 
 export interface ItemsContractor
 {
+    contractorName: string;
     folders: FolderContractor[];
     folderContract?: FolderContract[];
     path: any[];
@@ -31,6 +33,13 @@ export interface DataFile
     type?: string;
     fileType?: string | null;
     statusFile: string;
+    documentTypeCode: string;
+    documentTypes: string;
+    disable?: boolean;
+    folderName: string;
+    observation?: string;
+    reason?: string;
+    userContractual?: string;
 }
 
 export interface FolderContractor
@@ -43,6 +52,7 @@ export interface FolderContractor
     consutive: string;
     descriptionProject: string;
     contractorName: string;
+    contractorIdentification: string;
 }
 
 export interface FolderContract

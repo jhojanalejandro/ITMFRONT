@@ -19,14 +19,14 @@ export interface Contractor{
     id?: string;
 	nombre: string,
 	habilitado: string;
-	identificacion: string,
-	lugarExpedicion: string,
-	fechaNacimiento: Date,
-	direccion: string,
-	telefono: string,
-	celular: string,
-	correo: string,
-	userId?: string,
+	identificacion: string;
+	lugarExpedicion: string;
+	fechaNacimiento: Date;
+	direccion: string;
+	telefono: string;
+	celular: string;
+	correo: string;
+	userId?: string;
 	proccess: any;
 	elementId: string;
 	componentId: string;

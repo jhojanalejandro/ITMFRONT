@@ -96,7 +96,7 @@ export class RegisterContractFolderComponent implements OnInit {
       objectContract: new FormControl(this.dataProject.objectContract),
       fechaContrato: new FormControl(this.dataProject.fechaContrato, Validators.required),
       fechaFinalizacion: new FormControl(this.dataProject.fechaFinalizacion, Validators.required),
-      tipoModificacion: new FormControl(this.detailType.toLowerCase()),
+      tipoModificacion: new FormControl(null),
       noAdicion: new FormControl(null),
       fechaInicioAmpliacion: new FormControl(null),
       fechaDeTerminacionAmpliacion: new FormControl(null),
@@ -223,7 +223,6 @@ export class RegisterContractFolderComponent implements OnInit {
       this.formProject.value.updateData = true;
 
     }
-    debugger
     const detalle: DetailContractFolder = {
       fechaContrato: this.formProject.value.fechaContrato,
       fechaFinalizacion: this.formProject.value.fechaFinalizacion,
@@ -332,7 +331,6 @@ export class RegisterContractFolderComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(
         (resp) => {
-          debugger
           this.detailType = resp.find(f => f.code === DetailTypeCodes.MFC).id
           this.tipoContrato = resp;
         }

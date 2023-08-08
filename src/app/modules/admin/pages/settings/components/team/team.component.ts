@@ -32,7 +32,6 @@ export class SettingsTeamComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((teams: TeamModel[]) => {
                 // Mark for check
-                debugger
                 this.members = teams;
                 this._changeDetectorRef.markForCheck();
             });

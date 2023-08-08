@@ -121,6 +121,8 @@ export interface ElementComponent{
     obligacionesGenerales: string;
     objetoElemento: string;
     activityId?: string;
+    cantidadEnable?: string;
+    cpcId?: string;
 }
 
 export interface ListElements{
