@@ -43,6 +43,9 @@ export interface DetailFile{
     statusFileId: string;
     passed: any;
     userId: string;
+    contractorId?: string;
+    contractId: string;
+
 }
 
 

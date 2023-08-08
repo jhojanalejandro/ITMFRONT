@@ -40,7 +40,7 @@ export class MinutaContratoComponent implements OnInit {
   headerImageBase64: any;
   footerImageBase64: any;
   private readonly _unsubscribe$ = new Subject<void>();
-  documentSolicitudComiteList: any[] = [];
+  documentGenerated: any[] = [];
   currentDate: string;
   dataMinuta: any[] = [];
   constructor(private _economicService: ContractorService,
@@ -104,13 +104,14 @@ export class MinutaContratoComponent implements OnInit {
     });
   }
   public generateMinutePDF() {
+    debugger
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
 
       let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
       let fechaLetras = this._shareService.calcularDiferencia(data.fechaRealDeInicio, data.fechaFinalizacionConvenio);
       let valorLetras = this._shareService.numeroALetras(data.valorTotal, 'PESOS');
       let totalContrato = (+data.valorTotal.toFixed(0)).toLocaleString();
-      if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.contractorName == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null || data.valorTotal === null && data.minuteNumber == null || this.headerImageBase64 == null || this.footerImageBase64 == null) {
+      if (data.obligacionesEspecificas === null || data.obligacionesGenerales === null || data.correo === null || data.contractorName == null || data.supervisorItm == null || data.cargoSupervisorItm == null || data.identificacionSupervisor == null || data.valorTotal === null && data.contrato == null || this.headerImageBase64 == null || this.footerImageBase64 == null) {
         if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
           swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
         }
@@ -124,27 +125,27 @@ export class MinutaContratoComponent implements OnInit {
             title: '',
             html: 'No se encontro el valor del contrato para el contratista ' + data.contractorName,
             showConfirmButton: false,
-            timer: 1000
+            timer: 3000
           });
-        } else if (data.userJuridicFirm != null || data.userJuridicFirm == '') {
-          swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '',
-            html: 'No se encontro la firma del juridico para el contratista ' + data.contractorName,
-            showConfirmButton: false,
-            timer: 1000
-          });
-        } else if (data.minuteNumber == null || data.minuteNumber == '') {
+        }  else if (data.contrato == null || data.contrato == '') {
           swal.fire({
             position: 'center',
             icon: 'warning',
             title: '',
             html: 'No se encontro la numero de la minuta para el contratista ' + data.contractorName,
             showConfirmButton: false,
-            timer: 1500
+            timer: 3000
           });
 
+        }else if(data.cargoSupervisorItm == null || data.identificacionSupervisor == null){
+          swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: '',
+            html: 'No se encontro la información del supervisor ',
+            showConfirmButton: false,
+            timer: 3000
+          });
         }
       } else {
         data.obligacionesEspecificas = data.obligacionesEspecificas.replaceAll('->', ' ');
@@ -415,12 +416,14 @@ export class MinutaContratoComponent implements OnInit {
           contractorName: data.contractorName,
           contractorId: data.contractorId
         }
-        this.documentSolicitudComiteList.push(minute);
+        this.documentGenerated.push(minute);
       }
       this._changeDetectorRef.detectChanges();
       this._changeDetectorRef.markForCheck();
     }
-    this.savePdfGenerated(this.documentSolicitudComiteList, this.contractContractors.contractId, DocumentTypeFileCodes.APC);
+    if(this.documentGenerated.length > 0){
+      this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.MNT);
+    }
   }
 
 
@@ -575,12 +578,12 @@ export class MinutaContratoComponent implements OnInit {
                   fontSize: 10,
                 },
                 {
-                  text: 'y '+data.contractorName,
+                  text: 'y ' + data.contractorName,
                   fontSize: 10,
                   bold: true,
                 },
                 {
-                  text: ' identificado (a) con cédula de ciudadanía '+data.contractorIdentification+' en calidad de contratista, con el fin de hacer la siguiente modificación al contrato de prestación de servicio No. P- '+data.contractNumber+' de '+this.year.getFullYear()+', previa las siguientes:',
+                  text: ' identificado (a) con cédula de ciudadanía ' + data.contractorIdentification + ' en calidad de contratista, con el fin de hacer la siguiente modificación al contrato de prestación de servicio No. P- ' + data.contractNumber + ' de ' + this.year.getFullYear() + ', previa las siguientes:',
                   fontSize: 10,
                 },
               ],
@@ -623,18 +626,18 @@ export class MinutaContratoComponent implements OnInit {
               margin: [10, 10, 10, 10],
               text: [
                 {
-                  text: 'CLÁUSULA PRIMERA. Modificar la cláusula segunda del contrato, en el sentido de ampliar el plazo de ejecución contractual en '+ plazoAmpliacion,
+                  text: 'CLÁUSULA PRIMERA. Modificar la cláusula segunda del contrato, en el sentido de ampliar el plazo de ejecución contractual en ' + plazoAmpliacion,
                   style: 'textStyle'
                 },
                 {
-                  text: ', que se iniciarán a contar a partir del '+fechaInicioAmpliacionContrato+' y se extenderá hasta el  '+fechaFinalAmpliacionContrato+', según registro de ampliación No. 669/7543 , quedando así:',
+                  text: ', que se iniciarán a contar a partir del ' + fechaInicioAmpliacionContrato + ' y se extenderá hasta el  ' + fechaFinalAmpliacionContrato + ', según registro de ampliación No. 669/7543 , quedando así:',
                   style: 'textStyle'
                 },
               ],
             },
             {
               margin: [15, 15, 15, 15],
-              text: '““SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración '+plazoAmpliacion+' contados a partir de la suscripción del acta de inicio - la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. '+data.contractNumber+' Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
+              text: '““SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración ' + plazoAmpliacion + ' contados a partir de la suscripción del acta de inicio - la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
               style: 'textStyle'
             },
             {
@@ -684,7 +687,7 @@ export class MinutaContratoComponent implements OnInit {
           contractorName: data.contractorName,
           contractorId: data.contractorId
         }
-        this.documentSolicitudComiteList.push(minute);
+        this.documentGenerated.push(minute);
       } else {
         if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
           swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
@@ -719,7 +722,9 @@ export class MinutaContratoComponent implements OnInit {
 
         }
       }
-      this.savePdfGenerated(this.documentSolicitudComiteList, this.contractContractors.contractId, DocumentTypeCodes.MINUTA);
+      if(this.documentGenerated.length > 0){
+        this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.APC);
+      }
     }
 
 
@@ -736,6 +741,18 @@ export class MinutaContratoComponent implements OnInit {
           this.headerImageBase64 = base64Data;
         } else {
           this.footerImageBase64 = base64Data;
+          if (this.footerImageBase64 != undefined && this.footerImageBase64 != null && origin != null) {
+            switch (origin) {
+              case DocumentTypeFileCodes.MNT:
+                this.generateMinutePDF();
+                break;
+              case DocumentTypeFileCodes.APC:
+                this.generateMinuteExtension();
+                break;
+              default:
+                break;
+            }
+          }
         }
       })
       .catch(error => {
@@ -743,19 +760,6 @@ export class MinutaContratoComponent implements OnInit {
         swal.fire('', 'Error al cargar y convertir la imagen ' + error, 'error');
         this.hideComponent();
       });
-    if (this.footerImageBase64 != undefined && this.footerImageBase64 != null && origin != null) {
-      switch (origin) {
-        case DocumentTypeFileCodes.MNT:
-          this.generateMinutePDF();
-          break;
-        case DocumentTypeFileCodes.APC:
-          this.generateMinuteExtension();
-          break;
-        default:
-          break;
-      }
-    }
-
 
   }
 
@@ -772,10 +776,8 @@ export class MinutaContratoComponent implements OnInit {
 
   private async savePdfGenerated(pdfDocument: any, contractId: string, origin: string) {
     let registerFileLis: FileContractor[] = [];
-    debugger
     for (let index = 0; index < pdfDocument.length; index++) {
       let documentType = this.typeDocs.find(f => f.code === origin)
-      debugger
       let nombreDocumento = documentType.documentTypeDescription + pdfDocument[index].contractorName;
       let userId = this._auth.accessId;
       let date = this.currentDate;
@@ -784,7 +786,6 @@ export class MinutaContratoComponent implements OnInit {
         pdf.getDataUrl((dataURL) => resolve(dataURL));
       });
 
-      debugger
       const registerFile: FileContractor = {
         userId: userId,
         contractorId: pdfDocument[index].contractorId,
@@ -803,7 +804,6 @@ export class MinutaContratoComponent implements OnInit {
       registerFileLis.push(registerFile)
     }
 
-    debugger
     this._upload.UploadFileBillContractors(registerFileLis)
       .subscribe((res) => {
         if (res) {

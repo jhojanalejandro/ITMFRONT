@@ -100,8 +100,16 @@
                     </mat-form-field>
                     <div class="text-2xl text-warn-500 ">Para el envío de correos es necesario la clave de su Correo Corporativo</div>
                     <mat-form-field class="w-full">
-                        <mat-label>Contraseña Correo</mat-label>
-                        <input id="password" matInput type="passwordMail" [formControlName]="'passwordMail'">
+                        <mat-label>Contraseña</mat-label>
+                        <input id="password" matInput type="password" [formControlName]="'passwordMail'" #passwordMailField>
+                        <button mat-icon-button type="button"
+                            (click)="passwordMailField.type === 'password' ? passwordMailField.type = 'text' : passwordMailField.type = 'password'"
+                            matSuffix>
+                            <mat-icon class="icon-size-5" *ngIf="passwordMailField.type === 'password'"
+                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                            <mat-icon class="icon-size-5" *ngIf="passwordMailField.type === 'text'"
+                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                        </button>
                         <mat-error>
                             se requiere contraseña
                         </mat-error>

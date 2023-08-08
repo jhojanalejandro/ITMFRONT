@@ -20,7 +20,7 @@ export class ContractsPlaningResolver implements Resolve<any>
      * @param state
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any[]> {
-        return this._inventoryService.getProjectData();
+        return this._inventoryService.getContractActivateList();
     }
 }
 

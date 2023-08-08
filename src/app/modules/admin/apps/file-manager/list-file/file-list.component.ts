@@ -55,6 +55,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         statusFileId: null,
         passed: false,
         userId: null,
+        contractId: '',
     }
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -193,39 +194,39 @@ export class FileListComponent implements OnInit, OnDestroy {
             if(this.filesObservation.length > 0){
                 this.disableButnObservation = true;
             }
-            this.detailFile.fileId = file.id;
-            this.detailFile.registerDate = new Date();
-            this.detailFile.passed = true;
-            this.detailFile.statusFileId = event.value;
-            this.detailFile.userId = this._auth.accessId;
-
-            this._uploadService.updateStatusFileContractor(this.detailFile)
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((res) => {
-                    if (res) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: '',
-                            html: 'Información actualizada Exitosamente!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                },
-                    (response) => {
-                        console.log(response);
-                        Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-                    });
         }
+        this.detailFile.fileId = file.id;
+        this.detailFile.registerDate = new Date();
+        this.detailFile.passed = true;
+        this.detailFile.statusFileId = event.value;
+        this.detailFile.userId = this._auth.accessId;
+        this.detailFile.contractId = this.contractId;
+        this.detailFile.contractorId = this.contractorId;
+
+        this._uploadService.updateStatusFileContractor(this.detailFile)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+                (response) => {
+                    console.log(response);
+                    Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+                });
 
     }
 
     isAllSelected() {
         const numSelected = this.selection.selected.length;
         const numRows = this.selection.selected.length;
-        console.log(this.selection.selected);
-
         //esta validacion nos permite mostrar y ocltar los detalles de una operacion
         return numSelected === numRows;
 
@@ -251,8 +252,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     selectRow($event: any, dataSource: any) {
         if ($event.checked) {
             this.value = dataSource;
-            console.log(this.value);
-
         }
     }
     getData() {
@@ -302,6 +301,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
 
+    
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

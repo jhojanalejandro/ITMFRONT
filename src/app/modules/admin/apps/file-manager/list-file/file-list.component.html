@@ -90,7 +90,7 @@
                                         <div
                                             class="flex flex-col w-55 h-55 m-2 p-2 shadow rounded-2xl cursor-pointer bg-card">
                                             <section class="example-section">
-                                                <mat-radio-group [disabled]="file.disable">
+                                                <mat-radio-group [disabled]="file.disable || !permission">
                                                     <mat-radio-button *ngFor="let status of statusFile"
                                                         [disabled]="status.code == 'SBND'"
                                                         [matTooltip]="status.statusFileDescription" class="mr-4"

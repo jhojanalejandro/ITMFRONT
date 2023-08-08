@@ -28,18 +28,18 @@
                     </mat-form-field>
 
                     <mat-form-field class="contractField" appearance="fill">
-                        <mat-label>Nombre projecto</mat-label>
+                        <mat-label>Nombre proyecto</mat-label>
                         <input type="text" id="projectName" formControlName="projectName" autocomplete="off" matInput
-                            placeholder="Nombre projecto">
+                            placeholder="Nombre proyecto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                         <mat-error *ngIf="formProject.get('projectName').hasError('required')">
                             El Campo Proyecto es requerido
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
-                        <mat-label>Projecto</mat-label>
+                        <mat-label>proyecto</mat-label>
                         <input type="text" id="project" formControlName="project" autocomplete="off" matInput
-                            placeholder="Projecto">
+                            placeholder="proyecto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                     </mat-form-field>
                     <mat-form-field *ngIf="editData" class="contractField" appearance="fill">

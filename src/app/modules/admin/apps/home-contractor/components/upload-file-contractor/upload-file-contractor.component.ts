@@ -137,12 +137,13 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (res) => {
-                    if (res) {
+                    debugger
+                    if (res.success) {
                         swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: '',
-                            html: 'Información Registrada Exitosamente!',
+                            html: res.message,
                             showConfirmButton: false,
                             timer: 1500,
                         });
@@ -273,6 +274,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             );
         return this.dataContractor;
     }
+
+    
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();
         this._unsubscribeAll.next(true);

@@ -93,7 +93,6 @@ export const appRoutes: Route[] = [
             // Apps
             {path: 'apps', children: [
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
-                {path: 'archivo/:id', loadChildren: () => import('app/modules/admin/apps/file-manager/components/show-file/show-file.module').then(m => m.ShowFileModule)},
                 {path: 'maintainers-list', loadChildren: () => import('app/modules/admin/apps/maintainers-list/maintainers-lis.module').then(m => m.MaintainersListModule)}
             ]},
 

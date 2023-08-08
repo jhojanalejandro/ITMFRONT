@@ -58,8 +58,9 @@ export class NominaComponent implements OnInit, OnDestroy {
   showFiles(data: any) {
     return this._router.navigate(['/dashboards/nomina/documentos/'+data.id]);
   }
-  contractorList( data: any){
-    return  this._router.navigate(['/dashboards/lista-contratistas/nomina/' + data.id +'/' +data.contractname]);
+  contractorList(data: any){
+    debugger
+    return  this._router.navigate(['/dashboards/lista-contratistas/nomina/' + data.id +'/' +data.projectName]);
 
   }
   announceSortChange(sortState: Sort) {
@@ -101,7 +102,7 @@ export class NominaComponent implements OnInit, OnDestroy {
 
   getContractsData() {
     // Get the data
-    this._genericService.getAllContract(true, 'Nomina').pipe(takeUntil(this._unsubscribeAll))
+    this._genericService.getAllContract(true, 'NOMINA').pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);
         Response.forEach(element => {

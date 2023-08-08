@@ -46,7 +46,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     fileContractorListGeneral: any = [];
     chargeAccountData: any;
     executionReportData: ExecutionReport;
-    contractIdList: any[] = [];
+    contractList: any[] = [];
     minutesDocumentPdf: File;
     contractSelected: string = null;
     id: any;
@@ -150,9 +150,9 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
     private getContract() {
         this._contractorListService
-            .getContractorByContract(this._auth.accessId)
+            .getContractByContractor(this._auth.accessId)
             .subscribe((Response) => {
-                this.contractIdList = Response;
+                this.contractList = Response;
             });
     }
 
@@ -218,13 +218,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         this._router.navigate(['/sign-out']);
     }
 
-    descargarCuenta() {
-        this._contractorListService
-            .getContractorByContract(this._auth.accessId)
-            .subscribe((Response) => {
-                this.contractIdList = Response;
-            });
-    }
 
     descargarActa() {
         this._contractorService

@@ -18,7 +18,7 @@
                     <!-- Title -->
                     <div>
 
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">{{items.folders[0].contractorName}}</div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none" *ngIf="items.folders> 0 ">{{items.folders[0].contractorName}}</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <!-- Breadcrumbs -->
                             <ng-container *ngIf="items">

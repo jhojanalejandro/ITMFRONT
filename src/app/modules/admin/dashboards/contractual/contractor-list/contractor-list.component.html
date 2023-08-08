@@ -70,8 +70,8 @@
                     {{status.viewValue}}
                 </mat-option>
             </mat-select>
-            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:adjustments'">
-            </mat-icon>
+            <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:adjustments'">
+            </mat-icon> -->
 
         </mat-form-field>
     </div>
@@ -111,8 +111,8 @@
 
                     <div class="overflow-x-auto mx-6">
                         <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
-                            [trackBy]="trackByFn" cdkDropList cdkDropListOrientation="horizontal"
-                            (cdkDropListDropped)="drop($event)" matSort (matSortChange)="announceSortChange($event)">
+                            [trackBy]="trackByFn" 
+                             (matSortChange)="announceSortChange($event)">
                             <ng-container matColumnDef="select">
                                 <th mat-header-cell cdkDrag *matHeaderCellDef>
                                     <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -130,7 +130,7 @@
                             </ng-container>
                             <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
                                 <th mat-header-cell class="centre" cdkDrag mat-sort-header *matHeaderCellDef>
-                                    {{columna.title}} 
+                                    {{columna.title}}
                                 </th>
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
@@ -278,18 +278,18 @@
 
                             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
                             <tr mat-row *matRowDef="let row; columns: columnsToDisplay;">
-                                
+
                             </tr>
-                          
-                            <tr mat-row *ngIf="showDetail" [class.hidden]="contarctorSelected !== row">
+
+                            <!-- <tr mat-row *ngIf="showDetail" [class.hidden]="contarctorSelected !== row">
                                 <td colspan="5">
-                                  <!-- Contenido de los detalles -->
                                   <app-detail-contractor  (closeDetail)="closeDetail($event)"
                                   [contarctorSelected]="contarctorSelected"></app-detail-contractor>                                </td>
-                              </tr>
+                              </tr> -->
                         </table>
-                        <mat-paginator [pageSizeOptions]="[10, 30, 50, 100]"
-                            aria-label="Select page of contractorsList"></mat-paginator>
+                        <mat-paginator [length]="contractorsList.length" [pageSizeOptions]="[10, 30, 50, 100]"
+                            [pageSize]="2" aria-label="Select page">
+                        </mat-paginator>
                     </div>
                 </div>
             </div>

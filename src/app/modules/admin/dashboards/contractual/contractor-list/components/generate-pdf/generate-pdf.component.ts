@@ -56,7 +56,6 @@ export class GeneratePdfComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        debugger
         console.log('fecha',this.year.getFullYear());
         
         this.getDocumentType();
@@ -81,8 +80,9 @@ export class GeneratePdfComponent implements OnInit {
 
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let data = previusStudyData.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
+            debugger
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
-                && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.userJuridic != null && data.supervisorItmName != null && data.userFirm != null) {
+                && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.userJuridic != null && data.supervisorItmName != null && data.userFirm != null && data.supervisorFirm != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
                 let totalContrato = (+data.totalValue.toFixed(0)).toLocaleString();
@@ -1322,9 +1322,9 @@ export class GeneratePdfComponent implements OnInit {
                                             ],
                                         },
                                         {
-                                            image: 'data:image/png;base64,' + data.userFirm,
-                                            style: 'title',
+                                            image: 'data:image/jpg;base64,' + data.userFirm,
                                             fit: [70, 70],
+                                            style: 'fontPeque',
                                         },
                                     ],
                                 ],
@@ -1381,13 +1381,13 @@ export class GeneratePdfComponent implements OnInit {
                                     ],
                                     [
                                         {
-                                            image: 'data:image/jpg;base64,' + this.itmImageBase64,
+                                            image: 'data:image/jpg;base64,' + data.userFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
 
                                         },
                                         {
-                                            image: 'data:image/png;base64,' + data.userJuridicFirm,
+                                            image: 'data:image/jpg;base64,' + data.userJuridicFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
                                         },
@@ -1472,7 +1472,7 @@ export class GeneratePdfComponent implements OnInit {
                 };
 
                 let SolicitudComite = {
-                    documentPreviousStudy: documentPreviousStudy,
+                    document: documentPreviousStudy,
                     contractorName: data.contractorName,
                     contractorId: data.contractorId
                 }
@@ -1484,7 +1484,7 @@ export class GeneratePdfComponent implements OnInit {
                     return;
                 }
                 else if (data.generalObligations == null || data.generalObligations == '' || data.specificObligations == null || data.specificObligations == '') {
-                    swal.fire('', 'no se encontraron las obligaciones del contratista para el contratista ' + data.contractorName, 'warning');
+                    swal.fire('', 'no se encontraron las obligaciones del contratato para el contratista ' + data.contractorName, 'warning');
                 }
                 else if (data.totalValue == null || data.totalValue == '') {
                     swal.fire('', 'no se encontro el valor del contrato para el contratista ' + data.contractorName, 'warning');
@@ -1841,8 +1841,8 @@ export class GeneratePdfComponent implements OnInit {
     }
 
     private async savePdfGenerated(pdfDocument: any, contractId: string, origin: string) {
+       debugger
         let registerFileLis: FileContractor[] = [];
-        debugger
         for (let index = 0; index < pdfDocument.length; index++) {
             let documentType = this.typeDocs.find(f => f.code == origin)
             let nombreDocumento = documentType.documentTypeDescription + pdfDocument[index].contractorName;
@@ -1853,7 +1853,6 @@ export class GeneratePdfComponent implements OnInit {
                 pdf.getDataUrl((dataURL) => resolve(dataURL));
             });
 
-            debugger
             const registerFile: FileContractor = {
                 userId: userId,
                 contractorId: pdfDocument[index].contractorId,
@@ -1871,16 +1870,15 @@ export class GeneratePdfComponent implements OnInit {
             };
             registerFileLis.push(registerFile)
         }
-
-        debugger
         this._upload.UploadFileBillContractors(registerFileLis)
             .subscribe((res) => {
-                if (res) {
+                debugger
+                if (res.success) {
                     swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: '',
-                        html: 'Información Registrada Exitosamente!',
+                        html: res.message,
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -1901,6 +1899,7 @@ export class GeneratePdfComponent implements OnInit {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response: any) => {
+                debugger
                 this.typeDocs = response;
             });
 

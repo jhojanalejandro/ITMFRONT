@@ -9,5 +9,6 @@ export interface ContractorPayments{
     fromDate: Date;
     toDate: Date;
     descriptionPayment: string
+    registerDate: Date;
 
 }

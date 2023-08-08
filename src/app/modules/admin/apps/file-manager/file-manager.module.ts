@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +21,7 @@ import { ObservationFileComponent } from './list-file/observation-File/observati
 import { RegisterFolderComponent } from './components/register-folder/register-folder.component';
 import { FileListContractComponent } from './components/file-list-contract/file-list-contract.component';
 import { UploadFileContractComponent } from './components/upload-file-contract/upload-file-contract.component';
+import { ShowFileComponent } from './components/show-file/show-file.component';
 
 @NgModule({
     declarations: [
@@ -36,18 +37,21 @@ import { UploadFileContractComponent } from './components/upload-file-contract/u
         DetailFileContractComponent,
         ObservationFileComponent,
         FileListContractComponent,
-        UploadFileContractComponent
+        UploadFileContractComponent,
+        ShowFileComponent,
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(fileManagerRoutes),
         MatButtonModule,
         MatIconModule,
         MatSidenavModule,
         MatTooltipModule,
         SharedModule,
-        Ng2SearchPipeModule
-    ]
+        Ng2SearchPipeModule,
+        PdfViewerModule // Agrega el módulo PdfViewerModule aquí
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+
 })
-export class FileManagerModule
-{
+export class FileManagerModule {
 }

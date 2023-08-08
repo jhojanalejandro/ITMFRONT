@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -7,7 +7,6 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,6 +25,7 @@ import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
+import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
 
 @Component({
   selector: 'contractor-list',
@@ -48,7 +48,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild(MatTable) table!: MatTable<any>;
   elements: Elements[];
   componentes: Componente[];
-  listId: any[] = [];
+  contractorListId: any[] = [];
   contractorsList: Contractor[] = [];
   configForm: FormGroup;
   componentselectId: any;
@@ -62,10 +62,8 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   contractname: string;
   origin: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'detail', 'acciones'];
+  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
-  enterAnimationDuration: any = '2000ms';
-  exitAnimationDuration: string = '1500ms';
   visibleOption: boolean = false;
   datePipe: DatePipe;
   generateType: string;
@@ -105,7 +103,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     { title: 'CONTRACTUAL', name: 'hiringStatus' },
     { title: 'MINUTA', name: 'minuteGnenerated' },
     { title: 'COMITE', name: 'comiteGenerated' },
-    { title: 'ESTUDIOS PREVIOS', name: 'previusStudy' },
+    { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
     { title: 'DETALLE', name: 'detail' },
     { title: 'OPCIONES', name: 'acciones' }
   ]
@@ -167,11 +165,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
   }
 
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
-  }
-
-
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -207,8 +200,8 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   getDataContractor() {
     this._contractorListService.getContractorByIdProject(this.contractId).subscribe(contractorsListResponse => {
       if (contractorsListResponse.success) {
-        this.dataSource = new MatTableDataSource(contractorsListResponse.data);
         this.contractorsList = contractorsListResponse.data;
+        this.dataSource = new MatTableDataSource(this.contractorsList);
       } else {
         Swal.fire({
           position: 'center',
@@ -219,7 +212,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
           timer: 2000
         });
       }
-
+      this.cdref.detectChanges();
     });
 
   }
@@ -340,7 +333,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     if (data == null) {
       data = { id: null, contractId: null, componentId: null, elementId: null }
       this.selection.selected.forEach(element => {
-        this.listId.push(element.id);
+        this.contractorListId.push(element.id);
       });
     }
     const dialogRef = this._matDialog.open(ContractorDataHiringComponent, {
@@ -353,7 +346,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
         componentId: data.componentId,
         elementId: data.elementId,
         activityId: data.activityId,
-        idContractors: this.listId,
+        idContractors: this.contractorListId,
         statusContractor: data.statusContractor,
         assignmentUser: data.assignmentUser
       }
@@ -365,12 +358,13 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
           this.reloadResolve();
         }
         this.selection.clear();
-        this.listId = [];
+        this.contractorListId = [];
       });
 
   }
 
   generarMinuta(data: any = null) {
+    this.generateType = DocumentTypeFileCodes.MNT;
     if (data != null) {
       this.contractContractors.contractors = [data.id];
     } else {
@@ -445,9 +439,9 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   pdfGenerated(e: boolean) {
+    this.getDataContractor();
     this.generatePdf = e;
     this.generatePdfMinute = e;
-    this.getDataContractor();
 
   }
 
@@ -463,7 +457,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
       if (data == null) {
         data = { id: 0, contractId: null, componenteId: null, elementId: null }
         this.selection.selected.forEach(element => {
-          this.listId.push(element.id);
+          this.contractorListId.push(element.id);
         });
       }
       const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
@@ -474,7 +468,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
           idUser: this._authService.accessId,
           id: data.id,
           nombre: data.nombre,
-          idContractors: this.listId,
+          idContractors: this.contractorListId,
           contractId: this.contractId
         }
       });
@@ -482,7 +476,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
         if (result) {
           this.getDataContractor();
         }
-        this.listId = [];
+        this.contractorListId = [];
       });
     } else {
       Swal.fire('', 'Debes seleccionar registros!', 'warning');
@@ -555,7 +549,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   toggleDetails(product: any): void {
-    debugger
     // If the product is already selected...
     if (this.contractorSelected && this.contractorSelected.id === product.id) {
       // Close the details
@@ -572,7 +565,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   closeDetail(): void {
-    debugger
     this.contractorSelected = null;
     this.showDetail = false;
   }

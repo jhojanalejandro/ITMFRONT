@@ -53,17 +53,7 @@ export class PlaningService {
         return this._contractList.asObservable();
     }
 
-    /**
-     * Get products
-     *
-     *
-     * @param page
-     * @param size
-     * @param sort
-     * @param order
-     * @param search
-     */
-    getProjectData(): Observable<ContractList[]> {
+    getContractActivateList(): Observable<ContractList[]> {
         const params = new HttpParams()
             .set('inProgress', false)
             .set('tipoModulo', ModuloEnum.PLANEACION);
@@ -84,7 +74,9 @@ export class PlaningService {
     addEconomicChart(data: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addContractFolderEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError)
+        );
     }
 
     addComponent(data: any) {
@@ -110,14 +102,18 @@ export class PlaningService {
     getAllActivity(id: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.getActivityByIdComponent;
-        return this._httpClient.get<Activity[]>(urlEndpointGenerate + id);
+        return this._httpClient.get<Activity[]>(urlEndpointGenerate + id).pipe(
+            catchError(this.handleError)
+        );
     }
 
 
     addElementoComponente(data: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent;
-        return this._httpClient.post<any>(urlEndpointGenerate, data);
+        return this._httpClient.post<any>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError)
+        );
     }
 
     getElementoComponente(id: any) {
@@ -126,14 +122,16 @@ export class PlaningService {
         return this._httpClient.get<Elements[]>(urlEndpointGenerate + id);
     }
 
-    getComponentById(id: any, activityId: string, elementId: string) {
+    getComponentById(id: any, activityId?: string, elementId?: string) {
         const params = new HttpParams()
             .set('id', id)
             .set('activityId', activityId)
             .set('elementId', elementId);
         let urlEndpointGenerate =
             this.apiUrl + environment.getComponentById;
-        return this._httpClient.get<Componente>(urlEndpointGenerate, { params });
+        return this._httpClient.get<IResponse>(urlEndpointGenerate, { params }).pipe(
+            catchError(this.handleError)
+        );
     }
 
 
@@ -161,13 +159,15 @@ export class PlaningService {
     }
     deleteComponent(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
-        return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate + id).pipe(
+            catchError(this.handleError)
+        );
     }
 
     sendEconomicdataContractor(model: EconomicContractor[]) {
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, model).pipe(
-            catchError(this.handleError) // Manejo de errores, si es necesario
+            catchError(this.handleError)
         );
     }
 
@@ -183,13 +183,11 @@ export class PlaningService {
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
-        // Implementa el manejo de errores aquí, si es necesario
-        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
         Swal.fire({
             position: 'center',
             icon: 'error',
             title: '',
-            html: 'Error del sistema Intenta nuevamente!',
+            html: 'Error ' + error.error.message + ' Intenta nuevamente!',
             showConfirmButton: false,
             timer: 1500
         });

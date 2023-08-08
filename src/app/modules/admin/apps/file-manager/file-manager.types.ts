@@ -8,6 +8,7 @@ export interface ItemsContract
 
 export interface ItemsContractor
 {
+    contractorName: string;
     folders: FolderContractor[];
     folderContract?: FolderContract[];
     path: any[];
@@ -36,6 +37,9 @@ export interface DataFile
     documentTypes: string;
     disable?: boolean;
     folderName: string;
+    observation?: string;
+    reason?: string;
+    userContractual?: string;
 }
 
 export interface FolderContractor

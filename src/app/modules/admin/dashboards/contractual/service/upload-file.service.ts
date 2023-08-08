@@ -27,12 +27,21 @@ export class UploadFileDataService {
 
     UploadCdpFileExcel(formdata: any) {
         let urlEndpointGenerate = this.apiUrl + environment.addExcelCdpEndpoint;
-        return this._httpClient.post(urlEndpointGenerate, formdata, { responseType: 'text' });
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
+            catchError(this.handleError) 
+        );
     }
 
     UploadFileContractor(formdata: FileContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.addFileEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
+            catchError(this.handleError) 
+        );
+    }
+
+    UploadFileContractorTest(formdata: FileContractor): Promise<any> {
+        let urlEndpointGenerate = this.apiUrl + environment.addFileEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).toPromise();
     }
 
     UploadFileContract(formdata: Files) {

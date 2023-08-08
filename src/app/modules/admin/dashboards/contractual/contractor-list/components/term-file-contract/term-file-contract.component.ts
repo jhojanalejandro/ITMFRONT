@@ -63,7 +63,6 @@ export class TermFileContractComponent implements OnInit {
       this.termFileDocument.termType = this.termTypeId
       this.termFileDocument.contractId = this.data.contractId
     }
-    debugger
     this._contractorService
       .saveTermFileContract(this.termFileDocument)
       .pipe(takeUntil(this._unsubscribe$))

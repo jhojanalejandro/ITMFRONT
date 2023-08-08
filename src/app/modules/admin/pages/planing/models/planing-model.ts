@@ -122,6 +122,7 @@ export interface ElementComponent{
     objetoElemento: string;
     activityId?: string;
     cantidadEnable?: string;
+    cpcId?: string;
 }
 
 export interface ListElements{

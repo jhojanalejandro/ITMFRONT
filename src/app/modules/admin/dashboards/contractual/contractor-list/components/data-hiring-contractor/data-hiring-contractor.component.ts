@@ -91,16 +91,16 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     if (this.datos.id != null) {
       this.getHiring();
       this.shareData = true;
-      if(this.datos.componentId != null && this.datos.idContractors.length == 0){
-        this.getComponentById(this.datos.componentId,this.datos.activityId,this.datos.elementId);
+      if (this.datos.componentId != null && this.datos.idContractors.length == 0) {
+        this.getComponentById(this.datos.componentId, this.datos.activityId, this.datos.elementId);
       }
-      if(this.datos.elementId != null && this.datos.idContractors.length == 0){
+      if (this.datos.elementId != null && this.datos.idContractors.length == 0) {
         this.elementselectId = this.datos.elementId;
       }
 
-      if(this.datos.activityId != null && this.datos.idContractors.length == 0){
+      if (this.datos.activityId != null && this.datos.idContractors.length == 0) {
         this.activitySelectId = this.datos.activityId;
-        this.visibleActivity= true;
+        this.visibleActivity = true;
       }
       this.datos.idContractors.push(this.datos.id);
     } else if (this.datos.idContractors.length == 0) {
@@ -117,12 +117,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         'warning'
       );
     }
-    this.permission = this._auth.validateRoll(CodeUser.RECRUITER,this.datos.assignmentUser);
+    this.permission = this._auth.validateRoll(CodeUser.RECRUITER, this.datos.assignmentUser);
     // this.getAdmins();
-    if(!this.permission){
+    if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     }
-    
+
     if (this.datos.id != null) {
       this.getHiring();
     }
@@ -167,6 +167,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       this.formContractor.value.nivel = '0'
     }
     if (this.datos.idContractors.length > 0) {
+      debugger
       for (let index = 0; index < this.datos.idContractors.length; index++) {
         this.hiringDataList.push({
           userId: this._auth.accessId,
@@ -265,7 +266,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     if (this.formContractor.value.nivel == null) {
       this.formContractor.value.nivel = '0'
     }
-    
+
     const registerContractor: IHiringData[] = [{
       userId: this._auth.accessId,
       contractorId: this.datos.id,
@@ -333,19 +334,30 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getComponentById(id: any, activityId: string, elementId: string) {
+  private getComponentById(id: string, activityId: string, elementId: string) {
     this._planingService
-      .getComponentById(id,activityId,elementId)
+      .getComponentById(id, activityId, elementId)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response) => {
-        
-        this.componentes.push(response);
-        if(this.componentes[0].activities.length > 0 ){
-          this.activities = this.componentes[0].activities;
+        if (response.success) {
+          this.componentes.push(response.data.data);
+          if (this.componentes[0].activities  != null) {
+            this.activities = this.componentes[0].activities;
+          }
+          if (this.componentes[0].elementos != null) {
+            this.elements = this.componentes[0].elementos;
+          }
+        }else{
+          Swal.fire({
+            position: 'center',
+            icon: 'warning',
+            title: '',
+            html: response.message,
+            showConfirmButton: false,
+            timer: 2000
+          });
         }
-        if(this.componentes[0].elementos.length > 0 ){
-          this.elements = this.componentes[0].elementos;
-        }
+
       });
   }
 
@@ -412,7 +424,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     this._planingService.asignmentData(asignar)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe(resp => {
-        if(resp != null && resp == true){
+        if (resp != null && resp == true) {
           Swal.fire({
             position: 'center',
             icon: 'success',
@@ -430,7 +442,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
 
   sendEconomicdataContractor() {
     this.formContractor.disable();
-    if (this.elementselectId != null ) {
+    if (this.elementselectId != null) {
       let element: Elements = this.elements.find(item => item.id === this.elementselectId);
 
       for (let index = 0; index < this.datos.idContractors.length; index++) {
@@ -455,32 +467,32 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         .subscribe((response) => {
           Swal.fire('', 'informacíon economica asignada exitosamente!', 'success');
           if (response != null) {
-            if(this.update){
+            if (this.update) {
               this.updateContractor();
-            }else{
+            } else {
               this.addDataHiring()
             }
           } else {
             Swal.fire('Error', 'Información no Actualizada!', 'error');
           }
         },
-        (response) => {
-          this.formContractor.enable();
-          // Set the alert
-          console.log(response);
+          (response) => {
+            this.formContractor.enable();
+            // Set the alert
+            console.log(response);
 
-          Swal.fire('Error', 'Información no Actualizada!', 'error');
-          // Show the alert
-          this.showAlert = true;
-        });
+            Swal.fire('Error', 'Información no Actualizada!', 'error');
+            // Show the alert
+            this.showAlert = true;
+          });
       this.economicDataList = [];
-    }else{
-      if(this.update){
+    } else {
+      if (this.update) {
         this.updateContractor();
-      }else{
+      } else {
         this.addDataHiring()
       }
-      
+
     }
     return false;
   }
@@ -491,10 +503,10 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((response: IHiringData) => {
         if (response.id != null) {
-          
+
           this.title = 'Actualizar'
           this.update = true;
-          this.hiringData = response;    
+          this.hiringData = response;
         }
       });
   }
@@ -545,10 +557,10 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       })
   }
   calculateDaysBetweenDates(startDate: Date, endDate: Date): number {
-    if(startDate == null){
+    if (startDate == null) {
       startDate = this.hiringData.fechaRealDeInicio;
     }
-    if(endDate == null){
+    if (endDate == null) {
       endDate = this.hiringData.fechaFinalizacionConvenio;
     }
     let dateInitial = new Date(startDate);
@@ -575,11 +587,11 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
 
   calculateContratcValue = () => {
     let element: Elements;
-    if(this.elements == null || this.elements.length == 0 || this.elementAsignado != null){
+    if (this.elements == null || this.elements.length == 0 || this.elementAsignado != null) {
       this.elements.push(this.elementAsignado)
       element = this.elements.find(item => item.nombreElemento === this.nombreElemento);
       this.elementselectId = element.id
-    }else{
+    } else {
       element = this.elements.find(item => item.id === this.elementselectId);
     }
     let cantidadDias = this.calculateDaysBetweenDates(this.minDate, this.formContractor.value.fechaFinalizacionConvenio);
@@ -593,10 +605,10 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     const currentDate = new Date();
     const minDate = new Date();
     minDate.setFullYear(currentDate.getFullYear() - 2); // Resta dos años al año actual
-  
+
     this.twoYearAgoExam = minDate; // Comprueba si la fecha es anterior a la mínima permitida
   }
-  
+
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribe$.next(null);
