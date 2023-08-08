@@ -59,7 +59,6 @@ export class DetailContractorComponent implements OnInit, OnDestroy {
   ]
 
   ngOnInit(): void {
-    debugger
     this.selectedContracttorForm = this._formBuilder.group({
       nombre: [''],
       identificacion: [''],
@@ -114,7 +113,6 @@ export class DetailContractorComponent implements OnInit, OnDestroy {
   }
 
   closeDetails(): void {
-    debugger
     this.contractorSelected = null;
     this.closeDetail.emit(true);
   }

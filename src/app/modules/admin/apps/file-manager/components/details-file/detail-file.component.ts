@@ -11,6 +11,8 @@ import { FileListManagerService } from '../../services/list-file.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { ShowFileComponent } from '../show-file/show-file.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'detail-file',
@@ -20,8 +22,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 })
 export class DetailFileComponent implements OnInit, OnDestroy {
     userName: any;
-    item: any;
-    id: any;
+    item: DataFile;
+    fileId: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     configForm: FormGroup;
     contractorId: string;
@@ -36,6 +38,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _authService: AuthService,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _matDialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
@@ -47,7 +50,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this._fileManagerService.filesContract$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
-                this.id = item.id;
+                this.fileId = item.id;
                 // Open the drawer in case it is closed
                 this._listComponent.matDrawer.open();
 
@@ -94,16 +97,34 @@ export class DetailFileComponent implements OnInit, OnDestroy {
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
-    openDialog() {
-        //this.validateDinamycKey();
-        this._router.navigate(['apps/archivo/' + this.id]);
-    }
+
     encryptData(data) {
         try {
             return CryptoJS.AES.encrypt(JSON.stringify(data), GlobalConst.encryptSecretKey).toString();
         } catch (e) {
             console.log(e);
         }
+    }
+
+    showFile() {
+        //this.validateDinamycKey();
+        const dialogRef = this._matDialog.open(ShowFileComponent, {
+            width: '100%',
+            height: '100%',
+            autoFocus: false,
+            data: {
+                show: false,
+                split: true,
+                id: this.fileId,
+                fileName: this.item.filesName,
+                documentType: this.item.documentType,
+                fileData: this.item.filedata
+            }
+        });
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+            });
     }
 
 
@@ -114,7 +135,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
-                this._fileManagerService.DeleteFile(this.id).subscribe((res) => {
+                this._fileManagerService.DeleteFile(this.fileId).subscribe((res) => {
                     if (res) {
                         swal.fire({
                             position: 'center',

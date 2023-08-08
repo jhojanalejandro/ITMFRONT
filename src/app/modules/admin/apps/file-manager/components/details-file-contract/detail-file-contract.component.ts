@@ -11,6 +11,8 @@ import { FileListManagerService } from '../../services/list-file.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import swal from 'sweetalert2';
+import { ShowFileComponent } from '../show-file/show-file.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'detail-file-contract',
@@ -20,8 +22,7 @@ import swal from 'sweetalert2';
 })
 export class DetailFileContractComponent implements OnInit, OnDestroy {
     userName: any;
-    item: any;
-    id: any;
+    item: DataFile;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     configForm: FormGroup;
     contractId: string;
@@ -34,6 +35,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private _fuseConfirmationService: FuseConfirmationService,
+        private _matDialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
@@ -43,7 +45,6 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
         this._fileManagerService.filesContract$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
-                this.id = item.id;
                 // Open the drawer in case it is closed
                 this._listComponent.matDrawer.open();
 
@@ -93,7 +94,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
     }
     openDialog() {
         //this.validateDinamycKey();
-        this._router.navigate(['apps/archivo/' + this.id]);
+        this._router.navigate(['apps/archivo/' + this.item.id]);
     }
     encryptData(data) {
         try {
@@ -110,7 +111,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
-                this._fileManagerService.DeleteFile(this.id).subscribe((res) => {
+                this._fileManagerService.DeleteFile(this.item).subscribe((res) => {
                     if (res) {
                         swal.fire({
                             position: 'center',
@@ -134,6 +135,26 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
         });
     }
 
+
+    showFile() {
+        //this.validateDinamycKey();
+        const dialogRef = this._matDialog.open(ShowFileComponent, {
+            width: '100%',
+            height: '100%',
+            autoFocus: false,
+            data: {
+                show: false,
+                split: true,
+                id: this.item.id,
+                fileName: this.item.filesName,
+                documentType: this.item.documentType
+            }
+        });
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+            });
+    }
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
