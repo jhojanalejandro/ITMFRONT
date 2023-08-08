@@ -11,9 +11,16 @@ export const defaultNavigation: FuseNavigationItem[] = [
         children: [
             {
                 id   : 'dashboards.inicio',
-                title: 'Modulo Contractual',
+                title: 'Contractual',
                 type : 'basic',
                 icon : 'heroicons_outline:clipboard-check',
+                link : '/dashboards/inicio'
+            },
+            {
+                id   : 'dashboards.post-contractual',
+                title: 'Post-Contractual',
+                type : 'basic',
+                icon : 'heroicons_outline:briefcase',
                 link : '/dashboards/inicio'
             },
             {
@@ -36,7 +43,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 id      : 'docs.ecommerce',
                 title   : 'Planeación',
                 type    : 'collapsable',
-                icon    : 'heroicons_outline:shopping-cart',
+                icon    : 'heroicons_outline:clipboard-copy',
                 children: [
                     {
                         id   : 'docs.ecommerce.cuadroEconomico',
