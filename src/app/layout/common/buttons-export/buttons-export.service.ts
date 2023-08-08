@@ -10,12 +10,7 @@ export class ButtonsExportService {
     apiUrl: any = environment.apiURL;
     constructor(private _httpClient: HttpClient) {}
 
-    export(id: any) {
-        let urlEndPoint = this.apiUrl + environment.exportarViabilidad;
-        return this._httpClient.get<any>(urlEndPoint);
-    }
-
-    getReport(idContrato: string): Observable<Blob> {
+    generateReport(idContrato: string): Observable<Blob> {
       let urlEndPoint = this.apiUrl + environment.exportarViabilidad;
       const httpOptions = {
         responseType: 'blob' as 'json'
