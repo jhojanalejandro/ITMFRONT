@@ -27,7 +27,7 @@ export class DetailFileContractResolver implements Resolve<any>
      * @param state
      */
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile> {
-        return this._fileManagerService.getFileContractById(route.paramMap.get('id'))
+        return this._fileManagerService.getFileByFileId(route.paramMap.get('id'))
             .pipe(
                 // Error here means the requested task is not available
                 catchError((error) => {

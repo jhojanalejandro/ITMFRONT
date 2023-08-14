@@ -42,7 +42,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
         this._listComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.filesContract$
+        this._fileManagerService.getfile$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
                 // Open the drawer in case it is closed

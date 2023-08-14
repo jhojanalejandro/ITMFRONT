@@ -16,9 +16,8 @@ export class FileListManagerService {
     contractorId: string;
     private _listFileContractor: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
     private _listFileContract: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
-    private _filesContract: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
-
-    private _itemD: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
+    private _file: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
+    private _statusFile: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
 
     apiUrl: any = environment.apiURL;
 
@@ -50,8 +49,13 @@ export class FileListManagerService {
         this.contractorId = valor;
     }
 
-    get filesContract$(): Observable<DataFile> {
-        return this._filesContract.asObservable();
+    get getfile$(): Observable<DataFile> {
+        return this._file.asObservable();
+    }
+
+    
+    get getStatusfile$(): Observable<DataFile> {
+        return this._file.asObservable();
     }
 
     getFileByContractor(contractId: string | null = null, contractorId: any | null = null, folderId: string | null = null): Observable<DataFile> {
@@ -101,12 +105,12 @@ export class FileListManagerService {
     }
 
 
-    getFileContractById(id: any): Observable<DataFile> {
+    getFileByFileId(id: any): Observable<DataFile> {
         let urlEndPoint = this.apiUrl + environment.GetByIdFileEndpoint;
         return this._httpClient.get(urlEndPoint + id).pipe(
             take(1),
             tap((item: any) => {
-                this._filesContract.next(item);
+                this._file.next(item);
             }),
             switchMap((item) => {
 
@@ -119,7 +123,6 @@ export class FileListManagerService {
         );
     }
 
-
     UpdateContractFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -129,14 +132,14 @@ export class FileListManagerService {
         const params = new HttpParams()
             .set('fileId', id)
         let urlEndpointGenerate = this.apiUrl + environment.DeleteFileEndpoint;
-        return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate,{params});
     }
 
     getStatusFile(): Observable<any> {
         let urlEndPoint = this.apiUrl + environment.GetStatusFileEndpoint;
         return this._httpClient.get(urlEndPoint).pipe(
             tap((statusFile: any) => {
-                this._filesContract.next(statusFile);
+                this._statusFile.next(statusFile);
             })
         );
     }
