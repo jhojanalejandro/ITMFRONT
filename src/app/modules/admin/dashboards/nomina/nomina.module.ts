@@ -11,19 +11,23 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from 'app/shared/shared.module';
 import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.component';
 import { nominaRoutes } from 'app/modules/admin/dashboards/nomina/nomina.routing';
-import { CollectionAccountsListComponent, MY_FORMATS } from './collection-accounts-list/collection-accounts-list.component';
-import { DetailFilePaymentComponent } from './collection-accounts-list/details-file-payment/detail-file-payment.component';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { ContractorPaymentListComponent } from './contractor-payment-list/contractor-payment-list.component';
+import { DetailFilePaymentComponent } from './components/collection-accounts-list/details-file-payment/detail-file-payment.component';
+import { CollectionAccountsListComponent, MY_FORMATS } from './components/collection-accounts-list/collection-accounts-list.component';
+import { ContractorListPayrollComponent } from './components/contractor-list-payroll/contractor-list-payroll.component';
+import { NewnessContractorPayrollComponent } from './components/contractor-list-payroll/components/newness-contractor/newness-contractor.component';
+import { ModificacionPayrollComponent } from './components/contractor-list-payroll/components/modificacion-form/modificacion-form.component';
 
 @NgModule({
     declarations: [
         NominaComponent,
         CollectionAccountsListComponent,
         DetailFilePaymentComponent,
-        ContractorPaymentListComponent
+        ContractorListPayrollComponent,
+        NewnessContractorPayrollComponent,
+        ModificacionPayrollComponent
     ],
     imports     : [
         RouterModule.forChild(nominaRoutes),

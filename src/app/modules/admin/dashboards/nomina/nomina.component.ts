@@ -5,11 +5,11 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {  Router } from '@angular/router';
 import { GenericService } from '../../generic/generic.services';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'nomina',
@@ -23,7 +23,6 @@ export class NominaComponent implements OnInit, OnDestroy {
   data: any;
   userName: any;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-  @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
@@ -31,8 +30,9 @@ export class NominaComponent implements OnInit, OnDestroy {
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['numberProject','companyName', 'projectName','contractorCant', 'action'];
+  displayedColumns: string[] = ['numberProject','companyName', 'projectName','contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private _genericService: GenericService,
@@ -46,7 +46,7 @@ export class NominaComponent implements OnInit, OnDestroy {
     { title: 'NUMERO CONTRATO', name: 'numberProject' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
-    { title: 'CANTIDAD CONTRATISTAS', name: 'contractorCant' },
+    { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
     // {title: 'REVISADO', name: 'done'},
     { title: 'ACCIONES', name: 'action' },
   ]
@@ -58,9 +58,8 @@ export class NominaComponent implements OnInit, OnDestroy {
   showFiles(data: any) {
     return this._router.navigate(['/dashboards/nomina/documentos/'+data.id]);
   }
-  contractorList(data: any){
-    debugger
-    return  this._router.navigate(['/dashboards/lista-contratistas/nomina/' + data.id +'/' +data.projectName]);
+  navigateToContractorListPayroll(data: any){
+    return  this._router.navigate(['/dashboards/nomina/lista-contratistas/' + data.id +'/' +data.projectName]);
 
   }
   announceSortChange(sortState: Sort) {
@@ -69,10 +68,6 @@ export class NominaComponent implements OnInit, OnDestroy {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
-  }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
   }
 
   ngAfterContentChecked() {
@@ -87,7 +82,8 @@ export class NominaComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(): void {
     // Make the data source sortable
-    this.dataSource.sort = this.recentTransactionsTableMatSort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnDestroy(): void {
@@ -108,7 +104,6 @@ export class NominaComponent implements OnInit, OnDestroy {
         Response.forEach(element => {
           element.contractorCant =0;
         });
-        this.dataSource.sort = this.sort;
         this.dataSource.data = Response;
       });
   }
