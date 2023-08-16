@@ -111,7 +111,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
-                this._fileManagerService.DeleteFile(this.item).subscribe((res) => {
+                this._fileManagerService.DeleteFile(this.item.id).subscribe((res) => {
                     if (res) {
                         swal.fire({
                             position: 'center',
@@ -126,11 +126,7 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
                         // Mark for check
                         this._changeDetectorRef.markForCheck();
                     }
-                },
-                    (response) => {
-                        console.log(response);
-                        swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
-                    });
+                });
             }
         });
     }

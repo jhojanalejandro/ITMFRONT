@@ -19,16 +19,26 @@ export class ShowFileComponent implements OnInit {
   PathReportString: any;
   getFile: any;
   fileName: string;
-  file: File = null; // Variable to store file
+  file: any; // Variable to store file
   contratos: any; 
   pdfDescomprimido: Uint8Array;
-
+  fileDecode: any;
   id: any;
   constructor(
     private sanitizer: DomSanitizer,
     public matDialogRef: MatDialogRef<ShowFileComponent>,
     @Inject(MAT_DIALOG_DATA) private _data
-  ) { }
+  ) { 
+    this.id = this._data.id;
+    this.getFile = this._data.fileData;    
+    this.fileName = this._data.fileName;    
+
+    // this.file = this.sanitizer.bypassSecurityTrustResourceUrl(`data:application/pdf;base64,${this.getFile}`);
+
+    // this.getFile = `data:application/pdf;base64,${this.getFile}`;
+
+    // const base64String = this.getFile;// Tu cadena Base64 aquí
+  }
 
   ngOnInit(): void {
     this.id = this._data.id;
@@ -40,7 +50,7 @@ export class ShowFileComponent implements OnInit {
     this.PathReportString = 'data:application/pdf;base64,' + (this.sanitizer.bypassSecurityTrustResourceUrl(this.getFile) as any).changingThisBreaksApplicationSecurity;
 
     top.document.getElementById('ifrm').setAttribute("src", this.PathReportString);
-
+    
   }
 
   showPdf() {

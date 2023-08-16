@@ -88,7 +88,7 @@ export const environment = {
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
     updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
-    DeleteFileEndpoint: 'Files/Delete/',
+    DeleteFileEndpoint: 'Files/DeleteFile/',
 
 
     addHiringEndpoint: 'HiringData/SaveHiring',

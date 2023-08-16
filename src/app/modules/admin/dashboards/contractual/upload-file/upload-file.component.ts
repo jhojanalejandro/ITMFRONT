@@ -95,14 +95,11 @@ export class UploadFileComponent implements OnInit, OnDestroy {
     this.convertFile(this.file).subscribe(base64 => {
       this.base64Output = base64;
     });
-    // reader.onload = () => {
-    //     this.file = reader.result;
-    // };
   }
 
 
   addFileContractor(event) {
-    let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.MINUTA).id
+    let typeId = this.typeDocs.find(f => f.code === DocumentTypeCodes.ANEXO).id
 
     const registerFile: FileContractor = {
       userId: this._auth.accessId,
@@ -116,7 +113,8 @@ export class UploadFileComponent implements OnInit, OnDestroy {
       modifyDate: this.registerDate,
       filedata: event,
       monthPayment: null,
-      folderId: this._data.folderId
+      folderId: this._data.folderId,
+      anexo: true
     };
     this._upload.UploadFileContractor(registerFile).subscribe((res) => {
       if (res) {

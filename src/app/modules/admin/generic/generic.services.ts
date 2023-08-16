@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { DetalleContrato } from '../pages/planing/models/planing-model';
-import { AuthService } from 'app/core/auth/auth.service';
 import { CpcType, ElementType, RubroType, StatusContract } from './model/generic.model';
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
@@ -34,13 +34,14 @@ export class GenericService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    UpdateStateContractFolder(id: string) {
+    UpdateStateContractFolder(contractId: string) {
         const params = new HttpParams()
-            .set('id', id);
+            .set('contractId', contractId);
         let urlEndpointGenerate = this.apiUrl + environment.UpdateStateContractFolderEndpoint;
-        return this._httpClient.get<any>(urlEndpointGenerate, { params });
+        return this._httpClient.get<IResponse>(urlEndpointGenerate, { params }).pipe(
+            catchError(this.handleError)
+        );
     }
-
 
     getAllContract(inProgress: boolean, tipoModulo: string): Observable<any> {
         const params = new HttpParams()
@@ -103,7 +104,7 @@ export class GenericService {
         );
     }
 
-    
+
     getBanksContract(): Observable<any[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetBanksContractEndpoint;
@@ -118,11 +119,25 @@ export class GenericService {
         );
     }
 
-    
+
     getDetailType(): Observable<any[]> {
         let urlEndpointGenerate = this.apiUrl + environment.GetDetailTypeEndpoint;
         return this._httpClient.get<any>(urlEndpointGenerate
         );
     }
-
+    // Método para manejar errores (opcional)
+    private handleError(error: any): Observable<any> {
+        // Implementa el manejo de errores aquí, si es necesario
+        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
+        console.log(error);
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: error.error.message,
+            showConfirmButton: false,
+            timer: 2000
+        });
+        return new Observable<any>();
+    }
 }

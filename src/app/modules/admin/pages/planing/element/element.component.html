@@ -132,7 +132,7 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Valor Total</mat-label>
-                        <input type="text" (change)="onChange($event)" value="{{totalValue}}"
+                        <input type="text" (change)="onChangeTotalValue($event)" value="{{totalValue}}"
                             id="totalValue" formControlName="totalValue" autocomplete="off" matInput
                             placeholder="Valor Total">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">

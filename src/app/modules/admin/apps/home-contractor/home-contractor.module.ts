@@ -12,8 +12,8 @@ import { AngularmaterialModule } from 'app/layout/common/angular material/angula
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { MY_FORMATS } from '../../dashboards/nomina/collection-accounts-list/collection-accounts-list.component';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
+import { MY_FORMATS } from '../../dashboards/nomina/components/collection-accounts-list/collection-accounts-list.component';
 
 
 @NgModule({

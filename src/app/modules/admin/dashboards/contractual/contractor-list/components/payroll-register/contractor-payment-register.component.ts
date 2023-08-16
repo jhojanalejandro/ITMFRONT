@@ -10,6 +10,7 @@ import { ContractorPayments } from 'app/modules/admin/dashboards/nomina/models/c
 import { NominaService } from 'app/modules/admin/dashboards/nomina/service/nomina.service';
 import { EconomicContractor } from 'app/modules/admin/dashboards/nomina/models/economic-data-contractor';
 import { Subject, takeUntil } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
   paymentDataList: ContractorPayments[] = [];
   economicDataList: EconomicContractor[] = [];
 
-  economicContractor: EconomicContractor[] = [{ contractId: null, contractorId: null, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date() }];
+  economicContractor: EconomicContractor[] = [{ contractId: null, contractorId: null, totalValue: 0, unitValue: 0, totalPaidMonth: 0, debt: 0, modifyDate: new Date(), consecutive: 0 }];
   formFieldHelpers: string[] = [''];
   shareData: boolean = false;
   labelPosition: 'before' | 'after' = 'after';
@@ -40,6 +41,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
   formContractorPayment: FormGroup;
   pagos: any = GlobalConst.nomina;
   contractId: string;
+  consecutive: number = 1;
   private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(private _nominaService: NominaService,
@@ -85,6 +87,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
       contractorName: new FormControl({ value:  this.datos.nombre, disabled: true }, Validators.required),
       description: new FormControl(null, Validators.required),
       cantidadContratistas: new FormControl({ value: this.cantidadContratistas, disabled: true }),
+      consecutive: new FormControl(this.consecutive, Validators.required),
 
     });
   }
@@ -105,8 +108,8 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
         if(this.formContractorPayment.value.to == null){
           this.formContractorPayment.value.to = this.economicContractor[index].periodTo
         }
-        let payment = this.economicContractor.findIndex(x => x.contractorId === this.datos.idContractors[index]);
-        if (payment != null && payment > 0) {
+        let payment = this.economicContractor.find(x => x.contractorId === this.datos.idContractors[index]);
+        if (payment != null) {
           this.paymentDataList.push({
             userId: this._auth.accessId,
             contractorId: this.datos.idContractors[index],
@@ -115,9 +118,10 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
             paymentcant: this.formContractorPayment.value.cashPaymentTotal,
             cashPayment: this.formContractorPayment.value.cashPayment,
             fromDate: this.formContractorPayment.value.from,
-            toDate: this.formContractorPayment.value.to,
+            toDate: this.formContractorPayment.value.from,
             descriptionPayment: this.formContractorPayment.value.description,
-            registerDate: new Date()
+            registerDate: new Date(),
+            consecutive: payment.consecutive + 1
           });
         }
       }
@@ -128,6 +132,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
       if(this.formContractorPayment.value.to == null){
         this.formContractorPayment.value.to = this.economicContractor[0].periodTo
       }
+      let consecutive = this.economicContractor.find(x => x.contractorId === this.datos.id);
       this.paymentDataList = [{
         userId: this._auth.accessId,
         contractorId: this.datos.id,
@@ -138,10 +143,10 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
         fromDate: this.formContractorPayment.value.from,
         toDate: this.formContractorPayment.value.to,
         descriptionPayment: this.formContractorPayment.value.description,
-        registerDate: new Date()
+        registerDate: new Date(),
+        consecutive: consecutive.consecutive +1
       }]
     }
-    debugger  
     this._nominaService
       .addContractorPayments(this.paymentDataList)
       .pipe(takeUntil(this._unsubscribe$))
@@ -172,20 +177,11 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
     this.matDialogRef.close();
   }
 
-  getContractorPayment() {
-    this._nominaService.getByIdContractorPayments(this.datos.id)
-    .pipe(takeUntil(this._unsubscribe$))
-    .subscribe((Response) => {
-      this._nominaService = Response;
-    });
-  }
-
   getEconomicContractorPayment(ids: string[]) {
     let  economicData = {
       contractors: ids,
       contractId: this.contractId
     }
-    debugger
     this._nominaService.getByIdEconomicDataContractor(economicData)
     .pipe(takeUntil(this._unsubscribe$))
     .subscribe((Response) => {
@@ -193,7 +189,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
         Swal.fire('ups', 'No se puede ingresar a esta vista debido a que los valores estan en cero', 'warning');
         this.matDialogRef.close();
       } else {
-        debugger
+        this.consecutive = Response.consecutive;
         this.economicContractor = Response;
         if(this.economicContractor[0].periodFrom == null){
           this.economicContractor[0].periodFrom = new Date();
@@ -217,6 +213,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
               debt: dataEconomic.debt - dataEconomic.unitValue,
               freed: 0,
               modifyDate: this.registerDate,
+              consecutive: dataEconomic.consecutive
             }
           )
         }
@@ -238,7 +235,8 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
           userId: dataEconomic.userId,
           missing: dataEconomic.missing,
           cashPayment: dataEconomic.cashPayment,
-          unitValue: dataEconomic.unitValue
+          unitValue: dataEconomic.unitValue,
+          consecutive: dataEconomic.consecutive
         }
       ]
     }

@@ -15,6 +15,7 @@ import { ContractorPaymentRegisterComponent } from './components/payroll-registe
 import { AssignmentUserComponent } from './components/assigmentUser/assignment-user.component';
 import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 import { DetailContractorComponent } from './components/detail-contractor/detail-contractor.component';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({

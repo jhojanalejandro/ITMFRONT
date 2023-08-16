@@ -20,9 +20,9 @@ export class ContractorService {
 
     getContractorByIdProject(contractId: string) {
         const params = new HttpParams()
-        .set('contractId', contractId)
+            .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
-        return this._httpClient.get<IResponse>(urlEndPoint, {params}).pipe(
+        return this._httpClient.get<IResponse>(urlEndPoint, { params }).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
             }),
@@ -30,20 +30,7 @@ export class ContractorService {
         );
     }
 
-    // Método para manejar errores (opcional)
-    private handleError(error: any): Observable<any> {
-        // Implementa el manejo de errores aquí, si es necesario
-        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
-        Swal.fire({
-            position: 'center',
-            icon: 'error',
-            title: '',
-            html: error.error.message,
-            showConfirmButton: false,
-            timer: 2500
-          });
-        return new Observable<any>();
-    }
+
     getPaymentContractor(contractId: string, contractorId: string) {
         let urlEndPoint = this.apiUrl;
         const params = new HttpParams()
@@ -62,7 +49,7 @@ export class ContractorService {
         let urlEndpointGenerate = this.apiUrl + environment.sendMails;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
             catchError(this.handleError) // Manejo de errores, si es necesario
-            );
+        );
     }
     DeleteContractor(id: any) {
         let urlEndpointGenerate = this.apiUrl + environment.DeleteContractorByIdEndpoint;
@@ -134,10 +121,10 @@ export class ContractorService {
 
     getValidateDocumentUploadEndpoint(contractId: string, contractorId: string) {
         const params = new HttpParams()
-        .set('contractId', contractId)
-        .set('contractorId', contractorId);
+            .set('contractId', contractId)
+            .set('contractorId', contractorId);
         let urlEndPoint = this.apiUrl + environment.ValidateDocumentUploadEndpoint;
-        return this._httpClient.get<IResponse>(urlEndPoint, {params}).pipe(
+        return this._httpClient.get<IResponse>(urlEndPoint, { params }).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
             }),
@@ -145,4 +132,18 @@ export class ContractorService {
         );
     }
 
+    // Método para manejar errores (opcional)
+    private handleError(error: any): Observable<any> {
+        // Implementa el manejo de errores aquí, si es necesario
+        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: error.error.message,
+            showConfirmButton: false,
+            timer: 2500
+        });
+        return new Observable<any>();
+    }
 }

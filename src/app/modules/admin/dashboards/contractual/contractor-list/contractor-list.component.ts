@@ -7,7 +7,6 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,7 +34,7 @@ import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/doc
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit, AfterContentChecked {
   contractId: string;
   data: any;
   userName: any;
@@ -44,8 +43,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   generatePdf: boolean;
   pdfType: string;
   disableElement: boolean = true;
-  @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatTable) table!: MatTable<any>;
   elements: Elements[];
   componentes: Componente[];
@@ -63,7 +61,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   contractname: string;
   origin: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'nombre', 'identificacion', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
+  displayedColumns: string[] = ['select', 'identificacion','nombre',  'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   visibleOption: boolean = false;
   datePipe: DatePipe;
@@ -161,10 +159,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
-  }
 
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
@@ -178,7 +172,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.recentTransactionsTableMatSort;
+    this.dataSource.sort = this.sort;
   }
 
   selectRowFull(data: any) {
@@ -196,6 +190,9 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
       return item.id || index;
     }
   }
+  ngAfterContentChecked() {
+    this.cdref.detectChanges();
+  }
 
 
   getDataContractor() {
@@ -203,6 +200,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
       if (contractorsListResponse.success) {
         this.contractorsList = contractorsListResponse.data;
         this.dataSource = new MatTableDataSource(this.contractorsList);
+        this.cdref.detectChanges();
       } else {
         Swal.fire({
           position: 'center',
@@ -213,7 +211,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
           timer: 2000
         });
       }
-      this.cdref.detectChanges();
     });
 
   }
@@ -393,25 +390,19 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
       this._genericService.UpdateStateContractFolder(this.contractId)
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((resp) => {
-          if (resp) {
+          if (resp.success) {
             Swal.fire({
               position: 'center',
               icon: 'success',
               title: '',
-              html: 'Contrato activado exitosamente!',
+              html: resp.message,
               showConfirmButton: false,
               timer: 1500
             });
           } else {
             Swal.fire('Error', 'Error al activar el contrato! a falta de información', 'error');
           }
-        },
-          (response) => {
-            // Set the alert
-            console.log(response);
-
-            Swal.fire('', 'Error al activar el contrato!', 'error');
-          })
+        })
     }
 
   }
@@ -484,6 +475,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
     }
   }
+  
   historicalPayment(item: any) {
     this._loadrouter.navigate(['/dashboards/nomina/payment-contractor/' + this.contractId + '/' + item.id]);
   }

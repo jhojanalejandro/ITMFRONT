@@ -14,5 +14,6 @@ export interface EconomicContractor{
     modifyDate: Date;
     periodFrom?: Date;
     periodTo?: Date;
+    consecutive: number;
 }
 

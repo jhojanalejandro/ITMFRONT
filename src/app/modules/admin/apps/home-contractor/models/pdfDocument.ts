@@ -28,5 +28,5 @@ export interface ChargeAccount{
     bankingEntity: string;
     accountType: string;
     contractName: string;
-    chargeAccountNumber: string
+    chargeAccountNumber: number
 }

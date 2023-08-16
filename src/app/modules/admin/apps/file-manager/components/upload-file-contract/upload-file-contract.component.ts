@@ -9,6 +9,7 @@ import { DocumentTypeFile, Files } from 'app/layout/common/models/file-contracto
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
+import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 
 @Component({
   selector: 'app-upload-file-contract',
@@ -259,7 +260,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     this._upload.getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((type: DocumentTypeFile[]) => {
-        this.documentType = type.find(f => f.code === 'MNT').id;
+        this.documentType = type.find(f => f.code ===  DocumentTypeCodes.ANEXO).id;
       });
   }
 

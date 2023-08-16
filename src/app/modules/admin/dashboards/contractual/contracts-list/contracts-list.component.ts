@@ -1,9 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Router } from '@angular/router';
@@ -23,13 +22,13 @@ import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
+export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, AfterContentChecked {
   userName: any;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
   dataSource = new MatTableDataSource<ContractList[]>();
-  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant','isAssigmentUser', 'action'];
+  displayedColumns: string[] = ['numberProject', 'companyName', 'projectName', 'contractorsCant','isAssigmentUser','statusContract', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   contracts: ContractList[];
@@ -49,16 +48,17 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
-    { title: 'CONTRATISTAS', name: 'action' },
     { title: 'CONVENIO', name: 'isAssigmentUser' },
+    { title: 'ESTADO', name: 'statusContract' },
+    { title: 'CONTRATISTAS', name: 'action' },
   ]
   ngOnInit(): void {
     this.getContractsData();
     this.userName = this.auth.accessName.toUpperCase();
   }
 
-  navigateToContractors(data: any) {
-    this._router.navigate(['/dashboards/lista-contratistas/contractual/' + data.id + '/' +data.projectName]);
+  navigateToContractors(data: any,origin: string) {
+    this._router.navigate(['/dashboards/lista-contratistas/'+origin+'/' + data.id + '/' +data.projectName]);
   }
 
   uploadExcel() {
@@ -87,10 +87,6 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
-  }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
   }
 
   ngAfterContentChecked() {

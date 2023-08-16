@@ -29,7 +29,12 @@
                         formControlName="cantidadContratistas" autocomplete="off" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
                 </mat-form-field>
-
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Pago Número</mat-label>
+                    <input disabled="true" id="ejecucion" 
+                        formControlName="consecutive" autocomplete="off" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
+                </mat-form-field>
             </div>
             <div class="folder" *ngIf="shareData">
                 <mat-form-field class="hiring" appearance="fill">

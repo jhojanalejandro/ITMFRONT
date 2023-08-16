@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, switchMap, take, tap, throwError } from 'rxjs';
 import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { AnyAaaaRecord } from 'dns';
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root'
@@ -40,7 +40,7 @@ export class FileListManagerService {
         return this.folderId;
     }
 
-    
+
     getContractorId() {
         return this.contractorId;
     }
@@ -53,7 +53,7 @@ export class FileListManagerService {
         return this._file.asObservable();
     }
 
-    
+
     get getStatusfile$(): Observable<DataFile> {
         return this._file.asObservable();
     }
@@ -91,7 +91,7 @@ export class FileListManagerService {
                 // Update the item
                 const item = [...items.files] = items || null;
                 this._listFileContract.next(item);
-                
+
             }),
             switchMap((item) => {
 
@@ -128,11 +128,12 @@ export class FileListManagerService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
-    DeleteFile(id: any) {
-        const params = new HttpParams()
-            .set('fileId', id)
+    DeleteFile(fileId: any) {
+
         let urlEndpointGenerate = this.apiUrl + environment.DeleteFileEndpoint;
-        return this._httpClient.delete<IResponse>(urlEndpointGenerate,{params});
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate + fileId).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
     }
 
     getStatusFile(): Observable<any> {
@@ -142,6 +143,21 @@ export class FileListManagerService {
                 this._statusFile.next(statusFile);
             })
         );
+    }
+
+    // Método para manejar errores (opcional)
+    private handleError(error: any): Observable<any> {
+        // Implementa el manejo de errores aquí, si es necesario
+        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: error.error.message,
+            showConfirmButton: false,
+            timer: 2500
+        });
+        return new Observable<any>();
     }
 
 }

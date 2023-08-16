@@ -6,9 +6,6 @@ import { ContractListComponent } from './contracts-list.component';
 export const uploadDataRoutes: Route[] = [
     {
         path     : '',
-        component: ContractListComponent,
-        // resolve  : {
-        //     data: UploadDataResolver
-        // }
+        component: ContractListComponent
     }
 ];

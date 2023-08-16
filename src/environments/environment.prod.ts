@@ -4,7 +4,7 @@
 
 export const environment = {
     production: true,
-    apiURL: 'http://172.30.1.20:8080/swagger/index.html',
+    apiURL: 'http://172.30.0.9:8080/',
     // apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/SignUp',
@@ -63,10 +63,10 @@ export const environment = {
     AssignmentUserContractEndpoint: 'ContractFolder/AssignmentUserContract',
     SaveTermFileContractEndpoint: 'ContractFolder/SaveTermFileContract',
 
-    addContractorPaymentsEndpoint: 'ContractorPayments/Add',
+    addContractorPaymentsEndpoint: 'ContractorPayments/SaveContractorPayment',
     GetAllContractorPaymentsEndpoint: 'ContractorPayments/GetAll',
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
-    DeleteContractorPaymentsEndpoint: 'ContractorPayments/Delete',
+    DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
@@ -106,7 +106,7 @@ export const environment = {
     getElements: 'ElementosComponente/GetElementsByComponent/',
     getElementosById: 'ElementosComponente/GetByIdComponente',
 
-    deleteComponent: 'Componente/Delete/',
+    deleteComponent: 'Componente/DeleteComponentContract/',
     addElementosComponent: 'ElementosComponente/SaveElement',
     getElementoById: 'ElementosComponente/GetById/',
     getActivityByIdComponent: 'Componente/GetActivityByComponent/',
@@ -136,14 +136,8 @@ export const environment = {
     GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
+
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
 
 };
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+

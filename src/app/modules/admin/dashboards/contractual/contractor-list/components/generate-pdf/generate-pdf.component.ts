@@ -80,7 +80,6 @@ export class GeneratePdfComponent implements OnInit {
 
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let data = previusStudyData.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
-            debugger
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
                 && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.userJuridic != null && data.supervisorItmName != null && data.userFirm != null && data.supervisorFirm != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
@@ -1841,7 +1840,6 @@ export class GeneratePdfComponent implements OnInit {
     }
 
     private async savePdfGenerated(pdfDocument: any, contractId: string, origin: string) {
-       debugger
         let registerFileLis: FileContractor[] = [];
         for (let index = 0; index < pdfDocument.length; index++) {
             let documentType = this.typeDocs.find(f => f.code == origin)
@@ -1872,7 +1870,6 @@ export class GeneratePdfComponent implements OnInit {
         }
         this._upload.UploadFileBillContractors(registerFileLis)
             .subscribe((res) => {
-                debugger
                 if (res.success) {
                     swal.fire({
                         position: 'center',
@@ -1899,7 +1896,6 @@ export class GeneratePdfComponent implements OnInit {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response: any) => {
-                debugger
                 this.typeDocs = response;
             });
 

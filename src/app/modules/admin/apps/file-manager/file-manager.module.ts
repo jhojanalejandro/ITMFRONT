@@ -22,6 +22,7 @@ import { RegisterFolderComponent } from './components/register-folder/register-f
 import { FileListContractComponent } from './components/file-list-contract/file-list-contract.component';
 import { UploadFileContractComponent } from './components/upload-file-contract/upload-file-contract.component';
 import { ShowFileComponent } from './components/show-file/show-file.component';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 @NgModule({
     declarations: [
@@ -48,7 +49,8 @@ import { ShowFileComponent } from './components/show-file/show-file.component';
         MatTooltipModule,
         SharedModule,
         Ng2SearchPipeModule,
-        PdfViewerModule // Agrega el módulo PdfViewerModule aquí
+        PdfViewerModule,
+        NgxExtendedPdfViewerModule 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

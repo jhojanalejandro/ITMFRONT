@@ -35,7 +35,7 @@
                 <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
             </button>
         </div>
-        <div class="mt-4 sm:mt-0" *ngIf="origin == 'nomina'">
+        <div class="mt-4 sm:mt-0" *ngIf="origin === 'post-contractual'">
             <!-- Add section button -->
             <button class="ml-3" mat-flat-button [color]="'primary'" (click)="registerPayment(null)"
                 [matTooltip]="'Agregar Varios pagos'">
@@ -57,9 +57,6 @@
                     {{typeStatus.viewValue}}
                 </mat-option>
             </mat-select>
-            <mat-icon *ngIf="statusSelected.value == null" class="icon-size-5" matSuffix
-                [svgIcon]="'heroicons_solid:cursor-click'">
-            </mat-icon>
             <!-- <button *ngIf="statusSelected.value != null" mat-button (click)="clearSelection($event)"><mat-icon svgIcon="heroicons_solid:x"></mat-icon>
             </button> -->
         </mat-form-field>
@@ -111,10 +108,9 @@
 
                     <div class="overflow-x-auto mx-6">
                         <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
-                            [trackBy]="trackByFn" 
-                             (matSortChange)="announceSortChange($event)">
+                            [trackBy]="trackByFn" (matSortChange)="announceSortChange($event)">
                             <ng-container matColumnDef="select">
-                                <th mat-header-cell cdkDrag *matHeaderCellDef>
+                                <th mat-header-cell *matHeaderCellDef>
                                     <mat-checkbox (change)="$event ? masterToggle() : null"
                                         [checked]="selection.hasValue() && isAllSelected() "
                                         [indeterminate]="selection.hasValue() && !isAllSelected()"
@@ -129,7 +125,7 @@
                                 </td>
                             </ng-container>
                             <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
-                                <th mat-header-cell class="centre" cdkDrag mat-sort-header *matHeaderCellDef>
+                                <th mat-header-cell class="centre" mat-sort-header *matHeaderCellDef>
                                     {{columna.title}}
                                 </th>
                                 <td mat-cell [class.selected]="element.selected"
@@ -242,7 +238,7 @@
                                             </button>
                                         </mat-menu>
                                     </p>
-                                    <p *ngIf="columna.name=='acciones' && origin == 'nomina'">
+                                    <p *ngIf="columna.name=='acciones' && origin == 'post-contractual'">
 
                                         <button [matTooltip]="'Opciones Documentos'" mat-icon-button
                                             [matMenuTriggerFor]="summaryMenu">
@@ -287,8 +283,8 @@
                                   [contarctorSelected]="contarctorSelected"></app-detail-contractor>                                </td>
                               </tr> -->
                         </table>
-                        <mat-paginator [length]="contractorsList.length" [pageSizeOptions]="[10, 30, 50, 100]"
-                            [pageSize]="2" aria-label="Select page">
+                        <mat-paginator [length]="contractorsList.length" [pageSizeOptions]="[1,3,10, 30, 50, 100]"
+                             aria-label="Select page of contractorsList">
                         </mat-paginator>
                     </div>
                 </div>
