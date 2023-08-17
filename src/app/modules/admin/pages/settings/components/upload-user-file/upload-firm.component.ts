@@ -109,17 +109,15 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
       fileType: this.typeFile,
       fileNameC: this.fileName
     };
-    console.log(registerFile);
-
     this._auth.UploadFileFirm(registerFile)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        if (res) {
+        if (res.success) {
           swal.fire({
             position: 'center',
             icon: 'success',
             title: '',
-            html: 'Información Registrada Exitosamente!',
+            html: res.message,
             showConfirmButton: false,
             timer: 1500
           });

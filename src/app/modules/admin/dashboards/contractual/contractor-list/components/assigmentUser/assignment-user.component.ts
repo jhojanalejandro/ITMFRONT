@@ -34,6 +34,7 @@ export class AssignmentUserComponent implements OnInit {
   typeAsignmentSelected: string = null;
   userPrincipalSelected: AssignmentUser = null;
   private readonly _unsubscribe$ = new Subject<void>();
+  showUsers: boolean = false;
 
   constructor(private _contractorService: ContractorService,
     private ref: ChangeDetectorRef,
@@ -68,7 +69,7 @@ export class AssignmentUserComponent implements OnInit {
         .assignmentUser(this.assignmentUser)
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((res) => {
-          if(res){
+          if(res.success){
             Swal.fire({
               position: 'center',
               icon: 'success',
@@ -78,6 +79,7 @@ export class AssignmentUserComponent implements OnInit {
               timer: 1500
             });
           }
+          this.assignmentUser = [];
         },
           (response) => {
             Swal.fire('Error', 'No se pudo asignar la información!', 'error');
@@ -146,6 +148,7 @@ export class AssignmentUserComponent implements OnInit {
 
   }
   selectionChageContract(contract: any) {
+    this.showUsers = true;
     this.contractSelected = contract.value;
   }
 

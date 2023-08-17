@@ -99,7 +99,7 @@ export class ContractorService {
     assignmentUser(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.AssignmentUserContractEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data)
-            .pipe(retry(0));
+            .pipe(catchError(this.handleError));
     }
 
     getAssignmentType(): Observable<AssignmentType[]> {

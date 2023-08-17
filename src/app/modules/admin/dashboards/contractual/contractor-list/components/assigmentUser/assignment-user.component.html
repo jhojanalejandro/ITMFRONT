@@ -19,7 +19,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="showContractual" class="checkBox">
+            <div *ngIf="showContractual && showUsers" class="checkBox">
                 <span >Contractual encargado</span>
                 <div class="checkBox">
                     <mat-radio-group [color]="'primary'" [disabled]="false">
@@ -29,7 +29,7 @@
                     </mat-radio-group>
                 </div>
             </div>
-            <div *ngIf="showContractual" class="checkBox">
+            <div *ngIf="showContractual && showUsers" class="checkBox">
                 <span >Contractual apoyo</span>
                 <div class="checkBox">
                     <mat-checkbox *ngFor="let user of users" [value]="user.id"
@@ -38,7 +38,7 @@
                     </mat-checkbox>
                 </div>
             </div>
-            <div *ngIf="showSupervisors" class="checkBox">
+            <div *ngIf="showSupervisors && showUsers" class="checkBox">
                 <span >Supervisor contrato</span>
                 <div class="checkBox">
                     <mat-radio-group [color]="'primary'" [disabled]="false">

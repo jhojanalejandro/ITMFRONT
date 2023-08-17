@@ -261,7 +261,7 @@ export class AuthService {
 
     UploadFileFirm(formdata: UserFile) {
         let urlEndpointGenerate = this.apiUrl + environment.addFileFirmEndpoint;
-        return this._httpClient.post<any>(urlEndpointGenerate, formdata);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
     getRolls(): Observable<any> {
