@@ -38,7 +38,6 @@ export class PdfDataService {
         return this._httpClient.post<any>(urlEndpointGenerate, contractors);
     }
     getPreviusStudy(contractors: ContractContractors): Observable<PreviusStudy[]> {
-
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPreviusStudyContractIdEndpoint;
         return this._httpClient.post<PreviusStudy[]>(urlEndpointGenerate, contractors);

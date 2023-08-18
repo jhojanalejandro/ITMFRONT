@@ -61,7 +61,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   contractname: string;
   origin: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'identificacion','nombre',  'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
+  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   visibleOption: boolean = false;
   datePipe: DatePipe;
@@ -431,7 +431,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   pdfGenerated(e: boolean) {
-    this.getDataContractor();
+    this.reloadResolve();
     this.generatePdf = e;
     this.generatePdfMinute = e;
 
@@ -475,7 +475,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
     }
   }
-  
+
   historicalPayment(item: any) {
     this._loadrouter.navigate(['/dashboards/nomina/payment-contractor/' + this.contractId + '/' + item.id]);
   }
