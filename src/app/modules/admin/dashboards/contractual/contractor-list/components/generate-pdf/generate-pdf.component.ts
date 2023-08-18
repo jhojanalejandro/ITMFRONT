@@ -1459,11 +1459,9 @@ export class GeneratePdfComponent implements OnInit {
 
         }
         if (this.documentGenerate.length > 0) {
-            const pdf = pdfMake.createPdf(this.documentGenerate[0].document).download('estudiosprevios');
-
-            // this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS).then(
-            //      () => this.hideComponent()
-            // );
+            this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS).then(
+                 () => this.hideComponent()
+            );
         }
 
     }
@@ -1779,7 +1777,7 @@ export class GeneratePdfComponent implements OnInit {
             let nombreDocumento = documentType.documentTypeDescription + pdfDocument[index].contractorName;
             let date = this.currentDate;
             let userId = this._auth.accessId;
-            const pdf = pdfMake.createPdf(pdfDocument[index].document).download('estudiosprevios');
+            const pdf = pdfMake.createPdf(pdfDocument[index].document);
             const dataURL = await new Promise<string>((resolve, reject) => {
                 pdf.getDataUrl((dataURL) => resolve(dataURL));
             });
@@ -1798,8 +1796,6 @@ export class GeneratePdfComponent implements OnInit {
                 folderId: null,
                 origin: origin
             };
-            pdfMake.createPdf(pdfDocument[index].document).download('estudiosprevios')
-
             registerFileLis.push(registerFile)
         }
         this._upload.UploadFileBillContractors(registerFileLis)

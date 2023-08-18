@@ -106,7 +106,7 @@ export class MinutaContratoComponent implements OnInit {
   public generateMinutePDF() {
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
 
-      let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index])
+      let data = this.dataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index]);
       let fechaLetras = this._shareService.calcularDiferencia(data.fechaRealDeInicio, data.fechaFinalizacionConvenio);
       let valorLetras = this._shareService.numeroALetras(data.valorTotal, 'PESOS');
       let totalContrato = (+data.valorTotal.toFixed(0)).toLocaleString();
@@ -147,27 +147,31 @@ export class MinutaContratoComponent implements OnInit {
           });
         }
       } else {
-        data.obligacionesEspecificas = data.obligacionesEspecificas.replaceAll('->', ' ');
-        data.obligacionesGenerales = data.obligacionesGenerales.replaceAll('->', ' ');
+        data.obligacionesEspecificas = data.obligacionesEspecificas.replaceAll('->', ' ').replace(/\n/g, '');
+        data.obligacionesGenerales = data.obligacionesGenerales.replaceAll('->', ' ').replace(/\n/g, '');
         const documentMinute = {
           pageSize: 'A4',
           pageOrientation: 'FOLIO',
           pageMargins: [40, 80, 40, 60],
           header: {
+            margin: [20, 10, 20, 20],
             image: this.headerImageBase64,
-            fit: [600, 600],
+            fit: [550, 550],
           },
           footer: {
+            margin: [0, 0, 10, 20],
             image: this.footerImageBase64,
-            fit: [600, 600],
+            fit: [580, 580],
           },
           content: [
             {
+              margin: [10, 10, 10, 10],
               text: ['\n\nCONTRATO DE PRESTACIÓN DE SERVICIOS' + ' P - ' + data.contrato + ' DE ' + this.year.getFullYear()],
               style: 'header',
               alignment: 'center',
             },
             {
+              margin: [10, 10, 10, 10],
               text: [
                 'Entre los suscritos, de una parte, ' + data.supervisorItm + ' con c.c. ' + data.identificacionSupervisor + ', actuando en calidad de ' + data.cargoSupervisorItm + 'del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
                 'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.contractorName + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.identificacion + ' de ' + data.lugarExpedicion + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas: PRIMERA. -OBJETO DEL CONTRATO. Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública en ejecución del Contrato Interadministrativo No.4600095169 DE 2022, celebrado entre EL DISTRITO ESPECIAL DE CIENCIA',
@@ -191,6 +195,7 @@ export class MinutaContratoComponent implements OnInit {
             {
               style: 'tableWorkers',
               color: '#444',
+              margin: [10, 10, 10, 10],
               table: {
                 widths: ['auto', 'auto'],
                 body: [
@@ -359,6 +364,7 @@ export class MinutaContratoComponent implements OnInit {
               },
             },
             {
+              margin: [10, 10, 10, 10],
               text: [
                 'PARÁGRAFO SEGUNDO: Una vez efectuado el pago, deberá remitir la constancia al ITM. Lo anterior para la verificación de la respectiva cancelación de aportes. En caso de no acreditar el pago en la fecha establecida, el ITM podrá realizar la  suspensión del contrato. PARÁGRAFO TERCERO: Los trabajadores independientes con contrato de prestación de  servicios personales, deberán continuar efectuando el pago de sus aportes a la seguridad social, directamente',
                 'mediante la planilla integrada de liquidación de aportes - PILA, en la forma en que lo han venido haciendo y en las fechas  establecidas en el artículo 3.2.2.2.1 del Decreto 780 de 2016. VIGÉSIMA. SEGUNDA. -CLÁUSULA DE INDEMNIDAD.  El contratista mantendrá indemne al Instituto, de cualquier reclamación proveniente de terceros que tenga como causa',
@@ -377,19 +383,20 @@ export class MinutaContratoComponent implements OnInit {
           styles: {
             header: {
               fontSize: 12,
-              margin: [0, 5, 0, 5],
+              margin: [5, 5, 5, 5],
               bold: true,
               alignment: 'justify'
             },
             tableHeader: {
               bold: true,
-              fontSize: 13,
+              fontSize: 12,
               color: 'black',
               alignment: 'center',
             },
             tableWorkers: {
               alignment: 'center',
               color: 'black',
+              margin: [10, 10, 10, 10],
             },
             tableData: {
               bold: true,
@@ -406,9 +413,6 @@ export class MinutaContratoComponent implements OnInit {
               margin: [0, 10, 0, 0],
             },
           },
-          defaultStyle: {
-            // alignment: 'justify'
-          },
         };
         let minute = {
           document: documentMinute,
@@ -420,9 +424,11 @@ export class MinutaContratoComponent implements OnInit {
       this._changeDetectorRef.detectChanges();
       this._changeDetectorRef.markForCheck();
     }
-    if(this.documentGenerated.length > 0){
-      this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.MNT);
-    }
+    pdfMake.createPdf(this.documentGenerated[0].document).download('minuta');
+
+    // if(this.documentGenerated.length > 0){
+    //   this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.MNT);
+    // }
   }
 
 
@@ -444,12 +450,14 @@ export class MinutaContratoComponent implements OnInit {
           pageOrientation: 'FOLIO',
           pageMargins: [40, 80, 40, 60],
           header: {
+            margin: [30, 30, 30, 30],
             image: this.headerImageBase64,
-            fit: [600, 600],
+            fit: [600, 600]
           },
           footer: {
+            margin: [30, 30, 30, 30],
             image: this.footerImageBase64,
-            fit: [600, 600],
+            fit: [600, 600]
           },
           content: [
             {
@@ -520,27 +528,9 @@ export class MinutaContratoComponent implements OnInit {
                       bold: true,
                     },
                     fechaFinalAmpliacionContrato,
-                  ],
-                ],
-              },
-              layout: {
-                hLineWidth: function (i, node) {
-                  return i === 0 || i === node.table.body.length ? 2 : 1;
-                },
-                vLineWidth: function (i, node) {
-                  return i === 0 || i === node.table.widths.length ? 2 : 1;
-                },
-                hLineColor: function (i, node) {
-                  return i === 0 || i === node.table.body.length
-                    ? 'black'
-                    : 'black';
-                },
-                vLineColor: function (i, node) {
-                  return i === 0 || i === node.table.widths.length
-                    ? 'black'
-                    : 'black';
-                },
-              },
+                  ]
+                ]
+              }
             },
             {
               margin: [10, 10, 10, 10],
@@ -606,12 +596,12 @@ export class MinutaContratoComponent implements OnInit {
             },
             {
               margin: [10, 10, 10, 10],
-              text: '2. En orden a lo dicho, el 2 de noviembre de 2022 las partes firmaron el Contrato de Prestación de Servicios No. P-7240 de 2022, por un valor de SIETE MILLONES CIENTO SETENTA Y CINCO MIL CUATROCIENTOS SESENTA Y SIETE PESOS M/L ($ $ 7,175,467 ) y un plazo de ejecución de VEINTISIETE (27) DÍAS, contados a partir del 2 de noviembre de 2022 fecha en la cual fue suscrita el acta de inicio de actividades',
+              text: '2. En orden a lo dicho, el 2 de noviembre de 2022 las partes firmaron el Contrato de Prestación de Servicios No. P - ' + data.contractNumber + ' DE ' + this.year.getFullYear() +' por un valor de SIETE MILLONES CIENTO SETENTA Y CINCO MIL CUATROCIENTOS SESENTA Y SIETE PESOS M/L ($ $ 7,175,467 ) y un plazo de ejecución de VEINTISIETE (27) DÍAS, contados a partir del 2 de noviembre de 2022 fecha en la cual fue suscrita el acta de inicio de actividades',
               fontSize: 10,
             },
             {
               margin: [10, 10, 10, 10],
-              text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P-7240 de 2022 de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  CW153520/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-3819 de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
+              text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P- ' + data.contractNumber + ' DE ' + this.year.getFullYear() +' de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  CW153520/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-3819 de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
               fontSize: 10,
             },
             {
