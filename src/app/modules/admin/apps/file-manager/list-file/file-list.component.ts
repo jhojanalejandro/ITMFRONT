@@ -38,6 +38,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     statusFile: any;
     value: any;
     searchText: any;
+    folderName: string;
     permission: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchInputControl: FormControl = new FormControl();
@@ -85,6 +86,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
         this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
         this.folderId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
+        this.folderName = this._activatedRoute.snapshot.paramMap.get('folderName') || 'null';
         this.getData();
         this._fileManagerService.setContractId(this.contractId);
         this._fileManagerService.setContractorId(this.contractorId);

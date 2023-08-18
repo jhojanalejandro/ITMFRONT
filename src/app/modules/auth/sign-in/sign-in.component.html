@@ -11,33 +11,9 @@
                     <circle r="234" cx="790" cy="491"></circle>
                 </g>
             </svg>
-            <!-- Dots -->
-            <svg class="absolute -top-16 -right-16 text-gray-700" viewBox="0 0 220 192" width="220" height="192"
-                fill="none">
-                <defs>
-                    <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20"
-                        patternUnits="userSpaceOnUse">
-                        <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
-                    </pattern>
-                </defs>
-                <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-            </svg>
-            <!-- @formatter:on -->
-            <!-- Content -->
-            <div class="z-10 relative w-full max-w-2xl">
-                <!-- <div class="text-7xl font-bold leading-none text-primary-500">
-                    <div>Bienvenido al</div>
-                    <div>Modulo de contratacion</div>
-                </div> -->
-
-            </div>
         </div>
         <div class="w-full sm:w-auto py-8 px-4 sm:p-12 md:p-16">
             <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
-                <!-- Logo -->
-                <div class="w-48">
-                    <img src="assets/images/logo/logoItm.jpeg">
-                </div>
 
                 <!-- Title -->
                 <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">iniciar sesion</div>
@@ -56,14 +32,13 @@
                 <!-- Sign in form -->
                 <form class="mt-8" [formGroup]="signInForm" #signInNgForm="ngForm">
 
-                    <mat-form-field  class="w-full" appearance="outline">
+                    <mat-form-field  class="w-full" appearance="fill">
                         <mat-label >Tipo de usuario</mat-label>
                         <mat-select formControlName="userType"   name="contrato">
                             <mat-option *ngFor="let usuario of tipoUsuario" [value]="usuario.viewValue">
                                 {{usuario.viewValue}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-group'"></mat-icon>
                         <mat-error *ngIf="signInForm.get('userType').hasError('required')">
                             El Campo tipo usuario es requerido
                         </mat-error>

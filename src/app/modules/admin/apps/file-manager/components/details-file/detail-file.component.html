@@ -20,9 +20,11 @@
     <div class="flex flex-col items-start mt-8">
         <div class="text-xl font-medium">{{item.filesName}}</div>
         <div class="mt-1 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-            [class.bg-indigo-600]="item.fileType === 'folder'" [class.bg-red-600]="item.fileType === 'PDF'"
-            [class.bg-blue-600]="item.fileType === 'DOC'" [class.bg-green-600]="item.fileType === 'XLS'"
-            [class.bg-gray-600]="item.fileType === 'TXT'" [class.bg-amber-600]="item.fileType === 'JPG'">
+            [class.bg-red-600]="item.fileType === 'PDF'"
+            [class.bg-blue-600]="item.fileType === 'DOC'" 
+            [class.bg-green-600]="item.fileType === 'XLS'"
+            [class.bg-gray-600]="item.fileType === 'TXT'" 
+            [class.bg-amber-600]="item.fileType === 'JPG'">
             {{item.fileType.toUpperCase()}}
         </div>
     </div>

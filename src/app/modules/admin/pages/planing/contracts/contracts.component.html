@@ -56,11 +56,10 @@
                 </div>
                 <div class="overflow-x-auto mx-6">
                     <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
-                        [trackBy]="trackByFn" cdkDropList cdkDropListOrientation="horizontal"
-                        (cdkDropListDropped)="drop($event)" matSort (matSortChange)="announceSortChange($event)">
+                        [trackBy]="trackByFn"  matSort (matSortChange)="announceSortChange($event)">
 
                         <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
-                            <th mat-header-cell class="centre" cdkDrag mat-sort-header *matHeaderCellDef>
+                            <th mat-header-cell class="centre" mat-sort-header *matHeaderCellDef>
                                 {{columna.title}} </th>
 
                             <td mat-cell *matCellDef="let element">

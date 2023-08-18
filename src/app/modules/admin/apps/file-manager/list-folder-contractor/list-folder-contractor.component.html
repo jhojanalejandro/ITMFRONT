@@ -81,9 +81,6 @@
                                                     <div class="truncate" [matTooltip]="folder.numberProject">
                                                         {{folder.numberProject}}
                                                     </div>
-                                                    <ng-container *ngIf="folder.contents">
-                                                        <div class="text-secondary truncate">{{folder.contents}}</div>
-                                                    </ng-container>
                                                 </div>
                                             </a>
                                         </div>
@@ -104,7 +101,7 @@
                                 <div class="flex flex-wrap -m-2 mt-2">
                                     <ng-container
                                         *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
-                                        <div class="relative w-40 h-40 m-2 p-4 shadow rounded-2xl bg-card">
+                                        <div class="relative w-40 h-40 m-1 p-1 shadow rounded-2xl bg-card">
                                             <a class="absolute z-20 top-1.5 right-2.0 w-5 h-5 min-h-5"
                                             [ngClass]="{'bg-red-200  dark:bg-orange-600 ': folder.cantFile == 0,
                                             'bg-orange-200  dark:bg-orange-600 dark:text-orange-50': folder.cantFile > 0 && folder.cantFile < 3,
@@ -112,14 +109,13 @@
                                                 mat-icon-button>
                                                 <mat-icon class="icon-size-6"
                                                     [svgIcon]="folder.cantFile >= 3 ? 'heroicons_outline:check-circle' : folder.cantFile > 0 &&  folder.cantFile < 3 ? 'heroicons_outline:dots-circle-horizontal' : 'heroicons_outline:clock'"></mat-icon>
-
                                             </a>
-                                            <a class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
+                                            <a class="z-10 absolute inset-0 flex flex-col p-1 cursor-pointer"
                                                 (click)="route(folder.id)">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->
-                                                        <mat-icon class="icon-size-14 text-hint"
+                                                        <mat-icon class="icon-size-12 text-hint"
                                                             [svgIcon]="'iconsmind:folder'"></mat-icon>
                                                     </div>
                                                 </div>

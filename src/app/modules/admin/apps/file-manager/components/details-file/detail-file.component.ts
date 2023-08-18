@@ -47,13 +47,12 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this._listComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.filesContract$
+        this._fileManagerService.getfile$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
                 this.fileId = item.id;
-                // Open the drawer in case it is closed
+                // Open the drawer in case it is closed 
                 this._listComponent.matDrawer.open();
-
                 // Get the item
                 this.item = item;
                 this.userName = this._authService.accessName;

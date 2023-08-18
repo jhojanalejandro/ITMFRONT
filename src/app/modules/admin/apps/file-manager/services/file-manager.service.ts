@@ -10,27 +10,15 @@ import { IResponse } from 'app/layout/common/models/Response';
     providedIn: 'root'
 })
 export class FileManagerService {
-    // Private
 
     private _itemDF: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
-
     private _items: BehaviorSubject<Item | null> = new BehaviorSubject(null);
 
     apiUrl: any = environment.apiURL;
 
-    /**
-     * Constructor
-     */
     constructor(private _httpClient: HttpClient) {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Getter for items
-     */
     get items$(): Observable<Item> {
         return this._items.asObservable();
     }

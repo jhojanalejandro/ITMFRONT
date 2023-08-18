@@ -13,7 +13,8 @@ export enum DocumentTypeCodes{
     EXAMENESPREOCUPACIONALES = 'EXPNL',
     MINUTA = 'MNT',
     ESTUDIOSPREVIOS = 'ETPR',
-    SOLICITUDCOMITE = 'SLCMT'
+    SOLICITUDCOMITE = 'SLCMT',
+    ANEXO = 'ANX'
 }
 
 export enum TypeFileUserCode{

@@ -41,7 +41,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log(this.chargeAccountData);
-        if (this.generateChargeAccount && !this.generateExecutionReport) {
+        if (this.chargeAccountData != null) {
             this.downloadPDFChargeAccount();
             this.onGeneratePdf.emit(false);
         } else if (this.generateExecutionReport && !this.generateChargeAccount) {
@@ -93,7 +93,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
     private downloadPDFChargeAccount() {
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd'); 
         this.validateValuesPDFChargeAccount();
-
         this.valueLetter = this._shareService.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
         const documentDefinition = {
             content: [
@@ -202,11 +201,12 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                             [
                                 {
                                     text: 'NOMBRE:',
+                                    style: 'marginb',
                                 },
                                 {
                                     colSpan: 5,
                                     text: this.chargeAccountData.contractorName,
-                                    style: 'tableHeader',
+                                    style: 'marginb',
                                     alignment: 'center',
                                 },
                                 {
@@ -247,26 +247,32 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                             [
                                 {
                                     text: 'CÉDULA:',
+                                    style: 'marginb',
                                 },
                                 {
                                     text: this.chargeAccountData.contractorIdentification,
                                     alignment: 'center',
+                                    style: 'marginb',
                                 },
                                 {
                                     text: 'DV',
                                     alignment: 'center',
+                                    style: 'marginb',
                                 },
                                 {
                                     text: '8',
                                     alignment: 'center',
+                                    style: 'marginb',
                                 },
                                 {
                                     text: 'EXPEDIDA EN:',
                                     alignment: 'center',
+                                    style: 'marginb',
                                 },
                                 {
                                     text: this.chargeAccountData.expeditionIdentification,
-                                    alignment: 'center'
+                                    alignment: 'center',
+                                    style: 'marginb',
                                 },
                             ],
                             [
@@ -320,14 +326,16 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                             [
                                 {
                                     text: 'CONTRATO:',
+                                    style: 'marginb',
                                 },
                                 {
                                     text: 'N° - ' + this.chargeAccountData.contractNumber,
-                                    style: 'tableHeader',
+                                    style: 'marginb',
                                     alignment: 'center',
                                 },
                                 {
                                     text: this.chargeAccountData.contractName,
+                                    style: 'marginb',
                                     alignment: 'center',
                                 },
                             ],
@@ -351,7 +359,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 {
                                     colSpan: 2,
                                     text: this.chargeAccountData.totalValue,
-                                    alignment: 'center',
+                                    alignment: 'left',
                                 },
                                 {
                                     text: '',
@@ -365,7 +373,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 {
                                     colSpan: 2,
                                     text: this.valueLetter,
-                                    alignment: 'center',
+                                    alignment: 'left',
                                 },
                                 {
                                     text: '',
@@ -375,7 +383,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                             [
                                 {
                                     colSpan: 3,
-                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.accountType + this.chargeAccountData.bankingEntity + ' N° ' + this.chargeAccountData.accountNumber,
+                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.accountType+ ' ' + this.chargeAccountData.bankingEntity + ' N°  ' + this.chargeAccountData.accountNumber,
                                 },
                                 {
                                     text: '',
@@ -397,11 +405,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                     bold: true,
                     margin: [0, 0, 0, 10],
                 },
-                subheader: {
-                    fontSize: 16,
-                    bold: true,
-                    margin: [0, 10, 0, 5],
-                },
                 tableHeader: {
                     bold: true,
                     fontSize: 13,
@@ -419,10 +422,12 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                     alignment: 'center',
                     margin: [0, 10, 0, 0],
                 },
-            },
-            defaultStyle: {
-                // alignment: 'justify'
-            },
+                marginb: {
+                    fontSize: 12,
+                    margin: [0, 10, 0, 0],
+                    alignment: 'bottom',
+                },
+            }
         };
         let test = pdfMake
             .createPdf(documentDefinition)

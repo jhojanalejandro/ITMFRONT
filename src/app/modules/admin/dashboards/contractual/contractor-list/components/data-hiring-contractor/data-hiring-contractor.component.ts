@@ -167,7 +167,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       this.formContractor.value.nivel = '0'
     }
     if (this.datos.idContractors.length > 0) {
-      debugger
       for (let index = 0; index < this.datos.idContractors.length; index++) {
         this.hiringDataList.push({
           userId: this._auth.accessId,
@@ -459,6 +458,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           debt: this.valorContrato,
           modifyDate: this.registerDate,
           freed: 0,
+          consecutive: 1
         };
         this.economicDataList.push(economicData);
       }

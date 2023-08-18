@@ -27,13 +27,10 @@ export class GeneratePdfComponent implements OnInit {
     @Input() contractId: string;
     @Input() generateType: string;
     @Output() readonly pdfGenerated: EventEmitter<boolean> = new EventEmitter<boolean>();
-    valueLetter: any;
     currentDate: string;
     fechaActual: any = new Date();
     anioActual: any = this.fechaActual.getFullYear();
     anioAnterior: any = this.anioActual - 1;
-    file: any;
-    docDefinition: any;
     base64Output: any;
     headerImageBase654: any;
     footerImageBase654: any;
@@ -43,7 +40,7 @@ export class GeneratePdfComponent implements OnInit {
     previusStudyData: PreviusStudy[] = [];
     dateTransform: any = new Date();
     typeDocs: DocumentTypeFile[] = [];
-    documentSolicitudComiteList: any[] = [];
+    documentGenerate: any[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     year: Date = new Date();
 
@@ -56,8 +53,6 @@ export class GeneratePdfComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        console.log('fecha',this.year.getFullYear());
-        
         this.getDocumentType();
         this.dateTransform = this._shareService.transformDate(this.dateTransform);
         switch (this.generateType) {
@@ -80,9 +75,8 @@ export class GeneratePdfComponent implements OnInit {
 
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let data = previusStudyData.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
-            debugger
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
-                && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.userJuridic != null && data.supervisorItmName != null && data.userFirm != null && data.supervisorFirm != null) {
+                && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.juridicFirm != null && data.juridic != null && data.supervisorItmName != null && data.userFirm != null && data.supervisorFirm != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
                 let totalContrato = (+data.totalValue.toFixed(0)).toLocaleString();
@@ -93,28 +87,24 @@ export class GeneratePdfComponent implements OnInit {
                     pageOrientation: 'FOLIO',
                     pageMargins: [40, 80, 40, 60],
                     header: {
-                        margin: [20, 20],
+                        margin: [30, 30, 30, 30],
                         table: {
                             color: '#444',
                             style: 'tableExample',
-                            widths: [100, 210, 'auto', 70, 70],
+                            widths: ['auto', 'auto', 'auto', 70],
                             headerRows: 3,
                             body: [
                                 [
                                     {
-                                        rowSpan: 3,
+                                        rowSpan: 2,
                                         image: this.itmImageBase64,
-                                        style: 'title',
-                                        fit: [100, 100],
+                                        fit: [80, 80],
                                     },
                                     {
-                                        rowSpan: 3,
-                                        colSpan: 2,
+                                        rowSpan: 2,
                                         text: 'ESTUDIO PREVIO CONTRATACIÓN DIRECTA PRESTACIÓN DE SERVICIOS',
                                         style: 'title',
-                                        alignment: 'center',
                                     },
-                                    {},
                                     {
                                         text: 'Código',
                                     },
@@ -122,13 +112,12 @@ export class GeneratePdfComponent implements OnInit {
                                         text: 'FBS 057',
                                     },
                                 ],
-                                ['', '', '', 'Versión', '09'],
-                                ['', '', '', 'Fecha', this.currentDate],
+                                ['', '', 'Versión', '09'],
+                                ['', '', 'Fecha', this.currentDate],
                             ],
                         },
                     },
                     content: [
-
                         {
                             text: 'Fecha de Elaboración: ' + this.dateTransform,
                             style: 'subheader',
@@ -140,7 +129,7 @@ export class GeneratePdfComponent implements OnInit {
                             margin: [10, 0, 0, 0],
                         },
                         {
-                            text: 'Jhojan Alejandro Hernandez',
+                            text: 'ALEJANDRO VILLA GOMEZ',
                             bold: true,
                             style: 'fontPeque2',
                             margin: [10, 0, 0, 0],
@@ -213,7 +202,7 @@ export class GeneratePdfComponent implements OnInit {
                         {
 
                             table: {
-                                widths: [100, '*'],
+                                widths: [100, 400],
                                 style: 'marginTable',
                                 body: [
                                     [
@@ -231,19 +220,19 @@ export class GeneratePdfComponent implements OnInit {
                                                 {
                                                     text: 'Centro de costos o área de negocios',
                                                     style: 'title',
-                                                    margin: [10, 10, 10, 10],
+                                                    margin: [0, 10, 10, 10],
                                                 },
                                                 {
                                                     text: 'Definición de la Necesidad',
                                                     style: 'title',
-                                                    margin: [10, 100, 10, 10],
+                                                    margin: [0, 100, 10, 10],
                                                 },
                                             ],
                                         },
                                         [
                                             {
                                                 table: {
-                                                    widths: [50, 50, 50, 50, 50, 50, 50],
+                                                    widths: [45, 45, 45, 45, 45, 45, 40],
                                                     body: [
                                                         [
                                                             {
@@ -376,10 +365,10 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 10, 10, 30],
                             pageBreak: 'before',
                             table: {
-                                widths: [100, '*'],
+                                widths: [100, 390],
                                 body: [
                                     [
                                         {
@@ -501,8 +490,8 @@ export class GeneratePdfComponent implements OnInit {
                             margin: [10, 10, 10, 10],
                             pageBreak: 'before',
                             table: {
-                                margin: [10, 10, 10, 10],
-                                widths: [100, '*'],
+                                margin: [10, 10, 10, 30],
+                                widths: [100, 390],
                                 body: [
                                     [
 
@@ -580,9 +569,9 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 10, 10, 30],
                             table: {
-                                widths: ['*'],
+                                widths: [500],
                                 body: [
                                     [
                                         {
@@ -1208,32 +1197,13 @@ export class GeneratePdfComponent implements OnInit {
                                                     },
                                                 ],
                                             ],
-                                        },
-                                    ],
-                                ],
-                            },
-
-                            layout: {
-                                hLineWidth: function (i, node) {
-                                    return i === 0 || i === node.table.body.length ? 2 : 1;
-                                },
-                                vLineWidth: function (i, node) {
-                                    return i === 0 || i === node.table.widths.length ? 2 : 1;
-                                },
-                                hLineColor: function (i, node) {
-                                    return i === 0 || i === node.table.body.length
-                                        ? '#4FAACD'
-                                        : 'gray';
-                                },
-                                vLineColor: function (i, node) {
-                                    return i === 0 || i === node.table.widths.length
-                                        ? '#4FAACD'
-                                        : 'gray';
-                                },
-                            },
+                                        }
+                                    ]
+                                ]
+                            }
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 10, 10, 30],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -1261,30 +1231,12 @@ export class GeneratePdfComponent implements OnInit {
                                         },
                                     ],
                                 ],
-                            },
-                            layout: {
-                                hLineWidth: function (i, node) {
-                                    return i === 0 || i === node.table.body.length ? 2 : 1;
-                                },
-                                vLineWidth: function (i, node) {
-                                    return i === 0 || i === node.table.widths.length ? 2 : 1;
-                                },
-                                hLineColor: function (i, node) {
-                                    return i === 0 || i === node.table.body.length
-                                        ? '#4FAACD'
-                                        : 'gray';
-                                },
-                                vLineColor: function (i, node) {
-                                    return i === 0 || i === node.table.widths.length
-                                        ? '#4FAACD'
-                                        : 'gray';
-                                },
-                            },
+                            }
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            style: 'tableImage',
                             table: {
-                                widths: ['*', '*'],
+                                widths: [250, 250],
                                 body: [
                                     [
                                         {
@@ -1292,10 +1244,12 @@ export class GeneratePdfComponent implements OnInit {
                                             text: 'RESPONSABLE',
                                             style: 'titleTable2',
                                             fillColor: '#4FAACD',
-                                        }
+                                        },
+                                        {}
                                     ],
                                     [
                                         {
+                                            margin: [0, 10, 0, 0],
                                             text: [
                                                 {
                                                     text: 'Nombre: ',
@@ -1319,37 +1273,19 @@ export class GeneratePdfComponent implements OnInit {
                                                     style: 'fontSegundapagPeque',
                                                     margin: [0, 8, 0, 0],
                                                 },
-                                            ],
+                                            ]
                                         },
                                         {
-                                            image: 'data:image/jpg;base64,' + data.userFirm,
+                                            image: 'data:image/' + data.userFirmType + ';base64,' + data.userFirm,
                                             fit: [70, 70],
-                                            style: 'fontPeque',
-                                        },
-                                    ],
-                                ],
-                            },
-                            layout: {
-                                hLineWidth: function (i, node) {
-                                    return i === 0 || i === node.table.body.length ? 2 : 1;
-                                },
-                                vLineWidth: function (i, node) {
-                                    return i === 0 || i === node.table.widths.length ? 2 : 1;
-                                },
-                                hLineColor: function (i, node) {
-                                    return i === 0 || i === node.table.body.length
-                                        ? '#4FAACD'
-                                        : 'gray';
-                                },
-                                vLineColor: function (i, node) {
-                                    return i === 0 || i === node.table.widths.length
-                                        ? '#4FAACD'
-                                        : 'gray';
-                                },
-                            },
+                                            alignment: 'center',
+                                        }
+                                    ]
+                                ]
+                            }
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 10, 0, 10],
                             table: {
                                 widths: [160, 160, 160],
                                 body: [
@@ -1369,39 +1305,40 @@ export class GeneratePdfComponent implements OnInit {
                                     ],
                                     [
                                         {
-                                            text: data.user,
-                                            style: 'title',
+                                            image: 'data:image/' + data.userFirmType+';base64,' + data.userFirm,
+                                            fit: [70, 70],
+                                            style: 'fontPeque',
+
                                         },
                                         {
-                                            text: data.userJuridic,
+                                            image: 'data:image/'+data.juridicFirmType+';base64,'+data.juridicFirm,
+                                            fit: [70, 70],
+                                            style: 'fontPeque',
                                         },
                                         {
-                                            text: data.supervisorItmName,
+
+                                            image: 'data:image/'+data.supervisorFirmType+';base64,'+data.supervisorFirm,
+                                            fit: [70, 70],
+                                            style: 'fontPeque',
                                         },
                                     ],
                                     [
                                         {
-                                            image: 'data:image/jpg;base64,' + data.userFirm,
-                                            fit: [70, 70],
-                                            style: 'fontPeque',
-
+                                            text: data.user,
+                                            alignment: 'center',
                                         },
                                         {
-                                            image: 'data:image/jpg;base64,' + data.userJuridicFirm,
-                                            fit: [70, 70],
-                                            style: 'fontPeque',
+                                            text: data.juridic,
+                                            alignment: 'center',
                                         },
                                         {
-
-                                            image: 'data:image/jpg;base64,' + data.supervisorFirm,
-                                            fit: [70, 70],
-                                            style: 'fontPeque',
-
+                                            text: data.supervisorItmName,
+                                            alignment: 'center',
                                         },
                                     ]
                                 ],
                             },
-                        },
+                        }
                     ],
                     footer: {
                         margin: [10, 10],
@@ -1422,7 +1359,7 @@ export class GeneratePdfComponent implements OnInit {
                             bold: true,
                             fontSize: 13,
                             color: 'black',
-                            align: 'center',
+                            alignment: 'center',
                             margin: [0, 0, 10, 10],
                         },
                         tableExample: {
@@ -1430,7 +1367,7 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         title: {
                             bold: true,
-                            fontSize: 13,
+                            fontSize: 10,
                             color: 'black',
                             alignment: 'center',
                         },
@@ -1458,17 +1395,16 @@ export class GeneratePdfComponent implements OnInit {
                             fontSize: 10,
                         },
                         marginTable: {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 10, 30, 30],
                         },
                         fontSegundapagPeque: {
                             fontSize: 9,
                             alignment: 'justify'
                         },
-                    },
-
-                    defaultStyle: {
-                        // alignment: 'justify'
-                    },
+                        tableImage: {
+                            margin: [10, 10, 10, 30],
+                        }
+                    }
                 };
 
                 let SolicitudComite = {
@@ -1476,7 +1412,7 @@ export class GeneratePdfComponent implements OnInit {
                     contractorName: data.contractorName,
                     contractorId: data.contractorId
                 }
-                this.documentSolicitudComiteList.push(SolicitudComite);
+                this.documentGenerate.push(SolicitudComite);
             } else {
                 if (this.itmImageBase64 == null || this.itmImageBase64 == '' || this.itmImageBase64 == undefined) {
                     swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
@@ -1488,7 +1424,7 @@ export class GeneratePdfComponent implements OnInit {
                 }
                 else if (data.totalValue == null || data.totalValue == '') {
                     swal.fire('', 'no se encontro el valor del contrato para el contratista ' + data.contractorName, 'warning');
-                } else if (data.userJuridicFirm != null || data.userJuridicFirm == '') {
+                } else if (data.juridicFirm != null || data.juridicFirm == '') {
                     swal.fire({
                         position: 'center',
                         icon: 'warning',
@@ -1519,14 +1455,13 @@ export class GeneratePdfComponent implements OnInit {
                     this.hideComponent();
                     return;
                 }
-                if (this.contractContractors.contractors.length == 1) {
-                    this.hideComponent();
-                }
             }
 
         }
-        if (this.documentSolicitudComiteList.length > 0) {
-            this.savePdfGenerated(this.documentSolicitudComiteList, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS);
+        if (this.documentGenerate.length > 0) {
+            this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS).then(
+                 () => this.hideComponent()
+            );
         }
 
     }
@@ -1759,18 +1694,14 @@ export class GeneratePdfComponent implements OnInit {
                             fontSize: 9,
                             alignment: 'justify'
                         },
-                    },
-
-                    defaultStyle: {
-                        // alignment: 'justify'
-                    },
+                    }
                 };
                 let SolicitudComite = {
                     document: documentSolicitudComite,
                     contractorName: data.contractorName,
                     contractorId: data.contractorId
                 }
-                this.documentSolicitudComiteList.push(SolicitudComite);
+                this.documentGenerate.push(SolicitudComite);
             } else {
                 if (this.itmImageBase64 == null || this.itmImageBase64 == '') {
                     swal.fire('', 'Error al cargar la imagen ', 'warning');
@@ -1784,8 +1715,8 @@ export class GeneratePdfComponent implements OnInit {
                 this.hideComponent();
             }
         }
-        if (this.documentSolicitudComiteList.length > 0) {
-            this.savePdfGenerated(this.documentSolicitudComiteList, this.contractContractors.contractId, DocumentTypeCodes.SOLICITUDCOMITE);
+        if (this.documentGenerate.length > 0) {
+            this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.SOLICITUDCOMITE);
         }
 
     }
@@ -1798,7 +1729,6 @@ export class GeneratePdfComponent implements OnInit {
                 if (this.committeeRequestData.length == 0) {
                     this.hideComponent();
                 }
-
                 rslv();
             });
         });
@@ -1840,8 +1770,7 @@ export class GeneratePdfComponent implements OnInit {
         this.pdfGenerated.emit(false);
     }
 
-    private async savePdfGenerated(pdfDocument: any, contractId: string, origin: string) {
-       debugger
+    private async savePdfGenerated(pdfDocument: any, contractId: string, origin: string): Promise<void> {
         let registerFileLis: FileContractor[] = [];
         for (let index = 0; index < pdfDocument.length; index++) {
             let documentType = this.typeDocs.find(f => f.code == origin)
@@ -1852,14 +1781,13 @@ export class GeneratePdfComponent implements OnInit {
             const dataURL = await new Promise<string>((resolve, reject) => {
                 pdf.getDataUrl((dataURL) => resolve(dataURL));
             });
-
             const registerFile: FileContractor = {
                 userId: userId,
                 contractorId: pdfDocument[index].contractorId,
                 contractId: contractId,
                 filesName: nombreDocumento,
                 fileType: 'PDF',
-                descriptionFile: documentType.documentTypeDescription +' generada',
+                descriptionFile: documentType.documentTypeDescription + ' generada',
                 registerDate: date,
                 documentType: documentType.id,
                 modifyDate: date,
@@ -1872,7 +1800,6 @@ export class GeneratePdfComponent implements OnInit {
         }
         this._upload.UploadFileBillContractors(registerFileLis)
             .subscribe((res) => {
-                debugger
                 if (res.success) {
                     swal.fire({
                         position: 'center',
@@ -1880,18 +1807,10 @@ export class GeneratePdfComponent implements OnInit {
                         title: '',
                         html: res.message,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2000
                     });
-
                 }
-
-            },
-                (response) => {
-                    console.log(response);
-                    swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-                });
-
-        this.hideComponent();
+            });
     }
 
     private getDocumentType() {
@@ -1899,7 +1818,6 @@ export class GeneratePdfComponent implements OnInit {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response: any) => {
-                debugger
                 this.typeDocs = response;
             });
 

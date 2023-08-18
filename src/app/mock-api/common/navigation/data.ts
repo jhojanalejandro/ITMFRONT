@@ -17,13 +17,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link : '/dashboards/inicio'
             },
             {
-                id   : 'dashboards.post-contractual',
-                title: 'Post-Contractual',
-                type : 'basic',
-                icon : 'heroicons_outline:briefcase',
-                link : '/dashboards/inicio'
-            },
-            {
                 id   : 'dashboards.nomina',
                 title: 'Nomina',
                 type : 'basic',

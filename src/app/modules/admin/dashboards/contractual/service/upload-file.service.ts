@@ -56,7 +56,9 @@ export class UploadFileDataService {
 
     UploadFileBillContractors(formdata: FileContractor[]) {
         let urlEndpointGenerate = this.apiUrl + environment.addFileBillsEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
+            catchError(this.handleError)
+        );
     }
 
     getDocumentType() {

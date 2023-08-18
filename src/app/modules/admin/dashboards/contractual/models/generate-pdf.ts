@@ -54,10 +54,13 @@ export interface PreviusStudy{
     elementObject: string;
     elementName: string;
     user: string;
-    userJuridic: string;
-    userJuridicFirm: string;
+    juridic: string;
+    juridicFirm: string;
     totalValue: any;
     userFirm: string;
     userCharge: string;
     supervisorCharge: string;
+    userFirmType: string;
+    supervisorFirmType: string;
+    juridicFirmType: string;
 }

@@ -13,6 +13,7 @@ export interface FileContractor{
     monthPayment?: string;
     folderId: string;
     origin?: string;
+    anexo?: boolean
 }
 
 export interface Files{

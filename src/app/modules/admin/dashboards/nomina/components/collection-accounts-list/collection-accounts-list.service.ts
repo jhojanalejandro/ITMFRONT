@@ -10,24 +10,13 @@ import { IResponse } from 'app/layout/common/models/Response';
 })
 export class CollectionAccountsService
 {
-    // Private
     private _item: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
     private _itemD: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
-
     apiUrl: any = environment.apiURL;
 
-    /**
-     * Constructor
-     */
     constructor(private _httpClient: HttpClient)
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
-
-  
 
     get itemD$(): Observable<DataFile>
     {

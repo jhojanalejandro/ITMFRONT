@@ -1,10 +1,9 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterContentChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
@@ -25,14 +24,14 @@ import { OptionTypeDataComponent } from '../componentes/option-type-data/option-
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
+export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,AfterContentChecked {
   userName: any;
   configForm: FormGroup;
   generateMinute: boolean = false; 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<any>;
+  @ViewChild(MatTable) table: MatTable<any>;
   contracts: ContractList[] = [];
   typeContract: string;
   dataSource = new MatTableDataSource<any>();
@@ -159,10 +158,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
-  }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
   }
 
   ngAfterContentChecked() {

@@ -27,7 +27,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
 import { Router } from '@angular/router';
 import swal from 'sweetalert2';
-import { ChargeAccount, ExecutionReport } from './models/pdfDocument';
+import { ExecutionReport } from './models/pdfDocument';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -91,7 +91,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 if (result) {
-                    // this.getDataContractor(this.id);
+
                 }
             });
     }
@@ -99,6 +99,8 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         this.viewFilesContract = true;
         this.getFilesUserByContract();
         this.getFilesUserByContract();
+        this.getDataContractor();
+
 
     }
 
@@ -158,12 +160,12 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
     private getFilesUserByContract() {
         this._contractorListService
-            .getFilesContractorByContractId(this._auth.accessId,this.contractSelected)
+            .getFilesContractorByContractId(this._auth.accessId, this.contractSelected)
             .subscribe((Response: any) => {
-                
+
                 if (Response.length > 0) {
                     this.fileContractorListGeneral = Response;
-                    this.fileContractorList = Response.filter(f => f.documentTypesCode == DocumentTypeCode.PLANILLA || f.documentTypesCode == DocumentTypeCode.CUENTACOBRO || f.documentTypesCode == DocumentTypeCode.INFORMEEJECUCIÓN );
+                    this.fileContractorList = Response.filter(f => f.documentTypesCode == DocumentTypeCode.PLANILLA || f.documentTypesCode == DocumentTypeCode.CUENTACOBRO || f.documentTypesCode == DocumentTypeCode.INFORMEEJECUCIÓN);
                     return (this.filesCharged = true);
                 }
                 if (Response.length <= 0) {
@@ -188,10 +190,12 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
+                    if(Response.chargeAccountNumber == 0){
+                        Response.chargeAccountNumber = 1;
+                    }
                     if (Response != null) {
                         this.viwFilesGenerated = true;
                         this.chargeAccountData = Response;
-                        this.chargeAccount = true;
                     }
                 });
         } else {
@@ -207,17 +211,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .subscribe((Response) => {
                     if (Response != null) {
                         this.executionReportData = Response;
-                        this.chargeAccount = true;
                     }
                 });
         } else {
             swal.fire('', 'No has seleccionado contrato!', 'warning');
         }
     }
+
     signOut(): void {
         this._router.navigate(['/sign-out']);
     }
-
 
     descargarActa() {
         this._contractorService
@@ -239,6 +242,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         let base64String = b64Dada;
         this.downloadPdf(base64String, fileName);
     }
+
     onGeneratePdf(e: any) {
         this.chargeAccount = e;
         this.executionReport = e;
@@ -264,6 +268,11 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             });
     }
 
+    generateChargeAccount() {
+        this.chargeAccount = true;
+        this.executionReport = true;
+
+    }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

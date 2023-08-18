@@ -52,3 +52,24 @@ export interface NewnessContractor{
     tipoNovedad: string;   
 	contractId: string;
 }
+
+
+export interface ContractorPayroll{
+    id?: string;
+	nombre: string,
+	habilitado: string;
+	identificacion: string;
+	lugarExpedicion: string;
+	fechaNacimiento: Date;
+	direccion: string;
+	telefono: string;
+	celular: string;
+	correo: string;
+	userId?: string;
+	proccess: any;
+	elementId: string;
+	componentId: string;
+	legalProccess: any;
+	hiringStatus: any;
+	assignmentUser?: string[];
+}

@@ -17,8 +17,8 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
-import { UploadFileDataService } from '../../contractual/service/upload-file.service';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
+import { UploadFileDataService } from '../../../contractual/service/upload-file.service';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
@@ -72,7 +72,7 @@ export class CollectionAccountsListComponent implements OnInit {
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _matDialog: MatDialog,
     private _uploadFileDataService: UploadFileDataService,
-    private _gerenicService: GenericService,
+    private _gerenicService: GenericService
   ) { }
 
   ngOnInit(): void {

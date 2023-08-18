@@ -6,9 +6,9 @@ export interface ContractorPayments{
     cashPayment: boolean;
     monthPayment: any;
     paymentcant: any;
-    fromDate: Date;
-    toDate: Date;
+    fromDate: any;
+    toDate: any;
     descriptionPayment: string
     registerDate: Date;
-
+    consecutive: number;
 }

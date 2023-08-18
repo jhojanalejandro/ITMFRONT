@@ -1,8 +1,9 @@
 import { Route } from '@angular/router';
 import { NominaComponent } from 'app/modules/admin/dashboards/nomina/nomina.component';
-import { CollectionAccountsListComponent } from './collection-accounts-list/collection-accounts-list.component';
-import { CollectionAccountsItemFResolver } from './collection-accounts-list/collection-accounts-list.resolvers';
-import { ContractorPaymentListComponent } from './contractor-payment-list/contractor-payment-list.component';
+import { CollectionAccountsListComponent } from './components/collection-accounts-list/collection-accounts-list.component';
+import { CollectionAccountsItemFResolver } from './components/collection-accounts-list/collection-accounts-list.resolvers';
+import { ContractorListPayrollComponent } from './components/contractor-list-payroll/contractor-list-payroll.component';
+
 
 export const nominaRoutes: Route[] = [
     {
@@ -20,7 +21,7 @@ export const nominaRoutes: Route[] = [
         }
     },
     {
-        path: 'payment-contractor/:contractId/:ContractorId',
-        component: ContractorPaymentListComponent,
+        path: 'lista-contratistas/:contractId/:contractname',
+        component: ContractorListPayrollComponent,
     },
 ];

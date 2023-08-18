@@ -27,7 +27,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
 import { Contractor } from 'app/modules/admin/dashboards/contractual/models/contractor';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
-
+import { PDFDocument } from 'pdf-lib';
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -129,7 +129,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             filedata: this.base64Output,
             monthPayment: this.monthYear,
             userId: null,
-            folderId: null
+            folderId: null,
+            anexo: false
         };
         this.formFile.disable();
         this._uploadFileDataService
@@ -137,7 +138,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (res) => {
-                    debugger
                     if (res.success) {
                         swal.fire({
                             position: 'center',
@@ -266,7 +266,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.REGISTROSECOP)
                     }
                 }
-                 else if (resp.activateTermPayments) {
+                else if (resp.activateTermPayments) {
                     this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
                 }
 
@@ -275,7 +275,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         return this.dataContractor;
     }
 
-    
+
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();
         this._unsubscribeAll.next(true);

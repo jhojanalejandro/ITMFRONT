@@ -150,26 +150,18 @@ export class ShareService {
         }
     }
 
-    numeroALetras(num, currency) {
+    numeroALetras(total, currency) {
+        const numericValue = Number(total.toString().replace(/\./g, ''));
+
         currency = currency || {};
         let data = {
-            numero: num,
-            enteros: Math.floor(num),
-            centavos: (((Math.round(num * 100)) - (Math.floor(num) * 100))),
+            numero: numericValue,
+            enteros: Math.floor(numericValue),
             letrasCentavos: '',
-            letrasMonedaPlural: currency.plural || 'PESOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
+            letrasMonedaPlural: currency.plural || 'DE PESOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
             letrasMonedaSingular: currency.singular || 'PESO', //'PESO', 'Dólar', 'Bolivar', 'etc'
             letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVOS',
             letrasMonedaCentavoSingular: currency.centSingular || 'COLOMBIANOS'
-        };
-
-        if (data.centavos > 0) {
-            let centavos = ''
-            if (data.centavos == 1)
-                centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoSingular;
-            else
-                centavos = this.Millones(data.centavos) + ' ' + data.letrasMonedaCentavoPlural;
-            data.letrasCentavos = 'CON ' + centavos
         };
 
         if (data.enteros == 0)

@@ -13,22 +13,12 @@ export class NominaService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
-    /**
-     * Constructor
-     */
     constructor(private _httpClient: HttpClient) {
     }
 
-    /**
- * Getter for data
- */
     get data$(): Observable<any> {
         return this._data.asObservable();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
 
     addContractorPayments(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.addContractorPaymentsEndpoint;
