@@ -40,6 +40,7 @@ export const environment = {
     AddnewnessContractor: 'Contractor/AddNewNess',
     GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
     ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
+    SaveModifyMinuteEndpoint: 'ContractFolder/SaveModifyMinute',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
