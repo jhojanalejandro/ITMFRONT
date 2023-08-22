@@ -138,8 +138,7 @@ export const environment = {
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
 
-
-    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
+    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 
 
 };

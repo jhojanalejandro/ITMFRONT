@@ -40,6 +40,7 @@ export const environment = {
     AddnewnessContractor: 'Contractor/AddNewNess',
     GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
     ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
+    SaveModifyMinuteEndpoint: 'ContractFolder/SaveModifyMinute',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -88,7 +89,7 @@ export const environment = {
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
     updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
-    DeleteFileEndpoint: 'Files/Delete/',
+    DeleteFileEndpoint: 'Files/DeleteFile/',
 
 
     addHiringEndpoint: 'HiringData/SaveHiring',
@@ -137,7 +138,7 @@ export const environment = {
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
 
-    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
+    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 
 };
 
