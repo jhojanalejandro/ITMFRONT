@@ -17,8 +17,7 @@ import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/documen
 
 @Component({
     selector: 'app-generate-pdf',
-    templateUrl: './generate-pdf.component.html',
-    styleUrls: ['./generate-pdf.component.scss']
+    templateUrl: './generate-pdf.component.html'
 })
 export class GeneratePdfComponent implements OnInit {
     @ViewChild('pdfTable') pdfTable: ElementRef;
@@ -79,7 +78,7 @@ export class GeneratePdfComponent implements OnInit {
                 && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.juridicFirm != null && data.juridic != null && data.supervisorItmName != null && data.userFirm != null && data.supervisorFirm != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
-                let totalContrato = (+data.totalValue.toFixed(0)).toLocaleString();
+                let totalContrato = this.addCommasToNumber(data.totalValue);
                 data.specificObligations = data.specificObligations.replaceAll('->', ' ');
                 data.generalObligations = data.generalObligations.replaceAll('->', ' ');
                 const documentPreviousStudy = {
@@ -717,7 +716,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: valorLetras + 'm.l($' + totalContrato + ').',
+                                                            text: valorLetras + ' m.l($' + totalContrato + ').',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -744,8 +743,8 @@ export class GeneratePdfComponent implements OnInit {
                                     return i === 0 || i === node.table.widths.length
                                         ? '#4FAACD'
                                         : 'gray';
-                                },
-                            },
+                                }
+                            }
                         },
                         {
                             margin: [10, 10, 10, 10],
@@ -784,7 +783,7 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 8, 0, 0],
                                                     text: [
                                                         {
-                                                            text: 'La contratación se realizará con',
+                                                            text: 'La contratación se realizará con ',
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
@@ -793,7 +792,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             bold: true,
                                                         },
                                                         {
-                                                            text: 'con cédula de ciudadanía ',
+                                                            text: ' con cédula de ciudadanía ',
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
@@ -820,7 +819,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: 'PROFESIONAL EN CUALQUIER AREA DEL CONOCIMIENTO CON 1 AÑO DE EXPERIENCIA',
+                                                            text: data.requiredProfile,
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -1305,19 +1304,19 @@ export class GeneratePdfComponent implements OnInit {
                                     ],
                                     [
                                         {
-                                            image: 'data:image/' + data.userFirmType+';base64,' + data.userFirm,
+                                            image: 'data:image/' + data.userFirmType + ';base64,' + data.userFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
 
                                         },
                                         {
-                                            image: 'data:image/'+data.juridicFirmType+';base64,'+data.juridicFirm,
+                                            image: 'data:image/' + data.juridicFirmType + ';base64,' + data.juridicFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
                                         },
                                         {
 
-                                            image: 'data:image/'+data.supervisorFirmType+';base64,'+data.supervisorFirm,
+                                            image: 'data:image/' + data.supervisorFirmType + ';base64,' + data.supervisorFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
                                         },
@@ -1414,24 +1413,42 @@ export class GeneratePdfComponent implements OnInit {
                 }
                 this.documentGenerate.push(SolicitudComite);
             } else {
-                if (this.itmImageBase64 == null || this.itmImageBase64 == '' || this.itmImageBase64 == undefined) {
+                if (data.requiredProfile == null || data.requiredProfile == '') {
+                    swal.fire('', 'No se encontro el perfil requerido', 'warning');
+                    this.hideComponent();
+                    return;
+                } else if (this.itmImageBase64 == null || this.itmImageBase64 == '' || this.itmImageBase64 == undefined) {
                     swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
                     this.hideComponent();
                     return;
                 }
                 else if (data.generalObligations == null || data.generalObligations == '' || data.specificObligations == null || data.specificObligations == '') {
-                    swal.fire('', 'no se encontraron las obligaciones del contratato para el contratista ' + data.contractorName, 'warning');
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'no se encontraron las obligaciones del contratato para el contratista ' + data.contractorName,
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                 }
                 else if (data.totalValue == null || data.totalValue == '') {
-                    swal.fire('', 'no se encontro el valor del contrato para el contratista ' + data.contractorName, 'warning');
-                } else if (data.juridicFirm != null || data.juridicFirm == '') {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'no se encontro el valor del contrato para el contratista ' + data.contractorName,
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                } else if (data.juridicFirm == null || data.juridicFirm == '') {
                     swal.fire({
                         position: 'center',
                         icon: 'warning',
                         title: '',
                         html: 'No se  se encontro la firma del juridico para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2500
                     });
                 } else if (data.supervisorFirm == null || data.supervisorFirm == '') {
                     swal.fire({
@@ -1440,7 +1457,7 @@ export class GeneratePdfComponent implements OnInit {
                         title: '',
                         html: 'No se encontro la firma del supervisor para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2500
                     });
                     this.hideComponent();
                 } else if (data.userFirm == null || data.userFirm == '') {
@@ -1450,7 +1467,7 @@ export class GeneratePdfComponent implements OnInit {
                         title: '',
                         html: 'No se encontro la firma del contratual para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2500
                     });
                     this.hideComponent();
                     return;
@@ -1460,7 +1477,7 @@ export class GeneratePdfComponent implements OnInit {
         }
         if (this.documentGenerate.length > 0) {
             this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS).then(
-                 () => this.hideComponent()
+                () => this.hideComponent()
             );
         }
 
@@ -1721,9 +1738,9 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-
     private async getcommitteeRequestData(): Promise<void> {
         return await new Promise((rslv) => {
+            this.contractContractors.typeMinute = DocumentTypeCodes.SOLICITUDCOMITE
             this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response) => {
                 this.committeeRequestData = Response;
                 if (this.committeeRequestData.length == 0) {
@@ -1737,7 +1754,7 @@ export class GeneratePdfComponent implements OnInit {
 
     private async gePreviusStudyData(): Promise<void> {
         return await new Promise((rslv) => {
-
+            this.contractContractors.typeMinute = DocumentTypeCodes.ESTUDIOSPREVIOS
             this._pdfdataService.getPreviusStudy(this.contractContractors)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
@@ -1820,7 +1837,10 @@ export class GeneratePdfComponent implements OnInit {
             .subscribe((response: any) => {
                 this.typeDocs = response;
             });
+    }
 
+    addCommasToNumber(value: number): string {
+        return value.toLocaleString('es');
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);

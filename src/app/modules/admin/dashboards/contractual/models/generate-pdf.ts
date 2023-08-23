@@ -1,10 +1,11 @@
-export interface MinuteExtension{
+export interface OtherMinute{
+    id: string;
     contractId: string;
     contractorId: string;
 	contractorName: string;
     contractorIdentification: string;
 	contractorExpeditionPlace: string;
-    totalValueContract: string;
+    totalValueContract: any;
     initialDateContract: Date;
     finalDateContract: Date;
     initialDateContractExtension: Date;
@@ -15,7 +16,15 @@ export interface MinuteExtension{
     consecutive: number;
     contractNumber: string;
     supervisorCharge: string;
-
+    companyName: string;
+    additionValue: any;
+    registerDateContract: Date;
+    rubroContract: any;
+    unitValueContract: any;
+    numberModify: number;
+    specificObligations: any;
+    generalObligations: any;
+    typeModify: string;
 }
 
 export interface CommitteeRequest{
@@ -63,4 +72,32 @@ export interface PreviusStudy{
     userFirmType: string;
     supervisorFirmType: string;
     juridicFirmType: string;
+    requiredProfile: string;
+}
+
+export interface MinutePdf{
+    contractId: string;
+    contractorId: string;
+	contractorName: string;
+    contractorIdentification: string;
+	contractorExpeditionPlace: string;
+    totalValueContract: any;
+    initialDateContract: Date;
+    finalDateContract: Date;
+    elementObject: string;
+    supervisor: string;
+    supervisorIdentification: string
+    contractNumber: string;
+    supervisorCharge: string;
+    companyName: string;
+    contrato: any;
+    registerDateContract: Date;
+    rubroContract: any;
+    unitValueContract: any;
+    numberModify: number;
+    specificObligations: any;
+    generalObligations: any;
+    contractorMail: string;
+    comiteGenerated: boolean;
+    previusStudy: boolean;
 }
