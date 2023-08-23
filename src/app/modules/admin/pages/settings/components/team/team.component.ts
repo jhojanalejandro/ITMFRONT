@@ -52,14 +52,10 @@ export class SettingsTeamComponent implements OnInit {
         this._authService
             .updateUser(user)
             .subscribe((res) => {
-                if (res) {
+                if (res.success) {
                     this.openSnackBar(user.userName);
                 }
-            },
-                (response) => {
-                    console.log('error', response);
-                    swal.fire('Error', 'No se pudo actualizar!', 'error');
-                });
+            });
     }
     openSnackBar(user: string) {
         this._snackBar.open('  Rol Asignado al usuario ' + user, 'echo', {

@@ -79,9 +79,11 @@ export class AuthSignUpComponent implements OnInit {
         // Sign up
         this._authService.signUp(userRegister).subscribe(
             (response) => {
-                
+
                 // Navigate to the confirmation required page
-                this._router.navigateByUrl('/confirmation-required');
+                if (response.success) {
+                    this._router.navigateByUrl('/confirmation-required');
+                };
             },
             (response) => {
                 console.log(response);
