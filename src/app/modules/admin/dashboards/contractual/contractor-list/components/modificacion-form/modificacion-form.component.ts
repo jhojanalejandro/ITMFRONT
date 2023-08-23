@@ -30,6 +30,7 @@ import { DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/p
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
 import { UploadFileDataService } from '../../../service/upload-file.service';
+import { ContractorService } from '../../../service/contractor.service';
 
 
 @Component({
@@ -40,7 +41,6 @@ import { UploadFileDataService } from '../../../service/upload-file.service';
 export class ModificacionFormComponent implements OnInit {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
     filteredOptions: Observable<string[]>;
-    modificaciones: any = GlobalConst.requierePoliza;
     tipoModificacion: any;
     showDate: boolean = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -88,6 +88,7 @@ export class ModificacionFormComponent implements OnInit {
         private _router: Router,
         private _genericService: GenericService,
         private _uploadFileDataService: UploadFileDataService,
+        private _contractorService: ContractorService,
     ) {
         setInterval(() => {
             this.numberOfTicks++;
@@ -137,7 +138,7 @@ export class ModificacionFormComponent implements OnInit {
                 startWith(''),
                 map((value) => this._filter(value || ''))
             );
-            this.getDocumentType();
+        this.getDocumentType();
     }
 
     private _filter(value: string): string[] {
@@ -154,15 +155,6 @@ export class ModificacionFormComponent implements OnInit {
 
     trackByFn(index: number, item: any): any {
         return item.id || index;
-    }
-
-    getElements() {
-        this._planingService
-            .getElementoComponente(this._data)
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response) => {
-                this.elementos = response;
-            });
     }
 
     addModify() {
@@ -193,24 +185,21 @@ export class ModificacionFormComponent implements OnInit {
             activityId: this._data.data.activityId
 
         };
-
-        this._planingService.addElementoComponente(item)
+        this._contractorService
+            .saveMinuteModify(item)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
-                if (response) {
+                if (response.success) {
                     swal.fire({
                         position: 'center',
                         icon: 'success',
                         title: '',
-                        html: 'Información Registrada Exitosamente!',
+                        html: response.message,
                         showConfirmButton: false,
                         timer: 1500
                     });
                 }
                 this._changeDetectorRef.detectChanges();
-            }, (response) => {
-                // Set the alert
-                swal.fire('Error', 'Error al registrar la información!', 'error');
             });
         this.matDialogRef.close();
     }
@@ -238,8 +227,8 @@ export class ModificacionFormComponent implements OnInit {
     };
 
     selectmodificacion(event) {
-        let codeMinute = this.tipoModificacion.find(f =>f.id == event.value).code;
-        
+        let codeMinute = this.tipoModificacion.find(f => f.id == event.value).code;
+
         switch (codeMinute) {
             case DocumentTypeFileCodes.MC:
                 this.showDate = false;
@@ -303,26 +292,27 @@ export class ModificacionFormComponent implements OnInit {
                 }
             });
     }
-    getDateAdiction() {
+
+    private getDateAdiction() {
         this._genericService.getDetalleContractById(this._data.contractId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (resp) => {
-
                     this.dateAdiction = resp;
                 }
             );
     }
-    getDataElemento() {
+
+    private getDataElemento() {
         this._planingService.getElementoById(this._data.data.elementId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                if (resp !=  null) {
+                if (resp != null) {
                     this.elemento = resp;
-                    if(this.elemento.cpc == undefined){
+                    if (this.elemento.cpc == undefined) {
                         this.elemento.cpc = null;
                     }
-                    if(this.elemento.nombreCpc == undefined){
+                    if (this.elemento.nombreCpc == undefined) {
                         this.elemento.nombreCpc = null;
                     }
                     this.elemento.valorUnidad = this.elemento.valorUnidad;
@@ -342,27 +332,16 @@ export class ModificacionFormComponent implements OnInit {
         this.maxdate = new Date(numberOfMlSeconds + addMlSeconds);
     }
 
-    private getTypeMinuteContract() {
-        this._genericService.getTypeMinutesContract()
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(
-                (resp) => {
-                    this.modificaciones = resp;
-                }
-            );
-    }
-
     private getDocumentType() {
         this._uploadFileDataService
-          .getMinuteType()
-          .pipe(takeUntil(this._unsubscribeAll))
-          .subscribe((res) => {
-            
-            if (res != null) {
-              this.tipoModificacion = res;
-            }
-        });
-      }
+            .getMinuteType()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                if (res != null) {
+                    this.tipoModificacion = res;
+                }
+            });
+    }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

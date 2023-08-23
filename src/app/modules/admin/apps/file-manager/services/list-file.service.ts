@@ -5,6 +5,7 @@ import { DataFile } from 'app/modules/admin/apps/file-manager/file-manager.types
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import Swal from 'sweetalert2';
+import { ContractContractors } from 'app/modules/admin/dashboards/contractual/models/contractor';
 
 @Injectable({
     providedIn: 'root'
@@ -145,7 +146,17 @@ export class FileListManagerService {
         );
     }
 
-    // Método para manejar errores (opcional)
+
+    getFileDownload(contractContractors: ContractContractors): Observable<DataFile> {
+
+        let urlEndPoint = this.apiUrl + environment.GetFileDonwloadContractualEndpoint;
+        return this._httpClient.post<any>(urlEndPoint, contractContractors ).pipe(
+            tap((items) => {
+                this._listFileContractor.next(items);
+            })
+        );
+    }
+
     private handleError(error: any): Observable<any> {
         // Implementa el manejo de errores aquí, si es necesario
         // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal

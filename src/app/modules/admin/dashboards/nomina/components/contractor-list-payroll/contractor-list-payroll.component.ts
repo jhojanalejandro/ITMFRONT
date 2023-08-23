@@ -48,7 +48,7 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
-  contractContractors: ContractContractors = { contractId: null, contractors: [] };
+  contractContractors: ContractContractors = { contractId: null, contractors: [], typeMinute: null };
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;

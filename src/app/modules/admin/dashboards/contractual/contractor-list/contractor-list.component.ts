@@ -26,6 +26,9 @@ import { TermFileContractComponent } from './components/term-file-contract/term-
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
+import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 @Component({
   selector: 'contractor-list',
@@ -52,13 +55,13 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
-  contractContractors: ContractContractors = { contractId: null, contractors: [] };
+  contractContractors: ContractContractors = { contractId: null, contractors: [], typeMinute: null };
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   idSelected: string[] = [];
-  contractname: string;
+  contractName: string;
   origin: string;
   selection = new SelectionModel<any>(true, []);
   displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
@@ -88,6 +91,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     private router: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _loadrouter: Router,
+    private _fileService: FileListManagerService,
   ) {
     this.datePipe = new DatePipe('es');
   }
@@ -111,7 +115,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
     this.userName = this._authService.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
-    this.contractname = this.router.snapshot.paramMap.get('contractname') || 'null';
+    this.contractName = this.router.snapshot.paramMap.get('contractname') || 'null';
     this.origin = this.router.snapshot.paramMap.get('origin') || 'null';
 
     this.configForm = this._formBuilder.group({
@@ -215,7 +219,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
   }
   isAllSelected() {
-    if (this.selection.selected.length > 1) {
+    if (this.selection.selected.length >= 1) {
       this.visibleOption = true;
     } else {
       this.visibleOption = false;
@@ -374,8 +378,15 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     this.generatePdfMinute = true;
 
   }
-  generarEstudiosPrevios(data: any = null, type: string) {
-    this.contractContractors.contractors = [data.id];
+  generatedPdfContractor(data: any = null, type: string) {
+    if(data != null){
+      this.contractContractors.contractors = [data.id];
+    }else{
+      this.selection.selected.forEach(element => {
+        this.contractorListId.push(element.id);
+      });
+      this.contractContractors.contractors =  this.contractorListId;
+    }
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
     this.generateType = type;
@@ -427,14 +438,12 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
         }
       });
     }
-
   }
 
   pdfGenerated(e: boolean) {
-    this.reloadResolve();
     this.generatePdf = e;
     this.generatePdfMinute = e;
-
+    this.reloadResolve();
   }
 
   reloadResolve() {
@@ -541,17 +550,17 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     };
   }
 
-  toggleDetails(product: any): void {
+  toggleDetails(contractor: any): void {
     // If the product is already selected...
-    if (this.contractorSelected && this.contractorSelected.id === product.id) {
+    if (this.contractorSelected && this.contractorSelected.id === contractor.id) {
       // Close the details
       this.closeDetail();
       return;
     }
-    this.contractorSelected = product;
+    this.contractorSelected = contractor;
     this.showDetail = true;
 
-    this.selectedContracttorForm.patchValue(product);
+    this.selectedContracttorForm.patchValue(contractor);
 
     // Mark for check
     this.cdref.markForCheck();
@@ -562,8 +571,42 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     this.showDetail = false;
   }
 
+  getFilesFolder(typeFile: any) {
+    this.selection.selected.forEach(element => {
+      this.contractorListId.push(element.id);
+    });
+    this.contractContractors.contractors = this.contractorListId;
+    this.contractContractors.contractId = this.contractId;
+    this.contractContractors.typeMinute = typeFile;
+    this._fileService.getFileDownload(this.contractContractors)
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((Response: any) => {
+        const jszip = new JSZip();
+        for (let i = 0; i < Response.length; i++) {
+          Response[i].filedata = 'data:application/pdf;base64,' + Response[i].filedata
+          var binary = atob(Response[i].filedata.split(',')[1]);
+          var array = [];
+          for (let j = 0; j < binary.length; j++) {
+            array.push(binary.charCodeAt(j));
+          }
+          let pdf = new Blob([new Uint8Array(array)], {
+            type: 'application/pdf'
+          });
+          let contract = this.contractName;
+          jszip.folder(typeFile).file(`${Response[i].filesName}.pdf`, pdf);
+          if (i === (Response.length - 1)) {
+            jszip.generateAsync({ type: 'blob' }).then(function (content) {
+              // see FileSaver.js
+              saveAs(content,typeFile+ contract +'.zip');
+            });
+          }
+        }
+      })
+  }
+
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();
   }
+
 }

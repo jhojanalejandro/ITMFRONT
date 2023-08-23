@@ -11,6 +11,7 @@ export interface AsignmentData{
 
 
 export interface ContractContractors{
+	typeMinute: string
     contractId: string;
 	contractors: string[];
 }

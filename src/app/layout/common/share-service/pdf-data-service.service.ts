@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ContractContractors } from "app/modules/admin/dashboards/contractual/models/contractor";
-import { MinuteExtension, PreviusStudy } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
+import {  PreviusStudy } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
 import { environment } from "environments/environment";
 import { Observable, catchError } from "rxjs";
 import Swal from 'sweetalert2';

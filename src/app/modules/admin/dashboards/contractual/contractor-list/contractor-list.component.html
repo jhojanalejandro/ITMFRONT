@@ -7,7 +7,7 @@
                 <span class="ml-2">Volver</span>
             </a> -->
             <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
-                {{contractname}}!</div>
+                {{contractName}}!</div>
 
         </div>
         <div class="mt-4 sm:mt-0" *ngIf="origin == 'contractual'">
@@ -87,15 +87,34 @@
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Minuta
                                 </button>
-                                <button *ngIf="visibleOption" mat-menu-item (click)="generarEstudiosPrevios()">
+                                <button *ngIf="visibleOption" mat-menu-item (click)="generatedPdfContractor(null,'ESTUDIOS PREVIOS')">
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Estudios Previos
+                                </button>
+                                <button *ngIf="visibleOption" mat-menu-item (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Generar Solicitud de comite
+                                </button>
+                                <button *ngIf="visibleOption" mat-menu-item (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Generar  Otro si
                                 </button>
                                 <button mat-menu-item (click)="activateContarct()">
                                     <mat-icon svgIcon="heroicons_solid:arrow-circle-right"></mat-icon>
                                     Activar contrato
                                 </button>
-
+                                <button *ngIf="visibleOption" mat-menu-item (click)="getFilesFolder('MNT')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Descargar Minutas
+                                </button>
+                                <button *ngIf="visibleOption" mat-menu-item (click)="getFilesFolder('ETPR')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Descargar Estudios Previos
+                                </button>
+                                <button *ngIf="visibleOption" mat-menu-item (click)="getFilesFolder('SLCMT')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Descargar Solicitud de comite
+                                </button>
                             </mat-menu>
                         </div>
                     </div>
@@ -205,19 +224,22 @@
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Minuta
                                             </button>
-                                            <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="generarEstudiosPrevios(element,'ESTUDIOS PREVIOS')"
+                                            <button [matTooltip]="'GENERAR PDF'"
+                                                (click)="generatedPdfContractor(element,'ESTUDIOS PREVIOS')"
                                                 [color]="'primary'" mat-menu-item>
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Estudios Previos
                                             </button>
-                                            <button [matTooltip]="'Generar Modificacion'"
-                                                (click)="generarEstudiosPrevios(element,'SOLICITUD COMITE')"
+                                            <button [matTooltip]="'Generar'"
+                                                (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
                                                 mat-menu-item>
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                Solicitud de comite
+                                                Generar Solicitud de comite
                                             </button>
-
+                                            <button [matTooltip]="'Generar'" *ngIf="visibleOption" mat-menu-item (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                                Generar Otro si
+                                            </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
                                                 (click)="addTermFileContract(element)" [color]="'primary'"
                                                 mat-menu-item>

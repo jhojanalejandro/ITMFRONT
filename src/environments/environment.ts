@@ -90,6 +90,7 @@ export const environment = {
     updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/DeleteFile/',
+    GetFileDonwloadContractualEndpoint: 'Files/GetFileDonwloadContractual',
 
 
     addHiringEndpoint: 'HiringData/SaveHiring',

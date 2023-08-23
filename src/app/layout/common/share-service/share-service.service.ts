@@ -157,19 +157,20 @@ export class ShareService {
         let data = {
             numero: numericValue,
             enteros: Math.floor(numericValue),
+            decimales: numericValue % 1,
             letrasCentavos: '',
-            letrasMonedaPlural: currency.plural || 'DE PESOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
-            letrasMonedaSingular: currency.singular || 'PESO', //'PESO', 'Dólar', 'Bolivar', 'etc'
+            letrasMonedaPlural: currency.plural || 'PESOS',
+            letrasMonedaSingular: currency.singular || 'PESO',
             letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVOS',
             letrasMonedaCentavoSingular: currency.centSingular || 'COLOMBIANOS'
         };
-
+    
         if (data.enteros == 0)
             return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
         if (data.enteros == 1)
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular;
+            return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + (data.decimales > 0 ? '' : 'DE') + ' ' + data.letrasMonedaCentavoPlural;
         else
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural;
+            return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + (data.decimales > 0 ? '' : 'DE') + ' ' + data.letrasMonedaCentavoPlural;
     };
     transform(value: number): string {
         if (value === 0) {

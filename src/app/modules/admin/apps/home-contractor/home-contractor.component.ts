@@ -47,12 +47,10 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractList: any[] = [];
-    minutesDocumentPdf: File;
     contractSelected: string = null;
     id: any;
     userName: any;
-    chargeAccount: boolean = false;
-    executionReport: boolean = false;
+    typeGenerator: boolean = false;
     @ViewChild('pdfTable') pdfTable: ElementRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     raffleName: any;
@@ -61,6 +59,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
+    showPdfGenerated: boolean = false;
 
     constructor(
         private _contractorService: HomeContractorService,
@@ -222,14 +221,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         this._router.navigate(['/sign-out']);
     }
 
-    descargarActa() {
-        this._contractorService
-            .GetMinutesPdfContractor(this._auth.accessId, this.contractSelected)
-            .subscribe((Response) => {
-                this.minutesDocumentPdf = Response;
-            });
-    }
-
     downloadPdf(base64String, fileName) {
         const source = `data:application/pdf;base64,${base64String}`;
         const link = document.createElement('a');
@@ -244,8 +235,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
 
     onGeneratePdf(e: any) {
-        this.chargeAccount = e;
-        this.executionReport = e;
+        this.showPdfGenerated = e;
     }
 
     addPersonalData() {
@@ -267,12 +257,12 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
-    generateChargeAccount() {
-        this.chargeAccount = true;
-        this.executionReport = true;
+    generatePdf(e: any) {
+        this.typeGenerator = e;
+        this.showPdfGenerated = true;
 
     }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

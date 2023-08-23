@@ -50,13 +50,14 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
             id: this._authService.accessId,
             userName: this.accountForm.value.name,
             professionalposition: this.accountForm.value.profesionalPosistion,
-            phoneNumber: this.accountForm.value.phoneNumber,
+            phoneNumber: this.accountForm.value.phone,
             userEmail: this.accountForm.value.email,
             identification: this.accountForm.value.identification,
             passwordMail: this.accountForm.value.passwordMail
 
         };
         // Sign in
+        this._authService.accessEmail = updateUser.userEmail;
         this._authService.updateUser(updateUser)
             .subscribe(
                 (data: any) => {

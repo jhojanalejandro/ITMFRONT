@@ -132,6 +132,13 @@ export class ContractorService {
         );
     }
 
+    saveMinuteModify(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.SaveModifyMinuteEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
+    }
+
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
         // Implementa el manejo de errores aquí, si es necesario
