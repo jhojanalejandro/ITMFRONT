@@ -95,15 +95,13 @@ export class UploadFileDataService {
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
-        // Implementa el manejo de errores aquí, si es necesario
-        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
         Swal.fire({
             position: 'center',
             icon: 'error',
             title: '',
             html: error.error.message,
             showConfirmButton: false,
-            timer: 2000
+            timer: 3000
         });
         return new Observable<any>();
     }

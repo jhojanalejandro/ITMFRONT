@@ -5,24 +5,20 @@
             <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
-    <iframe id="ifrm" style="width: 100%; height: 100%;" ></iframe>
-    
-    <!-- <ngx-extended-pdf-viewer [data]="pdfDescomprimido" [height]="'90vh'"></ngx-extended-pdf-viewer> -->
+    <!-- <iframe id="ifrm" style="width: 100%; height: 100%;"></iframe> -->
 
-    <!-- <ngx-extended-pdf-viewer 
-    [src]="getFile"></ngx-extended-pdf-viewer> -->
-    <!-- <ngx-extended-pdf-viewer
-    [base64Src]="getFile"
-    backgroundColor="#ffffff"
-    [height]="'90vh'"
-    [useBrowserLocale]="true"
-    [handTool]="false"
-    [showHandToolButton]="true"
-  >
-  </ngx-extended-pdf-viewer> -->
-  <!-- <embed id="ifrm" width="100%" height="600px" /> -->
-  <!-- <iframe id="ifrm"  width="100%" height="600px"></iframe> -->
-  <!-- <iframe [src]="file" width="100%" height="500px"></iframe> -->
-
-
-</div>	
+    <!-- <iframe id="ifrm"  width="100%" height="600px"></iframe> -->
+    <!-- <iframe [src]="file" width="100%" height="500px"></iframe> -->
+    <!-- <ngx-extended-pdf-viewer [pdfData]="getFile" height="100%" width="100%"></ngx-extended-pdf-viewer> -->
+    <!-- <iframe [src]="pdfData" type="application/pdf" width="100%" height="100%"></iframe> -->
+    <!-- <pdf-viewer [src]="pdfData"
+    [render-text]="true"
+    [original-size]="false"
+    style="width: 400px; height: 500px"
+></pdf-viewer> -->
+    <!-- <pdf-viewer [src]="pdfData" style="width: 100%; height: 600px;"></pdf-viewer> -->
+    <!-- <a [href]="pdfUrl" target="_blank">Abrir PDF</a> -->
+    <ngx-extended-pdf-viewer [base64Src]="getFile" backgroundColor="#ffffff" [height]="'90vh'" [useBrowserLocale]="true"
+        [handTool]="false" [showHandToolButton]="true">
+    </ngx-extended-pdf-viewer>
+</div>
