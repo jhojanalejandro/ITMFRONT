@@ -18,62 +18,95 @@ export class ButtonsExportComponent implements OnInit {
     ngOnInit() { }
 
     generarReporte() {
-        this._service.generateReport(this.contractId)
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe(
-            (res) => {
-                var downloadURL = window.URL.createObjectURL(res);
-                var link = document.createElement('a');
-                link.href = downloadURL;
-                link.download = "Reporte";
-                link.click();
-                if (res) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Documento descargado.',
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
+        let generateReport = {
+            contractId: this.contractId,
+            typeStatus: 1,
+            status: 1
+        }
+        this._service.generateReport(generateReport)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "Reporte";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    console.log(response);
+                    swal.fire('', 'Error al descargar la informacion!', 'error');
                 }
-            },
-            (response) => {
-                console.log(response);
-                swal.fire('', 'Error al descargar la informacion!', 'error');
-            }
-        );
+            );
     }
+
+    generateReportSatisfaction() {
+        this._service.generateReportSatisfaction(this.contractId)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "Reporte";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    console.log(response);
+                    swal.fire('', 'Error al descargar la informacion!', 'error');
+                }
+            );
+    }
+
 
     exportarSolicitudCdp() {
         this._service.getReportCdp(this.contractId)
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe(
-            (res) => {
-                var downloadURL = window.URL.createObjectURL(res);
-                var link = document.createElement('a');
-                link.href = downloadURL;
-                link.download = "SOLICITUD CDP- DAP";
-                link.click();
-                if (res) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Documento descargado.',
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "SOLICITUD CDP- DAP";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    swal.fire('', '', 'error');
                 }
-            },
-            (response) => {
-                swal.fire('', '', 'error');
-            }
-        );
+            );
     }
 
     exportarPaa() {
         this._service.getReportPpa(this.contractId).subscribe(
             (res) => {
-                
+
                 if (res) {
                     var downloadURL = window.URL.createObjectURL(res);
                     var link = document.createElement('a');
@@ -86,8 +119,8 @@ export class ButtonsExportComponent implements OnInit {
                         title: 'Documento descargado.',
                         showConfirmButton: false,
                         timer: 1500
-                      })
-                }else{
+                    })
+                } else {
                     Swal.fire({
                         position: 'center',
                         icon: 'warning',
@@ -95,7 +128,7 @@ export class ButtonsExportComponent implements OnInit {
                         html: 'Información de los contratista incompleta',
                         showConfirmButton: false,
                         timer: 1500
-                      })
+                    })
                 }
             },
             (response) => {
@@ -107,34 +140,34 @@ export class ButtonsExportComponent implements OnInit {
 
     exportarCdp() {
         this._service.getReportDataCdp(this.contractId)
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe(
-            (res) => {
-                var downloadURL = window.URL.createObjectURL(res);
-                var link = document.createElement('a');
-                link.href = downloadURL;
-                link.download = "EXPORTAR CDP";
-                link.click();
-                if (res) {
-                   Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Documento descargado.',
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "EXPORTAR CDP";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    console.log(response);
+                    swal.fire('', 'Error al descargar la informacion!', 'error');
                 }
-            },
-            (response) => {
-                console.log(response);
-                swal.fire('', 'Error al descargar la informacion!', 'error');
-            }
-        );
+            );
     }
 
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();
-      }
-    
+    }
+
 }

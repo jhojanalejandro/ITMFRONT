@@ -14,7 +14,9 @@ export enum DocumentTypeCodes{
     MINUTA = 'MNT',
     ESTUDIOSPREVIOS = 'ETPR',
     SOLICITUDCOMITE = 'SLCMT',
-    ANEXO = 'ANX'
+    ANEXO = 'ANX',
+    DOCUMENTOSCONTRATACION = 'DCTTC'
+
 }
 
 export enum TypeFileUserCode{
