@@ -27,6 +27,15 @@ export interface OtherMinute{
     typeModify: string;
 }
 
+export interface CommiteeRequestContractor{
+    contractObject: string;
+    contractNumber: string;
+    registerDate: Date;
+    contractName: string;
+    previusStudyDto: CommitteeRequest[],
+    personalInCharge: PersonalInCharge[]
+}
+
 export interface CommitteeRequest{
     id: string;
     contractorId: string;
@@ -34,18 +43,21 @@ export interface CommitteeRequest{
     contractorIdentification: string;
     contractInitialDate: Date;
     contractFinalDate: Date;
-    contractNumber: string;
-    elementObject: string;
     elementName: string;
-    user: string;
     userIdentification: string;
     totalValue: any;
-    userFirm: string;
-    profileRequire: string;
+    profileRequireAcademic: string;
+    profileRequireExperience: string;
 }
 
 
-export interface PreviusStudy{
+export interface PreviusStudyContractors{
+    previusStudyDto: PreviusStudyContractorsList[],
+    personalInCharge: PersonalInCharge[]
+}
+
+
+export interface PreviusStudyContractorsList{
     id: string;
     contractId: string;
     contractorId: string;
@@ -57,23 +69,21 @@ export interface PreviusStudy{
     generalObligations: any;
     userIdentification: string;
     contractNumber: string;
-    supervisorIdentification: string;
-    supervisorFirm: string;
-    supervisorItmName: string;
     elementObject: string;
     elementName: string;
-    user: string;
-    juridic: string;
-    juridicFirm: string;
     totalValue: any;
-    userFirm: string;
-    userCharge: string;
-    supervisorCharge: string;
-    userFirmType: string;
-    supervisorFirmType: string;
-    juridicFirmType: string;
     requiredProfile: string;
 }
+
+export interface PersonalInCharge{
+    userName: string;
+    userCharge: string;
+    userIdentification: string;
+    userFirmType: string;
+    userFirm: string;
+    userChargeCode: string;
+}
+
 
 export interface MinutePdf{
     contractId: string;

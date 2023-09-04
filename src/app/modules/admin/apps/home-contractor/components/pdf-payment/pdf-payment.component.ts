@@ -12,8 +12,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
     selector: 'app-cuenta-cobro',
-    templateUrl: './pdf-payment.component.html',
-    styleUrls: ['./pdf-payment.component.scss']
+    templateUrl: './pdf-payment.component.html'
 })
 export class PdfPaymentComponent implements OnInit, OnDestroy {
     @ViewChild('pdfTable') pdfTable: ElementRef;
