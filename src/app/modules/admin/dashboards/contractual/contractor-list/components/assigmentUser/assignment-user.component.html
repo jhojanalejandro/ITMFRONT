@@ -38,6 +38,25 @@
                     </mat-checkbox>
                 </div>
             </div>
+            <div *ngIf="showContractual && showUsers" class="checkBox">
+                <span >Juridico encargado</span>
+                <div class="checkBox">
+                    <mat-radio-group [color]="'primary'" [disabled]="false">
+                        <mat-radio-button *ngFor="let juridic of juridics" [matTooltip]="Juridicos" class="mr-4"
+                            (change)="assignmentJuridicselectedPrincipal(juridic)"
+                            [value]="juridic.id">{{juridic.userName}}</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <div *ngIf="showContractual && showUsers" class="checkBox">
+                <span >Juridico apoyo</span>
+                <div class="checkBox">
+                    <mat-checkbox *ngFor="let juridic of juridics" [value]="juridic.id"
+                        (change)="assignmentUserselectedSecond(juridic)" [color]="'primary'">
+                        {{juridic.userName}}
+                    </mat-checkbox>
+                </div>
+            </div>
             <div *ngIf="showSupervisors && showUsers" class="checkBox">
                 <span >Supervisor contrato</span>
                 <div class="checkBox">
