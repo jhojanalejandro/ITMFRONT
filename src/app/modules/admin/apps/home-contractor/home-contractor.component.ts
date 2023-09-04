@@ -30,6 +30,7 @@ import swal from 'sweetalert2';
 import { ExecutionReport } from './models/pdfDocument';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
+import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -263,6 +264,25 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
     }
 
+    uploadNominaFile() {
+        const dialogRef = this._matDialog.open(ContractorPaymentSecurityRegisterComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                idUser: this._auth.accessId,
+                contractId: this.contractSelected,
+                contractorId: this._auth.accessId,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+
+                }
+            });
+    }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

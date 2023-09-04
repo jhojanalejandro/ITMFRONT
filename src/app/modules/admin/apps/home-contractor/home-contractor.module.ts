@@ -14,6 +14,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { MY_FORMATS } from '../../dashboards/nomina/components/collection-accounts-list/collection-accounts-list.component';
+import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { MY_FORMATS } from '../../dashboards/nomina/components/collection-accoun
         HomeContractorComponent,
         UploadFileContractorComponent,
         PdfPaymentComponent,
-        ContractorPersonalDataComponent
+        ContractorPersonalDataComponent,
+        ContractorPaymentSecurityRegisterComponent
     ],
     imports: [
         RouterModule.forChild(contractorRoutes),
