@@ -273,7 +273,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 item.forEach(element => {
-                    if(element.documentTypeCode == DocumentTypeCodes.HOJADEVIDA || element.documentTypeCode == DocumentTypeCodes.REGISTROSECOP || element.documentTypeCode == DocumentTypeCodes.EXAMENESPREOCUPACIONALES){
+                    if(element.documentTypeCode == DocumentTypeCodes.HOJADEVIDA || element.documentTypeCode == DocumentTypeCodes.REGISTROSECOP || element.documentTypeCode == DocumentTypeCodes.EXAMENESPREOCUPACIONALES || element.documentTypeCode == DocumentTypeCodes.DOCUMENTOSCONTRATACION){
                         element.disable = false;
                     }else{
                         element.disable = true;

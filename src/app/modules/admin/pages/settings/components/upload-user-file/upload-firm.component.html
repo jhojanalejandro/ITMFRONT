@@ -9,8 +9,16 @@
     <div class="modal-body pt-6">
         <form [formGroup]="formFile" class="example-form">
             <div class="folder">
+                <mat-form-field class="hiring" appearance="outline">
+                    <mat-label>Tipo Archivo</mat-label>
+                    <mat-select formControlName="typeUserFile" (selectionChange)="typeUploadFile($event)" name="typeFile">
+                        <mat-option *ngFor="let type of typeUserFile" [value]="type.id">
+                            {{type.fileTypeDescription}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
                 <div>
-                    <mat-form-field *ngIf="!typeImageB" class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="typeImageUpload" class="hiring" appearance="outline">
                         <mat-label>Firma propia</mat-label>
                         <mat-select (selectionChange)="owner($event)" required id="ownerValidate"
                             formControlName="ownerValidate" name="ownerValidate">
@@ -24,7 +32,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="isOwner && !typeImageB" class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="isOwner && typeImageUpload" class="hiring" appearance="outline">
                         <mat-label>Nombre Propietario</mat-label>
                         <input type="text" id="ownerFirm" formControlName="ownerFirm" autocomplete="off" matInput
                             placeholder="Nombre Propietario">
@@ -34,18 +42,9 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-
-                <mat-form-field class="hiring" appearance="outline">
-                    <mat-label>Tipo Archivo</mat-label>
-                    <mat-select formControlName="typeUserFile" (selectionChange)="typeImage($event)" name="typeFile">
-                        <mat-option *ngFor="let type of typeUserFile" [value]="type.id">
-                            {{type.fileTypeDescription}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
                 <div *ngIf="isOwner">
 
-                    <mat-form-field *ngIf="!typeImageB" class="hiring" appearance="outline">
+                    <mat-form-field *ngIf="typeImageUpload" class="hiring" appearance="outline">
                         <mat-label>Cargo Propietario</mat-label>
                         <mat-select formControlName="userCharge" (selectionChange)="onChange($event,member)"
                             name="userCharge">
@@ -54,20 +53,11 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <!-- <mat-form-field class="hiringD" appearance="outline">
-                        <mat-label>Cargo Propietario</mat-label>
-                        <textarea type="text" class="example-full-width" id="userCharge" formControlName="userCharge"
-                            autocomplete="off" matInput placeholder="Descripcion"></textarea>
-                        <mat-error *ngIf="formFile.get('userCharge').hasError('required')">
-                            El Campo es requerido
-                        </mat-error>
-                    </mat-form-field> -->
-
                 </div>
 
                 <div class="text-center pt-8">
                     <input formControlName="file" type="file" mat-flat-button color="primary"
-                        accept=".jpg, .jpeg, .png, .pdf, .docx" (change)="onChange($event)">
+                        accept="{{acceptExt}}" (change)="onChange($event)">
                 </div>
                 <!-- Shareable short link of  uploaded file -->
                 <div class="container text-center jumbotron" *ngIf="shortLink">
