@@ -20,7 +20,6 @@ import { NewnessContractorComponent } from './components/newness-contractor/newn
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { DatePipe } from '@angular/common';
 import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
-import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
@@ -62,9 +61,8 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   dataSource = new MatTableDataSource<any>();
   idSelected: string[] = [];
   contractName: string;
-  origin: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
+  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono','statusContractor', 'legalProccess', 'hiringStatus',  'comiteGenerated', 'previusStudy', 'minuteGnenerated', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   visibleOption: boolean = false;
   datePipe: DatePipe;
@@ -116,7 +114,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     this.userName = this._authService.accessName
     this.contractId = this.router.snapshot.paramMap.get('id') || 'null';
     this.contractName = this.router.snapshot.paramMap.get('contractname') || 'null';
-    this.origin = this.router.snapshot.paramMap.get('origin') || 'null';
 
     this.configForm = this._formBuilder.group({
       title: 'Eliminar Registro',
@@ -139,7 +136,9 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
       }),
       dismissible: true
     });
-    this.getDataContractor();
+
+    this.getDataContractor(false);
+
     this.selectedContracttorForm = this._formBuilder.group({
       nombre: [''],
       identificacion: [''],
@@ -199,8 +198,8 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
 
-  getDataContractor() {
-    this._contractorListService.getContractorByIdProject(this.contractId).subscribe(contractorsListResponse => {
+  getDataContractor(origin: boolean) {
+    this._contractorListService.getContractorByIdProject(this.contractId,origin).subscribe(contractorsListResponse => {
       if (contractorsListResponse.success) {
         this.contractorsList = contractorsListResponse.data;
         this.dataSource = new MatTableDataSource(this.contractorsList);
@@ -269,7 +268,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((result) => {
           if (result) {
-            this.getDataContractor();
+            this.getDataContractor(false);
           }
           this.selection.clear();
         });
@@ -453,38 +452,6 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  registerPayment(data: any) {
-    if (this.selection.selected.length > 0 || data != null) {
-      if (data == null) {
-        data = { id: 0, contractId: null, componenteId: null, elementId: null }
-        this.selection.selected.forEach(element => {
-          this.contractorListId.push(element.id);
-        });
-      }
-      const dialogRefPayment = this._matDialog.open(ContractorPaymentRegisterComponent, {
-        width: '900px',
-        disableClose: true,
-        autoFocus: false,
-        data: {
-          idUser: this._authService.accessId,
-          id: data.id,
-          nombre: data.nombre,
-          idContractors: this.contractorListId,
-          contractId: this.contractId
-        }
-      });
-      dialogRefPayment.afterClosed().subscribe((result) => {
-        if (result) {
-          this.getDataContractor();
-        }
-        this.contractorListId = [];
-      });
-    } else {
-      Swal.fire('', 'Debes seleccionar registros!', 'warning');
-
-    }
-  }
-
   historicalPayment(item: any) {
     this._loadrouter.navigate(['/dashboards/nomina/payment-contractor/' + this.contractId + '/' + item.id]);
   }
@@ -507,7 +474,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((result) => {
           if (result) {
-            this.getDataContractor();
+            this.getDataContractor(false);
           }
           this.selection.clear();
         });

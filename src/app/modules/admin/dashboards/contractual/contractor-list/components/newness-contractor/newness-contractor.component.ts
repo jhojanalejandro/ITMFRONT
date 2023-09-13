@@ -20,7 +20,7 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
   file: any = null; // Variable to store file
   indeterminate = false;
   showAlert: boolean = false;
-  tiponovedad: any = GlobalConst.tipoNovedad;
+  newnessTypes: any[] = [];
   registerDate = new Date();
   disableButton: boolean = false;
   filteredOptions: Observable<string[]>;
@@ -33,7 +33,7 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
   private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(
-    private contractorService: ContractorService,
+    private _contractorService: ContractorService,
     private ref: ChangeDetectorRef,
     public matDialogRef: MatDialogRef<NewnessContractorComponent>,
     private _formBuilder: FormBuilder,
@@ -41,6 +41,7 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getNewnessType();
     this.formFile = this._formBuilder.group({
       tipoNovedad: new FormControl(null, Validators.required),
       descripcionNovedad: new FormControl(null, Validators.required),
@@ -56,15 +57,18 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
     this.matDialogRef.close();
   }
 
-  AddDetailFile() {
+  saveNewnessContractor() {
+    let code = this.newnessTypes.find(f => f.id === this.formFile.value.tipoNovedad).code
+
     let detailFile: NewnessContractor = {
       id: null,
       contractId:  this._data.contractId,
       contractorId: this._data.contractorId,
-      descripcionNovedad: this.formFile.value.descripcionNovedad,
-      tipoNovedad: this.formFile.value.tipoNovedad
+      newnessDescripcion: this.formFile.value.descripcionNovedad,
+      newnessType: this.formFile.value.tipoNovedad,
+      newnessCode: code
     }
-    this.contractorService.addNewnessContractor(detailFile)
+    this._contractorService.addNewnessContractor(detailFile)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res) {
@@ -101,13 +105,15 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
   }
 
   UpdateNewnessContractor() {
+    let code = this.newnessTypes.find(f => f.id === this.formFile.value.tipoNovedad).code
     let detailFile: NewnessContractor = {
       contractId:  this._data.contractId,
       contractorId: this._data.id,
-      descripcionNovedad: this.formFile.value.descripcionNovedad,
-      tipoNovedad: this.formFile.value.tipoNovedad
+      newnessDescripcion: this.formFile.value.descripcionNovedad,
+      newnessType: this.formFile.value.tipoNovedad,
+      newnessCode: code
     }
-    this.contractorService.addNewnessContractor(detailFile).subscribe((res) => {
+    this._contractorService.addNewnessContractor(detailFile).subscribe((res) => {
       if (res) {
         swal.fire({
           position: 'center',
@@ -124,11 +130,13 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
       });
   }
 
+  private getNewnessType(){
+    this._contractorService.getNewnessType().subscribe(newness => {
+      this.newnessTypes = newness;
+    })
+  }
   ngOnDestroy(): void {
-
     this._unsubscribe$.complete();
-
     this._unsubscribe$.next();
-
   }
 }

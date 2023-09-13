@@ -14,15 +14,17 @@
     <div class="modal-body pt-6">
         <form [formGroup]="formFile" class="example-form">
             <div class="folder">
-                <mat-form-field  class="hiringD" appearance="outline">
+
+                <mat-form-field class="hiringField" appearance="fill">
                     <mat-label>Motivo Novedad</mat-label>
-                    <input type="text" placeholder="Seleccione o Digite" aria-label="Motivo Novedad" matInput
-                        [formControlName]="'tipoNovedad'" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of tiponovedad" [value]="option.viewValue">
-                            {{option.viewValue}}
+                    <mat-select  placeholder="Motivo Novedad"  [formControlName]="'tipoNovedad'"
+                        name="nivel">
+                        <mat-option *ngFor="let newnessType of newnessTypes"[value]="newnessType.id">
+                            {{newnessType.newnessDescription}}
                         </mat-option>
-                    </mat-autocomplete>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                    </mat-icon>
                 </mat-form-field>
             </div>
             <div class="folder">
@@ -41,5 +43,5 @@
 </div>
   <mat-dialog-actions align="end" class="pt-8">
     <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">Cancelar</button>
-    <button mat-flat-button  [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"  (click)="AddDetailFile()">Enviar</button>
+    <button mat-flat-button  [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"  (click)="saveNewnessContractor()">Enviar</button>
   </mat-dialog-actions>

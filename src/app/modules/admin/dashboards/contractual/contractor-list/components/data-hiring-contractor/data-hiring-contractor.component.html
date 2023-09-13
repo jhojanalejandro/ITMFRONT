@@ -169,19 +169,12 @@
                     </mat-form-field>
                 </div>
                 <div class="folderFieldContractor">
-                    <!-- <mat-form-field class="hiringField" appearance="fill">
-                        <mat-label>Supervisor</mat-label>
-                        <mat-select  placeholder="Selccionar Supervisor" formControlName="supervisorItm" name="supervisorItm">
-                            <mat-option *ngFor="let admin of supervisorList" [value]="admin.id">
-                                {{ admin.userName }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
-                        <mat-error *ngIf="formContractor.get('supervisorItm').hasError('required')">
-                            El Campo nivel es requerido
-                        </mat-error>
-                    </mat-form-field> -->
-
+                    <mat-form-field class="dataHiringC" appearance="fill">
+                        <mat-label>Actividad Contrato</mat-label>
+                        <textarea type="text" class="example-full-width" id="obligacionesGenerales"
+                            formControlName="activityContract" autocomplete="off" matInput
+                            placeholder="Obligaciones Generales"></textarea>
+                    </mat-form-field>
                 </div>
             </form>
         </mat-dialog-content>

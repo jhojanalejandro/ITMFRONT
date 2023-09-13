@@ -65,7 +65,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   visibleActivity: boolean = false;
   supervisor: string = 'Supervisor';
   permission: boolean = false;
-  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, cdp: null, numeroActa: null, caso: null }
+  hiringData: IHiringData = { contractId: this.datos.contractId, contractorId: null, fechaFinalizacionConvenio: null, contrato: null, compromiso: null, fechaRealDeInicio: null, fechaDeComite: null, requierePoliza: null, noPoliza: null, vigenciaInicial: null, vigenciaFinal: null, fechaExpedicionPoliza: null, valorAsegurado: null, fechaExaPreocupacional: null, nivel: null, cdp: null, numeroActa: null, caso: null, actividadContratista: null}
   private readonly _unsubscribe$ = new Subject<void>();
   detalleContrat: DetalleContrato = {
     contractId: null,
@@ -149,6 +149,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       activity: new FormControl(this.datos.activityId),
       cdp: new FormControl(this.hiringData.cdp),
       caso: new FormControl(this.hiringData.caso),
+      activityContract: new FormControl(this.hiringData.actividadContratista),
     });
     this.getDetailProject();
     this.validateDate();
@@ -189,8 +190,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
           cdp: this.formContractor.value.cdp,
           caso: this.formContractor.value.caso,
-          statusContractor: this.datos.statusContractor
-
+          statusContractor: this.datos.statusContractor,
+          actividadContratista: this.formContractor.value.activityContract,
         });
       }
     } else {
@@ -215,8 +216,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
         cdp: this.formContractor.value.cdp,
         caso: this.formContractor.value.caso,
-        statusContractor: this.datos.statusContractor
-
+        statusContractor: this.datos.statusContractor,
+        actividadContratista: this.formContractor.value.activityContract,
       }];
     }
     this._uploadService
@@ -286,8 +287,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       // supervisorId: this.formContractor.value.supervisorItm,
       fechaFinalizacionConvenio: this.formContractor.value.fechaFinalizacionConvenio,
       cdp: this.formContractor.value.cdp,
-      caso: this.formContractor.value.caso
-
+      caso: this.formContractor.value.caso,
+      actividadContratista: this.formContractor.value.activityContract
     }];
     this._uploadService
       .addHiringContractor(registerContractor)
@@ -586,6 +587,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   }
 
   calculateContratcValue = () => {
+    debugger
     let element: Elements;
     if (this.elements == null || this.elements.length == 0 || this.elementAsignado != null) {
       this.elements.push(this.elementAsignado)
