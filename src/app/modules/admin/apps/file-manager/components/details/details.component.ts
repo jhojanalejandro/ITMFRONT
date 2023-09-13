@@ -91,12 +91,19 @@ export class FileManagerDetailsComponent implements OnInit, OnDestroy
 
     getUserById(id: any) {
         
+<<<<<<< HEAD:src/app/modules/admin/apps/file-manager/components/details/details.component.ts
         this._authService.user$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((user: any) => {
             this.userName = user.userName
             // Mark for check
             this._changeDetectorRef.markForCheck();
+=======
+        (await this._authService.getUserById(id)).subscribe((Response) => {
+        return this.userName = Response.userName
+        //   this.lastName = Response.lastName
+        //   this.identificationCard = Response.identificationCard
+>>>>>>> f6a38ff986797aa7d347dca4c583f7718bb98b3f:src/app/modules/admin/apps/file-manager/details/details.component.ts
         });
     }
 

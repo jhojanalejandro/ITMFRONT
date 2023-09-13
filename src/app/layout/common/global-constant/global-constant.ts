@@ -102,7 +102,6 @@ export class GlobalConst {
         { viewValue: 'nicaraguense' },
         { viewValue: 'nigeriano' },
         { viewValue: 'norcoreano' },
-
         { viewValue: 'palestina' },
         { viewValue: 'paraguayo' },
         { viewValue: 'peruana' },
