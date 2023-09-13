@@ -18,9 +18,10 @@ export class ContractorService {
     constructor(private _httpClient: HttpClient) {
     }
 
-    getContractorByIdProject(contractId: string) {
+    getContractorByIdProject(contractId: string,originNomina: boolean) {
         const params = new HttpParams()
             .set('contractId', contractId)
+            .set('originNomina', originNomina);
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
         return this._httpClient.get<IResponse>(urlEndPoint, { params }).pipe(
             tap((response: any) => {
@@ -138,6 +139,13 @@ export class ContractorService {
             catchError(this.handleError) // Manejo de errores, si es necesario
         );
     }
+
+    getNewnessType() {
+        let urlEndpointGenerate = this.apiUrl + environment.getnewnessType;
+        return this._httpClient.get<any>(urlEndpointGenerate)
+            .pipe(retry(0));
+    }
+
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {

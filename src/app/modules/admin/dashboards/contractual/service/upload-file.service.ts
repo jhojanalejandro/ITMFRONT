@@ -93,6 +93,22 @@ export class UploadFileDataService {
         );
     }
 
+    
+    UploadFileCommitteeContractors(formdata: FileContractor) {
+        let urlEndpointGenerate = this.apiUrl + environment.SaveCommitteeContractorEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    
+    updateStatusFileCommitteeContractor(detail: DetailFile) {
+        let urlEndpointGenerate = this.apiUrl + environment.saveDetailFileCommitteeEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, detail).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
         Swal.fire({

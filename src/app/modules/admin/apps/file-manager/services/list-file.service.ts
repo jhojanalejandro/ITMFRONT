@@ -6,6 +6,7 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import Swal from 'sweetalert2';
 import { ContractContractors } from 'app/modules/admin/dashboards/contractual/models/contractor';
+import { FileContractor } from 'app/layout/common/models/file-contractor';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class FileListManagerService {
     contractId: string;
     folderId: string;
     contractorId: string;
-    private _listFileContractor: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
+    private _listFileContractor: BehaviorSubject<DataFile[] | null> = new BehaviorSubject(null);
     private _listFileContract: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
     private _file: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
     private _statusFile: BehaviorSubject<DataFile | null> = new BehaviorSubject(null);
@@ -59,13 +60,13 @@ export class FileListManagerService {
         return this._file.asObservable();
     }
 
-    getFileByContractor(contractId: string | null = null, contractorId: any | null = null, folderId: string | null = null): Observable<DataFile> {
+    getFileByContractor(contractId: string | null = null, contractorId: any | null = null, folderId: string | null = null): Observable<DataFile[]> {
         const params = new HttpParams()
             .set('contractorId', contractorId)
             .set('folderId', folderId)
             .set('contractId', contractId);
         let urlEndPoint = this.apiUrl + environment.GetAllFileByFolderContractorEndpoint;
-        return this._httpClient.get<any>(urlEndPoint, { params: params }).pipe(
+        return this._httpClient.get<DataFile[]>(urlEndPoint, { params: params }).pipe(
             tap((items) => {
                 this._listFileContractor.next(items);
 
