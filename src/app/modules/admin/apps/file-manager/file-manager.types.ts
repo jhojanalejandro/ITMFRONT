@@ -35,11 +35,12 @@ export interface DataFile
     statusFile: string;
     documentTypeCode: string;
     documentTypes: string;
-    disable?: boolean;
+    disable: boolean;
     folderName: string;
     observation?: string;
     reason?: string;
     userContractual?: string;
+    categoryCode: string;
 }
 
 export interface FolderContractor

@@ -49,9 +49,10 @@ export interface Minuta{
 export interface NewnessContractor{
     contractorId: string;
     id?: string;
-    descripcionNovedad: string;
-    tipoNovedad: string;   
+    newnessDescripcion: string;
+    newnessType: string;   
 	contractId: string;
+	newnessCode: string;
 }
 
 

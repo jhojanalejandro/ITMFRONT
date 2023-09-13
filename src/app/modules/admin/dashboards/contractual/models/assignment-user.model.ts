@@ -4,7 +4,6 @@ export interface AssignmentUser{
     id?: string;
     userId: string; 
 	assignmentType: string;  
-    rollId: string;  
 }
 
 export interface AssignmentType{

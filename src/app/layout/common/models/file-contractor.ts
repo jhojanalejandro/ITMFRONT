@@ -15,6 +15,7 @@ export interface FileContractor{
     origin?: string;
     anexo?: boolean;
     contractors?: any[];
+    documentTypeCode?: string;
 }
 
 export interface Files{
@@ -54,7 +55,7 @@ export interface DetailFile{
 export interface DetailFileContractor{
     id?: any;
     fileId: any;
-    reason: string;
+    reasonRejection: string;
     observation: string;
     files: any[];
     passed: boolean;
@@ -62,6 +63,7 @@ export interface DetailFileContractor{
     statusFileId: string;
     contractId: string;
     contractorId: string;
+    userId?: string;
 }
 
 export interface ContractsContractor{

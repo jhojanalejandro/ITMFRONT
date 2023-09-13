@@ -15,7 +15,7 @@ export enum DocumentTypeCodes{
     ESTUDIOSPREVIOS = 'ETPR',
     SOLICITUDCOMITE = 'SLCMT',
     ANEXO = 'ANX',
-    DOCUMENTOSCONTRATACION = 'DCTTC'
+    DOCUMENTOSCONTRATACION = 'DCTCT'
 
 }
 
@@ -38,5 +38,9 @@ export enum DocumentTypeFileCodes{
 export enum DetailTypeCodes{
     MFC = 'MFC',
     MC = 'CTIL',
-
 }
+export enum CategoryFile{
+    CGD = 'CGD',
+    CRAD = 'CRAD',
+}
+
