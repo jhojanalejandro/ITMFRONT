@@ -14,6 +14,7 @@ import {
     FormBuilder,
     FormControl,
     FormGroup,
+    NgForm,
     Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -41,6 +42,7 @@ import { ElementTypeCode } from 'app/layout/common/enums/elementType';
 
 export class ElementCardComponent implements OnInit, OnDestroy {
     filteredOptions: Observable<string[]>;
+    @ViewChild('elementNgForm') elementNgForm: NgForm;
     modificaciones: any = GlobalConst.requierePoliza;
     btnOpcion: string = 'Guardar';
     separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -197,6 +199,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement(): void {
+        // debugger
+        // if (this.elementForm.invalid) {
+        //     return;
+        // }
         let modificacion: any;
         if (this.elementForm.value.modificacion === 'Si') {
             modificacion = true;
@@ -234,6 +240,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             objetoElemento: this.elementForm.value.objetoElemento,
             activityId: this._data.activityId
         };
+        this.elementForm.disable();
+
         this._planingService.addElementoComponente(item)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
@@ -251,9 +259,11 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.detectChanges();
             }, (response) => {
                 // Set the alert
-                console.log(response);
-
-                swal.fire('error', 'Error al registrar la información!', 'error');
+                // Re-enable the form
+                this.elementForm.enable();
+                // Reset the form
+                this.elementNgForm.resetForm();
+                swal.fire('', 'response', 'error');
             });
     }
 
@@ -479,7 +489,12 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addCommasToNumber(value: number): string {
-        return value.toLocaleString('es');
+        if(value <= 9999 && value >= 1000){
+            const formattedNumber = value.toString();
+            return formattedNumber.substr(0, 1) + '.' + formattedNumber.substr(1);
+        }else{
+            return value.toLocaleString('es-ES', { maximumFractionDigits: 0 });
+        }
     }
     subscribeToValueChanges(controlName: string): void {
         this.elementForm.get(controlName).valueChanges.subscribe(value => {
