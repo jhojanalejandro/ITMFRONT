@@ -59,22 +59,18 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
   }
 
   AddObservationFile() {
-    // let termFileDocument: TermContract = {
-    //   detailContract: this.data.contractId,
-    //   startDate: this.registerDate,
-    //   termDate: this.formTerm.value.termType,
-    //   termType: this.termTypeId
-    // }
+
     let detailFile: DetailFileContractor = {
         fileId: this._data.id,
         observation: this.formFile.value.observation,
-        reason: this.formFile.value.motivo,
+        reasonRejection: this.formFile.value.motivo,
         files: this.observationfile,
         registerDate: new Date(),
         passed: false,
         statusFileId: this._data.statusFile,
         contractId: this._data.contractId,
-        contractorId: this._data.contractorId
+        contractorId: this._data.contractorId,
+        userId: this._data.userId
     }
     this._uploadService.addObservationDetailFile(detailFile)
     .pipe(takeUntil(this._unsubscribeAll))
