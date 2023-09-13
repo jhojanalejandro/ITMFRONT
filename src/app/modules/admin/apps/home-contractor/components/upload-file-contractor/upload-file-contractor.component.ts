@@ -206,7 +206,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     private getDaTaContractor(): any {
         this._contractorListService
-            .getContractorByIdProject(this._data.contractId)
+            .getContractorByIdProject(this._data.contractId,false)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
                 this.dataContractor = resp;

@@ -41,9 +41,13 @@ export class GeneratePdfComponent implements OnInit {
     dateTransform: any = new Date();
     typeDocs: DocumentTypeFile[] = [];
     documentGenerate: any[] = [];
+    documentGenerateCommiteeRequest: any = {
+        document: null,
+        contractId: null
+    };
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     year: Date = new Date();
-    comiteeContarctor: any[]= [];
+    comiteeContarctor: any[] = [];
     constructor(
         private _shareService: ShareService,
         private _pdfdataService: PdfDataService,
@@ -57,7 +61,7 @@ export class GeneratePdfComponent implements OnInit {
         this.dateTransform = this._shareService.transformDate(this.dateTransform);
         switch (this.generateType) {
             case PdfTypeGenerate.PREVIUSSTUDY:
-                this.gePreviusStudyData().then(
+                this.getPreviusStudyData().then(
                     () => this.getBase64Image(RouteImageEnum.LOGOITM, 'study')
                 );
                 break;
@@ -144,12 +148,12 @@ export class GeneratePdfComponent implements OnInit {
             let data = previusStudyData.previusStudyDto.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
 
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
-                && data.generalObligations != null && this.itmImageBase64 != null && user != null && juridic != null && supervisor != null && user.userFirm != null && supervisor.userFirm != null && juridic.userFirm != null) {
+                && data.generalObligations != null && this.itmImageBase64 != null && user != null && juridic != null && supervisor != null && user.userFirm != null && supervisor.userFirm != null && juridic.userFirm != null && data.requiredProfileAcademic != null && data.requiredProfileExperience != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
                 let totalContrato = this.addCommasToNumber(data.totalValue);
-                data.specificObligations = data.specificObligations.replaceAll('->', ' ');
-                data.generalObligations = data.generalObligations.replaceAll('->', ' ');
+                data.specificObligations = data.specificObligations.replaceAll('->', ' ').replace(/\n/g, '');
+                data.generalObligations = data.generalObligations.replaceAll('->', ' ').replace(/\n/g, '');
                 const documentPreviousStudy = {
                     pageSize: 'A4',
                     pageOrientation: 'FOLIO',
@@ -416,12 +420,12 @@ export class GeneratePdfComponent implements OnInit {
                                                         ],
                                                         [
                                                             {
-                                                                text: 'PROFESIONAL EN CUALQUIER AREA DEL CONOCIMIENTO',
+                                                                text: data.requiredProfileAcademic,
                                                                 bold: true,
                                                                 style: 'titleTable2',
                                                             },
                                                             {
-                                                                text: 'CON 1 AÑO DE EXPERIENCIA',
+                                                                text: data.requiredProfileExperience,
                                                                 style: 'titleTable2',
                                                             },
                                                         ],
@@ -434,7 +438,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 30],
+                            margin: [10, 5, 10, 10],
                             table: {
                                 widths: [100, 390],
                                 body: [
@@ -541,7 +545,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Tipo de Contrato',
-                                            style: 'titleTable1',
+                                            style: 'title',
                                         },
                                         {
                                             text: 'Prestación de servicios profesionales y de apoyo a la gestión.',
@@ -551,7 +555,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Plazo de Ejecución',
-                                            style: 'titleTable1',
+                                            style: 'title',
                                             margin: [5, 5, 5, 5],
                                         },
                                         {
@@ -564,7 +568,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Duración del Contrato Interadministrativo número ' + data.contractNumber + ' de ' + this.anioActual,
-                                            style: 'titleTable1',
+                                            style: 'title',
                                         },
                                         {
                                             text: fechaLetras + ' sin superar la vigencia ' + this.anioActual,
@@ -576,7 +580,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Forma de pago',
-                                            style: 'titleTable1',
+                                            style: 'title',
                                             margin: [20, 5, 0, 0],
                                         },
 
@@ -589,7 +593,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Supervisor',
-                                            style: 'titleTable1',
+                                            style: 'title',
                                         },
 
                                         {
@@ -601,7 +605,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 30],
+                            margin: [10, 5, 10, 5],
                             table: {
                                 widths: [500],
                                 body: [
@@ -717,7 +721,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 5, 10, 5],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -780,7 +784,7 @@ export class GeneratePdfComponent implements OnInit {
                             }
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 5, 10, 10],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -852,7 +856,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: data.requiredProfile,
+                                                            text: data.requiredProfileAcademic + ' ' + data.requiredProfileExperience,
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -888,7 +892,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 5, 10, 10],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -1202,7 +1206,7 @@ export class GeneratePdfComponent implements OnInit {
                             }
                         },
                         {
-                            margin: [5, 5, 5, 10],
+                            margin: [5, 5, 5, 5],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -1372,7 +1376,7 @@ export class GeneratePdfComponent implements OnInit {
                         },
                         titleTable1: {
                             bold: true,
-                            fontSize: 10,
+                            fontSize: 9,
                             color: 'black',
                             alignment: 'center',
                         },
@@ -1407,7 +1411,7 @@ export class GeneratePdfComponent implements OnInit {
                 }
                 this.documentGenerate.push(SolicitudComite);
             } else {
-                if (data.requiredProfile == null || data.requiredProfile == '') {
+                if (data.requiredProfileAcademic == null || data.requiredProfileExperience == null) {
                     swal.fire('', 'No se encontro el perfil requerido', 'warning');
                     this.hideComponent();
                     return;
@@ -1442,25 +1446,23 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generateCommitteeRequest(committeeRequestData: any) {
+    private generateCommitteeRequest(committeeRequestData: CommiteeRequestContractor) {
         let user = committeeRequestData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
-
-        if (this.itmImageBase64 != null && user.userName != null  != null && user.userFirm != null) {
+        if (this.itmImageBase64 != null && user.userName != null != null && user.userFirm != null) {
+            let date = new Date(committeeRequestData.registerDate);
+            let year = date.getFullYear();
             for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-                let data = committeeRequestData.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
-                if(data.profileRequireExperience == null || data.profileRequireAcademic == null || data.contractorIdentification == null){
-                    if (data.profileRequireExperience == null) {
-                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista' + data.contractorName , 'warning');
-                    }
-                    else if (data.profileRequireAcademic == null) {
-                        swal.fire('', 'no se ha cargado el perfil academico requerido para el contratista' + data.contractorName , 'warning');
+                let data = committeeRequestData.commiteeRequestDto.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
+                if (data.profileRequire == null || data.profileRequire == null || data.contractorIdentification == null) {
+                    if (data.profileRequire == null) {
+                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista' + data.contractorName, 'warning');
                     }
                     else if (data.contractorIdentification == null) {
-                        swal.fire('', 'no se encontro la identificacion del contratista '+ data.contractorName, 'warning');
+                        swal.fire('', 'no se encontro la identificacion del contratista ' + data.contractorName, 'warning');
                     }
                     this.hideComponent();
-                }else{
-                    this.comiteeContarctor[index] = [
+                } else {
+                    this.comiteeContarctor[index] =
                         [
                             {
                                 text: data.contractorName,
@@ -1471,7 +1473,7 @@ export class GeneratePdfComponent implements OnInit {
                                 style: 'fontPeque',
                             },
                             {
-                                text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + data.contractNumber + ' de ' + this.year.getFullYear(),
+                                text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + committeeRequestData.contractNumber + ' de ' + year,
                                 style: 'fontPeque',
                             },
                             {
@@ -1479,7 +1481,7 @@ export class GeneratePdfComponent implements OnInit {
                                 style: 'fontPeque',
                             },
                         ]
-                    ]
+
                 }
 
             }
@@ -1492,7 +1494,7 @@ export class GeneratePdfComponent implements OnInit {
                     table: {
                         color: '#444',
                         style: 'tableHeader',
-                        widths: [100, 170, 'auto', 70, 70],
+                        widths: ['auto', 190, 'auto', 75, 75],
                         headerRows: 3,
                         body: [
                             [
@@ -1500,7 +1502,7 @@ export class GeneratePdfComponent implements OnInit {
                                     rowSpan: 3,
                                     image: this.itmImageBase64,
                                     style: 'title',
-                                    fit: [150, 150],
+                                    fit: [80, 80],
                                 },
                                 {
                                     rowSpan: 3,
@@ -1573,7 +1575,7 @@ export class GeneratePdfComponent implements OnInit {
                         margin: [10, 10, 10, 10],
                         text: [
                             {
-                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.contractNumber + 'de ' + committeeRequestData.registerDate.getFullYear() + ', cuyo objeto es ' + committeeRequestData.contractObject,
+                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.contractNumber + 'de ' + year + ', cuyo objeto es ' + committeeRequestData.contractObject,
                                 fontSize: 10,
                                 alignment: 'justify'
                             },
@@ -1601,14 +1603,16 @@ export class GeneratePdfComponent implements OnInit {
                                         text: 'PERFIL REQUERIDO',
                                         style: 'fontPeque',
                                     },
-                                ].concat(this.comiteeContarctor)
-
-                            ]
+                                ]
+                            ].concat(this.comiteeContarctor)
                         }
                     },
                     {
+                        image: 'data:image/' + user.userFirmType + ';base64,' + user.userFirm,
+                        style: 'title',
+                        fit: [50, 50],
                         margin: [10, 0, 0, 0],
-                        text: '\n\nFIRMA:'
+
                     },
                     {
                         margin: [10, 0, 0, 0],
@@ -1681,9 +1685,9 @@ export class GeneratePdfComponent implements OnInit {
             };
             let SolicitudComite = {
                 document: documentSolicitudComite,
-                contractorId: this.contractContractors.contractId
+                contractId: this.contractContractors.contractId
             }
-            this.documentGenerate.push(SolicitudComite);
+            this.documentGenerateCommiteeRequest = SolicitudComite;
         } else {
             if (this.itmImageBase64 == null || this.itmImageBase64 == '') {
                 swal.fire('', 'Error al cargar la imagen ', 'warning');
@@ -1696,8 +1700,8 @@ export class GeneratePdfComponent implements OnInit {
             }
             this.hideComponent();
         }
-        if (this.documentGenerate.length > 0) {
-            this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.SOLICITUDCOMITE);
+        if (this.documentGenerateCommiteeRequest != null) {
+            this.savePdfGeneratedCommiteeRequest(this.documentGenerateCommiteeRequest, DocumentTypeCodes.SOLICITUDCOMITE);
         }
 
     }
@@ -1716,7 +1720,7 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private async gePreviusStudyData(): Promise<void> {
+    private async getPreviusStudyData(): Promise<void> {
         return await new Promise((rslv) => {
             this.contractContractors.typeMinute = DocumentTypeCodes.ESTUDIOSPREVIOS
             this._pdfdataService.getPreviusStudy(this.contractContractors)
@@ -1768,7 +1772,7 @@ export class GeneratePdfComponent implements OnInit {
                 contractId: contractId,
                 filesName: nombreDocumento,
                 fileType: 'PDF',
-                descriptionFile: documentType.documentTypeDescription + ' generada',
+                descriptionFile: documentType.documentTypeDescription + ' GENERADA',
                 registerDate: date,
                 documentType: documentType.id,
                 modifyDate: date,
@@ -1780,6 +1784,46 @@ export class GeneratePdfComponent implements OnInit {
             registerFileLis.push(registerFile)
         }
         this._upload.UploadFileBillContractors(registerFileLis)
+            .subscribe((res) => {
+                if (res.success) {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: res.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    this.hideComponent();
+                }
+            });
+    }
+
+    private async savePdfGeneratedCommiteeRequest(pdfDocument: any, origin: string): Promise<void> {
+        let documentType = this.typeDocs.find(f => f.code == origin)
+        let nombreDocumento = documentType.documentTypeDescription;
+        let date = this.currentDate;
+        let userId = this._auth.accessId;
+        const pdf = pdfMake.createPdf(pdfDocument.document);
+        const dataURL = await new Promise<string>((resolve, reject) => {
+            pdf.getDataUrl((dataURL) => resolve(dataURL));
+        });
+        const registerFile: FileContractor = {
+            userId: userId,
+            contractId: pdfDocument.contractId,
+            filesName: nombreDocumento,
+            fileType: 'PDF',
+            descriptionFile: documentType.documentTypeDescription + ' GENERADA',
+            registerDate: date,
+            documentType: documentType.id,
+            modifyDate: date,
+            filedata: dataURL.split('data:application/pdf;base64,')[1],
+            monthPayment: null,
+            folderId: null,
+            origin: origin,
+            contractors: this.contractContractors.contractors
+        };
+        this._upload.UploadFileCommitteeContractors(registerFile)
             .subscribe((res) => {
                 if (res.success) {
                     swal.fire({

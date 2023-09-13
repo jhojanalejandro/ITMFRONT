@@ -125,6 +125,13 @@ export class GenericService {
         return this._httpClient.get<any>(urlEndpointGenerate
         );
     }
+
+    GetPorcentageSecurity(): Observable<any[]> {
+        let urlEndpointGenerate = this.apiUrl + environment.GetPorcentageSecurityEndpoint;
+        return this._httpClient.get<any>(urlEndpointGenerate
+        );
+    }
+
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
         // Implementa el manejo de errores aquí, si es necesario

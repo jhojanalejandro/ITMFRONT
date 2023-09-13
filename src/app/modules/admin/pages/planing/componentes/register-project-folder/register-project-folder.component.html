@@ -83,7 +83,7 @@
                     </mat-form-field>
                     <mat-form-field (click)="pickerContrato.open()" class="contractField" appearance="fill">
                         <mat-label>Fecha Contrato</mat-label>
-                        <input matInput id="fechaContrato" [min]="registerDate" (dateChange)="dateChange($event)"
+                        <input matInput id="fechaContrato" (dateChange)="dateChange($event)"
                             autocomplete="off" formControlName="fechaContrato" [matDatepicker]="pickerContrato">
                         <mat-datepicker #pickerContrato></mat-datepicker>
                         <mat-datepicker-toggle matSuffix [for]="pickerContrato"></mat-datepicker-toggle>

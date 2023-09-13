@@ -257,7 +257,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     };
     let saludEps: EmptityHealth = {
       contractor: this._auth.accessId,
-      emptitytype: 'EPS',
+      emptitytype: 'SLD',
       emptity: this.contractorinformationStepperForm.controls['step4'].value.eps
     }
     this.emptityHealth.push(saludEps)

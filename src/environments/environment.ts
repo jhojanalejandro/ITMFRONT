@@ -16,7 +16,7 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
-    exportarViabilidad: 'ExportToExcel/GetViabilidadExcel/',
+    GenrateReportContractEndpoint: 'ExportToExcel/GenrateReportContract',
     exportarDap: 'ExportToExcel/GetSolicitudContratacionDap/',
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarCdp: 'ExportToExcel/ExportToExcelCdp/',
@@ -25,6 +25,7 @@ export const environment = {
     addExcelContractorEndpoint: 'ImportExcel/AddExcel',
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
     addExcelElementEndpoint: 'ImportExcel/ImportExcelElement',
+    GenerateSatisfactionReportEndpoint: 'ExportToExcel/GenerateSatisfactionReport',
 
     UpdateContractorEndpoint: 'Contractor/Update',
     SaveDataContractorEndpoint: 'Contractor/SaveDataContractor/',
@@ -69,18 +70,22 @@ export const environment = {
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
+    GetEmptityHealthContractorEndpoint: 'ContractorPayments/GetEmptityHealthContractor',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
     GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetEconiomicDataById',
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
+    GetPaymentByIdContractAndContractorEndpoint: 'EconomicDataContractor/GetPaymentByIdContractAndContractor',
 
     addFileEndpoint: 'Files/AddFileContractor',
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
     CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
+    SaveCommitteeContractorEndpoint: 'Files/SaveCommitteeContractor',
+    saveDetailFileCommitteeEndpoint: 'Files/CreateDetailCommittee',
 
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
@@ -138,6 +143,8 @@ export const environment = {
     GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
+    GetPorcentageSecurityEndpoint: 'MasterData/GetPorcentageSecurity',
+    getnewnessType: 'MasterData/GetNewnessType',
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 

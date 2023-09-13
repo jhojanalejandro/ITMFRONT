@@ -46,14 +46,6 @@ export class GlobalConst {
         { viewValue: 'Contratista' },
     ]
 
-
-    public static tipoNovedad: TypeSelectString[] = [
-        { viewValue: 'Despido' },
-        { viewValue: 'Renuncia' },
-        { viewValue: 'Cancelado' },
-        { viewValue: 'No contratado' },
-    ]
-
     public static nacionality: TypeSelectString[] = [
         { viewValue: 'colombiano' },
         { viewValue: 'venezolano' },

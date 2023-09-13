@@ -32,7 +32,7 @@ export interface CommiteeRequestContractor{
     contractNumber: string;
     registerDate: Date;
     contractName: string;
-    previusStudyDto: CommitteeRequest[],
+    commiteeRequestDto: CommitteeRequest[],
     personalInCharge: PersonalInCharge[]
 }
 
@@ -46,8 +46,7 @@ export interface CommitteeRequest{
     elementName: string;
     userIdentification: string;
     totalValue: any;
-    profileRequireAcademic: string;
-    profileRequireExperience: string;
+    profileRequire: string;
 }
 
 
@@ -72,7 +71,9 @@ export interface PreviusStudyContractorsList{
     elementObject: string;
     elementName: string;
     totalValue: any;
-    requiredProfile: string;
+    requiredProfileAcademic: string;
+    requiredProfileExperience: string;
+
 }
 
 export interface PersonalInCharge{
