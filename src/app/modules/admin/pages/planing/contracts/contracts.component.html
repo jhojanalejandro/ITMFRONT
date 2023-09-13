@@ -1,0 +1,133 @@
+<div class="flex flex-col flex-auto min-w-0">
+
+    <!-- Header -->
+    <div class="bg-card">
+        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8">
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <!-- Avatar and name -->
+                <div class="flex flex-auto items-center min-w-0">
+                    <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="assets/images/avatars/usercircle.png">
+                    </div>
+                    <div class="flex flex-col min-w-0 ml-4">
+                        <ng-container *transloco="let t">
+                            <div
+                                class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                                Bienvenido, {{userName}}</div>
+                        </ng-container>
+                        <!-- <div class="flex items-center">
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                            <div class="ml-1.5 leading-6 truncate text-secondary">Tienes 2 mensajes nuevos y 15 tareas nuevas</div>
+                        </div> -->
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
+                    <button *ngIf="showcontracts" (click)="SaveContract()" class="fuse-mat-button-rounded"
+                        mat-flat-button [color]="'accent'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
+                        <span class="ml-2">Registrar proyecto</span>
+                    </button>
+                    <button  *ngIf="showcontracts" (click)="SaveOptions()" class="fuse-mat-button-rounded"
+                        mat-flat-button [color]="'primary'">
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
+                        <span class="ml-2">Agregar Opciones</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-auto">
+                <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
+                        [placeholder]="'Buscar Contrato'">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">CONTRATOS</div>
+                </div>
+                <div class="overflow-x-auto mx-6">
+                    <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
+                        [trackBy]="trackByFn"  matSort (matSortChange)="announceSortChange($event)">
+
+                        <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
+                            <th mat-header-cell class="centre" mat-sort-header *matHeaderCellDef>
+                                {{columna.title}} </th>
+
+                            <td mat-cell *matCellDef="let element">
+                                <p
+                                    *ngIf="element[columna.name]=== element.companyName || element[columna.name]=== element.projectName || element[columna.name]=== element.project || element[columna.name]=== element.contractorsCant || element[columna.name]=== element.numberProject">
+                                    {{element[columna.name]}}</p>
+                                <p
+                                    *ngIf="element[columna.name]=== element.valorContrato && element[columna.name]!= element.contractorsCant">
+                                    $ {{element[columna.name]}}
+                                </p>
+                                <span
+                                *ngIf="element[columna.name]=== element.statusContract;"
+                                class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContract == 'INICIADO',
+                         'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContract === 'EN PROCESO'}">
+                                <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                            </span>
+                                <p *ngIf="element[columna.name]===element.action && showcontracts">
+
+                                    <button [matTooltip]="'Opciones contrato'" mat-icon-button
+                                        [matMenuTriggerFor]="summaryMenu">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                        </mat-icon>
+                                    </button>
+                                    <mat-menu #summaryMenu="matMenu">
+                                        <button [matTooltip]="'Agregar datos'"
+                                            (click)="UpdateDataContract(element)" mat-menu-item>
+                                            <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+                                            Editar datos
+                                        </button>
+                                        <button [matTooltip]="'Terminar Contrato'"
+                                            (click)="openConfirmationDelete(element)" [color]="'primary'"
+                                            mat-menu-item>
+                                            <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
+                                            Terminar Contrato
+                                        </button>
+                                        <button [matTooltip]="'Agregar Modificacion'"
+                                            (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
+                                            <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                            Generar Minuta
+                                        </button>
+                                    </mat-menu>
+                                </p>
+                                <p *ngIf="element[columna.name]===element.action && !showcontracts">
+                                    <button [matTooltip]="'Ver  Componentes'" style="text-align: center !important;"
+                                        class="hidden sm:inline-flex ml-3" (click)="addComponent(element)"
+                                        mat-flat-button [color]="'primary'">
+                                        <mat-icon svgIcon="heroicons_solid:arrow-circle-left"></mat-icon>
+                                    </button>
+                                </p>
+                            </td>
+                        </ng-container>
+
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="4">No hay datos para filtrar "{{input.value}}"</td>
+                        </tr>
+
+                        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"
+                            (click)="selection.toggle(row);">
+                        </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                        aria-label="Select page of contracts"></mat-paginator>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

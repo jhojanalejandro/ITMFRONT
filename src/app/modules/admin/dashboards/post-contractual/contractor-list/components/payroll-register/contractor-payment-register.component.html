@@ -1,0 +1,118 @@
+<div class="flex-col max-w-220 md:min-w-120 -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Rgistro datos contratista</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content style="margin: 0px; padding: 0px;">
+        <div class="option">
+            <!-- Alert -->
+            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'" [showIcon]="false"
+                [type]="alert.type" [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+        </div>
+        <br>
+        <!-- <h1>Nombre Contratista</h1> -->
+        <form [formGroup]="formContractorPayment" class="example-form overflow-y-auto">
+
+            <div class="folder">
+                <mat-form-field *ngIf="shareData" class="hiring" appearance="fill">
+                    <mat-label>Nombre Contratista</mat-label>
+                    <input [disabled]="true"  id="contractorName"  [formControlName]="'contractorName'" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Cantidad Contratista</mat-label>
+                    <input disabled="true" id="ejecucion" 
+                        formControlName="cantidadContratistas" autocomplete="off" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Pago Número</mat-label>
+                    <input disabled="true" id="ejecucion" 
+                        formControlName="consecutive" autocomplete="off" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
+                </mat-form-field>
+            </div>
+            <div class="folder" *ngIf="shareData">
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Cantidad A pagar</mat-label>
+                    <input type="text" id="compromiso" [ngModel]="economicContractor[0].unitValue | number :'1.0-0'"
+                        formControlName="cashPaymentTotal" autocomplete="off" matInput placeholder="Cantidad A pagar">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPayment.get('cashPaymentTotal').hasError('required')">
+                        El Campo pago es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Total Se debe</mat-label>
+                    <input type="text" id="compromiso" [ngModel]="economicContractor[0].debt | number :'1.0-0'"
+                        formControlName="totalDebt" autocomplete="off" matInput placeholder="Compromiso">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPayment.get('totalDebt').hasError('required')">
+                        El Campo cedula es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Valor Contrato</mat-label>
+                    <input type="text" id="compromiso" [ngModel]="economicContractor[0].totalValue | number :'1.0-0'"
+                        formControlName="paymentcant" autocomplete="off" matInput placeholder="Compromiso">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPayment.get('paymentcant').hasError('required')">
+                        El Campo cedula es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="folder">
+                <mat-form-field (click)="pickerFrom.open()" class="hiring" appearance="fill">
+                    <mat-label>Periodo a pagar Desde</mat-label>
+                    <input matInput id="from" autocomplete="off" [value]="economicContractor[0].periodFrom" formControlName="from" [matDatepicker]="pickerFrom">
+                    <mat-datepicker #pickerFrom></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                    <mat-error *ngIf="formContractorPayment.get('from').hasError('required')">
+                        Este Campo es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field (click)="pickerTo.open()" class="hiring" appearance="fill">
+                    <mat-label>Periodo a pagar hasta</mat-label>
+                    <input matInput id="to" autocomplete="off" [value]="economicContractor[0].periodTo" formControlName="to" [matDatepicker]="pickerTo">
+                    <mat-datepicker #pickerTo></mat-datepicker>
+                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                    <mat-error *ngIf="formContractorPayment.get('to').hasError('required')">
+                        Este Campo es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiring" appearance="fill">
+                    <mat-label>Tipo Pago</mat-label>
+                    <mat-select [formControlName]="'cashPayment'" name="cashPayment">
+                        <mat-option *ngFor="let pago of pagos" [value]="pago.viewValue">
+                            {{pago.viewValue}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:cash'">
+                    </mat-icon>
+                    <mat-error *ngIf="formContractorPayment.get('cashPayment').hasError('required')">
+                        El Campo pago requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="folder">
+                <mat-form-field class="hiringD" appearance="fill">
+                    <textarea type="text" class="example-full-width" id="description" formControlName="description"
+                        autocomplete="off" matInput placeholder="Observación"></textarea>
+                    <mat-error *ngIf="formContractorPayment.get('description').hasError('required')">
+                        El Campo Observación es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions class="action" align="end">
+        <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
+        <button mat-flat-button [color]="'primary'" type="submit" [disabled]="formContractorPayment.disabled"
+            *ngIf="!formContractorPayment.disabled" (click)="addPayment()">Guardar</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,48 @@
+
+mat-form-field {
+    width: 300px !important;
+}
+
+.observatationFolder {
+    text-align: center;
+}
+
+.modal-body {
+    margin-bottom: 15px;
+}
+
+.fieldObservation {
+    padding-left: 15px;
+    margin-right: 10px;
+    width: 600PX !important;
+    max-width: 500px;
+}
+
+.example-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    margin-left: 25px;
+    align-items: flex-start;
+    text-align: center;
+
+}
+
+.example-radio-button {
+    margin: 5px;
+    margin-left: 25px;
+}
+
+.example-section {
+    margin: 12px 0;
+  }
+  .checkBox {
+    text-align: center;
+    margin-left: 20px;
+}
+
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+  }

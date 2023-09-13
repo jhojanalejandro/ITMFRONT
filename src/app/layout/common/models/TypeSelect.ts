@@ -9,3 +9,6 @@ export interface TypeSelect {
   export interface TypeSelectString {
     viewValue: string;
   }
+  export interface TypeSelectNumber {
+    viewValue: number;
+  }

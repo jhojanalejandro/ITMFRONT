@@ -1,83 +1,79 @@
 <div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
     <div class="flex md:w-full md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
-        <div class="img relative hidden md:flex flex-auto items-center justify-center h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-r">
+        <div
+            class="img relative hidden md:flex flex-auto items-center justify-center h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-r">
             <!-- Background - @formatter:off -->
             <!-- Rings -->
-            <svg class="absolute inset-0 pointer-events-none"
-                 viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+            <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%"
+                preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
                 <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
                     <circle r="234" cx="196" cy="23"></circle>
                     <circle r="234" cx="790" cy="491"></circle>
                 </g>
             </svg>
-            <!-- Dots -->
-            <svg class="absolute -top-16 -right-16 text-gray-700"
-                 viewBox="0 0 220 192" width="220" height="192" fill="none">
-                <defs>
-                    <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
-                    </pattern>
-                </defs>
-                <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-            </svg>
-            <!-- @formatter:on -->
-            <!-- Content -->
             <div class="z-10 relative w-full max-w-2xl">
-    
+
             </div>
         </div>
         <div class="w-full sm:w-auto py-8 px-4 sm:p-12 md:p-16">
             <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
-                <!-- Logo -->
-                <div class="w-48">
-                    <img src="assets/images/logo/logoItm.jpeg">
-                </div>
                 <div class="text-2xl text-warn-500 ">Este registro es solo para personal autorizado</div>
                 <!-- Title -->
                 <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Registrarse</div>
                 <div class="flex items-baseline mt-0.5 font-medium">
                     <div>Ya tienes una cuenta?</div>
-                    <a
-                        class="ml-1 text-primary-500 hover:underline"
+                    <a class="ml-1 text-primary-500 hover:underline"
                         [routerLink]="['/paginas/authentication/sign-in']">Iniciar sesion
                     </a>
                 </div>
 
                 <!-- Alert -->
-                <fuse-alert
-                    class="mt-8 -mb-4"
-                    *ngIf="showAlert"
-                    [appearance]="'outline'"
-                    [showIcon]="false"
-                    [type]="alert.type"
-                    [@shake]="alert.type === 'error'">
+                <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                    [type]="alert.type" [@shake]="alert.type === 'error'">
                     {{alert.message}}
                 </fuse-alert>
 
                 <!-- Sign Up form -->
-                <form
-                    class="mt-8"
-                    [formGroup]="signUpForm">
+                <form class="mt-8" [formGroup]="signUpForm">
 
                     <!-- Name field -->
                     <mat-form-field class="w-full">
                         <mat-label>Nombre completo</mat-label>
-                        <input
-                            id="name"
-                            matInput
-                            [formControlName]="'name'">
+                        <input id="name" matInput [formControlName]="'name'">
                         <mat-error *ngIf="signUpForm.get('name').hasError('required')">
                             Se requiere el nombre completo
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Cedula</mat-label>
+                        <input id="name" type="number" matInput [formControlName]="'identification'">
+                        <mat-error *ngIf="signUpForm.get('name').hasError('required')">
+                            Se requiere el nombre completo
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>telefono</mat-label>
+                        <input id="phoneNumber" matInput type="number" [formControlName]="'phoneNumber'"
+                            #phoneNumberField>
+                        <button mat-icon-button type="button"
+                            (click)="phoneNumberField.type === 'password' ? phoneNumberField.type = 'text' : phoneNumberField.type = 'password'"
+                            matSuffix>
+                            <mat-icon class="icon-size-5" *ngIf="phoneNumberField.type === 'password'"
+                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                            <mat-icon class="icon-size-5" *ngIf="phoneNumberField.type === 'text'"
+                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                        </button>
+                        <mat-error>
+                            se requiere telefono
                         </mat-error>
                     </mat-form-field>
 
                     <!-- Email field -->
                     <mat-form-field class="w-full">
                         <mat-label>Correo electrónico</mat-label>
-                        <input
-                            id="email"
-                            matInput
-                            [formControlName]="'email'">
+                        <input id="email" matInput [formControlName]="'email'">
                         <mat-error *ngIf="signUpForm.get('email').hasError('required')">
                             Se requiere Dirección de correo electrónico
                         </mat-error>
@@ -85,116 +81,78 @@
                             Por favor, introduce una dirección de correo electrónico válida
                         </mat-error>
                     </mat-form-field>
-
-                    <mat-form-field class="w-full" appearance="outline">
-                        <mat-label >Cargo profesional</mat-label>
-                        <mat-select [formControlName]="'professional'" name="professional">
-                            <mat-option *ngFor="let profesional of profesionales" [value]="profesional.viewValue">
-                                {{profesional.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon
-                        class="icon-size-5"
-                        matSuffix
-                        [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
-                        <mat-error *ngIf="signUpForm.get('professional').hasError('required')">
-                            El Campo pension es requerido
-                        </mat-error>
-                    </mat-form-field> 
-                    <!-- Password field -->
+                    <div class="text-2xl text-warn-500 ">Para el envío de correos es necesario la clave de su Correo Corporativo</div>
                     <mat-form-field class="w-full">
                         <mat-label>Contraseña</mat-label>
-                        <input
-                            id="password"
-                            matInput
-                            type="password"
-                            [formControlName]="'password'"
-                            #passwordField>
-                        <button
-                            mat-icon-button
-                            type="button"
-                            (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                        <input id="password" matInput type="password" [formControlName]="'passwordMail'" #passwordMailField>
+                        <button mat-icon-button type="button"
+                            (click)="passwordMailField.type === 'password' ? passwordMailField.type = 'text' : passwordMailField.type = 'password'"
                             matSuffix>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordField.type === 'password'"
+                            <mat-icon class="icon-size-5" *ngIf="passwordMailField.type === 'password'"
                                 [svgIcon]="'heroicons_solid:eye'"></mat-icon>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="passwordField.type === 'text'"
+                            <mat-icon class="icon-size-5" *ngIf="passwordMailField.type === 'text'"
                                 [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                         </button>
                         <mat-error>
-                           se requiere contraseña
+                            se requiere contraseña
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>Descripción del cargo</mat-label>
+                        <textarea matInput [formControlName]="'professional'" [rows]="1" cdkTextareaAutosize
+                            [cdkAutosizeMinRows]="1">
+                        </textarea>
+                        <mat-icon class="icon-size-5" matSuffix
+                            [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                        <mat-error *ngIf="signUpForm.get('professional').hasError('required')">
+                            El Campo pension es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <!-- Password field -->
+                    <mat-form-field class="w-full">
+                        <mat-label>Contraseña</mat-label>
+                        <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+                        <button mat-icon-button type="button"
+                            (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                            matSuffix>
+                            <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                            <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                        </button>
+                        <mat-error>
+                            se requiere contraseña
                         </mat-error>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>Confirmar Contraseña</mat-label>
-                        <input
-                            id="confirmPassword"
-                            matInput
-                            type="password"
-                            [formControlName]="'confirmPassword'"
+                        <input id="confirmPassword" matInput type="password" [formControlName]="'confirmPassword'"
                             #confirmPasswordField>
-                        <button
-                            mat-icon-button
-                            type="button"
+                        <button mat-icon-button type="button"
                             (click)="confirmPasswordField.type === 'password' ? confirmPasswordField.type = 'text' : confirmPasswordField.type = 'password'"
                             matSuffix>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="confirmPasswordField.type === 'password'"
+                            <mat-icon class="icon-size-5" *ngIf="confirmPasswordField.type === 'password'"
                                 [svgIcon]="'heroicons_solid:eye'"></mat-icon>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="confirmPasswordField.type === 'text'"
+                            <mat-icon class="icon-size-5" *ngIf="confirmPasswordField.type === 'text'"
                                 [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                         </button>
                         <mat-error>
-                           se requiere contraseña
+                            se requiere contraseña
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="w-full">
-                        <mat-label>telefono</mat-label>
-                        <input
-                            id="phoneNumber"
-                            matInput
-                            type="number"
-                            [formControlName]="'phoneNumber'"
-                            #phoneNumberField>
-                        <button
-                            mat-icon-button
-                            type="button"
-                            (click)="phoneNumberField.type === 'password' ? phoneNumberField.type = 'text' : phoneNumberField.type = 'password'"
-                            matSuffix>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="phoneNumberField.type === 'password'"
-                                [svgIcon]="'heroicons_solid:eye'"></mat-icon>
-                            <mat-icon
-                                class="icon-size-5"
-                                *ngIf="phoneNumberField.type === 'text'"
-                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
-                        </button>
-                        <mat-error>
-                           se requiere telefono
-                        </mat-error>
-                    </mat-form-field>
+                    <fuse-alert class="mt-8 -mb-4" *ngIf="showAlertPassword" [appearance]="'outline'" [showIcon]="false"
+                        [type]="alertPassword.type" [@shake]="alertPassword.type === 'error'">
+                        {{alertPassword.message}}
+                    </fuse-alert>
                     <!-- Submit button -->
-                    <button
-                        class="fuse-mat-button-large w-full mt-6"
-                        mat-flat-button
-                        [color]="'primary'"
-                        [disabled]="signUpForm.disabled"
-                        (click)="signUp()">
+                    <button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
+                        [disabled]="signUpForm.disabled" (click)="signUp()">
                         <span *ngIf="!signUpForm.disabled">
                             Registrarse
                         </span>
-                        <mat-progress-spinner
-                            *ngIf="signUpForm.disabled"
-                            [diameter]="24"
+                        <mat-progress-spinner *ngIf="signUpForm.disabled" [diameter]="24"
                             [mode]="'indeterminate'"></mat-progress-spinner>
                     </button>
 

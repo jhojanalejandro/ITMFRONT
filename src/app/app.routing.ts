@@ -12,11 +12,6 @@ export const appRoutes: Route[] = [
     // Redirect empty path to '/dashboards/project'
     {path: '', pathMatch : 'full', redirectTo: 'dashboards/inicio'},
 
-    // Redirect signed in user to the '/dashboards/project'
-    //
-    // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
-    // path. Below is another redirection for that path to redirect the user to the desired
-    // location. This is a small convenience to keep all main routes together here on this file.
     {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboards/inicio'},
 
     // Auth routes for guests
@@ -55,7 +50,9 @@ export const appRoutes: Route[] = [
     // Landing routes
     {
         path: '',
-        component  : LayoutComponent,
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
         data: {
             layout: 'empty'
         },
@@ -88,23 +85,22 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/project/upload-data.module').then(m => m.UploadModule)},
-                {path: 'lista-contratistas/:id', loadChildren: () => import('app/modules/admin/dashboards/project/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
-                {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)}
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/contractual/contracts-list/contracts-lis.module').then(m => m.ContractListModule)},
+                {path: 'lista-contratistas/:id/:contractname', loadChildren: () => import('app/modules/admin/dashboards/contractual/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
+                {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)},
+                {path: 'pre-nomina-lista-contratistas/:id/:contractname', loadChildren: () => import('app/modules/admin/dashboards/post-contractual/contractor-list/post-contractual-contractor-list.module').then(m => m.PostContractualContractorListModule)},
+
             ]},
 
             // Apps
             {path: 'apps', children: [
-                {path: 'academy', loadChildren: () => import('app/modules/admin/apps/academy/academy.module').then(m => m.AcademyModule)},
-                {path: 'contacts', loadChildren: () => import('app/modules/admin/apps/contacts/contacts.module').then(m => m.ContactsModule)},
                 {path: 'file-manager', loadChildren: () => import('app/modules/admin/apps/file-manager/file-manager.module').then(m => m.FileManagerModule)},
-                {path: 'archivo/:id', loadChildren: () => import('app/modules/admin/apps/file-manager/show-file/show-file.module').then(m => m.ShowFileModule)},
-                {path: 'tasks', loadChildren: () => import('app/modules/admin/apps/tasks/tasks.module').then(m => m.TasksModule)},
-
+                {path: 'maintainers-list', loadChildren: () => import('app/modules/admin/apps/maintainers-list/maintainers-lis.module').then(m => m.MaintainersListModule)}
             ]},
 
             // Pages
             {path: 'paginas', children: [
+                {path: 'crear-pdf', loadChildren: () => import('app/modules/admin/pages/create-pdf/create-pdf.module').then(m => m.CreatePdfModule)},
 
                 // Error
                 {path: 'error', children: [
@@ -119,10 +115,12 @@ export const appRoutes: Route[] = [
 
             // Documentation
             {path: 'docs', children: [
-                {path: 'ecommerce', loadChildren: () => import('app/modules/admin/docs/ecommerce/ecommerce.module').then(m => m.ECommerceModule)},
+                {path: 'ecommerce', loadChildren: () => import('app/modules/admin/pages/planing/planing.module').then(m => m.PlaningModule)},
 
                 // Guides
-                // {path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.module').then(m => m.GuidesModule)}
+                {path: 'general', loadChildren: () => import('app/modules/admin/pages/general-data-list/general.module').then(m => m.GeneralListModule)},
+                {path: 'history', loadChildren: () => import('app/modules/admin/pages/history-contractor/history-contractor.module').then(m => m.HistoryContractorModule)}
+
             ]},
 
             // 404 & Catch all

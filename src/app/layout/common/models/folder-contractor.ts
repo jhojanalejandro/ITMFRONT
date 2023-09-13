@@ -1,9 +1,11 @@
-export interface IFolderContractor{
+export interface Folder{
     id?: any;
-    userId: any;
-    contractorId: any;
+    userId: string;
+    contractorId?: string;
+    contractId: string;
     folderName: string;
     descriptionProject: string;
     registerDate: Date;
     modifyDate: Date;
+    folderType: string;
 }

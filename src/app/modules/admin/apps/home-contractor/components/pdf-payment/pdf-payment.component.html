@@ -1,0 +1,91 @@
+<!-- <div  class="container">
+    <div id="pdfTable" #pdfTable >
+        <table class="table">
+            <tr class="alinear">
+                <td rowspan="2" class="alinear" style="padding-top: 35px;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CUENTA DE COBRO <span></span></td>
+                <td> &nbsp;&nbsp;&nbsp; FECHA DE COBRO: </td>
+                <td> &nbsp;&nbsp;&nbsp; NÚMERO  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
+            </tr>
+            <tr class="alinear">
+                <td>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{date | date: 'longDate'}}  </td>
+                <td>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1  </td>
+            </tr>
+        </table>
+        <br>
+        <table style="width:100%" class="table">
+            <tr class="alinear">
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;EMPRESA: &nbsp;&nbsp; {{dataCuenta.company}}</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp; NIT: &nbsp;&nbsp; {{nit}}</td>
+            </tr>
+            <tr class="alinear">
+                <td>DIRECCIÓN: &nbsp;&nbsp; Cra 24b # 40a sur 162</td>
+                <td>TELÉFONO: &nbsp;&nbsp; 423-4899</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table">
+            <tr class="alinear">
+                <td  class="alinear" colspan="6">&nbsp;&nbsp; DEBE A:</td>
+            </tr>
+            <tr class="alinear">
+                <td>NOMBRE:</td>
+                <td class="name" colspan="5">{{dataCuenta.nombre.toLocaleUpperCase() + ' ' + dataCuenta.apellido.toLocaleUpperCase() }}</td>
+            </tr>
+            <tr class="alinear">
+                <td class="alinear" colspan="6">INSCRITO EN EL RÉGIMEN SIMPLIFICADO DEL IVA</td>
+            </tr>
+            <tr class="alinear">
+                <td>CÉDULA:</td>
+                <td>{{dataCuenta.identificacion}}</td>
+                <td>DV</td>
+                <td>8</td>
+                <td>EXPEDIDA EN:</td>
+                <td>{{dataCuenta.lugarExpedicion}}</td>
+            </tr>
+            <tr class="alinear">
+                <td>DIRECCION:</td>
+                <td colspan="3">{{dataCuenta.direccion}}</td>
+                <td>TELEFONO:</td>
+                <td>{{dataCuenta.celular}}</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table">
+            <tr class="alinear">
+                <th>CONCEPTO:</th>
+                <th>Contrato de prestación de servicios como contratista para desarrollo
+                    RPA.</th>
+            </tr>
+            <tr class="alinear">
+                <td>PERIODO:</td>
+                <td> {{dataCuenta.from | date: 'longDate'}} hasta {{dataCuenta.to | date: 'longDate'}}</td>
+            </tr>
+            <tr class="alinear">
+                <td>VALOR:</td>
+                <td >$ {{dataCuenta.unitValue | number:'1.0-0'}}</td>
+            </tr>
+            <tr class="alinear">
+                <td>EN LETRAS:</td>
+                <td >{{valueLetter}}</td>
+            </tr>
+            <tr class="alinear">
+                <td colspan="2">Favor consignar en la cuenta de {{dataCuenta.tipoCuenta}} {{dataCuenta.entidadCuentaBancaria}} N° {{dataCuenta.cuentaBancaria}}</td>
+            </tr>
+        </table>
+        <br>
+        <div >
+            <span class="firm">FIRMA:</span>
+            <br>
+            <mat-divider class="linea" fxFlex="3,0"></mat-divider>
+            <br>
+            <span class="contractorName">NOMBRE: {{dataCuenta.nombre + '' + dataCuenta.apellido}}</span>
+            <br>
+            <span class="contractorName">Documento: {{dataCuenta.identificacion}}</span>
+
+        </div>
+
+    </div>
+    <div style="margin-bottom: 20px;" class="col-md-4 text-right">
+        <button (click)="downloadPDF()" class="btn btn-success btn-block" >Download PDF</button>
+    </div>
+</div> -->
