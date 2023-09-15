@@ -38,7 +38,7 @@
             </button> -->
         </mat-form-field>
         <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
-            <mat-select [disabled]="statusSelected.value == null" placeholder="ESTADOS"
+            <mat-select [disabled]="statusSelected.value == null || statusSelected.value == 5" placeholder="ESTADOS"
                 (selectionChange)="applyFilterByStatusSpecific($event)" name="status">
                 <mat-option *ngFor="let status of statusContractorSelected" [value]="status.viewValue">
                     {{status.viewValue}}
@@ -101,11 +101,11 @@
                                     <p
                                         *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
                                          && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
-                                         && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy">
+                                         && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
                                         {{element[columna.name]}}
                                     </p>
                                     <span
-                                        *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus"
+                                        *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
                                         'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
@@ -115,14 +115,14 @@
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.minuteGnenerated;"
+                                        *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
                                         'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess"
+                                        *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.hiringStatus === 'CONTRATANDO',
@@ -130,7 +130,7 @@
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated"
+                                        *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',                                       
@@ -138,14 +138,14 @@
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy"
+                                        *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',                                       
                                         'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated === 'APROBADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <span *ngIf="element[columna.name]===element.comiteGenerated"
+                                    <span *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
@@ -160,57 +160,7 @@
                                                 [svgIcon]="contractorSelected?.id === element.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
                                         </button>
                                     </p>
-                                    <p *ngIf="columna.name==='acciones'">
-
-                                        <button [matTooltip]="'Opciones Documentos'" mat-icon-button
-                                            [matMenuTriggerFor]="summaryMenu">
-                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
-                                            </mat-icon>
-                                        </button>
-                                        <mat-menu #summaryMenu="matMenu">
-                                            <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
-                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                Generar Minuta
-                                            </button>
-                                            <button [matTooltip]="'GENERAR PDF'"
-                                                (click)="generatedPdfContractor(element,'ESTUDIOS PREVIOS')"
-                                                [color]="'primary'" mat-menu-item>
-                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                Generar Estudios Previos
-                                            </button>
-                                            <button [matTooltip]="'Generar'"
-                                                (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
-                                                mat-menu-item>
-                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                Generar Solicitud de comite
-                                            </button>
-                                            <button [matTooltip]="'Generar'" *ngIf="visibleOption" mat-menu-item
-                                                (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
-                                                <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                Generar Otro si
-                                            </button>
-                                            <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="addTermFileContract(element)" [color]="'primary'"
-                                                mat-menu-item>
-                                                <mat-icon svgIcon="heroicons_solid:calendar"></mat-icon>
-                                                Habilitar Tiempo de entrega
-                                            </button>
-                                            <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="modificacionContrato(element)" [color]="'primary'"
-                                                mat-menu-item>
-                                                <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
-                                                Agregar Modificacion
-                                            </button>
-                                            <button [matTooltip]="'Desabilitar Contratista'"
-                                                (click)="openConfirmationDelete(element)" [color]="'primary'"
-                                                mat-menu-item>
-                                                <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-                                                Desabilitar
-                                            </button>
-                                        </mat-menu>
-                                    </p>
-                                    <p *ngIf="columna.name=='acciones' && origin == 'pre-nomina'">
+                                    <p *ngIf="columna.name=='acciones'">
 
                                         <button [matTooltip]="'Opciones Documentos'" mat-icon-button
                                             [matMenuTriggerFor]="summaryMenu">
@@ -230,11 +180,6 @@
                                             </button>
                                         </mat-menu>
                                     </p>
-                                    <!-- <div class="grid" >
-                                        <ng-container *ngIf="contractorSelected?.id === element.id">
-                                            <ng-container *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: element}"></ng-container>
-                                        </ng-container>
-                                    </div> -->
                                 </td>
 
 

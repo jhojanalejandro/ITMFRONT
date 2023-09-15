@@ -49,33 +49,6 @@ export class ButtonsExportComponent implements OnInit {
             );
     }
 
-    generateReportSatisfaction() {
-        this._service.generateReportSatisfaction(this.contractId)
-            .pipe(takeUntil(this._unsubscribe$))
-            .subscribe(
-                (res) => {
-                    var downloadURL = window.URL.createObjectURL(res);
-                    var link = document.createElement('a');
-                    link.href = downloadURL;
-                    link.download = "Reporte";
-                    link.click();
-                    if (res) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Documento descargado.',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
-                },
-                (response) => {
-                    console.log(response);
-                    swal.fire('', 'Error al descargar la informacion!', 'error');
-                }
-            );
-    }
-
 
     exportarSolicitudCdp() {
         this._service.getReportCdp(this.contractId)

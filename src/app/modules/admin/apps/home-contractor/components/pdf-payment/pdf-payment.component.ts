@@ -377,19 +377,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: '',
                                     alignment: 'center',
                                 },
-                            ],
-                            [
-                                {
-                                    colSpan: 3,
-                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.accountType+ ' ' + this.chargeAccountData.bankingEntity + ' N°  ' + this.chargeAccountData.accountNumber,
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                }
-                            ],
+                            ]
                         ],
                     },
                 },

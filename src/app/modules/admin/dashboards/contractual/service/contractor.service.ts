@@ -3,8 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, retry, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { ContractContractors, Contractor } from '../models/contractor';
-import { ChargeAccount } from 'app/modules/admin/apps/home-contractor/models/pdfDocument';
+import { ContractContractors } from '../models/contractor';
 import { AssignmentType } from '../models/assignment-user.model';
 import Swal from 'sweetalert2';
 
@@ -67,7 +66,7 @@ export class ContractorService {
             .set('contractorId', contractorId)
             .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetPdChargeAccountGetById;
-        return this._httpClient.get<ChargeAccount>(urlEndPoint, { params: params });
+        return this._httpClient.get<IResponse>(urlEndPoint, { params: params });
     }
 
 

@@ -23,6 +23,7 @@ import { UploadFileContractComponent } from './components/upload-file-contract/u
 import { ShowFileComponent } from './components/show-file/show-file.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
         ShowFileComponent,
     ],
     imports: [
+        QuillModule.forRoot(),
         RouterModule.forChild(fileManagerRoutes),
         MatButtonModule,
         MatIconModule,

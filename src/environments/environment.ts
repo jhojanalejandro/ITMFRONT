@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    //apiURL: 'https://localhost:44353/',
-    apiURL: 'https://localhost:7163/',
+    apiURL: 'https://localhost:44353/',
+    //apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/SignUp',
     retrieveEndpoint: 'User/retrievePassword',
@@ -71,6 +71,7 @@ export const environment = {
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
     GetEmptityHealthContractorEndpoint: 'ContractorPayments/GetEmptityHealthContractor',
+    GetPdChargeAccountGetById: 'ContractorPayments/ChargeAccountGetById',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
@@ -97,7 +98,6 @@ export const environment = {
     DeleteFileEndpoint: 'Files/DeleteFile/',
     GetFileDonwloadContractualEndpoint: 'Files/GetFileDonwloadContractual',
 
-
     addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
     GetAllHiringEndpoint: 'HiringData/GetAll',
@@ -120,7 +120,6 @@ export const environment = {
     getActivityById: 'Componente/GetActivityById/',
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
-    GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
     GetPdMinteExtension: 'PdfData/GetDataminuteExtension',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',

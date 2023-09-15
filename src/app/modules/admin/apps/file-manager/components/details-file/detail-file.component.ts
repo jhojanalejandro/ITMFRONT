@@ -50,6 +50,8 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this._fileManagerService.getfile$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
+                item.observation = this.stripHtml(item.observation);
+
                 this.fileId = item.id;
                 // Open the drawer in case it is closed 
                 this._listComponent.matDrawer.open();
@@ -166,6 +168,11 @@ export class DetailFileComponent implements OnInit, OnDestroy {
     }
     closeDrawer(): Promise<MatDrawerToggleResult> {
         return this._listComponent.matDrawer.close();
+    }
+
+    stripHtml(html: string): string {
+        const strippedHtml = html.replace(/<\/?(ol|ul|li|strong|em|u)[^>]*>/g, '  ');
+        return strippedHtml;
     }
 
 }

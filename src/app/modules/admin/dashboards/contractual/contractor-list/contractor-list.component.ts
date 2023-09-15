@@ -62,7 +62,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   idSelected: string[] = [];
   contractName: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono','statusContractor', 'legalProccess', 'hiringStatus',  'comiteGenerated', 'previusStudy', 'minuteGnenerated', 'acciones'];
+  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono', 'statusContractor', 'legalProccess', 'hiringStatus', 'comiteGenerated', 'previusStudy', 'minuteGnenerated', 'all','additional', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   visibleOption: boolean = false;
   datePipe: DatePipe;
@@ -78,6 +78,7 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   selectedContracttorForm: FormGroup;
   showDetail: boolean = false;
   isRowSelected = (row: any) => row === this.contractorSelected;
+  defaultRowIndex: number = 0; // Por ejemplo, asumamos que quieres que la primera fila sea la predeterminada
 
   constructor(
     private _contractorListService: ContractorService,
@@ -106,7 +107,10 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
     { title: 'COMITE', name: 'comiteGenerated' },
     { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
     { title: 'DETALLE', name: 'detail' },
-    { title: 'OPCIONES', name: 'acciones' }
+    { title: '', name: 'all' },
+    { title: 'OPCIONES', name: 'acciones' },
+    { title: 'DETALLE', name: 'additional' }
+
   ]
 
   ngOnInit(): void {
@@ -199,9 +203,13 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
 
   getDataContractor(origin: boolean) {
-    this._contractorListService.getContractorByIdProject(this.contractId,origin).subscribe(contractorsListResponse => {
+    this._contractorListService.getContractorByIdProject(this.contractId, origin).subscribe(contractorsListResponse => {
       if (contractorsListResponse.success) {
-        this.contractorsList = contractorsListResponse.data;
+        this.contractorsList = contractorsListResponse.data.map(contractor => ({
+          ...contractor,
+          all: 'TODOS',
+          additional: false
+        }));
         this.dataSource = new MatTableDataSource(this.contractorsList);
         this.cdref.detectChanges();
       } else {
@@ -378,13 +386,13 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
 
   }
   generatedPdfContractor(data: any = null, type: string) {
-    if(data != null){
+    if (data != null) {
       this.contractContractors.contractors = [data.id];
-    }else{
+    } else {
       this.selection.selected.forEach(element => {
         this.contractorListId.push(element.id);
       });
-      this.contractContractors.contractors =  this.contractorListId;
+      this.contractContractors.contractors = this.contractorListId;
     }
     this.contractContractors.contractId = this.contractId
     this.generatePdf = true;
@@ -485,7 +493,9 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
   changeTypeStatus(e: any) {
     this.statusContractorSelected = this.statusContractor.filter(f => f.value == e.value);
     this.statusSelected = this.typeStatusContractor.find(f => f.value == e.value);
-
+    if (e.value == 5) {
+      this.applyFilterByStatusSpecific('TODOS')
+    }
   }
   applyFilterByStatus(filterValue: any) {
     this.dataSource.filter = filterValue.value.trim().toLowerCase();
@@ -512,6 +522,9 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
         return data.minuteGnenerated.includes(filter);
       }
       if (this.statusSelected.viewValue == 'COMITE') {
+        return data.comiteGenerated.includes(filter);
+      }
+      if (this.statusSelected.viewValue == 'TODOS') {
         return data.comiteGenerated.includes(filter);
       }
     };
@@ -564,11 +577,27 @@ export class ContractorListComponent implements OnInit, OnDestroy, AfterViewInit
           if (i === (Response.length - 1)) {
             jszip.generateAsync({ type: 'blob' }).then(function (content) {
               // see FileSaver.js
-              saveAs(content,typeFile+ contract +'.zip');
+              saveAs(content, typeFile + contract + '.zip');
             });
           }
         }
       })
+  }
+
+  toggleAdditionalRow(row: any) {
+    // Cambiar el estado de showAdditionalRow para la fila específica
+    row.additional = !row.additional;
+  }
+  isDefaultRow = (_: any, rowIndex: number) => {
+    debugger
+    // Lógica para determinar si esta es la fila predeterminada
+    return rowIndex === this.defaultRowIndex;
+  }
+  
+
+  isAdditionalRow = (_: any,row: any) => {
+    debugger
+    return row.additional; // Debe devolver true o false según corresponda
   }
 
   ngOnDestroy(): void {

@@ -173,7 +173,7 @@ export class PlaningService {
             .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdHiringEndpoint;
-        return this._httpClient.get<IHiringData>(urlEndpointGenerate, { params: params });
+        return this._httpClient.get<IResponse>(urlEndpointGenerate, { params: params });
     }
 
 

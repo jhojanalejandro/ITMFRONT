@@ -190,12 +190,13 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
-                    if(Response.chargeAccountNumber == 0){
-                        Response.chargeAccountNumber = 1;
+                    debugger
+                    if(Response.data.data.chargeAccountNumber == 0){
+                        Response.data.data.chargeAccountNumber = 1;
                     }
-                    if (Response != null) {
+                    if (Response.data.data.periodExecutedFinalDate != null && Response.data.data.periodExecutedInitialDate != null) {
                         this.viwFilesGenerated = true;
-                        this.chargeAccountData = Response;
+                        this.chargeAccountData = Response.data.data;
                     }
                 });
         } else {

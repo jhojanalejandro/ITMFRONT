@@ -52,7 +52,7 @@
             </button> -->
         </mat-form-field>
         <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
-            <mat-select [disabled]="statusSelected.value == null" placeholder="ESTADOS"
+            <mat-select [disabled]="statusSelected.value == null || statusSelected.value == 5" placeholder="ESTADOS"
                 (selectionChange)="applyFilterByStatusSpecific($event)" name="status">
                 <mat-option *ngFor="let status of statusContractorSelected" [value]="status.viewValue">
                     {{status.viewValue}}
@@ -144,11 +144,11 @@
                                     <p
                                         *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
                                          && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
-                                         && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy">
+                                         && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
                                         {{element[columna.name]}}
                                     </p>
                                     <span
-                                        *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus"
+                                        *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
                                         'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
@@ -157,14 +157,16 @@
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'CONTRATANDO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
-                                    <span *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.minuteGnenerated;"
+                                    <span
+                                        *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.legalProccess === 'EN ESPERA',
                                         'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess"
+                                        *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.hiringStatus === 'CONTRATANDO',
@@ -172,7 +174,7 @@
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated"
+                                        *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',                                       
@@ -180,7 +182,7 @@
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy"
+                                        *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',                                       
@@ -188,7 +190,7 @@
                                         <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                     </span>
                                     <span
-                                        *ngIf="element[columna.name]===element.comiteGenerated"
+                                        *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
                                         class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                         [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
                                         'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
@@ -204,7 +206,6 @@
                                         </button>
                                     </p>
                                     <p *ngIf="columna.name==='acciones'">
-
                                         <button [matTooltip]="'Opciones Documentos'" mat-icon-button
                                             [matMenuTriggerFor]="summaryMenu">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
@@ -256,6 +257,12 @@
                                                 <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
                                                 Desabilitar
                                             </button>
+                                            <button [matTooltip]="'Desabilitar Contratista'"
+                                                (click)="toggleAdditionalRow(element)" [color]="'primary'"
+                                                mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
+                                                Detalle
+                                            </button>
                                         </mat-menu>
                                     </p>
                                 </td>
@@ -268,10 +275,8 @@
                             </tr>
 
                             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                            <tr mat-row *matRowDef="let row; columns: columnsToDisplay;">
-
-                            </tr>
-
+                            <tr mat-row *matRowDef="let row; columns: columnsToDisplay; when: isDefaultRow"></tr>
+                            <tr mat-row *matRowDef="let row; columns: ['additional']; when: isAdditionalRow"></tr>
                             <!-- <tr mat-row *ngIf="showDetail" [class.hidden]="contarctorSelected !== row">
                                 <td colspan="5">
                                   <app-detail-contractor  (closeDetail)="closeDetail($event)"

@@ -32,6 +32,13 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+  quillModules: any = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ align: [] }, { list: 'ordered' }, { list: 'bullet' }],
+      ['clean']
+    ]
+  };
   constructor(
     private _uploadService: UploadFileDataService,
     public matDialogRef: MatDialogRef<ObservationFileComponent>,
@@ -39,7 +46,7 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) private _data
   ) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     console.log(this._data);
     this.observationfile = this._data.files;
     this.formFile = this._formBuilder.group({
@@ -61,36 +68,38 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
   AddObservationFile() {
 
     let detailFile: DetailFileContractor = {
-        fileId: this._data.id,
-        observation: this.formFile.value.observation,
-        reasonRejection: this.formFile.value.motivo,
-        files: this.observationfile,
-        registerDate: new Date(),
-        passed: false,
-        statusFileId: this._data.statusFile,
-        contractId: this._data.contractId,
-        contractorId: this._data.contractorId,
-        userId: this._data.userId
+      fileId: this._data.id,
+      observation: this.formFile.value.observation,
+      reasonRejection: this.formFile.value.motivo,
+      files: this.observationfile,
+      registerDate: new Date(),
+      passed: false,
+      statusFileId: this._data.statusFile,
+      contractId: this._data.contractId,
+      contractorId: this._data.contractorId,
+      userId: this._data.userId,
+      termDate: this.formFile.value.termDate
     }
+    debugger
     this._uploadService.addObservationDetailFile(detailFile)
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe((res) => {
-      if (res) {
-        swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '',
-          html: 'Información actualizada Exitosamente!',
-          showConfirmButton: false,
-          timer: 1500
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((res) => {
+        if (res) {
+          swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: '',
+            html: 'Información actualizada Exitosamente!',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.matDialogRef.close(true);
+        }
+      },
+        (response) => {
+          console.log(response);
+          swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
         });
-        this.matDialogRef.close(true);
-      }
-    },
-      (response) => {
-        console.log(response);
-        swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
-      });
   }
 
   private _filter(value: string): string[] {
@@ -99,10 +108,10 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
       option.toLowerCase().includes(filterValue)
     );
   }
-  validarCampo(event){
-    if(this.formFile.value.motivo != null &&  this.formFile.value.observation != null){
-        this.disableButton = false;
-    }else{
+  validarCampo(event) {
+    if (this.formFile.value.motivo != null && this.formFile.value.observation != null) {
+      this.disableButton = false;
+    } else {
       this.disableButton = true;
 
     }
@@ -113,5 +122,5 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._unsubscribeAll.complete();
     this._unsubscribeAll.next(true);
-}
+  }
 }

@@ -317,8 +317,8 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     this._planingService
       .getHiringDataById(this.datos.id, this.datos.contractId)
       .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response: IHiringData) => {
-        if (response.id != null) {
+      .subscribe((response) => {
+        if (response.data != null) {
           this.title = 'Actualizar'
           this.update = true;
         }

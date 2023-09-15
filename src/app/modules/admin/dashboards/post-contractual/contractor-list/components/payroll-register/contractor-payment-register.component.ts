@@ -144,7 +144,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
         toDate: this.formContractorPayment.value.to,
         descriptionPayment: this.formContractorPayment.value.description,
         registerDate: new Date(),
-        consecutive: consecutive.consecutive +1
+        consecutive: consecutive.consecutive
       }]
     }
     this._nominaService
@@ -191,6 +191,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
       } else {
         this.consecutive = Response.consecutive;
         this.economicContractor = Response;
+        debugger
         if(this.economicContractor[0].periodFrom == null){
           this.economicContractor[0].periodFrom = new Date();
         } 

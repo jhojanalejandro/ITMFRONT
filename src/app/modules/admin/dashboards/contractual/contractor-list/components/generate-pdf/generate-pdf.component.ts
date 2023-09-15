@@ -1741,6 +1741,7 @@ export class GeneratePdfComponent implements OnInit {
         this._shareService.loadAndConvertImageToBase64(route)
             .then(base64Data => {
                 this.itmImageBase64 = base64Data;
+                debugger
                 if (origin == 'comite') {
                     this.generateCommitteeRequest(this.committeeRequestData);
                 } else {

@@ -62,7 +62,7 @@ export class PostContractualContractorListComponent implements OnInit, OnDestroy
   idSelected: string[] = [];
   contractName: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono','statusContractor', 'legalProccess', 'hiringStatus',  'comiteGenerated', 'previusStudy', 'minuteGnenerated', 'acciones'];
+  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono','statusContractor','previusStudy', 'legalProccess',  'minuteGnenerated','hiringStatus','comiteGenerated', 'all','acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   visibleOption: boolean = false;
   datePipe: DatePipe;
@@ -95,18 +95,17 @@ export class PostContractualContractorListComponent implements OnInit, OnDestroy
     this.datePipe = new DatePipe('es');
   }
   columnas = [
-    { title: 'NOMBRE', name: 'nombre' },
     { title: 'CEDULA', name: 'identificacion' },
+    { title: 'NOMBRE', name: 'nombre' },
     { title: 'CORREO', name: 'correo' },
     { title: 'TELEFONO', name: 'telefono' },
-    { title: 'ESTADO', name: 'proccess' },
     { title: 'REGISTRO', name: 'statusContractor' },
-    { title: 'JURIDICO', name: 'legalProccess' },
-    { title: 'CONTRACTUAL', name: 'hiringStatus' },
-    { title: 'MINUTA', name: 'minuteGnenerated' },
-    { title: 'COMITE', name: 'comiteGenerated' },
-    { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
-    { title: 'DETALLE', name: 'detail' },
+    { title: 'CUENTA COBRO', name: 'previusStudy' },
+    { title: 'ACTA SUPERVISIÓN', name: 'legalProccess' },
+    { title: 'ARL', name: 'hiringStatus' },
+    { title: 'SALUD', name: 'minuteGnenerated' },
+    { title: 'PENSIÓN', name: 'comiteGenerated' },
+    { title: '', name: 'all' },
     { title: 'OPCIONES', name: 'acciones' }
   ]
 
@@ -485,7 +484,9 @@ export class PostContractualContractorListComponent implements OnInit, OnDestroy
   changeTypeStatus(e: any) {
     this.statusContractorSelected = this.statusContractor.filter(f => f.value == e.value);
     this.statusSelected = this.typeStatusContractor.find(f => f.value == e.value);
-
+    if (e.value == 5) {
+      this.applyFilterByStatusSpecific('TODOS');
+    }
   }
   applyFilterByStatus(filterValue: any) {
     this.dataSource.filter = filterValue.value.trim().toLowerCase();
@@ -512,6 +513,9 @@ export class PostContractualContractorListComponent implements OnInit, OnDestroy
         return data.minuteGnenerated.includes(filter);
       }
       if (this.statusSelected.viewValue == 'COMITE') {
+        return data.comiteGenerated.includes(filter);
+      }
+      if (this.statusSelected.viewValue == 'TODOS') {
         return data.comiteGenerated.includes(filter);
       }
     };

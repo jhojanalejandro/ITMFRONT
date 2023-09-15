@@ -34,6 +34,7 @@ export interface Contractor{
 	legalProccess: any;
 	hiringStatus: any;
 	assignmentUser?: string[];
+	all?: any;
 }
 
 

@@ -224,13 +224,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .addHiringContractor(this.hiringDataList)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
-        if (res) {
-
+        if (res.success) {
           Swal.fire({
             position: 'center',
             icon: 'success',
             title: '',
-            html: 'Información Registrada Exitosamente!',
+            html: res.message,
             showConfirmButton: false,
             timer: 1500
           });
@@ -247,7 +246,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         };
         console.log(response);
 
-        Swal.fire('Error', 'Información no Registrada!', 'error');
+        Swal.fire('', response.message, 'error');
         this.showAlert = true;
       });
 
@@ -294,12 +293,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .addHiringContractor(registerContractor)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
-        if (res) {
+        if (res.success) {
           Swal.fire({
             position: 'center',
             icon: 'success',
             title: '',
-            html: 'Información actualizada Exitosamente!',
+            html: res.message,
             showConfirmButton: false,
             timer: 1500
           });
@@ -314,8 +313,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           // Set the alert
           console.log(response);
 
-          Swal.fire('Error', 'Información no Actualizada!', 'error');
-          // Show the alert
+          Swal.fire('', response.message, 'error');
           this.showAlert = true;
         });
 
@@ -502,12 +500,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     this._planingService
       .getHiringDataById(this.datos.id, this.datos.contractId)
       .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response: IHiringData) => {
-        if (response.id != null) {
+      .subscribe((response) => {
+        if (response.data != null) {
 
           this.title = 'Actualizar'
           this.update = true;
-          this.hiringData = response;
+          this.hiringData = response.data;
         }
       });
   }
