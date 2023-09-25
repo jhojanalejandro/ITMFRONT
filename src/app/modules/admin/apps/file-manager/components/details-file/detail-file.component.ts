@@ -50,7 +50,9 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this._fileManagerService.getfile$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
-                item.observation = this.stripHtml(item.observation);
+                if(item.observation != null){
+                    item.observation = this.stripHtml(item.observation);
+                }
 
                 this.fileId = item.id;
                 // Open the drawer in case it is closed 

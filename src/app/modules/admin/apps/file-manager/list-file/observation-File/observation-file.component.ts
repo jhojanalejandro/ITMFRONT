@@ -80,7 +80,6 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
       userId: this._data.userId,
       termDate: this.formFile.value.termDate
     }
-    debugger
     this._uploadService.addObservationDetailFile(detailFile)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {

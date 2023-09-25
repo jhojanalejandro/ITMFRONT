@@ -309,7 +309,6 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     updateFileFileGenerated(event: any, file: FileContractor) {
-        debugger
         this.detailFile.fileId = file.id;
         this.detailFile.registerDate = new Date();
         this.detailFile.passed = true;
