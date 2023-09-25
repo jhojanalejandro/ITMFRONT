@@ -132,8 +132,7 @@ export class ButtonsExportComponent implements OnInit {
                     }
                 },
                 (response) => {
-                    console.log(response);
-                    swal.fire('', 'Error al descargar la informacion!', 'error');
+                    swal.fire('', 'La información esta incompleta para generar el documento!', 'error');
                 }
             );
     }
