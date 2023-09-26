@@ -5,10 +5,6 @@ import { fuseAnimations } from '@fuse/animations';
 import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ContractorService } from '../../../service/contractor.service';
-import { TeamModel } from 'app/modules/auth/model/user-model';
-import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
-import { AssignmentUser, AssignmentType } from '../../../models/assignment-user.model';
-import { AssignmentTypeEnumCode } from 'app/layout/common/enums/userEnum/typeAssignmentenum';
 import { Subject, takeUntil } from 'rxjs';
 import { TermContract } from '../../../models/term-file-contract.model';
 
@@ -16,9 +12,7 @@ import { TermContract } from '../../../models/term-file-contract.model';
 @Component({
   selector: 'app-term-file-contract',
   templateUrl: './term-file-contract.component.html',
-  styleUrls: ['./term-file-contract.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: fuseAnimations
+  styleUrls: ['./term-file-contract.component.scss']
 })
 
 export class TermFileContractComponent implements OnInit {
@@ -67,12 +61,13 @@ export class TermFileContractComponent implements OnInit {
       .saveTermFileContract(this.termFileDocument)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
-        if (res) {
+        if (res.success) {
+          debugger
           Swal.fire({
             position: 'center',
             icon: 'success',
             title: '',
-            html: 'Fecha Termino agregada correctamente!',
+            html: res.message,
             showConfirmButton: false,
             timer: 1500
           });
@@ -80,7 +75,7 @@ export class TermFileContractComponent implements OnInit {
         }
       },
         (response) => {
-          Swal.fire('Error', 'No se pudo asignar la información!', 'error');
+          Swal.fire('', 'No se pudo asignar la información!', 'error');
           console.log(response);
         });
 
@@ -95,8 +90,8 @@ export class TermFileContractComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response: any) => {
         if (Response.length > 0) {
-          this.termType = Response.find(f => f.code === 'DCCT').termDescription;
-          this.termTypeId = Response.find(f => f.code === 'DCCT').id;
+          this.termType = Response.find(f => f.code === this.data.type).termDescription;
+          this.termTypeId = Response.find(f => f.code === this.data.type).id;
         } else {
           Swal.fire('', 'No es posible asignar fechas sin tipos !', 'warning');
           this.closePopup();

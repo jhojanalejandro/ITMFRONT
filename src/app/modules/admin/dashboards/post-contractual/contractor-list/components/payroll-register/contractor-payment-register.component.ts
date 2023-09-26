@@ -49,7 +49,13 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<ContractorPaymentRegisterComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    this._init();
+  }
+
+  private _init(){
     this.contractId =this.datos.contractId
     if (this.datos.id != null  && this.datos.idContractors.length == 0) {
       this.shareData = true;
@@ -73,9 +79,6 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
       this.getEconomicContractorPayment(this.datos.idContractors);
 
     }
-  }
-
-  ngOnInit(): void {
     this.formContractorPayment = this._formBuilder.group({
       from: new FormControl(null, Validators.required),
       to: new FormControl(null, Validators.required),
@@ -91,7 +94,6 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
 
     });
   }
-
   async addPayment() {
     if (this.formContractorPayment.value.cashPayment === 'pago efectivo') {
       this.formContractorPayment.value.cashPayment = true
@@ -191,7 +193,6 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
       } else {
         this.consecutive = Response.consecutive;
         this.economicContractor = Response;
-        debugger
         if(this.economicContractor[0].periodFrom == null){
           this.economicContractor[0].periodFrom = new Date();
         } 

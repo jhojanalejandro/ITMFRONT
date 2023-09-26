@@ -142,8 +142,9 @@ export const environment = {
     GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
-    GetPorcentageSecurityEndpoint: 'MasterData/GetPorcentageSecurity',
     getnewnessType: 'MasterData/GetNewnessType',
+    GetEmptityHealthEndpoint: 'MasterData/GetEmptityHealth',
+
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 

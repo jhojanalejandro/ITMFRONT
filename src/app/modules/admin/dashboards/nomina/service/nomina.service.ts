@@ -74,6 +74,7 @@ export class NominaService {
         );
     }
     private handleError(error: any): Observable<any> {
+        debugger
         Swal.fire({
             position: 'center',
             icon: 'error',

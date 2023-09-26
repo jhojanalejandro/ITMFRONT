@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { ExecutionReport } from '../models/pdfDocument';
-import { Bank } from '../models/mater.model';
-import { EmptityHealth } from '../models/contractor-personal-data.model';
+import { Bank, EntityHealth } from '../models/mater.model';
 
 @Injectable({
     providedIn: 'root'
@@ -90,7 +89,8 @@ export class HomeContractorService {
         return this._httpClient.get<Bank[]>(urlEndPoint);
     }
 
-    getEmptityHealth(contractorId: string) {
+
+    getEmptityHealthContractor(contractorId: string) {
         const params = new HttpParams()
             .set('contractorId', contractorId)
         let urlEndPoint = this.apiUrl + environment.GetEmptityHealthContractorEndpoint;

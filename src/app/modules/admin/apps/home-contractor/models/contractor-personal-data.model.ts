@@ -1,9 +1,8 @@
-export interface PersonalInformation{
+export interface PersonalInformation {
     contractorPersonalInformation: ContractorPersonalInformation;
     academicInformation: AcademicInformation[];
-    emptityHealth: EmptityHealth[];
 }
-export interface ContractorPersonalInformation{
+export interface ContractorPersonalInformation {
     id: string;
     identificacion: string;
     lugarExpedicion: string;
@@ -20,19 +19,14 @@ export interface ContractorPersonalInformation{
     tipoCuenta: string;
     entidadCuentaBancaria: string;
     fechaActualizacion: Date;
+    eps: string;
+    arl: string;
+    afp: string;
 }
 
-export interface AcademicInformation{
+export interface AcademicInformation {
     academicInformationtype: string;
     institution: string;
     collegeDegree: string;
     contractor: string;
 }
-
-export interface EmptityHealth{
-    contractor: string;
-    emptitytype: string;
-    emptity: string;
-}
-
-
