@@ -7,12 +7,6 @@
             </div>
         </div>
         <div class="mt-4 sm:mt-0">
-            <!-- Add section button -->
-            <button mat-flat-button [color]="'accent'" (click)="addTermFileContract(null)"
-                [matTooltip]="'Shortcut: Ctrl + .'">
-                <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
-                <span class="ml-2 mr-1">Tiempo entrega</span>
-            </button>
             <button class="ml-3" mat-flat-button [color]="'primary'" (click)="exportToExcel()"
                 [matTooltip]="'Agregar Varios pagos'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
@@ -188,12 +182,6 @@
                                                 (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
                                                 <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                 Generar Otro si
-                                            </button>
-                                            <button [matTooltip]="'Agregar Modificacion'"
-                                                (click)="addTermFileContract(element)" [color]="'primary'"
-                                                mat-menu-item>
-                                                <mat-icon svgIcon="heroicons_solid:calendar"></mat-icon>
-                                                Habilitar Tiempo de entrega
                                             </button>
                                             <button [matTooltip]="'Agregar Modificacion'"
                                                 (click)="modificacionContrato(element)" [color]="'primary'"

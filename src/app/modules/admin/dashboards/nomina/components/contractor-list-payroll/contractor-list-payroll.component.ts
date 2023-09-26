@@ -20,11 +20,10 @@ import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
 import { ContractorService } from '../../../contractual/service/contractor.service';
-import { ContractContractors, Contractor, ContractorPayroll } from '../../../contractual/models/contractor';
+import { ContractContractors, Contractor } from '../../../contractual/models/contractor';
 import { NewnessContractorComponent } from '../../../contractual/contractor-list/components/newness-contractor/newness-contractor.component';
 import { ModificacionFormComponent } from '../../../contractual/contractor-list/components/modificacion-form/modificacion-form.component';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
-import { TermFileContractComponent } from '../../../contractual/contractor-list/components/term-file-contract/term-file-contract.component';
 import { ShareService } from 'app/layout/common/share-service/share-service.service';
 import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
 import { ButtonsExportService } from 'app/layout/common/buttons-export/buttons-export.service';
@@ -424,32 +423,6 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
 
   historicalPayment(item: any) {
     this._loadrouter.navigate(['/dashboards/nomina/payment-contractor/' + this.contractId + '/' + item.id]);
-  }
-
-  addTermFileContract(contractor: any | null): void {
-    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
-    if (!this.permission) {
-      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
-    } else {
-      const dialogRef = this._matDialog.open(TermFileContractComponent, {
-        disableClose: true,
-        autoFocus: false,
-        data: {
-          onlyContractor: contractor != null ? true : false,
-          contractor: contractor != null ? contractor.id : null,
-          contractId: this.contractId,
-        }
-      });
-      dialogRef.afterClosed()
-        .pipe(takeUntil(this._unsubscribe$))
-        .subscribe((result) => {
-          if (result) {
-            this.getDataContractor(this.sendOrigin);
-          }
-          this.selection.clear();
-        });
-    }
-
   }
 
   changeTypeStatus(e: any) {
