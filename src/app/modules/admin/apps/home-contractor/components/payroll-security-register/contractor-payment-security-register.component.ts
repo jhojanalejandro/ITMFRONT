@@ -40,17 +40,13 @@ export class ContractorPaymentSecurityRegisterComponent implements OnInit, OnDes
   contractId: string;
   porcentageList: PorcentageModel[] = [];
   contractorPayment: ContractorPayments;
-  health: string;
-  pension: string;
-  arl: string;
   base64Output: any;
   file: any = null; // Variable to store file
   selectedFiles: File[] = [];
   filesWithCheckbox: any[] = [];
   private readonly _unsubscribe$ = new Subject<void>();
-
+  porcenterRisk: any = GlobalConst.PorcenterRisk;
   constructor(private _nominaService: NominaService,
-    private _genericService: GenericService,
     private _homeContractorService: HomeContractorService,
     private _auth: AuthService,
     public matDialogRef: MatDialogRef<ContractorPaymentSecurityRegisterComponent>,
@@ -62,34 +58,33 @@ export class ContractorPaymentSecurityRegisterComponent implements OnInit, OnDes
   ngOnInit(): void {
     this.contractId = this.datos.contractId
 
-    this.getPorcentageSecurity();
     this.getEconomicDataContractor();
     this.getHealtyContractor();
     this.formContractorPaymentSecurity = this._formBuilder.group({
       from: new FormControl(null, Validators.required),
       to: new FormControl(null, Validators.required),
-      paymentHealth: new FormControl(null, Validators.required),
+      paymenteps: new FormControl(null, Validators.required),
       paymentArl: new FormControl(null, Validators.required),
-      PaymentPension: new FormControl(null, Validators.required),
-      pension: new FormControl({ value: this.pension, disabled: true }, Validators.required),
-      arl: new FormControl({ value: this.arl, disabled: true }, Validators.required),
-      health: new FormControl({ value: this.health, disabled: true }, Validators.required),
+      Paymentafp: new FormControl(null, Validators.required),
+      afp: new FormControl({ value: null, disabled: true }, Validators.required),
+      arl: new FormControl({ value: null, disabled: true }, Validators.required),
+      eps: new FormControl({ value: null, disabled: true }, Validators.required),
       observation: new FormControl(null, Validators.required),
       file: new FormControl(null, Validators.required),
 
     });
-    this.subscribeToValueChanges('paymentHealth');
+    this.subscribeToValueChanges('paymenteps');
     this.subscribeToValueChanges('paymentArl');
-    this.subscribeToValueChanges('PaymentPension');
+    this.subscribeToValueChanges('Paymentafp');
   }
 
   async addPayment() {
     this.paymentDataList = {
       contractorId: this.datos.id,
       contractId: this.datos.contractId,
-      monthPayment: this.formContractorPaymentSecurity.value.paymentHealth,
+      monthPayment: this.formContractorPaymentSecurity.value.paymenteps,
       paymentcant: this.formContractorPaymentSecurity.value.paymentArl,
-      cashPayment: this.formContractorPaymentSecurity.value.PaymentPension,
+      cashPayment: this.formContractorPaymentSecurity.value.Paymentafp,
       descriptionPayment: this.formContractorPaymentSecurity.value.description,
       registerDate: new Date(),
     }
@@ -113,30 +108,28 @@ export class ContractorPaymentSecurityRegisterComponent implements OnInit, OnDes
         this.contractorPayment = Response;
       });
   }
-  private getPorcentageSecurity() {
-    this._genericService.GetPorcentageSecurity()
-      .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((Response) => {
-        this.porcentageList = Response;
-      });
-  }
 
   private getHealtyContractor() {
-    this._homeContractorService.getEmptityHealth(this._auth.accessId)
+    this._homeContractorService.getEmptityHealthContractor(this._auth.accessId)
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response) => {
-        this.pension = Response.data.data.find(f => f.emptityType == PorcentageEnumCode.PENSION).emptity
-        this.arl = Response.data.data.find(f => f.emptityType == PorcentageEnumCode.ARL).emptity
-        this.health = Response.data.data.find(f => f.emptityType == PorcentageEnumCode.SALUD).emptity
+        this.formContractorPaymentSecurity.patchValue({
+          afp: Response.data.afp,
+          arl: Response.data.afp,
+          eps: Response.data.eps,
+    
+        });
       });
   }
 
   calculateSecurity() {
     debugger
-    let porcentage = this.porcentageList.find(f => f.code == PorcentageEnumCode.SALUD).percentageValue;
-    const porcentajeCalculado = (this.contractorPayment.paymentcant * porcentage) / 100;
-    if (this.formContractorPaymentSecurity.value.paymentHealth != null || this.formContractorPaymentSecurity.value.paymentHealth != '') {
-      if (Number(this.formContractorPaymentSecurity.value.paymentHealth) < porcentajeCalculado) {
+    let porcentage = 12.5;
+    let calculatePorcentagePayment = (this.contractorPayment.paymentcant * 40) / 100
+    const porcentajeCalculado = (calculatePorcentagePayment * porcentage) / 100;
+    if (this.formContractorPaymentSecurity.value.paymenteps != null || this.formContractorPaymentSecurity.value.paymenteps != '') {
+      let payment = Number(this.formContractorPaymentSecurity.value.paymenteps.toString().replace(/\./g, ''));
+      if (payment < porcentajeCalculado) {
         Swal.fire('', 'El valor pagado de SALUD no es correcto, es posible que la planilla sea devuelta', 'warning');
 
       }
@@ -144,22 +137,27 @@ export class ContractorPaymentSecurityRegisterComponent implements OnInit, OnDes
   }
 
   calculateArl() {
-    let porcentage = this.porcentageList.find(f => f.code == PorcentageEnumCode.ARL).percentageValue;
-    const porcentajeCalculado = (this.contractorPayment.paymentcant * porcentage) / 100;
+    debugger
+    let porcentage = this.porcenterRisk.find(f => f.viewValue === this.contractorPayment.levelRisk).value;
+    let calculatePorcentagePayment = (this.contractorPayment.paymentcant * 40) / 100
+    const porcentajeCalculado = (calculatePorcentagePayment * porcentage) / 100;
     if (this.formContractorPaymentSecurity.value.paymentArl != null || this.formContractorPaymentSecurity.value.paymentArl != '') {
-      if (Number(this.formContractorPaymentSecurity.value.paymentArl) < porcentajeCalculado) {
+      let payment = Number(this.formContractorPaymentSecurity.value.paymentArl.toString().replace(/\./g, ''));
+      if (payment < porcentajeCalculado) {
         Swal.fire('', 'El valor pagado de ARL no es correcto, es posible que la planilla sea devuelta', 'warning');
 
       }
     }
   }
 
-  calculatePension() {
-    let porcentage = this.porcentageList.find(f => f.code == PorcentageEnumCode.ARL).percentageValue;
-    const porcentajeCalculado = (this.contractorPayment.paymentcant * porcentage) / 100;
-    if (this.formContractorPaymentSecurity.value.PaymentPension != null || this.formContractorPaymentSecurity.value.PaymentPension != '') {
-      if (Number(this.formContractorPaymentSecurity.value.PaymentPension) < porcentajeCalculado) {
-        Swal.fire('', 'El valor pagado de PENSION no es correcto, es posible que la planilla sea devuelta', 'warning');
+  calculateafp() {
+    debugger
+    let porcentage = 16;
+    let calculatePorcentagePayment = (this.contractorPayment.paymentcant * 40) / 100
+    const porcentajeCalculado = (calculatePorcentagePayment * porcentage) / 100;
+    if (this.formContractorPaymentSecurity.value.Paymentafp != null || this.formContractorPaymentSecurity.value.Paymentafp != '') {
+      if (Number(this.formContractorPaymentSecurity.value.Paymentafp.toString().replace(/\./g, '')) < porcentajeCalculado) {
+        Swal.fire('', 'El valor pagado de afp no es correcto, es posible que la planilla sea devuelta', 'warning');
       }
     }
   }

@@ -1,6 +1,6 @@
 <div class="flex-col max-w-220 md:min-w-120 -m-6">
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">Rgistro datos contratista</div>
+        <div class="text-lg font-medium">Rgistro pago seguridad social</div>
         <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
             <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
@@ -20,41 +20,41 @@
             <div class="folder">
                 <mat-form-field  class="hiringSecurity" appearance="fill">
                     <mat-label>Entidad SALUD</mat-label>
-                    <input  id="contractorName" [value]="health"  [formControlName]="'health'" matInput>
+                    <input  id="contractorName"   [formControlName]="'eps'" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                 </mat-form-field>
                 <mat-form-field  class="hiringSecurity" appearance="fill">
                     <mat-label>Entidad PENSIÓN</mat-label>
-                    <input   id="contractorName" [value]="pension" [formControlName]="'pension'" matInput>
+                    <input   id="contractorName" [formControlName]="'afp'" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                 </mat-form-field>
                 <mat-form-field  class="hiringSecurity" appearance="fill">
                     <mat-label>Entidad ARL</mat-label>
-                    <input  id="contractorName" [value]="arl" [formControlName]="'arl'" matInput>
+                    <input  id="contractorName" [formControlName]="'arl'" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                 </mat-form-field>
             </div>
             <div class="folder" >
                 <mat-form-field class="hiringSecurity" appearance="fill">
-                    <mat-label>Cantidad Pagada SALUD</mat-label>
+                    <mat-label>Valor Pagado de SALUD</mat-label>
                     <input type="text" id="compromiso" (change)="calculateSecurity()" 
-                        formControlName="paymentHealth" autocomplete="off" matInput placeholder="Cantidad A pagar">
+                        formControlName="paymenteps" autocomplete="off" matInput placeholder="Cantidad A pagar">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                    <mat-error *ngIf="formContractorPaymentSecurity.get('paymentHealth').hasError('required')">
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('paymenteps').hasError('required')">
                         El Campo pago es requerido
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="hiringSecurity" appearance="fill">
-                    <mat-label>Cantidad Pagada PENSIÓN</mat-label>
-                    <input type="text" id="compromiso" (change)="calculatePension()" 
-                        formControlName="PaymentPension" autocomplete="off" matInput placeholder="Compromiso">
+                    <mat-label>Valor Pagado de PENSIÓN</mat-label>
+                    <input type="text" id="compromiso" (change)="calculateafp()" 
+                        formControlName="Paymentafp" autocomplete="off" matInput placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                    <mat-error *ngIf="formContractorPaymentSecurity.get('PaymentPension').hasError('required')">
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('Paymentafp').hasError('required')">
                         El Campo cedula es requerido
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="hiringSecurity" appearance="fill">
-                    <mat-label>Cantidad Pagada ARL</mat-label>
+                    <mat-label>Valor Pagado de ARL</mat-label>
                     <input type="text" id="compromiso" (change)="calculateArl()" 
                         formControlName="paymentArl" autocomplete="off" matInput placeholder="Compromiso">
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
