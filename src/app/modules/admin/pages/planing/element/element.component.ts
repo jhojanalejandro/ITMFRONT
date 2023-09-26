@@ -86,7 +86,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     calculo: boolean = true;
     totalCalculate: boolean = true;
     totalValue: any = null;
-    totalValueContratista: any = null;
     objetoConvenio: any = null;
     unitValueMonth: any = null;
     elementselectId: any;
@@ -109,25 +108,18 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         private _genericService: GenericService,
         private _planingService: PlaningService,
     ) {
-        if (this._data.edit === true) {
-            this.totalCalculate = false;
-            this.btnOpcion = 'Actualizar';
-            this.showDate = false;
-            this.elemento = this._data.elemento;
-            this.totalValue = this.addCommasToNumber(this._data.elemento.valorTotal);
-            this.objetoConvenio = this._data.elemento.objetoElemento;
-            this.valorPorDiaContratista = this.addCommasToNumber(this.elemento.valorPorDiaContratista);
-            this.unitValueMonth = this.addCommasToNumber(this.elemento.valorUnidad);
-            this.valorPorDiaContratistas = this.addCommasToNumber(this.elemento.valorPorDia);
-            this.recursos = this.addCommasToNumber(this.elemento.recursos);
 
-        }
         setInterval(() => {
             this.numberOfTicks++;
             this._changeDetectorRef.detectChanges();
             this._changeDetectorRef.markForCheck();
         }, 1000);
 
+
+
+    }
+
+    ngOnInit(): void {
         this.elementForm = this._formBuilder.group({
             contractorCant: [this.elemento.cantidadContratistas, Validators.required],
             cantDay: [this.elemento.cantidadDias, Validators.required],
@@ -150,6 +142,19 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             objetoElemento: [this.objetoConvenio, [Validators.pattern(/[^\r\n]+/)]]
 
         });
+        if (this._data.edit === true) {
+            this.totalCalculate = false;
+            this.btnOpcion = 'Actualizar';
+            this.showDate = false;
+            this.elemento = this._data.elemento;
+            this.totalValue = this._genericService.addCommasToNumber(this._data.elemento.valorTotal);
+            this.objetoConvenio = this._data.elemento.objetoElemento;
+            this.valorPorDiaContratista = this._genericService.addCommasToNumber(this.elemento.valorPorDiaContratista);
+            this.unitValueMonth = this._genericService.addCommasToNumber(this.elemento.valorUnidad);
+            this.valorPorDiaContratistas = this._genericService.addCommasToNumber(this.elemento.valorPorDia);
+            this.recursos = this._genericService.addCommasToNumber(this.elemento.recursos);
+
+        }
         this.filteredOptions =
             this.elementForm.controls.nombreElemento.valueChanges.pipe(
                 startWith(''),
@@ -161,10 +166,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         this.subscribeToValueChanges('recursos');
         this.subscribeToValueChanges('valordiaContratista');
         this.subscribeToValueChanges('unitValue');
-
-    }
-
-    ngOnInit(): void {
         this.getDateAdiction();
         this.getCdp();
         this.getDetailContract();
@@ -199,7 +200,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement(): void {
-        // debugger
         // if (this.elementForm.invalid) {
         //     return;
         // }
@@ -215,10 +215,12 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         if (this.elementForm.value.tipoElemento === null) {
             this.elementForm.value.tipoElemento = 'Contratista'
         }
-        if (this.totalValueContratista === null) {
-            this.totalValueContratista = this.totalValue / this.elementForm.value.contractorCant;
+        if (this.valorPorDiaContratista === null) {
+            this.valorPorDiaContratista = this.totalValue / this.elementForm.value.contractorCant;
         }
-        this.totalValue += this.recursos;
+        if(this.recursos > 0 ){
+            this.totalValue += this.recursos;
+        }
         let item: Elements = {
             id: this._data.elemento.id,
             nombreElemento: this.elementForm.value.nombreElemento,
@@ -229,7 +231,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             valorTotal: Math.round(Number(this.totalValue.toString().replace(/\./g, ''))),
             valorPorDia: Math.round(Number(this.valorPorDiaContratistas.toString().replace(/\./g, ''))),
             valorPorDiaContratista: Math.round(Number(this.valorPorDiaContratista.toString().replace(/\./g, ''))),
-            valorTotalContratista: Math.round(Number(this.totalValueContratista.toString().replace(/\./g, ''))),
+            valorTotalContratista: Math.round(Number(this.valorPorDiaContratista.toString().replace(/\./g, ''))),
             cpcId: this.elementForm.value.cpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
@@ -281,19 +283,16 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                     this.totalValue = Math.round(Number(
                         this.valorPorDiaContratistas * this.elementForm.value.cantDay
                     ));
-                    this.totalValueContratista = Math.round(Number(
-                        this.valorPorDiaContratista * this.elementForm.value.cantDay
-                    ));
                     this.totalExacto = Math.round(this.totalValue);
                 } else if (this.elemento.valorTotal != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
                     this.totalExacto = Math.round(Number(
                         this.valorPorDiaContratistas * this.elementForm.value.cantDay
                     ));
-                    this.totalValueContratista = Math.round(Number(
+                    this.valorPorDiaContratista = Math.round(Number(
                         this.valorPorDiaContratista * this.elementForm.value.cantDay
                     ));
                     this.valorPorDiaContratista * this.elementForm.value.cantDay
-                    this.totalValueContratista = Math.round(Number(
+                    this.valorPorDiaContratista = Math.round(Number(
                         this.valorPorDiaContratista * this.elementForm.value.cantDay
                     ));
                     this.recursos += Math.round(this.elementForm.value.totalValue - this.totalExacto);
@@ -301,7 +300,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 if (this.elementForm.value.recursos != null && this.elementForm.value.recursos != '') {
                     this.recursos = Number(this.elementForm.value.recursos.toString().replace(/\./g, ''));
                     this.totalExacto = Math.round(this.recursos + this.totalExacto);
-                    this.totalExacto = this.addCommasToNumber(this.totalExacto);
+                    this.totalExacto = this._genericService.addCommasToNumber(this.totalExacto);
                 }
             }
         } else {
@@ -310,17 +309,15 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             this.totalValue = Math.round(this.elementForm.value.toString().replace(/\./g, ''));
             this.elementForm.value.totalValue = Math.round(this.valorPorDiaContratista);
         }
-        if (this.totalValue > 0) {
-            this.totalValue = this.addCommasToNumber(this.totalValue);
-            this.valorPorDiaContratistas = this.addCommasToNumber(this.valorPorDiaContratistas);
-            this.totalExacto = this.addCommasToNumber(this.totalExacto);
-            this.valorPorDiaContratista = this.addCommasToNumber(this.valorPorDiaContratista);
+        if (this.totalValue > 0 || this.totalValue != null) {
+            this.totalValue = this._genericService.addCommasToNumber(this.totalValue);
+            this.valorPorDiaContratistas = this._genericService.addCommasToNumber(this.valorPorDiaContratistas);
+            this.totalExacto = this._genericService.addCommasToNumber(this.totalExacto);
+            this.valorPorDiaContratista = this._genericService.addCommasToNumber(this.valorPorDiaContratista);
             if (this.recursos > 0) {
-                this.recursos = this.addCommasToNumber(this.recursos);
+                this.recursos = this._genericService.addCommasToNumber(this.recursos);
             }
         }
-
-
     };
 
     selectmodificacion() {
@@ -361,10 +358,10 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         }
 
         this.totalExacto = this.totalValue + this.recursos;
-        this.totalExacto = this.addCommasToNumber(this.totalExacto);
-        this.totalValue = this.addCommasToNumber(this.totalValue);
+        this.totalExacto = this._genericService.addCommasToNumber(this.totalExacto);
+        this.totalValue = this._genericService.addCommasToNumber(this.totalValue);
         if (this.recursos > 0) {
-            this.recursos = this.addCommasToNumber(this.recursos);
+            this.recursos = this._genericService.addCommasToNumber(this.recursos);
         }
     }
 
@@ -480,7 +477,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
 
         // Remover puntos del valor anterior para evitar puntos duplicados
         const numericValue = Number(value.toString().replace(/\./g, ''));
-        const formattedValue = this.addCommasToNumber(numericValue);
+        const formattedValue = this._genericService.addCommasToNumber(numericValue);
 
         // Si el valor formateado es diferente al valor en el control, actualizar el control
         if (formattedValue !== previousValue) {
@@ -488,14 +485,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         }
     }
 
-    addCommasToNumber(value: number): string {
-        if(value <= 9999 && value >= 1000){
-            const formattedNumber = value.toString();
-            return formattedNumber.substr(0, 1) + '.' + formattedNumber.substr(1);
-        }else{
-            return value.toLocaleString('es-ES', { maximumFractionDigits: 0 });
-        }
-    }
+
     subscribeToValueChanges(controlName: string): void {
         this.elementForm.get(controlName).valueChanges.subscribe(value => {
             this.formatNumberWithCommas(controlName, value);

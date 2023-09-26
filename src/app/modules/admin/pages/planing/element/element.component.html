@@ -122,6 +122,7 @@
                     </mat-form-field>   
                     <mat-form-field appearance="fill">
                         <mat-label>Valor Unidad</mat-label>
+                        <span matPrefix>$</span>
                         <input type="text" value="{{elemento.valorUnidad}}" id="unitValue"
                             [formControlName]="'unitValue'" (change)="calculate('valor')" autocomplete="off" matInput
                             placeholder="Valor Unidad">
@@ -135,6 +136,7 @@
                 <div class="folder">
                     <mat-form-field *ngIf="typeContractor" disable appearance="fill">
                         <mat-label>Valor Por dia contratistas</mat-label>
+                        <span matPrefix>$</span>
                         <input type="text" value="{{valorPorDiaContratistas}}" formControlName="unitValueDay"
                             autocomplete="off" matInput placeholder="Valor por Día">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
@@ -149,6 +151,7 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Recursos </mat-label>
+                        <span matPrefix>$</span>
                         <input type="text" value="{{recursos}}" id="recursos" formControlName="recursos"
                             (change)="calculate('valor')" autocomplete="off" matInput placeholder="Recuros">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
@@ -158,6 +161,7 @@
                 <div class="folder">
                     <mat-form-field [hidden]="totalCalculate" appearance="fill">
                         <mat-label>Valor por dia contratista</mat-label>
+                        <span matPrefix>$</span>
                         <input type="text" value="{{valorPorDiaContratista}}" id="valorDiaContratista"
                             formControlName="valordiaContratista" autocomplete="off" matInput
                             placeholder="valor Dia Contratista">
@@ -166,6 +170,7 @@
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="fill">
                         <mat-label>Total Exacto</mat-label>
+                        <span matPrefix>$</span>
                         <input type="text" value="{{totalExacto}}" id="totalExacto" formControlName="totalExacto"
                             autocomplete="off" matInput placeholder="Valor Exacto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
