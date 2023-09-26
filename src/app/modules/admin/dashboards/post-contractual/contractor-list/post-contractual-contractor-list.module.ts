@@ -6,7 +6,6 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
 import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
 import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
-import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 import { DetailContractorComponent } from './components/detail-contractor/detail-contractor.component';
 import { postContractualcontractorListRoutes } from './post-contractual-contractor-list.routing';
 import { PostContractualContractorListComponent } from './post-contractual-contractor-list.component';
@@ -17,7 +16,6 @@ import { PostContractualContractorListComponent } from './post-contractual-contr
         PostContractualContractorListComponent,
         ModificacionFormComponent,
         ContractorPaymentRegisterComponent,
-        TermFileContractComponent,
         DetailContractorComponent
     ],
     imports: [

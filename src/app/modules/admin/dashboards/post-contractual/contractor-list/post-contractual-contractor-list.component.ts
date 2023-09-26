@@ -18,7 +18,6 @@ import { Componente, Elements } from 'app/modules/admin/pages/planing/models/pla
 import { DatePipe } from '@angular/common';
 import { ContractorPaymentRegisterComponent } from './components/payroll-register/contractor-payment-register.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
-import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
@@ -28,6 +27,7 @@ import { saveAs } from "file-saver";
 import { ContractorService } from '../../contractual/service/contractor.service';
 import { ContractContractors, Contractor } from '../../contractual/models/contractor';
 import { NewnessContractorComponent } from '../../contractual/contractor-list/components/newness-contractor/newness-contractor.component';
+import { TermFileContractComponent } from '../../contractual/contractor-list/components/term-file-contract/term-file-contract.component';
 
 @Component({
   selector: 'post-contractual-contractor-list',
@@ -464,6 +464,7 @@ export class PostContractualContractorListComponent implements OnInit, OnDestroy
         disableClose: true,
         autoFocus: false,
         data: {
+          type: 'DCNM',
           onlyContractor: contractor != null ? true : false,
           contractor: contractor != null ? contractor.id : null,
           contractId: this.contractId,
