@@ -39,7 +39,6 @@ export class SettingsTeamComponent implements OnInit
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((teams: any) => {
             // Mark for check
-            debugger
             for (let index = 0; index < teams.length; index++) {
                 if(teams[index].avatar == 'vacio'){
                     teams[index].avatar = 'assets/images/avatars/male-07.jpg';
@@ -84,7 +83,6 @@ export class SettingsTeamComponent implements OnInit
 
 
     onChange(rol:any,user: any) {
-        debugger
         console.log(rol.value);
         
         user.idRoll = rol.value;
