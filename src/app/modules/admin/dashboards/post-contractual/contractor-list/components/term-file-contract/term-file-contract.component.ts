@@ -92,10 +92,11 @@ export class TermFileContractComponent implements OnInit {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((Response: any) => {
         if (Response.length > 0) {
-          this.termType = Response.find(f => f.code === 'DCCT').termDescription;
-          this.termTypeId = Response.find(f => f.code === 'DCCT').id;
+          debugger
+          this.termType = Response.find(f => f.code === 'DCNM').termDescription;
+          this.termTypeId = Response.find(f => f.code === 'DCNM').id;
         } else {
-          Swal.fire('', 'No es posible asignar fechas sin tipos !', 'warning');
+          Swal.fire('', 'No es posible asignar fechas sin tipos!', 'warning');
           this.closePopup();
         }
       });
