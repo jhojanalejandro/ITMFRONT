@@ -5,7 +5,7 @@
 export const environment = {
     production: false,
     apiURL: 'https://localhost:44353/',
-    // apiURL: 'https://localhost:7163/',
+    //apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/SignUp',
     retrieveEndpoint: 'User/retrievePassword',
@@ -16,7 +16,7 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
-    exportarViabilidad: 'ExportToExcel/GetViabilidadExcel/',
+    GenrateReportContractEndpoint: 'ExportToExcel/GenrateReportContract',
     exportarDap: 'ExportToExcel/GetSolicitudContratacionDap/',
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarCdp: 'ExportToExcel/ExportToExcelCdp/',
@@ -25,6 +25,7 @@ export const environment = {
     addExcelContractorEndpoint: 'ImportExcel/AddExcel',
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
     addExcelElementEndpoint: 'ImportExcel/ImportExcelElement',
+    GenerateSatisfactionReportEndpoint: 'ExportToExcel/GenerateSatisfactionReport',
 
     UpdateContractorEndpoint: 'Contractor/Update',
     SaveDataContractorEndpoint: 'Contractor/SaveDataContractor/',
@@ -40,6 +41,7 @@ export const environment = {
     AddnewnessContractor: 'Contractor/AddNewNess',
     GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
     ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
+    SaveModifyMinuteEndpoint: 'ContractFolder/SaveModifyMinute',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -68,18 +70,23 @@ export const environment = {
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
+    GetEmptityHealthContractorEndpoint: 'ContractorPayments/GetEmptityHealthContractor',
+    GetPdChargeAccountGetById: 'ContractorPayments/ChargeAccountGetById',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
     GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetEconiomicDataById',
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
+    GetPaymentByIdContractAndContractorEndpoint: 'EconomicDataContractor/GetPaymentByIdContractAndContractor',
 
     addFileEndpoint: 'Files/AddFileContractor',
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
     CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
+    SaveCommitteeContractorEndpoint: 'Files/SaveCommitteeContractor',
+    saveDetailFileCommitteeEndpoint: 'Files/CreateDetailCommittee',
 
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
@@ -89,7 +96,7 @@ export const environment = {
     updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/DeleteFile/',
-
+    GetFileDonwloadContractualEndpoint: 'Files/GetFileDonwloadContractual',
 
     addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
@@ -113,7 +120,6 @@ export const environment = {
     getActivityById: 'Componente/GetActivityById/',
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
-    GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
     GetPdMinteExtension: 'PdfData/GetDataminuteExtension',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
@@ -136,9 +142,11 @@ export const environment = {
     GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
+    getnewnessType: 'MasterData/GetNewnessType',
+    GetEmptityHealthEndpoint: 'MasterData/GetEmptityHealth',
 
 
-    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
+    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 
 
 };

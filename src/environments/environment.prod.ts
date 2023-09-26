@@ -40,6 +40,7 @@ export const environment = {
     AddnewnessContractor: 'Contractor/AddNewNess',
     GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
     ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
+    SaveModifyMinuteEndpoint: 'ContractFolder/SaveModifyMinute',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -68,6 +69,7 @@ export const environment = {
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
+    GetPdChargeAccountGetById: 'ContractorPayments/ChargeAccountGetById',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
@@ -88,7 +90,7 @@ export const environment = {
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
     updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
-    DeleteFileEndpoint: 'Files/Delete/',
+    DeleteFileEndpoint: 'Files/DeleteFile/',
 
 
     addHiringEndpoint: 'HiringData/SaveHiring',
@@ -113,7 +115,6 @@ export const environment = {
     getActivityById: 'Componente/GetActivityById/',
 
     GetPdfDataExecutionReport: 'PdfData/GetExecutionReport',
-    GetPdChargeAccountGetById: 'PdfData/ChargeAccountGetById',
     GetPdMinteExtension: 'PdfData/GetDataminuteExtension',
     GetBillByContractIdEndpoint: 'PdfData/GetDataBill',
     GetPreviusStudyContractIdEndpoint: 'PdfData/GetPreviusStudies',
@@ -137,7 +138,7 @@ export const environment = {
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
 
-    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json',
+    getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 
 };
 

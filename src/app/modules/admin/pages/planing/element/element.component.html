@@ -10,18 +10,24 @@
         <mat-dialog-content style="margin: 0px; padding: 0px;">
             <!-- Card form -->
             <form class="flex flex-col flex-0 items-start w-full p-4 sm:p-6 space-y-5 overflow-y-auto"
-                [formGroup]="elementForm">
-                <mat-form-field class="consecutive" appearance="fill">
-                    <mat-label>Consecutivo</mat-label>
-                    <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text"
-                        formControlName="consecutivo" autocomplete="off" matInput placeholder="Consecutivo">
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
-                    <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
-                        El Campo Consecutivo es requerido
-                    </mat-error>
-                </mat-form-field>
-                <div class="folder">
+                [formGroup]="elementForm" #elementNgForm="ngForm">
+                <div class="container">
+                    <div class="consecutive">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Consecutivo</mat-label>
+                            <input matInput [value]="elemento.consecutivo" id="consecutivo" type="text"
+                                formControlName="consecutivo" autocomplete="off" matInput placeholder="Consecutivo">
+                            <mat-icon class="icon-size-5" matSuffix
+                                [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                            <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
+                                El Campo Consecutivo es requerido
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
 
+                </div>
+
+                <div *ngIf="showDate" class="folder">
                     <mat-form-field [hidden]="showDate" appearance="fill">
                         <mat-label>Modificacion</mat-label>
                         <mat-select [formControlName]="'modificacion'" [(ngModel)]="elementselectId"
@@ -52,7 +58,7 @@
                     </mat-form-field>
                 </div>
                 <div>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field class="elementName" appearance="fill">
                         <mat-label>Nombre del Elemento</mat-label>
                         <input type="text" [value]="elemento.nombreElemento" placeholder="Seleccione o Digite"
                             aria-label="Nombre del Elemento" matInput [formControlName]="'nombreElemento'"
@@ -63,9 +69,12 @@
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
+                </div>
+                <div>
                     <mat-form-field appearance="fill">
                         <mat-label>Tipo Elemento</mat-label>
-                        <mat-select [formControlName]="'tipoElemento'" (selectionChange)="changeTypeElement($event)" name="tipoElemento">
+                        <mat-select [formControlName]="'tipoElemento'" (selectionChange)="changeTypeElement($event)"
+                            name="tipoElemento">
                             <mat-option *ngFor="let tipo of elementTypes" [value]="tipo.id">
                                 {{tipo.elementTypeDescription}}
                             </mat-option>
@@ -83,14 +92,14 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
                         </mat-icon>
                     </mat-form-field>
-                </div>
-                <div class="folder">
                     <mat-form-field appearance="fill">
                         <mat-label>Nombre Cpc</mat-label>
                         <input type="mail" id="nombreCpc" [value]="elemento.nombreCpc" formControlName="nombreCpc"
                             autocomplete="off" matInput placeholder="Nombre Cpc">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                     </mat-form-field>
+                </div>
+                <div class="folder">
                     <mat-form-field *ngIf="typeContractor" appearance="fill">
                         <mat-label>Cantidad Contratista</mat-label>
                         <input type="number" [value]="elemento.cantidadContratistas" id="contractorCant"
@@ -103,17 +112,17 @@
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Cantidad Días</mat-label>
-                        <input type="number" [value]="elemento.cantidadDias" id="cantDay" formControlName="cantDay" (change)="calculate('dias')" (change)="preventExceedingMax($event)"
-                            autocomplete="off" matInput placeholder="Cantidad Días">
+                        <input type="number" [value]="elemento.cantidadDias" id="cantDay" formControlName="cantDay"
+                            (change)="calculate('dias')" (change)="preventExceedingMax($event)" autocomplete="off"
+                            matInput placeholder="Cantidad Días">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                         <mat-error *ngIf="elementForm.get('cantDay').hasError('required')">
                             El Campo Cantidad Días es requerido
                         </mat-error>
-                    </mat-form-field>
-                </div>
-                <div class="folder">
+                    </mat-form-field>   
                     <mat-form-field appearance="fill">
                         <mat-label>Valor Unidad</mat-label>
+                        <span matPrefix>$</span>
                         <input type="text" value="{{elemento.valorUnidad}}" id="unitValue"
                             [formControlName]="'unitValue'" (change)="calculate('valor')" autocomplete="off" matInput
                             placeholder="Valor Unidad">
@@ -123,18 +132,28 @@
                             El Campo Valor Unidad es requerido
                         </mat-error>
                     </mat-form-field>
+                </div>
+                <div class="folder">
                     <mat-form-field *ngIf="typeContractor" disable appearance="fill">
                         <mat-label>Valor Por dia contratistas</mat-label>
-                        <input type="text" value="{{valorPorDiaContratistas}}"
-                            formControlName="unitValueDay" autocomplete="off" matInput placeholder="Valor por Día">
+                        <span matPrefix>$</span>
+                        <input type="text" value="{{valorPorDiaContratistas}}" formControlName="unitValueDay"
+                            autocomplete="off" matInput placeholder="Valor por Día">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Valor Total</mat-label>
-                        <input type="text" (change)="onChangeTotalValue($event)" value="{{totalValue}}"
-                            id="totalValue" formControlName="totalValue" autocomplete="off" matInput
-                            placeholder="Valor Total">
+                        <input type="text" (change)="onChangeTotalValue($event)" value="{{totalValue}}" id="totalValue"
+                            formControlName="totalValue" autocomplete="off" matInput placeholder="Valor Total">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
+                        </mat-icon>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Recursos </mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text" value="{{recursos}}" id="recursos" formControlName="recursos"
+                            (change)="calculate('valor')" autocomplete="off" matInput placeholder="Recuros">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
@@ -142,23 +161,18 @@
                 <div class="folder">
                     <mat-form-field [hidden]="totalCalculate" appearance="fill">
                         <mat-label>Valor por dia contratista</mat-label>
-                        <input type="text" value="{{valorPorDiaContratista}}"
-                            id="valorDiaContratista" formControlName="valordiaContratista" autocomplete="off" matInput
+                        <span matPrefix>$</span>
+                        <input type="text" value="{{valorPorDiaContratista}}" id="valorDiaContratista"
+                            formControlName="valordiaContratista" autocomplete="off" matInput
                             placeholder="valor Dia Contratista">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
                     <mat-form-field [hidden]="totalCalculate" appearance="fill">
                         <mat-label>Total Exacto</mat-label>
-                        <input type="text" value="{{totalExacto}}" id="totalExacto"
-                            formControlName="totalExacto" autocomplete="off" matInput placeholder="Valor Exacto">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
-                        </mat-icon>
-                    </mat-form-field>
-                    <mat-form-field [hidden]="totalCalculate" appearance="fill">
-                        <mat-label>Recursos </mat-label>
-                        <input type="text" value="{{recursos}}" id="recursos"
-                            formControlName="recursos" (change)="calculate('valor')" autocomplete="off" matInput placeholder="Recuros">
+                        <span matPrefix>$</span>
+                        <input type="text" value="{{totalExacto}}" id="totalExacto" formControlName="totalExacto"
+                            autocomplete="off" matInput placeholder="Valor Exacto">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
@@ -166,9 +180,9 @@
                 <div *ngIf="typeContractor" class="folder">
                     <mat-form-field class="hiringD" appearance="fill">
                         <mat-label>Obligaciones Especificas</mat-label>
-                        <textarea noLineBreaks type="text" class="example-full-width" [value]="elemento.nombreElemento" id="obligacionesEspecificas"
-                            formControlName="obligacionesEspecificas" autocomplete="off" matInput
-                            placeholder="Obligaciones Especificas"></textarea>
+                        <textarea noLineBreaks type="text" class="example-full-width" [value]="elemento.nombreElemento"
+                            id="obligacionesEspecificas" formControlName="obligacionesEspecificas" autocomplete="off"
+                            matInput placeholder="Obligaciones Especificas"></textarea>
                     </mat-form-field>
                 </div>
                 <div *ngIf="typeContractor" class="folder">
@@ -194,7 +208,8 @@
         <mat-dialog-actions align="end">
             <button mat-flat-button type="button" class="m-2" [color]="'warn'"
                 [mat-dialog-close]="false">Cancelar</button>
-            <button class="m-2 bg-green-600" mat-flat-button type="button" (click)="calculate('valor')">Calcular</button>
+            <button class="m-2 bg-green-600" mat-flat-button type="button"
+                (click)="calculate('valor')">Calcular</button>
             <button class="m-2" mat-flat-button [color]="'primary'" [disabled]="elementForm.disabled"
                 (click)="addElement()">
                 <span *ngIf="!elementForm.disabled">

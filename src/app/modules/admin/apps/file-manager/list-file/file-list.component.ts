@@ -15,7 +15,8 @@ import { DetailFileOption } from 'app/layout/common/enums/detail-file-enum/detai
 import { AuthService } from 'app/core/auth/auth.service';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
-import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { CategoryFile, DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { DataFile } from '../file-manager.types';
 
 
 @Component({
@@ -35,7 +36,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     items: any;
-    statusFile: any;
+    statusFileLoad: any;
+    statusFileCreate: any;
+
     value: any;
     searchText: any;
     folderName: string;
@@ -158,7 +161,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     addObservationFile(){
-        let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
+        let code = this.statusFileLoad.find(f => f.code === DetailFileOption.REMITIDO)
         const dialogRef = this._matDialog.open(ObservationFileComponent, {
             disableClose: true,
             autoFocus: false,
@@ -166,7 +169,8 @@ export class FileListComponent implements OnInit, OnDestroy {
                 files: this.filesObservation,
                 statusFile: code.id,
                 contractId:this.contractId,
-                contractorId: this.contractorId
+                contractorId: this.contractorId,
+                userId: this._auth.accessId
             }
         });
         dialogRef.afterClosed()
@@ -185,7 +189,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
     updateFile(event: any, file: FileContractor) {
-        let code = this.statusFile.find(f => f.code === DetailFileOption.REMITIDO)
+        let code = this.statusFileLoad.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
             this.disableButnObservation = false;
             this.filesObservation = this.filesObservation.filter(objeto => objeto.id !== file.id);
@@ -271,15 +275,14 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         this._fileManagerService.getFileByContractor(this.contractId, this.contractorId, this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: any) => {
-                item.forEach(element => {
-                    if(element.documentTypeCode == DocumentTypeCodes.HOJADEVIDA || element.documentTypeCode == DocumentTypeCodes.REGISTROSECOP || element.documentTypeCode == DocumentTypeCodes.EXAMENESPREOCUPACIONALES){
-                        element.disable = false;
+            .subscribe((files: DataFile[]) => {
+                this.items = files.map(file => {
+                    if (file.categoryCode === CategoryFile.CGD) {
+                      return { ...file, disabled: false }; // Modifica el campo "nombre"
                     }else{
-                        element.disable = true;
+                        return { ...file, disabled: true }; // Modifica el campo "nombre"
                     }
-                });
-                this.items = item;
+                  });
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -299,11 +302,62 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._fileManagerService.getStatusFile()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
-                this.statusFile = item;
+                this.statusFileLoad = item.filter(f => f.category === CategoryFile.CGD);
+                this.statusFileCreate = item.filter(f => f.category === CategoryFile.CRAD);;
+
             });
     }
 
-    
+    updateFileFileGenerated(event: any, file: FileContractor) {
+        this.detailFile.fileId = file.id;
+        this.detailFile.registerDate = new Date();
+        this.detailFile.passed = true;
+        this.detailFile.statusFileId = event.value;
+        this.detailFile.userId = this._auth.accessId;
+        this.detailFile.contractId = this.contractId;
+        this.detailFile.contractorId = this.contractorId;
+        if (file.documentTypeCode === DocumentTypeCodes.SOLICITUDCOMITE) {
+            this._uploadService.updateStatusFileCommitteeContractor(this.detailFile)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+                (response) => {
+                    console.log(response);
+                    Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+                });
+        }else{
+            this._uploadService.updateStatusFileContractor(this.detailFile)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información actualizada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+                (response) => {
+                    console.log(response);
+                    Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+                });
+        }
+
+    }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

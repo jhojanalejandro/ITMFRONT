@@ -4,22 +4,27 @@ import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { DetalleContrato } from '../pages/planing/models/planing-model';
-import { CpcType, ElementType, RubroType, StatusContract } from './model/generic.model';
+import {
+    CpcType,
+    ElementType,
+    RubroType,
+    StatusContract,
+} from './model/generic.model';
 import Swal from 'sweetalert2';
+import { DatePipe } from '@angular/common';
+import { EntityHealth } from '../apps/home-contractor/models/mater.model';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class GenericService {
     private _data: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
-
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient) {
-    }
+    constructor(private _httpClient: HttpClient) {}
 
     /**
      * Getter for data
@@ -28,25 +33,25 @@ export class GenericService {
         return this._data.asObservable();
     }
 
-
     UpdateContractFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.UpdateContractFolderEndpoint;
+        let urlEndpointGenerate =
+            this.apiUrl + environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
     }
 
     UpdateStateContractFolder(contractId: string) {
-        const params = new HttpParams()
-            .set('contractId', contractId);
-        let urlEndpointGenerate = this.apiUrl + environment.UpdateStateContractFolderEndpoint;
-        return this._httpClient.get<IResponse>(urlEndpointGenerate, { params }).pipe(
-            catchError(this.handleError)
-        );
+        const params = new HttpParams().set('contractId', contractId);
+        let urlEndpointGenerate =
+            this.apiUrl + environment.UpdateStateContractFolderEndpoint;
+        return this._httpClient
+            .get<IResponse>(urlEndpointGenerate, { params })
+            .pipe(catchError(this.handleError));
     }
 
     getAllContract(inProgress: boolean, tipoModulo: string): Observable<any> {
         const params = new HttpParams()
             .set('inProgress', inProgress)
-            .set('tipoModulo', tipoModulo)
+            .set('tipoModulo', tipoModulo);
         let urlEndPoint = this.apiUrl + environment.GetAllContractEndpoint;
         return this._httpClient.get(urlEndPoint, { params }).pipe(
             tap((response: any) => {
@@ -55,76 +60,74 @@ export class GenericService {
         );
     }
 
-    getDetalleContratoList(id: any, tipo: boolean): Observable<DetalleContrato[]> {
-        const params = new HttpParams()
-            .set('id', id)
-            .set('tipoConsulta', tipo);
+    getDetalleContratoList(
+        id: any,
+        tipo: boolean
+    ): Observable<DetalleContrato[]> {
+        const params = new HttpParams().set('id', id).set('tipoConsulta', tipo);
 
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdDetailListEndpoint;
-        return this._httpClient.get<DetalleContrato[]>(urlEndpointGenerate, { params: params }
-        );
+        return this._httpClient.get<DetalleContrato[]>(urlEndpointGenerate, {
+            params: params,
+        });
     }
 
     getDetalleContractById(id: any): Observable<DetalleContrato> {
-        const params = new HttpParams()
-            .set('id', id)
+        const params = new HttpParams().set('id', id);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdDetailByIdEndpoint;
-        return this._httpClient.get<DetalleContrato>(urlEndpointGenerate, { params: params }
-        );
+        return this._httpClient.get<DetalleContrato>(urlEndpointGenerate, {
+            params: params,
+        });
     }
 
-
     getCpcType(): Observable<CpcType[]> {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.GetCpcTypeEndpoint;
-        return this._httpClient.get<CpcType[]>(urlEndpointGenerate
-        );
+        let urlEndpointGenerate = this.apiUrl + environment.GetCpcTypeEndpoint;
+        return this._httpClient.get<CpcType[]>(urlEndpointGenerate);
     }
 
     getElementType(): Observable<ElementType[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetElementTypeEndpoint;
-        return this._httpClient.get<ElementType[]>(urlEndpointGenerate
-        );
+        return this._httpClient.get<ElementType[]>(urlEndpointGenerate);
     }
 
     getstatusContract(): Observable<StatusContract[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetStatusContractEndpoint;
-        return this._httpClient.get<StatusContract[]>(urlEndpointGenerate
-        );
+        return this._httpClient.get<StatusContract[]>(urlEndpointGenerate);
     }
 
     getTypeMinutesContract(): Observable<any[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetMinuteTypeContractEndpoint;
-        return this._httpClient.get<any>(urlEndpointGenerate
-        );
+        return this._httpClient.get<any>(urlEndpointGenerate);
     }
-
 
     getBanksContract(): Observable<any[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetBanksContractEndpoint;
-        return this._httpClient.get<any>(urlEndpointGenerate
-        );
+        return this._httpClient.get<any>(urlEndpointGenerate);
     }
 
     getRubrosContract(): Observable<RubroType[]> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetGetAllRubrosContractEndpoint;
-        return this._httpClient.get<RubroType[]>(urlEndpointGenerate
-        );
+        return this._httpClient.get<RubroType[]>(urlEndpointGenerate);
     }
-
 
     getDetailType(): Observable<any[]> {
-        let urlEndpointGenerate = this.apiUrl + environment.GetDetailTypeEndpoint;
-        return this._httpClient.get<any>(urlEndpointGenerate
-        );
+        let urlEndpointGenerate =
+            this.apiUrl + environment.GetDetailTypeEndpoint;
+        return this._httpClient.get<any>(urlEndpointGenerate);
     }
+
+    getEmptityHealthList(): Observable<EntityHealth[]> {
+        let urlEndPoint =  this.apiUrl +environment.GetEmptityHealthEndpoint;
+        return this._httpClient.get<EntityHealth[]>(urlEndPoint);
+    }
+
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
         // Implementa el manejo de errores aquí, si es necesario
@@ -136,8 +139,25 @@ export class GenericService {
             title: '',
             html: error.error.message,
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
         });
         return new Observable<any>();
+    }
+
+    addCommasToNumber(value: number): string {
+        if (value <= 9999 && value >= 1000) {
+            const formattedNumber = value.toString();
+            return (
+                formattedNumber.substr(0, 1) + '.' + formattedNumber.substr(1)
+            );
+        } else {
+            return value.toLocaleString('es-ES', { maximumFractionDigits: 0 });
+        }
+    }
+
+    getTransformDate(getDate: Date): string {
+        const datePipe = new DatePipe('en-US');
+        const currentDate = new Date(getDate);
+        return datePipe.transform(currentDate, 'yyyy-MM-dd');
     }
 }

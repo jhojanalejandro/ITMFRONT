@@ -104,8 +104,8 @@
                                         <div class="relative w-40 h-40 m-1 p-1 shadow rounded-2xl bg-card">
                                             <a class="absolute z-20 top-1.5 right-2.0 w-5 h-5 min-h-5"
                                             [ngClass]="{'bg-red-200  dark:bg-orange-600 ': folder.cantFile == 0,
-                                            'bg-orange-200  dark:bg-orange-600 dark:text-orange-50': folder.cantFile > 0 && folder.cantFile < 3,
-                                            'bg-green-200  ': folder.cantFile >= 3}"
+                                            'bg-orange-200  dark:bg-orange-600 dark:text-orange-50': folder.cantFile > 0 && folder.cantFile < 4,
+                                            'bg-green-200  ': folder.cantFile >= 4}"
                                                 mat-icon-button>
                                                 <mat-icon class="icon-size-6"
                                                     [svgIcon]="folder.cantFile >= 3 ? 'heroicons_outline:check-circle' : folder.cantFile > 0 &&  folder.cantFile < 3 ? 'heroicons_outline:dots-circle-horizontal' : 'heroicons_outline:clock'"></mat-icon>

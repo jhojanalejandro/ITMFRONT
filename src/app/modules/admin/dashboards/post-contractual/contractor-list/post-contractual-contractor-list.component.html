@@ -1,0 +1,462 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between py-8 px-6 md:px-8">
+        <div>
+            <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                {{contractName}}!
+            </div>
+        </div>
+        <div class="mt-4 sm:mt-0">
+            <!-- Add section button -->
+            <button mat-flat-button [color]="'accent'" (click)="addTermFileContract(null)"
+                [matTooltip]="'Shortcut: Ctrl + .'">
+                <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                <span class="ml-2 mr-1">Tiempo entrega</span>
+            </button>
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="registerPayment(null)"
+                [matTooltip]="'Agregar Varios pagos'">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2 mr-1">Agregar Pagos</span>
+            </button>
+            <!-- Add task button -->
+        </div>
+    </div>
+
+    <div class="flex-auto -mt-px pt-2 pl-2 pr-2 sm:pt-6">
+        <mat-form-field class="fuse-mat-dense p-2 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
+                [placeholder]="'Buscar Contrato'">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
+            <mat-select placeholder="TIPO ESTADO" (selectionChange)="changeTypeStatus($event)" name="status">
+                <mat-option *ngFor="let typeStatus of typeStatusContractor" [value]="typeStatus.value">
+                    {{typeStatus.viewValue}}
+                </mat-option>
+            </mat-select>
+            <!-- <button *ngIf="statusSelected.value != null" mat-button (click)="clearSelection($event)"><mat-icon svgIcon="heroicons_solid:x"></mat-icon>
+            </button> -->
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
+            <mat-select [disabled]="statusSelected.value == null || statusSelected.value == 5" placeholder="ESTADOS"
+                (selectionChange)="applyFilterByStatusSpecific($event)" name="status">
+                <mat-option *ngFor="let status of statusContractorSelected" [value]="status.viewValue">
+                    {{status.viewValue}}
+                </mat-option>
+            </mat-select>
+            <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:adjustments'">
+            </mat-icon> -->
+
+        </mat-form-field>
+        <div class="w-full  mx-auto">
+            <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
+                        <div class="ml-2 -mt-2 -mr-3">
+                            <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                            </button>
+                            <mat-menu #summaryMenu="matMenu">
+                                <button *ngIf="visibleOption" mat-menu-item (click)="generarMinuta()">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Generar Minuta
+                                </button>
+                                <button *ngIf="visibleOption" mat-menu-item
+                                    (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Generar Otro si
+                                </button>
+                                <button *ngIf="visibleOption" mat-menu-item (click)="getFilesFolder('MNT')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Descargar Minutas
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto mx-6">
+                        <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
+                            [trackBy]="trackByFn" (matSortChange)="announceSortChange($event)">
+                            <ng-container matColumnDef="select">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected() "
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
+                                    </mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row) " [aria-label]="checkboxLabel(row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
+                                <th mat-header-cell class="centre" mat-sort-header *matHeaderCellDef>
+                                    {{columna.title}}
+                                </th>
+                                <td mat-cell [class.selected]="element.selected"
+                                    (click)="element.selected = !element.selected;" *matCellDef="let element">
+                                    <p
+                                        *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
+                                         && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
+                                         && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
+                                        {{element[columna.name]}}
+                                    </p>
+                                    <span
+                                        *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus && element[columna.name]!=element.all"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
+                                        'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
+                                        'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.statusContractor === 'INVITADO',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'CONTRATANDO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess && element[columna.name]!=element.all"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.hiringStatus === 'CONTRATANDO',
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATADO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',                                       
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.previusStudy === 'APROBADO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span
+                                        *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',                                       
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated === 'APROBADO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <span *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
+                                        class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                        [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
+                                        'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
+                                        'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
+                                        'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
+                                        <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                    </span>
+                                    <p *ngIf="columna.name==='detail'">
+                                        <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                                            (click)="toggleDetails(element)">
+                                            <mat-icon class="icon-size-5"
+                                                [svgIcon]="contractorSelected?.id === element.id ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                        </button>
+                                    </p>
+                                    <p *ngIf="columna.name=='acciones'">
+
+                                        <button [matTooltip]="'Opciones Documentos'" mat-icon-button
+                                            [matMenuTriggerFor]="summaryMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #summaryMenu="matMenu">
+                                            <button [matTooltip]="'Guardar datos'" (click)="registerPayment(element)"
+                                                mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+                                                Agregar Pago
+                                            </button>
+                                            <button [matTooltip]="'Historial de pagos'"
+                                                (click)="historicalPayment(element)" mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_solid:clipboard-list"></mat-icon>
+                                                Historial de pagos
+                                            </button>
+                                        </mat-menu>
+                                    </p>
+                                </td>
+
+
+                            </ng-container>
+
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">No hay datos para filtrar"{{input.value}}"</td>
+                            </tr>
+
+                            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                            <tr mat-row *matRowDef="let row; columns: columnsToDisplay;">
+
+                            </tr>
+
+                            <!-- <tr mat-row *ngIf="showDetail" [class.hidden]="contarctorSelected !== row">
+                                <td colspan="5">
+                                  <app-detail-contractor  (closeDetail)="closeDetail($event)"
+                                  [contarctorSelected]="contarctorSelected"></app-detail-contractor>                                </td>
+                              </tr> -->
+                        </table>
+                        <mat-paginator [length]="contractorsList.length" [pageSizeOptions]="[1,3,10, 30, 50, 100]"
+                            aria-label="Select page of contractorsList">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #rowDetailsTemplate let-product>
+                <div class="shadow-lg overflow-hidden">
+                    <div class="flex border-b">
+                        <!-- Selected product form -->
+                        <form class="flex flex-col w-full" [formGroup]="selectedContracttorForm">
+
+                            <div class="flex flex-col sm:flex-row p-8">
+
+                                <!-- Product images and status -->
+                                <div class="flex flex-col items-center sm:items-start mb-8 sm:mb-0">
+                                    <div class="flex flex-col items-center">
+                                        <!-- <div class="w-32 h-44 border rounded overflow-hidden">
+                                            <ng-container
+                                                *ngIf="selectedContracttorForm.get('images').value.length; else noImage">
+                                                <img class="w-full h-full object-cover"
+                                                    [src]="selectedContracttorForm.get('images').value[selectedContracttorForm.get('currentImageIndex').value]">
+                                            </ng-container>
+                                            <ng-template #noImage>
+                                                <span class="flex items-center min-h-20 text-lg font-semibold">NO
+                                                    IMAGE</span>
+                                            </ng-template>
+                                        </div> -->
+                                        <!-- <div class="flex items-center mt-2 whitespace-nowrap"
+                                            *ngIf="selectedContracttorForm.get('images').value.length">
+                                            <button mat-icon-button (click)="cycleImages(false)">
+                                                <mat-icon class="icon-size-5"
+                                                    [svgIcon]="'heroicons_solid:arrow-narrow-left'"></mat-icon>
+                                            </button>
+                                            <span class="font-sm mx-2">
+                                                {{selectedContracttorForm.get('currentImageIndex').value + 1}} of
+                                                {{selectedContracttorForm.get('images').value.length}}
+                                            </span>
+                                            <button mat-icon-button (click)="cycleImages(true)">
+                                                <mat-icon class="icon-size-5"
+                                                    [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                            </button>
+                                        </div> -->
+                                    </div>
+                                    <!-- <div class="flex flex-col mt-8">
+                                        <span class="font-semibold mb-2">Activo</span>
+                                        <mat-slide-toggle [formControlName]="'habilitado'" [color]="'primary'">
+                                            {{selectedContracttorForm.get('habilitado').value === true ? 'Active' :
+                                            'Disabled'}}
+                                        </mat-slide-toggle>
+                                    </div> -->
+                                </div>
+
+                                <div class="flex flex-auto flex-wrap">
+                                    <!-- Name, SKU & etc. -->
+                                    <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
+
+                                        <!-- Name -->
+                                        <mat-form-field class="w-full">
+                                            <mat-label>Name</mat-label>
+                                            <input matInput [formControlName]="'nombre'">
+                                        </mat-form-field>
+
+                                        <!-- SKU and Barcode -->
+                                        <div class="flex">
+                                            <mat-form-field class="w-1/3 pr-2">
+                                                <mat-label>Identificacion</mat-label>
+                                                <input matInput [formControlName]="'identificacion'">
+                                            </mat-form-field>
+                                            <mat-form-field class="w-2/3 pl-2">
+                                                <mat-label>LugarExpedicion</mat-label>
+                                                <input matInput [formControlName]="'lugarExpedicion'">
+                                            </mat-form-field>
+                                        </div>
+
+                                        <!-- Category, Brand & Vendor -->
+                                        <!-- <div class="flex">
+                                            <mat-form-field class="w-1/3 pr-2">
+                                                <mat-label>Category</mat-label>
+                                                <mat-select [formControlName]="'category'">
+                                                    <ng-container *ngFor="let category of categories">
+                                                        <mat-option [value]="category.id">
+                                                            {{category.name}}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="w-1/3 px-2">
+                                                <mat-label>Brand</mat-label>
+                                                <mat-select [formControlName]="'brand'">
+                                                    <ng-container *ngFor="let brand of brands">
+                                                        <mat-option [value]="brand.id">
+                                                            {{brand.name}}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="w-1/3 pl-2">
+                                                <mat-label>Vendor</mat-label>
+                                                <mat-select [formControlName]="'vendor'">
+                                                    <ng-container *ngFor="let vendor of vendors">
+                                                        <mat-option [value]="vendor.id">
+                                                            {{vendor.name}}
+                                                        </mat-option>
+                                                    </ng-container>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div> -->
+
+                                        <!-- Stock and Reserved -->
+                                        <div class="flex">
+                                            <mat-form-field class="w-1/3 pr-2">
+                                                <mat-label>fechaNacimiento</mat-label>
+                                                <input type="number" matInput [formControlName]="'fechaNacimiento'">
+                                            </mat-form-field>
+                                            <mat-form-field class="w-1/3 pl-2">
+                                                <mat-label>direccion</mat-label>
+                                                <input type="number" matInput [formControlName]="'direccion'">
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cost, Base price, Tax & Price -->
+                                    <div class="flex flex-col w-full lg:w-1/4 sm:pl-8">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>telefono</mat-label>
+                                            <span matPrefix>$</span>
+                                            <input matInput [formControlName]="'telefono'">
+                                        </mat-form-field>
+                                        <mat-form-field class="w-full">
+                                            <mat-label>celular</mat-label>
+                                            <span matPrefix>$</span>
+                                            <input matInput [formControlName]="'celular'">
+                                        </mat-form-field>
+                                        <mat-form-field class="w-full">
+                                            <mat-label>correo</mat-label>
+                                            <span matSuffix>%</span>
+                                            <input type="number" matInput [formControlName]="'correo'">
+                                        </mat-form-field>
+                                        <!-- <mat-form-field class="w-full">
+                                            <mat-label>Price</mat-label>
+                                            <span matSuffix>$</span>
+                                            <input matInput [formControlName]="'price'">
+                                        </mat-form-field> -->
+                                    </div>
+
+                                    <!-- Weight & Tags -->
+                                    <div class="flex flex-col w-full lg:w-1/4 sm:pl-8">
+                                        <mat-form-field class="w-full">
+                                            <mat-label>proccess</mat-label>
+                                            <span matSuffix>lbs.</span>
+                                            <input matInput [formControlName]="'proccess'">
+                                        </mat-form-field>
+
+                                        <!-- Tags -->
+                                        <span class="mb-px font-medium leading-tight">Tags</span>
+                                        <div
+                                            class="mt-1.5 rounded-md border border-gray-300 dark:border-gray-500 shadow-sm overflow-hidden">
+                                            <!-- Header -->
+                                            <!-- <div class="flex items-center -my-px py-2 px-3">
+                                                <div class="flex items-center flex-auto min-w-0">
+                                                    <mat-icon class="icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                                    <input class="min-w-0 ml-2 py-1 border-0" type="text"
+                                                        placeholder="Enter tag name" (input)="filterTags($event)"
+                                                        (keydown)="filterTagsInputKeyDown($event)" [maxLength]="50"
+                                                        #newTagInput>
+                                                </div>
+                                                <button class="ml-3 w-8 h-8 min-h-8" mat-icon-button
+                                                    (click)="toggleTagsEditMode()">
+                                                    <mat-icon *ngIf="!tagsEditMode" class="icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                                                    <mat-icon *ngIf="tagsEditMode" class="icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:check'"></mat-icon>
+                                                </button>
+                                            </div> -->
+                                            <!-- Available tags -->
+                                            <div
+                                                class="h-44 leading-none overflow-y-auto border-t border-gray-300 dark:border-gray-500">
+                                                <!-- Tags -->
+                                                <!-- <ng-container *ngIf="!tagsEditMode">
+                                                    <ng-container *ngFor="let tag of filteredTags; trackBy: trackByFn">
+                                                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4"
+                                                            [color]="'primary'"
+                                                            [checked]="selectedProduct.tags.includes(tag.id)"
+                                                            (change)="toggleProductTag(tag, $event)">
+                                                            {{tag.title}}
+                                                        </mat-checkbox>
+                                                    </ng-container>
+                                                </ng-container> -->
+                                                <!-- Tags editing -->
+                                                <!-- <ng-container *ngIf="tagsEditMode">
+                                                    <div class="p-4 space-y-2">
+                                                        <ng-container
+                                                            *ngFor="let tag of filteredTags; trackBy: trackByFn">
+                                                            <mat-form-field
+                                                                class="fuse-mat-dense fuse-mat-no-subscript w-full">
+                                                                <input matInput [value]="tag.title"
+                                                                    (input)="updateTagTitle(tag, $event)">
+                                                                <button mat-icon-button (click)="deleteTag(tag)"
+                                                                    matSuffix>
+                                                                    <mat-icon class="icon-size-5"
+                                                                        [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                                                </button>
+                                                            </mat-form-field>
+                                                        </ng-container>
+                                                    </div>
+                                                </ng-container>
+                                                <div class="flex items-center h-10 min-h-10 -ml-0.5 pl-4 pr-3 leading-none cursor-pointer border-t hover:bg-gray-50 dark:hover:bg-hover"
+                                                    *ngIf="shouldShowCreateTagButton(newTagInput.value)"
+                                                    (click)="createTag(newTagInput.value); newTagInput.value = ''"
+                                                    matRipple>
+                                                    <mat-icon class="mr-2 icon-size-5"
+                                                        [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                                    <div class="break-all">Create "<b>{{newTagInput.value}}</b>"</div>
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="flex items-center justify-between w-full border-t px-8 py-4">
+                                <button class="-ml-4" mat-button [color]="'warn'" (click)="deleteSelectedProduct()">
+                                    Delete
+                                </button>
+                                <div class="flex items-center">
+                                    <div class="flex items-center mr-4" *ngIf="flashMessage">
+                                        <ng-container *ngIf="flashMessage === 'success'">
+                                            <mat-icon class="text-green-500"
+                                                [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                            <span class="ml-2">Product updated</span>
+                                        </ng-container>
+                                        <ng-container *ngIf="flashMessage === 'error'">
+                                            <mat-icon class="text-red-500" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                                            <span class="ml-2">An error occurred, try again!</span>
+                                        </ng-container>
+                                    </div>
+                                    <button mat-flat-button [color]="'primary'" (click)="updateSelectedProduct()">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+        [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
+    <app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+        [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>

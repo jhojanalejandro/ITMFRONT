@@ -17,7 +17,6 @@ import { PlaningService } from '../../service/planing.service';
 export class OptionTypeDataComponent implements OnInit, OnDestroy {
   loading: boolean = false; // Flag variable
   showAlert: boolean = false;
-  tiponovedad: any = GlobalConst.tipoNovedad;
   registerDate = new Date();
   filteredOptions: Observable<string[]>;
   formFile: FormGroup;

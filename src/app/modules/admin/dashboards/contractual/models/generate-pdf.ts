@@ -1,10 +1,11 @@
-export interface MinuteExtension{
+export interface OtherMinute{
+    id: string;
     contractId: string;
     contractorId: string;
 	contractorName: string;
     contractorIdentification: string;
 	contractorExpeditionPlace: string;
-    totalValueContract: string;
+    totalValueContract: any;
     initialDateContract: Date;
     finalDateContract: Date;
     initialDateContractExtension: Date;
@@ -15,7 +16,24 @@ export interface MinuteExtension{
     consecutive: number;
     contractNumber: string;
     supervisorCharge: string;
+    companyName: string;
+    additionValue: any;
+    registerDateContract: Date;
+    rubroContract: any;
+    unitValueContract: any;
+    numberModify: number;
+    specificObligations: any;
+    generalObligations: any;
+    typeModify: string;
+}
 
+export interface CommiteeRequestContractor{
+    contractObject: string;
+    contractNumber: string;
+    registerDate: Date;
+    contractName: string;
+    commiteeRequestDto: CommitteeRequest[],
+    personalInCharge: PersonalInCharge[]
 }
 
 export interface CommitteeRequest{
@@ -25,18 +43,20 @@ export interface CommitteeRequest{
     contractorIdentification: string;
     contractInitialDate: Date;
     contractFinalDate: Date;
-    contractNumber: string;
-    elementObject: string;
     elementName: string;
-    user: string;
     userIdentification: string;
     totalValue: any;
-    userFirm: string;
     profileRequire: string;
 }
 
 
-export interface PreviusStudy{
+export interface PreviusStudyContractors{
+    previusStudyDto: PreviusStudyContractorsList[],
+    personalInCharge: PersonalInCharge[]
+}
+
+
+export interface PreviusStudyContractorsList{
     id: string;
     contractId: string;
     contractorId: string;
@@ -48,19 +68,47 @@ export interface PreviusStudy{
     generalObligations: any;
     userIdentification: string;
     contractNumber: string;
-    supervisorIdentification: string;
-    supervisorFirm: string;
-    supervisorItmName: string;
     elementObject: string;
     elementName: string;
-    user: string;
-    juridic: string;
-    juridicFirm: string;
     totalValue: any;
-    userFirm: string;
+    requiredProfileAcademic: string;
+    requiredProfileExperience: string;
+
+}
+
+export interface PersonalInCharge{
+    userName: string;
     userCharge: string;
-    supervisorCharge: string;
+    userIdentification: string;
     userFirmType: string;
-    supervisorFirmType: string;
-    juridicFirmType: string;
+    userFirm: string;
+    userChargeCode: string;
+}
+
+
+export interface MinutePdf{
+    contractId: string;
+    contractorId: string;
+	contractorName: string;
+    contractorIdentification: string;
+	contractorExpeditionPlace: string;
+    totalValueContract: any;
+    initialDateContract: Date;
+    finalDateContract: Date;
+    elementObject: string;
+    supervisor: string;
+    supervisorIdentification: string
+    contractNumber: string;
+    supervisorCharge: string;
+    companyName: string;
+    contrato: any;
+    registerDateContract: Date;
+    rubroContract: any;
+    unitValueContract: any;
+    numberModify: number;
+    specificObligations: any;
+    generalObligations: any;
+    contractorMail: string;
+    comiteGenerated: boolean;
+    previusStudy: boolean;
 }

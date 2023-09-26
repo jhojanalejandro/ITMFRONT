@@ -31,9 +31,13 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   numberOfTicks = 0;
   formFile: FormGroup;
   members: any[];
-  typeImageB: boolean = true;
+  typeImageUpload: boolean = false;
   propietario: any = GlobalConst.requierePoliza;
   typeUserFile: any[];
+  acceptImage: string = '.jpg, .jpeg, .png';
+  acceptPdf: string = '.pdf, .docx';
+  acceptExt: string = '.pdf, .docx';
+
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   disableButton: boolean = true;
   fileName: string;
@@ -155,12 +159,14 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   }
 
   
-  typeImage(event: any) {
+  typeUploadFile(event: any) {
     let typeId = this.typeUserFile.find(f => f.code == TypeFileUserCode.FIRMA).id;
     if (event.value === typeId) {
-      this.typeImageB = false;
+      this.typeImageUpload = true;
+      this.acceptExt = this.acceptImage
     } else{
-      this.typeImageB = true;
+      this.typeImageUpload = false;
+      this.acceptExt = this.acceptPdf
     }
     this.userId = this._auth.accessId;
   }

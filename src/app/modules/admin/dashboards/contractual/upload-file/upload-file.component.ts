@@ -131,15 +131,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
         this.closeModal();
       }
 
-    },
-      (response) => {
-        this.formFile.enable();
-        // Set the alert
-        console.log(response);
-        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-        // Show the alert
-        this.showAlert = true;
-      });
+    });
   }
 
 

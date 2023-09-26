@@ -1,0 +1,104 @@
+<div class="flex-col max-w-220 md:min-w-120 -m-6">
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">Rgistro pago seguridad social</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+    <mat-dialog-content style="margin: 0px; padding: 0px;">
+        <div class="option">
+            <!-- Alert -->
+            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'" [showIcon]="false"
+                [type]="alert.type" [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+        </div>
+        <br>
+        <!-- <h1>Nombre Contratista</h1> -->
+        <form [formGroup]="formContractorPaymentSecurity" class="example-form overflow-y-auto">
+
+            <div class="folder">
+                <mat-form-field  class="hiringSecurity" appearance="fill">
+                    <mat-label>Entidad SALUD</mat-label>
+                    <input  id="contractorName"   [formControlName]="'eps'" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                </mat-form-field>
+                <mat-form-field  class="hiringSecurity" appearance="fill">
+                    <mat-label>Entidad PENSIÓN</mat-label>
+                    <input   id="contractorName" [formControlName]="'afp'" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                </mat-form-field>
+                <mat-form-field  class="hiringSecurity" appearance="fill">
+                    <mat-label>Entidad ARL</mat-label>
+                    <input  id="contractorName" [formControlName]="'arl'" matInput>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                </mat-form-field>
+            </div>
+            <div class="folder" >
+                <mat-form-field class="hiringSecurity" appearance="fill">
+                    <mat-label>Valor Pagado de SALUD</mat-label>
+                    <input type="text" id="compromiso" (change)="calculateSecurity()" 
+                        formControlName="paymenteps" autocomplete="off" matInput placeholder="Cantidad A pagar">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('paymenteps').hasError('required')">
+                        El Campo pago es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiringSecurity" appearance="fill">
+                    <mat-label>Valor Pagado de PENSIÓN</mat-label>
+                    <input type="text" id="compromiso" (change)="calculateafp()" 
+                        formControlName="Paymentafp" autocomplete="off" matInput placeholder="Compromiso">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('Paymentafp').hasError('required')">
+                        El Campo cedula es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiringSecurity" appearance="fill">
+                    <mat-label>Valor Pagado de ARL</mat-label>
+                    <input type="text" id="compromiso" (change)="calculateArl()" 
+                        formControlName="paymentArl" autocomplete="off" matInput placeholder="Compromiso">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('paymentArl').hasError('required')">
+                        El Campo cedula es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- <div>
+                <div class="text-center pt-8">
+                    <input formControlName="file" type="file" mat-flat-button color="primary" accept=".pdf"
+                        (change)="onChangeGetFile($event)" multiple>
+                </div>
+            </div> -->
+
+            <div class="checkbox-list" *ngIf="filesWithCheckbox.length > 0">
+                <span>Documentos seleccionados</span>
+
+                <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of filesWithCheckbox" class="mr-4"
+                    [value]="file.name" [color]="'primary'">
+                    {{file.name}}
+                </mat-checkbox>
+            </div>
+
+            <div class="folder">
+                <input type="file" (change)="onFileSelected($event)"  multiple>
+            </div>
+            <br>
+            <div class="folder" >
+                <mat-form-field class="hiringD" appearance="fill">
+                    <textarea type="text" class="example-full-width" id="observation" formControlName="observation"
+                        autocomplete="off" matInput placeholder="Observaciones"></textarea>
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('observation').hasError('required')">
+                        El Campo Descripcion es requerido
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions class="action" align="end">
+        <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>
+        <button mat-flat-button [color]="'primary'" type="submit" [disabled]="formContractorPaymentSecurity.disabled"
+            *ngIf="!formContractorPaymentSecurity.disabled" (click)="addPayment()">Guardar</button>
+    </mat-dialog-actions>
+</div>

@@ -17,7 +17,6 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/mat
 import { DetailFilePaymentComponent } from './components/collection-accounts-list/details-file-payment/detail-file-payment.component';
 import { CollectionAccountsListComponent, MY_FORMATS } from './components/collection-accounts-list/collection-accounts-list.component';
 import { ContractorListPayrollComponent } from './components/contractor-list-payroll/contractor-list-payroll.component';
-import { NewnessContractorPayrollComponent } from './components/contractor-list-payroll/components/newness-contractor/newness-contractor.component';
 import { ModificacionPayrollComponent } from './components/contractor-list-payroll/components/modificacion-form/modificacion-form.component';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { ModificacionPayrollComponent } from './components/contractor-list-payro
         CollectionAccountsListComponent,
         DetailFilePaymentComponent,
         ContractorListPayrollComponent,
-        NewnessContractorPayrollComponent,
         ModificacionPayrollComponent
     ],
     imports     : [

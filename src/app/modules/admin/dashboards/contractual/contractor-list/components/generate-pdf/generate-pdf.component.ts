@@ -9,16 +9,16 @@ import { ShareService } from 'app/layout/common/share-service/share-service.serv
 import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
 import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
 import { ContractContractors } from '../../../models/contractor';
-import { CommitteeRequest, PreviusStudy } from '../../../models/generate-pdf';
+import { CommiteeRequestContractor, CommitteeRequest, PreviusStudyContractors } from '../../../models/generate-pdf';
 import { PdfTypeGenerate } from 'app/layout/common/enums/document-type/pdf-type';
 import { Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from '../../../service/upload-file.service';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
     selector: 'app-generate-pdf',
-    templateUrl: './generate-pdf.component.html',
-    styleUrls: ['./generate-pdf.component.scss']
+    templateUrl: './generate-pdf.component.html'
 })
 export class GeneratePdfComponent implements OnInit {
     @ViewChild('pdfTable') pdfTable: ElementRef;
@@ -36,14 +36,18 @@ export class GeneratePdfComponent implements OnInit {
     footerImageBase654: any;
     itmImageBase64: string = null;
     alcaldiaImageBase654: any;
-    committeeRequestData: CommitteeRequest[];
-    previusStudyData: PreviusStudy[] = [];
+    committeeRequestData: CommiteeRequestContractor;
+    previusStudyData: PreviusStudyContractors;
     dateTransform: any = new Date();
     typeDocs: DocumentTypeFile[] = [];
     documentGenerate: any[] = [];
+    documentGenerateCommiteeRequest: any = {
+        document: null,
+        contractId: null
+    };
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     year: Date = new Date();
-
+    comiteeContarctor: any[] = [];
     constructor(
         private _shareService: ShareService,
         private _pdfdataService: PdfDataService,
@@ -57,7 +61,7 @@ export class GeneratePdfComponent implements OnInit {
         this.dateTransform = this._shareService.transformDate(this.dateTransform);
         switch (this.generateType) {
             case PdfTypeGenerate.PREVIUSSTUDY:
-                this.gePreviusStudyData().then(
+                this.getPreviusStudyData().then(
                     () => this.getBase64Image(RouteImageEnum.LOGOITM, 'study')
                 );
                 break;
@@ -71,23 +75,91 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generatePreviusStudyWithoutPolicy(previusStudyData: PreviusStudy[]) {
+    private generatePreviusStudyWithoutPolicy(previusStudyData: PreviusStudyContractors) {
+        let user = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
+        let juridic = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.JURIDICO || ct.userChargeCode === CodeUser.SUPERVISORAREAN)
+        let supervisor = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.SUPERVISOR)
+        this.currentDate = this._shareService.getCurrentDate();
+        if (this.itmImageBase64 == null || user == null || juridic == null || supervisor == null || user.userFirm == null || supervisor.userFirm == null || juridic.userFirm == null) {
+
+            if (this.itmImageBase64 == null || this.itmImageBase64 == undefined) {
+                swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
+            } else if (juridic == null) {
+                swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '',
+                    html: 'No se  se encontro juridico signado',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            } else if (juridic.userFirm == null) {
+                swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '',
+                    html: 'No se  se encontro la firma del juridico',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            }
+            else if (supervisor == null) {
+                swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '',
+                    html: 'No se encontro supervisor asignado ',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            }
+            else if (supervisor.userFirm == null) {
+                swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '',
+                    html: 'No se encontro la firma del supervisor ',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            } else if (user == null) {
+                swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '',
+                    html: 'No se encontro contratual asignado ',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            } else if (user.userFirm == null) {
+                swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '',
+                    html: 'No se encontro la firma del contratual ',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            }
+            this.hideComponent();
+        }
 
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-            let data = previusStudyData.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
+            let data = previusStudyData.previusStudyDto.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
+
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
-                && data.generalObligations != null && this.itmImageBase64 != null && data.user && data.juridicFirm != null && data.juridic != null && data.supervisorItmName != null && data.userFirm != null && data.supervisorFirm != null) {
+                && data.generalObligations != null && this.itmImageBase64 != null && user != null && juridic != null && supervisor != null && user.userFirm != null && supervisor.userFirm != null && juridic.userFirm != null && data.requiredProfileAcademic != null && data.requiredProfileExperience != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
-                let totalContrato = (+data.totalValue.toFixed(0)).toLocaleString();
-                data.specificObligations = data.specificObligations.replaceAll('->', ' ');
-                data.generalObligations = data.generalObligations.replaceAll('->', ' ');
+                let totalContrato = this.addCommasToNumber(data.totalValue);
+                data.specificObligations = data.specificObligations.replaceAll('->', ' ').replace(/\n/g, '');
+                data.generalObligations = data.generalObligations.replaceAll('->', ' ').replace(/\n/g, '');
                 const documentPreviousStudy = {
                     pageSize: 'A4',
                     pageOrientation: 'FOLIO',
                     pageMargins: [40, 80, 40, 60],
                     header: {
-                        margin: [30, 30, 30, 30],
+                        margin: [20, 20, 20, 20],
                         table: {
                             color: '#444',
                             style: 'tableExample',
@@ -96,12 +168,12 @@ export class GeneratePdfComponent implements OnInit {
                             body: [
                                 [
                                     {
-                                        rowSpan: 2,
+                                        rowSpan: 3,
                                         image: this.itmImageBase64,
                                         fit: [80, 80],
                                     },
                                     {
-                                        rowSpan: 2,
+                                        rowSpan: 3,
                                         text: 'ESTUDIO PREVIO CONTRATACIÓN DIRECTA PRESTACIÓN DE SERVICIOS',
                                         style: 'title',
                                     },
@@ -114,8 +186,8 @@ export class GeneratePdfComponent implements OnInit {
                                 ],
                                 ['', '', 'Versión', '09'],
                                 ['', '', 'Fecha', this.currentDate],
-                            ],
-                        },
+                            ]
+                        }
                     },
                     content: [
                         {
@@ -190,6 +262,7 @@ export class GeneratePdfComponent implements OnInit {
                                 },
                                 {
                                     text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN, IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP.',
+                                    bold: true,
                                     fontSize: 11,
                                 },
                             ],
@@ -219,12 +292,12 @@ export class GeneratePdfComponent implements OnInit {
                                             stack: [
                                                 {
                                                     text: 'Centro de costos o área de negocios',
-                                                    style: 'title',
+                                                    style: 'titleTable1',
                                                     margin: [0, 10, 10, 10],
                                                 },
                                                 {
                                                     text: 'Definición de la Necesidad',
-                                                    style: 'title',
+                                                    style: 'titleTable1',
                                                     margin: [0, 100, 10, 10],
                                                 },
                                             ],
@@ -347,12 +420,12 @@ export class GeneratePdfComponent implements OnInit {
                                                         ],
                                                         [
                                                             {
-                                                                text: 'PROFESIONAL EN CUALQUIER AREA DEL CONOCIMIENTO',
+                                                                text: data.requiredProfileAcademic,
                                                                 bold: true,
                                                                 style: 'titleTable2',
                                                             },
                                                             {
-                                                                text: 'CON 1 AÑO DE EXPERIENCIA',
+                                                                text: data.requiredProfileExperience,
                                                                 style: 'titleTable2',
                                                             },
                                                         ],
@@ -365,8 +438,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 30],
-                            pageBreak: 'before',
+                            margin: [10, 5, 10, 10],
                             table: {
                                 widths: [100, 390],
                                 body: [
@@ -385,7 +457,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 {
                                                     text: 'Descripción del objeto y sus Especificaciones Técnicas',
                                                     style: 'title',
-                                                    margin: [10, 200, 10, 10],
+                                                    margin: [10, 100, 10, 10],
                                                 },
                                             ],
                                         },
@@ -447,67 +519,33 @@ export class GeneratePdfComponent implements OnInit {
                                             {
                                                 margin: [6, 6],
                                                 text: [
+
                                                     {
                                                         text: 'OBLIGACIONES GENERALES: ',
-                                                        style: 'fontSegundapagPeque',
-                                                    },
-                                                    {
-                                                        text: '1) Presentar el informe de gestión de manera mensual al ITM de las actividades realizadas con el visto bueno requerido. 2) Presentar el Informe final de las actividades realizadas durante la ejecución del contrato. 3)',
-                                                        style: 'fontSegundapagPeque',
-                                                    },
-                                                    {
-                                                        text: ' EL CONTRATISTA ',
                                                         fontSize: 10,
+                                                        bold: true,
                                                     },
                                                     {
-                                                        text: 'acepta que la propiedad intelectual sobre los estudios, documentos y en general los productos resultantes de la ejecución del presente contrato, quedará a cargo del Distrito Especial de Ciencia, Tecnología e Innovación de Medellín. 4) Concertar la presencialidad requerida. 5) Observar e implementar las directrices institucionales sobre la administración de documentos. 6) Cumplir a cabalidad con el objeto contractual, en la forma y plazo establecido en el mismo, y con las especificaciones técnicas señaladas en los estudios previos. 7) Cumplir con la prestación del servicio requerido en el sitio acordado con el supervisor del contrato, según las especificaciones técnicas indicadas en los estudios previos. 8) Acatar las recomendaciones del supervisor, como enlace directo entre el ITM y el Contratista. 9) Presentar las facturas o cuentas de cobro correspondientes a las actividades realizadas durante la ejecución del contrato. 10) Abstenerse de presentar la factura o cuenta de cobro por encima del presupuesto disponible, de acuerdo con el valor del contrato. 11) Garantizar la prestación del servicio según las condiciones previamente estipuladas entre el contratista y el supervisor. 12) Informar por escrito al supervisor, las quejas, dudas, reclamos y demás inquietudes que puedan surgir en el desarrollo del objeto contractual. 13) Atender los requerimientos que sean formulados por el supervisor y para efectos de ejecutar en debida forma el contrato. 14) Toda comunicación entre el ITM y el contratista deberá constar por escrito con copia al supervisor del contrato. 15) Informar por escrito y en forma oportuna al ITM, los impedimentos para el cumplimiento del objeto contractual, referente a las obligaciones específicas. 16)',
+                                                        text: '' + data.generalObligations + '. ',
                                                         style: 'fontSegundapagPeque',
                                                     },
                                                     {
-                                                        text: ' "DEBER DE CONFIDENCIALIDAD"',
+                                                        text: 'OBLIGACIONES ESPECIFICAS: ',
                                                         fontSize: 10,
+                                                        bold: true,
                                                     },
                                                     {
-                                                        text: ': El Distrito Especial de Ciencia, Tecnología e Innovación de Medellín es el propietario de la información y las bases de datos actualizadas, documentadas y depuradas que el contratista recolecte durante el desarrollo del objeto contractual, en tal sentido le asiste al contratista el deber de confidencialidad, comprometiéndose a hacer uso debido de la información que conoce y a retornarla alDistrito Especial de Ciencia, Tecnología e Innovación de Medellín al terminar su vínculo contractual. Así mismo no podrá utilizar información para beneficio propio o de terceros. El contratista se compromete a garantizar la reserva de la información económica, financiera y tributaria que se le suministre para el desarrollo del objeto contractual. 17) Se obliga a responder civil y penalmente por sus acciones y omisiones en la actuación contractual, en los términos de la Ley. 18. El contratista deberá dar cumplimiento al Decreto 1072 de 2015 que establece el Sistema de Gestión de Seguridad y Salud en el trabajo SG-SST en lo que aplique. 19. El contratista deberá dar cumplimiento a la norma',
-                                                        style: 'fontSegundapagPeque',
-                                                    },
-                                                    {
-                                                        text: ' a NTC-ISO 14001 de 2015, ',
-                                                        fontSize: 10,
-                                                    },
-                                                    {
-                                                        text: 'que establece el Sistema de Gestión Ambiental SGA en lo que aplique. 20) En ejecución de sus actividades el contratista debe disponer de manera correcta los residuos que su ejecución pueda generar. 21) El contratista deberá informar al ITM, si debe realizar sus actividades por fuera del lugar en el que normalmente las ejecuta, para que la Institución informe a la ARL dicha situación. 22) Desplazarse por sus propios medios al lugar requerido para realizar las actividades contractuales inherentes al objeto contractual, haciendo uso de los elementos de identificación establecidos por el proyecto.23)Deberá cumplir con las medidas de prevención y precaución dadas por el Gobierno Nacional, Departamental y Municipales en los Decretos sancionados en relación a la pandemia que se surte hoy en el mundo llamada COVID-19; Adicionalmente y de conformidad con la normatividad expedida por el Gobierno Nacional en lo relativo',
+                                                        text: data.specificObligations,
                                                         style: 'fontSegundapagPeque',
                                                     },
                                                 ],
-                                            },
+                                            }
                                         ],
-                                    ],
-                                ],
-                            },
-                        },
-                        {
-                            margin: [10, 10, 10, 10],
-                            pageBreak: 'before',
-                            table: {
-                                margin: [10, 10, 10, 30],
-                                widths: [100, 390],
-                                body: [
-                                    [
-
-                                        {
-                                            text: '',
-                                            style: 'title',
-                                        },
-                                        {
-                                            text: 'OBLIGACIONES GENERALES:' + data.generalObligations + '. OBLIGACIONES ESPECIFICAS:' + data.specificObligations,
-                                            style: 'fontSegundapagPeque',
-                                        },
                                     ],
                                     [
                                         {
                                             text: 'Tipo de Contrato',
-                                            style: 'title2',
+                                            style: 'title',
                                         },
                                         {
                                             text: 'Prestación de servicios profesionales y de apoyo a la gestión.',
@@ -517,7 +555,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Plazo de Ejecución',
-                                            style: 'title2',
+                                            style: 'title',
                                             margin: [5, 5, 5, 5],
                                         },
                                         {
@@ -530,7 +568,7 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Duración del Contrato Interadministrativo número ' + data.contractNumber + ' de ' + this.anioActual,
-                                            style: 'title2',
+                                            style: 'title',
                                         },
                                         {
                                             text: fechaLetras + ' sin superar la vigencia ' + this.anioActual,
@@ -542,34 +580,32 @@ export class GeneratePdfComponent implements OnInit {
                                     [
                                         {
                                             text: 'Forma de pago',
-                                            style: 'title2',
+                                            style: 'title',
                                             margin: [20, 5, 0, 0],
                                         },
 
                                         {
                                             text: 'Se cancelará en pagos parciales correspondientes a la entrega previa del informe y/o producto. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo de satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARÁGRAFO: En el evento en que el contratista no cumpla con las actividades y/o productos correspondientes al mes, el Instituto no cancelará los honorarios de dicho mes; una vez se cuente con la totalidad de las actividades cumplidas, dicho pago será efectuado en la siguiente fecha de pago programada para el proyecto.',
                                             style: 'fontSegundapagPeque',
-                                            margin: [0, 10, 0, 0],
                                         },
 
                                     ],
                                     [
                                         {
                                             text: 'Supervisor',
-                                            style: 'title2',
+                                            style: 'title',
                                         },
 
                                         {
-                                            text: data.supervisorCharge + ' - Unidad Estratégica de Negocios',
+                                            text: supervisor.userCharge + ' - Unidad Estratégica de Negocios',
                                             style: 'fontSegundapagPeque',
                                         }
                                     ]
-
                                 ],
                             },
                         },
                         {
-                            margin: [10, 10, 10, 30],
+                            margin: [10, 5, 10, 5],
                             table: {
                                 widths: [500],
                                 body: [
@@ -685,7 +721,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 5, 10, 5],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -717,7 +753,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: valorLetras + 'm.l($' + totalContrato + ').',
+                                                            text: valorLetras + ' m.l($' + totalContrato + ').',
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -744,11 +780,11 @@ export class GeneratePdfComponent implements OnInit {
                                     return i === 0 || i === node.table.widths.length
                                         ? '#4FAACD'
                                         : 'gray';
-                                },
-                            },
+                                }
+                            }
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 5, 10, 10],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -784,7 +820,7 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 8, 0, 0],
                                                     text: [
                                                         {
-                                                            text: 'La contratación se realizará con',
+                                                            text: 'La contratación se realizará con ',
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
@@ -793,7 +829,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             bold: true,
                                                         },
                                                         {
-                                                            text: 'con cédula de ciudadanía ',
+                                                            text: ' con cédula de ciudadanía ',
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
@@ -820,7 +856,7 @@ export class GeneratePdfComponent implements OnInit {
                                                             style: 'fontSegundapagPeque',
                                                         },
                                                         {
-                                                            text: 'PROFESIONAL EN CUALQUIER AREA DEL CONOCIMIENTO CON 1 AÑO DE EXPERIENCIA',
+                                                            text: data.requiredProfileAcademic + ' ' + data.requiredProfileExperience,
                                                             style: 'fontSegundapagPeque',
                                                             bold: true,
                                                         },
@@ -856,7 +892,7 @@ export class GeneratePdfComponent implements OnInit {
                             },
                         },
                         {
-                            margin: [10, 10, 10, 10],
+                            margin: [10, 5, 10, 10],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -921,7 +957,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 {
                                                     text: 'A continuación, se establecen, los riesgos que deben asumir las partes en el presente proceso:',
                                                     style: 'fontSegundapagPeque',
-                                                    margin: [0, 10, 50, 50],
+                                                    margin: [5, 15, 15, 5],
                                                 },
                                                 [
                                                     {
@@ -942,14 +978,13 @@ export class GeneratePdfComponent implements OnInit {
                                                                         rowSpan: 2,
                                                                         text: 'CLASE',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 40, 5, 5],
                                                                     },
                                                                     {
                                                                         colSpan: 3,
                                                                         text: 'TIPIFICACION DEL RIESGO',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
                                                                     {},
                                                                     {},
@@ -957,202 +992,170 @@ export class GeneratePdfComponent implements OnInit {
                                                                         colSpan: 2,
                                                                         text: 'ASIGNACION DEL RIESGO',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
-                                                                    {}
+                                                                    ''
                                                                 ],
                                                                 [
-                                                                    {},
+                                                                    '',
                                                                     {
                                                                         text: 'No.',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'Descripción',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'Observaciones',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'ITM',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'PROPONENTE Y/O CONTRATISTA',
                                                                         style: 'titleTable1',
-                                                                        alignment: 'center',
-                                                                        margin: [5, 30, 5, 5],
+                                                                        margin: [5, 10, 5, 5],
                                                                     },
                                                                 ],
                                                                 [
                                                                     {
                                                                         rowSpan: 5,
                                                                         text: 'Administrativos, legales, documentales y/o regulatorios.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 150, 5, 5],
+                                                                        margin: [5, 100, 5, 5],
                                                                     },
                                                                     {
                                                                         text: '1',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 20, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'No firma del contrato por parte del proponente y/o CONTRATISTA.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'En caso de que el CONTRATISTA se rehusó a firmarlo, no estuvo de acuerdo con el clausulado. Riesgo que asume el CONTRATISTA.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: '',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'X',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 15, 5, 5],
                                                                     },
                                                                 ],
                                                                 [
-                                                                    {},
+                                                                    '',
                                                                     {
                                                                         text: '2',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 15, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'Incumplimiento del contrato por parte del CONTRATISTA.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'Hace referencia a cualquier clase de incumplimiento por parte del CONTRATISTA, antes, durante y posterior a la orden de iniciación del contrato. Riesgo que asume el CONTRATISTA',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: '',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'X',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 15, 5, 5],
                                                                     },
                                                                 ],
                                                                 [
-                                                                    {},
+                                                                    '',
                                                                     {
                                                                         text: '3',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 15, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'Demora en la radicación oportuna por parte del CONTRATISTA de las facturas (correctamente diligenciadas y firmadas) y/o cuentas de los gastos reembolsables.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'Riesgo que asume el CONTRATISTA, teniendo en cuenta que le corresponde a éste tener planes de contingencia y/o calidad para que las facturas se elaboren correctamente y radiquen oportunamente de acuerdo con lo manifestado en el contrato.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: '',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'X',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 20, 5, 5],
                                                                     },
                                                                 ],
                                                                 [
-                                                                    {},
+                                                                    '',
                                                                     {
                                                                         text: '4',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 20, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'Demora en la legalización del contrato por parte del CONTRATISTA.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'Causada por parte del CONTRATISTA, por no radicar completa, correcta y oportunamente la documentación de legalización, según el instructivo y/o lo manifestado en el contrato. Riesgo que asume el CONTRATISTA.',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: '',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'X',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 20, 5, 5],
                                                                     },
                                                                 ],
                                                                 [
-                                                                    {},
+                                                                    '',
                                                                     {
                                                                         text: '5',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
-                                                                        margin: [5, 50, 5, 5],
+                                                                        margin: [5, 20, 5, 5],
                                                                     },
                                                                     {
                                                                         text: 'Errores involuntarios que hayan quedado en la oferta presentada al ITM',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'Hace referencia a cualquier error que se pueda presentar en la oferta presentada al ITM ',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: '',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                     },
                                                                     {
                                                                         text: 'X',
-                                                                        alignment: 'center',
                                                                         style: 'titleTable1',
                                                                         margin: [5, 5, 5, 5],
-                                                                    },
+                                                                    }
                                                                 ]
-                                                            ],
-                                                        },
+                                                            ]
+                                                        }
                                                     },
                                                     {
                                                         text: 'CÓMO MINIMIZAR EL RIESGO:',
@@ -1188,22 +1191,22 @@ export class GeneratePdfComponent implements OnInit {
                                                                             {
                                                                                 text: ' Estricto y permanente acompañamiento y seguimiento por parte de la Supervisión asignada.',
                                                                                 style: 'fontSegundapagPeque',
-                                                                            },
-                                                                        ],
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            ],
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            ]
                                         }
                                     ]
                                 ]
                             }
                         },
                         {
-                            margin: [10, 10, 10, 30],
+                            margin: [5, 5, 5, 5],
                             table: {
                                 widths: ['*'],
                                 body: [
@@ -1212,7 +1215,7 @@ export class GeneratePdfComponent implements OnInit {
                                             text: 'ANÁLISIS QUE SUSTENTA LA EXIGENCIA DE GARANTÍAS',
                                             style: 'titleTable2',
                                             fillColor: '#4FAACD',
-                                        },
+                                        }
                                     ],
                                     [
                                         {
@@ -1226,17 +1229,17 @@ export class GeneratePdfComponent implements OnInit {
                                                     text: 'No obstante, la anterior determinación, de acuerdo con lo establecido en los artículos 7 a 17 de la Ley 1480 de 2011, en asocio con las determinaciones de los artículos 932 y 958 del Código de Comercio, el Contratista tiene la obligación de garantizar la calidad del bien o servicio objeto del contrato.',
                                                     style: 'fontSegundapagPeque',
                                                     margin: [0, 8, 0, 0],
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                ],
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                ]
                             }
                         },
                         {
                             style: 'tableImage',
                             table: {
-                                widths: [250, 250],
+                                widths: [255, 250],
                                 body: [
                                     [
                                         {
@@ -1258,7 +1261,7 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 5, 0, 0],
                                                 },
                                                 {
-                                                    text: data.user,
+                                                    text: user.userName,
                                                     style: 'fontSegundapagPeque',
                                                     margin: [0, 5, 0, 0],
                                                 },
@@ -1269,14 +1272,14 @@ export class GeneratePdfComponent implements OnInit {
                                                     margin: [0, 8, 0, 0],
                                                 },
                                                 {
-                                                    text: data.userCharge + ' - Unidad Estratégica de Negocios',
+                                                    text: user.userCharge + ' - Unidad Estratégica de Negocios',
                                                     style: 'fontSegundapagPeque',
                                                     margin: [0, 8, 0, 0],
                                                 },
                                             ]
                                         },
                                         {
-                                            image: 'data:image/' + data.userFirmType + ';base64,' + data.userFirm,
+                                            image: 'data:image/' + user.userFirmType + ';base64,' + user.userFirm,
                                             fit: [70, 70],
                                             alignment: 'center',
                                         }
@@ -1285,9 +1288,9 @@ export class GeneratePdfComponent implements OnInit {
                             }
                         },
                         {
-                            margin: [10, 10, 0, 10],
+                            margin: [5, 5, 0, 10],
                             table: {
-                                widths: [160, 160, 160],
+                                widths: [165, 165, 165],
                                 body: [
                                     [
                                         {
@@ -1305,34 +1308,34 @@ export class GeneratePdfComponent implements OnInit {
                                     ],
                                     [
                                         {
-                                            image: 'data:image/' + data.userFirmType+';base64,' + data.userFirm,
+                                            image: 'data:image/' + user.userFirmType + ';base64,' + user.userFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
 
                                         },
                                         {
-                                            image: 'data:image/'+data.juridicFirmType+';base64,'+data.juridicFirm,
+                                            image: 'data:image/' + juridic.userFirmType + ';base64,' + juridic.userFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
                                         },
                                         {
 
-                                            image: 'data:image/'+data.supervisorFirmType+';base64,'+data.supervisorFirm,
+                                            image: 'data:image/' + supervisor.userFirmType + ';base64,' + supervisor.userFirm,
                                             fit: [70, 70],
                                             style: 'fontPeque',
                                         },
                                     ],
                                     [
                                         {
-                                            text: data.user,
+                                            text: user.userName,
                                             alignment: 'center',
                                         },
                                         {
-                                            text: data.juridic,
+                                            text: juridic.userName,
                                             alignment: 'center',
                                         },
                                         {
-                                            text: data.supervisorItmName,
+                                            text: supervisor.userName,
                                             alignment: 'center',
                                         },
                                     ]
@@ -1371,15 +1374,9 @@ export class GeneratePdfComponent implements OnInit {
                             color: 'black',
                             alignment: 'center',
                         },
-                        title2: {
-                            bold: true,
-                            fontSize: 10,
-                            color: 'black',
-                            alignment: 'center',
-                        },
                         titleTable1: {
                             bold: true,
-                            fontSize: 8,
+                            fontSize: 9,
                             color: 'black',
                             alignment: 'center',
                         },
@@ -1388,7 +1385,7 @@ export class GeneratePdfComponent implements OnInit {
                             alignment: 'center',
                         },
                         fontPeque: {
-                            fontSize: 8,
+                            fontSize: 10,
                             alignment: 'center',
                         },
                         fontPeque2: {
@@ -1398,11 +1395,11 @@ export class GeneratePdfComponent implements OnInit {
                             margin: [10, 10, 30, 30],
                         },
                         fontSegundapagPeque: {
-                            fontSize: 9,
+                            fontSize: 10,
                             alignment: 'justify'
                         },
                         tableImage: {
-                            margin: [10, 10, 10, 30],
+                            margin: [5, 5, 5, 10],
                         }
                     }
                 };
@@ -1414,319 +1411,307 @@ export class GeneratePdfComponent implements OnInit {
                 }
                 this.documentGenerate.push(SolicitudComite);
             } else {
-                if (this.itmImageBase64 == null || this.itmImageBase64 == '' || this.itmImageBase64 == undefined) {
-                    swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
+                if (data.requiredProfileAcademic == null || data.requiredProfileExperience == null) {
+                    swal.fire('', 'No se encontro el perfil requerido', 'warning');
                     this.hideComponent();
                     return;
-                }
-                else if (data.generalObligations == null || data.generalObligations == '' || data.specificObligations == null || data.specificObligations == '') {
-                    swal.fire('', 'no se encontraron las obligaciones del contratato para el contratista ' + data.contractorName, 'warning');
+                } else if (data.generalObligations == null || data.generalObligations == '' || data.specificObligations == null || data.specificObligations == '') {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'no se encontraron las obligaciones del contratato para el contratista ' + data.contractorName,
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
                 }
                 else if (data.totalValue == null || data.totalValue == '') {
-                    swal.fire('', 'no se encontro el valor del contrato para el contratista ' + data.contractorName, 'warning');
-                } else if (data.juridicFirm != null || data.juridicFirm == '') {
                     swal.fire({
                         position: 'center',
                         icon: 'warning',
                         title: '',
-                        html: 'No se  se encontro la firma del juridico para el contratista ' + data.contractorName,
+                        html: 'no se encontro el valor del contrato para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 2000
+                        timer: 2500
                     });
-                } else if (data.supervisorFirm == null || data.supervisorFirm == '') {
-                    swal.fire({
-                        position: 'center',
-                        icon: 'warning',
-                        title: '',
-                        html: 'No se encontro la firma del supervisor para el contratista ' + data.contractorName,
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                    this.hideComponent();
-                } else if (data.userFirm == null || data.userFirm == '') {
-                    swal.fire({
-                        position: 'center',
-                        icon: 'warning',
-                        title: '',
-                        html: 'No se encontro la firma del contratual para el contratista ' + data.contractorName,
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                    this.hideComponent();
-                    return;
                 }
             }
 
         }
         if (this.documentGenerate.length > 0) {
             this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.ESTUDIOSPREVIOS).then(
-                 () => this.hideComponent()
+                () => this.hideComponent()
             );
         }
 
     }
 
-    private generateCommitteeRequest(committeeRequestData: any) {
-        for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-            let data = committeeRequestData.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
-            if (this.itmImageBase64 != null && data.profileRequire != null && data.contractorName != null && data.contractorIdentification != null) {
-                const documentSolicitudComite = {
-                    pageSize: 'A4',
-                    pageOrientation: 'FOLIO',
-                    pageMargins: [40, 80, 40, 60],
-                    header: {
-                        margin: [50, 20, 0, 30],
+    private generateCommitteeRequest(committeeRequestData: CommiteeRequestContractor) {
+        let user = committeeRequestData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
+        if (this.itmImageBase64 != null && user.userName != null != null && user.userFirm != null) {
+            let date = new Date(committeeRequestData.registerDate);
+            let year = date.getFullYear();
+            for (let index = 0; index < this.contractContractors.contractors.length; index++) {
+                let data = committeeRequestData.commiteeRequestDto.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
+                if (data.profileRequire == null || data.profileRequire == null || data.contractorIdentification == null) {
+                    if (data.profileRequire == null) {
+                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista' + data.contractorName, 'warning');
+                    }
+                    else if (data.contractorIdentification == null) {
+                        swal.fire('', 'no se encontro la identificacion del contratista ' + data.contractorName, 'warning');
+                    }
+                    this.hideComponent();
+                } else {
+                    this.comiteeContarctor[index] =
+                        [
+                            {
+                                text: data.contractorName,
+                                style: 'fontPeque',
+                            },
+                            {
+                                text: data.contractorIdentification,
+                                style: 'fontPeque',
+                            },
+                            {
+                                text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + committeeRequestData.contractNumber + ' de ' + year,
+                                style: 'fontPeque',
+                            },
+                            {
+                                text: data.profileRequire,
+                                style: 'fontPeque',
+                            },
+                        ]
+
+                }
+
+            }
+            const documentSolicitudComite = {
+                pageSize: 'A4',
+                pageOrientation: 'FOLIO',
+                pageMargins: [40, 80, 40, 60],
+                header: {
+                    margin: [50, 20, 0, 30],
+                    table: {
+                        color: '#444',
+                        style: 'tableHeader',
+                        widths: ['auto', 190, 'auto', 75, 75],
+                        headerRows: 3,
+                        body: [
+                            [
+                                {
+                                    rowSpan: 3,
+                                    image: this.itmImageBase64,
+                                    style: 'title',
+                                    fit: [80, 80],
+                                },
+                                {
+                                    rowSpan: 3,
+                                    colSpan: 2,
+                                    text: 'MEMORANDO',
+                                    style: 'memo',
+                                    alignment: 'center',
+                                },
+                                {},
+                                {
+                                    text: 'Código',
+                                },
+                                {
+                                    text: 'FG 005',
+                                },
+                            ],
+                            ['', '', '', 'Versión', '01'],
+                            ['', '', '', 'Fecha ', this.currentDate],
+                        ],
+                    },
+                },
+
+                footer: {
+                    margin: [10, 10],
+                    text: 'Medellín - Colombia',
+                    alignment: 'center',
+                },
+                content: [
+                    {
+                        text: 'Medellín, ' + this.currentDate,
+                        style: 'subheader',
+                        margin: [10, 10, 10, 10],
+                    },
+                    {
+                        text: 'Señores',
+                        style: 'marginRector',
+                        margin: [10, 0, 0, 0],
+                    },
+                    {
+                        text: 'COMITÉ DE SELECCIÓN DE SERVICIOS TEMPORALES',
+                        bold: true,
+                        style: 'fontPeque2',
+                        margin: [10, 0, 0, 0],
+                    },
+                    {
+                        text: 'Instituto Tecnológico Metropolitano',
+                        style: 'fontPeque2',
+                        margin: [10, 0, 0, 0],
+                    },
+                    {
+                        margin: [10, 10, 10, 10],
+                        text: [
+                            {
+                                text: 'Asunto : ',
+                                fontSize: 10,
+                                bold: true,
+                            },
+                            {
+                                text: 'Remisión Hoja de Vida ',
+                                fontSize: 10,
+                            },
+                        ],
+                    },
+                    {
+                        text: 'Respetados señores:',
+                        style: 'fontPeque2',
+                        margin: [10, 10, 10, 10],
+                    },
+                    {
+                        margin: [10, 10, 10, 10],
+                        text: [
+                            {
+                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.contractNumber + 'de ' + year + ', cuyo objeto es ' + committeeRequestData.contractObject,
+                                fontSize: 10,
+                                alignment: 'justify'
+                            },
+                        ],
+                    },
+                    {
+                        margin: [10, 10, 10, 10],
                         table: {
-                            color: '#444',
-                            style: 'tableHeader',
-                            widths: [100, 170, 'auto', 70, 70],
-                            headerRows: 3,
+                            widths: [115, 100, 130, 115],
                             body: [
                                 [
                                     {
-                                        rowSpan: 3,
-                                        image: this.itmImageBase64,
-                                        style: 'title',
-                                        fit: [100, 100],
+                                        text: 'NOMBRE COMPLETO',
+                                        style: 'fontPeque',
                                     },
                                     {
-                                        rowSpan: 3,
-                                        colSpan: 2,
-                                        text: 'MEMORANDO',
-                                        style: 'memo',
-                                        alignment: 'center',
-                                    },
-                                    {},
-                                    {
-                                        text: 'Código',
+                                        text: 'DOCUMENTO',
+                                        style: 'fontPeque',
                                     },
                                     {
-                                        text: 'FG 005',
+                                        text: 'PRODUCTO PARA CONTRATAR',
+                                        style: 'fontPeque',
                                     },
-                                ],
-                                ['', '', '', 'Versión', '01'],
-                                ['', '', '', 'Fecha ', this.currentDate],
-                            ],
-                        },
+                                    {
+                                        text: 'PERFIL REQUERIDO',
+                                        style: 'fontPeque',
+                                    },
+                                ]
+                            ].concat(this.comiteeContarctor)
+                        }
+                    },
+                    {
+                        image: 'data:image/' + user.userFirmType + ';base64,' + user.userFirm,
+                        style: 'title',
+                        fit: [100, 100],
+                        margin: [10, 0, 0, 0],
+
+                    },
+                    {
+                        margin: [10, 0, 0, 0],
+                        text: user.userName
+                    },
+                    {
+                        margin: [10, 0, 0, 0],
+                        text: 'Profesional Universitaria'
+                    },
+                    {
+                        margin: [10, 0, 0, 0],
+                        text: 'Unidad Estratégica de Negocios'
                     },
 
-                    footer: {
-                        margin: [10, 10],
-                        text: 'Medellín - Colombia',
+                ],
+                styles: {
+                    header: {
+                        fontSize: 18,
+                        bold: true,
+                        margin: [0, 0, 0, 10],
+                    },
+                    subheader: {
+                        fontSize: 10,
+                        margin: [0, 10, 0, 5],
+                    },
+                    tableHeader: {
+                        bold: true,
+                        fontSize: 13,
+                        color: 'black',
+                        align: 'center',
+                        margin: [10, 0, 10, 10],
+                    },
+                    memo: {
+                        bold: true,
+                        fontSize: 13,
+                        color: 'black',
+                        alignment: 'center',
+                        margin: [0, 20, 0, 0],
+                    },
+                    titleTable1: {
+                        bold: true,
+                        fontSize: 10,
+                        color: 'black',
                         alignment: 'center',
                     },
-                    content: [
-                        {
-                            text: 'Medellín, ' + this.currentDate,
-                            style: 'subheader',
-                            margin: [10, 10, 10, 10],
-                        },
-                        {
-                            text: 'Señores',
-                            style: 'marginRector',
-                            margin: [10, 0, 0, 0],
-                        },
-                        {
-                            text: 'COMITÉ DE SELECCIÓN DE SERVICIOS TEMPORALES',
-                            bold: true,
-                            style: 'fontPeque2',
-                            margin: [10, 0, 0, 0],
-                        },
-                        {
-                            text: 'Instituto Tecnológico Metropolitano',
-                            style: 'fontPeque2',
-                            margin: [10, 0, 0, 0],
-                        },
-                        {
-                            margin: [10, 10, 10, 10],
-                            text: [
-                                {
-                                    text: 'Asunto : ',
-                                    fontSize: 10,
-                                    bold: true,
-                                },
-                                {
-                                    text: 'Remisión Hoja de Vida ',
-                                    fontSize: 10,
-                                },
-                            ],
-                        },
-                        {
-                            text: 'Respetados señores:',
-                            style: 'fontPeque2',
-                            margin: [10, 10, 10, 10],
-                        },
-                        {
-                            margin: [10, 10, 10, 10],
-                            text: [
-                                {
-                                    text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + data.contractNumber + 'de ' + this.anioActual + ', cuyo objeto es ' + data.elementObject,
-                                    fontSize: 10,
-                                    alignment: 'justify'
-                                },
-                            ],
-                        },
-
-                        {
-                            margin: [10, 10, 10, 10],
-                            table: {
-                                widths: [115, 100, 130, 115],
-                                body: [
-                                    [
-                                        {
-                                            text: 'NOMBRE COMPLETO',
-                                            style: 'fontPeque',
-                                        },
-                                        {
-                                            text: 'DOCUMENTO',
-                                            style: 'fontPeque',
-                                        },
-                                        {
-                                            text: 'PRODUCTO PARA CONTRATAR',
-                                            style: 'fontPeque',
-                                        },
-                                        {
-                                            text: 'PERFIL REQUERIDO',
-                                            style: 'fontPeque',
-                                        },
-                                    ],
-                                    [
-                                        {
-                                            text: data.contractorName,
-                                            style: 'fontPeque',
-                                        },
-                                        {
-                                            text: data.contractorIdentification,
-                                            style: 'fontPeque',
-                                        },
-                                        {
-                                            text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + data.contractNumber + ' de ' + this.year.getFullYear(),
-                                            style: 'fontPeque',
-                                        },
-                                        {
-                                            text: data.profileRequire,
-                                            style: 'fontPeque',
-                                        },
-                                    ],
-                                ],
-                            },
-                        },
-                        {
-                            margin: [10, 0, 0, 0],
-                            text: '\n\nFIRMA:'
-                        },
-                        {
-                            margin: [10, 0, 0, 0],
-                            text: data.contractorName
-                        },
-                        {
-                            margin: [10, 0, 0, 0],
-                            text: 'Profesional Universitaria'
-                        },
-                        {
-                            margin: [10, 0, 0, 0],
-                            text: 'Unidad Estratégica de Negocios'
-                        },
-
-                    ],
-                    styles: {
-                        header: {
-                            fontSize: 18,
-                            bold: true,
-                            margin: [0, 0, 0, 10],
-                        },
-                        subheader: {
-                            fontSize: 10,
-                            margin: [0, 10, 0, 5],
-                        },
-                        tableHeader: {
-                            bold: true,
-                            fontSize: 13,
-                            color: 'black',
-                            align: 'center',
-                            margin: [10, 0, 10, 10],
-                        },
-                        title: {
-                            bold: true,
-                            fontSize: 13,
-                            color: 'black',
-                            alignment: 'center',
-                        },
-                        memo: {
-                            bold: true,
-                            fontSize: 13,
-                            color: 'black',
-                            alignment: 'center',
-                            margin: [0, 20, 0, 0],
-                        },
-                        title2: {
-                            bold: true,
-                            fontSize: 10,
-                            color: 'black',
-                            alignment: 'center',
-                        },
-                        titleTable1: {
-                            bold: true,
-                            fontSize: 8,
-                            color: 'black',
-                            alignment: 'center',
-                        },
-                        titleTable2: {
-                            fontSize: 10,
-                            color: 'white',
-                            alignment: 'center',
-                        },
-                        marginRector: {
-                            fontSize: 10,
-                            margin: [0, 5, 10, 0],
-                        },
-                        fontPeque: {
-                            fontSize: 8,
-                            alignment: 'center',
-                        },
-                        fontPeque2: {
-                            fontSize: 10,
-                        },
-                        fontSegundapag: {
-                            fontSize: 9,
-                        },
-                        fontSegundapagPeque: {
-                            fontSize: 9,
-                            alignment: 'justify'
-                        },
-                    }
-                };
-                let SolicitudComite = {
-                    document: documentSolicitudComite,
-                    contractorName: data.contractorName,
-                    contractorId: data.contractorId
+                    titleTable2: {
+                        fontSize: 10,
+                        color: 'white',
+                        alignment: 'center',
+                    },
+                    marginRector: {
+                        fontSize: 10,
+                        margin: [0, 5, 10, 0],
+                    },
+                    fontPeque: {
+                        fontSize: 8,
+                        alignment: 'center',
+                    },
+                    fontPeque2: {
+                        fontSize: 10,
+                    },
+                    fontSegundapag: {
+                        fontSize: 9,
+                    },
+                    fontSegundapagPeque: {
+                        fontSize: 9,
+                        alignment: 'justify'
+                    },
                 }
-                this.documentGenerate.push(SolicitudComite);
-            } else {
-                if (this.itmImageBase64 == null || this.itmImageBase64 == '') {
-                    swal.fire('', 'Error al cargar la imagen ', 'warning');
-                }
-                else if (data.profileRequire == null || data.profileRequire == '') {
-                    swal.fire('', 'no se ha cargado el perfil requerido', 'warning');
-                }
-                else if (data.contractorIdentification == null || data.contractorIdentification == '') {
-                    swal.fire('', 'no se encontro la identificacion del contratista', 'warning');
-                }
-                this.hideComponent();
+            };
+            let SolicitudComite = {
+                document: documentSolicitudComite,
+                contractId: this.contractContractors.contractId
             }
+            this.documentGenerateCommiteeRequest = SolicitudComite;
+        } else {
+            if (this.itmImageBase64 == null || this.itmImageBase64 == '') {
+                swal.fire('', 'Error al cargar la imagen ', 'warning');
+            }
+            else if (user.userFirm == null) {
+                swal.fire('', 'no se ha cargado la firma de contractual', 'warning');
+            }
+            else if (user.userName == null) {
+                swal.fire('', 'no se encontro contarctual asignado', 'warning');
+            }
+            this.hideComponent();
         }
-        if (this.documentGenerate.length > 0) {
-            this.savePdfGenerated(this.documentGenerate, this.contractContractors.contractId, DocumentTypeCodes.SOLICITUDCOMITE);
+        if (this.documentGenerateCommiteeRequest != null) {
+            this.savePdfGeneratedCommiteeRequest(this.documentGenerateCommiteeRequest, DocumentTypeCodes.SOLICITUDCOMITE);
         }
 
     }
 
-
     private async getcommitteeRequestData(): Promise<void> {
         return await new Promise((rslv) => {
+            this.contractContractors.typeMinute = DocumentTypeCodes.SOLICITUDCOMITE
             this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response) => {
                 this.committeeRequestData = Response;
-                if (this.committeeRequestData.length == 0) {
+                if (this.committeeRequestData != null) {
                     this.hideComponent();
                 }
                 rslv();
@@ -1735,14 +1720,14 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private async gePreviusStudyData(): Promise<void> {
+    private async getPreviusStudyData(): Promise<void> {
         return await new Promise((rslv) => {
-
+            this.contractContractors.typeMinute = DocumentTypeCodes.ESTUDIOSPREVIOS
             this._pdfdataService.getPreviusStudy(this.contractContractors)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
                     this.previusStudyData = Response;
-                    if (Response.length == 0) {
+                    if (Response.previusStudyDto.length == 0) {
                         this.hideComponent();
                     }
                     rslv();
@@ -1787,7 +1772,7 @@ export class GeneratePdfComponent implements OnInit {
                 contractId: contractId,
                 filesName: nombreDocumento,
                 fileType: 'PDF',
-                descriptionFile: documentType.documentTypeDescription + ' generada',
+                descriptionFile: documentType.documentTypeDescription + ' GENERADA',
                 registerDate: date,
                 documentType: documentType.id,
                 modifyDate: date,
@@ -1809,6 +1794,47 @@ export class GeneratePdfComponent implements OnInit {
                         showConfirmButton: false,
                         timer: 2000
                     });
+                    this.hideComponent();
+                }
+            });
+    }
+
+    private async savePdfGeneratedCommiteeRequest(pdfDocument: any, origin: string): Promise<void> {
+        let documentType = this.typeDocs.find(f => f.code == origin)
+        let nombreDocumento = documentType.documentTypeDescription;
+        let date = this.currentDate;
+        let userId = this._auth.accessId;
+        const pdf = pdfMake.createPdf(pdfDocument.document);
+        const dataURL = await new Promise<string>((resolve, reject) => {
+            pdf.getDataUrl((dataURL) => resolve(dataURL));
+        });
+        const registerFile: FileContractor = {
+            userId: userId,
+            contractId: pdfDocument.contractId,
+            filesName: nombreDocumento,
+            fileType: 'PDF',
+            descriptionFile: documentType.documentTypeDescription + ' GENERADA',
+            registerDate: date,
+            documentType: documentType.id,
+            modifyDate: date,
+            filedata: dataURL.split('data:application/pdf;base64,')[1],
+            monthPayment: null,
+            folderId: null,
+            origin: origin,
+            contractors: this.contractContractors.contractors
+        };
+        this._upload.UploadFileCommitteeContractors(registerFile)
+            .subscribe((res) => {
+                if (res.success) {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: res.message,
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    this.hideComponent();
                 }
             });
     }
@@ -1820,7 +1846,10 @@ export class GeneratePdfComponent implements OnInit {
             .subscribe((response: any) => {
                 this.typeDocs = response;
             });
+    }
 
+    addCommasToNumber(value: number): string {
+        return value.toLocaleString('es');
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);

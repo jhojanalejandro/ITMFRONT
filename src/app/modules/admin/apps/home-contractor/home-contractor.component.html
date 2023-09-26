@@ -70,6 +70,11 @@
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                                 <span>Información Personal</span>
                             </button>
+                            <button (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                                [routerLink]="['./']">
+                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                <span>Cargar Archivos nomina</span>
+                            </button>
                         </div>
 
                         <div class="flex flex-col sm:flex-row items-start mt-8">
@@ -136,7 +141,7 @@
                                     </div>
                                 </ng-container>
                                 <ng-container *ngIf="viwFilesGenerated">
-                                    <a (click)="generateChargeAccount()"
+                                    <a (click)="generatePdf('charge')"
                                         class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
                                         <div class="aspect-w-9 aspect-h-6">
                                             <div class="flex items-center justify-center">
@@ -158,7 +163,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    <a (click)="descargarActa()"
+                                    <a (click)="generatePdf('report')"
                                         class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
                                         <div class="aspect-w-9 aspect-h-6">
                                             <div class="flex items-center justify-center">
@@ -236,5 +241,5 @@
     </div>
 </div>
 <app-cuenta-cobro (onGeneratePdf)="onGeneratePdf($event)" [executionReportData]="executionReportData"
-    [chargeAccountData]="chargeAccountData"
-    *ngIf="(chargeAccountData != null && chargeAccount == true) || (executionReportData != null &&  executionReport)"></app-cuenta-cobro>
+    [chargeAccountData]="chargeAccountData" [typeGenerator]="typeGenerator"
+    *ngIf="(chargeAccountData != null && showPdfGenerated) || (executionReportData != null &&  showPdfGenerated)"></app-cuenta-cobro>

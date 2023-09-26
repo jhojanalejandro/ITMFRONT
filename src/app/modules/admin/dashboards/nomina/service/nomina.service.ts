@@ -5,6 +5,7 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { EconomicContractor } from '../models/economic-data-contractor';
 import Swal from 'sweetalert2';
+import { ContractorPayments } from '../models/contractor-payments';
 
 @Injectable({
     providedIn: 'root'
@@ -62,7 +63,18 @@ export class NominaService {
         );
     }
 
+
+    getContractorPayment(contractorId: string, contractId) {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        .set('contractId', contractId);
+        let urlEndPoint = this.apiUrl + environment.GetPaymentByIdContractAndContractorEndpoint;
+        return this._httpClient.get<ContractorPayments>(urlEndPoint, {params}).pipe(
+            catchError(this.handleError)
+        );
+    }
     private handleError(error: any): Observable<any> {
+        debugger
         Swal.fire({
             position: 'center',
             icon: 'error',

@@ -7,6 +7,7 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { IUserModel, TeamModel } from 'app/modules/auth/model/user-model';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UserFile } from 'app/modules/admin/pages/settings/models/setting.model';
+import Swal from 'sweetalert2';
 
 @Injectable()
 export class AuthService {
@@ -111,11 +112,11 @@ export class AuthService {
         return this._httpClient.post<IResponse>(this.apiUrl + environment.authenticateEndpoint, credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-                this.accessId = response.id;
-                this.accessName = response.userName
-                this.accessEmail = response.userEmail
-                this.codeC = response.code
+                this.accessToken = response.data.accessToken;
+                this.accessId = response.data.id;
+                this.accessName = response.data.userName
+                this.accessEmail = response.data.userEmail
+                this.codeC = response.data.code
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true
@@ -146,10 +147,11 @@ export class AuthService {
 
     updateUser(data: any) {
         let urlEndPoint = this.apiUrl + environment.updateUserEndpoint;
-        return this._httpClient.post<any>(urlEndPoint, data).pipe(
+        return this._httpClient.post<IResponse>(urlEndPoint, data).pipe(
             switchMap((response: any) => {
                 return of(response);
-            })
+            }),
+            catchError(this.handleError) 
         );
     }
 
@@ -158,10 +160,7 @@ export class AuthService {
         return this._httpClient.post(this.apiUrl + environment.validateTokenEndpoint + this.accessToken, {
             // accessToken: this.accessToken
         }).pipe(
-            catchError(() =>
-                // Return false
-                of(false)
-            ),
+            catchError(this.handleError),
             switchMap((response: any) => {
 
                 if (response) {
@@ -206,7 +205,7 @@ export class AuthService {
      */
     signUp(user: any) {
         let urlEndpointupdate = this.apiUrl + environment.sigUpEndpoint;
-        return this._httpClient.post(urlEndpointupdate, user, { responseType: 'text' });
+        return this._httpClient.post<IResponse>(urlEndpointupdate, user)
     }
 
     /**
@@ -332,5 +331,16 @@ export class AuthService {
                 return of(response);
             })
         );
+    }
+    private handleError(error: any): Observable<any> {
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '',
+            html: error.error.message,
+            showConfirmButton: false,
+            timer: 3000
+        });
+        return new Observable<any>();
     }
 }

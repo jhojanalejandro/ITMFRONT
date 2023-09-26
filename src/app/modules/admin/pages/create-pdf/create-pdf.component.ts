@@ -77,16 +77,8 @@ export class CreatePdfComponent implements OnInit {
 
     downloadMinutaMacro() {
         let data = minutaModificacionMacro;
-        const imagePath = '/assets/images/imagesPdf/alcaldia.jpeg';
 
-        this._shareService.loadAndConvertImageToBase64(imagePath)
-            .then(base64Data => {
-                this.base64Image = base64Data;
-                this.downloadMinutaMacropdf();
-            })
-            .catch(error => {
-                console.error('Error al cargar y convertir la imagen:', error);
-            });
+        this.downloadAsPDFs(data, 'MODIFICACIÓN');
     }
 
     downloadMinutaMacropdf() {

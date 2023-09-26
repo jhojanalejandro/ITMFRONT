@@ -98,7 +98,6 @@ export class ModificacionPayrollComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log(this._data.data.elementId);
         if (this._data.data.elementId != 0) {
             this.getDataElemento();
             this.getDateAdiction();

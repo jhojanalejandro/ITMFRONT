@@ -9,7 +9,6 @@ import { fileManagerRoutes } from 'app/modules/admin/apps/file-manager/file-mana
 import { FileManagerComponent } from 'app/modules/admin/apps/file-manager/file-manager.component';
 import { FileManagerDetailsComponent } from 'app/modules/admin/apps/file-manager/components/details/details.component';
 import { FileManagerListComponent } from 'app/modules/admin/apps/file-manager/list/list.component';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FileListComponent } from './list-file/file-list.component';
 import { ListFolderContractorComponent } from './list-folder-contractor/list-folder-contractor.component';
@@ -23,6 +22,8 @@ import { FileListContractComponent } from './components/file-list-contract/file-
 import { UploadFileContractComponent } from './components/upload-file-contract/upload-file-contract.component';
 import { ShowFileComponent } from './components/show-file/show-file.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         ShowFileComponent,
     ],
     imports: [
+        QuillModule.forRoot(),
         RouterModule.forChild(fileManagerRoutes),
         MatButtonModule,
         MatIconModule,
@@ -50,7 +52,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         SharedModule,
         Ng2SearchPipeModule,
         PdfViewerModule,
-        NgxExtendedPdfViewerModule 
+        NgxExtendedPdfViewerModule    
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

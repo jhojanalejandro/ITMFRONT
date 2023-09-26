@@ -14,7 +14,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { MatPaginator } from '@angular/material/paginator';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import Swal from 'sweetalert2';
-import { AssignmentUserComponent } from 'app/modules/admin/dashboards/contractual/contractor-list/components/assigmentUser/assignment-user.component';
+import { RubroRegisterComponent } from '../rubro-register/rubro-register.component';
 
 @Component({
   selector: 'app-rubro-list',
@@ -118,7 +118,7 @@ export class RubroListComponent implements OnInit, OnDestroy {
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos para asignar contratos!', 'warning');
     } else {
-      const dialogUpload = this._matDialog.open(AssignmentUserComponent, {
+      const dialogUpload = this._matDialog.open(RubroRegisterComponent, {
         disableClose: true,
         autoFocus: false,
         data: {

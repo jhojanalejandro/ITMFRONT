@@ -23,4 +23,5 @@ export interface IHiringData{
     cdp: string;
     caso: string;
     statusContractor?: string;
+    actividadContratista: string;
 }

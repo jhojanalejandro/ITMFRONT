@@ -3,8 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, retry, tap } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
-import { ContractContractors, Contractor } from '../models/contractor';
-import { ChargeAccount } from 'app/modules/admin/apps/home-contractor/models/pdfDocument';
+import { ContractContractors } from '../models/contractor';
 import { AssignmentType } from '../models/assignment-user.model';
 import Swal from 'sweetalert2';
 
@@ -18,9 +17,10 @@ export class ContractorService {
     constructor(private _httpClient: HttpClient) {
     }
 
-    getContractorByIdProject(contractId: string) {
+    getContractorByIdProject(contractId: string,originNomina: boolean) {
         const params = new HttpParams()
             .set('contractId', contractId)
+            .set('originNomina', originNomina);
         let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
         return this._httpClient.get<IResponse>(urlEndPoint, { params }).pipe(
             tap((response: any) => {
@@ -66,7 +66,7 @@ export class ContractorService {
             .set('contractorId', contractorId)
             .set('contractId', contractId)
         let urlEndPoint = this.apiUrl + environment.GetPdChargeAccountGetById;
-        return this._httpClient.get<ChargeAccount>(urlEndPoint, { params: params });
+        return this._httpClient.get<IResponse>(urlEndPoint, { params: params });
     }
 
 
@@ -131,6 +131,20 @@ export class ContractorService {
             catchError(this.handleError) // Manejo de errores, si es necesario
         );
     }
+
+    saveMinuteModify(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.SaveModifyMinuteEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
+    }
+
+    getNewnessType() {
+        let urlEndpointGenerate = this.apiUrl + environment.getnewnessType;
+        return this._httpClient.get<any>(urlEndpointGenerate)
+            .pipe(retry(0));
+    }
+
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {

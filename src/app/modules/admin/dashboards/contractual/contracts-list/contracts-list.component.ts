@@ -2,7 +2,7 @@ import { AfterContentChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDete
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Router } from '@angular/router';
@@ -58,7 +58,7 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, A
   }
 
   navigateToContractors(data: any,origin: string) {
-    this._router.navigate(['/dashboards/lista-contratistas/'+origin+'/' + data.id + '/' +data.projectName]);
+    this._router.navigate(['/dashboards/lista-contratistas/'+ data.id + '/' +data.projectName]);
   }
 
   uploadExcel() {
@@ -143,12 +143,14 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, A
         }
       });
       dialogUpload.afterClosed().subscribe((result) => {
-        if (result) {
-          this.getContractsData();
-        }
+        this.getContractsData();
       });
     }
 
+  }
+
+  navigateToContractorsPreNomina(data: any) {
+    this._router.navigate(['/dashboards/pre-nomina-lista-contratistas/' + data.id + '/' +data.projectName]);
   }
 
   ngOnDestroy(): void {

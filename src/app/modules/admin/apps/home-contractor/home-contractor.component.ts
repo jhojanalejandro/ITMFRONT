@@ -30,6 +30,7 @@ import swal from 'sweetalert2';
 import { ExecutionReport } from './models/pdfDocument';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
+import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -47,12 +48,10 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractList: any[] = [];
-    minutesDocumentPdf: File;
     contractSelected: string = null;
     id: any;
     userName: any;
-    chargeAccount: boolean = false;
-    executionReport: boolean = false;
+    typeGenerator: boolean = false;
     @ViewChild('pdfTable') pdfTable: ElementRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     raffleName: any;
@@ -61,6 +60,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
+    showPdfGenerated: boolean = false;
 
     constructor(
         private _contractorService: HomeContractorService,
@@ -190,12 +190,12 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
-                    if(Response.chargeAccountNumber == 0){
-                        Response.chargeAccountNumber = 1;
+                    if(Response.data.chargeAccountNumber == 0){
+                        Response.data.chargeAccountNumber = 1;
                     }
-                    if (Response != null) {
+                    if (Response.data.periodExecutedFinalDate != null && Response.data.periodExecutedInitialDate != null) {
                         this.viwFilesGenerated = true;
-                        this.chargeAccountData = Response;
+                        this.chargeAccountData = Response.data;
                     }
                 });
         } else {
@@ -222,14 +222,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         this._router.navigate(['/sign-out']);
     }
 
-    descargarActa() {
-        this._contractorService
-            .GetMinutesPdfContractor(this._auth.accessId, this.contractSelected)
-            .subscribe((Response) => {
-                this.minutesDocumentPdf = Response;
-            });
-    }
-
     downloadPdf(base64String, fileName) {
         const source = `data:application/pdf;base64,${base64String}`;
         const link = document.createElement('a');
@@ -244,8 +236,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
 
     onGeneratePdf(e: any) {
-        this.chargeAccount = e;
-        this.executionReport = e;
+        this.showPdfGenerated = e;
     }
 
     addPersonalData() {
@@ -267,11 +258,30 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 }
             });
     }
+    generatePdf(e: any) {
+        this.typeGenerator = e;
+        this.showPdfGenerated = true;
 
-    generateChargeAccount() {
-        this.chargeAccount = true;
-        this.executionReport = true;
+    }
 
+    uploadNominaFile() {
+        const dialogRef = this._matDialog.open(ContractorPaymentSecurityRegisterComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                idUser: this._auth.accessId,
+                contractId: this.contractSelected,
+                contractorId: this._auth.accessId,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+
+                }
+            });
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);

@@ -152,25 +152,25 @@ export class ShareService {
 
     numeroALetras(total, currency) {
         const numericValue = Number(total.toString().replace(/\./g, ''));
-
+    
         currency = currency || {};
         let data = {
             numero: numericValue,
             enteros: Math.floor(numericValue),
-            letrasCentavos: '',
-            letrasMonedaPlural: currency.plural || 'DE PESOS',//'PESOS', 'Dólares', 'Bolívares', 'etcs'
-            letrasMonedaSingular: currency.singular || 'PESO', //'PESO', 'Dólar', 'Bolivar', 'etc'
-            letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVOS',
-            letrasMonedaCentavoSingular: currency.centSingular || 'COLOMBIANOS'
+            letrasMonedaPlural: currency.plural || 'PESOS',
+            letrasMonedaSingular: currency.singular || 'PESO',
         };
-
-        if (data.enteros == 0)
-            return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-        if (data.enteros == 1)
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular;
-        else
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural;
-    };
+    
+        if (data.enteros === 0) {
+            return 'CERO ' + data.letrasMonedaPlural;
+        } else {
+            const millonesParte = this.Millones(data.enteros);
+            const monedaParte = data.enteros === 1 ? data.letrasMonedaSingular : data.letrasMonedaPlural;
+    
+            return millonesParte + ' ' + (data.enteros === 1 ? '' : 'DE') + ' ' + monedaParte;
+        }
+    }
+    
     transform(value: number): string {
         if (value === 0) {
             return 'cero pesos';

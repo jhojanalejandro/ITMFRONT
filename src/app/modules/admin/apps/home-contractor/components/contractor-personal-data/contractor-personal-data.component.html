@@ -386,14 +386,13 @@
                                 </mat-expansion-panel-header>
 
                                 <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>EPS</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite" aria-label="EPS" matInput
-                                        formControlName="eps" [matAutocomplete]="epsAutoComplete">
-                                    <mat-autocomplete #epsAutoComplete="matAutocomplete">
-                                        <mat-option *ngFor="let option of filteredOptionsEps | async" [value]="option">
-                                            {{ option }}
+                                    <mat-label fro="eps">EPS</mat-label>
+                                    <mat-select [formControlName]="'eps'" name="eps" id="eps"> 
+                                        <mat-option *ngFor="let epsSelect of eps"
+                                            [value]="epsSelect.id">
+                                            {{epsSelect.entityHealthDescription}}
                                         </mat-option>
-                                    </mat-autocomplete>
+                                    </mat-select>
                                 </mat-form-field>
 
                                 <mat-action-row>
@@ -409,14 +408,13 @@
                                 </mat-expansion-panel-header>
 
                                 <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>AFP</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
-                                        formControlName="afp" [matAutocomplete]="afpAutoComplete">
-                                    <mat-autocomplete #afpAutoComplete="matAutocomplete">
-                                        <mat-option *ngFor="let option of filteredOptionsAfp | async" [value]="option">
-                                            {{ option }}
+                                    <mat-label>PENSIÓN</mat-label>
+                                    <mat-select [formControlName]="'afp'" name="afp">
+                                        <mat-option *ngFor="let afpSelect of afp"
+                                            [value]="afpSelect.id">
+                                            {{afpSelect.entityHealthDescription}}
                                         </mat-option>
-                                    </mat-autocomplete>
+                                    </mat-select>
                                 </mat-form-field>
                                 <mat-action-row>
                                     <button mat-button color="warn" (click)="prevStep()">previo</button>
@@ -431,14 +429,13 @@
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>ALR</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
-                                        formControlName="arl" [matAutocomplete]="arlAutoComplete">
-                                    <mat-autocomplete #arlAutoComplete="matAutocomplete">
-                                        <mat-option *ngFor="let option of filteredOptionsArl | async" [value]="option">
-                                            {{ option }}
+                                    <mat-label>ARL</mat-label>
+                                    <mat-select [formControlName]="'arl'" name="raffles">
+                                        <mat-option *ngFor="let arlSelect of arl"
+                                            [value]="arlSelect.id">
+                                            {{arlSelect.entityHealthDescription}}
                                         </mat-option>
-                                    </mat-autocomplete>
+                                    </mat-select>
                                 </mat-form-field>
                                 <mat-action-row>
                                     <button mat-button color="warn" (click)="prevStep()">Previo</button>

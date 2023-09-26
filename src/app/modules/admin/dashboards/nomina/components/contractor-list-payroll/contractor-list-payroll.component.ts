@@ -14,14 +14,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModificacionPayrollComponent } from './components/modificacion-form/modificacion-form.component';
 import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { MatPaginator } from '@angular/material/paginator';
-import { NewnessContractorPayrollComponent } from './components/newness-contractor/newness-contractor.component';
 import { Componente, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { DatePipe } from '@angular/common';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
 import { ContractorService } from '../../../contractual/service/contractor.service';
-import { ContractContractors, ContractorPayroll } from '../../../contractual/models/contractor';
+import { ContractContractors, Contractor } from '../../../contractual/models/contractor';
+import { NewnessContractorComponent } from '../../../contractual/contractor-list/components/newness-contractor/newness-contractor.component';
+import { ModificacionFormComponent } from '../../../contractual/contractor-list/components/modificacion-form/modificacion-form.component';
+import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
+import { ShareService } from 'app/layout/common/share-service/share-service.service';
+import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
+import { ButtonsExportService } from 'app/layout/common/buttons-export/buttons-export.service';
+import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 
 @Component({
   selector: 'contractor-list-payroll',
@@ -44,19 +50,19 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
   elements: Elements[];
   componentes: Componente[];
   contractorListId: any[] = [];
-  contractorsList: ContractorPayroll[] = [];
+  contractorsList: Contractor[] = [];
   configForm: FormGroup;
   componentselectId: any;
   elementselectId: any;
-  contractContractors: ContractContractors = { contractId: null, contractors: [] };
+  contractContractors: ContractContractors = { contractId: null, contractors: [], typeMinute: null };
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   accountBalanceOptions: ApexOptions;
   dataSource = new MatTableDataSource<any>();
   idSelected: string[] = [];
-  contractname: string;
+  contractName: string;
   selection = new SelectionModel<any>(true, []);
-  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'telefono', 'legalProccess', 'hiringStatus', 'statusContractor', 'comiteGenerated', 'minuteGnenerated', 'previusStudy', 'acciones'];
+  displayedColumns: string[] = ['select', 'identificacion', 'nombre', 'correo', 'statusContractor', 'previusStudy', 'legalProccess', 'minuteGnenerated', 'hiringStatus', 'comiteGenerated', 'all', 'acciones'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   visibleOption: boolean = false;
   datePipe: DatePipe;
@@ -66,12 +72,14 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
   typeStatusContractor: any = GlobalConst.TypeStatusContractor;
   statusSelected: any = GlobalConst.StatusContractor;
   statusContractorSelected: any = GlobalConst.StatusContractor;
-  contractorSelected: ContractorPayroll | null = null;
+  contractorSelected: Contractor | null = null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   private readonly _unsubscribe$ = new Subject<void>();
   selectedContracttorForm: FormGroup;
   showDetail: boolean = false;
   isRowSelected = (row: any) => row === this.contractorSelected;
+  sendOrigin: boolean = false;
+  itmImageBase64: string = null;
 
   constructor(
     private _contractorListService: ContractorService,
@@ -83,22 +91,22 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
     private router: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _loadrouter: Router,
+    private _shareService: ShareService,
+    private _service: ButtonsExportService
   ) {
     this.datePipe = new DatePipe('es');
   }
   columnas = [
-    { title: 'NOMBRE', name: 'nombre' },
     { title: 'CEDULA', name: 'identificacion' },
+    { title: 'NOMBRE', name: 'nombre' },
     { title: 'CORREO', name: 'correo' },
-    { title: 'TELEFONO', name: 'telefono' },
-    { title: 'ESTADO', name: 'proccess' },
     { title: 'REGISTRO', name: 'statusContractor' },
-    { title: 'JURIDICO', name: 'legalProccess' },
-    { title: 'CONTRACTUAL', name: 'hiringStatus' },
-    { title: 'MINUTA', name: 'minuteGnenerated' },
-    { title: 'COMITE', name: 'comiteGenerated' },
-    { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
-    { title: 'DETALLE', name: 'detail' },
+    { title: 'CUENTA COBRO', name: 'previusStudy' },
+    { title: 'ACTA SUPERVISIÓN', name: 'legalProccess' },
+    { title: 'ARL', name: 'hiringStatus' },
+    { title: 'SALUD', name: 'minuteGnenerated' },
+    { title: 'PENSIÓN', name: 'comiteGenerated' },
+    { title: '', name: 'all' },
     { title: 'OPCIONES', name: 'acciones' }
   ]
 
@@ -106,7 +114,8 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
 
     this.userName = this._authService.accessName
     this.contractId = this.router.snapshot.paramMap.get('contractId') || 'null';
-    this.contractname = this.router.snapshot.paramMap.get('contractname') || 'null';
+    this.contractName = this.router.snapshot.paramMap.get('contractname') || 'null';
+    this.getBase64Image(RouteImageEnum.LOGOITM);
     this.configForm = this._formBuilder.group({
       title: 'Eliminar Registro',
       message: '¿Estás seguro de que desea eliminar este contacto de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
@@ -128,7 +137,9 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
       }),
       dismissible: true
     });
-    this.getDataContractor();
+
+    this.getDataContractor(true);
+
     this.selectedContracttorForm = this._formBuilder.group({
       nombre: [''],
       identificacion: [''],
@@ -188,8 +199,8 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
   }
 
 
-  getDataContractor() {
-    this._contractorListService.getContractorByIdProject(this.contractId).subscribe(contractorsListResponse => {
+  getDataContractor(origin: boolean) {
+    this._contractorListService.getContractorByIdProject(this.contractId, false).subscribe(contractorsListResponse => {
       if (contractorsListResponse.success) {
         this.contractorsList = contractorsListResponse.data;
         this.dataSource = new MatTableDataSource(this.contractorsList);
@@ -208,7 +219,7 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
 
   }
   isAllSelected() {
-    if (this.selection.selected.length > 1) {
+    if (this.selection.selected.length >= 1) {
       this.visibleOption = true;
     } else {
       this.visibleOption = false;
@@ -245,7 +256,7 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
-      const dialogRef = this._matDialog.open(NewnessContractorPayrollComponent, {
+      const dialogRef = this._matDialog.open(NewnessContractorComponent, {
         disableClose: true,
         autoFocus: false,
         data: {
@@ -258,11 +269,40 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((result) => {
           if (result) {
-            this.getDataContractor();
+            this.getDataContractor(this.sendOrigin);
           }
           this.selection.clear();
         });
     }
+
+  }
+
+  SendMailsAccounts() {
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      for (let index = 0; index < this.selection.selected.length; index++) {
+        this.idSelected[index] = this.selection.selected[index].id
+      }
+      let ids: any = { 'contractId': this.contractId, 'contractorsId': this.idSelected, 'userId': this._authService.accessId }
+      this._contractorListService.sendmailsAccounts(ids)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe((Response) => {
+          if (Response) {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '',
+              html: 'Invitaciones enviadas exitosamente!',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+          this.reloadResolve();
+        });
+    }
+
 
   }
 
@@ -271,7 +311,7 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     } else {
-      const dialogModificacion = this._matDialog.open(ModificacionPayrollComponent, {
+      const dialogModificacion = this._matDialog.open(ModificacionFormComponent, {
         width: '900px',
         disableClose: true,
         autoFocus: false,
@@ -305,8 +345,20 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
     this.generatePdfMinute = true;
 
   }
+  generatedPdfContractor(data: any = null, type: string) {
+    if (data != null) {
+      this.contractContractors.contractors = [data.id];
+    } else {
+      this.selection.selected.forEach(element => {
+        this.contractorListId.push(element.id);
+      });
+      this.contractContractors.contractors = this.contractorListId;
+    }
+    this.contractContractors.contractId = this.contractId
+    this.generatePdf = true;
+    this.generateType = type;
 
-
+  }
 
   activateContarct() {
     this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
@@ -333,11 +385,32 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
 
   }
 
+  uploadExcel() {
+    this.permission = this._authService.validateRoll(CodeUser.RECRUITER, this.contractorsList[0].assignmentUser);
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
+    } else {
+      const dialogUpload = this._matDialog.open(UploadFileContractComponent, {
+        disableClose: true,
+        autoFocus: false,
+        data: {
+          origin: 'cdp',
+          contractId: this.contractId,
+          show: true,
+        }
+      });
+      dialogUpload.afterClosed().subscribe((result) => {
+        if (result) {
+          this.reloadResolve();
+        }
+      });
+    }
+  }
+
   pdfGenerated(e: boolean) {
-    this.getDataContractor();
     this.generatePdf = e;
     this.generatePdfMinute = e;
-
+    this.reloadResolve();
   }
 
   reloadResolve() {
@@ -347,6 +420,7 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+
   historicalPayment(item: any) {
     this._loadrouter.navigate(['/dashboards/nomina/payment-contractor/' + this.contractId + '/' + item.id]);
   }
@@ -354,7 +428,9 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
   changeTypeStatus(e: any) {
     this.statusContractorSelected = this.statusContractor.filter(f => f.value == e.value);
     this.statusSelected = this.typeStatusContractor.find(f => f.value == e.value);
-
+    if (e.value == 5) {
+      this.applyFilterByStatusSpecific('TODOS');
+    }
   }
   applyFilterByStatus(filterValue: any) {
     this.dataSource.filter = filterValue.value.trim().toLowerCase();
@@ -383,20 +459,23 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
       if (this.statusSelected.viewValue == 'COMITE') {
         return data.comiteGenerated.includes(filter);
       }
+      if (this.statusSelected.viewValue == 'TODOS') {
+        return data.comiteGenerated.includes(filter);
+      }
     };
   }
 
-  toggleDetails(product: any): void {
+  toggleDetails(contractor: any): void {
     // If the product is already selected...
-    if (this.contractorSelected && this.contractorSelected.id === product.id) {
+    if (this.contractorSelected && this.contractorSelected.id === contractor.id) {
       // Close the details
       this.closeDetail();
       return;
     }
-    this.contractorSelected = product;
+    this.contractorSelected = contractor;
     this.showDetail = true;
 
-    this.selectedContracttorForm.patchValue(product);
+    this.selectedContracttorForm.patchValue(contractor);
 
     // Mark for check
     this.cdref.markForCheck();
@@ -406,6 +485,69 @@ export class ContractorListPayrollComponent implements OnInit, OnDestroy, AfterV
     this.contractorSelected = null;
     this.showDetail = false;
   }
+
+  private getBase64Image(route: string) {
+    this._shareService.loadAndConvertImageToBase64(route)
+      .then(base64Data => {
+        this.itmImageBase64 = base64Data;
+      })
+      .catch(error => {
+        console.error('Error al cargar y convertir la imagen:', error);
+      });
+  }
+
+  exportToExcel() {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('MiHojaDeCalculo');
+
+    // Agregar una imagen desde una URL
+    const image = workbook.addImage({
+      base64: this.itmImageBase64,
+      extension: '.jpeg',
+    });
+
+    worksheet.addImage(image, 'B2:C7'); // Ajusta la ubicación y el tamaño de la imagen
+
+    // Resto del contenido y formato de la hoja de cálculo
+
+    // Agregar la hoja de cálculo al archivo Excel
+    workbook.xlsx.writeBuffer().then((data) => {
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'MiArchivoExcel.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
+  generateReportSatisfaction() {
+    this._service.generateReportSatisfaction(this.contractId, this.itmImageBase64)
+        .pipe(takeUntil(this._unsubscribe$))
+        .subscribe(
+            (res) => {
+                var downloadURL = window.URL.createObjectURL(res);
+                var link = document.createElement('a');
+                link.href = downloadURL;
+                link.download = "Reporte";
+                link.click();
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Documento descargado.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            },
+            (response) => {
+                console.log(response);
+                Swal.fire('', 'Error al descargar la informacion!', 'error');
+            }
+        );
+}
 
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);

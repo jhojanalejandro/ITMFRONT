@@ -4,9 +4,7 @@ import {
     Inject,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy,
-    Output,
-    EventEmitter,
+    OnDestroy
 } from '@angular/core';
 import {
     FormBuilder,
@@ -27,7 +25,6 @@ import { fuseAnimations } from '@fuse/animations';
 import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
 import { Contractor } from 'app/modules/admin/dashboards/contractual/models/contractor';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
-import { PDFDocument } from 'pdf-lib';
 const moment = _rollupMoment || _moment;
 
 @Component({
@@ -97,19 +94,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     cerrar(): void {
         this.matDialogRef.close();
-    }
-    onUpload() {
-        this.loading = !this.loading;
-        // this.fileUploadService.upload(this.file).subscribe(
-        //     (event: any) => {
-        //         if (typeof (event) === 'object') {
-
-        //           // Short link via api response
-        //           this.shortLink = event.link;
-        //           this.loading = false; // Flag variable
-        //         }
-        //     }
-        // );
     }
 
     addFileContractor(event) {
@@ -220,7 +204,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     private getDaTaContractor(): any {
         this._contractorListService
-            .getContractorByIdProject(this._data.contractId)
+            .getContractorByIdProject(this._data.contractId,false)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
                 this.dataContractor = resp;
@@ -239,6 +223,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
+                debugger
                 if (!resp.activateTermContract && !resp.activateTermPayments) {
                     swal.fire(
                         '',
@@ -247,7 +232,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     );
                     this.cerrar();
                 }
-                if (resp.hv && resp.secop && resp.exam) {
+                if (resp.hv && resp.secop && resp.exam && !resp.activateTermPayments) {
                     swal.fire(
                         '',
                         'ya se cargaron los tres documentos no puedes cargar mas!',
@@ -255,21 +240,25 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     );
                     this.cerrar();
                 }
-                if (resp.activateTermContract) {
-                    this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code == DocumentTypeCodes.HOJADEVIDA || f.code == DocumentTypeCodes.REGISTROSECOP)
+                if (resp.activateTermContract && !resp.activateTermPayments) {
+                    this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code == DocumentTypeCodes.HOJADEVIDA || f.code == DocumentTypeCodes.REGISTROSECOP || f.code == DocumentTypeCodes.DOCUMENTOSCONTRATACION)
                     if (resp.hv) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.HOJADEVIDA)
-                    } if (resp.exam) {
+                    } 
+                    if (resp.exam) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES)
 
-                    } if (resp.secop) {
+                    } 
+                    if (resp.secop) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.REGISTROSECOP)
                     }
+                    if (resp.dct) {
+                        this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.DOCUMENTOSCONTRATACION)
+                    }
                 }
-                else if (resp.activateTermPayments) {
-                    this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
+                else if(resp.activateTermPayments){
+                    this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.PLANILLA || f.code == DocumentTypeCodes.INFORMEEJECUCIÓN || f.code == DocumentTypeCodes.CUENTACOBRO);
                 }
-
             }
             );
         return this.dataContractor;

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ContractContractors } from "app/modules/admin/dashboards/contractual/models/contractor";
-import { MinuteExtension, PreviusStudy } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
+import {  CommiteeRequestContractor, PreviusStudyContractors } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
 import { environment } from "environments/environment";
 import { Observable, catchError } from "rxjs";
 import Swal from 'sweetalert2';
@@ -35,12 +35,12 @@ export class PdfDataService {
     getcommitteeRequestData(contractors: ContractContractors) {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetCommitteeRequestdEndpoint;
-        return this._httpClient.post<any>(urlEndpointGenerate, contractors);
+        return this._httpClient.post<CommiteeRequestContractor>(urlEndpointGenerate, contractors);
     }
-    getPreviusStudy(contractors: ContractContractors): Observable<PreviusStudy[]> {
+    getPreviusStudy(contractors: ContractContractors): Observable<PreviusStudyContractors> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPreviusStudyContractIdEndpoint;
-        return this._httpClient.post<PreviusStudy[]>(urlEndpointGenerate, contractors);
+        return this._httpClient.post<PreviusStudyContractors>(urlEndpointGenerate, contractors);
     }
 
     // Método para manejar errores (opcional)

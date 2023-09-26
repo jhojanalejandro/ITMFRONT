@@ -13,7 +13,9 @@ export interface FileContractor{
     monthPayment?: string;
     folderId: string;
     origin?: string;
-    anexo?: boolean
+    anexo?: boolean;
+    contractors?: any[];
+    documentTypeCode?: string;
 }
 
 export interface Files{
@@ -53,7 +55,7 @@ export interface DetailFile{
 export interface DetailFileContractor{
     id?: any;
     fileId: any;
-    reason: string;
+    reasonRejection: string;
     observation: string;
     files: any[];
     passed: boolean;
@@ -61,6 +63,8 @@ export interface DetailFileContractor{
     statusFileId: string;
     contractId: string;
     contractorId: string;
+    userId?: string;
+    termDate?: Date;
 }
 
 export interface ContractsContractor{

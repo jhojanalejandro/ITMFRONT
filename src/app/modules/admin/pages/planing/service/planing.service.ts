@@ -111,9 +111,7 @@ export class PlaningService {
     addElementoComponente(data: any) {
         let urlEndpointGenerate =
             this.apiUrl + environment.addElementosComponent;
-        return this._httpClient.post<any>(urlEndpointGenerate, data).pipe(
-            catchError(this.handleError)
-        );
+        return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
 
     getElementoComponente(id: any) {
@@ -166,9 +164,7 @@ export class PlaningService {
 
     sendEconomicdataContractor(model: EconomicContractor[]) {
         let urlEndpointGenerate = this.apiUrl + environment.addEconomicDataContractorEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, model).pipe(
-            catchError(this.handleError)
-        );
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, model);
     }
 
     getHiringDataById(contractorId: any, contractId) {
@@ -177,7 +173,7 @@ export class PlaningService {
             .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdHiringEndpoint;
-        return this._httpClient.get<IHiringData>(urlEndpointGenerate, { params: params });
+        return this._httpClient.get<IResponse>(urlEndpointGenerate, { params: params });
     }
 
 

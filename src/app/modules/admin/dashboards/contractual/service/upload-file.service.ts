@@ -93,17 +93,31 @@ export class UploadFileDataService {
         );
     }
 
+    
+    UploadFileCommitteeContractors(formdata: FileContractor) {
+        let urlEndpointGenerate = this.apiUrl + environment.SaveCommitteeContractorEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
+            catchError(this.handleError)
+        );
+    }
+
+    
+    updateStatusFileCommitteeContractor(detail: DetailFile) {
+        let urlEndpointGenerate = this.apiUrl + environment.saveDetailFileCommitteeEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, detail).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
-        // Implementa el manejo de errores aquí, si es necesario
-        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
         Swal.fire({
             position: 'center',
             icon: 'error',
             title: '',
             html: error.error.message,
             showConfirmButton: false,
-            timer: 2000
+            timer: 3000
         });
         return new Observable<any>();
     }

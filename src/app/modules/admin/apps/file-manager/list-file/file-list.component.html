@@ -89,13 +89,23 @@
                                     <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <div
                                             class="flex flex-col w-55 h-55 m-2 p-2 shadow rounded-2xl cursor-pointer bg-card">
-                                            <section class="example-section">
+                                            <section *ngIf="file.categoryCode === 'CGD'" class="example-section">
                                                 <mat-radio-group [disabled]="file.disable || !permission">
-                                                    <mat-radio-button *ngFor="let status of statusFile"
+                                                    <mat-radio-button *ngFor="let status of statusFileLoad"
                                                         [disabled]="status.code == 'SBND'"
                                                         [matTooltip]="status.statusFileDescription" class="mr-4"
                                                         [checked]="file.statusFile === status.id"
                                                         (change)="updateFile($event,file)"
+                                                        [value]="status.id">{{status.code}}</mat-radio-button>
+                                                </mat-radio-group>
+                                            </section>
+                                            <section *ngIf="file.categoryCode === 'CRAD'" class="example-section">
+                                                <mat-radio-group [disabled]="file.disable || !permission">
+                                                    <mat-radio-button *ngFor="let status of statusFileCreate"
+                                                        [disabled]="status.code == 'SBND'"
+                                                        [matTooltip]="status.statusFileDescription" class="mr-4"
+                                                        [checked]="file.statusFile === status.id"
+                                                        (change)="updateFileFileGenerated($event,file)"
                                                         [value]="status.id">{{status.code}}</mat-radio-button>
                                                 </mat-radio-group>
                                             </section>

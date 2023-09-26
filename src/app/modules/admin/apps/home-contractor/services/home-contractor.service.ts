@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { ExecutionReport } from '../models/pdfDocument';
-import { Bank } from '../models/mater.model';
+import { Bank, EntityHealth } from '../models/mater.model';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +43,6 @@ export class HomeContractorService {
         const params = new HttpParams()
             .set('contractorId', contractor)
             .set('contractId', contract);
-        //const datos: any={IdContractor: arr[0], IdFolder: arr[1]}
         let urlEndPoint = this.apiUrl + environment.GetAllFileByContractEndpoint;
         return this._httpClient.get<any>(urlEndPoint, { params: params }).pipe(
             tap((items) => {
@@ -89,6 +88,15 @@ export class HomeContractorService {
         let urlEndPoint =  this.apiUrl +environment.GetBanksContractEndpoint;
         return this._httpClient.get<Bank[]>(urlEndPoint);
     }
+
+
+    getEmptityHealthContractor(contractorId: string) {
+        const params = new HttpParams()
+            .set('contractorId', contractorId)
+        let urlEndPoint = this.apiUrl + environment.GetEmptityHealthContractorEndpoint;
+        return this._httpClient.get<IResponse>(urlEndPoint, { params: params });
+    }
+
 
 }
 

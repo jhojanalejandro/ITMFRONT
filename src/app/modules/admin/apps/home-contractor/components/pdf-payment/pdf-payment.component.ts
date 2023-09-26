@@ -12,15 +12,13 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
     selector: 'app-cuenta-cobro',
-    templateUrl: './pdf-payment.component.html',
-    styleUrls: ['./pdf-payment.component.scss']
+    templateUrl: './pdf-payment.component.html'
 })
 export class PdfPaymentComponent implements OnInit, OnDestroy {
     @ViewChild('pdfTable') pdfTable: ElementRef;
     @Input() chargeAccountData: ChargeAccount;
     @Input() executionReportData: ExecutionReport;
-    @Input() generateChargeAccount: boolean;
-    @Input() generateExecutionReport: boolean;
+    @Input() typeGenerator: string;
 
     @Output() onGeneratePdf = new EventEmitter<boolean>();
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -41,10 +39,10 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         console.log(this.chargeAccountData);
-        if (this.chargeAccountData != null) {
+        if (this.chargeAccountData != null && this.typeGenerator == 'charge') {
             this.downloadPDFChargeAccount();
             this.onGeneratePdf.emit(false);
-        } else if (this.generateExecutionReport && !this.generateChargeAccount) {
+        } else if (this.typeGenerator == 'report' && this.executionReportData != null) {
             this.downloadPDFInforme();
             this.onGeneratePdf.emit(false);
         } else {
@@ -379,19 +377,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: '',
                                     alignment: 'center',
                                 },
-                            ],
-                            [
-                                {
-                                    colSpan: 3,
-                                    text: 'Favor consignar en la cuenta de ' + this.chargeAccountData.accountType+ ' ' + this.chargeAccountData.bankingEntity + ' N°  ' + this.chargeAccountData.accountNumber,
-                                },
-                                {
-                                    text: '',
-                                },
-                                {
-                                    text: '',
-                                }
-                            ],
+                            ]
                         ],
                     },
                 },

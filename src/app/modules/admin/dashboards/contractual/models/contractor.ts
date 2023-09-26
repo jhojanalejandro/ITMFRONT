@@ -11,6 +11,7 @@ export interface AsignmentData{
 
 
 export interface ContractContractors{
+	typeMinute: string
     contractId: string;
 	contractors: string[];
 }
@@ -21,18 +22,33 @@ export interface Contractor{
 	habilitado: string;
 	identificacion: string;
 	lugarExpedicion: string;
-	fechaNacimiento: Date;
+	fechaNacimiento: any | null;
 	direccion: string;
 	telefono: string;
 	celular: string;
 	correo: string;
 	userId?: string;
-	proccess: any;
 	elementId: string;
 	componentId: string;
 	legalProccess: any;
 	hiringStatus: any;
 	assignmentUser?: string[];
+	all?: any;
+	expanded?: any;
+	gender?: string;
+	contractValue?: any;
+	nacionality?: string;
+	expeditionPlace?: string;
+	initialContractDate?: Date;
+	finalContractDate?: Date; 
+	cantDays?: number;
+	emptityHealthDto?: any; 
+	bankEntity: string;
+	cdp?: string;
+	level: number;
+	eps: string;
+	arl: string;
+	afp: string;
 }
 
 
@@ -48,9 +64,10 @@ export interface Minuta{
 export interface NewnessContractor{
     contractorId: string;
     id?: string;
-    descripcionNovedad: string;
-    tipoNovedad: string;   
+    newnessDescripcion: string;
+    newnessType: string;   
 	contractId: string;
+	newnessCode: string;
 }
 
 
