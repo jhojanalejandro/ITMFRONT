@@ -6,12 +6,13 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
-import { AcademicInformation, ContractorPersonalInformation, EmptityHealth, PersonalInformation } from '../../models/contractor-personal-data.model';
+import { AcademicInformation, ContractorPersonalInformation, PersonalInformation } from '../../models/contractor-personal-data.model';
 import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { Bank } from '../../models/mater.model';
+import { Bank, EntityHealth } from '../../models/mater.model';
+import { GenericService } from 'app/modules/admin/generic/generic.services';
 
 @Component({
   selector: 'app-contractor-personal-data',
@@ -34,20 +35,9 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   title: string = 'Guardar';
   departments: any = GlobalConst.departments;
   municipio: any;
-  eps: any[] = [
-    'COOSALUD',
-    'NUEVA EPS',
-    'ALIANSALUD',
-    'SALUD TOTAL',
-    'EPS SANITAS',
-    'EPS SURA',
-    'SALUD MIA',
-    'CAPITAL SALUD',
-    'SAVIA SALUD',
-    'SAVIA SALUD',
-  ];
-  arl: any[] = GlobalConst.arl;
-  afp: any[] = GlobalConst.afp;
+  eps: any[] = [];
+  arl: any[] = [];
+  afp: any[] = [];
   banks: Bank[];
   accountType: any = GlobalConst.accountType;
   step = 0;
@@ -57,7 +47,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   labelPosition: string;
   numberOfTicks = 0;
   academicInformationList: AcademicInformation[] = [];
-  emptityHealth: EmptityHealth[] = [];
 
   academicInformation: AcademicInformation = {
     collegeDegree: '',
@@ -67,9 +56,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   };
   genero: string;
   private readonly _unsubscribe$ = new Subject<void>();
-  filteredOptionsEps: Observable<string[]>;
-  filteredOptionsAfp: Observable<string[]>;
-  filteredOptionsArl: Observable<string[]>;
   filteredOptionsAccountType: Observable<string[]>;
   filteredOptionsBanks: Observable<Bank[]>;
   generos: string[] = [
@@ -83,6 +69,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     private ref: ChangeDetectorRef,
     private _planingService: PlaningService,
     private _auth: AuthService,
+    private _genericService: GenericService,
     public matDialogRef: MatDialogRef<ContractorPersonalDataComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
@@ -91,6 +78,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.getBanks();
+    this.getentityHealth();
     if (this.datos.id != null) {
       this.getHiring();
 
@@ -144,19 +132,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       })
     });
     this.validateDate();
-
-    this.filteredOptionsEps = this.contractorinformationStepperForm.get('step4.eps').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterEps(value || ''))
-    );
-    this.filteredOptionsAfp = this.contractorinformationStepperForm.get('step4.afp').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterAfp(value || ''))
-    );
-    this.filteredOptionsArl = this.contractorinformationStepperForm.get('step4.arl').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterArl(value || ''))
-    );
 
     this.filteredOptionsAccountType = this.contractorinformationStepperForm.get('step3.accountType').valueChanges.pipe(
       startWith(''),
@@ -254,29 +229,13 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       tipoCuenta: this.contractorinformationStepperForm.controls['step3'].value.accountType,
       entidadCuentaBancaria: bank,
       fechaActualizacion: new Date(),
+      eps: this.contractorinformationStepperForm.controls['step4'].value.eps,
+      arl: this.contractorinformationStepperForm.controls['step4'].value.arl,
+      afp: this.contractorinformationStepperForm.controls['step4'].value.afp,
     };
-    let saludEps: EmptityHealth = {
-      contractor: this._auth.accessId,
-      emptitytype: 'SLD',
-      emptity: this.contractorinformationStepperForm.controls['step4'].value.eps
-    }
-    this.emptityHealth.push(saludEps)
-    let saludArl: EmptityHealth = {
-      contractor: this._auth.accessId,
-      emptitytype: 'ARL',
-      emptity: this.contractorinformationStepperForm.controls['step4'].value.arl
-    }
-    this.emptityHealth.push(saludArl)
-    let saludAfp: EmptityHealth = {
-      contractor: this._auth.accessId,
-      emptitytype: 'AFP',
-      emptity: this.contractorinformationStepperForm.controls['step4'].value.afp
-    }
-    this.emptityHealth.push(saludAfp)
     const registerpersonalInfoirmation: PersonalInformation = {
       contractorPersonalInformation: personalInfoirmation,
       academicInformation: this.academicInformationList,
-      emptityHealth: this.emptityHealth
     };
     this._homeService
       .saveContractorPersonalInformation(registerpersonalInfoirmation)
@@ -386,25 +345,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     this.step--;
   }
 
-
-  private _filterEps(value: any): string[] {
-    return this.eps.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
-  private _filterAfp(value: any): string[] {
-    return this.afp.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
-  private _filterArl(value: any): string[] {
-    return this.arl.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
   private _filterBanks(value: any): Bank[] {
     return this.banks.filter((option: Bank) =>
       option.bankName.toLowerCase().includes(value.toLowerCase())
@@ -424,6 +364,21 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   onChange(event: any) {
     this.genero = event.value
   }
+
+  private getentityHealth() {
+    this._genericService
+      .getEmptityHealthList()
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((response: EntityHealth[]) => {
+        if (response != null) {
+          this.afp = response.filter(f => f.code === 'AFP');
+          this.eps = response.filter(f => f.code === 'EPS');
+          this.arl = response.filter(f => f.code === 'ARL');
+
+        }
+      });
+  }
+  
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();
