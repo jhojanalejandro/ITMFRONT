@@ -1,0 +1,431 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Main -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between py-8 px-6 md:px-8">
+        <div>
+            <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-snug truncate">
+                {{contractName}}!</div>
+
+        </div>
+        <div class="mt-4 sm:mt-0">
+            <button class="ml-3" mat-flat-button [color]="'primary'" (click)="exportToExcel()"
+            [matTooltip]="'Agregar Varios pagos'">
+            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <span class="ml-2 mr-1">
+                Recibido de satisfaccíon
+            </span>
+        </button>
+        </div>
+    </div>
+    <div class="flex-auto">
+        <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
+                [placeholder]="'Buscar Contrato'">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
+            <mat-select placeholder="TIPO ESTADO" (selectionChange)="changeTypeStatus($event)" name="status">
+                <mat-option *ngFor="let typeStatus of typeStatusContractor" [value]="typeStatus.value">
+                    {{typeStatus.viewValue}}
+                </mat-option>
+            </mat-select>
+            <!-- <button *ngIf="statusSelected.value != null" mat-button (click)="clearSelection($event)"><mat-icon svgIcon="heroicons_solid:x"></mat-icon>
+            </button> -->
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense p-5 fuse-mat-no-subscript fuse-mat-rounded w-80 min-w-60">
+            <mat-select [disabled]="statusSelected.value == null || statusSelected.value == 5" placeholder="ESTADOS"
+                (selectionChange)="applyFilterByStatusSpecific($event)" name="status">
+                <mat-option *ngFor="let status of statusContractorSelected" [value]="status.viewValue">
+                    {{status.viewValue}}
+                </mat-option>
+            </mat-select>
+            <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:adjustments'">
+            </mat-icon> -->
+
+        </mat-form-field>
+    </div>
+    <div class="flex-auto border-t -mt-px pt-4 pl-2 pr-2 sm:pt-6">
+        <div class="w-full  mx-auto">
+            <div class="xl:col-span-2 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+                <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Contratistas</div>
+                        <div class="ml-2 -mt-2 -mr-3">
+                            <button mat-icon-button [matMenuTriggerFor]="summaryMenu">
+                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                            </button>
+                            <mat-menu #summaryMenu="matMenu">
+
+                                <button *ngIf="visibleOption" mat-menu-item
+                                    (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                    Generar Otro si
+                                </button>
+
+                            </mat-menu>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto mx-6">
+                        <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+                            <ng-container matColumnDef="select">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected() "
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
+                                    </mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row) " [aria-label]="checkboxLabel(row)">
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    <div *ngIf="columna.name ==='select'">
+                                        <mat-checkbox *ngIf="columna.name === 'select'"
+                                            (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected() "
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                            [aria-label]="checkboxLabel()">
+                                        </mat-checkbox>
+                                    </div>
+                                    <div *ngIf="column !='select'">
+                                        {{columna.title}}
+
+                                    </div>
+
+
+                                </th>
+                                <!-- <td mat-cell *matCellDef="let row">
+   
+
+                                </td> -->
+                                <!-- <th mat-header-cell *matHeaderCellDef>
+                                </th> -->
+                                <td mat-cell [class.selected]="element.selected"
+                                    (click)="element.selected = !element.selected;" *matCellDef="let element">
+                                    <div *ngIf="column ==='select'">
+                                        <mat-checkbox (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row) " [aria-label]="checkboxLabel(row)">
+                                        </mat-checkbox>
+                                    </div>
+                                    <div *ngIf="columna.name !='select' && columna.name !='acciones'">
+                                        <p
+                                            *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
+                                     && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
+                                     && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
+                                            {{element[columna.name]}}
+                                        </p>
+                                        <span
+                                            *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus && element[columna.name]!=element.all"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
+                                    'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
+                                    'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.statusContractor === 'INVITADO',
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO',
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'CONTRATANDO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span>
+                                        <span
+                                            *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.previusStudy && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.legalProccess === 'EN ESPERA',
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span>
+                                        <span
+                                            *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess && element[columna.name]!=element.all && element[columna.name]!=element.previusStudy"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.hiringStatus === 'CONTRATANDO',
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATADO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span>
+                                        <span
+                                            *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',  
+                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.previusStudy === 'RECHAZADO',                                     
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.previusStudy === 'APROBADO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span>
+                                        <span
+                                            *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
+                                            'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.minuteGnenerated === 'RECHAZADO',
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',                                       
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated === 'APROBADO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span>
+                                        <span
+                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
+                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span>
+                                    </div>
+                                    <div *ngIf="columna.name ==='acciones'"
+                                        (click)="isButtonClicked = false; toggleRowExpansion(element, $event)">
+                                        <p>
+                                            <button [matTooltip]="'Opciones Documentos'" mat-icon-button
+                                                [matMenuTriggerFor]="summaryMenu">
+                                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:menu'">
+                                                </mat-icon>
+                                            </button>
+                                            <mat-menu #summaryMenu="matMenu">
+                                                <button [matTooltip]="'Guardar datos'"
+                                                    (click)="registerPayment(element)" mat-menu-item>
+                                                    <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+                                                    Agregar Pago
+                                                </button>
+                                                <button [matTooltip]="'Historial de pagos'"
+                                                    (click)="historicalPayment(element)" mat-menu-item>
+                                                    <mat-icon svgIcon="heroicons_solid:clipboard-list"></mat-icon>
+                                                    Historial de pagos
+                                                </button>
+                                                <button [matTooltip]="'Generar'"  mat-menu-item
+                                                    (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
+                                                    Generar Otro si
+                                                </button>
+                                                <button [matTooltip]="'Agregar Modificacion'"
+                                                    (click)="addTermFileContract(element)" [color]="'primary'"
+                                                    mat-menu-item>
+                                                    <mat-icon svgIcon="heroicons_solid:calendar"></mat-icon>
+                                                    Habilitar Tiempo de entrega
+                                                </button>
+                                                <button [matTooltip]="'Agregar Modificacion'"
+                                                    (click)="modificacionContrato(element)" [color]="'primary'"
+                                                    mat-menu-item>
+                                                    <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
+                                                    Agregar Modificacion
+                                                </button>
+                                                <button [matTooltip]="'Desabilitar Contratista'"
+                                                    (click)="openConfirmationDelete(element)" [color]="'primary'"
+                                                    mat-menu-item>
+                                                    <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
+                                                    Desabilitar
+                                                </button>
+                                            </mat-menu>
+                                        </p>
+                                    </div>
+                                </td>
+
+                            </ng-container>
+
+                            <ng-container matColumnDef="expand">
+                                <th mat-header-cell *matHeaderCellDef aria-label="row actions"></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-icon-button aria-label="expand row"
+                                        (click)="isButtonClicked = true; toggleRowExpansion(element, $event)">
+                                        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                                        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="expandedDetail">
+                                <td mat-cell *matCellDef="let element"
+                                    [attr.colspan]="columnsToDisplayWithExpand.length">
+                                    <div class="example-element-detail"
+                                        [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                                        <form class="flex flex-col w-full" [formGroup]="selectedContracttorForm">
+
+                                            <div class="flex flex-col sm:flex-row p-8">
+
+                                                <!-- Product images and status -->
+
+                                                <div class="flex flex-auto flex-wrap">
+                                                    <!-- Name, SKU & etc. -->
+                                                    <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
+
+                                                        <!-- Name -->
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>Correo</mat-label>
+                                                            <input matInput [formControlName]="'correo'"
+                                                                [value]="expandedElement.correo">
+                                                        </mat-form-field>
+
+                                                        <!-- SKU and Barcode -->
+                                                        <div class="flex">
+                                                            <mat-form-field class="w-1/3 pr-2">
+                                                                <mat-label>Telefono</mat-label>
+                                                                <input matInput [formControlName]="'telefono'"
+                                                                    [value]="expandedElement.telefono">
+                                                            </mat-form-field>
+                                                            <mat-form-field class="w-2/3 pl-2">
+                                                                <mat-label>Dirección</mat-label>
+                                                                <input matInput [formControlName]="'direccion'"
+                                                                    [value]="expandedElement.direccion">
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <!-- Category, Brand & Vendor -->
+                                                        <div class="flex">
+                                                            <mat-form-field class="w-1/3 pr-2">
+                                                                <mat-label>Fecha de nacimiento</mat-label>
+                                                                <input matInput [formControlName]="'fechaNacimiento'"
+                                                                    [value]="expandedElement.fechaNacimiento">
+                                                            </mat-form-field>
+                                                            <mat-form-field class="w-1/3 pr-2">
+                                                                <mat-label>Lugar expedición Documento</mat-label>
+                                                                <input matInput [formControlName]="'expeditionPlace'"
+                                                                    [value]="expandedElement.expeditionPlace">
+                                                            </mat-form-field>
+                                                            <mat-form-field class="w-1/3 pl-2">
+                                                                <mat-label>CDP</mat-label>
+                                                                <input matInput [formControlName]="'cdp'"
+                                                                    [value]="expandedElement.cdp">
+                                                            </mat-form-field>
+                                                        </div>
+
+                                                        <!-- Stock and Reserved -->
+                                                        <div class="flex">
+                                                            <mat-form-field class="w-1/3 pr-2">
+                                                                <mat-label>Nivel de riesgo</mat-label>
+                                                                <input type="text" matInput [formControlName]="'level'"
+                                                                    [value]="expandedElement.level">
+                                                            </mat-form-field>
+                                                            <mat-form-field class="w-1/3 pl-2">
+                                                                <mat-label>Requiere Poliza</mat-label>
+                                                                <input type="number" matInput
+                                                                    [formControlName]="'reserved'">
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Cost, Base price, Tax & Price -->
+                                                    <div class="flex flex-col w-full lg:w-1/4 sm:pl-8">
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>Nacionalidad</mat-label>
+                                                            <input matInput [formControlName]="'nacionality'"
+                                                                [value]="expandedElement.nacionality">
+                                                        </mat-form-field>
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>Cantidad Días contrato</mat-label>
+                                                            <input matInput [formControlName]="'cantDays'"
+                                                                [value]="expandedElement.cantDays">
+                                                        </mat-form-field>
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>Entidad bancaria</mat-label>
+                                                            <input type="text" matInput [formControlName]="'bankEntity'"
+                                                                [value]="expandedElement.bankEntity">
+                                                        </mat-form-field>
+                                                        <!-- <mat-form-field class="w-full">
+                                                            <mat-label>Price</mat-label>
+                                                            <span matSuffix>$</span>
+                                                            <input matInput [formControlName]="'price'">
+                                                        </mat-form-field> -->
+                                                    </div>
+
+                                                    <!-- Weight & Tags -->
+                                                    <div class="flex flex-col w-full lg:w-1/4 sm:pl-8">
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>Valor contrato</mat-label>
+                                                            <span matPrefix>$</span>
+                                                            <input matInput [formControlName]="'contractValue'"
+                                                                [value]="expandedElement.contractValue">
+                                                        </mat-form-field>
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>EPS</mat-label>
+                                                            <mat-select [formControlName]="'eps'"
+                                                                [disabled]="expandedElement.eps == null">
+                                                                <ng-container *ngFor="let epsS of eps">
+                                                                    <mat-option [value]="epsS.id">
+                                                                        {{epsS.entityHealthDescription}}
+                                                                    </mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>ARL</mat-label>
+                                                            <mat-select [formControlName]="'arl'"
+                                                                [disabled]="expandedElement.arl == null">
+                                                                <ng-container *ngFor="let arlS of arl">
+                                                                    <mat-option [value]="arlS.id">
+                                                                        {{arlS.entityHealthDescription}}
+                                                                    </mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                        <mat-form-field class="w-full">
+                                                            <mat-label>PENSIÓN</mat-label>
+                                                            <mat-select [formControlName]="'afp'"
+                                                                [disabled]="expandedElement.afp == null">
+                                                                <ng-container *ngFor="let afpS of afp">
+                                                                    <mat-option [value]="afpS.id">
+                                                                        {{afpS.entityHealthDescription}}
+                                                                    </mat-option>
+                                                                </ng-container>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="flex items-center justify-between w-full border-t px-8 py-4">
+                                                <div class="flex items-center">
+                                                    <div class="flex items-center mr-4" *ngIf="flashMessage">
+                                                        <ng-container *ngIf="flashMessage === 'success'">
+                                                            <mat-icon class="text-green-500"
+                                                                [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                                            <span class="ml-2">Product updated</span>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="flashMessage === 'error'">
+                                                            <mat-icon class="text-red-500"
+                                                                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                                                            <span class="ml-2">An error occurred, try again!</span>
+                                                        </ng-container>
+                                                    </div>
+                                                    <button mat-flat-button [color]="'primary'"
+                                                        (click)="updateSelectedProduct()">
+                                                        Actualizar
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+                            <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+                                class="example-element-row" [class.example-expanded-row]="expandedElement === element"
+                                (click)="toggleRowExpansion(element, $event)">
+                            </tr>
+                            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row">
+
+                            </tr>
+                        </table>
+                        <mat-paginator [length]="contractorsList.length" [pageSizeOptions]="[1,3,10, 30, 50, 100]"
+                            aria-label="Select page of contractorsList">
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+        [contractContractors]="contractContractors"
+        *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
