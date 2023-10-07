@@ -12,8 +12,10 @@ export class ButtonsExportService {
 
   generateReport(generateReport: any): Observable<any> {
     let urlEndPoint = this.apiUrl + environment.GenrateReportContractEndpoint;
-
-    return this._httpClient.post<any>(urlEndPoint, generateReport);
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
+    return this._httpClient.post<any>(urlEndPoint, generateReport,httpOptions);
   }
   getReportDataCdp(idContrato: string): Observable<Blob> {
     let urlEndPoint = this.apiUrl + environment.exportarCdp;

@@ -27,6 +27,7 @@ export class ButtonsExportComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribe$))
             .subscribe(
                 (res) => {
+                    debugger
                     var downloadURL = window.URL.createObjectURL(res);
                     var link = document.createElement('a');
                     link.href = downloadURL;
