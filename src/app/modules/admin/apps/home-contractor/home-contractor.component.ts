@@ -1,164 +1,290 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { FormGroup } from '@angular/forms';
-import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatSort, Sort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GlobalCont } from 'app/layout/common/global-constant/global-constant';
-import { HomeContractorService } from './home-contractor.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+    MatSnackBarHorizontalPosition,
+    MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+import { HomeContractorService } from './services/home-contractor.service';
+import { UploadFileContractorComponent } from './components/upload-file-contractor/upload-file-contractor.component';
+import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
+import htmlToPdfmake from 'html-to-pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { ContractorService } from '../../dashboards/contractual/service/contractor.service';
+import { Router } from '@angular/router';
+import swal from 'sweetalert2';
+import { ExecutionReport } from './models/pdfDocument';
+import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
+import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
+import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
-    selector       : 'home-contractor',
-    templateUrl    : './home-contractor.component.html',
-    encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'home-contractor',
+    templateUrl: './home-contractor.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeContractorComponent implements OnInit, OnDestroy
-{
+export class HomeContractorComponent implements OnInit, OnDestroy {
+    viewFilesContract: boolean = false;
+    viwFilesGenerated: boolean = false;
+    filesCharged: boolean = false;
+    fileContractorList: any;
+    fileContractorListGeneral: any = [];
+    chargeAccountData: any;
+    executionReportData: ExecutionReport;
+    contractList: any[] = [];
+    contractSelected: string = null;
     id: any;
-    data: any;
     userName: any;
+    typeGenerator: boolean = false;
+    @ViewChild('pdfTable') pdfTable: ElementRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    @ViewChild('recentTransactionsTable', {read: MatSort}) recentTransactionsTableMatSort: MatSort;
-    @ViewChild(MatSort, { static: true }) sort!: MatSort;
-    @ViewChild(MatTable) table!: MatTable<any>;
     raffleName: any;
     contratos: any;
     configForm: FormGroup;
     horizontalPosition: MatSnackBarHorizontalPosition = 'center';
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
-    dataSource = new MatTableDataSource<any>();
-    selection = new SelectionModel<any>(true, []);
-    displayedColumns: string[] = ['nombre','apellido','documentodeidentificacion','correo','telefono','nacionalidad','fechanacimiento','acciones'];
-    columnsToDisplay: string[] = this.displayedColumns.slice();
+    showPdfGenerated: boolean = false;
 
-    /**
-     * Constructor
-     */
     constructor(
         private _contractorService: HomeContractorService,
         private _matDialog: MatDialog,
-        private auth: AuthService,
-        private cdref: ChangeDetectorRef,
-        private _liveAnnouncer: LiveAnnouncer,   
-        private router: ActivatedRoute,  
-    )
-    {
-    }
-    columnas = [ 
-        {title: 'NOMBRE', name: 'nombre'},
-        {title: 'APELLIDO', name: 'apellido'},
-        {title: 'CEDULA', name: 'documentodeidentificacion'},
-        {title: 'CORREO', name: 'correo'},
-        {title: 'TELEFONO', name: 'telefono'},
-        {title: 'NACIONALIDAD', name: 'nacionalidad'},
-        {title: 'FECHA NACIMIENTO', name: 'fechanacimiento'},
-        {title: 'ACCIONES', name: 'acciones'}
-    ]
+        private _auth: AuthService,
+        private _router: Router,
+        private _contractorListService: ContractorService,
+    ) { }
 
-            /**
-       * On init
-       */
-    ngOnInit(): void
-    {
-      this.userName = this.auth.accessName
-    }
-    openDialog(route: any,data: any) {
-        //this.validateDinamycKey();
-        switch(route){
-            case 'registerData':
-              // const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
-              //   autoFocus: false,
-              //   data     : {
-              //       idUser: this.auth.accessId,
-              //       data
-              //   }
-              // });
-              // dialogRef.afterClosed().subscribe((result) => {
-              //   if(result){
-              //     this.getDataContractor(this.id);
-              //   }
-              // }); 
-            break
-        //     case 'resultadosQr':
-        //         this._router.navigate(['lista/resultados/qr'], { skipLocationChange: true });
 
-        //    break
+    ngOnInit(): void {
+        this.userName = this._auth.accessName;
+        this.getContract();
 
-        }
     }
-        
-    announceSortChange(sortState: Sort) {
-        if (sortState.direction) {
-          this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    uploadDialog() {
+        const dialogRef = this._matDialog.open(UploadFileContractorComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                idUser: this._auth.accessId,
+                contractId: this.contractSelected,
+                contractorId: this._auth.accessId,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+
+                }
+            });
+    }
+    changeToViewFilesContract() {
+        this.viewFilesContract = true;
+        this.getFilesUserByContract();
+        this.getFilesUserByContract();
+        this.getDataContractor();
+
+
+    }
+
+    getFilesFolder = async () => {
+        this._contractorService
+            .getFileById(this._auth.accessId, this.contractSelected)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((Response: any) => {
+                const jszip = new JSZip();
+                Response.filedata =
+                    'data:application/pdf;base64,' + Response.filedata;
+                var binary = atob(Response.filedata.split(',')[1]);
+                var array = [];
+                for (let j = 0; j < binary.length; j++) {
+                    array.push(binary.charCodeAt(j));
+                }
+                let pdf = new Blob([new Uint8Array(array)], {
+                    type: 'application/pdf',
+                });
+                jszip
+                    .folder('pruebaCarpeta')
+                    .file(`${Response.filesName}.pdf`, pdf);
+                jszip.generateAsync({ type: 'blob' }).then(function (content) {
+                    // see FileSaver.js
+                    saveAs(content, 'pruebaDescarga.zip');
+                });
+            });
+    };
+
+    public downloadAsPDFs() {
+        let data = document.getElementById('htmlData');
+
+        const pdfTable = this.pdfTable.nativeElement;
+
+        var html = htmlToPdfmake(pdfTable.innerHTML);
+
+        const documentDefinition = { content: html };
+        pdfMake.createPdf(documentDefinition).download();
+    }
+
+    getDataContractor() {
+        if (this.contractSelected != null) {
+            this.getChargeAccount();
+            this.getExecutionReport();
         } else {
-          this._liveAnnouncer.announce('Sorting cleared');
+            swal.fire('', 'No has seleccionado contrato!', 'warning');
         }
-      }
-      //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
-        drop(event: CdkDragDrop<string[]>){
-            moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
-        }
-  
-      ngAfterContentChecked() {
-        this.cdref.detectChanges();
-       }
-  
-
-        //metodo de filtrar los datos de las columnas
-        applyFilter(event: Event) {
-            const filterValue = (event.target as HTMLInputElement).value;
-            this.dataSource.filter = filterValue.trim().toLowerCase();  
-          }
-  
-      ngAfterViewInit(): void
-      {
-          // Make the data source sortable
-          this.dataSource.sort = this.recentTransactionsTableMatSort;
-      }
-  
-      ngOnDestroy(): void
-      {
-          // Unsubscribe from all subscriptions
-          this._unsubscribeAll.next(null);
-          this._unsubscribeAll.complete();
-      }
-      selectRowFull(data: any) { 
-        
-        // const dialogRef =  this._matDialog.open(UploadDataContractoDataComponent, {
-        //     autoFocus: false,
-        //     data     : {
-        //         idUser: this.auth.accessId,
-        //         data
-        //     }
-        //   });
-        //   dialogRef.afterClosed().subscribe((result) => {
-        //     if(result){
-        //       this.getDataContractor(this.id);
-        //     }
-        // }); 
     }
-   
-      /**
-       * Track by function for ngFor loops
-       *
-       * @param index
-       * @param item
-       */
-      trackByFn(index: number, item: any): any
-      {
-          return item.id || index;
-      }
-   
+
+    private getContract() {
+        this._contractorListService
+            .getContractByContractor(this._auth.accessId)
+            .subscribe((Response) => {
+                this.contractList = Response;
+            });
+    }
+
+    private getFilesUserByContract() {
+        this._contractorListService
+            .getFilesContractorByContractId(this._auth.accessId, this.contractSelected)
+            .subscribe((Response: any) => {
+
+                if (Response.length > 0) {
+                    this.fileContractorListGeneral = Response;
+                    this.fileContractorList = Response.filter(f => f.documentTypesCode == DocumentTypeCode.PLANILLA || f.documentTypesCode == DocumentTypeCode.CUENTACOBRO || f.documentTypesCode == DocumentTypeCode.INFORMEEJECUCIÓN);
+                    return (this.filesCharged = true);
+                }
+                if (Response.length <= 0) {
+                    this.filesCharged = false;
+                }
+            });
+    }
 
 
+    /**
+ * Track by function for ngFor loops
+ *
+ * @param index
+ * @param item
+ */
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+    private getChargeAccount() {
+        if (this.contractSelected != null) {
+            this._contractorListService
+                .getPaymentAccount(this._auth.accessId, this.contractSelected)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((Response) => {
+                    if(Response.data.chargeAccountNumber == 0){
+                        Response.data.chargeAccountNumber = 1;
+                    }
+                    if (Response.data.periodExecutedFinalDate != null && Response.data.periodExecutedInitialDate != null) {
+                        this.viwFilesGenerated = true;
+                        this.chargeAccountData = Response.data;
+                    }
+                });
+        } else {
+            swal.fire('', 'No has seleccionado contrato!', 'warning');
+        }
+    }
 
+    private getExecutionReport() {
+        if (this.contractSelected != null) {
+            this._contractorService
+                .getExecutionReport(this._auth.accessId, this.contractSelected)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((Response) => {
+                    if (Response != null) {
+                        this.executionReportData = Response;
+                    }
+                });
+        } else {
+            swal.fire('', 'No has seleccionado contrato!', 'warning');
+        }
+    }
+
+    signOut(): void {
+        this._router.navigate(['/sign-out']);
+    }
+
+    downloadPdf(base64String, fileName) {
+        const source = `data:application/pdf;base64,${base64String}`;
+        const link = document.createElement('a');
+        link.href = source;
+        link.download = `${fileName}.pdf`;
+        link.click();
+    }
+
+    onClickDownloadPdf(b64Dada: string, fileName: string) {
+        let base64String = b64Dada;
+        this.downloadPdf(base64String, fileName);
+    }
+
+    onGeneratePdf(e: any) {
+        this.showPdfGenerated = e;
+    }
+
+    addPersonalData() {
+        const dialogRef = this._matDialog.open(ContractorPersonalDataComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                idUser: this._auth.accessId,
+                contractId: this.contractSelected,
+                contractorId: this._auth.accessId,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+                    // this.getDataContractor(this.id);
+                }
+            });
+    }
+    generatePdf(e: any) {
+        this.typeGenerator = e;
+        this.showPdfGenerated = true;
+
+    }
+
+    uploadNominaFile() {
+        const dialogRef = this._matDialog.open(ContractorPaymentSecurityRegisterComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                idUser: this._auth.accessId,
+                contractId: this.contractSelected,
+                contractorId: this._auth.accessId,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) => {
+                if (result) {
+
+                }
+            });
+    }
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

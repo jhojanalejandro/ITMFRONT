@@ -4,14 +4,14 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 export const defaultNavigation: FuseNavigationItem[] = [
     {
         id      : 'dashboards',
-        title   : 'Opciones',
+        title   : 'CONTRATACIÓN',
         subtitle: 'Opciones de contratacion',
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
             {
                 id   : 'dashboards.inicio',
-                title: 'Cargar datos',
+                title: 'Contractual',
                 type : 'basic',
                 icon : 'heroicons_outline:clipboard-check',
                 link : '/dashboards/inicio'
@@ -27,81 +27,74 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     {
         id      : 'apps',
-        title   : 'Historial',
+        title   : 'PLANEACIÓN',
         subtitle: 'Lista contratacion General',
         type    : 'group',
         icon    : 'heroicons_outline:home',
         children: [
-            // {
-            //     id   : 'apps.academy',
-            //     title: 'Academy',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:academic-cap',
-            //     link : '/apps/academy'
-            // },
-            // {
-            //     id   : 'apps.contacts',
-            //     title: 'Contacts',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:user-group',
-            //     link : '/apps/contacts'
-            // },
             {
                 id      : 'docs.ecommerce',
                 title   : 'Planeación',
                 type    : 'collapsable',
-                icon    : 'heroicons_outline:shopping-cart',
+                icon    : 'heroicons_outline:clipboard-copy',
                 children: [
                     {
                         id   : 'docs.ecommerce.cuadroEconomico',
                         title: 'Cuadro Economico',
                         type : 'basic',
-                        link : '/docs/ecommerce/cuadroEconomico'
+                        link : '/docs/ecommerce/cuadroEconomico/economic'
                     },
                     {
                         id   : 'docs.ecommerce.contratos',
                         title: 'Contratos Interadministrativos',
                         type : 'basic',
-                        link : '/docs/ecommerce/contratos'
-                    }
+                        link : '/docs/ecommerce/contratos/register'
+                    },
 
                 ]
             },
             {
                 id   : 'apps.file-manager',
-                title: 'Contratación',
+                title: 'Archivos Contratos',
                 type : 'basic',
-                icon : 'heroicons_outline:cloud',
+                icon : 'mat_outline:file_present',
                 link : '/apps/file-manager'
             },
-            // {
-            //     id   : 'apps.tasks',
-            //     title: 'Tasks',
-            //     type : 'basic',
-            //     icon : 'heroicons_outline:check-circle',
-            //     link : '/apps/tasks'
-            // }
+            {
+                id   : 'apps.maintainers-list',
+                title: 'Mantenedores',
+                type : 'basic',
+                icon : 'heroicons_outline:cloud',
+                link : '/apps/maintainers-list'
+            }
+        ]
+    },
+    {
+        id      : 'list',
+        title   : 'INFORMACIÓN GENERAL',
+        subtitle: 'Información historica de contratación',
+        type    : 'group',
+        icon    : 'heroicons_outline:home',
+        children: [
+            {
+                id   : 'general.contract',
+                title: 'Información Contratos',
+                type : 'basic',
+                icon : 'heroicons_solid:view-list',
+                link : '/docs/general/lista-general-contratos'
+            },
+            {
+                id   : 'general.list.contractors',
+                title: 'Información contratistas',
+                type : 'basic',
+                icon : 'list_alt',
+                link : '/docs/general/lista-general-contratistas'
+            }
         ]
     },
     {
         id  : 'divider-1',
         type: 'divider'
     },
-    // {
-    //     id      : 'documentation',
-    //     title   : 'Documentation',
-    //     subtitle: 'Everything you need to know about Fuse',
-    //     type    : 'group',
-    //     icon    : 'heroicons_outline:support',
-    //     children: [
-    //         {
-    //             id   : 'documentation.guides',
-    //             title: 'Guides',
-    //             type : 'basic',
-    //             icon : 'heroicons_outline:book-open',
-    //             link : '/docs/guides'
-    //         }
-    //     ]
-    // },
 ];
 

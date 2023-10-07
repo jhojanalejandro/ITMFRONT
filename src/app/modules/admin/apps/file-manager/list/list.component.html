@@ -27,24 +27,9 @@
                         <div class="text-4xl font-extrabold tracking-tight leading-none">Administracion Contratos</div>
                         <div class="flex items-center mt-0.5 font-medium text-secondary">
                             <ng-container *ngIf="!items.path.length">
-                                {{items.folders.length}} carpetas
+                                Cantidad Contratos: {{items.folders.length}}  
                             </ng-container>
                             <!-- Breadcrumbs -->
-                            <ng-container *ngIf="items.path.length">
-                                <div class="flex items-center space-x-2">
-                                    <div class="">/</div>
-                                    <ng-container *ngFor="let path of items.path; let last = last; trackBy: trackByFn">
-                                        <ng-container *ngIf="!last">
-                                            <a
-                                                class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/', path.id]"></a>
-                                        </ng-container>
-                                        <ng-container *ngIf="!last">
-                                            <div class="">/</div>
-                                        </ng-container>
-                                    </ng-container>
-                                </div>
-                            </ng-container>
                         </div>
                         <div class="flex-auto">
                             <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-full min-w-50">
@@ -65,12 +50,12 @@
                 </div>
 
                 <!-- Items list -->
-                <ng-container *ngIf="items && (items.folders.length > 0 || items.files.length > 0); else noItems">
+                <ng-container *ngIf="items && (items.folders.length > 0); else noItems">
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Folders -->
                         <ng-container *ngIf="items.folders.length > 0">
                             <div>
-                                <div class="font-medium">Carpetas</div>
+                                <div class="font-medium">Carpetas Contratos</div>
                                 <div
                                     class="flex flex-wrap -m-2 mt-2">
                                     <ng-container *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
@@ -86,7 +71,7 @@
                                             </a>
                                             <a
                                                 class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/contractor/', folder.id]">
+                                                [routerLink]="['/apps/file-manager/folders/contract/', folder.id]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->
@@ -101,7 +86,7 @@
                                                         [matTooltip]="folder.companyName">{{folder.companyName}}</div>
                                                         <div
                                                         class="truncate"
-                                                        [matTooltip]="folder.companyName">{{folder.projectName}}</div>
+                                                        [matTooltip]="folder.projectName">{{folder.projectName}}</div>
                                                     <ng-container *ngIf="folder.contents">
                                                         <div class="text-secondary truncate">{{folder.contents}}</div>
                                                     </ng-container>

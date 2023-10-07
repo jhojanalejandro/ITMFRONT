@@ -8,7 +8,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FuseFullscreenModule } from '@fuse/components/fullscreen';
 import { FuseLoadingBarModule } from '@fuse/components/loading-bar';
 import { FuseNavigationModule } from '@fuse/components/navigation';
-import { NotificationsModule } from 'app/layout/common/notifications/notifications.module';
 import { ShortcutsModule } from 'app/layout/common/shortcuts/shortcuts.module';
 import { UserModule } from 'app/layout/common/user/user.module';
 import { SharedModule } from 'app/shared/shared.module';
@@ -28,7 +27,6 @@ import { DenseLayoutComponent } from 'app/layout/layouts/vertical/dense/dense.co
         FuseFullscreenModule,
         FuseLoadingBarModule,
         FuseNavigationModule,
-        NotificationsModule,
         ShortcutsModule,
         UserModule,
         SharedModule

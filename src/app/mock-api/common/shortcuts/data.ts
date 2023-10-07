@@ -13,23 +13,7 @@ export const shortcuts = [
         label      : 'Documentation',
         description: 'Getting started',
         icon       : 'heroicons_outline:book-open',
-        link       : '/docs/guides/getting-started/introduction',
-        useRouter  : true
-    },
-    {
-        id         : '56a0a561-17e7-40b3-bd75-0b6cef230b7e',
-        label      : 'Tasks',
-        description: '12 unfinished tasks',
-        icon       : 'heroicons_outline:check-circle',
-        link       : '/apps/tasks',
-        useRouter  : true
-    },
-    {
-        id         : 'f5daf93e-b6f3-4199-8a0c-b951e92a6cb8',
-        label      : 'Contacts',
-        description: 'List all contacts',
-        icon       : 'heroicons_outline:user-group',
-        link       : '/apps/contacts',
+        link       : '/docs/opctions-contractor/getting-started/introduction',
         useRouter  : true
     },
     {

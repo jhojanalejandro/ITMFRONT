@@ -1,36 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
-import { FileManagerService } from 'app/modules/admin/apps/file-manager/file-manager.service';
-import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
+import { FileManagerService } from 'app/modules/admin/apps/file-manager/services/file-manager.service';
+import { DataFile, Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class FileManagerItemsResolver implements Resolve<any>
-{
-    /**
-     * Constructor
-     */
-    constructor(private _fileManagerService: FileManagerService)
-    {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Resolver
-     *
-     * @param route
-     * @param state
-     */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
-    {
-        return this._fileManagerService.getAllFolder();
-    }
-}
 
 @Injectable({
     providedIn: 'root'
@@ -57,9 +30,9 @@ export class FileManagerFolderResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item[]>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
     {
-        return this._fileManagerService.getAllFolder(route.paramMap.get('folderId'))
+        return this._fileManagerService.getAllFolder()
                    .pipe(
                        // Error here means the requested task is not available
                        catchError((error) => {
@@ -105,7 +78,7 @@ export class FileManagerItemResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Item>
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DataFile>
     {
         return this._fileManagerService.getItemByIdDetailFolder(route.paramMap.get('id'))
                    .pipe(

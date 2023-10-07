@@ -1,0 +1,54 @@
+.drop {
+    display: inline-block;
+    margin: 0 5px;
+    //background-color: black;
+}
+
+.hiringSecurity {
+    width: 170px;
+    margin-right: 5px;
+}
+
+.option {
+    justify-items: center;
+    text-align: center;
+}
+
+mat-form-field {
+    width: 240px !important;
+}
+
+.text {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.action {
+    margin-right: 10px !important;
+}
+
+
+.hiringD {
+    padding-left: 20px;
+    width: 810PX !important;
+    max-width: 810px !important;
+}
+
+.folder {
+    text-align: center;
+}
+
+::-webkit-file-upload-button {
+    background: rgb(69, 108, 237);
+    padding: 0.2em;
+    border-radius: 25px;
+    width: 150px;
+    height: 40px;
+    text-align: center;
+}
+
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+}

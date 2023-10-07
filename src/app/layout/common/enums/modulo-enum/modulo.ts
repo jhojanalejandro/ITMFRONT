@@ -1,0 +1,6 @@
+export enum ModuloEnum{
+    CONTARCTUAL = 'CONTARCTUAL',
+    NOMINA = 'NOMINA',
+    PLANEACION = 'PLANEACION',
+    JURIDICO = 'JURIDICO',
+}

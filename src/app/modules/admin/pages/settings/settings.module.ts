@@ -11,17 +11,19 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { SharedModule } from 'app/shared/shared.module';
 import { SettingsComponent } from 'app/modules/admin/pages/settings/settings.component';
-import { SettingsAccountComponent } from 'app/modules/admin/pages/settings/account/account.component';
-import { SettingsSecurityComponent } from 'app/modules/admin/pages/settings/security/security.component';
-import { SettingsTeamComponent } from 'app/modules/admin/pages/settings/team/team.component';
+import { SettingsAccountComponent } from 'app/modules/admin/pages/settings/components/account/account.component';
+import { SettingsSecurityComponent } from 'app/modules/admin/pages/settings/components/security/security.component';
 import { settingsRoutes } from 'app/modules/admin/pages/settings/settings.routing';
+import { SettingsTeamComponent } from './components/team/team.component';
+import { UploadFirmComponent } from './components/upload-user-file/upload-firm.component';
 
 @NgModule({
     declarations: [
         SettingsComponent,
         SettingsAccountComponent,
         SettingsSecurityComponent,
-        SettingsTeamComponent
+        SettingsTeamComponent,
+        UploadFirmComponent
     ],
     imports     : [
         RouterModule.forChild(settingsRoutes),

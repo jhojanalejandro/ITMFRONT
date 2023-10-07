@@ -1,4 +1,5 @@
 export interface IResponse{
-    status: string;
-    result: any;
+    success: boolean;
+    message: string;
+    data: any
 }

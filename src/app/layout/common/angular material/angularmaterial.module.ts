@@ -35,11 +35,13 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatRippleModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatChipsModule } from '@angular/material/chips';
-
+import { MatTreeModule } from '@angular/material/tree';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations:[
-    
+
+
   ],
   imports: [
     MatButtonModule,
@@ -73,14 +75,16 @@ import { MatChipsModule } from '@angular/material/chips';
     MatRadioModule,
     MatSortModule,
     MatMomentDateModule,
-    MatInputModule,   
+    MatInputModule,
     MatButtonToggleModule,
     MatTabsModule,
     MatStepperModule,
     TranslocoModule,
     NgApexchartsModule,
     MatRippleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTreeModule,
+    MatExpansionModule
   ],
   exports: [
     MatButtonModule,
@@ -121,7 +125,9 @@ import { MatChipsModule } from '@angular/material/chips';
     TranslocoModule,
     NgApexchartsModule,
     MatRippleModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTreeModule,
+    MatExpansionModule
   ],
 })
 
