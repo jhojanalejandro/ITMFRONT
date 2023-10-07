@@ -95,7 +95,8 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 }
             });
     }
-    changeToViewFilesContract() {
+    changeToViewFilesContract(event: any) {
+        this.contractSelected = event.value
         this.viewFilesContract = true;
         this.getFilesUserByContract();
         this.getFilesUserByContract();
@@ -190,7 +191,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
-                    if(Response.data.chargeAccountNumber == 0){
+                        if(Response.data.chargeAccountNumber == 0){
                         Response.data.chargeAccountNumber = 1;
                     }
                     if (Response.data.periodExecutedFinalDate != null && Response.data.periodExecutedInitialDate != null) {

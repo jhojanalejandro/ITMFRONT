@@ -31,8 +31,8 @@
                     <div class="flex mt-8 mb-4 lg:m-0 lg:ml-auto">
                         <mat-form-field class="hiring mt-6" appearance="outline">
                             <mat-label>Contractos</mat-label>
-                            <mat-select [(ngModel)]="contractSelected" name="contract"
-                                (selectionChange)="changeToViewFilesContract()">
+                            <mat-select  name="contract"
+                                (selectionChange)="changeToViewFilesContract($event)">
                                 <mat-option *ngFor="let contract of contractList" [value]="contract.id">
                                     {{contract.projectName}}
                                 </mat-option>

@@ -13,6 +13,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { ShareComponentsModule } from './modules/admin/dashboards/share-components/share-components.module';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -37,7 +38,7 @@ const routerConfig: ExtraOptions = {
         CoreModule,
         // Layout module of your application
         LayoutModule,
-
+        ShareComponentsModule,
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({})
     ],
