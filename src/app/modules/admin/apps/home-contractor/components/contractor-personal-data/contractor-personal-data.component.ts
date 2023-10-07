@@ -12,7 +12,7 @@ import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { Bank, EntityHealth } from '../../models/mater.model';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 
 @Component({
   selector: 'app-contractor-personal-data',
