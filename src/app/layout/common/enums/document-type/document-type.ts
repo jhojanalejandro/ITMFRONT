@@ -22,6 +22,7 @@ export enum DocumentTypeCodes{
 export enum TypeFileUserCode{
     FIRMA = 'FMA',
     IMAGENES = 'IMGC',
+    ADJUNTOSMENSAJE = 'ACMJ'
 }
 
 export enum DocumentTypeFileCodes{
@@ -37,7 +38,7 @@ export enum DocumentTypeFileCodes{
 
 export enum DetailTypeCodes{
     MFC = 'MFC',
-    MC = 'CTIL',
+    CTIL = 'CTIL',
 }
 export enum CategoryFile{
     CGD = 'CGD',

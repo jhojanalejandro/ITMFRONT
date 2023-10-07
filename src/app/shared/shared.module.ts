@@ -9,8 +9,7 @@ const ds = [
     FormsModule,
     AngularmaterialModule,
     ReactiveFormsModule,
-    IgxTreeModule
-    
+    IgxTreeModule,    
 ]
 
 @NgModule({

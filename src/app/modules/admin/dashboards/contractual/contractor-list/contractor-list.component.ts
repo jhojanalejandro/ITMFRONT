@@ -25,12 +25,11 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { ContractorService } from '../service/contractor.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { ContractContractors, Contractor } from '../models/contractor';
-import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
+import { NewnessContractorComponent } from '../../share-components/newness-contractor/newness-contractor.component';
 import {
     Componente,
     Elements,
@@ -38,7 +37,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
-import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
+import { TermFileContractComponent } from '../../share-components/term-file-contract/term-file-contract.component';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
@@ -53,6 +52,7 @@ import {
     trigger,
 } from '@angular/animations';
 import { EntityHealth } from 'app/modules/admin/apps/home-contractor/models/mater.model';
+import { ModificacionFormComponent } from '../../share-components/modificacion-form/modificacion-form.component';
 
 @Component({
     selector: 'contractor-list',
@@ -192,8 +192,6 @@ export class ContractorListComponent
         { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
         { title: '', name: 'all' },
         { title: 'OPCIONES', name: 'acciones' },
-        // { title: 'DETALLE', name: 'detail' },
-        // { title: 'FORM', name: 'showForm' }
     ];
 
     ngOnInit(): void {
@@ -220,6 +218,7 @@ export class ContractorListComponent
             arl: new FormControl(null, Validators.required),
             eps: new FormControl(null, Validators.required),
             afp: new FormControl(null),
+            contract: new FormControl(null),
           });
 
         this.configForm = this._formBuilder.group({

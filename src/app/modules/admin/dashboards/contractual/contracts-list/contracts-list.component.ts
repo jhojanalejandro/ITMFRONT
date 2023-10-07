@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Router } from '@angular/router';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { AssignmentUserComponent } from '../contractor-list/components/assigmentUser/assignment-user.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';

@@ -84,7 +84,6 @@ export class DetailContractorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-      debugger
         this.selectedContracttorForm = this._formBuilder.group({
             expeditionPlace: new FormControl(null),
             correo: new FormControl(null),

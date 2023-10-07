@@ -9,7 +9,7 @@ import { ShareService } from 'app/layout/common/share-service/share-service.serv
 import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
 import { PdfDataService } from 'app/layout/common/share-service/pdf-data-service.service';
 import { ContractContractors } from '../../../models/contractor';
-import { CommiteeRequestContractor, CommitteeRequest, PreviusStudyContractors } from '../../../models/generate-pdf';
+import { ResponseContractorPdf, CommitteeRequest, PreviusStudyContractorsList } from '../../../models/generate-pdf';
 import { PdfTypeGenerate } from 'app/layout/common/enums/document-type/pdf-type';
 import { Subject, takeUntil } from 'rxjs';
 import { UploadFileDataService } from '../../../service/upload-file.service';
@@ -36,8 +36,8 @@ export class GeneratePdfComponent implements OnInit {
     footerImageBase654: any;
     itmImageBase64: string = null;
     alcaldiaImageBase654: any;
-    committeeRequestData: CommiteeRequestContractor;
-    previusStudyData: PreviusStudyContractors;
+    committeeRequestData: ResponseContractorPdf<CommitteeRequest>;
+    previusStudyData: ResponseContractorPdf<PreviusStudyContractorsList>;
     dateTransform: any = new Date();
     typeDocs: DocumentTypeFile[] = [];
     documentGenerate: any[] = [];
@@ -75,7 +75,7 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generatePreviusStudyWithoutPolicy(previusStudyData: PreviusStudyContractors) {
+    private generatePreviusStudyWithoutPolicy(previusStudyData: ResponseContractorPdf<PreviusStudyContractorsList>) {
         let user = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
         let juridic = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.JURIDICO || ct.userChargeCode === CodeUser.SUPERVISORAREAN)
         let supervisor = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.SUPERVISOR)
@@ -145,7 +145,7 @@ export class GeneratePdfComponent implements OnInit {
         }
 
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-            let data = previusStudyData.previusStudyDto.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
+            let data = previusStudyData.getDataContractors.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
 
             if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
                 && data.generalObligations != null && this.itmImageBase64 != null && user != null && juridic != null && supervisor != null && user.userFirm != null && supervisor.userFirm != null && juridic.userFirm != null && data.requiredProfileAcademic != null && data.requiredProfileExperience != null) {
@@ -185,7 +185,7 @@ export class GeneratePdfComponent implements OnInit {
                                     },
                                 ],
                                 ['', '', 'Versión', '09'],
-                                ['', '', 'Fecha', this.currentDate],
+                                ['', '', 'Fecha', '06-09-2019'],
                             ]
                         }
                     },
@@ -239,32 +239,10 @@ export class GeneratePdfComponent implements OnInit {
                             margin: [10, 10, 10, 10],
                             text: [
                                 {
-                                    text: 'La Unidad Estratégica de Negocios del ITM, requiere celebrar un contrato de prestación de servicios en la gestión como Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública correspondientes al Contrato Interadministrativo No.',
+                                    text: 'La Unidad Estratégica de Negocios del ITM, requiere celebrar un contrato  de prestación de servicio para realizar la gestion de '+ data.activityContractor +' correspondientes al contrato interadministrativo No '+ data.contractNumber + ' celebrado entre empresa y el  ITM, cuyo objeto es',
                                     fontSize: 10,
                                     alignment: 'justify'
-                                },
-                                {
-                                    text: ' 4600095169',
-                                    fontSize: 11,
-                                    alignment: 'justify'
-                                },
-                                {
-                                    text: ' de ',
-                                    fontSize: 10,
-                                },
-                                {
-                                    text: '2023, ',
-                                    fontSize: 11,
-                                },
-                                {
-                                    text: 'cuyo objeto es',
-                                    fontSize: 10,
-                                },
-                                {
-                                    text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN, IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP.',
-                                    bold: true,
-                                    fontSize: 11,
-                                },
+                                }
                             ],
                         },
                         {
@@ -374,16 +352,12 @@ export class GeneratePdfComponent implements OnInit {
                                                 margin: [10, 10, 10, 10],
                                                 text: [
                                                     {
-                                                        text: 'El Plan de Desarrollo Institucional “ITM: A Otro Nivel”, 2020-2023, está orientado a trascender de la innovación competitiva a la que transforma, a partir de la articulación de la ciencia, la tecnología, la innovación y la producción artística, aportando desde su vocación tecnológica y compromiso social al logro de un modelo sostenible para la humanidad. El Plan de Desarrollo Institucional fue aprobado el día 29 de mayo de 2020 por El Consejo Directivo del Instituto Tecnológico Metropolitano Institución Universitaria, en ejercicio de sus atribuciones legales y estatutarias. La Unidad Estratégica de Negocios, observado la nueva propuesta rectoral, en especial el Gran Pilar No. 4, denominado “Modelo de gestión flexible, eficiente y sostenible” y con el fin de dar cumplimiento a objeto contractual fijado en el Contrato interadministrativo número ' + data.contractNumber + ' cuyo objeto es ' + '“' + data.elementObject + '”',
+                                                        text: 'El Plan de Desarrollo Institucional 2022 - 2025“Hacia una Era de Universidad y Humanidad en su línea estratégica Nro. 3“Proyección Social para Generar Transformaciones Humanas y Sostenibles” busca Consolidar al ITM como un aliado estratégico del sector social y productivo atendiendo sus necesidades y expectativas; a través de la extensión de las fortalezas institucionales aportando al desarrollo sostenible contemplando el programa Consolidación de alianzas para la extensión, la proyección social y el posicionamiento institucional con los proyectos de Desarrollo de la proyección social humana y sostenible y Consolidación de la extensión académica orientada a la atención de desafíos y prioridades del territorio para el desarrollo humano sostenible, y con el fin de dar cumplimiento al objeto contractual fijado en el Contrato interadministrativo número ' + data.contractNumber + ' cuyo objeto es ' + '“' + data.elementObject + '”',
                                                         fontSize: 10,
                                                         alignment: 'justify'
                                                     },
                                                     {
-                                                        text: ' CONTRATO INTERADMINISTRATIVO PARA EL ACOMPAÑAMIENTO EN LOS PROCESOS DE GESTIÓN,IMPLEMENTACIÓN Y SEGUIMIENTO DE POLÍTICAS PÚBLICAS, PLANES Y PROGRAMAS EN LAS DIFERENTES DIMENSIONES DEL DESARROLLO A CARGO DEL DAP., ',
-                                                        fontSize: 11,
-                                                    },
-                                                    {
-                                                        text: ' se solicita se autorice la contratación del siguiente personal, para así poder realizar actividades de acompañamiento y apoyo a la gestión, para la implementación y seguimiento al Plan de Desarrollo Distrital, Sistema Distrital de Planeación y los diferentes instrumentos de planificación y evaluación.',
+                                                        text: data.dutyContract,
                                                         fontSize: 10,
                                                     },
                                                 ],
@@ -471,7 +445,7 @@ export class GeneratePdfComponent implements OnInit {
                                                         bold: true,
                                                     },
                                                     {
-                                                        text: ' Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar ' + data.elementObject + ' del Contrato Interadministrativo No ', fontSize: 9,
+                                                        text:  data.elementObject, fontSize: 10,
                                                         alignment: 'justify'
                                                     },
                                                     {
@@ -497,7 +471,7 @@ export class GeneratePdfComponent implements OnInit {
                                                         bold: true,
                                                     },
                                                     {
-                                                        text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como Profesional para realizar el seguimiento, análisis y evaluación a la Inversión Pública',
+                                                        text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como'+data.activityContractor,
                                                         style: 'fontSegundapagPeque',
                                                     },
                                                 ],
@@ -1446,14 +1420,14 @@ export class GeneratePdfComponent implements OnInit {
 
     }
 
-    private generateCommitteeRequest(committeeRequestData: CommiteeRequestContractor) {
+    private generateCommitteeRequest(committeeRequestData: ResponseContractorPdf<CommitteeRequest>) {
         let user = committeeRequestData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
         if (this.itmImageBase64 != null && user.userName != null != null && user.userFirm != null) {
-            let date = new Date(committeeRequestData.registerDate);
+            let date = new Date(committeeRequestData.dataContract.registerDate);
             let year = date.getFullYear();
             for (let index = 0; index < this.contractContractors.contractors.length; index++) {
-                let data = committeeRequestData.commiteeRequestDto.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
-                if (data.profileRequire == null || data.profileRequire == null || data.contractorIdentification == null) {
+                let data = committeeRequestData.getDataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
+                if (data.profileRequire == null  || data.contractorIdentification == null) {
                     if (data.profileRequire == null) {
                         swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista' + data.contractorName, 'warning');
                     }
@@ -1473,7 +1447,7 @@ export class GeneratePdfComponent implements OnInit {
                                 style: 'fontPeque',
                             },
                             {
-                                text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + committeeRequestData.contractNumber + ' de ' + year,
+                                text: 'Prestación de servicios como contratista independiente, sin vínculo laboral por su propia cuenta y riesgo para realizar la gestion de ' + data.elementName + ' ejecución del Contrato Interadministrativo No. ' + committeeRequestData.dataContract.contractNumber + ' de ' + year,
                                 style: 'fontPeque',
                             },
                             {
@@ -1575,7 +1549,7 @@ export class GeneratePdfComponent implements OnInit {
                         margin: [10, 10, 10, 10],
                         text: [
                             {
-                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.contractNumber + 'de ' + year + ', cuyo objeto es ' + committeeRequestData.contractObject,
+                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.dataContract.contractNumber + 'de ' + year + ', cuyo objeto es ' + committeeRequestData.dataContract.contractObject,
                                 fontSize: 10,
                                 alignment: 'justify'
                             },
@@ -1620,7 +1594,7 @@ export class GeneratePdfComponent implements OnInit {
                     },
                     {
                         margin: [10, 0, 0, 0],
-                        text: 'Profesional Universitaria'
+                        text: user.userCharge
                     },
                     {
                         margin: [10, 0, 0, 0],
@@ -1709,7 +1683,7 @@ export class GeneratePdfComponent implements OnInit {
     private async getcommitteeRequestData(): Promise<void> {
         return await new Promise((rslv) => {
             this.contractContractors.typeMinute = DocumentTypeCodes.SOLICITUDCOMITE
-            this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response) => {
+            this._pdfdataService.getcommitteeRequestData(this.contractContractors).subscribe((Response: ResponseContractorPdf<CommitteeRequest>) => {
                 this.committeeRequestData = Response;
                 if (this.committeeRequestData != null) {
                     this.hideComponent();
@@ -1725,9 +1699,9 @@ export class GeneratePdfComponent implements OnInit {
             this.contractContractors.typeMinute = DocumentTypeCodes.ESTUDIOSPREVIOS
             this._pdfdataService.getPreviusStudy(this.contractContractors)
                 .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((Response) => {
+                .subscribe((Response: ResponseContractorPdf<PreviusStudyContractorsList>) => {
                     this.previusStudyData = Response;
-                    if (Response.previusStudyDto.length == 0) {
+                    if (Response.getDataContractors.length == 0) {
                         this.hideComponent();
                     }
                     rslv();

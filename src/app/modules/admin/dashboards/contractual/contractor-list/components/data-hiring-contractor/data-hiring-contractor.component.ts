@@ -13,7 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AsignmentData } from '../../../models/contractor';
 import { Activity, DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { fuseAnimations } from '@fuse/animations';
@@ -353,7 +353,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       this._planingService.sendEconomicdataContractor(this.economicDataList)
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((response) => {
-          debugger
           if (response.success) {
             Swal.fire('', response.message, 'success');
             if (this.update) {

@@ -54,6 +54,7 @@ export interface ContractFolder{
     nombreRubro: string;
     project: string;
     fuenteRubro: string;
+    dutyContract?: string;
 }
 
 export interface DetailContractFolder{
@@ -98,6 +99,8 @@ export interface Elements{
     obligacionesGenerales: string;
     objetoElemento: string;
     activityId?: string;
+    perfilRequeridoAcademico?: string;
+    perfilRequeridoExperiencia?: string;
 }
 
 export interface ElementComponent{
@@ -123,6 +126,9 @@ export interface ElementComponent{
     activityId?: string;
     cantidadEnable?: string;
     cpcId?: string;
+    perfilRequeridoAcademico?: string;
+    perfilRequeridoExperiencia?: string;
+    cpcNumber?: string;
 }
 
 export interface ListElements{
@@ -164,6 +170,7 @@ export interface ContractFolders{
     objectContract: string;
     statusContractId?: string;
     detailContractId?: string;
+    dutyContract?: string;
 }
 
 
@@ -200,5 +207,34 @@ export interface OptionTypeData{
     nombreComponente: string,
     idContrato: number;
     elementos? : [];
+}
+
+export interface ModifyContractor{
+    id?: any;
+    elementName: string;
+    cantidadContratistas: number;
+    cantDays: number;
+    unitValue: any;
+    totalValue: any;
+    valueDay: any;
+    valorTotalContratista: number;
+    valorPorDiaContratista: number;
+    cpcId: string;
+    isModify: boolean;
+    tipoElemento: string;
+    resources: any; 
+    consecutive: string;
+    specificObligations: string;
+    generalObligations: string;
+    elementObject: string;
+    contractId: string;
+    contractorId: string;
+    noAddition: string;
+    perfilRequeridoAcademico: string;
+    perfilRequeridoExperiencia: string;
+    minuteType: string;
+    initialAdditionDate: string;
+    finalAdditionDate: string;
+    isAddition: boolean;
 }
 

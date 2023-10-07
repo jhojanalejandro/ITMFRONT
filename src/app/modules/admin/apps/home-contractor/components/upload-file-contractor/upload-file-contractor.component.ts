@@ -192,10 +192,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
-
                 if (res != null) {
                     this.typeDocs = res;
-
                     this.gevalidateDocument();
                 }
             }
@@ -223,7 +221,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                debugger
                 if (!resp.activateTermContract && !resp.activateTermPayments) {
                     swal.fire(
                         '',
@@ -263,7 +260,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             );
         return this.dataContractor;
     }
-
 
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();

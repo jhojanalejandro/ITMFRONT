@@ -355,12 +355,6 @@
                                                     <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
                                                     Desabilitar
                                                 </button>
-                                                <button [matTooltip]="'Desabilitar Contratista'"
-                                                    (click)="toggleAdditionalRow(element)" [color]="'primary'"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-                                                    Detalle
-                                                </button>
                                             </mat-menu>
                                         </p>
                                     </div>
@@ -433,8 +427,6 @@
                                                                 [value]="expandedElement.cdp">
                                                             </mat-form-field>
                                                         </div>
-
-                                                        <!-- Stock and Reserved -->
                                                         <div class="flex">
                                                             <mat-form-field class="w-1/3 pr-2">
                                                                 <mat-label>Nivel de riesgo</mat-label>
@@ -445,6 +437,11 @@
                                                                 <mat-label>Requiere Poliza</mat-label>
                                                                 <input type="number" matInput
                                                                     [formControlName]="'reserved'">
+                                                            </mat-form-field>
+                                                            <mat-form-field class="w-1/3 pl-2">
+                                                                <mat-label>Contrato</mat-label>
+                                                                <input type="text" matInput
+                                                                    [formControlName]="'contract'">
                                                             </mat-form-field>
                                                         </div>
                                                     </div>

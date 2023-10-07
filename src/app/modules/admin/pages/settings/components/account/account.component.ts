@@ -86,7 +86,8 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
     }
     uploadFile() {
         const dialogRef = this._matDialog.open(UploadFirmComponent, {
-          autoFocus: false,
+            disableClose: true,
+            autoFocus: false,
         });
         dialogRef.afterClosed()
         .pipe(takeUntil(this._unsubscribeAll))
