@@ -7,6 +7,7 @@ import { contractorListRoutes } from './post-contractual-list.routing';
 import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
 import { PostContractualListComponent } from './post-contractual-list.component';
 import { ContractorPaymentRegisterComponent } from '../components/payroll-register/contractor-payment-register.component';
+import { ShareComponentsModule } from '../../share-components/share-components.module';
 
 
 
@@ -21,7 +22,8 @@ import { ContractorPaymentRegisterComponent } from '../components/payroll-regist
         NgApexchartsModule,
         TranslocoModule,
         SharedModule,
-        ButtonsExportModule
+        ButtonsExportModule,
+        ShareComponentsModule
     ]
 })
 export class PostContractualListModule {

@@ -28,7 +28,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { NewnessContractorComponent } from '../../share-components/newness-contractor/newness-contractor.component';
 import {
@@ -84,7 +84,6 @@ export class PostContractualListComponent
     userName: any;
     value: any;
     generatePdfMinute: boolean;
-    generatePdf: boolean;
     pdfType: string;
     disableElement: boolean = true;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -570,7 +569,7 @@ export class PostContractualListComponent
             this.contractContractors.contractors = this.contractorListId;
         }
         this.contractContractors.contractId = this.contractId;
-        this.generatePdf = true;
+        this.generatePdfMinute = true;
         this.generateType = type;
     }
 
@@ -643,7 +642,6 @@ export class PostContractualListComponent
     }
 
     pdfGenerated(e: boolean) {
-        this.generatePdf = e;
         this.generatePdfMinute = e;
         this.reloadResolve();
     }

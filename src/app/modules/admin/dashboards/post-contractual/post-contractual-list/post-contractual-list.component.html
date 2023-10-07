@@ -60,7 +60,7 @@
                             <mat-menu #summaryMenu="matMenu">
 
                                 <button *ngIf="visibleOption" mat-menu-item
-                                    (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                    (click)="generatedPdfContractor(null,'OTRO SI')">
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Otro si
                                 </button>
@@ -204,7 +204,7 @@
                                                     Historial de pagos
                                                 </button>
                                                 <button [matTooltip]="'Generar'"  mat-menu-item
-                                                    (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
+                                                    (click)="generatedPdfContractor(element,'OTRO SI')">
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                     Generar Otro si
                                                 </button>
@@ -433,6 +433,3 @@
     <app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
         [contractContractors]="contractContractors"
         *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
-    <app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
-        [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>
