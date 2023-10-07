@@ -54,10 +54,16 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-
+                <div class="checkbox-list" *ngIf="filesWithCheckbox.length > 0">
+                    <span>seleccionados</span>
+                    <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of filesWithCheckbox" class="mr-4"
+                        [value]="file.name" [color]="'primary'">
+                        {{file.name}}
+                    </mat-checkbox>
+                </div>
                 <div class="text-center pt-8">
                     <input formControlName="file" type="file" mat-flat-button color="primary"
-                        accept="{{acceptExt}}" (change)="onChange($event)">
+                        accept="{{acceptExt}}" (change)="onChangeFile($event)" multiple>
                 </div>
                 <!-- Shareable short link of  uploaded file -->
                 <div class="container text-center jumbotron" *ngIf="shortLink">
@@ -76,5 +82,5 @@
 <mat-dialog-actions align="end" class="pt-8">
     <button mat-flat-button type="button" [mat-dialog-close]="true" [color]="'warn'">Cancelar</button>
     <button mat-flat-button [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"
-        (click)="uploadFirm($event)">Cargar Archivo</button>
+        (click)="saveFile()">Cargar Archivo</button>
 </mat-dialog-actions>
