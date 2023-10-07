@@ -32,7 +32,8 @@
                             "highlight.js",
                             "crypto-js/enc-utf8",
                             "crypto-js/hmac-sha256",
-                            "crypto-js/enc-base64"
+                            "crypto-js/enc-base64",
+                            "url"
                         ],
                         "assets": [
                             "src/favicon-16x16.png",
@@ -40,8 +41,8 @@
                             "src/assets",
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/ngx-extended-pdf-viewer/assets/",
-                                "output": "/assets/"
+                                "input": "node_modules/ngx-extended-pdf-viewer/bleeding-edge/",
+                                "output": "/bleeding-edge/"
                             },
                             {
                                 "glob": "_redirects",
