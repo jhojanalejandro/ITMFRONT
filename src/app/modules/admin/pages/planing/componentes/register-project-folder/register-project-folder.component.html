@@ -63,15 +63,27 @@
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Nombre Rubro</mat-label>
-                        <input type="mail" id="nombreRubro" [value]="dataProject.nombreRubro" formControlName="nombreRubro"
+                        <input type="mail" id="nombreRubro"  formControlName="nombreRubro"
                             autocomplete="off" matInput placeholder="Nombre Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Fuente Rubro</mat-label>
-                        <input type="text" id="fuenteRubro"  [value]="dataProject.fuenteRubro" formControlName="fuenteRubro" autocomplete="off" matInput
+                        <input type="text" id="fuenteRubro" formControlName="fuenteRubro" autocomplete="off" matInput
                             placeholder="Fuente Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
+                        <mat-label>Estado contrato</mat-label>
+                        <mat-select [formControlName]="'statusContract'"  name="statusContract">
+                            <mat-option *ngFor="let state of statusContract" [value]="state.id">
+                                {{state.statusContractDescription}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                        <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="folderField pt-2">
@@ -105,18 +117,7 @@
 
                 <div class="folderField">
 
-                    <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
-                        <mat-label>Estado contrato</mat-label>
-                        <mat-select [formControlName]="'statusContract'"  name="statusContract">
-                            <mat-option *ngFor="let state of statusContract" [value]="state.id">
-                                {{state.statusContractDescription}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
-                        <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
+
                     <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="fill">
                         <mat-label>Numero Adicion</mat-label>
                         <input type="text" id="noAdicion" formControlName="noAdicion" autocomplete="off" matInput
@@ -153,11 +154,21 @@
                 </div>
 
                 <div class="folderField">
-                    <mat-form-field class="hiringD" appearance="fill">
+                    <mat-form-field class="rContract" appearance="fill">
                         <mat-label>Objeto Convenio</mat-label>
                         <textarea type="text" class="example-full-width" id="objectContract" formControlName="objectContract"
                             autocomplete="off" matInput placeholder="Objeto"></textarea>
                         <mat-error *ngIf="formProject.get('objectContract').hasError('required')">
+                            El Campo Objeto Convenio es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="folderField">
+                    <mat-form-field class="rContract" appearance="fill">
+                        <mat-label>Deber del Convenio</mat-label>
+                        <textarea type="text" class="example-full-width" id="dutyContract" formControlName="dutyContract"
+                            autocomplete="off" matInput placeholder="Deber del Convenio"></textarea>
+                        <mat-error *ngIf="formProject.get('dutyContract').hasError('required')">
                             El Campo Objeto Convenio es requerido
                         </mat-error>
                     </mat-form-field>
