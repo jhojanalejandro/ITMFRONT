@@ -16,7 +16,7 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
-    exportarViabilidad: 'ExportToExcel/GetViabilidadExcel/',
+    GenrateReportContractEndpoint: 'ExportToExcel/GenrateReportContract',
     exportarDap: 'ExportToExcel/GetSolicitudContratacionDap/',
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarCdp: 'ExportToExcel/ExportToExcelCdp/',
@@ -25,11 +25,12 @@ export const environment = {
     addExcelContractorEndpoint: 'ImportExcel/AddExcel',
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
     addExcelElementEndpoint: 'ImportExcel/ImportExcelElement',
+    GenerateSatisfactionReportEndpoint: 'ExportToExcel/GenerateSatisfactionReport',
 
     UpdateContractorEndpoint: 'Contractor/Update',
     SaveDataContractorEndpoint: 'Contractor/SaveDataContractor/',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
-    // GetContractorByIdEndpoint: 'Contractor/ChargeAccountGetById',
+    GetContractorByIdEndpoint: 'Contractor/GetById',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
     asignmentData: 'Contractor/UpdateAsignment',
     sendMails: 'MessageHandling/SendContractorAccount',
@@ -40,7 +41,7 @@ export const environment = {
     AddnewnessContractor: 'Contractor/AddNewNess',
     GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
     ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
-    SaveModifyMinuteEndpoint: 'ContractFolder/SaveModifyMinute',
+    SaveModifyMinuteEndpoint: 'Contractor/SaveModifyMinute',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -69,19 +70,24 @@ export const environment = {
     GetByIdContractorPaymentsEndpoint: 'ContractorPayments/GetById/',
     DeleteContractorPaymentsEndpoint: 'ContractorPayments/DeleteContractorPayment',
     GetPaymentsContractorListEndpoint: 'ContractorPayments/GetPaymentsContractorList',
+    GetEmptityHealthContractorEndpoint: 'ContractorPayments/GetEmptityHealthContractor',
     GetPdChargeAccountGetById: 'ContractorPayments/ChargeAccountGetById',
+    addContractorPaymentSecurityEndpoint: 'ContractorPayments/SaveContractorPaymentSecurity',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     GetAllEconomicDataContractorEndpoint: 'EconomicDataContractor/GetAll',
     GetByIdEconomicDataContractorEndpoint: 'EconomicDataContractor/GetEconiomicDataById',
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
+    GetPaymentByIdContractAndContractorEndpoint: 'EconomicDataContractor/GetPaymentByIdContractAndContractor',
 
     addFileEndpoint: 'Files/AddFileContractor',
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
     CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
+    SaveCommitteeContractorEndpoint: 'Files/SaveCommitteeContractor',
+    saveDetailFileCommitteeEndpoint: 'Files/CreateDetailCommittee',
 
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
@@ -91,7 +97,7 @@ export const environment = {
     updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/DeleteFile/',
-
+    GetFileDonwloadContractualEndpoint: 'Files/GetFileDonwloadContractual',
 
     addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
@@ -99,6 +105,7 @@ export const environment = {
     GetByIdHiringEndpoint: 'HiringData/GetByIdHinringData',
     DeleteHiringEndpoint: 'HiringData/Delete',
     GetDataMinutaHiringEndpoint: 'HiringData/GetByIdMinuta',
+    GetByIdDateHiringEndpoint: 'HiringData/GetDateContractById',
 
     addComponent: 'Componente/SaveComponentContract',
     addActivity: 'Componente/AddActivity/',
@@ -110,7 +117,7 @@ export const environment = {
 
     deleteComponent: 'Componente/DeleteComponentContract/',
     addElementosComponent: 'ElementosComponente/SaveElement',
-    getElementoById: 'ElementosComponente/GetById/',
+    getElementoById: 'ElementosComponente/GetElementById/',
     getActivityByIdComponent: 'Componente/GetActivityByComponent/',
     getActivityById: 'Componente/GetActivityById/',
 
@@ -123,6 +130,8 @@ export const environment = {
     addFileFirmEndpoint: 'UserFirm/SaveUserDocument',
     GetRollsEndpoint: 'UserFirm/GetAllRolls',
     GetTypeUserFileEndpoint: 'UserFirm/GetAllTypeUserFile',
+    AddFileAttachFirmEndpoint: 'UserFirm/SaveAttachFile',
+
 
 
     GetCpcTypeEndpoint: 'MasterData/GetAllCpcType',
@@ -137,8 +146,12 @@ export const environment = {
     GetAllAssignmentTypeEndpoint: 'MasterData/GetAllAssignmentType',
     GetAllTermTypeEndpoint: 'MasterData/GetAllTermType',
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
+    getnewnessType: 'MasterData/GetNewnessType',
+    GetEmptityHealthEndpoint: 'MasterData/GetEmptityHealth',
+
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
+
 
 };
 
