@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { ContractContractors } from "app/modules/admin/dashboards/contractual/models/contractor";
-import {  CommiteeRequestContractor, PreviusStudyContractors } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
+import {  OtherMinute, PreviusStudyContractorsList, ResponseContractorPdf } from "app/modules/admin/dashboards/contractual/models/generate-pdf";
 import { environment } from "environments/environment";
 import { Observable, catchError } from "rxjs";
 import Swal from 'sweetalert2';
@@ -19,7 +19,7 @@ export class PdfDataService {
     getDataMinuteExtension(contractors: ContractContractors) {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPdMinteExtension;
-        return this._httpClient.post<any>(urlEndpointGenerate, contractors).pipe(
+        return this._httpClient.post<ResponseContractorPdf<OtherMinute[]>>(urlEndpointGenerate, contractors).pipe(
             catchError(this.handleError) // Manejo de errores, si es necesario
         );
     }
@@ -35,12 +35,12 @@ export class PdfDataService {
     getcommitteeRequestData(contractors: ContractContractors) {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetCommitteeRequestdEndpoint;
-        return this._httpClient.post<CommiteeRequestContractor>(urlEndpointGenerate, contractors);
+        return this._httpClient.post<any>(urlEndpointGenerate, contractors);
     }
-    getPreviusStudy(contractors: ContractContractors): Observable<PreviusStudyContractors> {
+    getPreviusStudy(contractors: ContractContractors): Observable<ResponseContractorPdf<PreviusStudyContractorsList>> {
         let urlEndpointGenerate =
             this.apiUrl + environment.GetPreviusStudyContractIdEndpoint;
-        return this._httpClient.post<PreviusStudyContractors>(urlEndpointGenerate, contractors);
+        return this._httpClient.post<ResponseContractorPdf<PreviusStudyContractorsList>>(urlEndpointGenerate, contractors);
     }
 
     // Método para manejar errores (opcional)

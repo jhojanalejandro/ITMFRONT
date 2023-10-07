@@ -6,7 +6,6 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import Swal from 'sweetalert2';
 import { ContractContractors } from 'app/modules/admin/dashboards/contractual/models/contractor';
-import { FileContractor } from 'app/layout/common/models/file-contractor';
 
 @Injectable({
     providedIn: 'root'

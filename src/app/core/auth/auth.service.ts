@@ -332,6 +332,13 @@ export class AuthService {
             })
         );
     }
+
+    UploadFileAttach(formdata: UserFile[]) {
+        let urlEndpointGenerate = this.apiUrl + environment.AddFileAttachFirmEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
+
+
     private handleError(error: any): Observable<any> {
         Swal.fire({
             position: 'center',

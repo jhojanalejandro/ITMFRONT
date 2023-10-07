@@ -6,6 +6,7 @@ import { IResponse } from 'app/layout/common/models/Response';
 import { ContractContractors } from '../models/contractor';
 import { AssignmentType } from '../models/assignment-user.model';
 import Swal from 'sweetalert2';
+import { ModifyContractor } from 'app/modules/admin/pages/planing/models/planing-model';
 
 @Injectable({
     providedIn: 'root'
@@ -132,7 +133,7 @@ export class ContractorService {
         );
     }
 
-    saveMinuteModify(data: any) {
+    saveMinuteModify(data: ModifyContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.SaveModifyMinuteEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
             catchError(this.handleError) // Manejo de errores, si es necesario
@@ -148,13 +149,18 @@ export class ContractorService {
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
-        // Implementa el manejo de errores aquí, si es necesario
-        // Por ejemplo, puedes mostrar un mensaje de error en la consola o en una ventana modal
+        let errorResponse = null;
+        if(error.error.message == null){
+            errorResponse = error.error
+        }else{
+            errorResponse = error.error.message
+        }
+        debugger
         Swal.fire({
             position: 'center',
             icon: 'error',
             title: '',
-            html: error.error.message,
+            html: errorResponse,
             showConfirmButton: false,
             timer: 2500
         });

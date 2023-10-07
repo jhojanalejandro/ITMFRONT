@@ -20,15 +20,6 @@ export class HomeContractorService {
         return this._data.asObservable();
     }
 
-
-    getData(): Observable<any> {
-        return this._httpClient.get('api/dashboards/finance').pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
-    }
-
     addContractFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -98,5 +89,16 @@ export class HomeContractorService {
     }
 
 
+    getContarctorById(contractorId: string): Observable<any> {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
+
+        return this._httpClient.get<any>(urlEndPoint, { params: params }).pipe(
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
 }
 
