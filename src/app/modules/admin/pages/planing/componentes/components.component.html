@@ -25,13 +25,6 @@
                         <span class="ml-1 text-secondary">Componentes</span>
                     </div>
                 </div>
-                <div class="flex sm:hidden">
-                    <a class="inline-flex items-center -ml-1.5 text-secondary font-medium" [routerLink]="'./..'">
-                        <mat-icon class="icon-size-5 text-secondary" [svgIcon]="'heroicons_solid:chevron-left'">
-                        </mat-icon>
-                        <span class="ml-1">Back</span>
-                    </a>
-                </div>
             </div>
             <!-- Title -->
             <div class="mt-2">
@@ -115,7 +108,7 @@
                                             <button (click)="editComponent(dataComponente)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar Componente
                                             </button>
-                                            <button (click)="deleteConfirmationDialog(dataComponente)" mat-menu-item>
+                                            <button (click)="deleteConfirmationDialog(dataComponente,'Componente')" mat-menu-item>
                                                 <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>Eliminar Componente
                                             </button>
                                         </mat-menu>
@@ -151,6 +144,9 @@
                                             <button (click)="editActivity(dataActividad)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar Actividad
                                             </button>
+                                            <button (click)="deleteConfirmationDialog(dataActividad,'Actividad')" mat-menu-item>
+                                                <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>Eliminar Actividad
+                                            </button>
                                         </mat-menu>
                                     </div>
                                 </div>
@@ -167,11 +163,11 @@
                                     <div class="text-2xl font-semibold leading-tight">Nombre Elemento:
                                         {{dataElemento.nombreElemento}}</div>
                                     <div class="-mr-4">
-                                        <button mat-icon-button [matMenuTriggerFor]="listCard07Menu">
+                                        <button mat-icon-button [matMenuTriggerFor]="listCardMenu">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
                                             </mat-icon>
                                         </button>
-                                        <mat-menu #listCard07Menu="matMenu">
+                                        <mat-menu #listCardMenu="matMenu">
                                             <button (click)="editElemento(dataElemento)" mat-menu-item>
                                                 <mat-icon svgIcon="edit"></mat-icon>Editar
                                             </button>
@@ -283,6 +279,25 @@
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
                                     <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
                                         Calculado sobre <span class="text-green-500">{{porcentajeCalculo}}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                        <div class="flex items-start justify-between">
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Recursos adicionales</div>
+                        </div>
+                        <div class="flex items-center mt-1">
+                            <div class="flex flex-col">
+                                <div class="text-3xl font-semibold tracking-tight leading-tight">
+                                    {{resource | currency:'COP '}}
+                                </div>
+                                <div class="flex items-center">
+                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
+                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
+                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
+                                        valor sin utilizar
                                     </div>
                                 </div>
                             </div>

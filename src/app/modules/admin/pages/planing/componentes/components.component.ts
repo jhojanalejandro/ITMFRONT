@@ -46,6 +46,7 @@ export class AddComponentsComponent implements OnInit {
     configForm: FormGroup;
     subTotal: number = 0;
     total: number = 0;
+    resource: number = 0;
     contractorCant: number = 0;
     elementosCant: number = 0;
     componentCant: number = 0;
@@ -143,6 +144,7 @@ export class AddComponentsComponent implements OnInit {
                 element.elementos.forEach((item) => {
                     this.elementosCant++;
                     this.subTotal += item.valorTotal;
+                    this.resource += element.recursos
                     this.contractorCant += item.cantidadContratistas
                 });
             }
@@ -151,6 +153,7 @@ export class AddComponentsComponent implements OnInit {
                     this.activitiesCant++;
                     if (item.elementos.length >= 1) {
                         item.elementos.forEach((element) => {
+                            this.resource += element.recursos
                             this.elementosCant++;
                             this.subTotal += element.valorTotal;
                             this.contractorCant += element.cantidadContratistas
@@ -370,12 +373,13 @@ export class AddComponentsComponent implements OnInit {
             valorContrato: this.total,
             valorSubTotal: this.subTotal,
             gastosOperativos: this.gastosOperativos,
+            recursos: this.resource
         };
 
         this._contrtactService.UpdateCostContractFolder(saveCalculo)
             .pipe(takeUntil(this._unsubscribe$))
             .subscribe((res) => {
-                if (res) {
+                if (res.success) {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -442,10 +446,35 @@ export class AddComponentsComponent implements OnInit {
 
     }
 
-    deleteConfirmationDialog(component: any): void {
+    deleteActivity(activity: any) {
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            this._planingService.deleteActivity(activity.id)
+                .pipe(takeUntil(this._unsubscribe$))
+                .subscribe((response) => {
+                    if (response.success) {
+                        Swal.fire(
+                            {
+                                position: 'center',
+                                icon: 'success',
+                                title: '',
+                                html: 'Información Elimina Exitosamente!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }
+                        );
+                        this.reloadResolve();
+                    }
+                });
+        }
+
+    }
+
+    deleteConfirmationDialog(component: any,typeDelete: string): void {
         this.configForm = this._formBuilder.group({
-            title: 'Eliminar Componente',
-            message: '¿Está seguro de que desea eliminar el componente?  <span class="font-medium">¡Esta acción no se puede deshacer!</span>',
+            title: 'Eliminar '+typeDelete,
+            message: '¿Está seguro de que deseas eliminar el componente?  <span class="font-medium">¡Esta acción no se puede deshacer!</span>',
             icon: this._formBuilder.group({
                 show: true,
                 name: 'heroicons_outline:exclamation',
@@ -469,7 +498,11 @@ export class AddComponentsComponent implements OnInit {
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
-                this.deleteComponent(component);
+                if(typeDelete == 'Componente'){
+                    this.deleteComponent(component);
+                }else{
+                    this.deleteActivity(component);
+                }
             }
         });
     }
