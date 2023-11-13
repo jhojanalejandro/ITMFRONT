@@ -3,6 +3,8 @@ import { ButtonsExportService } from './buttons-export.service';
 import swal from 'sweetalert2';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
+import { ShareService } from '../share-service/share-service.service';
+import { RouteImageEnum } from '../enums/route-image/route-image';
 
 @Component({
     selector: 'app-buttons-export',
@@ -11,11 +13,15 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ButtonsExportComponent implements OnInit {
     @Input() contractId: string;
+    @Input() showNomina: boolean;
     private readonly _unsubscribe$ = new Subject<void>();
+    itmImageBase64: string = null;
 
-    constructor(private _service: ButtonsExportService) { }
+    constructor(private _service: ButtonsExportService, private _shareService: ShareService) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.getBase64Image();
+     }
 
     generarReporte() {
         let generateReport = {
@@ -27,7 +33,6 @@ export class ButtonsExportComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribe$))
             .subscribe(
                 (res) => {
-                    debugger
                     var downloadURL = window.URL.createObjectURL(res);
                     var link = document.createElement('a');
                     link.href = downloadURL;
@@ -49,7 +54,6 @@ export class ButtonsExportComponent implements OnInit {
                 }
             );
     }
-
 
     exportarSolicitudCdp() {
         this._service.getReportCdp(this.contractId)
@@ -136,6 +140,43 @@ export class ButtonsExportComponent implements OnInit {
                     swal.fire('', 'La información esta incompleta para generar el documento!', 'error');
                 }
             );
+    }
+
+    generateSatisfactionReportate() {
+        this._service.generateReportSatisfaction(this.contractId, this.itmImageBase64)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "REPORTE SATISFACCIÓN";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    swal.fire('', '', 'error');
+                }
+            );
+    }
+
+    private getBase64Image() {
+        this._shareService.loadAndConvertImageToBase64(RouteImageEnum.LOGOITM)
+            .then(base64Data => {
+                this.itmImageBase64 = base64Data;
+                
+            })
+            .catch(error => {
+                console.error('Error al cargar y convertir la imagen:', error);
+            });
     }
 
     ngOnDestroy(): void {

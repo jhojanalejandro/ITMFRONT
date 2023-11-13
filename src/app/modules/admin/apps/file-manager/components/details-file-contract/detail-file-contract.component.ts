@@ -143,7 +143,8 @@ export class DetailFileContractComponent implements OnInit, OnDestroy {
                 split: true,
                 id: this.item.id,
                 fileName: this.item.filesName,
-                documentType: this.item.documentType
+                documentType: this.item.documentType,
+                fileData: this.item.filedata
             }
         });
         dialogRef.afterClosed()

@@ -12,21 +12,19 @@
     </div>
     <!-- <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Cargar Archivo</p> -->
     <div class="modal-body pt-6">
-        <form [formGroup]="formFile" class="example-form">
-            <div class="folder">
+        <form [formGroup]="formMaintainer" class="example-form">
+            <div *ngIf="showNumber" class="folder">
                 <mat-form-field  class="hiringD" appearance="outline">
-                    <mat-label>Motivo Novedad</mat-label>
-                    <input type="text" placeholder="Seleccione o Digite" aria-label="Motivo Novedad" matInput
-                        [formControlName]="'tipoNovedad'" >
+                    <mat-label>{{placeholderNumber}}</mat-label>
+                    <input type="text" placeholder="{{placeholderNumber}}" matInput
+                        [formControlName]="'numberOption'" >
                 </mat-form-field>
             </div>
             <div class="folder">
                 <mat-form-field  class="hiringD" appearance="outline">
-                    <mat-label>descripción Novedad</mat-label>
-                    <textarea type="text"  class="example-full-width" id="descripcionNovedad" formControlName="descripcionNovedad" autocomplete="off" matInput placeholder="descripcion Novedad"></textarea>
-                    <mat-error *ngIf="formFile.get('descripcionNovedad').hasError('required')">
-                        El Campo Descripcion es requerido
-                    </mat-error>
+                    <mat-label>{{placeholderName}}</mat-label>
+                    <input type="text" placeholder="{{placeholderName}}" matInput
+                        [formControlName]="'nameOption'" >
                 </mat-form-field>
             </div>
 
@@ -36,5 +34,5 @@
 </div>
   <mat-dialog-actions align="end" class="pt-8">
     <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">Cancelar</button>
-    <button mat-flat-button  [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"  (click)="AddDetailFile()">Enviar</button>
+    <button mat-flat-button  [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formMaintainer.disabled"  (click)="saveOption()">Enviar</button>
   </mat-dialog-actions>

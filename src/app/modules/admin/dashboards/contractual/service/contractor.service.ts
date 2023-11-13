@@ -7,6 +7,7 @@ import { ContractContractors } from '../models/contractor';
 import { AssignmentType } from '../models/assignment-user.model';
 import Swal from 'sweetalert2';
 import { ModifyContractor } from 'app/modules/admin/pages/planing/models/planing-model';
+import { MinutePdf, ResponseContractorPdf } from '../models/generate-pdf';
 
 @Injectable({
     providedIn: 'root'
@@ -18,11 +19,10 @@ export class ContractorService {
     constructor(private _httpClient: HttpClient) {
     }
 
-    getContractorByIdProject(contractId: string,originNomina: boolean) {
+    getContractorsByIdProject(contractId: string) {
         const params = new HttpParams()
-            .set('contractId', contractId)
-            .set('originNomina', originNomina);
-        let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
+            .set('contractId', contractId);
+        let urlEndPoint = this.apiUrl + environment.GetByContractorsIdContractEndpoint;
         return this._httpClient.get<IResponse>(urlEndPoint, { params }).pipe(
             tap((response: any) => {
                 this._contractorsByContract.next(response);
@@ -57,19 +57,6 @@ export class ContractorService {
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id);
     }
 
-    addContractFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
-    }
-
-    getPaymentAccount(contractorId: string, contractId: string) {
-        const params = new HttpParams()
-            .set('contractorId', contractorId)
-            .set('contractId', contractId)
-        let urlEndPoint = this.apiUrl + environment.GetPdChargeAccountGetById;
-        return this._httpClient.get<IResponse>(urlEndPoint, { params: params });
-    }
-
 
     getFilesContractorByContractId(contractorId: string, contractId: string) {
         const params = new HttpParams()
@@ -85,9 +72,9 @@ export class ContractorService {
     }
 
 
-    getDataMinute(contractId: ContractContractors) {
+    getDataMinute(contractId: ContractContractors): Observable<ResponseContractorPdf<MinutePdf>> {
         let urlEndPoint = this.apiUrl + environment.GetBillByContractIdEndpoint;
-        return this._httpClient.post<any>(urlEndPoint, contractId);
+        return this._httpClient.post<ResponseContractorPdf<MinutePdf>>(urlEndPoint, contractId);
     }
 
     addNewnessContractor(data: any) {
@@ -133,9 +120,9 @@ export class ContractorService {
         );
     }
 
-    saveMinuteModify(data: ModifyContractor) {
+    saveMinuteModify(changeContractModel: ModifyContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.SaveModifyMinuteEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, changeContractModel).pipe(
             catchError(this.handleError) // Manejo de errores, si es necesario
         );
     }
@@ -146,6 +133,18 @@ export class ContractorService {
             .pipe(retry(0));
     }
 
+    getContractorByIdProject(contractId: string,contractorId) {
+        const params = new HttpParams()
+            .set('contractId', contractId)
+            .set('contractorId', contractorId);
+        let urlEndPoint = this.apiUrl + environment.GetByContractorIdContractEndpoint;
+        return this._httpClient.get<IResponse>(urlEndPoint, { params }).pipe(
+            tap((response: any) => {
+                this._contractorsByContract.next(response);
+            }),
+            catchError(this.handleError) // Manejo de errores, si es necesario
+        );
+    }
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {
@@ -155,7 +154,6 @@ export class ContractorService {
         }else{
             errorResponse = error.error.message
         }
-        debugger
         Swal.fire({
             position: 'center',
             icon: 'error',

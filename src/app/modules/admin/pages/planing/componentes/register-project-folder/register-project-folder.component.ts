@@ -12,7 +12,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { Subject, takeUntil } from 'rxjs';
 import { RubroType, StatusContract } from 'app/modules/admin/generic/model/generic.model';
 import { CodeStatusContract } from 'app/layout/common/enums/statusContract';
-import { DetailTypeCodes, DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
+import { DetailTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 
 @Component({
@@ -42,6 +42,7 @@ export class RegisterContractFolderComponent implements OnInit {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   permission: boolean = false;
   detailType: string;
+  rubrosOrigin: any = GlobalConst.rubrosOrgin
   constructor(
     private _upload: UploadDataService,
     private _genericService: GenericService,
@@ -86,7 +87,9 @@ export class RegisterContractFolderComponent implements OnInit {
       nombreRubro: new FormControl(null),
       fuenteRubro: new FormControl(null),
       dutyContract: new FormControl(null),
-      project: new FormControl(null)
+      project: new FormControl(null),
+      contarctValue: new FormControl({value: null, disabled: true}),
+      resource: new FormControl(null)
     });
     this.fillData();
   }

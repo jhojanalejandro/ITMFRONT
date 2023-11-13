@@ -15,6 +15,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import Swal from 'sweetalert2';
 import { AssignmentUserComponent } from 'app/modules/admin/dashboards/contractual/contractor-list/components/assigmentUser/assignment-user.component';
+import { MaintainerRegisterComponent } from '../maintainer-register/maintainer-register.component';
 
 @Component({
   selector: 'app-banks-list',
@@ -108,26 +109,26 @@ export class BanksListComponent implements OnInit, OnDestroy {
     return item.id || index;
   }
 
-  AddBank(bank: any) {
-    this.permission = this.auth.validateRoll(CodeUser.SUPERVISORAREAC);
-    if (!this.permission) {
-      Swal.fire('', 'No tienes permisos para asignar contratos!', 'warning');
-    }else{
-      const dialogUpload = this._matDialog.open(AssignmentUserComponent, {
-        disableClose: true,
-        autoFocus: false,
-        data: bank
-        
-      });
-      dialogUpload.afterClosed().subscribe((result) => {
-        if (result) {
-          this.getBanksList();
-        }
-      });
-    }
 
+  formRegister(cpc: any){
+    const dialogRef = this._matDialog.open(MaintainerRegisterComponent, {
+      disableClose: true,
+      autoFocus: false,
+      data: {
+          cpc,
+          type: 'bank'
+      },
+  });
+  dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((result) => {
+          if (result) {
+ 
+          }
+      });
   }
-
+  
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next(null);

@@ -1,7 +1,7 @@
 <div class="flex-col max-w-250 md:min-w-120 -m-6">
     <div class="flex-col max-w-240 md:min-w-160">
         <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-            <div class="text-lg font-medium">Rgistro datos de Contratación</div>
+            <div class="text-lg font-medium">Registro datos de Contratación</div>
             <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
                 <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
             </button>
@@ -118,7 +118,7 @@
 
                 <div class="folderFieldContractor">
                     <mat-form-field class="hiringField" appearance="fill">
-                        <mat-label for="requierePoliza" >Requiere poliza</mat-label>
+                        <mat-label for="requierePoliza">Requiere poliza</mat-label>
                         <mat-select (selectionChange)="requiere($event)"  id="requierePoliza"
                             [formControlName]="'requierePoliza'" name="requierePoliza">
                             <mat-option *ngFor="let poliza of requierePoliza" [value]="poliza.viewValue">
@@ -146,7 +146,7 @@
                         appearance="fill">
                         <mat-label>Fecha Expedicion Poliza</mat-label>
                         <input matInput id="fechaExPedicionPoliza" autocomplete="off"
-                            [value]="hiringData.fechaExpedicionPoliza" formControlName="fechaExPedicionPoliza"
+                            formControlName="fechaExPedicionPoliza"
                             [matDatepicker]="pickerEP">
                         <mat-datepicker #pickerEP></mat-datepicker>
                         <mat-datepicker-toggle matSuffix [for]="pickerEP"></mat-datepicker-toggle>
@@ -154,7 +154,7 @@
                     <mat-form-field *ngIf="showDataPoliza" (click)="pickerVF.open()" class="hiringField"
                         appearance="fill">
                         <mat-label>Vigencia Final</mat-label>
-                        <input matInput id="vigenciaFinal" autocomplete="off" [value]="hiringData.vigenciaFinal"
+                        <input matInput id="vigenciaFinal" autocomplete="off"
                             formControlName="vigenciaFinal" [matDatepicker]="pickerVF">
                         <mat-datepicker #pickerVF></mat-datepicker>
                         <mat-datepicker-toggle matSuffix [for]="pickerVF"></mat-datepicker-toggle>
@@ -179,7 +179,7 @@
             </form>
         </mat-dialog-content>
         <mat-dialog-actions class="action" align="end">
-            <button mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
+            <button class="btn-cancelar" mat-flat-button [color]="'warn'" type="button" [mat-dialog-close]="false">Cancelar</button>
             <button mat-flat-button [color]="'primary'" [disabled]="!permission"
                 (click)="sendEconomicdataContractor()"> <span  *ngIf="!formContractor.disabled" >{{title}}</span>
                 <mat-progress-spinner *ngIf="formContractor.disabled" [diameter]="24"

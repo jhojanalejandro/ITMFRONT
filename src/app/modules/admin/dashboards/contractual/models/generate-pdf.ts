@@ -47,7 +47,12 @@ export interface DataContract{
     contractObject: string;
     contractNumber: string;
     registerDate: Date;
-    contractName: string;
+    companyName: string;
+    projectName: string;
+    rubro: string;
+    rubroName: string;
+    rubroOrigin: string;
+
 }
 
 export interface PreviusStudyContractorsList{
@@ -69,6 +74,7 @@ export interface PreviusStudyContractorsList{
     requiredProfileExperience: string;
     activityContractor: string;
     dutyContract: string;
+    policeRequire: boolean;
 }
 
 export interface PersonalInCharge{
@@ -91,12 +97,8 @@ export interface MinutePdf{
     initialDateContract: Date;
     finalContractDate: Date;
     elementObject: string;
-    supervisor: string;
-    supervisorIdentification: string
     contractNumber: string;
-    supervisorCharge: string;
     companyName: string;
-    contrato: any;
     registerDateContract: Date;
     rubroContract: any;
     unitValueContract: any;
@@ -106,4 +108,5 @@ export interface MinutePdf{
     contractorMail: string;
     comiteGenerated: boolean;
     previusStudy: boolean;
+    requirePolice: boolean;
 }

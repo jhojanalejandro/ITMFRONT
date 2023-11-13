@@ -38,12 +38,6 @@ export class HistoryContractorComponent implements OnInit, OnDestroy
                 type    : 'group',
                 children: [
                     {
-                        id   : 'opcion.contratos',
-                        title: 'Contratos Asociados',
-                        type : 'basic',
-                        link : '/docs/history/lista/opcion/contratos/'+this.contractorId
-                    },
-                    {
                         id   : 'opcion.pagos',
                         title: 'Pagos Efectuados',
                         type : 'basic',
@@ -55,12 +49,12 @@ export class HistoryContractorComponent implements OnInit, OnDestroy
                         type : 'basic',
                         link : '/docs/history/lista/opcion/datos-contratacion/'+this.contractorId
                     },
-                    {
-                        id   : 'optcion.serving',
-                        title: 'Serving',
-                        type : 'basic',
-                        link : '/docs/history/lista/opcion/serving/'+this.contractorId
-                    }
+                    // {
+                    //     id   : 'optcion.serving',
+                    //     title: 'Serving',
+                    //     type : 'basic',
+                    //     link : '/docs/history/lista/opcion/serving/'+this.contractorId
+                    // }
                 ]
             }
         ];

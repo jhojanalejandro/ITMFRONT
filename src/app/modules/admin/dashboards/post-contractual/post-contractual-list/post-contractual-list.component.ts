@@ -55,11 +55,13 @@ import { EntityHealth } from 'app/modules/admin/apps/home-contractor/models/mate
 import {
     ContractContractors,
     Contractor,
+    PostContractual,
 } from '../../contractual/models/contractor';
 import { ContractorService } from '../../contractual/service/contractor.service';
 import { ContractorDataHiringComponent } from '../../contractual/contractor-list/components/data-hiring-contractor/data-hiring-contractor.component';
 import { ContractorPaymentRegisterComponent } from '../components/payroll-register/contractor-payment-register.component';
 import { ModificacionFormComponent } from '../../share-components/modificacion-form/modificacion-form.component';
+import { ContractorPaymentService } from '../../contractual/service/contractorPayment.service';
 
 @Component({
     selector: 'post-contractual-list',
@@ -91,7 +93,7 @@ export class PostContractualListComponent
     elements: Elements[];
     componentes: Componente[];
     contractorListId: any[] = [];
-    contractorsList: Contractor[] = [];
+    contractorsList: PostContractual[] = [];
     configForm: FormGroup;
     componentselectId: any;
     elementselectId: any;
@@ -112,11 +114,10 @@ export class PostContractualListComponent
         'identificacion',
         'nombre',
         'statusContractor',
-        'legalProccess',
-        'hiringStatus',
-        'comiteGenerated',
-        'previusStudy',
-        'minuteGnenerated',
+        'paymentsCant',
+        'periodPaymented',
+        'paymentCant',
+        'debt',
         'acciones',
         'all',
     ];
@@ -129,7 +130,7 @@ export class PostContractualListComponent
     typeStatusContractor: any = GlobalConst.TypeStatusContractor;
     statusSelected: any = GlobalConst.StatusContractor;
     statusContractorSelected: any = GlobalConst.StatusContractor;
-    contractorSelected: Contractor | null = null;
+    contractorSelected: PostContractual | null = null;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     private readonly _unsubscribe$ = new Subject<void>();
     selectedContracttorForm: FormGroup;
@@ -148,13 +149,12 @@ export class PostContractualListComponent
         nacionality: null,
         expeditionPlace: null,
         contractValue: null,
-        habilitado: null,
         identificacion: null,
         lugarExpedicion: null,
         elementId: null,
         componentId: null,
-        legalProccess: null,
-        hiringStatus: null,
+        paymentPension: null,
+        paymentArl: null,
         initialContractDate: null,
         finalContractDate: null,
         cantDays: 0,
@@ -164,16 +164,22 @@ export class PostContractualListComponent
         eps: null,
         arl: null,
         afp: null,
+        contract: null,
+        paymentsCant: null,
+        statusContractor: null,
+        periodPaymented: null,
+        paymentCant: null,
+        debt: null
     };
     eps: EntityHealth[] = [];
     arl: EntityHealth[] = [];
     afp: EntityHealth[] = [];
-    expandedElement: Contractor = this.expandedEmpty;
+    expandedElement: PostContractual = this.expandedEmpty;
     isButtonClicked: boolean = false;
-    sendOrigin: boolean = false;
 
     constructor(
         private _contractorListService: ContractorService,
+        private _contractorPaymentService: ContractorPaymentService,
         private _genericService: GenericService,
         private _matDialog: MatDialog,
         private _authService: AuthService,
@@ -189,13 +195,11 @@ export class PostContractualListComponent
     columnas = [
         { title: 'NOMBRE', name: 'nombre' },
         { title: 'CEDULA', name: 'identificacion' },
-        { title: 'ESTADO', name: 'proccess' },
         { title: 'REGISTRO', name: 'statusContractor' },
-        { title: 'CUENTA COBRO', name: 'legalProccess' },
-        { title: 'CONTRACTUAL', name: 'hiringStatus' },
-        { title: 'ACTA SUPERVISIÓN', name: 'minuteGnenerated' },
-        { title: 'ARL', name: 'comiteGenerated' },
-        { title: 'SALUD PREVIO', name: 'previusStudy' },
+        { title: 'CANTIDAD PAGOS', name: 'paymentsCant' },
+        { title: 'PERIODO PAGADO', name: 'periodPaymented' },
+        { title: 'CANTIDAD PAGADA', name: 'paymentCant' },
+        { title: 'DEUDA', name: 'debt' },
         { title: '', name: 'all' },
         { title: 'OPCIONES', name: 'acciones' },
     ];
@@ -249,7 +253,7 @@ export class PostContractualListComponent
             dismissible: true,
         });
 
-        this.getDataContractor(false);
+        this.getDataContractor();
     }
 
     announceSortChange(sortState: Sort) {
@@ -294,9 +298,9 @@ export class PostContractualListComponent
         this.cdref.detectChanges();
     }
 
-    getDataContractor(origin: boolean) {
-        this._contractorListService
-            .getContractorByIdProject(this.contractId, origin)
+    getDataContractor() {
+        this._contractorPaymentService
+            .getContractorPostContractual(this.contractId)
             .subscribe((contractorsListResponse) => {
                 if (contractorsListResponse.success) {
                     this.contractorsList = contractorsListResponse.data.map(
@@ -383,7 +387,7 @@ export class PostContractualListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
-                        this.getDataContractor(false);
+                        this.getDataContractor();
                     }
                     this.selection.clear();
                 });
@@ -499,7 +503,7 @@ export class PostContractualListComponent
             );
             dialogRefPayment.afterClosed().subscribe((result) => {
                 if (result) {
-                    this.getDataContractor(this.sendOrigin);
+                    this.getDataContractor();
                 }
                 this.contractorListId = [];
             });
@@ -691,7 +695,7 @@ export class PostContractualListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
-                        this.getDataContractor(this.sendOrigin);
+                        this.getDataContractor();
                     }
                     this.selection.clear();
                 });

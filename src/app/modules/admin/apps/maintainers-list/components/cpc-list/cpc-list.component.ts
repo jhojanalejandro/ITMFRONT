@@ -15,6 +15,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import Swal from 'sweetalert2';
 import { AssignmentUserComponent } from 'app/modules/admin/dashboards/contractual/contractor-list/components/assigmentUser/assignment-user.component';
+import { MaintainerRegisterComponent } from '../maintainer-register/maintainer-register.component';
 
 @Component({
   selector: 'app-cpc-list',
@@ -45,8 +46,7 @@ export class CpcListComponent implements OnInit, OnDestroy {
     private _matDialog: MatDialog,
     private auth: AuthService,
     private cdref: ChangeDetectorRef,
-    private _liveAnnouncer: LiveAnnouncer,
-    private _router: Router
+    private _liveAnnouncer: LiveAnnouncer
   ) {
   }
   columnas = [
@@ -130,6 +130,25 @@ export class CpcListComponent implements OnInit, OnDestroy {
       });
     }
 
+  }
+
+  formRegister(cpc: any){
+    const dialogRef = this._matDialog.open(MaintainerRegisterComponent, {
+      disableClose: true,
+      autoFocus: false,
+      data: {
+          cpc,
+          type: 'cpc'
+      },
+  });
+  dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this._unsubscribeAll))
+      .subscribe((result) => {
+          if (result) {
+ 
+          }
+      });
   }
 
   ngOnDestroy(): void {

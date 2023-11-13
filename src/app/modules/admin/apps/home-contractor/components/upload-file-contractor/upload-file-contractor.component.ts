@@ -30,9 +30,7 @@ const moment = _rollupMoment || _moment;
 @Component({
     selector: 'app-upload-file-contractor',
     templateUrl: './upload-file-contractor.component.html',
-    styleUrls: ['./upload-file-contractor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+    styleUrls: ['./upload-file-contractor.component.scss']
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
     date = new FormControl(moment());
@@ -202,7 +200,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     private getDaTaContractor(): any {
         this._contractorListService
-            .getContractorByIdProject(this._data.contractId,false)
+            .getContractorByIdProject(this._data.contractId,this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
                 this.dataContractor = resp;

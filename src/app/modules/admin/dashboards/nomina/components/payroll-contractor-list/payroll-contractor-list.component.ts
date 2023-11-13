@@ -50,7 +50,7 @@ import {
     trigger,
 } from '@angular/animations';
 import { EntityHealth } from 'app/modules/admin/apps/home-contractor/models/mater.model';
-import { ContractContractors, Contractor } from '../../../contractual/models/contractor';
+import { ContractContractors, Contractor, NominaContractual, PostContractual } from '../../../contractual/models/contractor';
 import { ContractorService } from '../../../contractual/service/contractor.service';
 import { NewnessContractorComponent } from '../../../share-components/newness-contractor/newness-contractor.component';
 import { ContractorPaymentRegisterComponent } from '../../../post-contractual/components/payroll-register/contractor-payment-register.component';
@@ -58,6 +58,7 @@ import { ContractorDataHiringComponent } from '../../../contractual/contractor-l
 import { TermFileContractComponent } from '../../../share-components/term-file-contract/term-file-contract.component';
 import * as ExcelJS from 'exceljs/dist/exceljs.min.js';
 import { ModificacionFormComponent } from '../../../share-components/modificacion-form/modificacion-form.component';
+import { ContractorPaymentService } from '../../../contractual/service/contractorPayment.service';
 
 
 @Component({
@@ -78,12 +79,9 @@ import { ModificacionFormComponent } from '../../../share-components/modificacio
 export class PayrollContractualListComponent
     implements OnInit, OnDestroy, AfterViewInit, AfterContentChecked
 {
-    itmImageBase64: string = null;
     contractId: string;
     userName: any;
-    value: any;
     generatePdfMinute: boolean;
-    generatePdf: boolean;
     pdfType: string;
     disableElement: boolean = true;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -94,6 +92,7 @@ export class PayrollContractualListComponent
     contractorsList: Contractor[] = [];
     configForm: FormGroup;
     componentselectId: any;
+    elementselectId: any;
     contractContractors: ContractContractors = {
         contractId: null,
         contractors: [],
@@ -110,12 +109,15 @@ export class PayrollContractualListComponent
         'select',
         'identificacion',
         'nombre',
-        'statusContractor',
-        'legalProccess',
-        'hiringStatus',
-        'comiteGenerated',
-        'previusStudy',
-        'minuteGnenerated',
+        'paymentPeriodDate',
+        'payrollNumber',
+        'paymentPension',
+        'paymentArl',
+        'paymentEps',
+        'correctArlPayment',
+        'correctAfpPayment',
+        'correctEpsPayment',
+        'correctSheet',
         'acciones',
         'all',
     ];
@@ -128,7 +130,7 @@ export class PayrollContractualListComponent
     typeStatusContractor: any = GlobalConst.TypeStatusContractor;
     statusSelected: any = GlobalConst.StatusContractor;
     statusContractorSelected: any = GlobalConst.StatusContractor;
-    contractorSelected: Contractor | null = null;
+    contractorSelected: NominaContractual | null = null;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     private readonly _unsubscribe$ = new Subject<void>();
     selectedContracttorForm: FormGroup;
@@ -147,13 +149,12 @@ export class PayrollContractualListComponent
         nacionality: null,
         expeditionPlace: null,
         contractValue: null,
-        habilitado: null,
         identificacion: null,
         lugarExpedicion: null,
         elementId: null,
         componentId: null,
-        legalProccess: null,
-        hiringStatus: null,
+        paymentPension: null,
+        paymentArl: null,
         initialContractDate: null,
         finalContractDate: null,
         cantDays: 0,
@@ -163,16 +164,23 @@ export class PayrollContractualListComponent
         eps: null,
         arl: null,
         afp: null,
+        payrollNumber: null,
+        paymentPeriodDate: new Date(),
+        correctArlPayment: null,
+        correctAfpPayment: null,
+        correctEpsPayment: null,
+        correctSheet: null,
+        paymentEps: null,
+        contract: null
     };
     eps: EntityHealth[] = [];
     arl: EntityHealth[] = [];
     afp: EntityHealth[] = [];
-    expandedElement: Contractor = this.expandedEmpty;
+    expandedElement: NominaContractual = this.expandedEmpty;
     isButtonClicked: boolean = false;
-    sendOrigin: boolean = false;
-
     constructor(
         private _contractorListService: ContractorService,
+        private _contractorPayment: ContractorPaymentService,
         private _genericService: GenericService,
         private _matDialog: MatDialog,
         private _authService: AuthService,
@@ -188,13 +196,16 @@ export class PayrollContractualListComponent
     columnas = [
         { title: 'NOMBRE', name: 'nombre' },
         { title: 'CEDULA', name: 'identificacion' },
-        { title: 'ESTADO', name: 'proccess' },
         { title: 'REGISTRO', name: 'statusContractor' },
-        { title: 'CUENTA COBRO', name: 'legalProccess' },
-        { title: 'CONTRACTUAL', name: 'hiringStatus' },
-        { title: 'ACTA SUPERVISIÓN', name: 'minuteGnenerated' },
-        { title: 'ARL', name: 'comiteGenerated' },
-        { title: 'SALUD PREVIO', name: 'previusStudy' },
+        { title: 'PERIODO DE PAGO', name: 'paymentPeriodDate' },
+        { title: 'PAGO AFP', name: 'paymentPension' },
+        { title: 'PAGO ARL', name: 'paymentArl' },
+        { title: 'PAGO EPS', name: 'paymentEps' },
+        { title: 'NUMERO PLANILLA', name: 'payrollNumber' },
+        { title: 'PAGO AFP', name: 'correctAfpPayment' },
+        { title: 'PAGO ARL', name: 'correctArlPayment' },
+        { title: 'PAGO EPS', name: 'correctEpsPayment' },
+        { title: 'REVISADA', name: 'correctSheet' },
         { title: '', name: 'all' },
         { title: 'OPCIONES', name: 'acciones' },
     ];
@@ -248,7 +259,7 @@ export class PayrollContractualListComponent
             dismissible: true,
         });
 
-        this.getDataContractor(false);
+        this.getDataContractor();
     }
 
     announceSortChange(sortState: Sort) {
@@ -293,9 +304,9 @@ export class PayrollContractualListComponent
         this.cdref.detectChanges();
     }
 
-    getDataContractor(origin: boolean) {
-        this._contractorListService
-            .getContractorByIdProject(this.contractId, origin)
+    getDataContractor() {
+        this._contractorPayment
+            .getContractorNomina(this.contractId)
             .subscribe((contractorsListResponse) => {
                 if (contractorsListResponse.success) {
                     this.contractorsList = contractorsListResponse.data.map(
@@ -322,6 +333,7 @@ export class PayrollContractualListComponent
                 }
             });
     }
+
     isAllSelected() {
         if (this.selection.selected.length >= 1) {
             this.visibleOption = true;
@@ -347,13 +359,6 @@ export class PayrollContractualListComponent
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
             row.Id + 1
         }`;
-    }
-
-    //metodo que obtiene las columnas seleccionadas de la grid
-    selectRow($event: any, dataSource: any) {
-        if ($event.checked) {
-            this.value = dataSource;
-        }
     }
 
     openConfirmationDelete(element: any): void {
@@ -382,7 +387,7 @@ export class PayrollContractualListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
-                        this.getDataContractor(false);
+                        this.getDataContractor();
                     }
                     this.selection.clear();
                 });
@@ -498,7 +503,7 @@ export class PayrollContractualListComponent
             );
             dialogRefPayment.afterClosed().subscribe((result) => {
                 if (result) {
-                    this.getDataContractor(this.sendOrigin);
+                    this.getDataContractor();
                 }
                 this.contractorListId = [];
             });
@@ -568,7 +573,6 @@ export class PayrollContractualListComponent
             this.contractContractors.contractors = this.contractorListId;
         }
         this.contractContractors.contractId = this.contractId;
-        this.generatePdf = true;
         this.generateType = type;
     }
 
@@ -641,7 +645,6 @@ export class PayrollContractualListComponent
     }
 
     pdfGenerated(e: boolean) {
-        this.generatePdf = e;
         this.generatePdfMinute = e;
         this.reloadResolve();
     }
@@ -691,7 +694,7 @@ export class PayrollContractualListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
-                        this.getDataContractor(this.sendOrigin);
+                        this.getDataContractor();
                     }
                     this.selection.clear();
                 });
@@ -872,33 +875,6 @@ export class PayrollContractualListComponent
                 }
             });
     }
-
-    exportToExcel() {
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('MiHojaDeCalculo');
-    
-        // Agregar una imagen desde una URL
-        const image = workbook.addImage({
-          base64: this.itmImageBase64,
-          extension: '.jpeg',
-        });
-    
-        worksheet.addImage(image, 'B2:C7'); // Ajusta la ubicación y el tamaño de la imagen
-    
-        // Resto del contenido y formato de la hoja de cálculo
-    
-        // Agregar la hoja de cálculo al archivo Excel
-        workbook.xlsx.writeBuffer().then((data) => {
-          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'MiArchivoExcel.xlsx';
-          a.click();
-          window.URL.revokeObjectURL(url);
-        });
-      }
-    
 
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);

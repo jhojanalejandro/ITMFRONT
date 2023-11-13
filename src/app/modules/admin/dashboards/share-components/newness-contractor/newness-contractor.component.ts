@@ -66,6 +66,7 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
       contractorId: this._data.contractorId,
       newnessDescripcion: this.formFile.value.descripcionNovedad,
       newnessType: this.formFile.value.tipoNovedad,
+      registerDate: new Date(),
       newnessCode: code
     }
     this._contractorService.addNewnessContractor(detailFile)
@@ -111,6 +112,7 @@ export class NewnessContractorComponent implements OnInit, OnDestroy {
       contractorId: this._data.id,
       newnessDescripcion: this.formFile.value.descripcionNovedad,
       newnessType: this.formFile.value.tipoNovedad,
+      registerDate: new Date(),
       newnessCode: code
     }
     this._contractorService.addNewnessContractor(detailFile).subscribe((res) => {

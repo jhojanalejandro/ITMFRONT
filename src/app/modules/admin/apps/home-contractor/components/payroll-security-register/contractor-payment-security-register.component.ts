@@ -103,22 +103,14 @@ export class ContractorPaymentSecurityRegisterComponent
             paymenteps: new FormControl(null, Validators.required),
             paymentArl: new FormControl(null, Validators.required),
             Paymentafp: new FormControl(null, Validators.required),
-            afp: new FormControl(
-                { value: null, disabled: true },
-                Validators.required
-            ),
-            arl: new FormControl(
-                { value: null, disabled: true },
-                Validators.required
-            ),
-            eps: new FormControl(
-                { value: null, disabled: true },
-                Validators.required
-            ),
+            afp: new FormControl({ value: null, disabled: true },Validators.required),
+            arl: new FormControl({ value: null, disabled: true },Validators.required),
+            eps: new FormControl({ value: null, disabled: true },Validators.required),
             observation: new FormControl(null, Validators.required),
             file: new FormControl(null, Validators.required),
             paymentPeriodDate: new FormControl(null, Validators.required),
             payrollNumber: new FormControl(null, Validators.required),
+            ibc: new FormControl(null, Validators.required),
         });
         this.subscribeToValueChanges('paymenteps');
         this.subscribeToValueChanges('paymentArl');
@@ -167,7 +159,7 @@ export class ContractorPaymentSecurityRegisterComponent
             correctEpsPayment: this.verifySheet.correctEpsPayment,
             correctArlPayment: this.verifySheet.correctArlPayment,
             correctSheet: this.verifySheet.correctSheet,
-            contractorFile: this.contractorFile
+            contractorFile: this.contractorFile,
         };
         this._nominaService
             .addContractorPaymentSecurity(this.paymentsecurityData)
@@ -374,8 +366,6 @@ export class ContractorPaymentSecurityRegisterComponent
     //este metodo es para leer cuando se va a buscar por un campo especifico
     async readPdf(file: File,fieldFilter: string,typeFilter: string): Promise<void> {
         const pdfData = new Uint8Array(await this.readFile(file));
-        
-        debugger
         const pdfDocument = await pdfjsLib.getDocument({ data: pdfData })
             .promise;
 
@@ -419,7 +409,6 @@ export class ContractorPaymentSecurityRegisterComponent
         searchText: string,
         typeFilter: string
     ): Promise<any[]> {
-        debugger
         const numPages = pdfDocument.numPages;
         const searchResults = [];
 
@@ -454,8 +443,6 @@ export class ContractorPaymentSecurityRegisterComponent
                 }
             }
         }
-        console.log(searchResults);
-
         return searchResults;
     }
 

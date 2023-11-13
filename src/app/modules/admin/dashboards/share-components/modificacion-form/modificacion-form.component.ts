@@ -28,7 +28,7 @@ import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
-import { CpcType } from 'app/modules/admin/generic/model/generic.model';
+import { NominaService } from '../../nomina/service/nomina.service';
 
 
 
@@ -45,13 +45,13 @@ export class ModificacionFormComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     minDateAdiction:Date = new Date();
-    cpcNumber: string = null; 
-    elemento: ElementComponent = { nombreElemento: null, componentId: null, cantidadContratistas: null, cantidadDias: null, valorUnidad: null, valorTotal: null, valorPorDia: null, cpc: null, nombreCpc: null, modificacion: false, tipoElemento: null, recursos: 0, consecutivo: null, obligacionesGenerales: null, obligacionesEspecificas: null, valorPorDiaContratista: null, valorTotalContratista: null, objetoElemento: null, activityId: null }
+    cpcId: string = null; 
     disableField: boolean = true;
     resources: any= null;
-    cpcType: CpcType[];
+    totalValue: any = null;
     exactTotal: number = 0;
     isAddition: boolean = false;
+    elementData: any;
     dateAdiction: DetalleContrato = {
         contractId: null,
         fechaContrato: null,
@@ -78,6 +78,7 @@ export class ModificacionFormComponent implements OnInit {
     minDate: Date;
     maxdate: Date;
     minDateFinal: Date;
+    economicData: any;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -90,6 +91,7 @@ export class ModificacionFormComponent implements OnInit {
         private _fuseConfirmationService: FuseConfirmationService,
         private _planingService: PlaningService,
         private _genericService: GenericService,
+        private _nominaService: NominaService,
         private _uploadFileDataService: UploadFileDataService,
         private _contractorService: ContractorService,
     ) {
@@ -113,32 +115,29 @@ export class ModificacionFormComponent implements OnInit {
             this.matDialogRef.close();
         }
 
-
         this.modifyForm = this._formBuilder.group({
-            contractorCant: new FormControl(this.elemento.cantidadContratistas, Validators.required),
-            cantDay: new FormControl(this.elemento.cantidadDias, Validators.required),
-            unitValue: new FormControl(null, Validators.required),
-            totalValue: new FormControl(null, Validators.required),
-            unitValueDay: new FormControl(null, Validators.required),
+            contractorCant: new FormControl(null, Validators.required),
+            cantDay: new FormControl({value: null, disabled: true }, Validators.required),
+            unitValue: new FormControl({value: null, disabled: true }, Validators.required),
+            totalValue: new FormControl({value: null, disabled: true }, Validators.required),
+            unitValueDay: new FormControl({value: null, disabled: true }, Validators.required),
             calculateValue: new FormControl(null, Validators.required),
             additionValue: new FormControl(null, Validators.required),
-            cpc: new FormControl(this.elemento.cpc, Validators.required),
-            cpcName: new FormControl(this.elemento.nombreCpc, Validators.required),
             elementType: new FormControl(null, Validators.required),
-            elementName: new FormControl(null, Validators.required),
+            elementName: new FormControl({value: null, disabled: true }, Validators.required),
             modification: new FormControl(null, Validators.required),
-            resources: new FormControl(null, Validators.required),
+            resources: new FormControl({value: null, disabled: true }, Validators.required),
             initialAdditionDate: new FormControl(null),
             finalAdditionDate: new FormControl(null),
             modificationType: new FormControl(null, Validators.required),
-            elementObject: new FormControl(null, Validators.required),
+            elementObject: new FormControl({value: null, disabled: true }, Validators.required),
             specificObligations: new FormControl(null, Validators.required),
             generalObligations: new FormControl(null, Validators.required),
             initialDateContract: new FormControl({value: null, disabled: true }, Validators.required),
             finalDateContract: new FormControl({value: null, disabled: true }, Validators.required),
             academicProfile: new FormControl(null, Validators.required),
             profesionalProfile: new FormControl(null, Validators.required),
-            noAddition: new FormControl(null, Validators.required),
+            noAddition: new FormControl(null, Validators.required)
         });
         this.filteredOptions =
             this.modifyForm.controls.elementName.valueChanges.pipe(
@@ -147,14 +146,12 @@ export class ModificacionFormComponent implements OnInit {
             );
         this.getDocumentType();
         this.getDateContract();
-        this.getCdp();
         this.subscribeToValueChanges('additionValue');
-
+        this.getEconomicData();
     }
 
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();
-
         return this.allelementos.filter((option) =>
             option.toLowerCase().includes(filterValue)
         );
@@ -175,27 +172,26 @@ export class ModificacionFormComponent implements OnInit {
         } else {
             modificacion = true;
         }
-        debugger
         if(this.exactTotal == 0){
-            this.exactTotal = Number(this.modifyForm.value.totalValue.toString().replace(/\./g, ''))
+            this.exactTotal = this.totalValue;
         }
-        let item: ModifyContractor = {
-            elementName: this.modifyForm.value.elementName,
+        debugger
+        let changeContractModel: ModifyContractor = {
+            elementName: this.elementData.nombreElemento,
             cantidadContratistas: this.modifyForm.value.contractorCant,
-            cantDays: this.modifyForm.value.cantDay,
-            unitValue: Number(this.modifyForm.value.unitValue.toString().replace(/\./g, '')),
+            cantDays: this.modifyForm.value.cantDay == null ? this.elementData.cantidadDias : this.modifyForm.value.cantDay,
+            unitValue:this.modifyForm.value.unitValue != null ? Number(this.modifyForm.value.unitValue.toString().replace(/\./g, '')) : this.elementData.valorUnidad,
             totalValue:  this.exactTotal,
-            valueDay: Number(this.modifyForm.value.unitValueDay.toString().replace(/\./g, '')),
-            valorPorDiaContratista: this.modifyForm.value.valorDiaContratista,
+            valueDay: this.modifyForm.value.unitValueDay != null ? Number(this.modifyForm.value.unitValueDay.toString().replace(/\./g, '')) : this.elementData.valorPorDia,
+            valorPorDiaContratista: 0,
             valorTotalContratista: 0,
-            cpcId: this.modifyForm.value.cpcName,
+            cpcId: this.cpcId,
             isModify: modificacion,
-            tipoElemento: this.modifyForm.value.elementType,
             resources: this.modifyForm.value.resources,
             consecutive: '1',
             specificObligations: this.modifyForm.value.specificObligations,
             generalObligations: this.modifyForm.value.generalObligations,
-            elementObject: this.modifyForm.value.elementObject,
+            elementObject: this.modifyForm.value.elementObject == null ? this.elementData.objetoElemento : this.modifyForm.value.elementObject,
             perfilRequeridoAcademico: this.modifyForm.value.academicProfile,
             perfilRequeridoExperiencia: this.modifyForm.value.profesionalProfile,
             noAddition: this.modifyForm.value.noAddition,
@@ -205,9 +201,11 @@ export class ModificacionFormComponent implements OnInit {
             initialAdditionDate: this.modifyForm.value.initialAdditionDate,
             finalAdditionDate: this.modifyForm.value.finalAdditionDate,
             isAddition: this.isAddition,
+            registerDate: new Date(),
+            debt: this.modifyForm.value.unitValueDay
         };
         this._contractorService
-            .saveMinuteModify(item)
+            .saveMinuteModify(changeContractModel)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((response) => {
                 if (response.success) {
@@ -227,17 +225,21 @@ export class ModificacionFormComponent implements OnInit {
 
     calculate = () => {
         this.totalCalculate = false;
-        this.modifyForm.value.unitValueDay = Number(
+        let unitValue = Number(
             (this.modifyForm.value.unitValue / 30) *
             this.modifyForm.value.contractorCant
         );
-        this.elemento.valorPorDia = this.modifyForm.value.unitValueDay;
-        this.elemento.valorTotal = this.modifyForm.value.totalValue;
-        this.elemento.valorTotal = Number(
-            this.elemento.valorPorDia * this.modifyForm.value.cantDay
+
+        let totalVlue = Number(
+            Number(this.modifyForm.value.unitValueDay) * this.modifyForm.value.cantDay
         );
         let paymentDayContractor =
             this.modifyForm.value.unitValueDay / Number(this.modifyForm.value.cantDay);
+            this.modifyForm.patchValue({
+                unitValue: this._genericService.addCommasToNumber(unitValue),
+                unitValueDay: this._genericService.addCommasToNumber(paymentDayContractor),
+                totalValue: this._genericService.addCommasToNumber(totalVlue),
+            });
         if (this.modifyForm.value.cantDay >= '30') {
             //   Swal.fire(
             //     'Advertencia!',
@@ -349,34 +351,38 @@ export class ModificacionFormComponent implements OnInit {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
                 this.resources = resp.recursos;
+                this.cpcId = resp.cpcId;
+                this.elementData = resp;
                 this.modifyForm.patchValue({
                     elementName: resp.nombreElemento,
-                    resources: resp.recursos,
+                    resources: this._genericService.addCommasToNumber(resp.recursos),
                     cantDay: resp.cantidadDias,
-                    cpcName: resp.cpcId,
-                    cpc: resp.nombreCpc,
-                    unitValue: this._genericService.addCommasToNumber(resp.valorUnidad),
-                    unitValueDay: this._genericService.addCommasToNumber(resp.valorPorDia),
-                    totalValue: this._genericService.addCommasToNumber(resp.valorTotal),
                     elementObject: resp.objetoElemento,
-                    academicProfile: resp.perfilRequeridoExperiencia,
+                    academicProfile: resp.perfilRequeridoAcademico,
                     profesionalProfile: resp.perfilRequeridoExperiencia,
                     specificObligations: resp.obligacionesEspecificas,
                     generalObligations: resp.obligacionesGenerales
-                })
-                if (resp != null) {
-                    this.elemento = resp;
-                    if (this.elemento.cpc == undefined) {
-                        this.elemento.cpc = null;
-                    }
-                    if (this.elemento.nombreCpc == undefined) {
-                        this.elemento.nombreCpc = null;
-                    }
-                    this.elemento.valorUnidad = this.elemento.valorUnidad;
-                    this.elemento.valorPorDia = this.elemento.valorPorDia;
-                    this.elemento.valorTotal = this.elemento.valorTotal;
-                    this.elemento.recursos = this.elemento.recursos;
-                }
+                });
+            })
+    }
+    
+    private getEconomicData() {
+        let contractorId: string[] = [this._data.data.id]
+        let filterData = {
+            contractors: contractorId,
+            contractId: this._data.contractId
+        }
+        this._nominaService.getByIdEconomicDataContractor(filterData)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((resp) => {
+                this.totalValue = resp[0].totalValue;
+                this.economicData = resp[0]
+                this.modifyForm.patchValue({
+                    cantDay: resp.cantidadDias,
+                    unitValue: this._genericService.addCommasToNumber(resp[0].unitValue),
+                    unitValueDay: this._genericService.addCommasToNumber(resp[0].debt),
+                    totalValue: this._genericService.addCommasToNumber(resp[0].totalValue)
+                });
             })
     }
 
@@ -408,30 +414,8 @@ export class ModificacionFormComponent implements OnInit {
             });
     }
 
-    
-    private getCdp() {
-        this._genericService.getCpcType()
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response) => {
-                this.cpcType = response;
-            }, (response) => {
-                // Set the alert
-                console.log(response);
-
-                swal.fire('', 'Error al registrar la información!', 'error');
-            });
-    }
-
-    changecpcType(e: any) {
-        let cpcN: CpcType = this.cpcType.find(f => f.id == e.value);
-        this.modifyForm.patchValue({
-            cpc: cpcN.cpcName,
-        })
-        this.elemento.nombreCpc = cpcN.cpcName;
-    }
 
     onChangeTotalValue(event) {
-        debugger
         if (this.modifyForm.value.additionValue != null ) {
             // if (this.totalValue != this.elementForm.value.totalValue) {
             //     if (this.totalValue < Number(this.elementForm.value.totalValue.toString().replace(/\./g, ''))) {
@@ -440,10 +424,10 @@ export class ModificacionFormComponent implements OnInit {
             //         this.recursos = Math.round(Number(this.totalValue) - Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')));
             //     }
             // }
-            this.exactTotal = Math.round(Number(this.modifyForm.value.totalValue.toString().replace(/\./g, '')) + Number(this.modifyForm.value.additionValue.toString().replace(/\./g, '')))
+            this.exactTotal = Math.round(this.totalValue+ Number(this.modifyForm.value.additionValue.toString().replace(/\./g, '')))
             this.modifyForm.patchValue({
                 calculateValue: this._genericService.addCommasToNumber(this.exactTotal),
-            })
+            });
             
         } else {
             swal.fire('', 'Valores no validos!', 'warning');
@@ -454,15 +438,15 @@ export class ModificacionFormComponent implements OnInit {
     subscribeToValueChanges(controlName: string): void {
         this.modifyForm.get(controlName).valueChanges.subscribe(value => {
             this.formatNumberWithCommas(controlName, value);
-            if(Number(value.toString().replace(/\./g, '')) > Number(this.modifyForm.value.resources.toString().replace(/\./g, ''))){
+            if(Number(value.toString().replace(/\./g, '')) > this.resources){
                 swal.fire('', 'El valor no puede ser mayor a los recursos disponibles!', 'warning');
 
                 this.modifyForm.patchValue({
-                    additionValue: this._genericService.addCommasToNumber(this.modifyForm.value.resources),
+                    additionValue: this._genericService.addCommasToNumber(this.resources),
                 });
             }else{
                 this.formatNumberWithCommas(controlName, value);
-                let porcentaje = (Number(this.modifyForm.value.totalValue.toString().replace(/\./g, '')) * 30) / 100;
+                let porcentaje = (this.totalValue * 30) / 100;
                 if(Number(value.toString().replace(/\./g, '')) >(porcentaje)){
                     swal.fire('', 'El valor no puede ser mayor al 30% del valor del contrato!', 'warning');
                 }

@@ -15,7 +15,7 @@ export class ButtonsExportService {
     const httpOptions = {
       responseType: 'blob' as 'json'
     };
-    return this._httpClient.post<any>(urlEndPoint, generateReport,httpOptions);
+    return this._httpClient.post<any>(urlEndPoint, generateReport, httpOptions);
   }
   getReportDataCdp(idContrato: string): Observable<Blob> {
     let urlEndPoint = this.apiUrl + environment.exportarCdp;
@@ -58,4 +58,17 @@ export class ButtonsExportService {
     };
     return this._httpClient.post<any>(urlEndPoint, generateSatisfaccion, httpOptions);
   }
+
+  generateEconomicTable(contractId: any, base64: string): Observable<any> {
+    let urlEndPoint = this.apiUrl + environment.GenerateEconomicTableEndpoint;
+    let generateSatisfaccion = {
+      contractId: contractId,
+      base64: base64
+    }
+    const httpOptions = {
+      responseType: 'blob' as 'json'
+    };
+    return this._httpClient.post<any>(urlEndPoint, generateSatisfaccion, httpOptions);
+  }
+
 }

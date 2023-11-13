@@ -30,7 +30,7 @@
                                             <div class="">/</div>
                                         </ng-container>
                                         <ng-container>
-                                            <div>Carpetas contratato</div>
+                                            <div>Carpetas contrato</div>
                                         </ng-container>
                                     </ng-container>
 
@@ -49,6 +49,10 @@
                     <!-- Actions -->
                     <div class="mt-4 sm:mt-0">
                         <!-- Upload button -->
+                        <button [disabled]="selection.selected.length == 0" class="ml-4" mat-flat-button [color]="'primary'" (click)="uploadFile()">
+                            <mat-icon  [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
+                            <span class="ml-2 mr-1">Cargar Archivo</span>
+                        </button>
                         <button class="ml-4" mat-flat-button [color]="'primary'" (click)="crearCarpeta()">
                             <mat-icon [svgIcon]="'heroicons_outline:document-add'"></mat-icon>
                             <span class="ml-2 mr-1">Crear Carpeta</span>
@@ -97,10 +101,22 @@
                         <!-- Folders -->
                         <ng-container *ngIf="items.folders.length > 0">
                             <div>
-                                <div class="font-medium">Lista carpetas Contratistas del contrato</div>
+                                <div class="font-medium">Lista Contratistas</div>
+                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected() "
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">Seleccionar todo
+                            </mat-checkbox>
                                 <div class="flex flex-wrap -m-2 mt-2">
                                     <ng-container
                                         *ngFor="let folder of items.folders | filter:searchText; trackBy:trackByFn">
+                                        <section class="ml-10">
+                                            <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="$event ? selection.toggle(folder) : null"
+                                                [checked]="selection.isSelected(folder) "
+                                                [aria-label]="checkboxLabel(folder)">
+                                            </mat-checkbox>
+                                        </section>
                                         <div class="relative w-40 h-40 m-1 p-1 shadow rounded-2xl bg-card">
                                             <a class="absolute z-20 top-1.5 right-2.0 w-5 h-5 min-h-5"
                                             [ngClass]="{'bg-red-200  dark:bg-orange-600 ': folder.cantFile == 0,

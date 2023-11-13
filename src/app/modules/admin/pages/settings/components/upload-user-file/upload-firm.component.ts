@@ -144,7 +144,6 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
       fileType: this.typeFile,
       fileNameC: this.fileName
     };
-    debugger
     this._auth.UploadFileFirm(this.fileSelected)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
@@ -247,7 +246,6 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     if (!this.formFile.valid) {
       return
     }
-    debugger
     this._auth.UploadFileAttach(this.anexoFile)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
@@ -276,7 +274,6 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   }
 
   saveFile(){
-    debugger
     let typeId = this.typeUserFile.find(f => f.code == TypeFileUserCode.ADJUNTOSMENSAJE).id;
     if(typeId === this.typeFileSelected ){
       this.uploadAnexo();

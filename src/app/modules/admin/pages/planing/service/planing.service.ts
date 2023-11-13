@@ -180,12 +180,11 @@ export class PlaningService {
     deleteActivity(activityId: any) {
         let urlEndpointGenerate = this.apiUrl + environment.deleteActivityEndpoint;
         const params = new HttpParams()
-        .set('activityId', activityId);
-        return this._httpClient.delete<IResponse>(urlEndpointGenerate,{params}).pipe(
+            .set('activityId', activityId);
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate, { params }).pipe(
             catchError(this.handleError)
         );
     }
-
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {

@@ -22,7 +22,7 @@
                 <!-- Actions -->
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
                     <button [matTooltip]="'Cargar Excel'" (click)="uploadExcel()"
-                        class="fuse-mat-button-rounded bg-primary-700" mat-flat-button [color]="'primary'">
+                        class="fuse-mat-button-rounded bg-primary-700 btn-upload-contractors" mat-flat-button [color]="'primary'">
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:upload'"></mat-icon>
                         <span class="ml-2">Cargar Contratistas</span>
                     </button>
@@ -50,9 +50,8 @@
                     <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">CONTRATOS</div>
                 </div>
                 <div class="overflow-x-auto mx-6">
-                    <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
+                    <table id="mi-lista" class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
                         [trackBy]="trackByFn" matSort (matSortChange)="announceSortChange($event)">
-
                         <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">
                             <th mat-header-cell class="centre" mat-sort-header *matHeaderCellDef>
                                 {{columna.title}} </th>
@@ -78,12 +77,12 @@
                                 </span>
                                 <p *ngIf="element[columna.name]=== element.acciones">
                                     <button *ngIf="element.statusContract === 'EN PROCESO'" [matTooltip]="'Mostrar Contratistas'" style="margin-left: 3px !important;"
-                                        class="hidden sm:inline-flex ml-3" (click)="navigateToContractors(element,'contractual')"
+                                        class="hidden sm:inline-flex ml-3 boton-de-clic" (click)="navigateToContractors(element,'contractual')"
                                         mat-flat-button [color]="'accent'">
                                         <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
                                     </button>
                                     <button *ngIf="element.statusContract === 'EN EJECUCIÓN'" [matTooltip]="'Opciones contractual'" mat-icon-button
-                                        [matMenuTriggerFor]="summaryMenu">
+                                        [matMenuTriggerFor]="summaryMenu" data-cy=boton-con-icono>
                                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
                                         </mat-icon>
                                     </button>
@@ -98,7 +97,6 @@
                                         </button>
                                     </mat-menu>
                                 </p>
-
                             </td>
                         </ng-container>
 

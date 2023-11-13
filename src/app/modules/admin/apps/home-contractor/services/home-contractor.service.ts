@@ -69,7 +69,6 @@ export class HomeContractorService {
         return this._httpClient.get<ExecutionReport>(urlEndPoint, { params: params });
     }
 
-
     saveContractorPersonalInformation(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.SaveDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -99,6 +98,14 @@ export class HomeContractorService {
                 return of(response);
             })
         );
+    }
+
+    validateStatus(contractorId: string, contractId: string) {
+        const params = new HttpParams()
+            .set('contractorId', contractorId)
+            .set('contractId', contractId)
+        let urlEndPoint = this.apiUrl + environment.GetStatusContractorEndpoint;
+        return this._httpClient.get<any>(urlEndPoint, { params: params });
     }
 }
 

@@ -80,10 +80,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     public matDialogRef: MatDialogRef<ContractorDataHiringComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
-  ) {
-
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this._initData();
@@ -109,7 +106,9 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         this.activitySelectId = this.datos.activityId;
         this.visibleActivity = true;
       }
-      this.datos.idContractors.push(this.datos.id);
+      if(this.datos.id != null){
+        this.datos.idContractors.push(this.datos.id);
+      }
     } else{
       if (this.datos.idContractors.length == 0) {
         Swal.fire(
@@ -289,7 +288,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       });
   }
 
-
   asignActivity(e: any) {
     this.activitySelectId = e.value;
     let actividades = this.activities.find(f => f.id == e.value);
@@ -453,6 +451,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         }
       })
   }
+
   calculateDaysBetweenDates(startDate: Date, endDate: Date): number {
     if (startDate == null) {
       startDate = this.formContractor.value.fechaRealDeInicio;
@@ -492,9 +491,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       element = this.elements.find(item => item.id === this.elementselectId);
     }
     this.showTotal = true;
-    let cantidadDias = this.calculateDaysBetweenDates(this.minDate, this.formContractor.value.fechaFinalizacionConvenio);
-    this.valorContrato = element.valorPorDiaContratista * cantidadDias;
-    this.valorTotalContrato = (+this.valorContrato.toFixed(0)).toLocaleString();
+    if(this.minDate != null && this.formContractor.value.fechaFinalizacionConvenio != null){
+      let cantidadDias = this.calculateDaysBetweenDates(this.minDate, this.formContractor.value.fechaFinalizacionConvenio);
+      this.valorContrato = element.valorPorDiaContratista * cantidadDias;
+      this.valorTotalContrato = (+this.valorContrato.toFixed(0)).toLocaleString();
+    }
+
   }
 
   private validateDate() {
@@ -504,6 +506,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
 
     this.twoYearAgoExam = minDate; // Comprueba si la fecha es anterior a la mínima permitida
   }
+
   private async saveAsignmentElement(): Promise<void>{
     return await new Promise(async (rslv) => {
       let asignar: AsignmentData = {
@@ -627,6 +630,11 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res.success) {
+          if(this.componentselectId != this.datos.componentId){
+            this.saveAsignmentElement().then(() =>{
+              this.asignmentElement();
+            });
+          }
           Swal.fire({
             position: 'center',
             icon: 'success',

@@ -62,14 +62,6 @@
                     <mat-datepicker #pickerIR></mat-datepicker>
                     <mat-datepicker-toggle matSuffix [for]="pickerIR"></mat-datepicker-toggle>
                 </mat-form-field>
-                <!-- <mat-form-field class="hiringSecurity"  (click)="dp.open()"  appearance="fill">
-                    <mat-label for="paymentPeriodDate">Periodo Mes y año</mat-label>
-                    <input matInput [matDatepicker]="dp" placeholder="Año y mes" [formControl]="date">
-                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-                    <mat-datepicker #dp startView="multi-year" (yearSelected)="chosenYearHandler($event)"
-                        (monthSelected)="chosenMonthHandler($event, dp)" panelClass="example-month-picker">
-                    </mat-datepicker>
-                </mat-form-field> -->
                 <mat-form-field class="hiringSecurity" appearance="fill">
                     <mat-label>Número Planilla</mat-label>
                     <input type="text" id="payrollNumber" 
@@ -77,6 +69,15 @@
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     <mat-error *ngIf="formContractorPaymentSecurity.get('payrollNumber').hasError('required')">
                         El Campo payrollNumber es requerido
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="hiringSecurity" appearance="fill">
+                    <mat-label>Ingreso Base de Cotización (IBC)</mat-label>
+                    <input type="text" id="ibc"
+                        formControlName="ibc" autocomplete="off" matInput placeholder="Ingreso Base de Cotización">
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    <mat-error *ngIf="formContractorPaymentSecurity.get('ibc').hasError('required')">
+                        El Campo ARL es requerido
                     </mat-error>
                 </mat-form-field>
             </div>

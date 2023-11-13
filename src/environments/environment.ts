@@ -16,7 +16,7 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
-    GenrateReportContractEndpoint: 'ExportToExcel/GenrateReportContract',
+    GenrateReportContractEndpoint: 'ExportToExcel/GenerateReportContract',
     exportarDap: 'ExportToExcel/GetSolicitudContratacionDap/',
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',
     exportarCdp: 'ExportToExcel/ExportToExcelCdp/',
@@ -26,9 +26,10 @@ export const environment = {
     addExcelCdpEndpoint: 'ImportExcel/ImportExcelCdp',
     addExcelElementEndpoint: 'ImportExcel/ImportExcelElement',
     GenerateSatisfactionReportEndpoint: 'ExportToExcel/GenerateSatisfactionReport',
+    GenerateEconomicTableEndpoint: 'ExportToExcel/GenerateEconomicTable',
 
     UpdateContractorEndpoint: 'Contractor/Update',
-    SaveDataContractorEndpoint: 'Contractor/SaveDataContractor/',
+    SaveDataContractorEndpoint: 'Contractor/SaveDataContractor',
     GetFolderContractorEndpoint: 'Contractor/GetAll/',
     GetContractorByIdEndpoint: 'Contractor/GetById',
     DeleteContractorByIdEndpoint: 'Contractor/Delete/',
@@ -39,9 +40,12 @@ export const environment = {
     GetMinutesPdf: 'Contractor/GetDocumentMinutesPdf/',
     HistoryContractor: 'Contractor/GetHistoryContractor',
     AddnewnessContractor: 'Contractor/AddNewNess',
-    GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
+    GetByContractorsIdContractEndpoint: 'Contractor/GetContractorsByContract',
     ValidateDocumentUploadEndpoint: 'Contractor/ValidateDocumentUpload',
     SaveModifyMinuteEndpoint: 'Contractor/SaveModifyMinute',
+    GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
+    GetNewnessContractorEndpoint: 'Contractor/GetNewnessContractor',
+    GetStatusContractorEndpoint: 'Contractor/GetStatusContractor',
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -73,6 +77,9 @@ export const environment = {
     GetEmptityHealthContractorEndpoint: 'ContractorPayments/GetEmptityHealthContractor',
     GetPdChargeAccountGetById: 'ContractorPayments/ChargeAccountGetById',
     addContractorPaymentSecurityEndpoint: 'ContractorPayments/SaveContractorPaymentSecurity',
+    GetContractorPaymentSecurityEndpoint: 'ContractorPayments/GetContractorPaymentSecurity',
+    GetContractorNominaEndpoint: 'ContractorPayments/GetContractorListNomina',
+    GetPaymentsContractorEndpoint: 'ContractorPayments/GetPaymentsContractor',
 
     addEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
     UpdateEconomicDataContractorEndpoint: 'EconomicDataContractor/AddEconomicData',
@@ -88,6 +95,7 @@ export const environment = {
     CreateDetailObservationEndpoint: 'Files/CreateDetailObservation',
     SaveCommitteeContractorEndpoint: 'Files/SaveCommitteeContractor',
     saveDetailFileCommitteeEndpoint: 'Files/CreateDetailCommittee',
+    addFileShareEndpoint: 'Files/AddFileShareContractor',
 
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
@@ -98,6 +106,8 @@ export const environment = {
     GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/DeleteFile/',
     GetFileDonwloadContractualEndpoint: 'Files/GetFileDonwloadContractual',
+    GetFileContractorByFolderToDownloadEndpoint: 'Files/GetFileContractorByFolderToDownload',
+
 
     addHiringEndpoint: 'HiringData/SaveHiring',
     UpdateHiringEndpoint: 'HiringData/Update',
@@ -149,7 +159,9 @@ export const environment = {
     GetDetailTypeEndpoint: 'MasterData/GetAllDetailType',
     getnewnessType: 'MasterData/GetNewnessType',
     GetEmptityHealthEndpoint: 'MasterData/GetEmptityHealth',
-
+    SaveRubroEndpoint: 'MasterData/SaveRubro',
+    SaveSaveBankEndpoint: 'MasterData/SaveBank',
+    SaveCpcTypeEndpoint: 'MasterData/SaveCpcType',
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 

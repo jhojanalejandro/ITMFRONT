@@ -31,6 +31,7 @@ import { ExecutionReport } from './models/pdfDocument';
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
+import { ContractorPaymentService } from '../../dashboards/contractual/service/contractorPayment.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -39,6 +40,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class HomeContractorComponent implements OnInit, OnDestroy {
     viewFilesContract: boolean = false;
     viwFilesGenerated: boolean = false;
@@ -48,6 +50,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractList: any[] = [];
+    hired: boolean = false;
     contractSelected: string = null;
     id: any;
     userName: any;
@@ -68,8 +71,9 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         private _auth: AuthService,
         private _router: Router,
         private _contractorListService: ContractorService,
-    ) { }
+        private _contractorPaymentService: ContractorPaymentService,
 
+    ) { }
 
     ngOnInit(): void {
         this.userName = this._auth.accessName;
@@ -91,18 +95,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 if (result) {
-
                 }
             });
     }
     changeToViewFilesContract(event: any) {
-        this.contractSelected = event.value
+        this.contractSelected = event.value;
         this.viewFilesContract = true;
         this.getFilesUserByContract();
         this.getFilesUserByContract();
         this.getDataContractor();
-
-
+        this.validateHired();
     }
 
     getFilesFolder = async () => {
@@ -161,12 +163,21 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
 
     private getFilesUserByContract() {
         this._contractorListService
-            .getFilesContractorByContractId(this._auth.accessId, this.contractSelected)
+            .getFilesContractorByContractId(
+                this._auth.accessId,
+                this.contractSelected
+            )
             .subscribe((Response: any) => {
-
                 if (Response.length > 0) {
                     this.fileContractorListGeneral = Response;
-                    this.fileContractorList = Response.filter(f => f.documentTypesCode == DocumentTypeCode.PLANILLA || f.documentTypesCode == DocumentTypeCode.CUENTACOBRO || f.documentTypesCode == DocumentTypeCode.INFORMEEJECUCIÓN);
+                    this.fileContractorList = Response.filter(
+                        (f) =>
+                            f.documentTypesCode == DocumentTypeCode.PLANILLA ||
+                            f.documentTypesCode ==
+                            DocumentTypeCode.CUENTACOBRO ||
+                            f.documentTypesCode ==
+                            DocumentTypeCode.INFORMEEJECUCIÓN
+                    );
                     return (this.filesCharged = true);
                 }
                 if (Response.length <= 0) {
@@ -175,29 +186,34 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             });
     }
 
-
     /**
- * Track by function for ngFor loops
- *
- * @param index
- * @param item
- */
+     * Track by function for ngFor loops
+     *
+     * @param index
+     * @param item
+     */
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
     private getChargeAccount() {
         if (this.contractSelected != null) {
-            this._contractorListService
+            this._contractorPaymentService
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
-                        if(Response.data.chargeAccountNumber == 0){
-                        Response.data.chargeAccountNumber = 1;
+                    if (Response.data != null) {
+                        if (Response.data.chargeAccountNumber == 0) {
+                            Response.data.chargeAccountNumber = 1;
+                        }
+                        if (
+                            Response.data.periodExecutedFinalDate != null &&
+                            Response.data.periodExecutedInitialDate != null
+                        ) {
+                            this.viwFilesGenerated = true;
+                            this.chargeAccountData = Response.data;
+                        }
                     }
-                    if (Response.data.periodExecutedFinalDate != null && Response.data.periodExecutedInitialDate != null) {
-                        this.viwFilesGenerated = true;
-                        this.chargeAccountData = Response.data;
-                    }
+
                 });
         } else {
             swal.fire('', 'No has seleccionado contrato!', 'warning');
@@ -241,15 +257,18 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
 
     addPersonalData() {
-        const dialogRef = this._matDialog.open(ContractorPersonalDataComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                idUser: this._auth.accessId,
-                contractId: this.contractSelected,
-                contractorId: this._auth.accessId,
-            },
-        });
+        const dialogRef = this._matDialog.open(
+            ContractorPersonalDataComponent,
+            {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    idUser: this._auth.accessId,
+                    contractId: this.contractSelected,
+                    contractorId: this._auth.accessId,
+                },
+            }
+        );
         dialogRef
             .afterClosed()
             .pipe(takeUntil(this._unsubscribeAll))
@@ -259,31 +278,47 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 }
             });
     }
+
     generatePdf(e: any) {
         this.typeGenerator = e;
         this.showPdfGenerated = true;
-
     }
 
     uploadNominaFile() {
-        const dialogRef = this._matDialog.open(ContractorPaymentSecurityRegisterComponent, {
-            disableClose: true,
-            autoFocus: false,
-            data: {
-                idUser: this._auth.accessId,
-                contractId: this.contractSelected,
-                contractorId: this._auth.accessId,
-            },
-        });
+        const dialogRef = this._matDialog.open(
+            ContractorPaymentSecurityRegisterComponent,
+            {
+                disableClose: true,
+                autoFocus: false,
+                data: {
+                    idUser: this._auth.accessId,
+                    contractId: this.contractSelected,
+                    contractorId: this._auth.accessId,
+                },
+            }
+        );
         dialogRef
             .afterClosed()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((result) => {
                 if (result) {
-
                 }
             });
     }
+
+    private validateHired() {
+        if (this.contractSelected != null) {
+            this._contractorService
+                .validateStatus(this._auth.accessId, this.contractSelected)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe((Response) => {
+                    this.hired = Response;
+                });
+        } else {
+            swal.fire('', 'No has seleccionado contrato!', 'warning');
+        }
+    }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

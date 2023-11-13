@@ -53,7 +53,7 @@
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Rubro</mat-label>
-                        <mat-select [formControlName]="'rubro'" (selectionChange)="changeRubro($event)" name="rubro">
+                        <mat-select formControlName="rubro" (selectionChange)="changeRubro($event)" name="rubro">
                             <mat-option *ngFor="let tipo of rubros" [value]="tipo.id">
                                 {{tipo.rubroNumber}}
                             </mat-option>
@@ -69,9 +69,15 @@
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Fuente Rubro</mat-label>
-                        <input type="text" id="fuenteRubro" formControlName="fuenteRubro" autocomplete="off" matInput
-                            placeholder="Fuente Rubro">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                        <mat-select formControlName="fuenteRubro"  name="fuenteRubro">
+                            <mat-option *ngFor="let rubro of rubrosOrigin" [value]="rubro.viewValue">
+                                {{rubro.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                        <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
                         <mat-label>Estado contrato</mat-label>
@@ -116,8 +122,6 @@
                 </div>
 
                 <div class="folderField">
-
-
                     <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="fill">
                         <mat-label>Numero Adicion</mat-label>
                         <input type="text" id="noAdicion" formControlName="noAdicion" autocomplete="off" matInput
@@ -127,7 +131,6 @@
                             El Campo no Adicion es requerido
                         </mat-error>
                     </mat-form-field>
-
                 </div>
 
                 <div class="folderField">
@@ -152,7 +155,20 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-
+                <div class="folderField">
+                    <mat-form-field  class="contractField" appearance="fill">
+                        <mat-label>Valor Contrato</mat-label>
+                        <input type="text" id="contarctValue" formControlName="contarctValue" autocomplete="off" matInput
+                            placeholder="Valor Contrato">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field  class="contractField" appearance="fill">
+                        <mat-label>Recursos Adicionales</mat-label>
+                        <input type="text" id="resource" formControlName="resource" autocomplete="off" matInput
+                            placeholder="Recursos Adicionales">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    </mat-form-field>
+                </div>
                 <div class="folderField">
                     <mat-form-field class="rContract" appearance="fill">
                         <mat-label>Objeto Convenio</mat-label>

@@ -10,6 +10,7 @@ import { ContractorDataHiringComponent } from './components/data-hiring-contract
 import { GeneratePdfComponent } from './components/generate-pdf/generate-pdf.component';
 import { AssignmentUserComponent } from './components/assigmentUser/assignment-user.component';
 import { ShareComponentsModule } from '../../share-components/share-components.module';
+import { HistoryInnabilityComponent } from './components/history-innability/history-innability.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { ShareComponentsModule } from '../../share-components/share-components.m
         ContractorDataHiringComponent,
         GeneratePdfComponent,
         AssignmentUserComponent,
+        HistoryInnabilityComponent
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

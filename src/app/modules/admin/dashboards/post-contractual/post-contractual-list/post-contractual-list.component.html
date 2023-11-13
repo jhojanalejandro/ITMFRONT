@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="flex-auto">
-        <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+        <mat-form-field class="fuse-mat-dense p-2 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
             <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input [autocomplete]="'off'"
                 [placeholder]="'Buscar Contrato'">
@@ -58,15 +58,16 @@
                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                             </button>
                             <mat-menu #summaryMenu="matMenu">
-
                                 <button *ngIf="visibleOption" mat-menu-item
                                     (click)="generatedPdfContractor(null,'OTRO SI')">
                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                     Generar Otro si
                                 </button>
-
                             </mat-menu>
                         </div>
+                    </div>
+                    <div class="inputsearch p-8 pl-20">
+                        <app-buttons-export [showNomina]="false" [contractId]="contractId"></app-buttons-export>
                     </div>
 
                     <div class="overflow-x-auto mx-6">
@@ -103,12 +104,6 @@
 
 
                                 </th>
-                                <!-- <td mat-cell *matCellDef="let row">
-   
-
-                                </td> -->
-                                <!-- <th mat-header-cell *matHeaderCellDef>
-                                </th> -->
                                 <td mat-cell [class.selected]="element.selected"
                                     (click)="element.selected = !element.selected;" *matCellDef="let element">
                                     <div *ngIf="column ==='select'">
@@ -119,70 +114,39 @@
                                     </div>
                                     <div *ngIf="columna.name !='select' && columna.name !='acciones'">
                                         <p
-                                            *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
-                                     && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
-                                     && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
+                                            *ngIf="element[columna.name]!= element.acciones && element[columna.name]!=element.statusContractor && element[columna.name]!=element.all">
                                             {{element[columna.name]}}
                                         </p>
+                                        <!-- <p *ngIf="element[columna.name]== element.paymentPeriodDate">
+                                            {{element[columna.name] | date}}
+                                        </p> -->
+                                        <!-- <span
+                                            *ngIf="element[columna.name]=== element.correctArlPayment && element[columna.name] === element.correctAfpPayment && element[columna.name]===element.correctEpsPayment && element[columna.name]===element.correctSheet"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.correctArlPayment === 'PAGO NO CORRECTO'  || element.correctAfpPayment === 'PAGO NO CORRECTO' || element.correctEpsPayment === 'PAGO NO CORRECTO' || element.correctSheet === 'PAGO NO CORRECTO',
+                                    'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.correctArlPayment === 'PAGO NO REGISTRADO' || element.correctAfpPayment === 'PAGO NO REGISTRADO' || element.correctEpsPayment === 'PAGO NO REGISTRADO' || element.correctSheet === 'PAGO NO REGISTRADO',
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.correctArlPayment === 'PAGO CORRECTO' || element.correctAfpPayment === 'PAGO CORRECTO' || element.correctEpsPayment === 'PAGO CORRECTO' || element.correctSheet === 'PAGO CORRECTO'}">
+                                            <span
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                        </span> -->
                                         <span
                                             *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus && element[columna.name]!=element.all"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
-                                    'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
-                                    'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.statusContractor === 'INVITADO',
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'CONTRATANDO'}">
+                                'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
+                                'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.statusContractor === 'INVITADO',
+                                'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContractor === 'CONTRATADO',
+                                'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.statusContractor === 'CONTRATANDO'}">
                                             <span
-                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
+                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}
+                                            </span>
                                         </span>
-                                        <span
-                                            *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.previusStudy && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
+                                        <!-- <span *ngIf="element[columna.name]=== element.periodPaymented"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.legalProccess === 'EN ESPERA',
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
+                                            [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.periodPaymented === 'NO REGISTRADO'}">
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
-                                        </span>
-                                        <span
-                                            *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess && element[columna.name]!=element.all && element[columna.name]!=element.previusStudy"
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.hiringStatus === 'CONTRATANDO',
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.hiringStatus === 'CONTRATADO'}">
-                                            <span
-                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
-                                        </span>
-                                        <span
-                                            *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',  
-                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.previusStudy === 'RECHAZADO',                                     
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.previusStudy === 'APROBADO'}">
-                                            <span
-                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
-                                        </span>
-                                        <span
-                                            *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all"
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
-                                            'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.minuteGnenerated === 'RECHAZADO',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',                                       
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated === 'APROBADO'}">
-                                            <span
-                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
-                                        </span>
-                                        <span
-                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
-                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
-                                            <span
-                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
-                                        </span>
+                                        </span> -->
                                     </div>
                                     <div *ngIf="columna.name ==='acciones'"
                                         (click)="isButtonClicked = false; toggleRowExpansion(element, $event)">
@@ -203,7 +167,7 @@
                                                     <mat-icon svgIcon="heroicons_solid:clipboard-list"></mat-icon>
                                                     Historial de pagos
                                                 </button>
-                                                <button [matTooltip]="'Generar'"  mat-menu-item
+                                                <button [matTooltip]="'Generar'" mat-menu-item
                                                     (click)="generatedPdfContractor(element,'OTRO SI')">
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                     Generar Otro si
@@ -430,6 +394,7 @@
             </div>
         </div>
     </div>
+</div>
     <app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
         [contractContractors]="contractContractors"
         *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>

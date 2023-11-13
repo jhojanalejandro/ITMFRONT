@@ -13,7 +13,7 @@
                 [formGroup]="modifyForm">
 
                 <div>
-                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="field" appearance="fill">
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
                         <mat-label>Fecha Inicio Contrato</mat-label>
                         <input matInput id="initialDateContract" (dateChange)="dateChange($event)" autocomplete="off"
                             formControlName="initialDateContract" [matDatepicker]="pickerFCo">
@@ -23,7 +23,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="field" appearance="fill">
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
                         <mat-label>Fecha Final Contrato</mat-label>
                         <input matInput id="finalDateContract" autocomplete="off" formControlName="finalDateContract"
                             [matDatepicker]="pickerFCo">
@@ -49,7 +49,7 @@
                             El Campo Fecha es requerido
                         </mat-error>
                     </mat-form-field> -->
-                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="field" appearance="fill">
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
                         <mat-label>Fecha Inicio Ampliacion</mat-label>
                         <input matInput id="initialAdditionDate" [min]="dateAdiction.fechaFinalizacion" [max]="maxdate"
                             (dateChange)="dateChangeInitial($event)" autocomplete="off"
@@ -60,7 +60,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="field" appearance="fill">
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
                         <mat-label>Fecha Final Ampliacion</mat-label>
                         <input matInput id="finalAdditionDate" [min]="minDateFinal" autocomplete="off"
                             formControlName="finalAdditionDate" [matDatepicker]="pickerFCo">
@@ -70,7 +70,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="field" appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Tipo Modidicacion</mat-label>
                         <mat-select formControlName="modificationType"
                             (selectionChange)="selectmodificacion($event)" name="modificationType">
@@ -85,7 +85,6 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-
                 <div>
                     <mat-form-field class="modifyName" appearance="fill">
                         <mat-label>Nombre Elemento</mat-label>
@@ -96,28 +95,14 @@
                             El Campo es requerido
                         </mat-error>
                     </mat-form-field>
-
                 </div>
                 <div>
-                    <mat-form-field class="modifyName" appearance="fill">
-                        <mat-label>CPC</mat-label>
-                        <input type="text" id="cpc" formControlName="cpc" autocomplete="off" matInput placeholder="CPC">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
-                        <mat-error *ngIf="modifyForm.get('cpc').hasError('required')">
-                            El Campo cpc es requerido
-                        </mat-error>
-                    </mat-form-field>
-
-                </div>
-                <div *ngIf="isAddition">
-
-                    <mat-form-field class="field" appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Recursos Adicionales</mat-label>
                         <span matPrefix>$</span>
-                        <input id="resources" formControlName="resources" autocomplete="off" matInput
-                            placeholder="Recuros">
+                        <input id="resources" formControlName="resources" autocomplete="off" matInput placeholder="Recuros">
                     </mat-form-field>
-                    <mat-form-field class="field" appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Cantidad Días</mat-label>
                         <input type="number" id="cantDay" formControlName="cantDay" autocomplete="off" matInput
                             placeholder="Cantidad Días">
@@ -126,20 +111,10 @@
                             El Campo recursos es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="field" appearance="fill">
-                        <mat-label>Nombre Cpc</mat-label>
-                        <mat-select formControlName="cpcName" (selectionChange)="changecpcType($event)" name="cpcName">
-                            <mat-option *ngFor="let tipo of cpcType" [value]="tipo.id">
-                                {{tipo.cpcNumber}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
-                    </mat-form-field>
                 </div>
                 <div>
-                    <mat-form-field class="field" appearance="fill">
-                        <mat-label>Valor Unidad(a pagar por mes)</mat-label>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Valor Unidad(pago mensual)</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" id="unitValue" formControlName="unitValue" autocomplete="off" matInput
                             placeholder="Valor Unidad">
@@ -147,13 +122,13 @@
                             El Campo Valor Unidad es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="field" appearance="fill">
-                        <mat-label>Valor a pagar Por dia</mat-label>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Valor que se debe</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" formControlName="unitValueDay" autocomplete="off" matInput
                             placeholder="Valor por Día">
                     </mat-form-field>
-                    <mat-form-field class="field" appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Valor Total Contrato</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" id="totalValue" formControlName="totalValue" autocomplete="off" matInput
@@ -162,19 +137,19 @@
 
                 </div>
                 <div *ngIf="isAddition">
-                    <mat-form-field class="field"  appearance="fill">
+                    <mat-form-field class="modifyfield"  appearance="fill">
                         <mat-label>Valor a adicionar</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" (change)="onChangeTotalValue($event)" id="additionValue"
-                            formControlName="additionValue" autocomplete="off" matInput placeholder="Valor Exacto">
+                            formControlName="additionValue" autocomplete="off" matInput placeholder="Valor adición">
                     </mat-form-field>
-                    <mat-form-field class="field"  appearance="fill">
+                    <mat-form-field class="modifyfield"  appearance="fill">
                         <mat-label>Número adición</mat-label>
                         <span matPrefix>$</span>
                         <input type="text"  id="noAddition"
                             formControlName="noAddition" autocomplete="off" matInput placeholder="Número adición">
                     </mat-form-field>
-                    <mat-form-field class="field"  appearance="fill">
+                    <mat-form-field class="modifyfield"  appearance="fill">
                         <mat-label>Total Exacto</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" id="calculateValue"
@@ -190,7 +165,7 @@
                             placeholder="Descripcion"></textarea>
                     </mat-form-field>
                 </div>
-                <div *ngIf="showModify" class="folder">
+                <div *ngIf="showModify" [hidden]="true" class="folder">
                     <mat-form-field class="modify" appearance="fill">
                         <mat-label>Perfil academico</mat-label>
                         <textarea noLineBreaks type="text" class="example-full-width" id="academicProfile"
@@ -198,7 +173,7 @@
                             placeholder="Perfil academico"></textarea>
                     </mat-form-field>
                 </div>
-                <div *ngIf="showModify" class="folder">
+                <div *ngIf="showModify" [hidden]="true" class="folder">
                     <mat-form-field class="modify" appearance="fill">
                         <mat-label>Perfil Profesional</mat-label>
                         <textarea noLineBreaks type="text" class="example-full-width" id="profesionalProfile"

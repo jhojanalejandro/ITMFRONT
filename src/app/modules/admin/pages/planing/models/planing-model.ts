@@ -221,7 +221,6 @@ export interface ModifyContractor{
     valorPorDiaContratista: number;
     cpcId: string;
     isModify: boolean;
-    tipoElemento: string;
     resources: any; 
     consecutive: string;
     specificObligations: string;
@@ -236,5 +235,7 @@ export interface ModifyContractor{
     initialAdditionDate: string;
     finalAdditionDate: string;
     isAddition: boolean;
+    registerDate: Date;
+    debt: string;
 }
 

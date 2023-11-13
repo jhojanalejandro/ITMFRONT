@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -17,13 +17,17 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/mat
 import { DetailFilePaymentComponent } from './components/collection-accounts-list/details-file-payment/detail-file-payment.component';
 import { CollectionAccountsListComponent, MY_FORMATS } from './components/collection-accounts-list/collection-accounts-list.component';
 import { PayrollContractualListComponent } from './components/payroll-contractor-list/payroll-contractor-list.component';
+import { ButtonsExportModule } from 'app/layout/common/buttons-export/buttons-export.module';
+import { FileManagerModule } from '../../apps/file-manager/file-manager.module';
+import { ShowFileComponent } from './components/collection-accounts-list/show-file/show-file.component';
 
 @NgModule({
     declarations: [
         NominaComponent,
         CollectionAccountsListComponent,
         DetailFilePaymentComponent,
-        PayrollContractualListComponent
+        PayrollContractualListComponent,
+        ShowFileComponent
     ],
     imports     : [
         RouterModule.forChild(nominaRoutes),
@@ -35,8 +39,10 @@ import { PayrollContractualListComponent } from './components/payroll-contractor
         MatSortModule,
         MatTableModule,
         NgApexchartsModule,
-        SharedModule
+        SharedModule,
+        ButtonsExportModule,
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [DatePipe,
         {
             provide: DateAdapter,

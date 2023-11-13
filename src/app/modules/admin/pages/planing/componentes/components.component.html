@@ -34,6 +34,10 @@
             </div>
         </div>
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <button [matTooltip]="'Generar cuadro economico'" class="ml-3" mat-flat-button [color]="'primary'" (click)="generateEconomicTable()">
+                <mat-icon svgIcon="mat_solid:file_download"></mat-icon>
+                Cuadro Economico
+            </button>
             <button [matTooltip]="'Importar elemento'" class="ml-3" mat-flat-button [color]="'primary'" (click)="uploadExcel()">
                 <mat-icon svgIcon="mat_solid:upload_file"></mat-icon>
                 Importar

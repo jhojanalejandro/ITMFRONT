@@ -30,7 +30,7 @@
                     <div class="text-xl font-semibold">Selecciona un contrato para ver y subir documentos</div>
                     <div class="flex mt-8 mb-4 lg:m-0 lg:ml-auto">
                         <mat-form-field class="hiring mt-6" appearance="outline">
-                            <mat-label>Contractos</mat-label>
+                            <mat-label>Contratos</mat-label>
                             <mat-select  name="contract"
                                 (selectionChange)="changeToViewFilesContract($event)">
                                 <mat-option *ngFor="let contract of contractList" [value]="contract.id">
@@ -65,12 +65,12 @@
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
                                 <span>Cargar Archivo</span>
                             </button>
-                            <button (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                            <button *ngIf="!hired" (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
                                 [routerLink]="['./']">
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                                 <span>Información Personal</span>
                             </button>
-                            <button (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                            <button *ngIf="hired" (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
                                 [routerLink]="['./']">
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                                 <span>Cargar Archivos nomina</span>
@@ -104,7 +104,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div
                                                 class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
                                                 <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">

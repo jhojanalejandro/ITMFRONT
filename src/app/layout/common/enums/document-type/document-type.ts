@@ -15,8 +15,9 @@ export enum DocumentTypeCodes{
     ESTUDIOSPREVIOS = 'ETPR',
     SOLICITUDCOMITE = 'SLCMT',
     ANEXO = 'ANX',
-    DOCUMENTOSCONTRATACION = 'DCTCT'
-
+    DOCUMENTOSCONTRATACION = 'DCTCT',
+    OTROSI = 'OTS',
+    RESPUESTASOLICITUDCOMITE = 'RSLCM'
 }
 
 export enum TypeFileUserCode{

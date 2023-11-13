@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -7,7 +7,6 @@ import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 import { AcademicInformation, ContractorPersonalInformation, PersonalInformation } from '../../models/contractor-personal-data.model';
-import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
 import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
@@ -18,9 +17,9 @@ import { GenericService } from 'app/modules/admin/generic/generic.service';
   selector: 'app-contractor-personal-data',
   templateUrl: './contractor-personal-data.component.html',
   styleUrls: ['./contractor-personal-data.component.scss'],
-  
+
 })
-export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
+export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
 
   alert: { type: FuseAlertType; message: string } = {
     type: 'warn',
@@ -39,7 +38,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   arl: any[] = [];
   afp: any[] = [];
   banks: Bank[];
-  accountType: any = GlobalConst.accountType;
+  accountTypes: any = GlobalConst.accountType;
   step = 0;
   contractorPersonalInformation: ContractorPersonalInformation;
   contractorinformationStepperForm: FormGroup;
@@ -56,8 +55,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   };
   genero: string;
   private readonly _unsubscribe$ = new Subject<void>();
-  filteredOptionsAccountType: Observable<string[]>;
-  filteredOptionsBanks: Observable<Bank[]>;
   generos: string[] = [
     'Masculino',
     'Femenino',
@@ -81,7 +78,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     this.getentityHealth();
     if (this.datos.id != null) {
       this.getHiring();
-
     }
     this.validarFechaNacimiento();
     setInterval(() => {
@@ -102,7 +98,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
         departamento: ['', Validators.required],
         address: ['', Validators.required],
         neiberhood: ['', Validators.required],
-
       }),
       step2: this._formBuilder.group({
         technical: [''],
@@ -133,10 +128,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     });
     this.validateDate();
 
-    this.filteredOptionsAccountType = this.contractorinformationStepperForm.get('step3.accountType').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterAccountType(value || ''))
-    );
   }
 
 
@@ -208,8 +199,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       }
 
     }
-
-    let bank = this.banks.find(x => x.bankName == this.contractorinformationStepperForm.controls['step3'].value.bank).id;
     let departamento = this.departments.find(x => x.id == this.contractorinformationStepperForm.controls['step1'].value.departamento).departamento;
 
     const personalInfoirmation: ContractorPersonalInformation = {
@@ -227,7 +216,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       barrio: this.contractorinformationStepperForm.controls['step1'].value.neiberhood,
       cuentaBancaria: this.contractorinformationStepperForm.controls['step3'].value.accountNumber.toString(),
       tipoCuenta: this.contractorinformationStepperForm.controls['step3'].value.accountType,
-      entidadCuentaBancaria: bank,
+      entidadCuentaBancaria: this.contractorinformationStepperForm.controls['step3'].value.bank,
       fechaActualizacion: new Date(),
       eps: this.contractorinformationStepperForm.controls['step4'].value.eps,
       arl: this.contractorinformationStepperForm.controls['step4'].value.arl,
@@ -324,11 +313,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       .subscribe((response: Bank[]) => {
         if (response != null) {
           this.banks = response;
-          this.filteredOptionsBanks = this.contractorinformationStepperForm.get('step3.bank').valueChanges.pipe(
-            startWith(''),
-            map((value) => this._filterBanks(value || ''))
-          );
-
         }
       });
   }
@@ -351,15 +335,11 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     );
   }
 
-  private _filterAccountType(value: any): string[] {
-    return this.accountType.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-  validarFechaNacimiento() {
+
+  private validarFechaNacimiento() {
     const today = new Date();
     const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-    this.minBirth = eighteenYearsAgo;
+    return this.minBirth = eighteenYearsAgo;
   }
   onChange(event: any) {
     this.genero = event.value
@@ -378,7 +358,25 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
         }
       });
   }
-  
+
+  dateChange(event: any) {
+    const step1FormGroup = this.contractorinformationStepperForm.get('step1');
+
+    // Agrega un valor a "identification" usando patchValue
+    step1FormGroup.patchValue({
+      birthDate: event.value
+    });
+  }
+  filterCalendar(date: Date | null): boolean {
+    
+    // Personaliza el filtro para permitir solo fechas válidas
+    if (!date) {
+      return true;
+    }
+    // Puedes personalizar el rango de fechas permitidas aquí
+    return date >= new Date();
+  }
+
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();

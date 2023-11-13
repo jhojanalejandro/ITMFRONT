@@ -11,8 +11,7 @@ import { FuseScrollResetModule } from '@fuse/directives/scroll-reset';
 import { SharedModule } from 'app/shared/shared.module';
 import { HistoryContractorComponent } from './history-contractor.component';
 import { historyContractorRoutes } from './history-contractor.routing';
-import { ContractsListComponent } from './components/contracts-list/contracts-list';
-import { PaymentListComponent } from './components/payment-list/payment-list';
+import { PaymentListComponent } from './components/payment-list/payment-list.component';
 import { HiringDataListComponent } from './components/hiring-data-list/hiring-data-list';
 import { ServingComponent } from './components/serving/serving';
 
@@ -20,7 +19,6 @@ import { ServingComponent } from './components/serving/serving';
 @NgModule({
     declarations: [
         HistoryContractorComponent,
-        ContractsListComponent,
         PaymentListComponent,
         HiringDataListComponent,
         ServingComponent,

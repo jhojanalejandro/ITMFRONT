@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { DocumentTypeFile, Files } from 'app/layout/common/models/file-contractor';
+import { DocumentTypeFile, FileContractor, Files } from 'app/layout/common/models/file-contractor';
 import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
@@ -41,6 +41,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   aceptfile: string = 'image/jpeg, image/png, application/pdf';
   permission: boolean = false;
+  shareFile: boolean = false;
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -63,20 +64,22 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
-    if (this._data.show) {
-      this.mostrarContrato = true;
-      this.aceptFile = this.aceptExcel;
-    }
+    debugger
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
       this.isSelectContract = true;
       this.aceptFile = this.aceptFile;
     }
-
+    if(this._data.origin == 'share' && !this._data.show){
+      this.shareFile = true
+    }
+    if (this._data.show) {
+      this.mostrarContrato = true;
+      this.aceptFile = this.aceptExcel;
+    }
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
-      IdProject: new FormControl(null, Validators.required),
+      project: new FormControl(null, Validators.required),
       description: new FormControl(null, Validators.required),
     });
     this.getContractsData();
@@ -150,7 +153,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   uploadTypeFile() {
-    
+    debugger
     if (this.isSelectContract == true) {
       if(this._data.origin === 'cdp'){
         this.uploadCdpFile();
@@ -163,6 +166,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   uploadCdpFile() {
+    
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('excel', fileToUpload, fileToUpload.name);
@@ -202,12 +206,54 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
 
   }
 
+  addFileContractors(base64){
+    debugger
+    const uploadFile: FileContractor = {
+      userId: this._auth.accessId,
+      folderId: null,
+      contractId: this._data.contractId,
+      filesName: this.fileName,
+      fileType: this.fileType,
+      descriptionFile: this.formFile.value.description,
+      registerDate: this.registerDate,
+      filedata: base64,
+      documentType: this.documentType,
+      contractors: this._data.contractorsId
+    };
+    this._upload.UploadFileShareContractor(uploadFile).subscribe(res => {
+      if (res) {
+        swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: '',
+          html: 'Información Registrada Exitosamente!',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        //this.matDialogRef.close();  
+        this.ref.detectChanges();
+        this.ref.markForCheck();
+        this.closeModal();
+      }
+
+    },
+      (response) => {
+        console.log(response);
+
+        this.formFile.enable();
+        // Set the alert
+        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+        // Show the alert
+        this.showAlert = true;
+      });
+  }
+
   uploadPdfFile() {
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('excel', fileToUpload, fileToUpload.name);
     formData.append('userId', this._auth.accessId.toString());
-    formData.append('contractId', this.formFile.value.IdProject);
+    formData.append('contractId', this.formFile.value.project);
     if (this._data.show) {
       // Should match the parameter name in backend
       this._upload.UploadFileExcel(formData).subscribe((res) => {
@@ -237,7 +283,11 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
           this.showAlert = true;
         });
     } else {
-      this.addFileContract(this.base64Output);
+      if(this.shareFile){
+        this.addFileContractors(this.base64Output);
+      }else{
+        this.addFileContract(this.base64Output);
+      }
     }
   }
 
@@ -260,7 +310,12 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     this._upload.getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((type: DocumentTypeFile[]) => {
-        this.documentType = type.find(f => f.code ===  DocumentTypeCodes.ANEXO).id;
+        debugger
+        if(this.shareFile){
+          this.documentType = type.find(f => f.code ===  DocumentTypeCodes.RESPUESTASOLICITUDCOMITE).id;
+        }else{
+          this.documentType = type.find(f => f.code ===  DocumentTypeCodes.ANEXO).id;
+        }
       });
   }
 

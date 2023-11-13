@@ -14,7 +14,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import Swal from 'sweetalert2';
-import { RubroRegisterComponent } from '../rubro-register/rubro-register.component';
+import { MaintainerRegisterComponent } from '../maintainer-register/maintainer-register.component';
 
 @Component({
   selector: 'app-rubro-list',
@@ -51,7 +51,7 @@ export class RubroListComponent implements OnInit, OnDestroy {
   columnas = [
     { title: 'NUMERO RUBRO', name: 'rubroNumber' },
     { title: 'NOMBRE RUBRO', name: 'rubro' },
-    { title: 'CONTRATISTAS', name: 'action' },
+    { title: 'OPCIÓN', name: 'action' },
   ]
   ngOnInit(): void {
     this.getRubroList();
@@ -113,16 +113,17 @@ export class RubroListComponent implements OnInit, OnDestroy {
     return item.id || index;
   }
 
-  AsssigmentUser(rubro: any) {
+  formRegister(rubro: any) {
     this.permission = this.auth.validateRoll(CodeUser.SUPERVISORAREAC);
     if (!this.permission) {
       Swal.fire('', 'No tienes permisos para asignar contratos!', 'warning');
     } else {
-      const dialogUpload = this._matDialog.open(RubroRegisterComponent, {
+      const dialogUpload = this._matDialog.open(MaintainerRegisterComponent, {
         disableClose: true,
         autoFocus: false,
         data: {
-          rubro: rubro
+          rubro,
+          type: 'rubro'
         }
       });
       dialogUpload.afterClosed().subscribe((result) => {

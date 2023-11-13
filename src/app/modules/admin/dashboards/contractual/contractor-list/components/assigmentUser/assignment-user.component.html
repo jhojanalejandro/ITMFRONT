@@ -6,69 +6,149 @@
         </button>
     </div>
     <mat-dialog-content style="margin: 0px; padding: 0px;">
+
         <!-- <h1>Nombre Contratista</h1> -->
-        <form class="example-form overflow-y-auto">
-
-            <div class="folderAsigment">
-                <mat-form-field class="hiringAsigment" appearance="fill">
-                    <mat-label>Contratos</mat-label>
-                    <mat-select (selectionChange)="selectionChageContract($event)" name="raffles">
-                        <mat-option *ngFor="let contract of contracts" [value]="contract.id">
-                            {{contract.projectName}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            <div *ngIf="showContractual && showUsers" class="checkBox">
-                <span >Contractual encargado</span>
-                <div class="checkBox">
-                    <mat-radio-group [color]="'primary'" [disabled]="false">
-                        <mat-radio-button *ngFor="let user of users" [matTooltip]="usualrios" class="mr-4"
-                            (change)="assignmentUserselectedPrincipal(user)"
-                            [value]="user.id">{{user.userName}}</mat-radio-button>
-                    </mat-radio-group>
+        <div class="folderAsigment">
+            <mat-form-field class="hiringAsigment" appearance="fill">
+                <mat-label>Contratos</mat-label>
+                <mat-select (selectionChange)="selectionChageContract($event)" name="raffles">
+                    <mat-option *ngFor="let contract of contracts" [value]="contract.id">
+                        {{contract.projectName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div div class="mt-1.5 rounded-md border border-gray-300 dark:border-gray-500 shadow-sm overflow-hidden m-10">
+            <!-- Header -->
+            <div class="flex items-center -my-px py-2 px-3 bg-gray-200">
+                <div class="flex items-center flex-auto min-w-0">
+                    <span>Asignar Contractual</span>
                 </div>
             </div>
-            <div *ngIf="showContractual && showUsers" class="checkBox">
-                <span >Contractual apoyo</span>
-                <div class="checkBox">
-                    <mat-checkbox *ngFor="let user of users" [value]="user.id"
-                        (change)="assignmentUserselectedSecond(user)" [color]="'primary'">
-                        {{user.userName}}
-                    </mat-checkbox>
-                </div>
-            </div>
-            <div *ngIf="showContractual && showUsers" class="checkBox">
-                <span >Juridico encargado</span>
-                <div class="checkBox">
-                    <mat-radio-group [color]="'primary'" [disabled]="false">
-                        <mat-radio-button *ngFor="let juridic of juridics" [matTooltip]="Juridicos" class="mr-4"
-                            (change)="assignmentJuridicselectedPrincipal(juridic)"
-                            [value]="juridic.id">{{juridic.userName}}</mat-radio-button>
-                    </mat-radio-group>
-                </div>
-            </div>
-            <div *ngIf="showContractual && showUsers" class="checkBox">
-                <span >Juridico apoyo</span>
-                <div class="checkBox">
-                    <mat-checkbox *ngFor="let juridic of juridics" [value]="juridic.id"
-                        (change)="assignmentUserselectedSecond(juridic)" [color]="'primary'">
-                        {{juridic.userName}}
-                    </mat-checkbox>
-                </div>
-            </div>
-            <div *ngIf="showSupervisors && showUsers" class="checkBox">
-                <span >Supervisor contrato</span>
-                <div class="checkBox">
-                    <mat-radio-group [color]="'primary'" [disabled]="false">
-                        <mat-radio-button *ngFor="let user of supervisors" [matTooltip]="Supervisores" class="mr-4"
-                            (change)="onChangeAdmin(user)" [value]="user.id">{{user.userName}}</mat-radio-button>
-                    </mat-radio-group>
-                </div>
+            <!-- Available tags -->
+            <div class="h-44 leading-none overflow-y-auto border-t border-gray-300 dark:border-gray-500">
+                <!-- Tags -->
+                <ng-container *ngFor="let user of users;">
+                    <ng-container >
+                        <mat-radio-group class="flex items-center h-10 min-h-10 px-4" [color]="'primary'"
+                            [disabled]="false">
+                            <mat-radio-button [matTooltip]="Contractuales" class="mr-4"
+                                [disabled]="user.asign == 'Second Contractual'"
+                                (change)="assignmentUserselectedPrincipal($event,user)"
+                                [value]="user.id">{{user.userName}}</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="user.id" (change)="assignmentUserselectedSecond(user)"
+                            [color]="'primary'"
+                            [disabled]="user.asign == 'Principal Contractual'">
+                            {{user.userName}}
+                        </mat-checkbox>
+                    </ng-container>
+                </ng-container>
+                <!-- Tags editing -->
 
             </div>
+        </div>
+        <!-- <div *ngIf="showContractual && showUsers" class="checkBox">
+            <span>Contractual encargado</span>
+            <div class="checkBox">
+                <mat-radio-group   *ngFor="let user of users" [color]="'primary'" [disabled]="false">
+                    <mat-radio-button [matTooltip]="usualrios" class="mr-4"
+                        (change)="assignmentUserselectedPrincipal(user)"
+                        [value]="user.id">{{user.userName}}</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <div *ngIf="showContractual && showUsers" class="checkBox">
+            <span>Contractual apoyo</span>
+            <div class="checkBox">
+                <mat-checkbox *ngFor="let user of users" [value]="user.id" (change)="assignmentUserselectedSecond(user)"
+                    [color]="'primary'">
+                    {{user.userName}}
+                </mat-checkbox>
+            </div>
+        </div> -->
+        <div div class="mt-1.5 rounded-md border border-gray-300 dark:border-gray-500 shadow-sm overflow-hidden m-10">
+            <!-- Header -->
+            <div class="flex items-center -my-px py-2 px-3 bg-gray-200">
+                <div class="flex items-center flex-auto min-w-0">
+                    <span>Asignar Juridico</span>
+                </div>
+            </div>
+            <!-- Available tags -->
+            <div class="h-44 leading-none overflow-y-auto border-t border-gray-300 dark:border-gray-500">
+                <!-- Tags -->
+                <ng-container *ngFor="let juridic of juridics">
+                    <ng-container >
+                        <mat-radio-group class="flex items-center h-10 min-h-10 px-4" [color]="'primary'"
+                            [disabled]="false">
+                            <mat-radio-button [matTooltip]="usualrios" class="mr-4"
+                                [disabled]="juridic.asign == 'Second Juridic'"
+                                (change)="assignmentJuridicselectedPrincipal(juridic)"
+                                [value]="juridic.id">{{juridic.userName}}</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="juridic.id" (change)="assignmentJuridicSelectedSecond(juridic)"
+                            [color]="'primary'"
+                            [disabled]="juridic.asign == 'Principal Juridic'">
+                            {{juridic.userName}}
+                        </mat-checkbox>
+                    </ng-container>
+                </ng-container>
+                <!-- Tags editing -->
 
-        </form>
+            </div>
+        </div>
+        <!-- <div *ngIf="showContractual && showUsers" class="checkBox">
+            <span>Juridico encargado</span>
+            <div class="checkBox">
+                <mat-radio-group [color]="'primary'" [disabled]="false">
+                    <mat-radio-button *ngFor="let juridic of juridics" [matTooltip]="Juridicos" class="mr-4"
+                        (change)="assignmentJuridicselectedPrincipal(juridic)"
+                        [value]="juridic.id">{{juridic.userName}}</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <div *ngIf="showContractual && showUsers" class="checkBox">
+            <span>Juridico apoyo</span>
+            <div class="checkBox">
+                <mat-checkbox *ngFor="let juridic of juridics" [value]="juridic.id"
+                    (change)="assignmentUserselectedSecond(juridic)" [color]="'primary'">
+                    {{juridic.userName}}
+                </mat-checkbox>
+            </div>
+        </div> -->
+        <div div class="mt-1.5 rounded-md border border-gray-300 dark:border-gray-500 shadow-sm overflow-hidden m-10">
+            <!-- Header -->
+            <div class="flex items-center -my-px py-2 px-3 bg-gray-200">
+                <div class="flex items-center flex-auto min-w-0">
+                    <span>Asignar Supervisor</span>
+                </div>
+            </div>
+            <!-- Available tags -->
+            <div class="h-44 leading-none overflow-y-auto border-t border-gray-300 dark:border-gray-500">
+                <!-- Tags -->
+                <ng-container>
+                    <ng-container *ngFor="let user of supervisors">
+                        <mat-radio-group class="flex items-center h-10 min-h-10 px-4" [color]="'primary'"
+                            [disabled]="false">
+                            <mat-radio-button [matTooltip]="Supervisores" class="mr-4"
+                                (change)="onChangeAdmin(user)"
+                                [value]="user.id">{{user.userName}}</mat-radio-button>
+                        </mat-radio-group>
+                    </ng-container>
+                </ng-container>
+                <!-- Tags editing -->
+
+            </div>
+        </div>
+        <!-- <div *ngIf="showSupervisors && showUsers" class="checkBox">
+            <span>Supervisor contrato</span>
+            <div class="checkBox">
+                <mat-radio-group [color]="'primary'" [disabled]="false">
+                    <mat-radio-button *ngFor="let user of supervisors" [matTooltip]="Supervisores" class="mr-4"
+                        (change)="onChangeAdmin(user)" [value]="user.id">{{user.userName}}</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div> -->
     </mat-dialog-content>
     <mat-dialog-actions class="action" align="end">
         <button mat-flat-button color="warn" type="button" [mat-dialog-close]="false">Cancelar</button>

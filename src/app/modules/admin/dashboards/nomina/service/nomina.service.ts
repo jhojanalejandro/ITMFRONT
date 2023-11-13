@@ -75,7 +75,6 @@ export class NominaService {
     }
 
     addContractorPaymentSecurity(data: any) {
-        debugger
         let urlEndpointGenerate = this.apiUrl + environment.addContractorPaymentSecurityEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
             catchError(this.handleError)
@@ -86,7 +85,6 @@ export class NominaService {
         console.log(error);
         
         let errorShow = null;
-        debugger
         if(error.error.message == null){
             errorShow = error.error
         }else{

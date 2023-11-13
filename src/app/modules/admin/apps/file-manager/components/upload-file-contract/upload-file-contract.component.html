@@ -16,7 +16,7 @@
             <div  class="folder">
                 <mat-form-field *ngIf="mostrarContrato" class="flex-auto gt-xs:pl-3" appearance="fill">
                     <mat-label >CONTRATOS</mat-label>
-                    <mat-select required id="IdProject" (selectionChange)="selectionChageContract($event)" formControlName="IdProject"  name="IdProject">
+                    <mat-select required id="project" (selectionChange)="selectionChageContract($event)" formControlName="project"  name="project">
                         <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
                             {{contarto.projectName}}
                         </mat-option>
@@ -25,7 +25,7 @@
                     class="icon-size-5"
                     matSuffix
                     [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
-                    <mat-error *ngIf="formFile.get('IdProject').hasError('required')">
+                    <mat-error *ngIf="formFile.get('project').hasError('required')">
                         Este Campo es requerido
                     </mat-error>
                 </mat-form-field> 
@@ -41,7 +41,7 @@
                     </mat-form-field>
                 </div>
                 <div class="text-center pt-8">
-                    <input formControlName="file" type="file" 
+                    <input formControlName="file" type="file" data-cy="file-input"
                     accept="{{aceptFile}}"
                     mat-flat-button color="primary"  (change)="onChange($event)">
                 </div>

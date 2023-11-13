@@ -24,6 +24,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
+import { ShareService } from 'app/layout/common/share-service/share-service.service';
+import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
 
 @Component({
     selector: 'components-card',
@@ -40,7 +42,7 @@ export class AddComponentsComponent implements OnInit {
     abrirDivComponente: boolean = false;
     abrirDivElemento: boolean = false;
     abrirDivActivity: boolean = false;
-
+    itmImageBase64: string = null;
     data: any;
     contractId: string = null;
     configForm: FormGroup;
@@ -69,7 +71,8 @@ export class AddComponentsComponent implements OnInit {
         private _loadrouter: Router,
         private _formBuilder: FormBuilder,
         private _service: ButtonsExportService,
-        private _authService: AuthService
+        private _authService: AuthService,
+        private _shareService: ShareService
     ) {
         this.contractId = this.route.snapshot.params.id;
         if (this.contractId) {
@@ -82,6 +85,7 @@ export class AddComponentsComponent implements OnInit {
         if (!this.permission) {
             this.messagePermission()
         }
+        this.getBase64Image();
     }
 
 
@@ -562,6 +566,46 @@ export class AddComponentsComponent implements OnInit {
     private messagePermission() {
         Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     }
+
+    generateEconomicTable() {
+        this._service.generateEconomicTable(this.contractId, this.itmImageBase64)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "Reporte";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    console.log(response);
+                    Swal.fire('', 'Error al descargar la informacion!', 'error');
+                }
+            );
+    }
+
+    private getBase64Image() {
+        this._shareService.loadAndConvertImageToBase64(RouteImageEnum.LOGOITM)
+            .then(base64Data => {
+                this.itmImageBase64 = base64Data;
+                
+            })
+            .catch(error => {
+                console.error('Error al cargar y convertir la imagen:', error);
+            });
+    }
+
+
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();
