@@ -136,18 +136,27 @@ export class AssignmentUserComponent implements OnInit {
     this.userPrincipalSelected = assignmwntUser;
   }
 
-  assignmentUserselectedSecond(usuario: any) {
-    this.findUser(usuario.id,'Second Contractual',2);
+  assignmentUserselectedSecond(event: any,usuario: any) {
+    if(event.checked){
+      this.findUser(usuario.id,'Second Contractual',2);
 
-    let assignmwntUser: AssignmentUser = {
-      contractId: this.contractSelected,
-      userId: usuario.id,
-      assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
+      let assignmwntUser: AssignmentUser = {
+        contractId: this.contractSelected,
+        userId: usuario.id,
+        assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
+      }
+      let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
+      if(indexUser < 0){
+        this.userSelected.push(assignmwntUser);
+      }
+    }else{
+      this.findUser(usuario.id,'Second Contractual',1);
+      const index = this.userSelected.findIndex(item => item.userId === usuario.id);
+      if (index !== -1) {
+        this.userSelected.splice(index, 1);
+      }
     }
-    let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
-    if(indexUser < 0){
-      this.userSelected.push(assignmwntUser);
-    }
+
   }
   onChangeAdmin(supervisor: any) {
     let assignmwntUser: AssignmentUser = {
@@ -208,10 +217,13 @@ export class AssignmentUserComponent implements OnInit {
       var index = this.users.findIndex(f => f.asign == type);
       if(index >= 0){
         this.users[index].asign = '';
-      }    }
-    var index = this.users.findIndex(f => f.id == id);
+      }    
+    }else{
+      var index = this.users.findIndex(f => f.id == id);
+      this.users[index].asign = type;
+    }
 
-    this.users[index].asign = type;
+
   }
   
   private findUserJuridic(id: string, type: string, level: number){

@@ -30,14 +30,11 @@
                 <!-- Tags -->
                 <ng-container *ngFor="let user of users;">
                     <ng-container >
-                        <mat-radio-group class="flex items-center h-10 min-h-10 px-4" [color]="'primary'"
-                            [disabled]="false">
-                            <mat-radio-button [matTooltip]="Contractuales" class="mr-4"
-                                [disabled]="user.asign == 'Second Contractual'"
-                                (change)="assignmentUserselectedPrincipal($event,user)"
-                                [value]="user.id">{{user.userName}}</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="user.id" (change)="assignmentUserselectedSecond(user)"
+                        <mat-radio-button [matTooltip]="Contractuales" class="flex items-center h-10 min-h-10 px-4 mr-4" [color]="'primary'"
+                        [disabled]="user.asign == 'Second Contractual'"
+                        (change)="assignmentUserselectedPrincipal($event,user)"
+                        [value]="user.id">{{user.userName}}</mat-radio-button>
+                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="user.id" (change)="assignmentUserselectedSecond($event,user)"
                             [color]="'primary'"
                             [disabled]="user.asign == 'Principal Contractual'">
                             {{user.userName}}
