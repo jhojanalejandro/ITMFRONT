@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
@@ -23,7 +23,7 @@ import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations
 })
-export class RegisterContractFolderComponent implements OnInit {
+export class RegisterContractFolderComponent implements OnInit, OnDestroy {
   alert: { type: FuseAlertType; message: string } = {
     type: 'warn',
     message: ''
@@ -39,7 +39,7 @@ export class RegisterContractFolderComponent implements OnInit {
   rubroNumber: string;
   editData: boolean = false;
   AddeditData: boolean = false;
-  private _unsubscribeAll: Subject<any> = new Subject<any>();
+  private readonly _unsubscribe$ = new Subject<void>();
   permission: boolean = false;
   detailType: string;
   rubrosOrigin: any = GlobalConst.rubrosOrgin
@@ -88,8 +88,10 @@ export class RegisterContractFolderComponent implements OnInit {
       fuenteRubro: new FormControl(null),
       dutyContract: new FormControl(null),
       project: new FormControl(null),
-      contarctValue: new FormControl({value: null, disabled: true}),
-      resource: new FormControl(null)
+      contarctValue: new FormControl({ value: null, disabled: true }),
+      resource: new FormControl(null),
+      areaCode: new FormControl(null)
+
     });
     this.fillData();
   }
@@ -97,7 +99,7 @@ export class RegisterContractFolderComponent implements OnInit {
     this.ref.detectChanges();
   }
 
-  private fillData(){
+  private fillData() {
     if (this._data != null) {
       this.editData = true;
       this.formProject.patchValue({
@@ -116,7 +118,9 @@ export class RegisterContractFolderComponent implements OnInit {
         nombreRubro: this._data.data.nombreRubro,
         fuenteRubro: this._data.data.fuenteRubro,
         dutyContract: this._data.data.dutyContract,
-        project: this._data.data.project
+        project: this._data.data.project,
+        resource: this._data.data.resource,
+        areaCode: this._data.data.areaCode,
       });
 
       // this.dataProject.rubro = this._data.data.rubro;
@@ -129,8 +133,6 @@ export class RegisterContractFolderComponent implements OnInit {
   addContractFolder() {
     if (this.formProject.invalid) {
       this.formProject.enable();
-
-      // Set the alert
       this.alert = {
         type: 'error',
         message: 'ERROR EN LA INFORMACION'
@@ -140,53 +142,10 @@ export class RegisterContractFolderComponent implements OnInit {
       this.showAlert = true;
       return
     } else {
-
-      if (this.formProject.value.statusContract == null) {
-        let status: StatusContract[] = this.statusContract.filter(f => f.code == CodeStatusContract.INICIADO)
-        this.formProject.value.statusContract = status[0].id;
-      }
-      if (this.formProject.value.updateData === 'Solo Editar') {
-        this.formProject.value.updateData = true;
-
-      } else {
-        this.formProject.value.updateData = false;
-      }
-      const detalle: DetailContractFolder = {
-        fechaContrato: this.formProject.value.fechaContrato,
-        fechaFinalizacion: this.formProject.value.fechaFinalizacion,
-        adicion: false,
-        detailType: this.detailType,
-        contractId: null,
-        registerDate: this.registerDate,
-        modifyDate: this.registerDate,
-        userId: this.authService.accessId,
-      }
-      const registerProject: ContractFolder = {
-        companyName: this.formProject.value.companyName,
-        projectName: this.formProject.value.projectName,
-        objectContract: this.formProject.value.objectContract,
-        statusContractId: this.formProject.value.statusContract,
-        activate: true,
-        enableProject: false,
-        contractorsCant: 0,
-        valorContrato: 0,
-        valorSubTotal: 0,
-        gastosOperativos: 0,
-        noAdicion: this.formProject.value.noAdicion,
-        fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
-        fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
-        detalleContratoDto: detalle,
-        numberProject: this.formProject.value.numberProject,
-        project: this.formProject.value.project,
-        rubro: this.formProject.value.rubro,
-        nombreRubro: this.formProject.value.nombreRubro,
-        fuenteRubro: this.formProject.value.fuenteRubro,
-        dutyContract: this.formProject.value.dutyContract
-
-      };
+      let registerProject = this.buildObject(true, null);
 
       this._upload.addContractFolder(registerProject)
-        .pipe(takeUntil(this._unsubscribeAll))
+        .pipe(takeUntil(this._unsubscribe$))
         .subscribe((res) => {
           if (res) {
             if (res.success) {
@@ -225,54 +184,9 @@ export class RegisterContractFolderComponent implements OnInit {
   }
 
   async editContractFolder() {
-
-    let adicion: boolean = false;
-    if (this._data.data.fechaFinalizacion != this.formProject.value.fechaFinalizacion) {
-      adicion = true;
-    }
-
-    if (this.formProject.value.updateData === 'Solo Editar') {
-      this.formProject.value.updateData = false;
-
-    } else {
-      this.formProject.value.updateData = true;
-
-    }
-    const detalle: DetailContractFolder = {
-      fechaContrato: this.formProject.value.fechaContrato,
-      fechaFinalizacion: this.formProject.value.fechaFinalizacion,
-      adicion: adicion,
-      detailType: this.formProject.value.tipoModificacion,
-      contractId: this._data.data.id,
-      id: this._data.data.detailContractId,
-      modifyDate: this.registerDate,
-      userId: this.authService.accessId,
-    }
-    const registerProject: ContractFolder = {
-      id: this._data.data.id,
-      companyName: this.formProject.value.companyName,
-      projectName: this.formProject.value.projectName,
-      objectContract: this.formProject.value.objectContract,
-      statusContractId: this.formProject.value.statusContract,
-      activate: true,
-      enableProject: false,
-      contractorsCant: 0,
-      detalleContratoDto: detalle,
-      valorContrato: 0,
-      valorSubTotal: 0,
-      gastosOperativos: 0,
-      noAdicion: this.formProject.value.noAdicion,
-      fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
-      fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
-      numberProject: this.formProject.value.numberProject,
-      project: this.formProject.value.project,
-      rubro: this.formProject.value.rubro,
-      nombreRubro: this.formProject.value.nombreRubro,
-      fuenteRubro: this.formProject.value.fuenteRubro,
-      dutyContract: this.formProject.value.dutyContract
-    };
-    this._upload.addContractFolder(registerProject)
-      .pipe(takeUntil(this._unsubscribeAll))
+    let updateProject = this.buildObject(false, this._data.data.id);
+    this._upload.addContractFolder(updateProject)
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res) {
           Swal.fire({
@@ -312,7 +226,7 @@ export class RegisterContractFolderComponent implements OnInit {
 
   private getStatusContract() {
     this._genericService.getstatusContract()
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         this.statusContract = res;
       });
@@ -333,7 +247,7 @@ export class RegisterContractFolderComponent implements OnInit {
 
   private getRubroContract() {
     this._genericService.getRubrosContract()
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe(
         (resp) => {
           this.rubros = resp;
@@ -348,9 +262,10 @@ export class RegisterContractFolderComponent implements OnInit {
       this.AddeditData = false;
     }
   }
+
   private getTypeMinuteContract() {
     this._genericService.getDetailType()
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntil(this._unsubscribe$))
       .subscribe(
         (resp) => {
           this.detailType = resp.find(f => f.code === DetailTypeCodes.CTIL).id
@@ -362,6 +277,83 @@ export class RegisterContractFolderComponent implements OnInit {
       );
   }
 
-  
+  private buildObject(register: boolean, id: string): any {
+    let detalle = null;
+    if (register) {
+      if (this.formProject.value.statusContract == null) {
+        let status: StatusContract[] = this.statusContract.filter(f => f.code == CodeStatusContract.INICIADO)
+        this.formProject.value.statusContract = status[0].id;
+      }
+      if (this.formProject.value.updateData === 'Solo Editar') {
+        this.formProject.value.updateData = true;
+
+      } else {
+        this.formProject.value.updateData = false;
+      }
+
+      detalle = {
+        fechaContrato: this.formProject.value.fechaContrato,
+        fechaFinalizacion: this.formProject.value.fechaFinalizacion,
+        adicion: false,
+        detailType: this.detailType,
+        contractId: null,
+        registerDate: this.registerDate,
+        modifyDate: this.registerDate,
+        userId: this.authService.accessId,
+      }
+    } else {
+      let adicion: boolean = false;
+      if (this._data.data.fechaFinalizacion != this.formProject.value.fechaFinalizacion) {
+        adicion = true;
+      }
+      if (this.formProject.value.updateData === 'Solo Editar') {
+        this.formProject.value.updateData = false;
+      } else {
+        this.formProject.value.updateData = true;
+      }
+      detalle = {
+        fechaContrato: this.formProject.value.fechaContrato,
+        fechaFinalizacion: this.formProject.value.fechaFinalizacion,
+        adicion: adicion,
+        detailType: this.formProject.value.tipoModificacion,
+        contractId: this._data.data.id,
+        id: this._data.data.detailContractId,
+        modifyDate: this.registerDate,
+        userId: this.authService.accessId,
+      }
+    }
+    const updateProject: ContractFolder = {
+      id: id,
+      companyName: this.formProject.value.companyName,
+      projectName: this.formProject.value.projectName,
+      objectContract: this.formProject.value.objectContract,
+      statusContractId: this.formProject.value.statusContract,
+      activate: true,
+      enableProject: false,
+      contractorsCant: 0,
+      detalleContratoDto: detalle,
+      valorContrato: 0,
+      valorSubTotal: 0,
+      gastosOperativos: 0,
+      noAdicion: this.formProject.value.noAdicion,
+      fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
+      fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
+      numberProject: this.formProject.value.numberProject,
+      project: this.formProject.value.project,
+      rubro: this.formProject.value.rubro,
+      nombreRubro: this.formProject.value.nombreRubro,
+      fuenteRubro: this.formProject.value.fuenteRubro,
+      dutyContract: this.formProject.value.dutyContract,
+      recursosAdicinales: this.formProject.value.resource,
+      areaCode: this.formProject.value.areaCode
+    };
+    return updateProject;
+  }
+
+
+  ngOnDestroy(): void {
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
+  }
 
 }
