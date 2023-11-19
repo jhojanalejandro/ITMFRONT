@@ -112,11 +112,11 @@ export class AuthService {
         return this._httpClient.post<IResponse>(this.apiUrl + environment.authenticateEndpoint, credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
-                this.accessToken = response.data.data.accessToken;
-                this.accessId = response.data.data.id;
-                this.accessName = response.data.data.userName
-                this.accessEmail = response.data.data.userEmail
-                this.codeC = response.data.data.code
+                this.accessToken = response.data.accessToken;
+                this.accessId = response.data.id;
+                this.accessName = response.data.userName
+                this.accessEmail = response.data.userEmail
+                this.codeC = response.data.code
                 // let plainText:string;
                 // this.accessId= crypto.AES.encrypt(plainText, response.id).toString();
                 // Set the authenticated flag to true
@@ -205,9 +205,7 @@ export class AuthService {
      */
     signUp(user: any) {
         let urlEndpointupdate = this.apiUrl + environment.sigUpEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointupdate, user).pipe(
-            catchError(this.handleError)
-        );
+        return this._httpClient.post<IResponse>(urlEndpointupdate, user)
     }
 
     /**
@@ -334,6 +332,13 @@ export class AuthService {
             })
         );
     }
+
+    UploadFileAttach(formdata: UserFile[]) {
+        let urlEndpointGenerate = this.apiUrl + environment.AddFileAttachFirmEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
+
+
     private handleError(error: any): Observable<any> {
         Swal.fire({
             position: 'center',

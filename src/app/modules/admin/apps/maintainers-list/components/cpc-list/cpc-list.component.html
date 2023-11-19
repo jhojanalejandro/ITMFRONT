@@ -1,4 +1,4 @@
-<button  class="ml-3" mat-flat-button [color]="'primary'"
+<button  class="ml-3" (click)="formRegister(null)" mat-flat-button [color]="'primary'"
     [matTooltip]="'Shortcut: Ctrl + /'">
     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
     <span class="ml-2 mr-1">Agregar CPC</span>
@@ -24,7 +24,7 @@
                                     {{element[columna.name]}}</p>
                                 <!-- <p *ngIf="element[columna.name]!= element.registerDate && element[columna.name]== element.modifyDate">{{element[columna.name] | date}} </p>  -->
                                 <p *ngIf="element[columna.name]=== element.acciones">
-                                    <button [matTooltip]="'Mostrar Contratistas'" style="margin-left: 3px !important;"
+                                    <button [matTooltip]="'Editar cpc'" (click)="formRegister(element)" style="margin-left: 3px !important;"
                                         class="hidden sm:inline-flex ml-3" (click)="navigateToContractors(element)"
                                         mat-flat-button [color]="'primary'">
                                         <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { ExecutionReport } from '../models/pdfDocument';
-import { Bank } from '../models/mater.model';
-import { EmptityHealth } from '../models/contractor-personal-data.model';
+import { Bank, EntityHealth } from '../models/mater.model';
 
 @Injectable({
     providedIn: 'root'
@@ -19,15 +18,6 @@ export class HomeContractorService {
 
     get data$(): Observable<any> {
         return this._data.asObservable();
-    }
-
-
-    getData(): Observable<any> {
-        return this._httpClient.get('api/dashboards/finance').pipe(
-            tap((response: any) => {
-                this._data.next(response);
-            })
-        );
     }
 
     addContractFolder(data: any) {
@@ -79,7 +69,6 @@ export class HomeContractorService {
         return this._httpClient.get<ExecutionReport>(urlEndPoint, { params: params });
     }
 
-
     saveContractorPersonalInformation(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.SaveDataContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -90,7 +79,8 @@ export class HomeContractorService {
         return this._httpClient.get<Bank[]>(urlEndPoint);
     }
 
-    getEmptityHealth(contractorId: string) {
+
+    getEmptityHealthContractor(contractorId: string) {
         const params = new HttpParams()
             .set('contractorId', contractorId)
         let urlEndPoint = this.apiUrl + environment.GetEmptityHealthContractorEndpoint;
@@ -98,5 +88,24 @@ export class HomeContractorService {
     }
 
 
+    getContarctorById(contractorId: string): Observable<any> {
+        const params = new HttpParams()
+        .set('contractorId', contractorId)
+        let urlEndPoint = this.apiUrl + environment.GetContractorByIdEndpoint;
+
+        return this._httpClient.get<any>(urlEndPoint, { params: params }).pipe(
+            switchMap((response: any) => {
+                return of(response);
+            })
+        );
+    }
+
+    validateStatus(contractorId: string, contractId: string) {
+        const params = new HttpParams()
+            .set('contractorId', contractorId)
+            .set('contractId', contractId)
+        let urlEndPoint = this.apiUrl + environment.GetStatusContractorEndpoint;
+        return this._httpClient.get<any>(urlEndPoint, { params: params });
+    }
 }
 

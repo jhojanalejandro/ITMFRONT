@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
 import Swal from 'sweetalert2';
@@ -21,8 +20,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 
 export class AssignmentUserComponent implements OnInit {
-  users: TeamModel[] = [];;
-  juridics: TeamModel[] = [];;
+  users: TeamModel[] = [];
+  juridics: TeamModel[] = [];
   supervisors: TeamModel[] = [];
   supervisorSelected: AssignmentUser = null;
   contracts: any;
@@ -71,6 +70,10 @@ export class AssignmentUserComponent implements OnInit {
       if(this.juridicPrincipalSelected != null){
         this.assignmentUser.push(this.juridicPrincipalSelected);
       }
+      this.assignmentUser = this.assignmentUser.map((assignment) => ({
+        ...assignment,
+        contractId: this.contractSelected,
+    }));
       this._contractorService
         .assignmentUser(this.assignmentUser)
         .pipe(takeUntil(this._unsubscribe$))
@@ -103,7 +106,7 @@ export class AssignmentUserComponent implements OnInit {
     this._auth.getTeams()
     .pipe(takeUntil(this._unsubscribe$))
     .subscribe((Response: TeamModel[]) => {
-      this.users = Response.filter(f => f.rollCode == CodeUser.RECRUITER);
+      this.users = Response.filter(f => f.rollCode == CodeUser.RECRUITER || f.rollCode == CodeUser.SUPERVISORAREAC);
       this.supervisors = Response.filter(f => f.rollCode == CodeUser.SUPERVISOR);
       this.juridics = Response.filter(f => f.rollCode == CodeUser.JURIDICO);
       if(this.users.length == 0 && this.supervisors.length ==0){
@@ -122,7 +125,9 @@ export class AssignmentUserComponent implements OnInit {
 
     });
   }
-  assignmentUserselectedPrincipal(usuario: any) {
+  assignmentUserselectedPrincipal(event: any,usuario: any) {
+    this.findUser(usuario.id,'Principal Contractual',1);
+
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
@@ -131,16 +136,27 @@ export class AssignmentUserComponent implements OnInit {
     this.userPrincipalSelected = assignmwntUser;
   }
 
-  assignmentUserselectedSecond(usuario: any) {
-    let assignmwntUser: AssignmentUser = {
-      contractId: this.contractSelected,
-      userId: usuario.id,
-      assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
+  assignmentUserselectedSecond(event: any,usuario: any) {
+    if(event.checked){
+      this.findUser(usuario.id,'Second Contractual',2);
+
+      let assignmwntUser: AssignmentUser = {
+        contractId: this.contractSelected,
+        userId: usuario.id,
+        assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
+      }
+      let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
+      if(indexUser < 0){
+        this.userSelected.push(assignmwntUser);
+      }
+    }else{
+      this.findUser(usuario.id,'Second Contractual',1);
+      const index = this.userSelected.findIndex(item => item.userId === usuario.id);
+      if (index !== -1) {
+        this.userSelected.splice(index, 1);
+      }
     }
-    let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
-    if(indexUser < 0){
-      this.userSelected.push(assignmwntUser);
-    }
+
   }
   onChangeAdmin(supervisor: any) {
     let assignmwntUser: AssignmentUser = {
@@ -174,6 +190,7 @@ export class AssignmentUserComponent implements OnInit {
   }
 
   assignmentJuridicselectedPrincipal(usuario: any) {
+    this.findUserJuridic(usuario.id,'Principal Juridic',1);
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
@@ -183,6 +200,7 @@ export class AssignmentUserComponent implements OnInit {
   }
 
   assignmentJuridicSelectedSecond(usuario: any) {
+    this.findUserJuridic(usuario.id,'Second Juridic',2);
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
@@ -193,6 +211,33 @@ export class AssignmentUserComponent implements OnInit {
       this.userSelected.push(assignmwntUser);
     }
   }
+
+  private findUser(id: string, type: string, level: number){
+    if(level == 1){
+      var index = this.users.findIndex(f => f.asign == type);
+      if(index >= 0){
+        this.users[index].asign = '';
+      }    
+    }else{
+      var index = this.users.findIndex(f => f.id == id);
+      this.users[index].asign = type;
+    }
+
+
+  }
+  
+  private findUserJuridic(id: string, type: string, level: number){
+    if(level == 1){
+      var index = this.juridics.findIndex(f => f.asign == type);
+      if(index >= 0){
+        this.juridics[index].asign = '';
+      }
+    }
+    var index = this.juridics.findIndex(f => f.id == id);
+
+    this.juridics[index].asign = type;
+  }
+
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();

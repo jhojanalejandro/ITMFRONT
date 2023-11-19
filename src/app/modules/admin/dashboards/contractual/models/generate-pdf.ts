@@ -11,11 +11,8 @@ export interface OtherMinute{
     initialDateContractExtension: Date;
     finalDateContractExtension: Date;
     object: string;
-    supervisor: string;
-    supervisorIdentification: string
     consecutive: number;
     contractNumber: string;
-    supervisorCharge: string;
     companyName: string;
     additionValue: any;
     registerDateContract: Date;
@@ -27,13 +24,10 @@ export interface OtherMinute{
     typeModify: string;
 }
 
-export interface CommiteeRequestContractor{
-    contractObject: string;
-    contractNumber: string;
-    registerDate: Date;
-    contractName: string;
-    commiteeRequestDto: CommitteeRequest[],
-    personalInCharge: PersonalInCharge[]
+export interface ResponseContractorPdf<T>{
+    dataContract: DataContract;
+    getDataContractors: T[];
+    personalInCharge: PersonalInCharge[];
 }
 
 export interface CommitteeRequest{
@@ -49,12 +43,17 @@ export interface CommitteeRequest{
     profileRequire: string;
 }
 
+export interface DataContract{
+    contractObject: string;
+    contractNumber: string;
+    registerDate: Date;
+    companyName: string;
+    projectName: string;
+    rubro: string;
+    rubroName: string;
+    rubroOrigin: string;
 
-export interface PreviusStudyContractors{
-    previusStudyDto: PreviusStudyContractorsList[],
-    personalInCharge: PersonalInCharge[]
 }
-
 
 export interface PreviusStudyContractorsList{
     id: string;
@@ -73,7 +72,9 @@ export interface PreviusStudyContractorsList{
     totalValue: any;
     requiredProfileAcademic: string;
     requiredProfileExperience: string;
-
+    activityContractor: string;
+    dutyContract: string;
+    policeRequire: boolean;
 }
 
 export interface PersonalInCharge{
@@ -94,14 +95,10 @@ export interface MinutePdf{
 	contractorExpeditionPlace: string;
     totalValueContract: any;
     initialDateContract: Date;
-    finalDateContract: Date;
+    finalContractDate: Date;
     elementObject: string;
-    supervisor: string;
-    supervisorIdentification: string
     contractNumber: string;
-    supervisorCharge: string;
     companyName: string;
-    contrato: any;
     registerDateContract: Date;
     rubroContract: any;
     unitValueContract: any;
@@ -111,4 +108,5 @@ export interface MinutePdf{
     contractorMail: string;
     comiteGenerated: boolean;
     previusStudy: boolean;
+    requirePolice: boolean;
 }

@@ -11,9 +11,7 @@ import { IUser } from 'app/layout/common/models/userAuthenticate';
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.css'],
-    encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+    styleUrls: ['./sign-in.component.css']
 })
 export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
@@ -62,10 +60,10 @@ export class AuthSignInComponent implements OnInit {
         this._authService.signIn(useraLogin)
             .subscribe(
                 (response) => {
-                    if(response.data.data.code === CodeUser.CONTRACTOR){
+                    if(response.data.code === CodeUser.CONTRACTOR){
                         this._router.navigate(['inicio/contratista']);
 
-                    }else if(response.data.data.code != null && response.data.data.code != CodeUser.CONTRACTOR){
+                    }else if(response.data.code != null && response.data.code != CodeUser.CONTRACTOR){
                         this._router.navigate(['dashboards/inicio']);
                     }
                 },

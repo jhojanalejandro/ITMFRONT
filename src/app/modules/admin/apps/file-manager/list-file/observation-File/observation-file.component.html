@@ -21,23 +21,14 @@
                 </mat-form-field>
             </div>
             <div class="checkbox-list">
-                <!-- <mat-radio-group [disabled]="true" aria-labelledby="example-radio-group-label" class="example-radio-group"
-                > -->
                 <span>Documentos seleccionados</span>
-
                 <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of observationfile" class="mr-4"
                     [value]="file.id" [color]="'primary'">
                     {{file.documentTypes}}
                 </mat-checkbox>
-
-                <!-- <mat-radio-button  *ngFor="let file of observationfile" class="example-radio-button" [value]="file">
-                    {{file.documentTypes}}
-                </mat-radio-button>
-            </mat-radio-group> -->
             </div>
 
-
-            <div class="observatationFolder">
+            <!-- <div class="observatationFolder">
                 <mat-form-field class="fieldObservation" appearance="outline">
                     <mat-label>Observación</mat-label>
                     <textarea type="text" class="example-full-width" id="observation" formControlName="observation"
@@ -46,7 +37,8 @@
                         El Campo Descripcion es requerido
                     </mat-error>
                 </mat-form-field>
-            </div>
+
+            </div> -->
             <div class="observatationFolder">
                 <mat-form-field (click)="pickerTo.open()" class="hiringTerm" appearance="fill">
                     <mat-label>Fecha Limite Entrega Documentos</mat-label>
@@ -56,7 +48,9 @@
                     <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                 </mat-form-field>
             </div>
-
+            <quill-editor class="mt-1" formControlName="observation" [placeholder]="'Escriba su observación'"
+                [modules]="quillModules">
+            </quill-editor>
         </form>
     </div>
 

@@ -53,7 +53,7 @@
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Rubro</mat-label>
-                        <mat-select [formControlName]="'rubro'" (selectionChange)="changeRubro($event)" name="rubro">
+                        <mat-select formControlName="rubro" (selectionChange)="changeRubro($event)" name="rubro">
                             <mat-option *ngFor="let tipo of rubros" [value]="tipo.id">
                                 {{tipo.rubroNumber}}
                             </mat-option>
@@ -63,15 +63,33 @@
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Nombre Rubro</mat-label>
-                        <input type="mail" id="nombreRubro" [value]="dataProject.nombreRubro" formControlName="nombreRubro"
+                        <input type="mail" id="nombreRubro"  formControlName="nombreRubro"
                             autocomplete="off" matInput placeholder="Nombre Rubro">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Fuente Rubro</mat-label>
-                        <input type="text" id="fuenteRubro"  [value]="dataProject.fuenteRubro" formControlName="fuenteRubro" autocomplete="off" matInput
-                            placeholder="Fuente Rubro">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                        <mat-select formControlName="fuenteRubro"  name="fuenteRubro">
+                            <mat-option *ngFor="let rubro of rubrosOrigin" [value]="rubro.viewValue">
+                                {{rubro.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                        <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
+                        <mat-label>Estado contrato</mat-label>
+                        <mat-select [formControlName]="'statusContract'"  name="statusContract">
+                            <mat-option *ngFor="let state of statusContract" [value]="state.id">
+                                {{state.statusContractDescription}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
+                        <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="folderField pt-2">
@@ -104,19 +122,6 @@
                 </div>
 
                 <div class="folderField">
-
-                    <mat-form-field *ngIf="editData" class="contractField" appearance="fill">
-                        <mat-label>Estado contrato</mat-label>
-                        <mat-select [formControlName]="'statusContract'"  name="statusContract">
-                            <mat-option *ngFor="let state of statusContract" [value]="state.id">
-                                {{state.statusContractDescription}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
-                        <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
-                            Este campo es requerido
-                        </mat-error>
-                    </mat-form-field>
                     <mat-form-field *ngIf="editData && AddeditData" class="contractField" appearance="fill">
                         <mat-label>Numero Adicion</mat-label>
                         <input type="text" id="noAdicion" formControlName="noAdicion" autocomplete="off" matInput
@@ -126,7 +131,6 @@
                             El Campo no Adicion es requerido
                         </mat-error>
                     </mat-form-field>
-
                 </div>
 
                 <div class="folderField">
@@ -151,13 +155,42 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-
                 <div class="folderField">
-                    <mat-form-field class="hiringD" appearance="fill">
+                    <mat-form-field  class="contractField" appearance="fill">
+                        <mat-label>Valor Contrato</mat-label>
+                        <input type="text" id="contarctValue" formControlName="contarctValue" autocomplete="off" matInput
+                            placeholder="Valor Contrato">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field  class="contractField" appearance="fill">
+                        <mat-label>Recursos Adicionales</mat-label>
+                        <input type="text" id="resource" formControlName="resource" autocomplete="off" matInput
+                            placeholder="Recursos Adicionales">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field  class="contractField" appearance="fill">
+                        <mat-label>Codigo de Area</mat-label>
+                        <input type="text" id="areaCode" formControlName="areaCode" matInput
+                            placeholder="Codigo de Area">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="folderField">
+                    <mat-form-field class="rContract" appearance="fill">
                         <mat-label>Objeto Convenio</mat-label>
                         <textarea type="text" class="example-full-width" id="objectContract" formControlName="objectContract"
                             autocomplete="off" matInput placeholder="Objeto"></textarea>
                         <mat-error *ngIf="formProject.get('objectContract').hasError('required')">
+                            El Campo Objeto Convenio es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="folderField">
+                    <mat-form-field class="rContract" appearance="fill">
+                        <mat-label>Deber del Convenio</mat-label>
+                        <textarea type="text" class="example-full-width" id="dutyContract" formControlName="dutyContract"
+                            autocomplete="off" matInput placeholder="Deber del Convenio"></textarea>
+                        <mat-error *ngIf="formProject.get('dutyContract').hasError('required')">
                             El Campo Objeto Convenio es requerido
                         </mat-error>
                     </mat-form-field>

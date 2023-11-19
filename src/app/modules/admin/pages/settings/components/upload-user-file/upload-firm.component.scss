@@ -42,3 +42,9 @@ mat-form-field{
     width: 620PX !important;
     max-width: 800px;
 }
+
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    margin-left: 60px;
+}

@@ -24,7 +24,6 @@ import { fuseAnimations } from '@fuse/animations';
 
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';

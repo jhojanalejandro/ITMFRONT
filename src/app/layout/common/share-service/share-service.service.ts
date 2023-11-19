@@ -86,7 +86,7 @@ export class ShareService {
         }
 
         return this.Decenas(decenas);
-    }//Centenas()
+    }
 
     Seccion(num, divisor, strSingular, strPlural) {
         let cientos = Math.floor(num / divisor)
@@ -118,7 +118,7 @@ export class ShareService {
             return strCentenas;
 
         return strMiles + ' ' + strCentenas;
-    }//Miles()
+    }
 
     Millones(num) {
         let divisor = 1000000;
@@ -132,7 +132,7 @@ export class ShareService {
             return strMiles;
 
         return strMillones + ' ' + strMiles;
-    }//Millones()
+    }
 
     calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
         let fechaInicios = new Date(fechaInicio);
@@ -152,26 +152,33 @@ export class ShareService {
 
     numeroALetras(total, currency) {
         const numericValue = Number(total.toString().replace(/\./g, ''));
-
+    
         currency = currency || {};
         let data = {
             numero: numericValue,
             enteros: Math.floor(numericValue),
-            decimales: numericValue % 1,
-            letrasCentavos: '',
             letrasMonedaPlural: currency.plural || 'PESOS',
             letrasMonedaSingular: currency.singular || 'PESO',
-            letrasMonedaCentavoPlural: currency.centPlural || 'CENTAVOS',
-            letrasMonedaCentavoSingular: currency.centSingular || 'COLOMBIANOS'
         };
     
-        if (data.enteros == 0)
-            return 'CERO ' + data.letrasMonedaPlural + ' ' + data.letrasCentavos;
-        if (data.enteros == 1)
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaSingular + ' ' + (data.decimales > 0 ? '' : 'DE') + ' ' + data.letrasMonedaCentavoPlural;
-        else
-            return this.Millones(data.enteros) + ' ' + data.letrasMonedaPlural + ' ' + (data.decimales > 0 ? '' : 'DE') + ' ' + data.letrasMonedaCentavoPlural;
-    };
+        if (data.enteros === 0) {
+            return 'CERO ' + data.letrasMonedaPlural;
+        } else {
+            const millonesParte = this.Millones(data.enteros);
+            const monedaParte = data.enteros === 1 ? data.letrasMonedaSingular : data.letrasMonedaPlural;
+            let resultado = millonesParte;
+            // Verificar si se debe agregar "DE"
+            const milesParte = data.enteros % 1000000;
+    
+            if (milesParte === 0) {
+                resultado += ' DE';
+            }
+        
+            resultado += ' ' + monedaParte;
+            return resultado;
+        }
+    }
+    
     transform(value: number): string {
         if (value === 0) {
             return 'cero pesos';

@@ -1,25 +1,25 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, Subject, map, startWith, takeUntil } from 'rxjs';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
-import { AcademicInformation, ContractorPersonalInformation, EmptityHealth, PersonalInformation } from '../../models/contractor-personal-data.model';
-import { IHiringData } from 'app/modules/admin/dashboards/contractual/models/hiring-data';
+import { AcademicInformation, ContractorPersonalInformation, PersonalInformation } from '../../models/contractor-personal-data.model';
 import { HomeContractorService } from '../../services/home-contractor.service';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
-import { Bank } from '../../models/mater.model';
+import { Bank, EntityHealth } from '../../models/mater.model';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 
 @Component({
   selector: 'app-contractor-personal-data',
   templateUrl: './contractor-personal-data.component.html',
   styleUrls: ['./contractor-personal-data.component.scss'],
-  
+
 })
-export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
+export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
 
   alert: { type: FuseAlertType; message: string } = {
     type: 'warn',
@@ -34,22 +34,11 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   title: string = 'Guardar';
   departments: any = GlobalConst.departments;
   municipio: any;
-  eps: any[] = [
-    'COOSALUD',
-    'NUEVA EPS',
-    'ALIANSALUD',
-    'SALUD TOTAL',
-    'EPS SANITAS',
-    'EPS SURA',
-    'SALUD MIA',
-    'CAPITAL SALUD',
-    'SAVIA SALUD',
-    'SAVIA SALUD',
-  ];
-  arl: any[] = GlobalConst.arl;
-  afp: any[] = GlobalConst.afp;
+  eps: any[] = [];
+  arl: any[] = [];
+  afp: any[] = [];
   banks: Bank[];
-  accountType: any = GlobalConst.accountType;
+  accountTypes: any = GlobalConst.accountType;
   step = 0;
   contractorPersonalInformation: ContractorPersonalInformation;
   contractorinformationStepperForm: FormGroup;
@@ -57,7 +46,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   labelPosition: string;
   numberOfTicks = 0;
   academicInformationList: AcademicInformation[] = [];
-  emptityHealth: EmptityHealth[] = [];
 
   academicInformation: AcademicInformation = {
     collegeDegree: '',
@@ -67,11 +55,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
   };
   genero: string;
   private readonly _unsubscribe$ = new Subject<void>();
-  filteredOptionsEps: Observable<string[]>;
-  filteredOptionsAfp: Observable<string[]>;
-  filteredOptionsArl: Observable<string[]>;
-  filteredOptionsAccountType: Observable<string[]>;
-  filteredOptionsBanks: Observable<Bank[]>;
   generos: string[] = [
     'Masculino',
     'Femenino',
@@ -83,6 +66,7 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     private ref: ChangeDetectorRef,
     private _planingService: PlaningService,
     private _auth: AuthService,
+    private _genericService: GenericService,
     public matDialogRef: MatDialogRef<ContractorPersonalDataComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
   ) {
@@ -91,9 +75,9 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.getBanks();
+    this.getentityHealth();
     if (this.datos.id != null) {
       this.getHiring();
-
     }
     this.validarFechaNacimiento();
     setInterval(() => {
@@ -114,7 +98,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
         departamento: ['', Validators.required],
         address: ['', Validators.required],
         neiberhood: ['', Validators.required],
-
       }),
       step2: this._formBuilder.group({
         technical: [''],
@@ -145,23 +128,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     });
     this.validateDate();
 
-    this.filteredOptionsEps = this.contractorinformationStepperForm.get('step4.eps').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterEps(value || ''))
-    );
-    this.filteredOptionsAfp = this.contractorinformationStepperForm.get('step4.afp').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterAfp(value || ''))
-    );
-    this.filteredOptionsArl = this.contractorinformationStepperForm.get('step4.arl').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterArl(value || ''))
-    );
-
-    this.filteredOptionsAccountType = this.contractorinformationStepperForm.get('step3.accountType').valueChanges.pipe(
-      startWith(''),
-      map((value) => this._filterAccountType(value || ''))
-    );
   }
 
 
@@ -233,8 +199,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       }
 
     }
-
-    let bank = this.banks.find(x => x.bankName == this.contractorinformationStepperForm.controls['step3'].value.bank).id;
     let departamento = this.departments.find(x => x.id == this.contractorinformationStepperForm.controls['step1'].value.departamento).departamento;
 
     const personalInfoirmation: ContractorPersonalInformation = {
@@ -252,31 +216,15 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       barrio: this.contractorinformationStepperForm.controls['step1'].value.neiberhood,
       cuentaBancaria: this.contractorinformationStepperForm.controls['step3'].value.accountNumber.toString(),
       tipoCuenta: this.contractorinformationStepperForm.controls['step3'].value.accountType,
-      entidadCuentaBancaria: bank,
+      entidadCuentaBancaria: this.contractorinformationStepperForm.controls['step3'].value.bank,
       fechaActualizacion: new Date(),
+      eps: this.contractorinformationStepperForm.controls['step4'].value.eps,
+      arl: this.contractorinformationStepperForm.controls['step4'].value.arl,
+      afp: this.contractorinformationStepperForm.controls['step4'].value.afp,
     };
-    let saludEps: EmptityHealth = {
-      contractor: this._auth.accessId,
-      emptitytype: 'SLD',
-      emptity: this.contractorinformationStepperForm.controls['step4'].value.eps
-    }
-    this.emptityHealth.push(saludEps)
-    let saludArl: EmptityHealth = {
-      contractor: this._auth.accessId,
-      emptitytype: 'ARL',
-      emptity: this.contractorinformationStepperForm.controls['step4'].value.arl
-    }
-    this.emptityHealth.push(saludArl)
-    let saludAfp: EmptityHealth = {
-      contractor: this._auth.accessId,
-      emptitytype: 'AFP',
-      emptity: this.contractorinformationStepperForm.controls['step4'].value.afp
-    }
-    this.emptityHealth.push(saludAfp)
     const registerpersonalInfoirmation: PersonalInformation = {
       contractorPersonalInformation: personalInfoirmation,
       academicInformation: this.academicInformationList,
-      emptityHealth: this.emptityHealth
     };
     this._homeService
       .saveContractorPersonalInformation(registerpersonalInfoirmation)
@@ -317,8 +265,8 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     this._planingService
       .getHiringDataById(this.datos.id, this.datos.contractId)
       .pipe(takeUntil(this._unsubscribe$))
-      .subscribe((response: IHiringData) => {
-        if (response.id != null) {
+      .subscribe((response) => {
+        if (response.data != null) {
           this.title = 'Actualizar'
           this.update = true;
         }
@@ -365,11 +313,6 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
       .subscribe((response: Bank[]) => {
         if (response != null) {
           this.banks = response;
-          this.filteredOptionsBanks = this.contractorinformationStepperForm.get('step3.bank').valueChanges.pipe(
-            startWith(''),
-            map((value) => this._filterBanks(value || ''))
-          );
-
         }
       });
   }
@@ -386,44 +329,54 @@ export class ContractorPersonalDataComponent implements OnInit,OnDestroy {
     this.step--;
   }
 
-
-  private _filterEps(value: any): string[] {
-    return this.eps.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
-  private _filterAfp(value: any): string[] {
-    return this.afp.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
-  private _filterArl(value: any): string[] {
-    return this.arl.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
   private _filterBanks(value: any): Bank[] {
     return this.banks.filter((option: Bank) =>
       option.bankName.toLowerCase().includes(value.toLowerCase())
     );
   }
 
-  private _filterAccountType(value: any): string[] {
-    return this.accountType.filter((option) =>
-      option.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-  validarFechaNacimiento() {
+
+  private validarFechaNacimiento() {
     const today = new Date();
     const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-    this.minBirth = eighteenYearsAgo;
+    return this.minBirth = eighteenYearsAgo;
   }
   onChange(event: any) {
     this.genero = event.value
   }
+
+  private getentityHealth() {
+    this._genericService
+      .getEmptityHealthList()
+      .pipe(takeUntil(this._unsubscribe$))
+      .subscribe((response: EntityHealth[]) => {
+        if (response != null) {
+          this.afp = response.filter(f => f.code === 'AFP');
+          this.eps = response.filter(f => f.code === 'EPS');
+          this.arl = response.filter(f => f.code === 'ARL');
+
+        }
+      });
+  }
+
+  dateChange(event: any) {
+    const step1FormGroup = this.contractorinformationStepperForm.get('step1');
+
+    // Agrega un valor a "identification" usando patchValue
+    step1FormGroup.patchValue({
+      birthDate: event.value
+    });
+  }
+  filterCalendar(date: Date | null): boolean {
+    
+    // Personaliza el filtro para permitir solo fechas válidas
+    if (!date) {
+      return true;
+    }
+    // Puedes personalizar el rango de fechas permitidas aquí
+    return date >= new Date();
+  }
+
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();

@@ -21,8 +21,11 @@ import { RegisterFolderComponent } from './components/register-folder/register-f
 import { FileListContractComponent } from './components/file-list-contract/file-list-contract.component';
 import { UploadFileContractComponent } from './components/upload-file-contract/upload-file-contract.component';
 import { ShowFileComponent } from './components/show-file/show-file.component';
+import { QuillModule } from 'ngx-quill';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+
+ // Sustituye 'ruta-del-worker-pdfjs.worker.js' por la ruta correcta
+
 
 @NgModule({
     declarations: [
@@ -42,6 +45,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
         ShowFileComponent,
     ],
     imports: [
+        QuillModule.forRoot(),
         RouterModule.forChild(fileManagerRoutes),
         MatButtonModule,
         MatIconModule,
@@ -49,7 +53,6 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
         MatTooltipModule,
         SharedModule,
         Ng2SearchPipeModule,
-        PdfViewerModule,
         NgxExtendedPdfViewerModule    
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

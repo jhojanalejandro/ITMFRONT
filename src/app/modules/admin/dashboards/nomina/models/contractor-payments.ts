@@ -11,4 +11,5 @@ export interface ContractorPayments{
     descriptionPayment: string
     registerDate: Date;
     consecutive: number;
+    levelRisk?: string;
 }

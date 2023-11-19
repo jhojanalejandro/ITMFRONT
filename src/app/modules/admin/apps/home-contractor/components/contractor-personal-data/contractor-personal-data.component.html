@@ -9,8 +9,8 @@
         <mat-dialog-content style="margin: 0px; padding: 0px;">
             <div class="option">
                 <!-- Alert -->
-                <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'"
-                    [showIcon]="false" [type]="alert.type" [@shake]="alert.type === 'error'">
+                <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'" [showIcon]="false"
+                    [type]="alert.type" [@shake]="alert.type === 'error'">
                     {{alert.message}}
                 </fuse-alert>
             </div>
@@ -23,8 +23,11 @@
                         <div class="folderFieldContractor">
                             <mat-form-field (click)="pickerFC.open()" class="hiringField" appearance="fill">
                                 <mat-label>Fecha Nacimiento</mat-label>
-                                <input matInput id="birthDate" [max]="minBirth" autocomplete="off"
-                                    formControlName="birthDate" [matDatepicker]="pickerFC" matDatepickerFormat="dd/MM/yyyy"  required>
+                                <!-- <input matInput id="birthDate" [max]="minBirth"
+                                    formControlName="birthDate" [matDatepicker]="pickerFC" required  (dateChange)="dateChange($event)"> -->
+                                <input matInput id="birthDate" [max]="minBirth" formControlName="birthDate"
+                                    [matDatepicker]="pickerFC" required (dateChange)="dateChange($event)"
+                                    (click)="pickerFC.open()">
                                 <mat-datepicker #pickerFC></mat-datepicker>
                                 <mat-datepicker-toggle matSuffix [for]="pickerFC"></mat-datepicker-toggle>
                                 <mat-error>
@@ -306,7 +309,7 @@
                         <ng-template matStepLabel>Información Bancaria</ng-template>
                         <div class="flex flex-col gt-sm:flex-row">
                             <div class="folderFieldContractor">
-                                <mat-form-field class="hiringField" appearance="fill">
+                                <!-- <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>Bancos</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite" aria-label="bank" matInput
                                         formControlName="bank" [matAutocomplete]="bankAutoComplete">
@@ -316,30 +319,39 @@
                                             {{ option.bankName }}
                                         </mat-option>
                                     </mat-autocomplete>
-                                </mat-form-field>
-                                <!-- <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>Bancos</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite"
-                                        aria-label="Nombre del Elemento" matInput [formControlName]="'bank'"
-                                        [matAutocomplete]="auto">
-                                    <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let bank of banks | async" [value]="bank.id">
-                                            {{bank.bankName}}
-                                        </mat-option>
-                                    </mat-autocomplete>
                                 </mat-form-field> -->
                                 <mat-form-field class="hiringField" appearance="fill">
+                                    <mat-label>Bancos</mat-label>
+                                    <mat-select formControlName="bank" >
+                                        <mat-option *ngFor="let option of banks" [value]="option.id">
+                                            {{option.bankName}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                                    </mat-icon>
+                                </mat-form-field>
+                                <mat-form-field class="hiringField" appearance="fill">
+                                    <mat-label>Tipo Cuenta</mat-label>
+                                    <mat-select formControlName="accountType" >
+                                        <mat-option *ngFor="let option of accountTypes" [value]="option">
+                                            {{option}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                                    </mat-icon>
+                                </mat-form-field>
+                                <!-- <mat-form-field class="hiringField" appearance="fill">
                                     <mat-label>Tipo Cuenta</mat-label>
                                     <input type="text" placeholder="Seleccione o Digite"
                                         aria-label="Nombre del Elemento" matInput [formControlName]="'accountType'"
                                         [matAutocomplete]="auto">
                                     <mat-autocomplete #auto="matAutocomplete">
-                                        <mat-option *ngFor="let account of filteredOptionsAccountType | async"
+                                        <mat-option *ngFor="let account of accountTypes"
                                             [value]="account">
                                             {{account}}
                                         </mat-option>
                                     </mat-autocomplete>
-                                </mat-form-field>
+                                </mat-form-field> -->
                                 <mat-form-field class="hiringField" appearance="fill">
                                     <input type="number" id="accountNumber" matInput [formControlName]="'accountNumber'"
                                         [placeholder]="'Número cuenta'" autocomplete="off">
@@ -386,14 +398,12 @@
                                 </mat-expansion-panel-header>
 
                                 <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>EPS</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite" aria-label="EPS" matInput
-                                        formControlName="eps" [matAutocomplete]="epsAutoComplete">
-                                    <mat-autocomplete #epsAutoComplete="matAutocomplete">
-                                        <mat-option *ngFor="let option of filteredOptionsEps | async" [value]="option">
-                                            {{ option }}
+                                    <mat-label fro="eps">EPS</mat-label>
+                                    <mat-select [formControlName]="'eps'" name="eps" id="eps">
+                                        <mat-option *ngFor="let epsSelect of eps" [value]="epsSelect.id">
+                                            {{epsSelect.entityHealthDescription}}
                                         </mat-option>
-                                    </mat-autocomplete>
+                                    </mat-select>
                                 </mat-form-field>
 
                                 <mat-action-row>
@@ -409,14 +419,12 @@
                                 </mat-expansion-panel-header>
 
                                 <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>AFP</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
-                                        formControlName="afp" [matAutocomplete]="afpAutoComplete">
-                                    <mat-autocomplete #afpAutoComplete="matAutocomplete">
-                                        <mat-option *ngFor="let option of filteredOptionsAfp | async" [value]="option">
-                                            {{ option }}
+                                    <mat-label>PENSIÓN</mat-label>
+                                    <mat-select [formControlName]="'afp'" name="afp">
+                                        <mat-option *ngFor="let afpSelect of afp" [value]="afpSelect.id">
+                                            {{afpSelect.entityHealthDescription}}
                                         </mat-option>
-                                    </mat-autocomplete>
+                                    </mat-select>
                                 </mat-form-field>
                                 <mat-action-row>
                                     <button mat-button color="warn" (click)="prevStep()">previo</button>
@@ -431,14 +439,12 @@
                                     </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <mat-form-field class="hiringField" appearance="fill">
-                                    <mat-label>ALR</mat-label>
-                                    <input type="text" placeholder="Seleccione o Digite" aria-label="AFP" matInput
-                                        formControlName="arl" [matAutocomplete]="arlAutoComplete">
-                                    <mat-autocomplete #arlAutoComplete="matAutocomplete">
-                                        <mat-option *ngFor="let option of filteredOptionsArl | async" [value]="option">
-                                            {{ option }}
+                                    <mat-label>ARL</mat-label>
+                                    <mat-select [formControlName]="'arl'" name="raffles">
+                                        <mat-option *ngFor="let arlSelect of arl" [value]="arlSelect.id">
+                                            {{arlSelect.entityHealthDescription}}
                                         </mat-option>
-                                    </mat-autocomplete>
+                                    </mat-select>
                                 </mat-form-field>
                                 <mat-action-row>
                                     <button mat-button color="warn" (click)="prevStep()">Previo</button>
@@ -482,7 +488,8 @@
                                 </mat-form-field>
                             </div> -->
                         <div class="flex justify-end mt-6 ml-5">
-                            <button mat-flat-button [color]="'accent'" type="button" class="mt-2 ml-2 mt-6" matStepperPrevious>
+                            <button mat-flat-button [color]="'accent'" type="button" class="mt-2 ml-2 mt-6"
+                                matStepperPrevious>
                                 Volver
                             </button>
                             <button mat-flat-button [color]="'primary'" class="mt-2 ml-2  mt-6"

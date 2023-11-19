@@ -34,7 +34,7 @@ export class CollectionAccountsService
     getItemByTypeAndDate(type: any | null = null,contractId: any | null = null, date : any | null = null): Observable<DataFile>
     {
         if(type === 'documentos'){
-            type = 'Cuenta De Cobro';
+            type = null;
         }
         if(date === null){
             let month = new Date().getMonth() + 1;

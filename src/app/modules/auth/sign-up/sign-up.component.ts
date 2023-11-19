@@ -6,6 +6,7 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from '../model/user-model';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'auth-sign-up',
@@ -42,7 +43,7 @@ export class AuthSignUpComponent implements OnInit {
     ngOnInit(): void {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-            name: ['', Validators.required],
+            userName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required],
             confirmPassword: ['', Validators.required],
@@ -57,7 +58,7 @@ export class AuthSignUpComponent implements OnInit {
     signUp() {
 
         const userRegister: IUserModel = {
-            userName: this.signUpForm.value.name,
+            userName: this.signUpForm.value.userName,
             userPassword: this.signUpForm.value.password,
             professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,
@@ -87,7 +88,14 @@ export class AuthSignUpComponent implements OnInit {
             },
             (response) => {
                 console.log(response);
-
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: '',
+                    html: response.error.message,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
                 // Re-enable the form
                 this.signUpForm.enable();
                 // Reset the form

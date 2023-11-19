@@ -4,9 +4,7 @@ import {
     Inject,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy,
-    Output,
-    EventEmitter,
+    OnDestroy
 } from '@angular/core';
 import {
     FormBuilder,
@@ -32,9 +30,7 @@ const moment = _rollupMoment || _moment;
 @Component({
     selector: 'app-upload-file-contractor',
     templateUrl: './upload-file-contractor.component.html',
-    styleUrls: ['./upload-file-contractor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+    styleUrls: ['./upload-file-contractor.component.scss']
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
     date = new FormControl(moment());
@@ -194,10 +190,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
-
                 if (res != null) {
                     this.typeDocs = res;
-
                     this.gevalidateDocument();
                 }
             }
@@ -206,7 +200,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     private getDaTaContractor(): any {
         this._contractorListService
-            .getContractorByIdProject(this._data.contractId,false)
+            .getContractorByIdProject(this._data.contractId,this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
                 this.dataContractor = resp;
@@ -225,6 +219,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
+                debugger
                 if (!resp.activateTermContract && !resp.activateTermPayments) {
                     swal.fire(
                         '',
@@ -233,7 +228,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     );
                     this.cerrar();
                 }
-                if (resp.hv && resp.secop && resp.exam) {
+                if (resp.dct && resp.hv && resp.secop && resp.exam && !resp.activateTermPayments) {
                     swal.fire(
                         '',
                         'ya se cargaron los tres documentos no puedes cargar mas!',
@@ -241,7 +236,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     );
                     this.cerrar();
                 }
-                if (resp.activateTermContract) {
+                if (resp.activateTermContract && !resp.activateTermPayments) {
                     this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code == DocumentTypeCodes.HOJADEVIDA || f.code == DocumentTypeCodes.REGISTROSECOP || f.code == DocumentTypeCodes.DOCUMENTOSCONTRATACION)
                     if (resp.hv) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.HOJADEVIDA)
@@ -257,15 +252,13 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.DOCUMENTOSCONTRATACION)
                     }
                 }
-                else if (resp.activateTermPayments) {
-                    this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES && f.code != DocumentTypeCodes.HOJADEVIDA && f.code != DocumentTypeCodes.REGISTROSECOP)
+                else if(resp.activateTermPayments){
+                    this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.PLANILLA || f.code == DocumentTypeCodes.INFORMEEJECUCIÓN || f.code == DocumentTypeCodes.CUENTACOBRO);
                 }
-
             }
             );
         return this.dataContractor;
     }
-
 
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();

@@ -27,7 +27,7 @@
                 <div class="flex items-center mt-6 sm:mt-0 sm:ml-2 space-x-3">
                     <button *ngIf="showcontracts" (click)="SaveContract()" class="fuse-mat-button-rounded"
                         mat-flat-button [color]="'accent'">
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
+                        <mat-icon class="icon-size-5 btn-r-contract" [svgIcon]="'heroicons_outline:folder-add'"></mat-icon>
                         <span class="ml-2">Registrar proyecto</span>
                     </button>
                     <button  *ngIf="showcontracts" (click)="SaveOptions()" class="fuse-mat-button-rounded"
@@ -74,13 +74,14 @@
                                 *ngIf="element[columna.name]=== element.statusContract;"
                                 class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                 [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContract == 'INICIADO',
+                                'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-50': element.statusContract === 'EN EJECUCIÓN',
                          'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.statusContract === 'EN PROCESO'}">
                                 <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                             </span>
                                 <p *ngIf="element[columna.name]===element.action && showcontracts">
 
                                     <button [matTooltip]="'Opciones contrato'" mat-icon-button
-                                        [matMenuTriggerFor]="summaryMenu">
+                                        [matMenuTriggerFor]="summaryMenu" data-cy="boton-icono">
                                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'">
                                         </mat-icon>
                                     </button>
@@ -90,7 +91,7 @@
                                             <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
                                             Editar datos
                                         </button>
-                                        <button [matTooltip]="'Terminar Contrato'"
+                                        <button  [matTooltip]="'Terminar Contrato'"
                                             (click)="openConfirmationDelete(element)" [color]="'primary'"
                                             mat-menu-item>
                                             <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>

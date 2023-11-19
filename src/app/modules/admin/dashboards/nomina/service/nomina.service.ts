@@ -73,12 +73,28 @@ export class NominaService {
             catchError(this.handleError)
         );
     }
+
+    addContractorPaymentSecurity(data: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.addContractorPaymentSecurityEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     private handleError(error: any): Observable<any> {
+        console.log(error);
+        
+        let errorShow = null;
+        if(error.error.message == null){
+            errorShow = error.error
+        }else{
+            errorShow = error.error.message
+        }
         Swal.fire({
             position: 'center',
             icon: 'error',
             title: '',
-            html: error.error.message,
+            html: errorShow,
             showConfirmButton: false,
             timer: 2000
         });

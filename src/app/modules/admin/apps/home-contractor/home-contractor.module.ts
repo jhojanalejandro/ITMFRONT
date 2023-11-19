@@ -15,6 +15,7 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/mat
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { MY_FORMATS } from '../../dashboards/nomina/components/collection-accounts-list/collection-accounts-list.component';
 import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { ContractorPaymentSecurityRegisterComponent } from './components/payroll
         MatSortModule,
         FuseCardModule,
         NgApexchartsModule,
-        SharedModule
+        SharedModule,
+        NgxExtendedPdfViewerModule
     ],
     providers: [DatePipe,
         {

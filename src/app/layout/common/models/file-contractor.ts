@@ -64,6 +64,7 @@ export interface DetailFileContractor{
     contractId: string;
     contractorId: string;
     userId?: string;
+    termDate?: Date;
 }
 
 export interface ContractsContractor{

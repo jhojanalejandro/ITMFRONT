@@ -40,7 +40,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations:[
-    
+
+
   ],
   imports: [
     MatButtonModule,
@@ -74,7 +75,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatRadioModule,
     MatSortModule,
     MatMomentDateModule,
-    MatInputModule,   
+    MatInputModule,
     MatButtonToggleModule,
     MatTabsModule,
     MatStepperModule,

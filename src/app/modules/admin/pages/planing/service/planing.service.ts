@@ -155,8 +155,9 @@ export class PlaningService {
             this.apiUrl + environment.GetDataMinutaHiringEndpoint;
         return this._httpClient.post<any>(urlEndpointGenerate, data);
     }
+
     deleteComponent(id: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.deleteComponent;
+        let urlEndpointGenerate = this.apiUrl + environment.deleteComponentEndpoint;
         return this._httpClient.delete<IResponse>(urlEndpointGenerate + id).pipe(
             catchError(this.handleError)
         );
@@ -173,9 +174,17 @@ export class PlaningService {
             .set('contractId', contractId);
         let urlEndpointGenerate =
             this.apiUrl + environment.GetByIdHiringEndpoint;
-        return this._httpClient.get<IHiringData>(urlEndpointGenerate, { params: params });
+        return this._httpClient.get<IResponse>(urlEndpointGenerate, { params: params });
     }
 
+    deleteActivity(activityId: any) {
+        let urlEndpointGenerate = this.apiUrl + environment.deleteActivityEndpoint;
+        const params = new HttpParams()
+            .set('activityId', activityId);
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate, { params }).pipe(
+            catchError(this.handleError)
+        );
+    }
 
     // Método para manejar errores (opcional)
     private handleError(error: any): Observable<any> {

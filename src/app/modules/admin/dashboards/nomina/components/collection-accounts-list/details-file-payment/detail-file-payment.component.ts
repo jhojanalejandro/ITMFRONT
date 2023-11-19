@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
 import { CollectionAccountsListComponent } from '../collection-accounts-list.component';
-import { ShowFileComponent } from 'app/modules/admin/apps/file-manager/components/show-file/show-file.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ShowFileComponent } from '../show-file/show-file.component';
 
 
 @Component({
@@ -95,7 +95,8 @@ export class DetailFilePaymentComponent implements OnInit, OnDestroy {
                 split: true,
                 id: this.item.id,
                 fileName: this.item.filesName,
-                documentType: this.item.documentType
+                documentType: this.item.documentType,
+                fileData: this.item.filedata
             }
         });
         dialogRef.afterClosed()
