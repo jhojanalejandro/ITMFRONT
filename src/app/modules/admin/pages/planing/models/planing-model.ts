@@ -55,6 +55,8 @@ export interface ContractFolder{
     project: string;
     fuenteRubro: string;
     dutyContract?: string;
+    recursosAdicinales?: string;
+    areaCode: string;
 }
 
 export interface DetailContractFolder{
