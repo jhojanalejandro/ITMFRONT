@@ -156,12 +156,14 @@
                     </mat-form-field>
                 </div>
                 <div class="folderField">
-                    <mat-form-field  class="contractField" appearance="fill">
-                        <mat-label>Valor Contrato</mat-label>
-                        <input type="text" id="contarctValue" formControlName="contarctValue" autocomplete="off" matInput
-                            placeholder="Valor Contrato">
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                    <mat-form-field (click)="pickerTA.open()" class="contractField" appearance="fill">
+                        <mat-label>Fecha Registro contrato</mat-label>
+                        <input matInput id="registerDateContract" autocomplete="off"
+                            formControlName="registerDateContract" [matDatepicker]="pickerTA">
+                        <mat-datepicker #pickerTA></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerTA"></mat-datepicker-toggle>
                     </mat-form-field>
+
                     <mat-form-field  class="contractField" appearance="fill">
                         <mat-label>Recursos Adicionales</mat-label>
                         <input type="text" id="resource" formControlName="resource" autocomplete="off" matInput

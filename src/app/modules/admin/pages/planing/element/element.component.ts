@@ -126,7 +126,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             tipoElemento: [null],
             nombreElemento: [null, Validators.required],
             modificacion: [null],
-            recursos: [null],
+            recursos: new FormControl({ value: null, disabled: true }),
             fechamodificacion: [null],
             consecutivo: [null, Validators.required],
             valordiaContratista: [null, Validators.required],
@@ -144,13 +144,13 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 totalValue: this._genericService.addCommasToNumber(this._data.elemento.valorTotal),
                 id: this._data.elemento.id,
                 unitValueDay: this._genericService.addCommasToNumber(this._data.elemento.valorPorDia),
-                totalExacto: this._genericService.addCommasToNumber(this._data.elemento.recursos+this._data.elemento.valorTotal),
+                totalExacto: this._genericService.addCommasToNumber(this._data.elemento.valorTotal),
                 cpc: this._data.elemento.cpcId,
                 nombreCpc: this._data.elemento.nombreCpc,
                 tipoElemento: this._data.elemento.tipoElemento,
                 nombreElemento: this._data.elemento.nombreElemento,
                 modificacion: [null],
-                recursos: this._genericService.addCommasToNumber(this._data.elemento.recursos),
+                recursos: this._data.elemento.recursos != null ? this._genericService.addCommasToNumber(this._data.elemento.recursos) : 0, 
                 fechamodificacion: [null],
                 consecutivo: this._data.elemento.consecutivo,
                 valordiaContratista: this._genericService.addCommasToNumber(this._data.elemento.valorPorDiaContratista),
@@ -166,7 +166,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             this.totalValue = this._genericService.addCommasToNumber(this._data.elemento.valorTotal);
             this.valorPorDiaContratista = this._genericService.addCommasToNumber(this._data.elemento.valorPorDiaContratista);
             this.valorPorDiaContratistas = this._genericService.addCommasToNumber(this._data.elemento.valorPorDia);
-            this.recursos = this._genericService.addCommasToNumber(this._data.elemento.recursos);
 
         }
         this.filteredOptions =
@@ -232,9 +231,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         if (this.valorPorDiaContratista === null) {
             this.valorPorDiaContratista = this.totalValue / this.elementForm.value.contractorCant;
         }
-        if(this.recursos > 0 ){
-            this.totalValue += this.recursos;
-        }
+
         let item: Elements = {
             id: this._data.elemento.id,
             nombreElemento: this.elementForm.value.nombreElemento,
@@ -249,7 +246,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             cpcId: this.elementForm.value.cpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
-            recursos: Math.ceil(Number(this.recursos.toString().replace(/\./g, ''))),
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,

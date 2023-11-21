@@ -187,7 +187,7 @@ export class ModificacionFormComponent implements OnInit {
             valorTotalContratista: 0,
             cpcId: this.cpcId,
             isModify: modificacion,
-            resources: this.modifyForm.value.resources,
+            resources: 0,
             consecutive: '1',
             specificObligations: this.modifyForm.value.specificObligations,
             generalObligations: this.modifyForm.value.generalObligations,

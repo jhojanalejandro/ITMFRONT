@@ -22,6 +22,7 @@ export interface OtherMinute{
     specificObligations: any;
     generalObligations: any;
     typeModify: string;
+    initialValue: any;
 }
 
 export interface ResponseContractorPdf<T>{

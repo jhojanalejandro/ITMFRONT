@@ -53,9 +53,10 @@ export class AssignmentUserComponent implements OnInit {
   }
 
   async addAssignmentUsers() {
+    debugger
     if(this.contractSelected == null){
       Swal.fire('', 'selecciona  un contrato!', 'warning');
-    } else if(this.userSelected.length == 0 &&  this.supervisorSelected == null){
+    } else if(this.userSelected.length == 0 &&  this.supervisorSelected == null && this.userPrincipalSelected == null){
       Swal.fire('', 'Falta información necesaria para la asignación!', 'warning');
     }else{
       if(this.userSelected.length > 0){
@@ -134,29 +135,33 @@ export class AssignmentUserComponent implements OnInit {
       assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.RESPONSABLECONTRATOCODE).id
     }
     this.userPrincipalSelected = assignmwntUser;
+    let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
+    if(indexUser == -1){
+      this.userSelected.push(assignmwntUser);
+    }else{
+      this.userSelected.splice(indexUser, 1);
+    }
+
   }
 
   assignmentUserselectedSecond(event: any,usuario: any) {
     if(event.checked){
-      this.findUser(usuario.id,'Second Contractual',2);
 
-      let assignmwntUser: AssignmentUser = {
-        contractId: this.contractSelected,
-        userId: usuario.id,
-        assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
-      }
-      let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
-      if(indexUser < 0){
-        this.userSelected.push(assignmwntUser);
-      }
-    }else{
-      this.findUser(usuario.id,'Second Contractual',1);
-      const index = this.userSelected.findIndex(item => item.userId === usuario.id);
-      if (index !== -1) {
-        this.userSelected.splice(index, 1);
-      }
     }
+    this.findUser(usuario.id,'Second Contractual',2);
 
+    let assignmwntUser: AssignmentUser = {
+      contractId: this.contractSelected,
+      userId: usuario.id,
+      assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
+    }
+    let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
+
+    if(indexUser < 0){
+      this.userSelected.push(assignmwntUser);
+    }else{
+      this.userSelected.splice(indexUser, 1);
+    }
   }
   onChangeAdmin(supervisor: any) {
     let assignmwntUser: AssignmentUser = {
@@ -214,13 +219,25 @@ export class AssignmentUserComponent implements OnInit {
 
   private findUser(id: string, type: string, level: number){
     if(level == 1){
-      var index = this.users.findIndex(f => f.asign == type);
+      var index = this.users.findIndex(f => f.asign == type && f.id == id);
       if(index >= 0){
         this.users[index].asign = '';
+      }else{
+        var indexUserType = this.users.findIndex(f => f.asign == type);
+        var indexUser = this.users.findIndex(f => f.id == id);
+        if(indexUserType >= 0){
+          this.users[indexUserType].asign = '';
+        }
+        this.users[indexUser].asign = type;
       }    
     }else{
-      var index = this.users.findIndex(f => f.id == id);
-      this.users[index].asign = type;
+      var index2 = this.users.findIndex(f => f.id == id && f.asign == type);
+      if(index2 >=0){
+        this.users[index2].asign = '';
+      }else{
+        var indexId = this.users.findIndex(f => f.id == id);
+        this.users[indexId].asign = type;
+      }
     }
 
 
@@ -228,14 +245,26 @@ export class AssignmentUserComponent implements OnInit {
   
   private findUserJuridic(id: string, type: string, level: number){
     if(level == 1){
-      var index = this.juridics.findIndex(f => f.asign == type);
+      var index = this.juridics.findIndex(f => f.asign == type && f.id == id);
       if(index >= 0){
         this.juridics[index].asign = '';
+      }else{
+        var indexUserType = this.juridics.findIndex(f => f.asign == type);
+        var indexUser = this.juridics.findIndex(f => f.id == id);
+        if(indexUserType >= 0){
+          this.juridics[indexUserType].asign = '';
+        }
+        this.juridics[indexUser].asign = type;
+      }    
+    }else{
+      var index2 = this.juridics.findIndex(f => f.id == id && f.asign == type);
+      if(index2 >=0){
+        this.juridics[index2].asign = '';
+      }else{
+        var indexId = this.juridics.findIndex(f => f.id == id);
+        this.juridics[indexId].asign = type;
       }
     }
-    var index = this.juridics.findIndex(f => f.id == id);
-
-    this.juridics[index].asign = type;
   }
 
   ngOnDestroy(): void {

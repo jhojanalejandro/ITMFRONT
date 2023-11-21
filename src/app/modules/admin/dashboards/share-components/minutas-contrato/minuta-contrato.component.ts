@@ -130,7 +130,7 @@ export class MinutaContratoComponent implements OnInit {
       let fechaLetras = this._shareService.calcularDiferencia(data.initialDateContract, data.finalContractDate);
       let valorLetras = this._shareService.numeroALetras(data.totalValueContract, 'PESOS');
       let totalContrato = this.addCommasToNumber(data.totalValueContract);
-      if (data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || this.headerImageBase64 == null || this.footerImageBase64 == null || data.comiteGenerated != true || data.previusStudy != true) {
+      if (data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || data.comiteGenerated != true || data.previusStudy != true) {
         if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
           swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
           this.hideComponent();
@@ -160,7 +160,7 @@ export class MinutaContratoComponent implements OnInit {
             showConfirmButton: false,
             timer: 3000
           });
-        } else if (data.contractNumber == null || data.contractNumber == '') {
+        } else if (data.contractNumber == null || data.contractNumber == '' || data.contractNumber == 'vacio') {
           swal.fire({
             position: 'center',
             icon: 'warning',
@@ -184,6 +184,9 @@ export class MinutaContratoComponent implements OnInit {
         data.specificObligations = data.specificObligations.replaceAll('->', ' ').replace(/\n/g, '');
         data.generalObligations = data.generalObligations.replaceAll('->', ' ').replace(/\n/g, '');
         let documentMinute = null;
+        debugger 
+        let d =  data.contractNumber
+       
         if(data.requirePolice){
           documentMinute = this.documentMinuteWithPolice(data,fechaLetras,valorLetras,totalContrato,dataProject,supervisor);
         }else{
@@ -1062,6 +1065,7 @@ export class MinutaContratoComponent implements OnInit {
   }
 
   private generateAdditionMinute() {
+    debugger
     let dataProject = this.otherMinuteData.dataContract;
 
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
@@ -1069,14 +1073,13 @@ export class MinutaContratoComponent implements OnInit {
       let plazo = this._shareService.calcularDiferencia(data.initialDateContract, data.finalDateContract);
       let fechaInicioContrato = this._shareService.transformDate(data.initialDateContract.toString());
       let fechaFinalContrato = this._shareService.transformDate(data.finalDateContract.toString());
-      let valorLetras = this._shareService.numeroALetras(data.totalValueContract, 'PESOS');
-      let fechaInicioAmpliacionContrato = this._shareService.transformDate(data.initialDateContractExtension.toString());
-      let fechaFinalAmpliacionContrato = this._shareService.transformDate(data.finalDateContractExtension.toString());
-      let plazoAmpliacion = this._shareService.calcularDiferencia(data.initialDateContractExtension, data.finalDateContractExtension);
-      data.totalValueContract = this.addCommasToNumber(data.totalValueContract);
+      let valorLetras = this._shareService.numeroALetras(data.initialValue, 'PESOS');
+      data.totalValueContract = this.addCommasToNumber(data.initialValue);
       data.additionValue = this.addCommasToNumber(data.additionValue);
       data.unitValueContract = this.addCommasToNumber(data.unitValueContract);
-      if (plazoAmpliacion != null && fechaFinalAmpliacionContrato != null && fechaInicioAmpliacionContrato != null) {
+      debugger
+      let d = dataProject.registerDate
+      if (valorLetras != null && data.additionValue != null) {
         const documentMinuteAddition = {
           pageSize: 'A4',
           pageOrientation: 'FOLIO',
@@ -1345,26 +1348,7 @@ export class MinutaContratoComponent implements OnInit {
             showConfirmButton: false,
             timer: 1000
           });
-        } else if (fechaInicioAmpliacionContrato != null || fechaInicioAmpliacionContrato == '') {
-          swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '',
-            html: 'No se encontro la firma del juridico para el contratista ' + data.contractorName,
-            showConfirmButton: false,
-            timer: 1000
-          });
-        } else if (plazoAmpliacion == null || plazoAmpliacion == '') {
-          swal.fire({
-            position: 'center',
-            icon: 'warning',
-            title: '',
-            html: 'No se encontro la numero de la minuta para el contratista ' + data.contractorName,
-            showConfirmButton: false,
-            timer: 1500
-          });
-
-        }
+        } 
       }
       if (this.documentGenerated.length > 0) {
         this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.ADC,DocumentTypeCodes.OTROSI);
@@ -1388,6 +1372,7 @@ export class MinutaContratoComponent implements OnInit {
       data.unitValueContract = this.addCommasToNumber(data.unitValueContract);
       data.specificObligations = data.specificObligations.replaceAll('->', ' ');
       data.generalObligations = data.generalObligations.replaceAll('->', ' ');
+
       if (plazoAmpliacion != null ) {
         const minutaModificacionMacro = {
           pageSize: 'A4',
@@ -2152,7 +2137,6 @@ export class MinutaContratoComponent implements OnInit {
           this.headerImageBase64 = base64Data;
         } else {
           this.footerImageBase64 = base64Data;
-          debugger
           if (this.footerImageBase64 != undefined && this.footerImageBase64 != null && origin != null) {
             switch (origin) {
               case DocumentTypeFileCodes.MNT:
@@ -2205,8 +2189,9 @@ export class MinutaContratoComponent implements OnInit {
     for (let index = 0; index < pdfDocument.length; index++) {
       let documentType = this.typeDocs.find(f => f.code === origin);
       let minuteType = null;
+      debugger
+      minuteType = this.typeDocs.find(f => f.code === anexo)
       if(documentType == null){
-        minuteType = this.typeDocs.find(f => f.code === anexo)
         documentType = this.typeMinute.find(f => f.code === origin)
       }
       
@@ -2218,6 +2203,7 @@ export class MinutaContratoComponent implements OnInit {
       const dataURL = await new Promise<string>((resolve) => {
         pdf.getDataUrl((dataURL) => resolve(dataURL));
       });
+      debugger
       const registerFile: FileContractor = {
         userId: userId,
         contractorId: pdfDocument[index].contractorId,
