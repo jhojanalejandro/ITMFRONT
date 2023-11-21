@@ -55,8 +55,9 @@ export interface ContractFolder{
     project: string;
     fuenteRubro: string;
     dutyContract?: string;
-    recursosAdicinales?: string;
+    resourceContract?: any;
     areaCode: string;
+    registerDateContract: Date
 }
 
 export interface DetailContractFolder{
@@ -95,7 +96,7 @@ export interface Elements{
     cpcId: string;
     modificacion: boolean;
     tipoElemento: string;
-    recursos: any; 
+    recursos?: any; 
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;

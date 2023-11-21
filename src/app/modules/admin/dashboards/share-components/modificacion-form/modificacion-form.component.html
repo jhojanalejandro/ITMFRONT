@@ -107,9 +107,6 @@
                         <input type="number" id="cantDay" formControlName="cantDay" autocomplete="off" matInput
                             placeholder="Cantidad Días">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                        <mat-error *ngIf="modifyForm.get('cantDay').hasError('required')">
-                            El Campo recursos es requerido
-                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div>
@@ -118,9 +115,6 @@
                         <span matPrefix>$</span>
                         <input type="text" id="unitValue" formControlName="unitValue" autocomplete="off" matInput
                             placeholder="Valor Unidad">
-                        <mat-error *ngIf="modifyForm.get('unitValue').hasError('required')">
-                            El Campo Valor Unidad es requerido
-                        </mat-error>
                     </mat-form-field>
                     <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Valor que se debe</mat-label>
