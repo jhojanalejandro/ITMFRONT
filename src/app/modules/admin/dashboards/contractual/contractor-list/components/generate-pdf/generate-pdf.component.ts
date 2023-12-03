@@ -2692,12 +2692,13 @@ export class GeneratePdfComponent implements OnInit {
                 let data = committeeRequestData.getDataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
                 if (data.profileRequire == null  || data.contractorIdentification == null) {
                     if (data.profileRequire == null) {
-                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista' + data.contractorName, 'warning');
+                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista: ' + data.contractorName, 'warning');
                     }
                     else if (data.contractorIdentification == null) {
-                        swal.fire('', 'no se encontro la identificacion del contratista ' + data.contractorName, 'warning');
+                        swal.fire('', 'no se encontro la identificacion del contratista: ' + data.contractorName, 'warning');
                     }
                     this.hideComponent();
+                    return
                 } else {
                     this.comiteeContarctor[index] =
                         [
@@ -2812,7 +2813,7 @@ export class GeneratePdfComponent implements OnInit {
                         margin: [10, 10, 10, 10],
                         text: [
                             {
-                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.dataContract.contractNumber + 'de ' + year + ', cuyo objeto es ' + committeeRequestData.dataContract.contractObject,
+                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.dataContract.contractNumber + ' de ' + year + ', cuyo objeto es ' + committeeRequestData.dataContract.contractObject,
                                 fontSize: 10,
                                 alignment: 'justify'
                             },

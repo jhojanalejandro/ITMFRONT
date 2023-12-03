@@ -1077,7 +1077,6 @@ export class MinutaContratoComponent implements OnInit {
       data.totalValueContract = this.addCommasToNumber(data.initialValue);
       data.additionValue = this.addCommasToNumber(data.additionValue);
       data.unitValueContract = this.addCommasToNumber(data.unitValueContract);
-      debugger
       let d = dataProject.registerDate
       if (valorLetras != null && data.additionValue != null) {
         const documentMinuteAddition = {
@@ -2189,7 +2188,6 @@ export class MinutaContratoComponent implements OnInit {
     for (let index = 0; index < pdfDocument.length; index++) {
       let documentType = this.typeDocs.find(f => f.code === origin);
       let minuteType = null;
-      debugger
       minuteType = this.typeDocs.find(f => f.code === anexo)
       if(documentType == null){
         documentType = this.typeMinute.find(f => f.code === origin)

@@ -7,56 +7,61 @@
     </div>
     <!-- <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Cargar Archivo</p> -->
     <div class="modal-body pt-6">
-        <form [formGroup]="formFile" class="example-form">
-            <div class="observatationFolder">
-                <mat-form-field class="fieldObservation" appearance="outline">
-                    <mat-label>Motivo rechazo</mat-label>
-                    <input type="text" placeholder="Seleccione o Digite" aria-label="Motivo Rechazo" matInput
-                        [formControlName]="'motivo'" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option" checked="true">
-                            {{option}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </div>
-            <div class="checkbox-list">
-                <span>Documentos seleccionados</span>
-                <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of observationfile" class="mr-4"
-                    [value]="file.id" [color]="'primary'">
-                    {{file.documentTypes}}
-                </mat-checkbox>
-            </div>
+        <div class="option">
+            <!-- Alert -->
+            <fuse-alert class="mt-8 -mb-4 text-red-500" *ngIf="showAlert" [appearance]="'fill'" [showIcon]="false"
+                [type]="alert.type" [@shake]="alert.type === 'error'">
+                {{alert.message}}
+            </fuse-alert>
+        </div>
+        <mat-dialog-content style="margin: 0px; padding: 0px;">
+            <form [formGroup]="formFile" class="example-form">
+                <div class="observatationFolder">
+                    <mat-form-field class="fieldObservation" appearance="outline">
+                        <mat-label>Motivo rechazo</mat-label>
+                        <input type="text" placeholder="Seleccione o Digite" aria-label="Motivo Rechazo" matInput
+                            [formControlName]="'motivo'" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option" checked="true">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                <div class="checkbox-list">
+                    <span>Documentos seleccionados</span>
+                    <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of observationfile" class="mr-4"
+                        [value]="file.id" [color]="'primary'">
+                        {{file.documentTypes}}
+                    </mat-checkbox>
+                </div>
+                <div class="observatationFolder">
+                    <mat-form-field (click)="pickerTo.open()" class="hiringTerm" appearance="fill">
+                        <mat-label>Fecha Limite Entrega Documentos</mat-label>
+                        <input matInput [min]="registerDate" id="dateTo" autocomplete="off" formControlName="termDate"
+                            [matDatepicker]="pickerTo">
+                        <mat-datepicker #pickerTo></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                    </mat-form-field>
+                </div>
+                <quill-editor class="mt-1 p-0" formControlName="observation" [placeholder]="'Escriba su observación'"
+                    [modules]="quillModules">
+                </quill-editor>
+                <div>
 
-            <!-- <div class="observatationFolder">
-                <mat-form-field class="fieldObservation" appearance="outline">
-                    <mat-label>Observación</mat-label>
-                    <textarea type="text" class="example-full-width" id="observation" formControlName="observation"
-                        autocomplete="off" matInput placeholder="Observacion"></textarea>
-                    <mat-error *ngIf="formFile.get('observation').hasError('required')">
-                        El Campo Descripcion es requerido
-                    </mat-error>
-                </mat-form-field>
+                </div>
+                <mat-dialog-actions align="end" class="pt-8">
+                    <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">
+                        Cancelar
+                    </button>
+                        <button mat-flat-button [color]="'primary'" [disabled]="!permission || formFile.disabled"
+                        (click)="AddObservationFile()"> <span>Enviar</span>
+                        <mat-progress-spinner *ngIf="formFile.disabled" [diameter]="24"
+                            [mode]="'indeterminate'"></mat-progress-spinner></button>
+                </mat-dialog-actions>
+            </form>
+        </mat-dialog-content>
 
-            </div> -->
-            <div class="observatationFolder">
-                <mat-form-field (click)="pickerTo.open()" class="hiringTerm" appearance="fill">
-                    <mat-label>Fecha Limite Entrega Documentos</mat-label>
-                    <input matInput [min]="registerDate" id="dateTo" autocomplete="off" formControlName="termDate"
-                        [matDatepicker]="pickerTo">
-                    <mat-datepicker #pickerTo></mat-datepicker>
-                    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-                </mat-form-field>
-            </div>
-            <quill-editor class="mt-1 p-0" formControlName="observation" [placeholder]="'Escriba su observación'"
-                [modules]="quillModules">
-            </quill-editor>
-        </form>
     </div>
 
 </div>
-<mat-dialog-actions align="end" class="pt-8">
-    <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">Cancelar</button>
-    <button mat-flat-button [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"
-        (click)="AddObservationFile()">Enviar</button>
-</mat-dialog-actions>

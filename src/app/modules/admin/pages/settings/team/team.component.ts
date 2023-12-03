@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
 import swal from 'sweetalert2';
@@ -13,16 +14,21 @@ import swal from 'sweetalert2';
 export class SettingsTeamComponent implements OnInit
 {
     members: any[];
+    permission: boolean = false;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    constructor(private _authService: AuthService,
-        private _changeDetectorRef: ChangeDetectorRef,
-        )
+    constructor(private _authService: AuthService)
     {
     }
 
     ngOnInit(): void
     {
+        debugger
+        this.permission = this._authService.validateRoll(CodeUser.ADMIN);
+        if (!this.permission) {
+          swal.fire('', 'No tienes permisos para asignar roles!', 'warning');
+        }
         this._authService.teams$
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((teams: any) => {
@@ -53,8 +59,8 @@ export class SettingsTeamComponent implements OnInit
                 }
                 
             }
+            debugger
             this.members = teams;
-            this._changeDetectorRef.markForCheck();
         });
     }
 

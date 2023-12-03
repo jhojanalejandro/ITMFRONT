@@ -46,8 +46,8 @@
                         <mat-form-field  class="hiringFile" appearance="fill">
                             <mat-label >Tipo Documento</mat-label>
                             <mat-select (selectionChange)="tipoSeleeccionado($event,'document')" name="typeFile">
-                                <mat-option  *ngFor="let docuemnto of tipoDocumentos" [value]="docuemnto.id">
-                                    {{docuemnto.documentTypeDescription}}
+                                <mat-option  *ngFor="let documento of tipoDocumentos" [value]="documento.id">
+                                    {{documento.documentTypeDescription}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

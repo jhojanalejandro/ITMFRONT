@@ -1,53 +1,48 @@
 <div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
         <div class="text-lg font-medium">Cargar Archivos</div>
-        <button
-            mat-icon-button
-            (click)="closeModal()"
-            [tabIndex]="-1">
-            <mat-icon
-                class="text-current"
-                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        <button mat-icon-button (click)="closeModal()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
     <!-- <p style="text-align: center; font-size: medium; text-decoration-style: dotted; text-decoration-color: black;">Cargar Archivo</p> -->
     <div class="modal-body pt-6">
         <form [formGroup]="formFile" class="example-form">
-            <div  class="folder">
+            <div class="folder">
                 <mat-form-field *ngIf="mostrarContrato" class="flex-auto gt-xs:pl-3" appearance="fill">
-                    <mat-label >CONTRATOS</mat-label>
-                    <mat-select required id="project" (selectionChange)="selectionChageContract($event)" formControlName="project"  name="project">
+                    <mat-label>CONTRATOS</mat-label>
+                    <mat-select required id="project" (selectionChange)="validatePermission()"
+                        formControlName="project" name="project">
                         <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
                             {{contarto.projectName}}
                         </mat-option>
                     </mat-select>
-                    <mat-icon
-                    class="icon-size-5"
-                    matSuffix
-                    [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                     <mat-error *ngIf="formFile.get('project').hasError('required')">
                         Este Campo es requerido
                     </mat-error>
-                </mat-form-field> 
+                </mat-form-field>
                 <div>
                 </div>
                 <div class="folder" *ngIf="!mostrarContrato && !isSelectContract">
                     <mat-form-field class="hiringD" appearance="fill">
                         <mat-label>Descripcion</mat-label>
-                        <textarea type="text"  class="example-full-width" id="description" formControlName="description" autocomplete="off" matInput placeholder="Descripcion"></textarea>
+                        <textarea type="text" class="example-full-width" id="description" formControlName="description"
+                            autocomplete="off" matInput placeholder="Descripcion"></textarea>
                         <mat-error *ngIf="formFile.get('description').hasError('required')">
-                            El Campo Descripcion es requerido
+                            El campo Descripcion es requerido
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="text-center pt-8">
-                    <input formControlName="file" type="file" data-cy="file-input"
-                    accept="{{aceptFile}}"
-                    mat-flat-button color="primary"  (change)="onChange($event)">
+                    <input formControlName="file" type="file" data-cy="file-input" accept="{{aceptFile}}"
+                        mat-flat-button color="primary" (change)="onChange($event)">
+                        <mat-error *ngIf="formFile.get('file').hasError('required')">
+                            El campo archivo es requerido
+                        </mat-error>
                 </div>
                 <!-- Shareable short link of  uploaded file -->
-                <div class="container text-center jumbotron"
-                    *ngIf="shortLink">
+                <div class="container text-center jumbotron" *ngIf="shortLink">
                     <h2> Visit Here</h2>
                     <a href="{{shortLink}}">{{shortLink}}</a>
                 </div>
@@ -56,11 +51,18 @@
                     <h3>Loading ...</h3>
                 </div>
             </div>
-        </form>      
+
+            <mat-dialog-actions align="end" class="pt-8">
+                <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">
+                    Cancelar
+                </button>
+                <button mat-flat-button [color]="'primary'" [disabled]="!permission || formFile.disabled"
+                    (click)="uploadTypeFile()"> <span>Cargar archivo</span>
+                    <mat-progress-spinner *ngIf="formFile.disabled" [diameter]="24"
+                        [mode]="'indeterminate'"></mat-progress-spinner></button>
+            </mat-dialog-actions>
+
+        </form>
     </div>
 
 </div>
-  <mat-dialog-actions align="end" class="pt-8">
-    <button mat-flat-button type="button" [mat-dialog-close]="true" [color]="'warn'">Cancelar</button>
-    <button mat-flat-button  [color]="'primary'" type="submit" [disabled]="disableButton" *ngIf="!formFile.disabled"  (click)="uploadTypeFile($event)">Cargar archivo</button>
-  </mat-dialog-actions>

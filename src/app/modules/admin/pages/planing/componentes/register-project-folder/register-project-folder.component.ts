@@ -37,12 +37,13 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
   tipoContrato: any;
   rubros: RubroType[] = [];
   rubroNumber: string;
-  editData: boolean = false;
+  updateData: boolean = false;
   AddeditData: boolean = false;
   private readonly _unsubscribe$ = new Subject<void>();
   permission: boolean = false;
   detailType: string;
-  rubrosOrigin: any = GlobalConst.rubrosOrgin
+  rubrosOrigin: any = GlobalConst.rubrosOrgin;
+  titleButoon = 'Guardar';
   constructor(
     private _upload: UploadDataService,
     private _genericService: GenericService,
@@ -101,9 +102,14 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
     this.ref.detectChanges();
   }
 
+  saveFormContract(){
+    this.updateData ? this.updateContractFolder() : this.addContractFolder();
+  }
+
   private fillData() {
     if (this._data != null) {
-      this.editData = true;
+      this.updateData = true;
+      this.titleButoon = 'Actualizar';
       this.formProject.patchValue({
         projectName: this._data.data.projectName,
         companyName: this._data.data.companyName,
@@ -186,7 +192,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
 
   }
 
-  async editContractFolder() {
+  async updateContractFolder() {
     let updateProject = this.buildObject(false, this._data.data.id);
     this._upload.addContractFolder(updateProject)
       .pipe(takeUntil(this._unsubscribe$))
@@ -325,6 +331,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         userId: this.authService.accessId,
       }
     }
+    debugger
     const updateProject: ContractFolder = {
       id: id,
       companyName: this.formProject.value.companyName,

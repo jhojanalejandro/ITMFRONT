@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, of, ReplaySubject, switchMap, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, ReplaySubject, Subject, switchMap, tap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
@@ -17,11 +17,17 @@ export class AuthService {
     private _user: ReplaySubject<IUserModel> = new ReplaySubject<IUserModel>(1);
     private isAuthenticated: boolean = false;
     apiUrl: any = environment.apiURL;
+    userPresence$ = new Subject<{ code: string, rol: string, presente: boolean }>();
+
 
     constructor(
         private _httpClient: HttpClient) {
     }
 
+
+    setUserPresence(code: string, rol: string, presente: boolean): void {
+        this.userPresence$.next({ code, rol, presente });
+    }
     // Método para establecer el estado de autenticación
     setAuthenticated(status: boolean) {
         this.isAuthenticated = status;
@@ -151,7 +157,7 @@ export class AuthService {
             switchMap((response: any) => {
                 return of(response);
             }),
-            catchError(this.handleError) 
+            catchError(this.handleError)
         );
     }
 
@@ -300,6 +306,11 @@ export class AuthService {
                 break;
             case CodeUser.NOMINA:
                 if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.NOMINA || this.codeC == CodeUser.SUPERVISORAREAN) {
+                    result = true;
+                }
+                break
+            case CodeUser.ADMIN:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.SUPERVISORAREAN) {
                     result = true;
                 }
                 break

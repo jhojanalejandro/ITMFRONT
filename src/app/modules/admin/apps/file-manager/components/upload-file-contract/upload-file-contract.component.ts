@@ -10,6 +10,7 @@ import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
+import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
   selector: 'app-upload-file-contract',
@@ -19,6 +20,10 @@ import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/documen
   animations: fuseAnimations
 })
 export class UploadFileContractComponent implements OnInit, OnDestroy {
+  alert: { type: FuseAlertType; message: string } = {
+    type: 'warn',
+    message: ''
+  };
   shortLink: string = "";
   loading: boolean = false; // Flag variable
   file: any = null; // Variable to store file
@@ -64,13 +69,13 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    debugger
+    this.validatePermission();
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
       this.isSelectContract = true;
       this.aceptFile = this.aceptFile;
     }
-    if(this._data.origin == 'share' && !this._data.show){
+    if (this._data.origin == 'share' && !this._data.show) {
       this.shareFile = true
     }
     if (this._data.show) {
@@ -98,13 +103,11 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     this.convertFile(this.file).subscribe(base64 => {
       this.base64Output = base64;
     });
-    // reader.onload = () => {
-    //     this.file = reader.result;
-    // };
   }
 
 
   addFileContract(event) {
+    
     const uploadFile: Files = {
       userId: this._auth.accessId,
       folderId: this._data.folderId,
@@ -153,11 +156,20 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   uploadTypeFile() {
-    debugger
+        if (this.formFile.invalid) {
+      this.alert = {
+        type: 'error',
+        message: 'ERROR EN LA INFORMACION'
+      };
+
+      // Show the alert
+      this.showAlert = true;
+      return
+    }
     if (this.isSelectContract == true) {
-      if(this._data.origin === 'cdp'){
+      if (this._data.origin === 'cdp') {
         this.uploadCdpFile();
-      }else{
+      } else {
         this.uploadElementFile();
       }
     } else {
@@ -166,7 +178,17 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   uploadCdpFile() {
-    
+    if (this.formFile.invalid) {
+      this.alert = {
+        type: 'error',
+        message: 'ERROR EN LA INFORMACION'
+      };
+
+      // Show the alert
+      this.showAlert = true;
+      return
+    }
+
     let fileToUpload = <File>this.file;
     const formData = new FormData();
     formData.append('excel', fileToUpload, fileToUpload.name);
@@ -206,8 +228,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
 
   }
 
-  addFileContractors(base64){
-    debugger
+  addFileContractors(base64) {
     const uploadFile: FileContractor = {
       userId: this._auth.accessId,
       folderId: null,
@@ -283,19 +304,18 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
           this.showAlert = true;
         });
     } else {
-      if(this.shareFile){
+      if (this.shareFile) {
         this.addFileContractors(this.base64Output);
-      }else{
+      } else {
         this.addFileContract(this.base64Output);
       }
     }
   }
 
-  selectionChageContract(contract: any) {
-    contract.value;
-    this.permission = this._auth.validateRoll(CodeUser.RECRUITER,this._data.assignmentUser);
-    if(!this.permission){
-
+  validatePermission() {
+    this.permission = this._auth.validateRoll(CodeUser.RECRUITER, this._data.assignmentUser);
+    if (!this.permission) {
+      swal.fire('', 'No tienes permisos para subir documentos!', 'warning');
     }
   }
   convertFile(file: File): Observable<string> {
@@ -310,11 +330,10 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     this._upload.getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((type: DocumentTypeFile[]) => {
-        debugger
-        if(this.shareFile){
-          this.documentType = type.find(f => f.code ===  DocumentTypeCodes.RESPUESTASOLICITUDCOMITE).id;
-        }else{
-          this.documentType = type.find(f => f.code ===  DocumentTypeCodes.ANEXO).id;
+        if (this.shareFile) {
+          this.documentType = type.find(f => f.code === DocumentTypeCodes.RESPUESTASOLICITUDCOMITE).id;
+        } else {
+          this.documentType = type.find(f => f.code === DocumentTypeCodes.ANEXO).id;
         }
       });
   }

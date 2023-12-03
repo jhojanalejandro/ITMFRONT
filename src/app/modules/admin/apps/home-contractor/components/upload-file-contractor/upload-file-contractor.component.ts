@@ -4,12 +4,14 @@ import {
     Inject,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy
+    OnDestroy,
+    ViewChild
 } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
     FormGroup,
+    NgForm,
     Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -34,6 +36,7 @@ const moment = _rollupMoment || _moment;
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
     date = new FormControl(moment());
+    @ViewChild('signInNgForm') uploadNgForm: NgForm;
     monthYear: any;
     shortLink: string = '';
     loading: boolean = false; // Flag variable
@@ -73,10 +76,10 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             'question'
         );
         this.formFile = this._formBuilder.group({
-            file: [null, Validators.required],
-            filesName: [null],
-            typeDoc: [null, Validators.required],
-            description: [null, Validators.required],
+            file: new FormControl(null, Validators.required),
+            filesName: new FormControl(null),
+            typeDoc: new FormControl(null, Validators.required),
+            description: new FormControl(null, Validators.required)
         });
         this.getDaTaContractor();
     }
@@ -94,7 +97,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         this.matDialogRef.close();
     }
 
-    addFileContractor(event) {
+    addFileContractor(event) : void{
         if (this.formFile.invalid) {
             return;
         }
@@ -136,7 +139,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                 },
                 (response) => {
                     this.formFile.enable();
-                    console.log(response);
                     // Set the alert
                     swal.fire(
                         'Error',
@@ -219,7 +221,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                debugger
                 if (!resp.activateTermContract && !resp.activateTermPayments) {
                     swal.fire(
                         '',

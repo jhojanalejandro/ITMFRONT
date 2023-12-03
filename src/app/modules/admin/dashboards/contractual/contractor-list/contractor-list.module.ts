@@ -19,7 +19,7 @@ import { HistoryInnabilityComponent } from './components/history-innability/hist
         ContractorDataHiringComponent,
         GeneratePdfComponent,
         AssignmentUserComponent,
-        HistoryInnabilityComponent
+        HistoryInnabilityComponent,
     ],
     imports: [
         RouterModule.forChild(contractorListRoutes),

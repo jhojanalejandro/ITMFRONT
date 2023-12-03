@@ -1,18 +1,19 @@
-<button *ngIf="!showNomina" [matTooltip]="'Descargar Archivo.'" class="hidden sm:inline-flex ml-3" (click)="generarReporte()" mat-flat-button [color]="'primary'">
-  Generar Reporte<mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+<button *ngIf="!showNomina" [matTooltip]="'Descargar Reporte'" class="hidden sm:inline-flex ml-3" (click)="generarReporte()" mat-flat-button [color]="'primary'">
+  <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">Reporte</span>
 </button>
-<button *ngIf="!showNomina" [matTooltip]="'Agregar datos'" class="hidden sm:inline-flex ml-3" (click)="exportarPaa()" mat-flat-button [color]="'primary'">
-  Solicitud PAA<mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+<button *ngIf="!showNomina" [matTooltip]="'Descargar Solicitud PAA'" class="hidden sm:inline-flex ml-3" (click)="exportarPaa()" mat-flat-button [color]="'primary'">
+  <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">PAA</span>
 </button>
-<button *ngIf="!showNomina" [matTooltip]="'Descargar Archivo.'" class="hidden sm:inline-flex ml-3" (click)="exportarSolicitudCdp()" mat-flat-button [color]="'primary'">
-  Solicitud CDP<mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+<button *ngIf="!showNomina" [matTooltip]="'Descargar Solicitud CDP'" class="hidden sm:inline-flex ml-3" (click)="exportarSolicitudCdp()" mat-flat-button [color]="'primary'">
+  <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">Solicitud CDP</span>
 </button>
 <button *ngIf="!showNomina" [matTooltip]="'Descargar Archivo.'" class="hidden sm:inline-flex ml-3" (click)="exportarCdp()" mat-flat-button [color]="'primary'">
-  Exportar CDP<mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+  <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">Exportar CDP</span>
 </button>
 <button *ngIf="showNomina" [matTooltip]="'Generar recibido de satisfacción'" class="hidden sm:inline-flex ml-3" (click)="generateSatisfactionReportate()" mat-flat-button [color]="'primary'">
-  Recibido de satisfacción<mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+  Recibido de satisfacción
+  <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon>
 </button>
 <button *ngIf="showNomina" [matTooltip]="'Generar recibido de satisfacción'" class="hidden sm:inline-flex ml-3" (click)="generateSatisfactionReportate()" mat-flat-button [color]="'primary'">
-  Reporte estado<mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>
+  <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">Reporte estado</span>
 </button>

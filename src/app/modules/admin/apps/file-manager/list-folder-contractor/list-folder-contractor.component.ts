@@ -116,8 +116,8 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             });
     }
 
-    route(route: any) {
-        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + route]);
+    route(route: any, name: string) {
+        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + route + '/' + name]);
     }
 
     crearCarpeta() {

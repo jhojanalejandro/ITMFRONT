@@ -36,8 +36,8 @@ export interface CommitteeRequest{
     contractorId: string;
 	contractorName: string;
     contractorIdentification: string;
-    contractInitialDate: Date;
-    contractFinalDate: Date;
+    initialDateContract: Date;
+    finalDateContract: Date;
     elementName: string;
     userIdentification: string;
     totalValue: any;

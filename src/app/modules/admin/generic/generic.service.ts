@@ -145,14 +145,17 @@ export class GenericService {
     }
 
     addCommasToNumber(value: number): string {
-        if (value <= 9999 && value >= 1000) {
-            const formattedNumber = value.toString();
-            return (
-                formattedNumber.substr(0, 1) + '.' + formattedNumber.substr(1)
-            );
-        } else {
-            return value.toLocaleString('es-ES', { maximumFractionDigits: 0 });
+        if(value != null){
+            if (value <= 9999 && value >= 1000) {
+                const formattedNumber = value.toString();
+                return (
+                    formattedNumber.substr(0, 1) + '.' + formattedNumber.substr(1)
+                );
+            } else {
+                return value.toLocaleString('es-ES', { maximumFractionDigits: 0 });
+            }
         }
+
     }
 
     getDateContract(

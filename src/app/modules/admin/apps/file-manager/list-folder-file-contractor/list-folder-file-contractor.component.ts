@@ -30,6 +30,7 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     filteredStreets: Observable<string[]>;
     contractId: string;
     contractorId: string;
+    contractorName: string;
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -45,6 +46,8 @@ export class ListFolderFileContractorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.contractorId = this.router.snapshot.paramMap.get('contractorId') || 'null';
         this.contractId = this.router.snapshot.paramMap.get('contractId') || 'null';
+        this.contractorName = this.router.snapshot.paramMap.get('name') || 'null';
+
         this.getData();
     }
 

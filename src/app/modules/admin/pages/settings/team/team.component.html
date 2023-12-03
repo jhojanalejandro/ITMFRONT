@@ -26,7 +26,7 @@
                 </div>
                 <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
                     <div class="order-2 sm:order-1 ml-4 sm:ml-0">
-                        <mat-form-field  class="hiring" appearance="outline">
+                        <mat-form-field class="hiring" appearance="outline">
                             <mat-label >{{member.idRoll}}</mat-label>
                             <mat-select (selectionChange)="onChange($event,member)" name="typeFile">
                                 <mat-option  *ngFor="let role of roles" [value]="role.value">

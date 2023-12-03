@@ -53,7 +53,6 @@ export class AssignmentUserComponent implements OnInit {
   }
 
   async addAssignmentUsers() {
-    debugger
     if(this.contractSelected == null){
       Swal.fire('', 'selecciona  un contrato!', 'warning');
     } else if(this.userSelected.length == 0 &&  this.supervisorSelected == null && this.userPrincipalSelected == null){

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -60,10 +60,9 @@ export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
     'Femenino',
     'Otro'
   ]
-  minBirth: Date;
+  minBirth: Date = new Date();
   constructor(
     private _homeService: HomeContractorService,
-    private ref: ChangeDetectorRef,
     private _planingService: PlaningService,
     private _auth: AuthService,
     private _genericService: GenericService,
@@ -82,14 +81,12 @@ export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
     this.validarFechaNacimiento();
     setInterval(() => {
       this.numberOfTicks++;
-      this.ref.detectChanges();
-      this.ref.markForCheck();
     }, 1000);
     // Horizontal stepper form
     this.contractorinformationStepperForm = this._formBuilder.group({
       step1: this._formBuilder.group({
         identification: ['', Validators.required],
-        birthDate: [null, Validators.required],
+        birthDate: new FormControl(null, Validators.required),
         expeditionPlace: ['', Validators.required],
         phoneNumber: ['', Validators.required],
         movilPhoneNumber: ['', Validators.required],
@@ -239,8 +236,6 @@ export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 1500
           });
-          this.ref.detectChanges();
-          this.ref.markForCheck();
           this.matDialogRef.close(true);
         }
       },
