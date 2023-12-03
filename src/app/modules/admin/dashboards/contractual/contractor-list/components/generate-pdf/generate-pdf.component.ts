@@ -2758,7 +2758,7 @@ export class GeneratePdfComponent implements OnInit {
                                 },
                             ],
                             ['', '', '', 'Versión', '01'],
-                            ['', '', '', 'Fecha ', this.currentDate],
+                            ['', '', '', 'Fecha ', '2008-04-18'],
                         ],
                     },
                 },
