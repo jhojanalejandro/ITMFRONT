@@ -43,11 +43,12 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   formFile: FormGroup;
   typeDocs: DocumentTypeFile[] = [];
   aceptFile: string;
+  origin: string;
   aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   aceptfile: string = 'image/jpeg, image/png, application/pdf';
   permission: boolean = false;
   shareFile: boolean = false;
-
+  contractId: string = null;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
@@ -70,6 +71,8 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.validatePermission();
+    this.origin = this._data.origin
+    debugger
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
       this.isSelectContract = true;
@@ -78,14 +81,14 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     if (this._data.origin == 'share' && !this._data.show) {
       this.shareFile = true
     }
-    if (this._data.show) {
+    if (this._data.show && this._data.origin != 'cdp') {
       this.mostrarContrato = true;
       this.aceptFile = this.aceptExcel;
     }
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
-      project: new FormControl(null, Validators.required),
-      description: new FormControl(null, Validators.required),
+      project: new FormControl({value: null, disabled: !this.mostrarContrato}, Validators.required),
+      description: new FormControl(this._data.origin == 'cdp' ? 'desc' : null, Validators.required)
     });
     this.getContractsData();
     this.GetFileType();
@@ -107,7 +110,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
 
 
   addFileContract(event) {
-    
+
     const uploadFile: Files = {
       userId: this._auth.accessId,
       folderId: this._data.folderId,
@@ -151,12 +154,16 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((data) => {
         this.contratos = data;
-
+        this.formFile.patchValue({
+          project: this._data.contractId
+        })
+        this.contractId = this._data.contractId;
       });
   }
 
   uploadTypeFile() {
-        if (this.formFile.invalid) {
+    debugger
+    if (this.formFile.invalid) {
       this.alert = {
         type: 'error',
         message: 'ERROR EN LA INFORMACION'
@@ -168,6 +175,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     }
     if (this.isSelectContract == true) {
       if (this._data.origin === 'cdp') {
+        debugger
         this.uploadCdpFile();
       } else {
         this.uploadElementFile();
