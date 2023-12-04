@@ -317,8 +317,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 this.statusFileLoad = item.filter(f => f.category === CategoryFile.CGD);
-                this.statusFileCreate = item.filter(f => f.category === CategoryFile.CRAD);;
-
+                this.statusFileCreate = item.filter(f => f.category === CategoryFile.CRAD);
             });
     }
 

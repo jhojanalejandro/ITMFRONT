@@ -127,7 +127,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         fuenteRubro: this._data.data.fuenteRubro,
         dutyContract: this._data.data.dutyContract,
         project: this._data.data.project,
-        resource: this._genericService.addCommasToNumber(this._data.data.recursosAdicionales),
+        resource: this._genericService.addCommasToNumber(this._data.data.resourceContract),
         areaCode: this._data.data.areaCode,
         registerDateContract: this.formProject.value.registerDateContrac
       });
@@ -331,7 +331,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         userId: this.authService.accessId,
       }
     }
-    debugger
     const updateProject: ContractFolder = {
       id: id,
       companyName: this.formProject.value.companyName,

@@ -542,6 +542,7 @@ export class ContractorListComponent
                             showConfirmButton: false,
                             timer: 1500,
                         });
+                        this.getDataContractor()
                     } else {
                         Swal.fire(
                             'Error',

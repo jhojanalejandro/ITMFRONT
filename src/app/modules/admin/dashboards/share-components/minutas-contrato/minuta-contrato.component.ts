@@ -1065,7 +1065,6 @@ export class MinutaContratoComponent implements OnInit {
   }
 
   private generateAdditionMinute() {
-    debugger
     let dataProject = this.otherMinuteData.dataContract;
 
     for (let index = 0; index < this.contractContractors.contractors.length; index++) {
