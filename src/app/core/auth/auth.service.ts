@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, Observable, of, ReplaySubject, switchMap, tap, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, catchError, Observable, of, ReplaySubject, Subject, switchMap, tap, throwError } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
@@ -8,6 +8,7 @@ import { IUserModel, TeamModel } from 'app/modules/auth/model/user-model';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UserFile } from 'app/modules/admin/pages/settings/models/setting.model';
 import Swal from 'sweetalert2';
+import { ResetPassword } from 'app/layout/common/models/reset-password';
 
 @Injectable()
 export class AuthService {
@@ -17,11 +18,17 @@ export class AuthService {
     private _user: ReplaySubject<IUserModel> = new ReplaySubject<IUserModel>(1);
     private isAuthenticated: boolean = false;
     apiUrl: any = environment.apiURL;
+    userPresence$ = new Subject<{ code: string, rol: string, presente: boolean }>();
+
 
     constructor(
         private _httpClient: HttpClient) {
     }
 
+
+    setUserPresence(code: string, rol: string, presente: boolean): void {
+        this.userPresence$.next({ code, rol, presente });
+    }
     // Método para establecer el estado de autenticación
     setAuthenticated(status: boolean) {
         this.isAuthenticated = status;
@@ -94,8 +101,11 @@ export class AuthService {
      *
      * @param email
      */
-    forgotPassword(model: any): Observable<any> {
-        return this._httpClient.post(this.apiUrl + environment.retrieveEndpoint, model);
+    forgotPassword(mail: any): Observable<any> {
+        let forgot = {
+            mail: mail
+        }
+        return this._httpClient.post(this.apiUrl + environment.retrieveEndpoint, forgot);
     }
 
     /**
@@ -135,7 +145,7 @@ export class AuthService {
         // let plainText:string;
         // let encrypt:string;
         // encrypt= crypto.AES.encrypt(plainText, this.accessId).toString();
-        // let plainText2:string;      
+        // let plainText2:string;
         return this._httpClient.get<any>(this.apiUrl + environment.getByIdUserEndpoint + this.accessId).pipe(
             switchMap((response: any) => {
                 // Return a new observable with the response
@@ -151,7 +161,7 @@ export class AuthService {
             switchMap((response: any) => {
                 return of(response);
             }),
-            catchError(this.handleError) 
+            catchError(this.handleError)
         );
     }
 
@@ -303,6 +313,11 @@ export class AuthService {
                     result = true;
                 }
                 break
+            case CodeUser.ADMIN:
+                if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.SUPERVISORAREAN) {
+                    result = true;
+                }
+                break
             case CodeUser.PLANEACION:
                 if (this.codeC == CodeUser.ADMIN || this.codeC == CodeUser.PLANEACION) {
                     result = true;
@@ -338,6 +353,10 @@ export class AuthService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
+
+    resetPassword(resetModel: ResetPassword): Observable<any> {
+        return this._httpClient.patch<IResponse>(this.apiUrl + environment.resetPasswordUserpoint, resetModel)
+    }
 
     private handleError(error: any): Observable<any> {
         Swal.fire({

@@ -127,7 +127,7 @@
                                                     [svgIcon]="folder.cantFile >= 3 ? 'heroicons_outline:check-circle' : folder.cantFile > 0 &&  folder.cantFile < 3 ? 'heroicons_outline:dots-circle-horizontal' : 'heroicons_outline:clock'"></mat-icon>
                                             </a>
                                             <a class="z-10 absolute inset-0 flex flex-col p-1 cursor-pointer"
-                                                (click)="route(folder.id)">
+                                                (click)="route(folder.id,folder.contractorName)">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
                                                         <!-- Icon -->

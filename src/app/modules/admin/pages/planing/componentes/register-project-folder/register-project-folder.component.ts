@@ -7,7 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadDataService } from 'app/modules/admin/dashboards/contractual/service/upload-data.service';
 import { FuseAlertType } from '@fuse/components/alert';
-import { DetailContractFolder, ContractFolder, ContractFolders } from '../../models/planing-model';
+import { DetailContractFolder, ContractFolder } from '../../models/planing-model';
 import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { Subject, takeUntil } from 'rxjs';
 import { RubroType, StatusContract } from 'app/modules/admin/generic/model/generic.model';
@@ -37,12 +37,13 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
   tipoContrato: any;
   rubros: RubroType[] = [];
   rubroNumber: string;
-  editData: boolean = false;
+  updateData: boolean = false;
   AddeditData: boolean = false;
   private readonly _unsubscribe$ = new Subject<void>();
   permission: boolean = false;
   detailType: string;
-  rubrosOrigin: any = GlobalConst.rubrosOrgin
+  rubrosOrigin: any = GlobalConst.rubrosOrgin;
+  titleButoon = 'Guardar';
   constructor(
     private _upload: UploadDataService,
     private _genericService: GenericService,
@@ -88,20 +89,27 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
       fuenteRubro: new FormControl(null),
       dutyContract: new FormControl(null),
       project: new FormControl(null),
-      contarctValue: new FormControl({ value: null, disabled: true }),
+      registerDateContract: new FormControl(null),
       resource: new FormControl(null),
       areaCode: new FormControl(null)
 
     });
     this.fillData();
+    this.subscribeToValueChanges('resource');
+
   }
   ngAfterContentChecked() {
     this.ref.detectChanges();
   }
 
+  saveFormContract(){
+    this.updateData ? this.updateContractFolder() : this.addContractFolder();
+  }
+
   private fillData() {
     if (this._data != null) {
-      this.editData = true;
+      this.updateData = true;
+      this.titleButoon = 'Actualizar';
       this.formProject.patchValue({
         projectName: this._data.data.projectName,
         companyName: this._data.data.companyName,
@@ -119,8 +127,9 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         fuenteRubro: this._data.data.fuenteRubro,
         dutyContract: this._data.data.dutyContract,
         project: this._data.data.project,
-        resource: this._data.data.resource,
+        resource: this._genericService.addCommasToNumber(this._data.data.resourceContract),
         areaCode: this._data.data.areaCode,
+        registerDateContract: this.formProject.value.registerDateContrac
       });
 
       // this.dataProject.rubro = this._data.data.rubro;
@@ -183,7 +192,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
 
   }
 
-  async editContractFolder() {
+  async updateContractFolder() {
     let updateProject = this.buildObject(false, this._data.data.id);
     this._upload.addContractFolder(updateProject)
       .pipe(takeUntil(this._unsubscribe$))
@@ -344,11 +353,36 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
       nombreRubro: this.formProject.value.nombreRubro,
       fuenteRubro: this.formProject.value.fuenteRubro,
       dutyContract: this.formProject.value.dutyContract,
-      recursosAdicinales: this.formProject.value.resource,
-      areaCode: this.formProject.value.areaCode
+      resourceContract: this.formProject.value.resource != null ? Math.ceil(Number(this.formProject.value.resource.toString().replace(/\./g, ''))) : 0,
+      areaCode: this.formProject.value.areaCode,
+      registerDateContract: this.formProject.value.registerDateContract
     };
     return updateProject;
   }
+
+  
+  subscribeToValueChanges(controlName: string): void {
+    this.formProject.get(controlName).valueChanges.subscribe(value => {
+        this.formatNumberWithCommas(controlName, value);
+    });
+}
+
+  formatNumberWithCommas(controlName: string, value: number): void {
+    if(value > 0 && value != null){
+        const control = this.formProject.get(controlName);
+        const previousValue = control.value;
+
+        // Remover puntos del valor anterior para evitar puntos duplicados
+        const numericValue = Number(value.toString().replace(/\./g, ''));
+        const formattedValue = this._genericService.addCommasToNumber(numericValue);
+
+        // Si el valor formateado es diferente al valor en el control, actualizar el control
+        if (formattedValue !== previousValue) {
+            control.patchValue(formattedValue, { emitEvent: false });
+        }
+    }
+
+}
 
 
   ngOnDestroy(): void {

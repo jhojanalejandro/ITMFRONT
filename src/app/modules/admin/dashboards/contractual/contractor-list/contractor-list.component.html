@@ -13,24 +13,24 @@
         <div class="mt-4 sm:mt-0">
             <!-- Add section button -->
             <button mat-flat-button [color]="'accent'" (click)="addTermFileContract(null)"
-                [matTooltip]="'Shortcut: Ctrl + .'">
+                [matTooltip]="'tiempo de entrega documentos'">
                 <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                 <span class="ml-2 mr-1">Tiempo entrega</span>
             </button>
             <button mat-flat-button class="ml-3" [color]="'accent'" (click)="SendMailsAccounts()"
-                [matTooltip]="'Shortcut: Ctrl + .'">
+                [matTooltip]="'Enviar invitación a proceso de contratación'">
                 <mat-icon [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
             <button (click)="registrarDatosContratacion(null)" class="ml-3" mat-flat-button [color]="'primary'"
-                [matTooltip]="'Shortcut: Ctrl + /'">
+                [matTooltip]="'Guardar datos contratistas'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Guardar Datos</span>
             </button>
 
             <button (click)="uploadExcel()" class="ml-3" mat-flat-button [color]="'primary'"
-                [matTooltip]="'Shortcut: Ctrl + /'">
+                [matTooltip]="'Cargar Archivo cdp contratista'">
                 <mat-icon [svgIcon]="'heroicons_solid:save'"></mat-icon>
                 <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
             </button>
@@ -199,6 +199,16 @@
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
+                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
+                                'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
+                                'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
+                                'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
+                                            <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}
+                                            </span>
+                                        </span>
+                                        <span
                                             *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
@@ -218,21 +228,12 @@
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
-                                        <span
-                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
-                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
-                                            <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}
-                                            </span>
-                                        </span>
+
                                     </div>
                                     <div *ngIf="columna.name ==='acciones'"
                                         (click)="isButtonClicked = false; toggleRowExpansion(element, $event)">
                                         <p>
-                                            <button  [matTooltip]="'Opciones Documentos'" mat-icon-button
+                                            <button [matTooltip]="'Opciones Documentos'" mat-icon-button
                                                 [matMenuTriggerFor]="summaryMenu" class="option">
                                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:menu'">
                                                 </mat-icon>
@@ -496,9 +497,8 @@
         </div>
     </div>
 </div>
-    <app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
-        [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
-    <app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
-        [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>
+<app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+    [contractContractors]="contractContractors"
+    *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
+<app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+    [contractContractors]="contractContractors" *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>

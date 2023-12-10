@@ -24,6 +24,7 @@ export function convertFile(file: File): Observable<string> {
 
 
 
+
 const dat = getCurrentDate();
 const data = getDataMinute();
 

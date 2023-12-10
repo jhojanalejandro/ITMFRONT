@@ -18,7 +18,8 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div div class="mt-1.5 rounded-md border border-gray-300 dark:border-gray-500 shadow-sm overflow-hidden m-10">
+        <div div
+            class="mt-1.5 rounded-md border h-150 border-gray-300 dark:border-gray-500 shadow-sm overflow-hidden m-10">
             <!-- Header -->
             <div class="flex items-center -my-px py-2 px-3 bg-gray-200">
                 <div class="flex items-center flex-auto min-w-0">
@@ -28,19 +29,23 @@
             <!-- Available tags -->
             <div class="h-44 leading-none overflow-y-auto border-t border-gray-300 dark:border-gray-500">
                 <!-- Tags -->
-                <ng-container *ngFor="let user of users;">
-                    <ng-container >
-                        <mat-radio-button [matTooltip]="Contractuales" class="flex items-center h-10 min-h-10 px-4 mr-4" [color]="'primary'"
-                        [disabled]="user.asign == 'Second Contractual'"
-                        (change)="assignmentUserselectedPrincipal($event,user)"
-                        [value]="user.id">{{user.userName}}</mat-radio-button>
-                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="user.id" (change)="assignmentUserselectedSecond($event,user)"
-                            [color]="'primary'"
-                            [disabled]="user.asign == 'Principal Contractual'">
-                            {{user.userName}}
-                        </mat-checkbox>
+                <mat-radio-group [color]="'primary'" [disabled]="false">
+                    <ng-container class="ctn border" *ngFor="let user of users;">
+                        <ng-container>
+                            <mat-radio-button [matTooltip]="Contractuales"
+                                class="flex items-center h-10 min-h-10 pt-2 px-6 mr-6 colorGreen" [color]="'primary'"
+                                [disabled]="user.asign == 'Second Contractual'"
+                                (change)="assignmentUserselectedPrincipal($event,user)"
+                                [value]="user.id">principal</mat-radio-button>
+                            <span class="flex items-center h-10 min-h-10 px-10 mr-2">{{user.userName}}</span>
+                            <mat-checkbox class="flex items-center h-10 min-h-10 px-6 colorBlue" [value]="user.id"
+                                (change)="assignmentUserselectedSecond($event,user)" [color]="'primary'"
+                                [disabled]="user.asign === 'Principal Contractual'">
+                                Apoyo
+                            </mat-checkbox>
+                        </ng-container>
                     </ng-container>
-                </ng-container>
+                </mat-radio-group>
                 <!-- Tags editing -->
 
             </div>
@@ -74,22 +79,23 @@
             <!-- Available tags -->
             <div class="h-44 leading-none overflow-y-auto border-t border-gray-300 dark:border-gray-500">
                 <!-- Tags -->
-                <ng-container *ngFor="let juridic of juridics">
-                    <ng-container >
-                        <mat-radio-group class="flex items-center h-10 min-h-10 px-4" [color]="'primary'"
-                            [disabled]="false">
-                            <mat-radio-button [matTooltip]="usualrios" class="mr-4"
-                                [disabled]="juridic.asign == 'Second Juridic'"
+                <mat-radio-group [color]="'primary'" [disabled]="false">
+                    <ng-container *ngFor="let juridic of juridics">
+                        <ng-container>
+                            <mat-radio-button [matTooltip]="usualrios" class="flex items-center h-10 min-h-10 px-4"
+                                [color]="'primary'" [disabled]="juridic.asign == 'Second Juridic'"
                                 (change)="assignmentJuridicselectedPrincipal(juridic)"
-                                [value]="juridic.id">{{juridic.userName}}</mat-radio-button>
-                        </mat-radio-group>
-                        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="juridic.id" (change)="assignmentJuridicSelectedSecond(juridic)"
-                            [color]="'primary'"
-                            [disabled]="juridic.asign == 'Principal Juridic'">
-                            {{juridic.userName}}
-                        </mat-checkbox>
+                                [value]="juridic.id">Principal</mat-radio-button>
+                            <span class="flex items-center h-10 min-h-10 px-10 mr-2">{{juridic.userName}}</span>
+                            <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [value]="juridic.id"
+                                (change)="assignmentJuridicSelectedSecond(juridic)" [color]="'primary'"
+                                [disabled]="juridic.asign == 'Principal Juridic'">
+                                Apoyo
+                            </mat-checkbox>
+                        </ng-container>
                     </ng-container>
-                </ng-container>
+                </mat-radio-group>
+
                 <!-- Tags editing -->
 
             </div>
@@ -125,12 +131,8 @@
                 <!-- Tags -->
                 <ng-container>
                     <ng-container *ngFor="let user of supervisors">
-                        <mat-radio-group class="flex items-center h-10 min-h-10 px-4" [color]="'primary'"
-                            [disabled]="false">
-                            <mat-radio-button [matTooltip]="Supervisores" class="mr-4"
-                                (change)="onChangeAdmin(user)"
-                                [value]="user.id">{{user.userName}}</mat-radio-button>
-                        </mat-radio-group>
+                        <mat-radio-button [matTooltip]="Supervisores" class="flex items-center h-10 min-h-10 px-4" (change)="onChangeAdmin(user)" [color]="'primary'"
+                        [value]="user.id">{{user.userName}}</mat-radio-button>
                     </ng-container>
                 </ng-container>
                 <!-- Tags editing -->

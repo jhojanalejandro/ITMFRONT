@@ -28,6 +28,7 @@ import { PlaningService } from '../service/planing.service';
 import { CpcType, ElementType } from 'app/modules/admin/generic/model/generic.model';
 import Swal from 'sweetalert2';
 import { ElementTypeCode } from 'app/layout/common/enums/elementType';
+import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
     selector: 'app-alement',
@@ -38,6 +39,12 @@ import { ElementTypeCode } from 'app/layout/common/enums/elementType';
 
 export class ElementCardComponent implements OnInit, OnDestroy {
     filteredOptions: Observable<string[]>;
+    alert: { type: FuseAlertType; message: string } = {
+        type: 'warn',
+        message: ''
+    };
+    showAlert: boolean = false;
+
     @ViewChild('elementNgForm') elementNgForm: NgForm;
     modificaciones: any = GlobalConst.requierePoliza;
     btnOpcion: string = 'Guardar';
@@ -72,6 +79,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         'Tecnologo Profesional',
 
     ];
+
+
     @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
     numberOfTicks = 0;
     recursos: any = 0;
@@ -126,7 +135,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             tipoElemento: [null],
             nombreElemento: [null, Validators.required],
             modificacion: [null],
-            recursos: [null],
+            recursos: new FormControl({ value: null, disabled: true }),
             fechamodificacion: [null],
             consecutivo: [null, Validators.required],
             valordiaContratista: [null, Validators.required],
@@ -144,13 +153,13 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 totalValue: this._genericService.addCommasToNumber(this._data.elemento.valorTotal),
                 id: this._data.elemento.id,
                 unitValueDay: this._genericService.addCommasToNumber(this._data.elemento.valorPorDia),
-                totalExacto: this._genericService.addCommasToNumber(this._data.elemento.recursos+this._data.elemento.valorTotal),
+                totalExacto: this._genericService.addCommasToNumber(this._data.elemento.valorTotal),
                 cpc: this._data.elemento.cpcId,
                 nombreCpc: this._data.elemento.nombreCpc,
                 tipoElemento: this._data.elemento.tipoElemento,
                 nombreElemento: this._data.elemento.nombreElemento,
                 modificacion: [null],
-                recursos: this._genericService.addCommasToNumber(this._data.elemento.recursos),
+                recursos: this._data.elemento.recursos != null ? this._genericService.addCommasToNumber(this._data.elemento.recursos) : 0,
                 fechamodificacion: [null],
                 consecutivo: this._data.elemento.consecutivo,
                 valordiaContratista: this._genericService.addCommasToNumber(this._data.elemento.valorPorDiaContratista),
@@ -166,7 +175,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             this.totalValue = this._genericService.addCommasToNumber(this._data.elemento.valorTotal);
             this.valorPorDiaContratista = this._genericService.addCommasToNumber(this._data.elemento.valorPorDiaContratista);
             this.valorPorDiaContratistas = this._genericService.addCommasToNumber(this._data.elemento.valorPorDia);
-            this.recursos = this._genericService.addCommasToNumber(this._data.elemento.recursos);
 
         }
         this.filteredOptions =
@@ -214,9 +222,16 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement(): void {
-        // if (this.elementForm.invalid) {
-        //     return;
-        // }
+        if (this.elementForm.invalid) {
+            this.alert = {
+                type: 'error',
+                message: 'ERROR EN LA INFORMACION'
+            };
+
+            // Show the alert
+            this.showAlert = true;
+            return
+        }
         let modificacion: any;
         if (this.elementForm.value.modificacion === 'Si') {
             modificacion = true;
@@ -232,9 +247,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         if (this.valorPorDiaContratista === null) {
             this.valorPorDiaContratista = this.totalValue / this.elementForm.value.contractorCant;
         }
-        if(this.recursos > 0 ){
-            this.totalValue += this.recursos;
-        }
+
         let item: Elements = {
             id: this._data.elemento.id,
             nombreElemento: this.elementForm.value.nombreElemento,
@@ -249,7 +262,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             cpcId: this.elementForm.value.cpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
-            recursos: Math.ceil(Number(this.recursos.toString().replace(/\./g, ''))),
             consecutivo: this.elementForm.value.consecutivo,
             obligacionesEspecificas: this.elementForm.value.obligacionesEspecificas,
             obligacionesGenerales: this.elementForm.value.obligacionesGenerales,
@@ -301,7 +313,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                     ));
                     this.totalExacto = Math.ceil(this.totalValue);
                 } else if (this._data.elemento.valorTotal.toString() != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
-                    
+
                     this.totalExacto = Math.ceil(Number(
                         this.valorPorDiaContratistas * this.elementForm.value.cantDay
                     ));
@@ -498,14 +510,14 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     formatNumberWithCommas(controlName: string, value: number): void {
-        if(value > 0 && value != null){
+        if (value > 0 || value != null) {
             const control = this.elementForm.get(controlName);
             const previousValue = control.value;
-    
+
             // Remover puntos del valor anterior para evitar puntos duplicados
             const numericValue = Number(value.toString().replace(/\./g, ''));
             const formattedValue = this._genericService.addCommasToNumber(numericValue);
-    
+
             // Si el valor formateado es diferente al valor en el control, actualizar el control
             if (formattedValue !== previousValue) {
                 control.patchValue(formattedValue, { emitEvent: false });

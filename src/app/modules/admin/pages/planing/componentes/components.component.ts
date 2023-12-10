@@ -581,7 +581,8 @@ export class AddComponentsComponent implements OnInit {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Documento descargado.',
+                            title: '',
+                            html: 'Documento descargado.',
                             showConfirmButton: false,
                             timer: 1500
                         })

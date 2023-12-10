@@ -21,7 +21,6 @@ export class ShowFileComponent implements OnInit {
         public matDialogRef: MatDialogRef<ShowFileComponent>,
         @Inject(MAT_DIALOG_DATA) private _data
     ) {
-        debugger
         pdfDefaultOptions.assetsFolder = 'bleeding-edge';
 
         this.id = this._data.id;
@@ -42,7 +41,6 @@ export class ShowFileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        debugger
         this.id = this._data.id;
         this.getFile = this._data.fileData;
         this.fileName = this._data.fileName;

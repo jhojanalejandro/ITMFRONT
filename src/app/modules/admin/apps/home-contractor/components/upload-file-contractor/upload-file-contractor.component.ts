@@ -4,12 +4,14 @@ import {
     Inject,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy
+    OnDestroy,
+    ViewChild
 } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
     FormGroup,
+    NgForm,
     Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -26,14 +28,38 @@ import { ContractorService } from 'app/modules/admin/dashboards/contractual/serv
 import { Contractor } from 'app/modules/admin/dashboards/contractual/models/contractor';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 const moment = _rollupMoment || _moment;
+import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 
+export const MY_FORMATS = {
+    parse: {
+      dateInput: 'MM/YYYY',
+    },
+    display: {
+      dateInput: 'MM/YYYY',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY',
+    },
+  };
 @Component({
     selector: 'app-upload-file-contractor',
     templateUrl: './upload-file-contractor.component.html',
-    styleUrls: ['./upload-file-contractor.component.scss']
+    styleUrls: ['./upload-file-contractor.component.scss'],
+        providers: [DatePipe,
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+        },
+
+        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    ]
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
-    date = new FormControl(moment());
+    date = new FormControl(null,Validators.required);
+    @ViewChild('signInNgForm') uploadNgForm: NgForm;
     monthYear: any;
     shortLink: string = '';
     loading: boolean = false; // Flag variable
@@ -48,6 +74,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     formFile: FormGroup;
     showDate: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+
 
     constructor(
         private ref: ChangeDetectorRef,
@@ -73,10 +101,10 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             'question'
         );
         this.formFile = this._formBuilder.group({
-            file: [null, Validators.required],
-            filesName: [null],
-            typeDoc: [null, Validators.required],
-            description: [null, Validators.required],
+            file: new FormControl(null, Validators.required),
+            filesName: new FormControl(null),
+            typeDoc: new FormControl(null, Validators.required),
+            description: new FormControl(null, Validators.required)
         });
         this.getDaTaContractor();
     }
@@ -94,10 +122,11 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         this.matDialogRef.close();
     }
 
-    addFileContractor(event) {
+    addFileContractor(event) : void{
         if (this.formFile.invalid) {
             return;
         }
+        debugger
         let name = this.file.name.split('.')
         const registerFile: FileContractor = {
             contractorId: this._auth.accessId,
@@ -136,7 +165,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                 },
                 (response) => {
                     this.formFile.enable();
-                    console.log(response);
                     // Set the alert
                     swal.fire(
                         'Error',
@@ -219,7 +247,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                debugger
                 if (!resp.activateTermContract && !resp.activateTermPayments) {
                     swal.fire(
                         '',
@@ -240,11 +267,11 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.EXAMENESPREOCUPACIONALES || f.code == DocumentTypeCodes.HOJADEVIDA || f.code == DocumentTypeCodes.REGISTROSECOP || f.code == DocumentTypeCodes.DOCUMENTOSCONTRATACION)
                     if (resp.hv) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.HOJADEVIDA)
-                    } 
+                    }
                     if (resp.exam) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.EXAMENESPREOCUPACIONALES)
 
-                    } 
+                    }
                     if (resp.secop) {
                         this.typeDocs = this.typeDocs.filter(f => f.code != DocumentTypeCodes.REGISTROSECOP)
                     }

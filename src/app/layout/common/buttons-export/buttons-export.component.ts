@@ -32,17 +32,18 @@ export class ButtonsExportComponent implements OnInit {
         this._service.generateReport(generateReport)
             .pipe(takeUntil(this._unsubscribe$))
             .subscribe(
-                (res) => {
-                    var downloadURL = window.URL.createObjectURL(res);
+                (resp) => {
+                    var downloadURL = window.URL.createObjectURL(resp);
                     var link = document.createElement('a');
                     link.href = downloadURL;
                     link.download = "Reporte";
                     link.click();
-                    if (res) {
+                    if (resp) {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Documento descargado.',
+                            title: '',
+                            html: 'Documento descargado.',                            
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -69,7 +70,8 @@ export class ButtonsExportComponent implements OnInit {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Documento descargado.',
+                            title: '',
+                            html: 'Documento descargado.',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -94,7 +96,8 @@ export class ButtonsExportComponent implements OnInit {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Documento descargado.',
+                        title: '',
+                        html: 'Documento descargado.',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -130,7 +133,8 @@ export class ButtonsExportComponent implements OnInit {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Documento descargado.',
+                            title: '',
+                            html: 'Documento descargado.',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -156,7 +160,8 @@ export class ButtonsExportComponent implements OnInit {
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'Documento descargado.',
+                            title: '',
+                            html: 'Documento descargado.',
                             showConfirmButton: false,
                             timer: 1500
                         })
