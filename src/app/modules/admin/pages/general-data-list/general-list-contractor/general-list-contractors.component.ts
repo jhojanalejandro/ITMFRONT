@@ -73,7 +73,7 @@ export class GeneralListContractorsComponent
             this.dataSource = new MatTableDataSource(
                 response
             );
-            this.dataSource.sort = this.sort;        
+            this.dataSource.sort = this.sort;
         });
     }
     columnas = [
@@ -105,8 +105,8 @@ export class GeneralListContractorsComponent
         this._unsubscribeAll.complete();
     }
 
-    addComponent(data: any) {
-        this._router.navigate(["/docs/history/"+data.id+"/opcion/contratos/" + data.id]);
+    navigateDetail(data: any) {
+        this._router.navigate(["/docs/history/"+data.id+"/opcion"]);
     }
 
     /**
@@ -142,8 +142,8 @@ export class GeneralListContractorsComponent
         } else {
             this._liveAnnouncer.announce('Sorting cleared');
         }
-    }  
-    
+    }
+
     drop(event: CdkDragDrop<string[]>) {
         moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
     }

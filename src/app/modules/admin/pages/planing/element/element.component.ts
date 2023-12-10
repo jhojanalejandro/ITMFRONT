@@ -510,7 +510,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     formatNumberWithCommas(controlName: string, value: number): void {
-        if (value > 0 && value != null) {
+        if (value > 0 || value != null) {
             const control = this.elementForm.get(controlName);
             const previousValue = control.value;
 

@@ -8,7 +8,7 @@ export const environment = {
     //apiURL: 'https://localhost:7163/',
     authenticateEndpoint: 'User/Authenticate',
     sigUpEndpoint: 'User/SignUp',
-    retrieveEndpoint: 'User/retrievePassword',
+    retrieveEndpoint: 'User/RetrievePassword',
     updateUserEndpoint: 'User/UpdateTeamRoll',
     updatePasswordUserEndpoint: 'User/UpdatePassword',
     getAllUserEndpoint: 'User/GetTeam',
@@ -16,6 +16,8 @@ export const environment = {
     deleteUserEndpoint: 'User/Delete/',
     getByIdUserEndpoint: 'User/GetById/',
     validateTokenEndpoint: 'User/ValidateTokens/',
+    resetPasswordUserpoint: 'User/ResetPassword',
+
     GenrateReportContractEndpoint: 'ExportToExcel/GenerateReportContract',
     exportarDap: 'ExportToExcel/GetSolicitudContratacionDap/',
     exportarSoicitudCdp: 'ExportToExcel/GetSolicitudCdp/',

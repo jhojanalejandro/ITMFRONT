@@ -9,15 +9,15 @@
     <div class="modal-body pt-6">
         <form [formGroup]="formFile" class="example-form">
             <div class="folder">
-                <mat-form-field *ngIf="mostrarContrato" class="flex-auto gt-xs:pl-3" appearance="fill">
+                <mat-form-field *ngIf="mostrarContrato || origin == 'cdp'" class="flex-auto gt-xs:pl-3" appearance="fill">
                     <mat-label>CONTRATOS</mat-label>
-                    <mat-select required id="project" (selectionChange)="validatePermission()"
+                    <mat-select required id="project" [value]="contractId" (selectionChange)="validatePermission()"
                         formControlName="project" name="project">
-                        <mat-option *ngFor="let contarto of contratos" [value]="contarto.id">
-                            {{contarto.projectName}}
+                        <mat-option *ngFor="let contrato of contratos" [value]="contrato.id">
+                            {{contrato.projectName}}
                         </mat-option>
                     </mat-select>
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                    <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'"></mat-icon> -->
                     <mat-error *ngIf="formFile.get('project').hasError('required')">
                         Este Campo es requerido
                     </mat-error>
@@ -57,7 +57,7 @@
                     Cancelar
                 </button>
                 <button mat-flat-button [color]="'primary'" [disabled]="!permission || formFile.disabled"
-                    (click)="uploadTypeFile()"> <span>Cargar archivo</span>
+                    (click)="uploadTypeFile()"> <span *ngIf="!formFile.disabled">Cargar archivo</span>
                     <mat-progress-spinner *ngIf="formFile.disabled" [diameter]="24"
                         [mode]="'indeterminate'"></mat-progress-spinner></button>
             </mat-dialog-actions>

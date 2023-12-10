@@ -13,6 +13,8 @@ import {
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
 import { EntityHealth } from '../apps/home-contractor/models/mater.model';
+import * as CryptoJS from 'crypto-js';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 @Injectable({
     providedIn: 'root',
@@ -24,7 +26,7 @@ export class GenericService {
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient) {}
+    constructor(private _httpClient: HttpClient) { }
 
     /**
      * Getter for data
@@ -124,7 +126,7 @@ export class GenericService {
     }
 
     getEmptityHealthList(): Observable<EntityHealth[]> {
-        let urlEndPoint =  this.apiUrl +environment.GetEmptityHealthEndpoint;
+        let urlEndPoint = this.apiUrl + environment.GetEmptityHealthEndpoint;
         return this._httpClient.get<EntityHealth[]>(urlEndPoint);
     }
 
@@ -145,7 +147,7 @@ export class GenericService {
     }
 
     addCommasToNumber(value: number): string {
-        if(value != null){
+        if (value != null) {
             if (value <= 9999 && value >= 1000) {
                 const formattedNumber = value.toString();
                 return (
@@ -175,5 +177,17 @@ export class GenericService {
         const datePipe = new DatePipe('en-US');
         const currentDate = new Date(getDate);
         return datePipe.transform(currentDate, 'yyyy-MM-dd');
+    }
+
+
+
+    encryptData(data: string): string {
+        const cipherText = CryptoJS.AES.encrypt(data, GlobalConst.encryptSecretKey).toString();
+        return cipherText;
+    }
+
+    decryptData(cipherText: string): string {
+        const decrypted = CryptoJS.AES.decrypt(cipherText, GlobalConst.encryptSecretKey).toString(CryptoJS.enc.Utf8);
+        return decrypted;
     }
 }
