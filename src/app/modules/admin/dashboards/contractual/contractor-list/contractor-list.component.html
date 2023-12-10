@@ -13,24 +13,24 @@
         <div class="mt-4 sm:mt-0">
             <!-- Add section button -->
             <button mat-flat-button [color]="'accent'" (click)="addTermFileContract(null)"
-                [matTooltip]="'Shortcut: Ctrl + .'">
+                [matTooltip]="'tiempo de entrega documentos'">
                 <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                 <span class="ml-2 mr-1">Tiempo entrega</span>
             </button>
             <button mat-flat-button class="ml-3" [color]="'accent'" (click)="SendMailsAccounts()"
-                [matTooltip]="'Shortcut: Ctrl + .'">
+                [matTooltip]="'Enviar invitación a proceso de contratación'">
                 <mat-icon [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
             <button (click)="registrarDatosContratacion(null)" class="ml-3" mat-flat-button [color]="'primary'"
-                [matTooltip]="'Shortcut: Ctrl + /'">
+                [matTooltip]="'Guardar datos contratistas'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Guardar Datos</span>
             </button>
 
             <button (click)="uploadExcel()" class="ml-3" mat-flat-button [color]="'primary'"
-                [matTooltip]="'Shortcut: Ctrl + /'">
+                [matTooltip]="'Cargar Archivo cdp contratista'">
                 <mat-icon [svgIcon]="'heroicons_solid:save'"></mat-icon>
                 <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
             </button>
@@ -199,7 +199,7 @@
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all && element.previusStudy == element.comiteGenerated"
+                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
                                 'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',

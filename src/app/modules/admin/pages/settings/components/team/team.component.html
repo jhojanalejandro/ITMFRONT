@@ -22,8 +22,8 @@
                 <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
                     <div class="order-2 sm:order-1 ml-4 sm:ml-0">
                         <mat-form-field *ngIf="member.rollCode !='ADM'" class="w-90" appearance="fill">
-                            <mat-label >ASIGNAR ROL</mat-label>
-                            <mat-select [disabled]="member.rollCode =='ADM'" (selectionChange)="onChange($event,member)" [(ngModel)]="member.rollId" name="typeFile">
+                            <mat-label >Asignar perfil</mat-label>
+                            <mat-select [disabled]="member.rollCode =='ADM' || !permission" [value]="member.rollId" (selectionChange)="onChange($event,member)" [(ngModel)]="member.rollId" name="typeFile">
                                 <mat-option  *ngFor="let role of roles" [value]="role.id">
                                     {{role.rollName}}
                                 </mat-option>

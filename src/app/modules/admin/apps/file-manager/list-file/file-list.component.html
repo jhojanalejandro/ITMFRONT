@@ -42,12 +42,16 @@
                                         </ng-container>
                                         <ng-container>
                                             <a class="text-primary cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + contractorId]">Carpetas
+                                                [routerLink]="['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + contractorId+ '/'+contarctorName]">Carpetas
                                                 contratista</a>
                                         </ng-container>
                                         <div class="">/</div>
                                         <ng-container>
                                             <div>Archivos contratista</div>
+                                        </ng-container>
+                                        <div class="">/</div>
+                                        <ng-container>
+                                            <div>{{contarctorName}}</div>
                                         </ng-container>
                                     </ng-container>
 

@@ -16,6 +16,7 @@
             </div>
             <!-- Sign Up form -->
             <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="contractorinformationStepperForm">
+
                 <mat-vertical-stepper [linear]="true" #stepper>
                     <mat-step [formGroupName]="'step1'" [stepControl]="contractorinformationStepperForm.get('step1')"
                         #horizontalStepperStep1>
@@ -23,10 +24,8 @@
                         <div class="folderFieldContractor">
                             <mat-form-field (click)="pickerFC.open()" class="hiringField" appearance="fill">
                                 <mat-label>Fecha Nacimiento</mat-label>
-                                <!-- <input matInput id="birthDate" [max]="minBirth"
-                                    formControlName="birthDate" [matDatepicker]="pickerFC" required  (dateChange)="dateChange($event)"> -->
                                 <input matInput id="birthDate" [max]="minBirth" formControlName="birthDate"
-                                    [matDatepicker]="pickerFC" required (dateChange)="dateChange($event)"
+                                    [matDatepicker]="pickerFC" (dateChange)="dateChange($event)"
                                     (click)="pickerFC.open()">
                                 <mat-datepicker #pickerFC></mat-datepicker>
                                 <mat-datepicker-toggle matSuffix [for]="pickerFC"></mat-datepicker-toggle>
@@ -36,7 +35,7 @@
                             </mat-form-field>
                             <mat-form-field class="hiringField" appearance="fill">
                                 <input id="identification" matInput autocomplete="off"
-                                    [formControlName]="'identification'" [placeholder]="'Número de Cedula'" required>
+                                    [formControlName]="'identification'" [placeholder]="'Número de Cedula'" >
                                 <mat-error>
                                     Se requiere Cedula
                                 </mat-error>

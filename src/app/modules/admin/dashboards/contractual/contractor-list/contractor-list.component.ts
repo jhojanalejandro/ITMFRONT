@@ -145,8 +145,8 @@ export class ContractorListComponent
         componentId: null,
         legalProccess: null,
         hiringStatus: null,
-        initialContractDate: null,
-        finalContractDate: null,
+        initialDateContract: null,
+        finalDateContract: null,
         cantDays: 0,
         bankEntity: null,
         cdp: null,
@@ -542,6 +542,7 @@ export class ContractorListComponent
                             showConfirmButton: false,
                             timer: 1500,
                         });
+                        this.getDataContractor()
                     } else {
                         Swal.fire(
                             'Error',

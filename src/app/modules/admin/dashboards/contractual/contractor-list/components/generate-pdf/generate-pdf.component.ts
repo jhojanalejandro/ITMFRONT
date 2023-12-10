@@ -42,6 +42,7 @@ export class GeneratePdfComponent implements OnInit {
         document: null,
         contractId: null
     };
+    timerInterval: any = null;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     year: Date = new Date();
     comiteeContarctor: any[] = [];
@@ -53,6 +54,7 @@ export class GeneratePdfComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.mostrarSweetAlert();
         this.getDocumentType();
         this.dateTransform = this._shareService.transformDate(this.dateTransform);
         switch (this.generateType) {
@@ -70,6 +72,32 @@ export class GeneratePdfComponent implements OnInit {
         this.currentDate = this._shareService.getCurrentDate();
 
     }
+
+    mostrarSweetAlert(): void {
+        swal.fire({
+          title: 'Generando pdf!',
+          html: 'Espera <b></b> milliseconds.',
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: () => {
+            swal.showLoading();
+            const b = swal.getHtmlContainer()?.querySelector('b');
+            this.timerInterval = setInterval(() => {
+              const timerLeft = swal.getTimerLeft();
+              if (b) {
+                b.textContent = timerLeft ? timerLeft.toString() : ''; // Verifica si timerLeft es null o undefined
+              }
+            }, 100);
+          },
+          willClose: () => {
+            clearInterval(this.timerInterval);
+          }
+        }).then((result) => {
+          if (result.dismiss === swal.DismissReason.timer) {
+            console.log('I was closed by the timer');
+          }
+        });
+      }
 
     private generatePreviusStudy(previusStudyData: ResponseContractorPdf<PreviusStudyContractorsList>) {
         let user = previusStudyData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
@@ -125,7 +153,7 @@ export class GeneratePdfComponent implements OnInit {
                     position: 'center',
                     icon: 'warning',
                     title: '',
-                    html: 'No se encontro contratual asignado ',
+                    html: 'No se encontro contractual asignado ',
                     showConfirmButton: false,
                     timer: 2500
                 });
@@ -134,7 +162,7 @@ export class GeneratePdfComponent implements OnInit {
                     position: 'center',
                     icon: 'warning',
                     title: '',
-                    html: 'No se encontro la firma del contratual ',
+                    html: 'No se encontro la firma del contractual ',
                     showConfirmButton: false,
                     timer: 2500
                 });
@@ -143,7 +171,7 @@ export class GeneratePdfComponent implements OnInit {
                     position: 'center',
                     icon: 'warning',
                     title: '',
-                    html: 'No se encontro la firma del contratual ',
+                    html: 'No se encontro la firma del jefe de la unidad estrategica ',
                     showConfirmButton: false,
                     timer: 2500
                 });
@@ -1449,7 +1477,14 @@ export class GeneratePdfComponent implements OnInit {
                 },
                 tableImage: {
                     margin: [5, 5, 5, 10],
-                }
+                },
+                titleT: {
+                    bold: true,
+                    fontSize: 10,
+                    color: 'black',
+                    alignment: 'center',
+                    margin: [0,5,0,0]
+                },
             }
         };
         return documentPreviousStudy;
@@ -2692,12 +2727,13 @@ export class GeneratePdfComponent implements OnInit {
                 let data = committeeRequestData.getDataContractors.find(ct => ct.contractorId === this.contractContractors.contractors[index].toUpperCase());
                 if (data.profileRequire == null  || data.contractorIdentification == null) {
                     if (data.profileRequire == null) {
-                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista' + data.contractorName, 'warning');
+                        swal.fire('', 'no se ha cargado el perfil de experiencia requerido para el contratista: ' + data.contractorName, 'warning');
                     }
                     else if (data.contractorIdentification == null) {
-                        swal.fire('', 'no se encontro la identificacion del contratista ' + data.contractorName, 'warning');
+                        swal.fire('', 'no se encontro la identificacion del contratista: ' + data.contractorName, 'warning');
                     }
                     this.hideComponent();
+                    return
                 } else {
                     this.comiteeContarctor[index] =
                         [
@@ -2757,7 +2793,7 @@ export class GeneratePdfComponent implements OnInit {
                                 },
                             ],
                             ['', '', '', 'Versión', '01'],
-                            ['', '', '', 'Fecha ', this.currentDate],
+                            ['', '', '', 'Fecha ', '2008-04-18'],
                         ],
                     },
                 },
@@ -2812,7 +2848,7 @@ export class GeneratePdfComponent implements OnInit {
                         margin: [10, 10, 10, 10],
                         text: [
                             {
-                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.dataContract.contractNumber + 'de ' + year + ', cuyo objeto es ' + committeeRequestData.dataContract.contractObject,
+                                text: 'Remito para su estudio las hojas de vida de los proponentes contratistas para el apoyo integral en la ejecución del Contrato Interadministrativo ' + committeeRequestData.dataContract.contractNumber + ' de ' + year + ', cuyo objeto es ' + committeeRequestData.dataContract.contractObject,
                                 fontSize: 10,
                                 alignment: 'justify'
                             },

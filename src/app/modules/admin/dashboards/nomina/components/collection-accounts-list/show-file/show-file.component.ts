@@ -41,7 +41,6 @@ export class ShowFileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        debugger
         this.id = this._data.id;
         this.getFile = this._data.fileData;
         this.fileName = this._data.fileName;

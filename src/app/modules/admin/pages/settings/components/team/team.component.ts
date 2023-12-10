@@ -19,6 +19,7 @@ export class SettingsTeamComponent implements OnInit {
     members: any[];
     roles: any;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    permission: boolean = false;
 
     constructor(private _authService: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -27,12 +28,18 @@ export class SettingsTeamComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.permission = this._authService.validateRoll(CodeUser.ADMIN);
+        if (!this.permission) {
+          swal.fire('', 'No tienes permisos para asignar roles!', 'warning');
+        }
         this.getRolls();
         this._authService.getTeams()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((teams: TeamModel[]) => {
                 // Mark for check
-                this.members = teams;
+                this.members = teams.map(objeto => {
+                    return { ...objeto, rollId: objeto.rollId.toLowerCase() };
+                  });
                 this._changeDetectorRef.markForCheck();
             });
     }

@@ -8,8 +8,8 @@ export interface OtherMinute{
     totalValueContract: any;
     initialDateContract: Date;
     finalDateContract: Date;
-    initialDateContractExtension: Date;
-    finalDateContractExtension: Date;
+    extensionInitialDate: Date;
+    extensionFinalDate: Date;
     object: string;
     consecutive: number;
     contractNumber: string;
@@ -36,8 +36,8 @@ export interface CommitteeRequest{
     contractorId: string;
 	contractorName: string;
     contractorIdentification: string;
-    contractInitialDate: Date;
-    contractFinalDate: Date;
+    initialDateContract: Date;
+    finalDateContract: Date;
     elementName: string;
     userIdentification: string;
     totalValue: any;
