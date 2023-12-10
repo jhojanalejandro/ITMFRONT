@@ -93,7 +93,6 @@ export class GlobalConst {
         { viewValue: 'italiana' },
         { viewValue: 'jamaiquina' },
         { viewValue: 'japonésa' },
-
         { viewValue: 'lituano' },
         { viewValue: 'líbio' },
         { viewValue: 'marroqui' },
@@ -160,7 +159,13 @@ export class GlobalConst {
         { viewValue: '3', value: 2.436  },
         { viewValue: '4', value: 4.35     },
         { viewValue: '5', value: 6.96  },
+    ];
+
+    public static rubrosOrgin: TypeSelectString[] = [
+        { viewValue: 'FUNCIONAMIENTO' },
+        { viewValue: 'INVERSION' },
     ]
+
 }
 
 

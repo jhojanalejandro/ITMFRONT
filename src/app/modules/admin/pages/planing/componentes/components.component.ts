@@ -24,6 +24,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { AuthService } from 'app/core/auth/auth.service';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
+import { ShareService } from 'app/layout/common/share-service/share-service.service';
+import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
 
 @Component({
     selector: 'components-card',
@@ -40,12 +42,13 @@ export class AddComponentsComponent implements OnInit {
     abrirDivComponente: boolean = false;
     abrirDivElemento: boolean = false;
     abrirDivActivity: boolean = false;
-
+    itmImageBase64: string = null;
     data: any;
     contractId: string = null;
     configForm: FormGroup;
     subTotal: number = 0;
     total: number = 0;
+    resource: number = 0;
     contractorCant: number = 0;
     elementosCant: number = 0;
     componentCant: number = 0;
@@ -68,7 +71,8 @@ export class AddComponentsComponent implements OnInit {
         private _loadrouter: Router,
         private _formBuilder: FormBuilder,
         private _service: ButtonsExportService,
-        private _authService: AuthService
+        private _authService: AuthService,
+        private _shareService: ShareService
     ) {
         this.contractId = this.route.snapshot.params.id;
         if (this.contractId) {
@@ -81,6 +85,7 @@ export class AddComponentsComponent implements OnInit {
         if (!this.permission) {
             this.messagePermission()
         }
+        this.getBase64Image();
     }
 
 
@@ -143,6 +148,7 @@ export class AddComponentsComponent implements OnInit {
                 element.elementos.forEach((item) => {
                     this.elementosCant++;
                     this.subTotal += item.valorTotal;
+                    this.resource += element.recursos
                     this.contractorCant += item.cantidadContratistas
                 });
             }
@@ -151,6 +157,7 @@ export class AddComponentsComponent implements OnInit {
                     this.activitiesCant++;
                     if (item.elementos.length >= 1) {
                         item.elementos.forEach((element) => {
+                            this.resource += element.recursos
                             this.elementosCant++;
                             this.subTotal += element.valorTotal;
                             this.contractorCant += element.cantidadContratistas
@@ -370,12 +377,13 @@ export class AddComponentsComponent implements OnInit {
             valorContrato: this.total,
             valorSubTotal: this.subTotal,
             gastosOperativos: this.gastosOperativos,
+            recursos: this.resource
         };
 
         this._contrtactService.UpdateCostContractFolder(saveCalculo)
             .pipe(takeUntil(this._unsubscribe$))
             .subscribe((res) => {
-                if (res) {
+                if (res.success) {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -442,10 +450,35 @@ export class AddComponentsComponent implements OnInit {
 
     }
 
-    deleteConfirmationDialog(component: any): void {
+    deleteActivity(activity: any) {
+        if (!this.permission) {
+            this.messagePermission();
+        } else {
+            this._planingService.deleteActivity(activity.id)
+                .pipe(takeUntil(this._unsubscribe$))
+                .subscribe((response) => {
+                    if (response.success) {
+                        Swal.fire(
+                            {
+                                position: 'center',
+                                icon: 'success',
+                                title: '',
+                                html: 'Información Elimina Exitosamente!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }
+                        );
+                        this.reloadResolve();
+                    }
+                });
+        }
+
+    }
+
+    deleteConfirmationDialog(component: any,typeDelete: string): void {
         this.configForm = this._formBuilder.group({
-            title: 'Eliminar Componente',
-            message: '¿Está seguro de que desea eliminar el componente?  <span class="font-medium">¡Esta acción no se puede deshacer!</span>',
+            title: 'Eliminar '+typeDelete,
+            message: '¿Está seguro de que deseas eliminar el componente?  <span class="font-medium">¡Esta acción no se puede deshacer!</span>',
             icon: this._formBuilder.group({
                 show: true,
                 name: 'heroicons_outline:exclamation',
@@ -469,7 +502,11 @@ export class AddComponentsComponent implements OnInit {
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
-                this.deleteComponent(component);
+                if(typeDelete == 'Componente'){
+                    this.deleteComponent(component);
+                }else{
+                    this.deleteActivity(component);
+                }
             }
         });
     }
@@ -529,6 +566,47 @@ export class AddComponentsComponent implements OnInit {
     private messagePermission() {
         Swal.fire('', 'No tienes permisos de modificar Información!', 'warning');
     }
+
+    generateEconomicTable() {
+        this._service.generateEconomicTable(this.contractId, this.itmImageBase64)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe(
+                (res) => {
+                    var downloadURL = window.URL.createObjectURL(res);
+                    var link = document.createElement('a');
+                    link.href = downloadURL;
+                    link.download = "Reporte";
+                    link.click();
+                    if (res) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: 'Documento descargado.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                },
+                (response) => {
+                    console.log(response);
+                    Swal.fire('', 'Error al descargar la informacion!', 'error');
+                }
+            );
+    }
+
+    private getBase64Image() {
+        this._shareService.loadAndConvertImageToBase64(RouteImageEnum.LOGOITM)
+            .then(base64Data => {
+                this.itmImageBase64 = base64Data;
+                
+            })
+            .catch(error => {
+                console.error('Error al cargar y convertir la imagen:', error);
+            });
+    }
+
+
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();

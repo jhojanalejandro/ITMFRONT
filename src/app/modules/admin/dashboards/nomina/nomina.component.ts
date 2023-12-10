@@ -8,7 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import {  Router } from '@angular/router';
-import { GenericService } from '../../generic/generic.services';
+import { GenericService } from '../../generic/generic.service';
 import { MatPaginator } from '@angular/material/paginator';
 
 @Component({

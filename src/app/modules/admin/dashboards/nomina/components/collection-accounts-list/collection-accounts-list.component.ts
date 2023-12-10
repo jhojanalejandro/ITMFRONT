@@ -15,10 +15,11 @@ import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
-import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { CategoryFile, DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 import { UploadFileDataService } from '../../../contractual/service/upload-file.service';
+import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
@@ -63,7 +64,8 @@ export class CollectionAccountsListComponent implements OnInit {
   dateSearch: any;
   tipoDocumentos: DocumentTypeFile[] = [];
   contratos: any;
-
+  statusFileLoad: any;
+  statusFileCreate: any;
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -72,7 +74,8 @@ export class CollectionAccountsListComponent implements OnInit {
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _matDialog: MatDialog,
     private _uploadFileDataService: UploadFileDataService,
-    private _gerenicService: GenericService
+    private _gerenicService: GenericService,
+    private _fileManagerService: FileListManagerService,
   ) { }
 
   ngOnInit(): void {
@@ -80,6 +83,7 @@ export class CollectionAccountsListComponent implements OnInit {
     this.getData();
     this.getDocumentType();
     this.getContractsData();
+    this.getStatusFile();
   }
 
 
@@ -224,13 +228,12 @@ export class CollectionAccountsListComponent implements OnInit {
       this.dateSearch = year + '/' + month;
 
     }
-    if(type == 'contract'){
+    if (type == 'contract') {
       this.contractId = event.value;
-    }else{
+    } else {
       this.type = event.value
     }
     this._collectionAccounts.getItemByTypeAndDate(this.type, this.contractId, this.dateSearch).subscribe((res) => {
-      
       if (res != null) {
         this.items.files = res;
       } else {
@@ -280,13 +283,23 @@ export class CollectionAccountsListComponent implements OnInit {
       .getDocumentType()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        
+
         if (res != null) {
           this.tipoDocumentos = res.filter(f => f.code === DocumentTypeCode.CUENTACOBRO || f.code === DocumentTypeCode.PLANILLA || f.code === DocumentTypeCode.INFORMEEJECUCIÓN);
         }
       }
       );
   }
+
+  private getStatusFile() {
+    this._fileManagerService.getStatusFile()
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((item: any) => {
+            this.statusFileLoad = item.filter(f => f.category === CategoryFile.CGD);
+            this.statusFileCreate = item.filter(f => f.category === CategoryFile.CRAD);;
+
+        });
+}
 
   getContractsData() {
     // Get the data

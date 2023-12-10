@@ -3,36 +3,28 @@ import { Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition } from '@angular/material/snack-bar';
-import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Router } from '@angular/router';
+import { MaintainerRegisterComponent } from './components/maintainer-register/maintainer-register.component';
 
 @Component({
   selector: 'app-maintainers-list-contarctual',
   styleUrls: ['./maintainers-list.component.scss'],
-  templateUrl: './maintainers-list.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './maintainers-list.component.html'
 })
 export class maintainersListComponent implements OnInit {
   selectContract: any;
   data: any;
+  private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(
-    private auth: AuthService,
     private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
-    private _router: Router
-  ) {
-  }
+    private _matDialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
   }
-
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -42,8 +34,14 @@ export class maintainersListComponent implements OnInit {
     }
   }
 
+
   ngAfterContentChecked() {
     this.cdref.detectChanges();
   }
+
+  ngOnDestroy(): void {
+    this._unsubscribe$.next(null);
+    this._unsubscribe$.complete();
+}
 
 }

@@ -43,7 +43,7 @@ export class AuthSignUpComponent implements OnInit {
     ngOnInit(): void {
         // Create the form
         this.signUpForm = this._formBuilder.group({
-            name: ['', Validators.required],
+            userName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required],
             confirmPassword: ['', Validators.required],
@@ -58,7 +58,7 @@ export class AuthSignUpComponent implements OnInit {
     signUp() {
 
         const userRegister: IUserModel = {
-            userName: this.signUpForm.value.name,
+            userName: this.signUpForm.value.userName,
             userPassword: this.signUpForm.value.password,
             professionalposition: this.signUpForm.value.professional,
             userEmail: this.signUpForm.value.email,

@@ -54,6 +54,10 @@ export interface ContractFolder{
     nombreRubro: string;
     project: string;
     fuenteRubro: string;
+    dutyContract?: string;
+    resourceContract?: any;
+    areaCode: string;
+    registerDateContract: Date
 }
 
 export interface DetailContractFolder{
@@ -92,12 +96,14 @@ export interface Elements{
     cpcId: string;
     modificacion: boolean;
     tipoElemento: string;
-    recursos: any; 
+    recursos?: any; 
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
     objetoElemento: string;
     activityId?: string;
+    perfilRequeridoAcademico?: string;
+    perfilRequeridoExperiencia?: string;
 }
 
 export interface ElementComponent{
@@ -123,6 +129,9 @@ export interface ElementComponent{
     activityId?: string;
     cantidadEnable?: string;
     cpcId?: string;
+    perfilRequeridoAcademico?: string;
+    perfilRequeridoExperiencia?: string;
+    cpcNumber?: string;
 }
 
 export interface ListElements{
@@ -164,6 +173,7 @@ export interface ContractFolders{
     objectContract: string;
     statusContractId?: string;
     detailContractId?: string;
+    dutyContract?: string;
 }
 
 
@@ -200,5 +210,35 @@ export interface OptionTypeData{
     nombreComponente: string,
     idContrato: number;
     elementos? : [];
+}
+
+export interface ModifyContractor{
+    id?: any;
+    elementName: string;
+    cantidadContratistas: number;
+    cantDays: number;
+    unitValue: any;
+    totalValue: any;
+    valueDay: any;
+    valorTotalContratista: number;
+    valorPorDiaContratista: number;
+    cpcId: string;
+    isModify: boolean;
+    resources: any; 
+    consecutive: string;
+    specificObligations: string;
+    generalObligations: string;
+    elementObject: string;
+    contractId: string;
+    contractorId: string;
+    noAddition: string;
+    perfilRequeridoAcademico: string;
+    perfilRequeridoExperiencia: string;
+    minuteType: string;
+    initialAdditionDate: string;
+    finalAdditionDate: string;
+    isAddition: boolean;
+    registerDate: Date;
+    debt: string;
 }
 

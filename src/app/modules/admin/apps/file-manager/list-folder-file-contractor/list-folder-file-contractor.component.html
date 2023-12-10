@@ -39,6 +39,10 @@
                                         <ng-container>
                                             <div>Carpetas contratista</div>
                                         </ng-container>
+                                        <div class="">/</div>
+                                        <ng-container>
+                                            <div>{{contractorName}}</div>
+                                        </ng-container>
                                     </ng-container>
 
                                 </div>
@@ -86,10 +90,9 @@
                                                     [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
                                             </a>
                                             <a class="z-10 absolute inset-0 flex flex-col p-4 cursor-pointer"
-                                                [routerLink]="['/apps/file-manager/file/contractor/'+contractId +'/'+contractorId +'/'+ folder.id]">
+                                                [routerLink]="['/apps/file-manager/file/contractor/'+contractId +'/'+contractorId +'/'+ folder.id +'/' +contractorName]">
                                                 <div class="aspect-w-9 aspect-h-6">
                                                     <div class="flex items-center justify-center">
-                                                        <!-- Icon -->
                                                         <mat-icon class="icon-size-14 text-hint"
                                                             [svgIcon]="'iconsmind:folder'"></mat-icon>
                                                     </div>

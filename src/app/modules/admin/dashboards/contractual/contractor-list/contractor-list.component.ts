@@ -1,14 +1,11 @@
 import {
     AfterContentChecked,
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Input,
     OnDestroy,
     OnInit,
     ViewChild,
-    ViewEncapsulation,
 } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ApexOptions } from 'ng-apexcharts';
@@ -25,12 +22,11 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModificacionFormComponent } from './components/modificacion-form/modificacion-form.component';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { ContractorService } from '../service/contractor.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { ContractContractors, Contractor } from '../models/contractor';
-import { NewnessContractorComponent } from './components/newness-contractor/newness-contractor.component';
+import { NewnessContractorComponent } from '../../share-components/newness-contractor/newness-contractor.component';
 import {
     Componente,
     Elements,
@@ -38,7 +34,7 @@ import {
 import { DatePipe } from '@angular/common';
 import { ContractorDataHiringComponent } from './components/data-hiring-contractor/data-hiring-contractor.component';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
-import { TermFileContractComponent } from './components/term-file-contract/term-file-contract.component';
+import { TermFileContractComponent } from '../../share-components/term-file-contract/term-file-contract.component';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/document-type';
@@ -53,6 +49,8 @@ import {
     trigger,
 } from '@angular/animations';
 import { EntityHealth } from 'app/modules/admin/apps/home-contractor/models/mater.model';
+import { ModificacionFormComponent } from '../../share-components/modificacion-form/modificacion-form.component';
+import { HistoryInnabilityComponent } from './components/history-innability/history-innability.component';
 
 @Component({
     selector: 'contractor-list',
@@ -75,11 +73,9 @@ export class ContractorListComponent
     contractId: string;
     data: any;
     userName: any;
-    value: any;
     generatePdfMinute: boolean;
     generatePdf: boolean;
     pdfType: string;
-    disableElement: boolean = true;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild(MatTable) table!: MatTable<any>;
     elements: Elements[];
@@ -149,8 +145,8 @@ export class ContractorListComponent
         componentId: null,
         legalProccess: null,
         hiringStatus: null,
-        initialContractDate: null,
-        finalContractDate: null,
+        initialDateContract: null,
+        finalDateContract: null,
         cantDays: 0,
         bankEntity: null,
         cdp: null,
@@ -158,6 +154,7 @@ export class ContractorListComponent
         eps: null,
         arl: null,
         afp: null,
+        contract: null
     };
     eps: EntityHealth[] = [];
     arl: EntityHealth[] = [];
@@ -182,8 +179,6 @@ export class ContractorListComponent
     columnas = [
         { title: 'NOMBRE', name: 'nombre' },
         { title: 'CEDULA', name: 'identificacion' },
-        // { title: 'CORREO', name: 'correo' },
-        { title: 'ESTADO', name: 'proccess' },
         { title: 'REGISTRO', name: 'statusContractor' },
         { title: 'JURIDICO', name: 'legalProccess' },
         { title: 'CONTRACTUAL', name: 'hiringStatus' },
@@ -192,8 +187,6 @@ export class ContractorListComponent
         { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
         { title: '', name: 'all' },
         { title: 'OPCIONES', name: 'acciones' },
-        // { title: 'DETALLE', name: 'detail' },
-        // { title: 'FORM', name: 'showForm' }
     ];
 
     ngOnInit(): void {
@@ -220,6 +213,7 @@ export class ContractorListComponent
             arl: new FormControl(null, Validators.required),
             eps: new FormControl(null, Validators.required),
             afp: new FormControl(null),
+            contract: new FormControl(null),
           });
 
         this.configForm = this._formBuilder.group({
@@ -245,7 +239,7 @@ export class ContractorListComponent
             dismissible: true,
         });
 
-        this.getDataContractor(false);
+        this.getDataContractor();
     }
 
     announceSortChange(sortState: Sort) {
@@ -290,9 +284,10 @@ export class ContractorListComponent
         this.cdref.detectChanges();
     }
 
-    getDataContractor(origin: boolean) {
+    getDataContractor() {
         this._contractorListService
-            .getContractorByIdProject(this.contractId, origin)
+            .getContractorsByIdProject(this.contractId)
+            .pipe(takeUntil(this._unsubscribe$))
             .subscribe((contractorsListResponse) => {
                 if (contractorsListResponse.success) {
                     this.contractorsList = contractorsListResponse.data.map(
@@ -346,13 +341,6 @@ export class ContractorListComponent
         }`;
     }
 
-    //metodo que obtiene las columnas seleccionadas de la grid
-    selectRow($event: any, dataSource: any) {
-        if ($event.checked) {
-            this.value = dataSource;
-        }
-    }
-
     openConfirmationDelete(element: any): void {
         this.permission = this._authService.validateRoll(
             CodeUser.RECRUITER,
@@ -379,7 +367,7 @@ export class ContractorListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
-                        this.getDataContractor(false);
+                        this.getDataContractor();
                     }
                     this.selection.clear();
                 });
@@ -648,7 +636,7 @@ export class ContractorListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
-                        this.getDataContractor(false);
+                        this.getDataContractor();
                     }
                     this.selection.clear();
                 });
@@ -790,6 +778,7 @@ export class ContractorListComponent
                     arl:this.expandedElement.arl,
                     eps: this.expandedElement.eps,
                     afp: this.expandedElement.afp,
+                    contract: this.expandedElement.contract
                   });
 
             }
@@ -831,6 +820,44 @@ export class ContractorListComponent
             });
     }
 
+    // private getCdp() {
+    //     this._genericService.getCpcType()
+    //         .pipe(takeUntil(this._unsubscribe$))
+    //         .subscribe((response) => {
+    //             this.cpcType = response;
+    //         }, (response) => {
+    //             // Set the alert
+    //             console.log(response);
+
+    //             swal.fire('', 'Error al registrar la información!', 'error');
+    //         });
+    // }
+
+    histtoryInnability(data: any) {
+
+        const dialogRef = this._matDialog.open(HistoryInnabilityComponent, {
+            width: '100%',
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                idUser: this._authService.accessId,
+                contractId: this.contractId,
+                id: data.id,
+                statusContractor: data.statusContractor,
+                assignmentUser: data.assignmentUser,
+            },
+        });
+        dialogRef
+            .afterClosed()
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe((result) => {
+                if (result) {
+                    this.reloadResolve();
+                }
+                this.selection.clear();
+                this.contractorListId = [];
+            });
+    }
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();

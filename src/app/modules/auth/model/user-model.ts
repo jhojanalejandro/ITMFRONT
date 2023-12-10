@@ -26,5 +26,7 @@ export interface TeamModel{
     rollCode: string;
     rollId: string;
     rollDescription: string;
+    asign?: string;
+
 }
 

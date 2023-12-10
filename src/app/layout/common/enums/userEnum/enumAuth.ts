@@ -9,4 +9,5 @@ export enum CodeUser{
     DESACTIVADO = 'DTV',
     SUPERVISORAREAC= 'SPVAC',
     SUPERVISORAREAN = 'SPVAN',
+    JEFEUNIDAD = 'JFUE',
 }

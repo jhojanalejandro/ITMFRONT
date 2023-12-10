@@ -20,8 +20,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 
 export class AssignmentUserComponent implements OnInit {
-  users: TeamModel[] = [];;
-  juridics: TeamModel[] = [];;
+  users: TeamModel[] = [];
+  juridics: TeamModel[] = [];
   supervisors: TeamModel[] = [];
   supervisorSelected: AssignmentUser = null;
   contracts: any;
@@ -55,7 +55,7 @@ export class AssignmentUserComponent implements OnInit {
   async addAssignmentUsers() {
     if(this.contractSelected == null){
       Swal.fire('', 'selecciona  un contrato!', 'warning');
-    } else if(this.userSelected.length == 0 &&  this.supervisorSelected == null){
+    } else if(this.userSelected.length == 0 &&  this.supervisorSelected == null && this.userPrincipalSelected == null){
       Swal.fire('', 'Falta información necesaria para la asignación!', 'warning');
     }else{
       if(this.userSelected.length > 0){
@@ -70,6 +70,10 @@ export class AssignmentUserComponent implements OnInit {
       if(this.juridicPrincipalSelected != null){
         this.assignmentUser.push(this.juridicPrincipalSelected);
       }
+      this.assignmentUser = this.assignmentUser.map((assignment) => ({
+        ...assignment,
+        contractId: this.contractSelected,
+    }));
       this._contractorService
         .assignmentUser(this.assignmentUser)
         .pipe(takeUntil(this._unsubscribe$))
@@ -102,7 +106,7 @@ export class AssignmentUserComponent implements OnInit {
     this._auth.getTeams()
     .pipe(takeUntil(this._unsubscribe$))
     .subscribe((Response: TeamModel[]) => {
-      this.users = Response.filter(f => f.rollCode == CodeUser.RECRUITER);
+      this.users = Response.filter(f => f.rollCode == CodeUser.RECRUITER || f.rollCode == CodeUser.SUPERVISORAREAC);
       this.supervisors = Response.filter(f => f.rollCode == CodeUser.SUPERVISOR);
       this.juridics = Response.filter(f => f.rollCode == CodeUser.JURIDICO);
       if(this.users.length == 0 && this.supervisors.length ==0){
@@ -121,24 +125,41 @@ export class AssignmentUserComponent implements OnInit {
 
     });
   }
-  assignmentUserselectedPrincipal(usuario: any) {
+  assignmentUserselectedPrincipal(event: any,usuario: any) {
+    this.findUser(usuario.id,'Principal Contractual',1);
+
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
       assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.RESPONSABLECONTRATOCODE).id
     }
     this.userPrincipalSelected = assignmwntUser;
+    let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
+    if(indexUser == -1){
+      this.userSelected.push(assignmwntUser);
+    }else{
+      this.userSelected.splice(indexUser, 1);
+    }
+
   }
 
-  assignmentUserselectedSecond(usuario: any) {
+  assignmentUserselectedSecond(event: any,usuario: any) {
+    if(event.checked){
+
+    }
+    this.findUser(usuario.id,'Second Contractual',2);
+
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
       assignmentType: this.typesAssignment.find(f => f.code === AssignmentTypeEnumCode.APOYORESPONSABLECONTRATO).id
     }
     let indexUser = this.userSelected.findIndex(f => f.userId ==usuario.id)
+
     if(indexUser < 0){
       this.userSelected.push(assignmwntUser);
+    }else{
+      this.userSelected.splice(indexUser, 1);
     }
   }
   onChangeAdmin(supervisor: any) {
@@ -173,6 +194,7 @@ export class AssignmentUserComponent implements OnInit {
   }
 
   assignmentJuridicselectedPrincipal(usuario: any) {
+    this.findUserJuridic(usuario.id,'Principal Juridic',1);
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
@@ -182,6 +204,7 @@ export class AssignmentUserComponent implements OnInit {
   }
 
   assignmentJuridicSelectedSecond(usuario: any) {
+    this.findUserJuridic(usuario.id,'Second Juridic',2);
     let assignmwntUser: AssignmentUser = {
       contractId: this.contractSelected,
       userId: usuario.id,
@@ -192,6 +215,57 @@ export class AssignmentUserComponent implements OnInit {
       this.userSelected.push(assignmwntUser);
     }
   }
+
+  private findUser(id: string, type: string, level: number){
+    if(level == 1){
+      var index = this.users.findIndex(f => f.asign == type && f.id == id);
+      if(index >= 0){
+        this.users[index].asign = '';
+      }else{
+        var indexUserType = this.users.findIndex(f => f.asign == type);
+        var indexUser = this.users.findIndex(f => f.id == id);
+        if(indexUserType >= 0){
+          this.users[indexUserType].asign = '';
+        }
+        this.users[indexUser].asign = type;
+      }    
+    }else{
+      var index2 = this.users.findIndex(f => f.id == id && f.asign == type);
+      if(index2 >=0){
+        this.users[index2].asign = '';
+      }else{
+        var indexId = this.users.findIndex(f => f.id == id);
+        this.users[indexId].asign = type;
+      }
+    }
+
+
+  }
+  
+  private findUserJuridic(id: string, type: string, level: number){
+    if(level == 1){
+      var index = this.juridics.findIndex(f => f.asign == type && f.id == id);
+      if(index >= 0){
+        this.juridics[index].asign = '';
+      }else{
+        var indexUserType = this.juridics.findIndex(f => f.asign == type);
+        var indexUser = this.juridics.findIndex(f => f.id == id);
+        if(indexUserType >= 0){
+          this.juridics[indexUserType].asign = '';
+        }
+        this.juridics[indexUser].asign = type;
+      }    
+    }else{
+      var index2 = this.juridics.findIndex(f => f.id == id && f.asign == type);
+      if(index2 >=0){
+        this.juridics[index2].asign = '';
+      }else{
+        var indexId = this.juridics.findIndex(f => f.id == id);
+        this.juridics[indexId].asign = type;
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();

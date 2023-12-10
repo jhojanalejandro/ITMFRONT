@@ -4,12 +4,14 @@ import {
     Inject,
     ViewEncapsulation,
     ChangeDetectorRef,
-    OnDestroy
+    OnDestroy,
+    ViewChild
 } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
     FormGroup,
+    NgForm,
     Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -30,12 +32,11 @@ const moment = _rollupMoment || _moment;
 @Component({
     selector: 'app-upload-file-contractor',
     templateUrl: './upload-file-contractor.component.html',
-    styleUrls: ['./upload-file-contractor.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+    styleUrls: ['./upload-file-contractor.component.scss']
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
     date = new FormControl(moment());
+    @ViewChild('signInNgForm') uploadNgForm: NgForm;
     monthYear: any;
     shortLink: string = '';
     loading: boolean = false; // Flag variable
@@ -75,10 +76,10 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             'question'
         );
         this.formFile = this._formBuilder.group({
-            file: [null, Validators.required],
-            filesName: [null],
-            typeDoc: [null, Validators.required],
-            description: [null, Validators.required],
+            file: new FormControl(null, Validators.required),
+            filesName: new FormControl(null),
+            typeDoc: new FormControl(null, Validators.required),
+            description: new FormControl(null, Validators.required)
         });
         this.getDaTaContractor();
     }
@@ -96,7 +97,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         this.matDialogRef.close();
     }
 
-    addFileContractor(event) {
+    addFileContractor(event) : void{
         if (this.formFile.invalid) {
             return;
         }
@@ -138,7 +139,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                 },
                 (response) => {
                     this.formFile.enable();
-                    console.log(response);
                     // Set the alert
                     swal.fire(
                         'Error',
@@ -192,10 +192,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getDocumentType()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((res) => {
-
                 if (res != null) {
                     this.typeDocs = res;
-
                     this.gevalidateDocument();
                 }
             }
@@ -204,7 +202,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
 
     private getDaTaContractor(): any {
         this._contractorListService
-            .getContractorByIdProject(this._data.contractId,false)
+            .getContractorByIdProject(this._data.contractId,this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
                 this.dataContractor = resp;
@@ -223,7 +221,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((resp) => {
-                debugger
                 if (!resp.activateTermContract && !resp.activateTermPayments) {
                     swal.fire(
                         '',
@@ -232,7 +229,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     );
                     this.cerrar();
                 }
-                if (resp.hv && resp.secop && resp.exam && !resp.activateTermPayments) {
+                if (resp.dct && resp.hv && resp.secop && resp.exam && !resp.activateTermPayments) {
                     swal.fire(
                         '',
                         'ya se cargaron los tres documentos no puedes cargar mas!',
@@ -263,7 +260,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             );
         return this.dataContractor;
     }
-
 
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();

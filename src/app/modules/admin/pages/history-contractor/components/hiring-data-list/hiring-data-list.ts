@@ -7,16 +7,9 @@ import { HistoryContractorComponent } from '../../history-contractor.component';
 })
 export class HiringDataListComponent
 {
-    /**
-     * Constructor
-     */
     constructor(private _guidesComponent: HistoryContractorComponent)
     {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Toggle the drawer

@@ -86,7 +86,7 @@ export class ShareService {
         }
 
         return this.Decenas(decenas);
-    }//Centenas()
+    }
 
     Seccion(num, divisor, strSingular, strPlural) {
         let cientos = Math.floor(num / divisor)
@@ -118,7 +118,7 @@ export class ShareService {
             return strCentenas;
 
         return strMiles + ' ' + strCentenas;
-    }//Miles()
+    }
 
     Millones(num) {
         let divisor = 1000000;
@@ -132,7 +132,7 @@ export class ShareService {
             return strMiles;
 
         return strMillones + ' ' + strMiles;
-    }//Millones()
+    }
 
     calcularDiferencia(fechaInicio: Date, fechaFin: Date) {
         let fechaInicios = new Date(fechaInicio);
@@ -166,8 +166,16 @@ export class ShareService {
         } else {
             const millonesParte = this.Millones(data.enteros);
             const monedaParte = data.enteros === 1 ? data.letrasMonedaSingular : data.letrasMonedaPlural;
+            let resultado = millonesParte;
+            // Verificar si se debe agregar "DE"
+            const milesParte = data.enteros % 1000000;
     
-            return millonesParte + ' ' + (data.enteros === 1 ? '' : 'DE') + ' ' + monedaParte;
+            if (milesParte === 0) {
+                resultado += ' DE';
+            }
+        
+            resultado += ' ' + monedaParte;
+            return resultado;
         }
     }
     

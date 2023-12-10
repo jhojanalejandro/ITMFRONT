@@ -6,6 +6,7 @@ import { FileManagerService } from 'app/modules/admin/apps/file-manager/services
 import { Item } from 'app/modules/admin/apps/file-manager/file-manager.types';
 import { FormControl } from '@angular/forms';
 import { Subject, takeUntil, switchMap, Observable, startWith, map } from 'rxjs';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
     selector: 'file-manager-list',
@@ -22,6 +23,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy {
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
     contractId: string = null;
+    selection = new SelectionModel<any>(true, []);
 
     /**
      * Constructor
@@ -112,4 +114,27 @@ export class FileManagerListComponent implements OnInit, OnDestroy {
     }
 
 
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+            row.Id + 1
+        }`;
+    }
+
+    isAllSelected() {
+
+        const numSelected = this.selection.selected.length;
+        const numRows = this.items.folders.length;
+        return numSelected === numRows;
+    }
+
+    masterToggle() {
+        if (this.isAllSelected()) {
+            this.selection.clear();
+            return;
+        }
+        this.selection.select(...this.items.folders);
+    }
 }

@@ -7,6 +7,8 @@ import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ListFolderContractorService } from '../services/list-folder-contractor.service';
 import { RegisterFolderComponent } from '../components/register-folder/register-folder.component';
+import { UploadFileContractComponent } from '../components/upload-file-contract/upload-file-contract.component';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
     selector: 'list-folder-contractor',
@@ -24,10 +26,9 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
     searchInputControl: FormControl = new FormControl();
     filteredStreets: Observable<string[]>;
     contractId: string = null;
+    selection = new SelectionModel<any>(true, []);
+    contractorListId: any[] = [];
 
-    /**
-     * Constructor
-     */
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -115,8 +116,8 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             });
     }
 
-    route(route: any) {
-        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + route]);
+    route(route: any, name: string) {
+        this._router.navigate(['/apps/file-manager/folders/files/' + this.contractId + '/contratista/' + route + '/' + name]);
     }
 
     crearCarpeta() {
@@ -142,6 +143,51 @@ export class ListFolderContractorComponent implements OnInit, OnDestroy {
             this._router.navigateByUrl(currentUrl);
         });
     }
+
+    uploadFile() {
+        this.selection.selected.forEach((element) => {
+            this.contractorListId.push(element.id);
+        });
+        const dialogRef = this._matDialog.open(UploadFileContractComponent, {
+            disableClose: true,
+            autoFocus: false,
+            data: {
+                origin: 'share',
+                contractId: this.contractId,
+                show: false,
+                contractorsId: this.contractorListId
+            },
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.reloadResolve();
+            }
+        });
+    }
+
+    checkboxLabel(row?: any): string {
+        if (!row) {
+            return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+        }
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+            row.Id + 1
+        }`;
+    }
+
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.items.folders.length;
+        return numSelected === numRows;
+    }
+
+    masterToggle() {
+        if (this.isAllSelected()) {
+            this.selection.clear();
+            return;
+        }
+        this.selection.select(...this.items.folders);
+    }
+    
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);

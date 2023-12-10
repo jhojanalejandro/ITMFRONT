@@ -6,7 +6,6 @@ import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import Swal from 'sweetalert2';
 import { ContractContractors } from 'app/modules/admin/dashboards/contractual/models/contractor';
-import { FileContractor } from 'app/layout/common/models/file-contractor';
 
 @Injectable({
     providedIn: 'root'
@@ -66,6 +65,29 @@ export class FileListManagerService {
             .set('folderId', folderId)
             .set('contractId', contractId);
         let urlEndPoint = this.apiUrl + environment.GetAllFileByFolderContractorEndpoint;
+        return this._httpClient.get<DataFile[]>(urlEndPoint, { params: params }).pipe(
+            tap((items) => {
+                this._listFileContractor.next(items);
+
+            }),
+            switchMap((item) => {
+
+                if (!item) {
+                    return throwError('No se pudo encontrar item con id of ' + contractorId + '!');
+                }
+
+                return of(item);
+            })
+        );
+    }
+
+    
+    getFileByContractorToDownload(contractId: string | null = null, contractorId: any | null = null, folderId: string | null = null): Observable<DataFile[]> {
+        const params = new HttpParams()
+            .set('contractorId', contractorId)
+            .set('folderId', folderId)
+            .set('contractId', contractId);
+        let urlEndPoint = this.apiUrl + environment.GetFileContractorByFolderToDownloadEndpoint;
         return this._httpClient.get<DataFile[]>(urlEndPoint, { params: params }).pipe(
             tap((items) => {
                 this._listFileContractor.next(items);

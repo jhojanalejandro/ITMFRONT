@@ -2,10 +2,13 @@ import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDest
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { map, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { DetailFileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
+import { AuthService } from 'app/core/auth/auth.service';
+import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
+import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
   selector: 'app-observation-file',
@@ -28,7 +31,12 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     'Error en la información',
     'Error Ortografico',
   ];
+  permission: boolean = false;
   observationfile: any;
+  alert: { type: FuseAlertType; message: string } = {
+    type: 'warn',
+    message: ''
+  };
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -43,11 +51,23 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     private _uploadService: UploadFileDataService,
     public matDialogRef: MatDialogRef<ObservationFileComponent>,
     private _formBuilder: FormBuilder,
+    private _auth: AuthService,
     @Inject(MAT_DIALOG_DATA) private _data
   ) { }
 
   ngOnInit(): void {
-    console.log(this._data);
+    const isAuthenticated = this._auth.isAuthenticatedUser();
+    this.permission = this._auth.validateRoll(CodeUser.JURIDICO, null);
+    // this.getAdmins();
+    if (!this.permission) {
+      Swal.fire('', 'No tienes permisos para aprobar documentos!', 'warning');
+    } else {
+      if (isAuthenticated) {
+        Swal.fire('', 'Hay otro usuario juridico interactuando!', 'warning');
+      } else {
+        this._auth.setAuthenticated(true);
+      }
+    }
     this.observationfile = this._data.files;
     this.formFile = this._formBuilder.group({
       motivo: new FormControl(null, Validators.required),
@@ -66,7 +86,14 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
   }
 
   AddObservationFile() {
-
+    if (this.formFile.invalid) {
+      this.alert = {
+        type: 'error',
+        message: 'ERROR EN LA INFORMACION'
+      };
+      this.showAlert = true;
+      return
+    }
     let detailFile: DetailFileContractor = {
       fileId: this._data.id,
       observation: this.formFile.value.observation,
@@ -80,11 +107,13 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
       userId: this._data.userId,
       termDate: this.formFile.value.termDate
     }
+    this.formFile.disable();
+
     this._uploadService.addObservationDetailFile(detailFile)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
         if (res) {
-          swal.fire({
+          Swal.fire({
             position: 'center',
             icon: 'success',
             title: '',
@@ -96,8 +125,9 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
         }
       },
         (response) => {
+          this.formFile.enable();
           console.log(response);
-          swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+          Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
         });
   }
 

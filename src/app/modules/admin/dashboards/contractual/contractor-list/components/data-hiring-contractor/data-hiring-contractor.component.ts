@@ -13,7 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AsignmentData } from '../../../models/contractor';
 import { Activity, DetalleContrato, ElementComponent, Elements } from 'app/modules/admin/pages/planing/models/planing-model';
 import { PlaningService } from 'app/modules/admin/pages/planing/service/planing.service';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { eachMonthOfInterval, getDaysInMonth } from 'date-fns';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { fuseAnimations } from '@fuse/animations';
@@ -80,15 +80,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     public matDialogRef: MatDialogRef<ContractorDataHiringComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any, private _formBuilder: FormBuilder
-  ) {
-
-
-  }
+  ) { }
 
   ngOnInit(): void {
     this._initData();
     if (this.datos != null) {
-      if(this.datos.statusContractor === 'INHABILITADO'){
+      if (this.datos.statusContractor === 'INHABILITADO') {
         Swal.fire(
           '',
           'Usuario INHABILITADO',
@@ -109,8 +106,10 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         this.activitySelectId = this.datos.activityId;
         this.visibleActivity = true;
       }
-      this.datos.idContractors.push(this.datos.id);
-    } else{
+      if (this.datos.id != null) {
+        this.datos.idContractors.push(this.datos.id);
+      }
+    } else {
       if (this.datos.idContractors.length == 0) {
         Swal.fire(
           'Ei!',
@@ -124,10 +123,10 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
           'Hay un error al ingresar, intenta de nuevo',
           'warning'
         );
+      }
+
     }
 
-    } 
-    
     this.permission = this._auth.validateRoll(CodeUser.RECRUITER, this.datos.assignmentUser);
     // this.getAdmins();
     if (!this.permission) {
@@ -137,7 +136,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
 
   }
 
-  private _initData(){
+  private _initData() {
     this.formContractor = this._formBuilder.group({
       contrato: new FormControl(null),
       compromiso: new FormControl(null),
@@ -152,11 +151,11 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       valorAsegurado: new FormControl(null),
       fechaExamenPreocupacional: new FormControl(null),
       nivel: new FormControl(null),
-      fechaFinalizacionConvenio: new FormControl(null, Validators.required),
+      fechaFinalizacionConvenio: new FormControl(null),
       elemento: new FormControl(null, Validators.required),
       componente: new FormControl(null, Validators.required),
       totalContrato: new FormControl(null),
-      activity: new FormControl(null),
+      activity: new FormControl({ value: null, disabled: this.visibleActivity }),
       cdp: new FormControl(null),
       caso: new FormControl(null),
       activityContract: new FormControl(null),
@@ -172,6 +171,9 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   }
 
   updateContractor() {
+    if (this.formContractor.invalid) {
+      return;
+    }
     if (this.formContractor.value.requierePoliza == 'si') {
       this.formContractor.value.requierePoliza = true;
     } else {
@@ -212,8 +214,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res.success) {
-          if(this.componentselectId != this.datos.componentId){
-            this.saveAsignmentElement().then(() =>{
+          if (this.componentselectId != this.datos.componentId) {
+            this.saveAsignmentElement().then(() => {
               this.asignmentElement();
             });
           }
@@ -263,13 +265,13 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .subscribe((response) => {
         if (response.success) {
           this.componentes.push(response.data);
-          if (this.componentes[0].activities  != null) {
+          if (this.componentes[0].activities != null) {
             this.activities = this.componentes[0].activities;
           }
           if (this.componentes[0].elementos != null) {
             this.elements = this.componentes[0].elementos;
           }
-        }else{
+        } else {
           Swal.fire({
             position: 'center',
             icon: 'warning',
@@ -288,7 +290,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         });
       });
   }
-
 
   asignActivity(e: any) {
     this.activitySelectId = e.value;
@@ -325,8 +326,11 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
   }
 
   sendEconomicdataContractor() {
+    if (this.formContractor.invalid) {
+      return;
+    }
     this.formContractor.disable();
-    if(this.valorContrato == null || this.valorContrato == 0){
+    if (this.valorContrato == null || this.valorContrato == 0) {
       this.calculateContratcValue();
     }
     if (this.elementselectId != null) {
@@ -353,7 +357,6 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       this._planingService.sendEconomicdataContractor(this.economicDataList)
         .pipe(takeUntil(this._unsubscribe$))
         .subscribe((response) => {
-          debugger
           if (response.success) {
             Swal.fire('', response.message, 'success');
             if (this.update) {
@@ -399,7 +402,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
             fechaInicioReal: response.data.fechaRealDeInicio,
             numeroActa: response.data.numeroActa,
             fechaComite: response.data.fechaDeComite,
-            requierePoliza: response.data.requierePoliza ?  'Si' : 'No',
+            requierePoliza: response.data.requierePoliza ? 'Si' : 'No',
             noPoliza: response.data.noPoliza,
             vigenciaInicial: response.data.vigenciaInicial,
             vigenciaFinal: response.data.vigenciaFinal,
@@ -454,6 +457,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
         }
       })
   }
+
   calculateDaysBetweenDates(startDate: Date, endDate: Date): number {
     if (startDate == null) {
       startDate = this.formContractor.value.fechaRealDeInicio;
@@ -493,9 +497,12 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       element = this.elements.find(item => item.id === this.elementselectId);
     }
     this.showTotal = true;
-    let cantidadDias = this.calculateDaysBetweenDates(this.minDate, this.formContractor.value.fechaFinalizacionConvenio);
-    this.valorContrato = element.valorPorDiaContratista * cantidadDias;
-    this.valorTotalContrato = (+this.valorContrato.toFixed(0)).toLocaleString();
+    if (this.minDate != null && this.formContractor.value.fechaFinalizacionConvenio != null) {
+      let cantidadDias = this.calculateDaysBetweenDates(this.minDate, this.formContractor.value.fechaFinalizacionConvenio);
+      this.valorContrato = element.valorPorDiaContratista * cantidadDias;
+      this.valorTotalContrato = (+this.valorContrato.toFixed(0)).toLocaleString();
+    }
+
   }
 
   private validateDate() {
@@ -505,7 +512,8 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
 
     this.twoYearAgoExam = minDate; // Comprueba si la fecha es anterior a la mínima permitida
   }
-  private async saveAsignmentElement(): Promise<void>{
+
+  private async saveAsignmentElement(): Promise<void> {
     return await new Promise(async (rslv) => {
       let asignar: AsignmentData = {
         contractId: this.datos.contractId,
@@ -529,7 +537,7 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
     });
   }
 
-  private asignmentElement(){
+  private asignmentElement() {
     let asignar: AsignmentData = {
       contractId: this.datos.contractId,
       id: this.elementselectId,
@@ -628,6 +636,11 @@ export class ContractorDataHiringComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribe$))
       .subscribe((res) => {
         if (res.success) {
+          if (this.componentselectId != this.datos.componentId) {
+            this.saveAsignmentElement().then(() => {
+              this.asignmentElement();
+            });
+          }
           Swal.fire({
             position: 'center',
             icon: 'success',

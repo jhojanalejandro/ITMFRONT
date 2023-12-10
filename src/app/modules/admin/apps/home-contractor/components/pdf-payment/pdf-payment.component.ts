@@ -1,4 +1,13 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import html2canvas from 'html2canvas';
 import htmlToPdfmake from 'html-to-pdfmake';
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -9,10 +18,11 @@ import { Subject } from 'rxjs';
 import { ChargeAccount, ExecutionReport } from '../../models/pdfDocument';
 import { ShareService } from 'app/layout/common/share-service/share-service.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as pdf from 'pdf-parse';
 
 @Component({
     selector: 'app-cuenta-cobro',
-    templateUrl: './pdf-payment.component.html'
+    templateUrl: './pdf-payment.component.html',
 })
 export class PdfPaymentComponent implements OnInit, OnDestroy {
     @ViewChild('pdfTable') pdfTable: ElementRef;
@@ -33,16 +43,23 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
 
     // dataCuenta: Contractor = { tipoContratacion: '', codigo: '', convenio: '', fechaInicio: '', fechaFin: '', nombre: '', apellido: '', identificacion: '', lugarExpedicion: '', fechaNacimiento: new Date(), direccion: '', departamento: '', municipio: '', telefono: '', celular: '', correo: '', cuentaBancaria: '', tipoCuenta: '', entidadCuentaBancaria: '', from: new Date(), to: new Date(),uniTValue: 0, company: ''}
 
-    constructor(private datepipe: DatePipe,
-        private _shareService: ShareService) {
-    }
+    constructor(
+        private datepipe: DatePipe,
+        private _shareService: ShareService
+    ) { }
 
     ngOnInit(): void {
-        console.log(this.chargeAccountData);
+        this.valueLetter = this._shareService.numeroALetras(
+            this.chargeAccountData.totalValue,
+            'PESOS'
+        );
         if (this.chargeAccountData != null && this.typeGenerator == 'charge') {
             this.downloadPDFChargeAccount();
             this.onGeneratePdf.emit(false);
-        } else if (this.typeGenerator == 'report' && this.executionReportData != null) {
+        } else if (
+            this.typeGenerator == 'report' &&
+            this.executionReportData != null
+        ) {
             this.downloadPDFInforme();
             this.onGeneratePdf.emit(false);
         } else {
@@ -50,7 +67,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
             this.downloadPDFChargeAccount();
             this.onGeneratePdf.emit(false);
         }
-        this.valueLetter = this._shareService.numeroALetras(this.chargeAccountData.totalValue, 'PESOS');
+
     }
 
     public downloadPDF() {
@@ -89,9 +106,12 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         });
     }
     private downloadPDFChargeAccount() {
-        let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd'); 
+        let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
         this.validateValuesPDFChargeAccount();
-        this.valueLetter = this._shareService.numeroALetras(this.chargeAccountData.totalValue, 'PESOS')
+        this.valueLetter = this._shareService.numeroALetras(
+            this.chargeAccountData.totalValue,
+            'PESOS'
+        );
         const documentDefinition = {
             content: [
                 {
@@ -117,17 +137,21 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     alignment: 'center',
                                 },
                             ],
-                            [{
-                                text: '',
-                                alignment: 'center',
-                            }, {
-                                text: latest_date,
-                                alignment: 'center',
-                            }, {
-                                text: this.chargeAccountData.chargeAccountNumber,
-                                alignment: 'center',
-                            },],/*  */
-
+                            [
+                                {
+                                    text: '',
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: latest_date,
+                                    alignment: 'center',
+                                },
+                                {
+                                    text: this.chargeAccountData
+                                        .chargeAccountNumber,
+                                    alignment: 'center',
+                                },
+                            ] /*  */,
                         ],
                     },
                 },
@@ -163,8 +187,8 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 {
                                     text: 'TELÉFONO: 4403208',
                                     alignment: 'center',
-                                }
-                            ],/*  */
+                                },
+                            ] /*  */,
                         ],
                     },
                 },
@@ -194,7 +218,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     text: '',
-                                }
+                                },
                             ],
                             [
                                 {
@@ -218,7 +242,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     text: '',
-                                }
+                                },
                             ],
                             [
                                 {
@@ -248,7 +272,8 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     style: 'marginb',
                                 },
                                 {
-                                    text: this.chargeAccountData.contractorIdentification,
+                                    text: this.chargeAccountData
+                                        .contractorIdentification,
                                     alignment: 'center',
                                     style: 'marginb',
                                 },
@@ -268,7 +293,8 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     style: 'marginb',
                                 },
                                 {
-                                    text: this.chargeAccountData.expeditionIdentification,
+                                    text: this.chargeAccountData
+                                        .expeditionIdentification,
                                     alignment: 'center',
                                     style: 'marginb',
                                 },
@@ -296,7 +322,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     text: this.chargeAccountData.phoneNumber,
-                                    alignment: 'center'
+                                    alignment: 'center',
                                 },
                             ],
                         ],
@@ -314,7 +340,9 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     colSpan: 2,
-                                    text: 'Contrato de prestación de servicios como ' + this.chargeAccountData.elementName,
+                                    text:
+                                        'Contrato de prestación de servicios como ' +
+                                        this.chargeAccountData.elementName,
                                     alignment: 'center',
                                 },
                                 {
@@ -327,7 +355,9 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     style: 'marginb',
                                 },
                                 {
-                                    text: 'N° - ' + this.chargeAccountData.contractNumber,
+                                    text:
+                                        'N° - ' +
+                                        this.chargeAccountData.contractNumber,
                                     style: 'marginb',
                                     alignment: 'center',
                                 },
@@ -343,7 +373,13 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     colSpan: 2,
-                                    text: 'del ' + this.chargeAccountData.periodExecutedInitialDate + ' al ' + this.chargeAccountData.periodExecutedFinalDate,
+                                    text:
+                                        'del ' +
+                                        this.chargeAccountData
+                                            .periodExecutedInitialDate +
+                                        ' al ' +
+                                        this.chargeAccountData
+                                            .periodExecutedFinalDate,
                                     alignment: 'center',
                                 },
                                 {
@@ -377,13 +413,30 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: '',
                                     alignment: 'center',
                                 },
-                            ]
+                            ],
                         ],
                     },
                 },
-                { text: '\n\nFIRMA: ' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] },
-                { text: this.chargeAccountData.contractorName }, { text: 'C.C : \t' + this.chargeAccountData.contractorIdentification }
-
+                { text: '\n\nFIRMA: ' },
+                {
+                    canvas: [
+                        {
+                            type: 'line',
+                            x1: 0,
+                            y1: 1,
+                            x2: 300 - 2 * 40,
+                            y2: 1,
+                            lineWidth: 1,
+                            margin: [5, 0],
+                        },
+                    ],
+                },
+                { text: this.chargeAccountData.contractorName },
+                {
+                    text:
+                        'C.C : \t' +
+                        this.chargeAccountData.contractorIdentification,
+                },
             ],
             styles: {
                 header: {
@@ -413,26 +466,31 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                     margin: [0, 10, 0, 0],
                     alignment: 'bottom',
                 },
-            }
+            },
         };
         let test = pdfMake
             .createPdf(documentDefinition)
-            .download(this.chargeAccountData.contractorName + 'CUENTADECOBRO.pdf');
+            .download(
+                this.chargeAccountData.contractorName + 'CUENTADECOBRO.pdf'
+            );
         console.log(test);
         this.onGeneratePdf.emit(false);
     }
 
     private downloadPDFInforme() {
-        
         this.validateValuesPDFInforme();
         let day = this.datepipe.transform(this.date, 'dd');
         let month = this.datepipe.transform(this.date, 'MM');
         let year = this.datepipe.transform(this.date, 'YYYY');
 
         let latest_date = this.datepipe.transform(this.date, 'yyyy-MM-dd');
-       
-        let plazo = this._shareService.calcularDiferencia(this.executionReportData.contractInitialDate, this.executionReportData.contractFinalDate)
-        this.specificObligation = this.executionReportData.specificObligations.split('->');
+
+        let plazo = this._shareService.calcularDiferencia(
+            this.executionReportData.contractInitialDate,
+            this.executionReportData.contractFinalDate
+        );
+        this.specificObligation =
+            this.executionReportData.specificObligations.split('->');
         for (let index = 0; index < this.specificObligation.length; index++) {
             this.listaData[index] = [
                 {
@@ -445,8 +503,8 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                 {
                     text: 'Correos electrónicos',
                     alignment: 'center',
-                }
-            ]
+                },
+            ];
         }
         const documentDefinition = {
             content: [
@@ -465,70 +523,82 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                 },
                                 {
                                     text: '',
-                                }
+                                },
                             ],
                             [
                                 {
                                     text: 'NOMBRE DEL CONTRATISTA',
                                     style: 'tableHeader',
-                                }, {
-                                    text: this.executionReportData.contractorName,
-                                }
+                                },
+                                {
+                                    text: this.executionReportData
+                                        .contractorName,
+                                },
                             ],
                             [
                                 {
                                     text: 'NÚMERO DEL CONTRATO',
                                     style: 'tableHeader',
-                                }, {
-                                    text: this.executionReportData.contractNumber,
-                                }
+                                },
+                                {
+                                    text: this.executionReportData
+                                        .contractNumber,
+                                },
                             ],
                             [
                                 {
                                     text: 'FECHA DE INICIO',
                                     style: 'tableHeader',
-                                }, {
+                                },
+                                {
                                     text: this.valueInitialDate,
-                                }
+                                },
                             ],
                             [
                                 {
                                     text: 'PLAZO',
                                     style: 'tableHeader',
-                                }, {
+                                },
+                                {
                                     text: plazo,
-                                }
+                                },
                             ],
                             [
                                 {
                                     text: 'OBJETO',
                                     style: 'tableHeader',
-                                }, {
-                                    text: ['Prestación de servicios como contratista',
+                                },
+                                {
+                                    text: [
+                                        'Prestación de servicios como contratista',
                                         'independiente, sin vínculo laboral por su propia cuenta',
                                         'y riesgo para realizar la gestión de Apoyo asistencial',
                                         'de logística y procesos administrativos en ejecución',
                                         'del Contrato Interadministrativo No. 4600094924 de',
                                         '2022, celebrado entre el Distrito Especial de Ciencia',
                                         'Tecnología e Innovación de Medellín y el',
-                                        'Departamento Administrativo de Planeación']
-                                }
+                                        'Departamento Administrativo de Planeación',
+                                    ],
+                                },
                             ],
                             [
                                 {
                                     text: 'VALOR DEL CONTRATO',
                                     style: 'tableHeader',
-                                }, {
+                                },
+                                {
                                     text: this.executionReportData.totalValue,
-                                }
+                                },
                             ],
                             [
                                 {
                                     text: 'SUPERVISOR ITM',
                                     style: 'tableHeader',
-                                }, {
-                                    text: this.executionReportData.supervisorContract,
-                                }
+                                },
+                                {
+                                    text: this.executionReportData
+                                        .supervisorContract,
+                                },
                             ],
                         ],
                     },
@@ -544,7 +614,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                                     text: 'OBLIGACIONES ESPECIFICAS SEGÚN CONTRATO',
                                     alignment: 'center',
                                     style: 'tableHeader',
-
                                 },
                                 {
                                     text: 'EJECUCION O DESARROLLO DE LAS OBLIGACIONES ESPECIFICAS SEGÚN CONTRATO',
@@ -702,14 +771,65 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
                         ],
                     },
                 },
-                { text: '\n\n PERIODO EJECUTADO: \t\t\t' + 'del ' + this.executionReportData.periodExecutedInitialDate + ' al ' + this.executionReportData.periodExecutedFinalDate },
-                { text: '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t' + this.executionReportData.totalValue },
-                { text: '\n\n Para constancia se firma en Medellín a los  ' + day + ' días del mes  ' + month + ' del año  ' + year + ' \n\n' },
-                { text: '\n\n' }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [5, 0] }] }, { canvas: [{ type: 'line', x1: 0, y1: 1, x2: 350 - 2 * 40, y2: 1, lineWidth: 1, margin: [15, 15, 5, 5] }] },
+                {
+                    text:
+                        '\n\n PERIODO EJECUTADO: \t\t\t' +
+                        'del ' +
+                        this.executionReportData.periodExecutedInitialDate +
+                        ' al ' +
+                        this.executionReportData.periodExecutedFinalDate,
+                },
+                {
+                    text:
+                        '\n\n VALOR DEL PERIODO A COBRAR: \t\t\t' +
+                        this.executionReportData.totalValue,
+                },
+                {
+                    text:
+                        '\n\n Para constancia se firma en Medellín a los  ' +
+                        day +
+                        ' días del mes  ' +
+                        month +
+                        ' del año  ' +
+                        year +
+                        ' \n\n',
+                },
+                { text: '\n\n' },
+                {
+                    canvas: [
+                        {
+                            type: 'line',
+                            x1: 0,
+                            y1: 1,
+                            x2: 350 - 2 * 40,
+                            y2: 1,
+                            lineWidth: 1,
+                            margin: [5, 0],
+                        },
+                    ],
+                },
+                {
+                    canvas: [
+                        {
+                            type: 'line',
+                            x1: 0,
+                            y1: 1,
+                            x2: 350 - 2 * 40,
+                            y2: 1,
+                            lineWidth: 1,
+                            margin: [15, 15, 5, 5],
+                        },
+                    ],
+                },
                 { text: this.executionReportData.contractorName + '\n' },
-                { text: 'C.C :' + this.executionReportData.contractorIdentification + ' \t' + '\n' },
-                { text: 'Contratista ITM' }
-
+                {
+                    text:
+                        'C.C :' +
+                        this.executionReportData.contractorIdentification +
+                        ' \t' +
+                        '\n',
+                },
+                { text: 'Contratista ITM' },
             ],
             styles: {
                 header: {
@@ -746,7 +866,10 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         };
         let test = pdfMake
             .createPdf(documentDefinition)
-            .download(this.executionReportData.contractorName + 'REPORTEDEEJECUCION.pdf');
+            .download(
+                this.executionReportData.contractorName +
+                'REPORTEDEEJECUCION.pdf'
+            );
         console.log(test);
         this.onGeneratePdf.emit(false);
     }
@@ -764,7 +887,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
             'septiembre',
             'octubre',
             'noviembre',
-            'diciembre'
+            'diciembre',
         ];
 
         const fecha = new Date(value);
@@ -775,21 +898,61 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
         return `${dia} de ${mes} del ${año}`;
     }
 
-
-    private validateValuesPDFInforme(){
-        this.executionReportData.totalValue = Number(this.executionReportData.totalValue).toFixed(0);
-        this.valueInitialDate = this.transformDate(this.executionReportData.contractInitialDate.toString());
-        this.executionReportData.periodExecutedInitialDate = this.transformDate(this.executionReportData.periodExecutedInitialDate);
-        this.executionReportData.periodExecutedFinalDate = this.transformDate(this.executionReportData.periodExecutedFinalDate);
-        this.executionReportData.totalValue = (+this.executionReportData.totalValue).toLocaleString();
-
+    private validateValuesPDFInforme() {
+        this.executionReportData.totalValue = Number(
+            this.executionReportData.totalValue
+        ).toFixed(0);
+        this.valueInitialDate = this.transformDate(
+            this.executionReportData.contractInitialDate.toString()
+        );
+        this.executionReportData.periodExecutedInitialDate = this.transformDate(
+            this.executionReportData.periodExecutedInitialDate
+        );
+        this.executionReportData.periodExecutedFinalDate = this.transformDate(
+            this.executionReportData.periodExecutedFinalDate
+        );
+        this.executionReportData.totalValue = (+this.executionReportData
+            .totalValue).toLocaleString();
     }
-    private validateValuesPDFChargeAccount(){
-        this.chargeAccountData.totalValue = Number(this.chargeAccountData.totalValue).toFixed(0);
-        this.chargeAccountData.periodExecutedInitialDate = this.transformDate(this.chargeAccountData.periodExecutedInitialDate);
-        this.chargeAccountData.periodExecutedFinalDate = this.transformDate(this.chargeAccountData.periodExecutedFinalDate);
-        this.chargeAccountData.totalValue = (+this.chargeAccountData.totalValue).toLocaleString();
+    private validateValuesPDFChargeAccount() {
+        this.chargeAccountData.totalValue = Number(
+            this.chargeAccountData.totalValue
+        ).toFixed(0);
+        this.chargeAccountData.periodExecutedInitialDate = this.transformDate(
+            this.chargeAccountData.periodExecutedInitialDate
+        );
+        this.chargeAccountData.periodExecutedFinalDate = this.transformDate(
+            this.chargeAccountData.periodExecutedFinalDate
+        );
+        this.chargeAccountData.totalValue = (+this.chargeAccountData
+            .totalValue).toLocaleString();
+    }
 
+    downloadWordFile(base64: any) {
+        // Decodifica la cadena base64 en un ArrayBuffer.
+        const byteCharacters = atob(base64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+
+        // Crea un Blob a partir del ArrayBuffer decodificado.
+        const blob = new Blob([byteArray], { type: 'application/msword' });
+
+        // Crea una URL de datos para el Blob.
+        const url = window.URL.createObjectURL(blob);
+
+        // Crea un enlace de descarga y simula un clic en él para iniciar la descarga.
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'documento.docx'; // Nombre del archivo para la descarga
+        document.body.appendChild(a);
+        a.click();
+
+        // Limpia la URL de datos y elimina el enlace de descarga.
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     }
     ngOnDestroy(): void {
         this._unsubscribeAll.complete();

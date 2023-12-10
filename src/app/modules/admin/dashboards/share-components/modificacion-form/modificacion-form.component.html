@@ -1,0 +1,203 @@
+<div class="flex-col max-w-220 md:min-w-120 -m-6">
+    <div class="flex-col max-w-220 md:min-w-120">
+        <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+            <div class="text-lg font-medium">Registro Modificacion</div>
+            <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+                <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+            </button>
+        </div>
+        <mat-dialog-content style="margin: 0px; padding: 0px;">
+
+            <!-- Card form -->
+            <form class="flex flex-col flex-0 items-start w-full p-4 sm:p-4 space-y-3 overflow-y-auto"
+                [formGroup]="modifyForm">
+
+                <div>
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
+                        <mat-label>Fecha Inicio Contrato</mat-label>
+                        <input matInput id="initialDateContract" (dateChange)="dateChange($event)" autocomplete="off"
+                            formControlName="initialDateContract" [matDatepicker]="pickerFCo">
+                        <mat-datepicker #pickerFCo></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerFCo"></mat-datepicker-toggle>
+                        <mat-error *ngIf="modifyForm.get('initialDateContract').hasError('required')">
+                            Este Campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
+                        <mat-label>Fecha Final Contrato</mat-label>
+                        <input matInput id="finalDateContract" autocomplete="off" formControlName="finalDateContract"
+                            [matDatepicker]="pickerFCo">
+                        <mat-datepicker #pickerFCo></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerFCo"></mat-datepicker-toggle>
+                        <mat-error *ngIf="modifyForm.get('finalDateContract').hasError('required')">
+                            Este Campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <!-- <mat-form-field class="field" appearance="fill">
+                        <mat-label>Fecha Modificación</mat-label>
+                        <mat-select [formControlName]="'fechaModificacion'" name="adicion">
+                            <mat-option *ngFor="let adicion of dateAdiction$ | async"
+                                [value]="adicion.fechaFinalizacion">
+                                {{adicion.fechaFinalizacion | date}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                        <mat-error *ngIf="modifyForm.get('fechaModificacion').hasError('required')">
+                            El Campo Fecha es requerido
+                        </mat-error>
+                    </mat-form-field> -->
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
+                        <mat-label>Fecha Inicio Ampliacion</mat-label>
+                        <input matInput id="initialAdditionDate" [min]="dateAdiction.fechaFinalizacion" [max]="maxdate"
+                            (dateChange)="dateChangeInitial($event)" autocomplete="off"
+                            formControlName="initialAdditionDate" [matDatepicker]="pickerFCo">
+                        <mat-datepicker #pickerFCo></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerFCo"></mat-datepicker-toggle>
+                        <mat-error *ngIf="modifyForm.get('initialAdditionDate').hasError('required')">
+                            Este Campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
+                        <mat-label>Fecha Final Ampliacion</mat-label>
+                        <input matInput id="finalAdditionDate" [min]="minDateFinal" autocomplete="off"
+                            formControlName="finalAdditionDate" [matDatepicker]="pickerFCo">
+                        <mat-datepicker #pickerFCo></mat-datepicker>
+                        <mat-datepicker-toggle matSuffix [for]="pickerFCo"></mat-datepicker-toggle>
+                        <mat-error *ngIf="modifyForm.get('finalAdditionDate').hasError('required')">
+                            Este Campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Tipo Modidicacion</mat-label>
+                        <mat-select formControlName="modificationType"
+                            (selectionChange)="selectmodificacion($event)" name="modificationType">
+                            <mat-option *ngFor="let tipo of tipoModificacion" [value]="tipo.id">
+                                {{tipo.minuteTypeDescription}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
+                        </mat-icon>
+                        <mat-error *ngIf="modifyForm.get('modificationType').hasError('required')">
+                            El Campo Tipo de opcion es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="modifyName" appearance="fill">
+                        <mat-label>Nombre Elemento</mat-label>
+                        <input type="text" id="elementName" formControlName="elementName" autocomplete="off" matInput
+                            placeholder="Nombre Elemento">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                        <mat-error *ngIf="modifyForm.get('elementName').hasError('required')">
+                            El Campo es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Recursos Adicionales</mat-label>
+                        <span matPrefix>$</span>
+                        <input id="resources" formControlName="resources" autocomplete="off" matInput placeholder="Recuros">
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Cantidad Días</mat-label>
+                        <input type="number" id="cantDay" formControlName="cantDay" autocomplete="off" matInput
+                            placeholder="Cantidad Días">
+                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Valor Unidad(pago mensual)</mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text" id="unitValue" formControlName="unitValue" autocomplete="off" matInput
+                            placeholder="Valor Unidad">
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Valor que se debe</mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text" formControlName="unitValueDay" autocomplete="off" matInput
+                            placeholder="Valor por Día">
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Valor Total Contrato</mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text" id="totalValue" formControlName="totalValue" autocomplete="off" matInput
+                            placeholder="Valor Total">
+                    </mat-form-field>
+
+                </div>
+                <div *ngIf="isAddition">
+                    <mat-form-field class="modifyfield"  appearance="fill">
+                        <mat-label>Valor a adicionar</mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text" (change)="onChangeTotalValue($event)" id="additionValue"
+                            formControlName="additionValue" autocomplete="off" matInput placeholder="Valor adición">
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield"  appearance="fill">
+                        <mat-label>Número adición</mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text"  id="noAddition"
+                            formControlName="noAddition" autocomplete="off" matInput placeholder="Número adición">
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield"  appearance="fill">
+                        <mat-label>Total Exacto</mat-label>
+                        <span matPrefix>$</span>
+                        <input type="text" id="calculateValue"
+                            formControlName="calculateValue" autocomplete="off" matInput placeholder="Valor Exacto">
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="showModify" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>Objeto</mat-label>
+                        <textarea type="text" class="example-full-width" id="elementObject"
+                            formControlName="elementObject" autocomplete="off" matInput
+                            placeholder="Descripcion"></textarea>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="showModify" [hidden]="true" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>Perfil academico</mat-label>
+                        <textarea noLineBreaks type="text" class="example-full-width" id="academicProfile"
+                            formControlName="academicProfile" autocomplete="off" matInput
+                            placeholder="Perfil academico"></textarea>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="showModify" [hidden]="true" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>Perfil Profesional</mat-label>
+                        <textarea noLineBreaks type="text" class="example-full-width" id="profesionalProfile"
+                            formControlName="profesionalProfile" autocomplete="off" matInput
+                            placeholder="Perfil Profesional"></textarea>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="showModify" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>obligaciones Especificas</mat-label>
+                        <textarea type="text"  class="example-full-width"
+                            id="specificObligations" formControlName="specificObligations" autocomplete="off" matInput
+                            placeholder="Descripcion"></textarea>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="showModify" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>obligaciones Generales</mat-label>
+                        <textarea type="text"  class="example-full-width"
+                            id="generalObligations" formControlName="generalObligations" autocomplete="off" matInput
+                            placeholder="Descripcion"></textarea>
+                    </mat-form-field>
+                </div>
+            </form>
+        </mat-dialog-content>
+
+        <mat-dialog-actions align="end">
+            <button mat-flat-button type="button" [color]="'warn'" [mat-dialog-close]="false">Cancelar</button>
+            <button class="m-5 bg-green-600" mat-flat-button type="button" (click)="calculate()">Calcular</button>
+            <button class="m-2" mat-flat-button [color]="'primary'" type="submit" (click)="addModify()">Guardar</button>
+        </mat-dialog-actions>
+    </div>
+</div>

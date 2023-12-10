@@ -17,13 +17,12 @@ import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 import { CategoryFile, DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { DataFile } from '../file-manager.types';
+import { RollCodeEnum } from 'app/layout/common/enums/userEnum/route-image';
 
 
 @Component({
     selector: 'file-list',
     templateUrl: './file-list.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListComponent implements OnInit, OnDestroy {
     checked = false;
@@ -61,6 +60,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         userId: null,
         contractId: '',
     }
+    contarctorName: string = '';
+
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -73,6 +74,13 @@ export class FileListComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
+        this._auth.userPresence$.subscribe(({ code, rol, presente }) => {
+            if (presente && rol == RollCodeEnum.JURIDICO ,code ) {
+              alert('¡Otro usuario con los mismos parámetros está presente en este componente!');
+            }
+          });
+        //   this.userPresenceService.setUserPresence(Math.floor(10000 + Math.random() * 90000), this._auth.a, true);
+
         const isAuthenticated = this._auth.isAuthenticatedUser();
         this.permission = this._auth.validateRoll(CodeUser.JURIDICO, null);
         // this.getAdmins();
@@ -90,6 +98,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         this.contractId = this._activatedRoute.snapshot.paramMap.get('contractId') || 'null';
         this.folderId = this._activatedRoute.snapshot.paramMap.get('folderId') || 'null';
         this.folderName = this._activatedRoute.snapshot.paramMap.get('folderName') || 'null';
+        this.contarctorName = this._activatedRoute.snapshot.paramMap.get('name') || 'null';
+
         this.getData();
         this._fileManagerService.setContractId(this.contractId);
         this._fileManagerService.setContractorId(this.contractorId);
@@ -189,6 +199,7 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
     updateFile(event: any, file: FileContractor) {
+        debugger
         let code = this.statusFileLoad.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
             this.disableButnObservation = false;
@@ -198,9 +209,12 @@ export class FileListComponent implements OnInit, OnDestroy {
         } else {
             this.filesObservation = this.filesObservation.filter(objeto => objeto.id !== file.id);
             if(this.filesObservation.length > 0){
+                this.disableButnObservation = false;
+            }else{
                 this.disableButnObservation = true;
             }
         }
+
         this.detailFile.fileId = file.id;
         this.detailFile.registerDate = new Date();
         this.detailFile.passed = true;
@@ -361,6 +375,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+        
+        // this._auth.setUserPresence(this.nombre, this.rol, false);
+
     }
 
 }

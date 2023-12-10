@@ -34,9 +34,7 @@ export class UploadFileDataService {
 
     UploadFileContractor(formdata: FileContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.addFileEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
-            catchError(this.handleError) 
-        );
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
     UploadFileContractorTest(formdata: FileContractor): Promise<any> {
@@ -107,6 +105,11 @@ export class UploadFileDataService {
         return this._httpClient.post<IResponse>(urlEndpointGenerate, detail).pipe(
             catchError(this.handleError)
         );
+    }
+
+    UploadFileShareContractor(formdata: FileContractor) {
+        let urlEndpointGenerate = this.apiUrl + environment.addFileShareEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 
     // Método para manejar errores (opcional)

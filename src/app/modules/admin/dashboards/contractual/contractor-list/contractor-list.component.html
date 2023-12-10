@@ -13,24 +13,24 @@
         <div class="mt-4 sm:mt-0">
             <!-- Add section button -->
             <button mat-flat-button [color]="'accent'" (click)="addTermFileContract(null)"
-                [matTooltip]="'Shortcut: Ctrl + .'">
+                [matTooltip]="'tiempo de entrega documentos'">
                 <mat-icon [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                 <span class="ml-2 mr-1">Tiempo entrega</span>
             </button>
             <button mat-flat-button class="ml-3" [color]="'accent'" (click)="SendMailsAccounts()"
-                [matTooltip]="'Shortcut: Ctrl + .'">
+                [matTooltip]="'Enviar invitación a proceso de contratación'">
                 <mat-icon [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                 <span class="ml-2 mr-1">Enviar Correos</span>
             </button>
             <!-- Add task button -->
             <button (click)="registrarDatosContratacion(null)" class="ml-3" mat-flat-button [color]="'primary'"
-                [matTooltip]="'Shortcut: Ctrl + /'">
+                [matTooltip]="'Guardar datos contratistas'">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2 mr-1">Guardar Datos</span>
             </button>
 
             <button (click)="uploadExcel()" class="ml-3" mat-flat-button [color]="'primary'"
-                [matTooltip]="'Shortcut: Ctrl + /'">
+                [matTooltip]="'Cargar Archivo cdp contratista'">
                 <mat-icon [svgIcon]="'heroicons_solid:save'"></mat-icon>
                 <span class="ml-2 mr-1">Cargar Archivo Cdp</span>
             </button>
@@ -58,9 +58,6 @@
                     {{status.viewValue}}
                 </mat-option>
             </mat-select>
-            <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:adjustments'">
-            </mat-icon> -->
-
         </mat-form-field>
     </div>
     <div class="flex-auto border-t -mt-px pt-4 pl-2 pr-2 sm:pt-6">
@@ -114,7 +111,7 @@
                     </div>
 
                     <div class="inputsearch p-8 pl-20">
-                        <app-buttons-export [contractId]="contractId"></app-buttons-export>
+                        <app-buttons-export [showNomina]="false" [contractId]="contractId"></app-buttons-export>
                     </div>
 
                     <div class="overflow-x-auto mx-6">
@@ -202,6 +199,16 @@
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
+                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
+                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
+                                'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
+                                'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
+                                'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
+                                            <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}
+                                            </span>
+                                        </span>
+                                        <span
                                             *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
@@ -221,96 +228,18 @@
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
-                                        <span
-                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
-                                            class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
-                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
-                                            <span
-                                                class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
-                                        </span>
-                                        <!-- <p *ngIf="element[columna.name]===element.acciones">
-                                            <button [matTooltip]="'Opciones Documentos'" mat-icon-button
-                                                [matMenuTriggerFor]="summaryMenu">
-                                                <mat-icon class="icon-size-5"
-                                                    [svgIcon]="'heroicons_solid:menu'">
-                                                </mat-icon>
-                                            </button>
-                                            <mat-menu #summaryMenu="matMenu">
-                                                <button [matTooltip]="'Agregar datos'"
-                                                    (click)="registrarDatosContratacion(element)" mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:pencil-alt"></mat-icon>
-                                                    Agregar datos
-                                                </button>
-                                                <button [matTooltip]="'Agregar Modificacion'"
-                                                    (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Minuta
-                                                </button>
-                                                <button [matTooltip]="'GENERAR PDF'"
-                                                    (click)="generatedPdfContractor(element,'ESTUDIOS PREVIOS')"
-                                                    [color]="'primary'" mat-menu-item>
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Estudios Previos
-                                                </button>
-                                                <button [matTooltip]="'Generar'"
-                                                    (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Solicitud de comite
-                                                </button>
-                                                <button [matTooltip]="'Generar'" *ngIf="visibleOption" mat-menu-item
-                                                    (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Otro si
-                                                </button>
-                                                <button [matTooltip]="'Agregar Modificacion'"
-                                                    (click)="addTermFileContract(element)" [color]="'primary'"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:calendar"></mat-icon>
-                                                    Habilitar Tiempo de entrega
-                                                </button>
-                                                <button [matTooltip]="'Agregar Modificacion'"
-                                                    (click)="modificacionContrato(element)" [color]="'primary'"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:plus-circle"></mat-icon>
-                                                    Agregar Modificacion
-                                                </button>
-                                                <button [matTooltip]="'Desabilitar Contratista'"
-                                                    (click)="openConfirmationDelete(element)" [color]="'primary'"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-                                                    Desabilitar
-                                                </button>
-                                                <button [matTooltip]="'Desabilitar Contratista'"
-                                                    (click)="toggleAdditionalRow(element)" [color]="'primary'"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-                                                    Detalle
-                                                </button>
-                                            </mat-menu>
-                                        </p> -->
-                                        <!-- <p *ngIf="element[columna.name] ==='detail'">
-                                            <button mat-icon-button aria-label="expand row"
-                                            (click)="(expandedElement = expandedElement === element ? false : element); $event.stopPropagation()">
-                                            <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
-                                            <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
-                                        </button>
 
-                                        </p> -->
                                     </div>
                                     <div *ngIf="columna.name ==='acciones'"
                                         (click)="isButtonClicked = false; toggleRowExpansion(element, $event)">
                                         <p>
                                             <button [matTooltip]="'Opciones Documentos'" mat-icon-button
-                                                [matMenuTriggerFor]="summaryMenu">
+                                                [matMenuTriggerFor]="summaryMenu" class="option">
                                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:menu'">
                                                 </mat-icon>
                                             </button>
                                             <mat-menu #summaryMenu="matMenu">
-                                                <button [matTooltip]="'Agregar datos'"
+                                                <button class="aregar" [matTooltip]="'Agregar datos'"
                                                     (click)="registrarDatosContratacion(element)" mat-menu-item>
                                                     <mat-icon svgIcon="heroicons_solid:pencil-alt"></mat-icon>
                                                     Agregar datos
@@ -350,16 +279,16 @@
                                                     Agregar Modificacion
                                                 </button>
                                                 <button [matTooltip]="'Desabilitar Contratista'"
+                                                    (click)="histtoryInnability(element)" [color]="'primary'"
+                                                    mat-menu-item>
+                                                    <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
+                                                    Historial de innabilidad
+                                                </button>
+                                                <button [matTooltip]="'Desabilitar Contratista'"
                                                     (click)="openConfirmationDelete(element)" [color]="'primary'"
                                                     mat-menu-item>
                                                     <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
                                                     Desabilitar
-                                                </button>
-                                                <button [matTooltip]="'Desabilitar Contratista'"
-                                                    (click)="toggleAdditionalRow(element)" [color]="'primary'"
-                                                    mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
-                                                    Detalle
                                                 </button>
                                             </mat-menu>
                                         </p>
@@ -430,16 +359,18 @@
                                                             <mat-form-field class="w-1/3 pl-2">
                                                                 <mat-label>CDP</mat-label>
                                                                 <input matInput [formControlName]="'cdp'"
-                                                                [value]="expandedElement.cdp">
+                                                                    [value]="expandedElement.cdp">
                                                             </mat-form-field>
                                                         </div>
-
-                                                        <!-- Stock and Reserved -->
                                                         <div class="flex">
-                                                            <mat-form-field class="w-1/3 pr-2">
+                                                            <mat-form-field class="w-1/3 pl-2">
+                                                                <mat-label>Contrato</mat-label>
+                                                                <input type="text" matInput formControlName="contract">
+                                                            </mat-form-field>
+                                                            <mat-form-field class="w-1/3 pl-2">
                                                                 <mat-label>Nivel de riesgo</mat-label>
-                                                                <input type="text" matInput
-                                                                    [formControlName]="'level'" [value]="expandedElement.level">
+                                                                <input type="text" matInput [formControlName]="'level'"
+                                                                    [value]="expandedElement.level">
                                                             </mat-form-field>
                                                             <mat-form-field class="w-1/3 pl-2">
                                                                 <mat-label>Requiere Poliza</mat-label>
@@ -463,8 +394,8 @@
                                                         </mat-form-field>
                                                         <mat-form-field class="w-full">
                                                             <mat-label>Entidad bancaria</mat-label>
-                                                            <input type="text" matInput
-                                                                [formControlName]="'bankEntity'" [value]="expandedElement.bankEntity">
+                                                            <input type="text" matInput [formControlName]="'bankEntity'"
+                                                                [value]="expandedElement.bankEntity">
                                                         </mat-form-field>
                                                         <!-- <mat-form-field class="w-full">
                                                             <mat-label>Price</mat-label>
@@ -483,7 +414,8 @@
                                                         </mat-form-field>
                                                         <mat-form-field class="w-full">
                                                             <mat-label>EPS</mat-label>
-                                                            <mat-select [formControlName]="'eps'" [disabled]="expandedElement.eps == null">
+                                                            <mat-select [formControlName]="'eps'"
+                                                                [disabled]="expandedElement.eps == null">
                                                                 <ng-container *ngFor="let epsS of eps">
                                                                     <mat-option [value]="epsS.id">
                                                                         {{epsS.entityHealthDescription}}
@@ -493,7 +425,8 @@
                                                         </mat-form-field>
                                                         <mat-form-field class="w-full">
                                                             <mat-label>ARL</mat-label>
-                                                            <mat-select [formControlName]="'arl'" [disabled]="expandedElement.arl == null">
+                                                            <mat-select [formControlName]="'arl'"
+                                                                [disabled]="expandedElement.arl == null">
                                                                 <ng-container *ngFor="let arlS of arl">
                                                                     <mat-option [value]="arlS.id">
                                                                         {{arlS.entityHealthDescription}}
@@ -504,7 +437,8 @@
 
                                                         <mat-form-field class="w-full">
                                                             <mat-label>PENSIÓN</mat-label>
-                                                            <mat-select [formControlName]="'afp'" [disabled]="expandedElement.afp == null">
+                                                            <mat-select [formControlName]="'afp'"
+                                                                [disabled]="expandedElement.afp == null">
                                                                 <ng-container *ngFor="let afpS of afp">
                                                                     <mat-option [value]="afpS.id">
                                                                         {{afpS.entityHealthDescription}}
@@ -562,9 +496,9 @@
             </div>
         </div>
     </div>
-    <app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
-        [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
-    <app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
-        [contractContractors]="contractContractors"
-        *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>
+</div>
+<app-minuta-contrato [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+    [contractContractors]="contractContractors"
+    *ngIf="contractContractors != null && generatePdfMinute"></app-minuta-contrato>
+<app-generate-pdf [generateType]="generateType" (pdfGenerated)="pdfGenerated($event)"
+    [contractContractors]="contractContractors" *ngIf="contractContractors != null && generatePdf"></app-generate-pdf>

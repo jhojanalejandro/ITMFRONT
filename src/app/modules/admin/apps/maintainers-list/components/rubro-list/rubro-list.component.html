@@ -1,4 +1,4 @@
-<button class="ml-3" mat-flat-button [color]="'primary'" [matTooltip]="'Shortcut: Ctrl + /'">
+<button class="ml-3" mat-flat-button (click)="formRegister(null)" [color]="'primary'" [matTooltip]="'Agregar rubro'">
     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
     <span class="ml-2 mr-1">Agregar Rubro</span>
 </button>
@@ -23,7 +23,7 @@
                                     {{element[columna.name]}}</p>
 
                                 <p *ngIf="element[columna.name]=== element.acciones">
-                                    <button [matTooltip]="'Mostrar Contratistas'" style="margin-left: 3px !important;"
+                                    <button  (click)="formRegister(element)" [matTooltip]="'Editar rubro'" style="margin-left: 3px !important;"
                                         class="hidden sm:inline-flex ml-3" (click)="navigateToContractors(element)"
                                         mat-flat-button [color]="'primary'">
                                         <mat-icon svgIcon="heroicons_outline:pencil-alt"></mat-icon>

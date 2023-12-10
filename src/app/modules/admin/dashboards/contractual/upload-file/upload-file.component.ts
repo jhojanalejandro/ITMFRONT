@@ -6,7 +6,7 @@ import swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { DocumentTypeFile, Files, FileContractor } from 'app/layout/common/models/file-contractor';
-import { GenericService } from 'app/modules/admin/generic/generic.services';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
 import { UploadFileDataService } from '../service/upload-file.service';
