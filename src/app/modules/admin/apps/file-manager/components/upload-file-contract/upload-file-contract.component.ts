@@ -72,7 +72,6 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.validatePermission();
     this.origin = this._data.origin
-    debugger
     if (this._data.show && this._data.contractId != null) {
       this.mostrarContrato = false;
       this.isSelectContract = true;
@@ -132,7 +131,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
           showConfirmButton: false,
           timer: 1500
         });
-        //this.matDialogRef.close();  
+        //this.matDialogRef.close();
         this.ref.detectChanges();
         this.ref.markForCheck();
         this.closeModal();
@@ -214,7 +213,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
+          //this.matDialogRef.close();
           this.ref.detectChanges();
           this.ref.markForCheck();
           this.closeModal();
@@ -259,7 +258,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
           showConfirmButton: false,
           timer: 1500
         });
-        //this.matDialogRef.close();  
+        //this.matDialogRef.close();
         this.ref.detectChanges();
         this.ref.markForCheck();
         this.closeModal();
@@ -295,7 +294,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
+          //this.matDialogRef.close();
           this.ref.detectChanges();
           this.ref.markForCheck();
           this.closeModal();
@@ -365,7 +364,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
+          //this.matDialogRef.close();
           this.ref.detectChanges();
           this.ref.markForCheck();
           this.closeModal();

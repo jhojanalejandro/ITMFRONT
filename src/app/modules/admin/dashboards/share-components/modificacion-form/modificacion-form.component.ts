@@ -45,7 +45,7 @@ export class ModificacionFormComponent implements OnInit {
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
     minDateAdiction:Date = new Date();
-    cpcId: string = null; 
+    cpcId: string = null;
     disableField: boolean = true;
     resources: any= null;
     totalValue: any = null;
@@ -175,7 +175,6 @@ export class ModificacionFormComponent implements OnInit {
         if(this.exactTotal == 0){
             this.exactTotal = this.totalValue;
         }
-        debugger
         let changeContractModel: ModifyContractor = {
             elementName: this.elementData.nombreElemento,
             cantidadContratistas: this.modifyForm.value.contractorCant,
@@ -365,7 +364,7 @@ export class ModificacionFormComponent implements OnInit {
                 });
             })
     }
-    
+
     private getEconomicData() {
         let contractorId: string[] = [this._data.data.id]
         let filterData = {
@@ -428,7 +427,7 @@ export class ModificacionFormComponent implements OnInit {
             this.modifyForm.patchValue({
                 calculateValue: this._genericService.addCommasToNumber(this.exactTotal),
             });
-            
+
         } else {
             swal.fire('', 'Valores no validos!', 'warning');
 
@@ -459,11 +458,11 @@ export class ModificacionFormComponent implements OnInit {
         if(value > 0 && value != null){
             const control = this.modifyForm.get(controlName);
             const previousValue = control.value;
-    
+
             // Remover puntos del valor anterior para evitar puntos duplicados
             const numericValue = Number(value.toString().replace(/\./g, ''));
             const formattedValue = this._genericService.addCommasToNumber(numericValue);
-    
+
             // Si el valor formateado es diferente al valor en el control, actualizar el control
             if (formattedValue !== previousValue) {
                 control.patchValue(formattedValue, { emitEvent: false });

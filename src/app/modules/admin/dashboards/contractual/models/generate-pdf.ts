@@ -8,8 +8,8 @@ export interface OtherMinute{
     totalValueContract: any;
     initialDateContract: Date;
     finalDateContract: Date;
-    initialDateContractExtension: Date;
-    finalDateContractExtension: Date;
+    extensionInitialDate: Date;
+    extensionFinalDate: Date;
     object: string;
     consecutive: number;
     contractNumber: string;

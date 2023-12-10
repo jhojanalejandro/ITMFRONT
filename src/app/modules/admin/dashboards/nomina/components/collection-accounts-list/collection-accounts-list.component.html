@@ -42,7 +42,7 @@
                             class="icon-size-5"
                             matSuffix
                             [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
-                        </mat-form-field> 
+                        </mat-form-field>
                         <mat-form-field  class="hiringFile" appearance="fill">
                             <mat-label >Tipo Documento</mat-label>
                             <mat-select (selectionChange)="tipoSeleeccionado($event,'document')" name="typeFile">
@@ -67,7 +67,7 @@
 
                 <!-- Items list -->
                 <ng-container *ngIf="items.files.length > 0; else noItems">
-                    
+
                     <div class="p-6 md:p-8 space-y-8">
                         <!-- Files -->
                         <ng-container *ngIf="items.files.length > 0">
@@ -112,9 +112,9 @@
                                     <ng-container *ngFor="let file of items; trackBy:trackByFn">
                                         <div
                                             class="flex flex-col w-55 h-55 m-2 p-2 shadow rounded-2xl cursor-pointer bg-card">
-                                            <section *ngIf="file.categoryCode === 'CRAD'" class="example-section">
+                                            <section *ngIf="file.categoryCode === 'CGD'" class="example-section">
                                                 <mat-radio-group>
-                                                    <mat-radio-button *ngFor="let status of statusFileCreate"
+                                                    <mat-radio-button *ngFor="let status of statusFileLoad"
                                                         [disabled]="status.code == 'SBND'"
                                                         [matTooltip]="status.statusFileDescription" class="mr-4"
                                                         [checked]="file.statusFile === status.id"
