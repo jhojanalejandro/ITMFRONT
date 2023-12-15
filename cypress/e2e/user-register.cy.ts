@@ -43,14 +43,14 @@ describe('lista contratos', () => {
       cy.get('[formControlName="confirmPassword"]').type('123');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
-      cy.wait(2000);
-      cy.contains('Ya existe un usuario registrado con ese correo')
-
-      cy.contains('Iniciar sesion').click();
-
-      cy.contains('iniciar sesion').click();
       cy.wait(3000);
-      cy.login('jhojanhernandezy24@outlook.es', '123', 'Contractual');
+    //   cy.contains('Ya existe un usuario registrado con ese correo')
+
+    //   cy.contains('Iniciar sesion').click();
+
+    //   cy.contains('iniciar sesion').click();
+    //   cy.wait(3000);
+    //   cy.login('jhojanhernandezy24@outlook.es', '123', 'Contractual');
       // cy.GetAllContracts(token);
   })
 

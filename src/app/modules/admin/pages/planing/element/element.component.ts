@@ -298,6 +298,7 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     calculate = (e: string) => {
+        debugger
         if (this.typeContractor) {
             if ((this.elementForm.value.unitValue === null || this.elementForm.value.unitValue === '')) {
                 if (e === 'valor' && this.elementForm.value.cantDay != null && this.elementForm.value.cantDay != '') {
@@ -333,9 +334,9 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 }
             }
         } else {
+            this.valorPorDiaContratistas = Math.ceil(Number(this.elementForm.value.unitValue.toString().replace(/\./g, '')) / 30);
 
-            this.valorPorDiaContratistas = Math.ceil(this.elementForm.value.unitValue.toString().replace(/\./g, ''));
-            this.totalValue = Math.ceil(this.elementForm.value.toString().replace(/\./g, ''));
+            this.totalValue = Math.ceil(this.elementForm.value.cantDay * this.valorPorDiaContratistas);
             this.elementForm.value.totalValue = Math.ceil(this.valorPorDiaContratista);
         }
         if (this.totalValue > 0 || this.totalValue != null) {

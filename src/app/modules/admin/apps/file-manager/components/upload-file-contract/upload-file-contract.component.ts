@@ -87,7 +87,7 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     this.formFile = this._formBuilder.group({
       file: new FormControl(null, Validators.required),
       project: new FormControl({value: null, disabled: !this.mostrarContrato}, Validators.required),
-      description: new FormControl(this._data.origin == 'cdp' ? 'desc' : null, Validators.required)
+      description: new FormControl(this._data.origin == 'cdp' ? 'desc' : null, !this.mostrarContrato && !this.isSelectContract ? Validators.required : null)
     });
     this.getContractsData();
     this.GetFileType();

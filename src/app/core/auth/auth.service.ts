@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, catchError, Observable, of, ReplaySubject, Subject, switchMap, tap, throwError } from 'rxjs';
-import { AuthUtils } from 'app/core/auth/auth.utils';
+import { AuthUtils } from '../../core/auth/auth.utils';
 import { environment } from 'environments/environment';
 import { IResponse } from 'app/layout/common/models/Response';
 import { IUserModel, TeamModel } from 'app/modules/auth/model/user-model';
