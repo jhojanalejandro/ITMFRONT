@@ -29,7 +29,7 @@
                         <mat-label>Descripcion</mat-label>
                         <textarea type="text" class="example-full-width" id="description" formControlName="description"
                             autocomplete="off" matInput placeholder="Descripcion"></textarea>
-                        <mat-error *ngIf="formFile.get('description').hasError('required')">
+                        <mat-error *ngIf="formFile.get('description').hasError('required') && !mostrarContrato && !isSelectContract">
                             El campo Descripcion es requerido
                         </mat-error>
                     </mat-form-field>
