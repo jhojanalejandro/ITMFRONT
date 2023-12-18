@@ -218,6 +218,7 @@ export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
       eps: this.contractorinformationStepperForm.controls['step4'].value.eps,
       arl: this.contractorinformationStepperForm.controls['step4'].value.arl,
       afp: this.contractorinformationStepperForm.controls['step4'].value.afp,
+      enableEdit: false
     };
     const registerpersonalInfoirmation: PersonalInformation = {
       contractorPersonalInformation: personalInfoirmation,
@@ -363,7 +364,7 @@ export class ContractorPersonalDataComponent implements OnInit, OnDestroy {
     });
   }
   filterCalendar(date: Date | null): boolean {
-    
+
     // Personaliza el filtro para permitir solo fechas válidas
     if (!date) {
       return true;

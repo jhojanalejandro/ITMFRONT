@@ -77,7 +77,7 @@ export class GeneratePdfComponent implements OnInit {
         swal.fire({
           title: 'Generando pdf!',
           html: 'Espera <b></b> milliseconds.',
-          timer: 2000,
+          timer: 3000,
           timerProgressBar: true,
           didOpen: () => {
             swal.showLoading();
@@ -117,7 +117,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se  se encontro juridico signado',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             } else if (juridic.userFirm == null) {
                 swal.fire({
@@ -126,7 +126,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se  se encontro la firma del juridico',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             }
             else if (supervisor == null) {
@@ -136,7 +136,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se encontro supervisor asignado ',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             }
             else if (supervisor.userFirm == null) {
@@ -146,7 +146,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se encontro la firma del supervisor ',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             } else if (user == null) {
                 swal.fire({
@@ -155,7 +155,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se encontro contractual asignado ',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             } else if (user.userFirm == null) {
                 swal.fire({
@@ -164,7 +164,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se encontro la firma del contractual ',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             } else if (jobUser.userFirm == null) {
                 swal.fire({
@@ -173,7 +173,7 @@ export class GeneratePdfComponent implements OnInit {
                     title: '',
                     html: 'No se encontro la firma del jefe de la unidad estrategica ',
                     showConfirmButton: false,
-                    timer: 2500
+                    timer: 5000
                 });
             }
             this.hideComponent();
@@ -181,7 +181,7 @@ export class GeneratePdfComponent implements OnInit {
 
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let data = previusStudyData.getDataContractors.find(ct => ct.contractorId == this.contractContractors.contractors[index].toUpperCase());
-            if (data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
+            if (!data.legalprocessAprove || data.totalValue != null && data.contractInitialDate != null && data.contractFinalDate != null && data.specificObligations != null
                 && data.generalObligations != null && this.itmImageBase64 != null && user != null && juridic != null && supervisor != null && user.userFirm != null && supervisor.userFirm != null && juridic.userFirm != null && data.requiredProfileAcademic != null && data.requiredProfileExperience != null) {
                 let fechaLetras = this._shareService.calcularDiferencia(data.contractInitialDate, data.contractFinalDate);
                 let valorLetras = this._shareService.numeroALetras(data.totalValue, 'PESOS');
@@ -212,7 +212,16 @@ export class GeneratePdfComponent implements OnInit {
                         title: '',
                         html: 'no se encontraron las obligaciones del contratato para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 2500
+                        timer: 5000
+                    });
+                }else if (!data.legalprocessAprove) {
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'Aun no se aprueban los docuemntos del contratista',
+                        showConfirmButton: false,
+                        timer: 5000
                     });
                 }
                 else if (data.totalValue == null || data.totalValue == '') {
@@ -222,7 +231,7 @@ export class GeneratePdfComponent implements OnInit {
                         title: '',
                         html: 'no se encontro el valor del contrato para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 2500
+                        timer: 5000
                     });
                 }
             }
@@ -1289,8 +1298,8 @@ export class GeneratePdfComponent implements OnInit {
                                                     [
                                                         {
                                                             style: 'fontSegundapagPeque',
-                                                            text: '•	De Cumplimiento del Contrato: Cubrirá al ITM de los perjuicios directos derivados del incumplimiento total o parcial de las obligaciones nacidas del contrato, así como de su cumplimiento tardío o su cumplimiento defectuoso, cuando ellos son imputables al contratista garantizado. Este amparo comprende además siempre el pago de las multas y de la cláusula penal pecuniaria que se hayan pactado en el contrato por una cuantía equivalente al diez por ciento (10%) del valor total del contrato y con una vigencia igual a su plazo y cuatro (4) meses más.', 
-                                                            fillColor: '#eeeeee', 
+                                                            text: '•	De Cumplimiento del Contrato: Cubrirá al ITM de los perjuicios directos derivados del incumplimiento total o parcial de las obligaciones nacidas del contrato, así como de su cumplimiento tardío o su cumplimiento defectuoso, cuando ellos son imputables al contratista garantizado. Este amparo comprende además siempre el pago de las multas y de la cláusula penal pecuniaria que se hayan pactado en el contrato por una cuantía equivalente al diez por ciento (10%) del valor total del contrato y con una vigencia igual a su plazo y cuatro (4) meses más.',
+                                                            fillColor: '#eeeeee',
                                                             border: [false, false, false, false]
                                                         },
                                                     ],

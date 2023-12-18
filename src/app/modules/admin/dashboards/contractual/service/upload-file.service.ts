@@ -28,7 +28,7 @@ export class UploadFileDataService {
     UploadCdpFileExcel(formdata: any) {
         let urlEndpointGenerate = this.apiUrl + environment.addExcelCdpEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
-            catchError(this.handleError) 
+            catchError(this.handleError)
         );
     }
 
@@ -91,7 +91,7 @@ export class UploadFileDataService {
         );
     }
 
-    
+
     UploadFileCommitteeContractors(formdata: FileContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.SaveCommitteeContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).pipe(
@@ -99,7 +99,7 @@ export class UploadFileDataService {
         );
     }
 
-    
+
     updateStatusFileCommitteeContractor(detail: DetailFile) {
         let urlEndpointGenerate = this.apiUrl + environment.saveDetailFileCommitteeEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, detail).pipe(
@@ -120,7 +120,7 @@ export class UploadFileDataService {
             title: '',
             html: error.error.message,
             showConfirmButton: false,
-            timer: 3000
+            timer: 4000
         });
         return new Observable<any>();
     }

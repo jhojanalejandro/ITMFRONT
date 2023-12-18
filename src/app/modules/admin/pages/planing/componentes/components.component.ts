@@ -201,6 +201,7 @@ export class AddComponentsComponent implements OnInit {
             this.messagePermission();
         } else {
             const dialogRef = this._matDialog.open(ComponentesFormComponent, {
+                width: '600px',
                 disableClose: true,
                 autoFocus: false,
                 data: {
@@ -599,7 +600,7 @@ export class AddComponentsComponent implements OnInit {
         this._shareService.loadAndConvertImageToBase64(RouteImageEnum.LOGOITM)
             .then(base64Data => {
                 this.itmImageBase64 = base64Data;
-                
+
             })
             .catch(error => {
                 console.error('Error al cargar y convertir la imagen:', error);

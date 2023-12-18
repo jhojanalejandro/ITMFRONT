@@ -94,7 +94,7 @@ export class AuthSignUpComponent implements OnInit {
                     title: '',
                     html: response.error.message,
                     showConfirmButton: false,
-                    timer: 3000
+                    timer: 4000
                 });
                 // Re-enable the form
                 this.signUpForm.enable();

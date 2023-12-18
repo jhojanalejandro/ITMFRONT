@@ -58,7 +58,7 @@ export class HistoryInnabilityComponent implements OnInit {
       this.contractorId = this.datos.id;
       this.contractId = this.datos.contractId;
 
-    }  
+    }
       // Create the selected product form
       this.getDataContractor();
 

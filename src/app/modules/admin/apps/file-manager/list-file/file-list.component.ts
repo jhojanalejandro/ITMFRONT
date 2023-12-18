@@ -49,7 +49,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     contractId: string;
     folderId: string;
     disableButnObservation: boolean = true;
-    filesObservation : FileContractor[] = [];  
+    filesObservation : FileContractor[] = [];
     detailFile: DetailFile = {
         fileId: null,
         registerDate: new Date(),
@@ -199,7 +199,6 @@ export class FileListComponent implements OnInit, OnDestroy {
             });
     }
     updateFile(event: any, file: FileContractor) {
-        debugger
         let code = this.statusFileLoad.find(f => f.code === DetailFileOption.REMITIDO)
         if (code.id === event.value) {
             this.disableButnObservation = false;
@@ -374,7 +373,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
-        
+
         // this._auth.setUserPresence(this.nombre, this.rol, false);
 
     }

@@ -78,6 +78,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.userName = this._auth.accessName;
         this.getContract();
+        this.getStatusUpdate();
 
     }
     uploadDialog() {
@@ -318,6 +319,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             swal.fire('', 'No has seleccionado contrato!', 'warning');
         }
     }
+
+    private getStatusUpdate() {
+        this._contractorService
+        .getExecutionReport(this._auth.accessId, this.contractSelected)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((Response) => {
+                
+        });
+    }
+
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);

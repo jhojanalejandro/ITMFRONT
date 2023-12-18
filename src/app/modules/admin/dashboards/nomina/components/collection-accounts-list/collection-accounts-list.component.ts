@@ -304,7 +304,6 @@ export class CollectionAccountsListComponent implements OnInit {
     this._fileManagerService.getStatusFile()
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((item: any) => {
-            debugger
             this.statusFileLoad = item.filter(f => f.category === CategoryFile.CGD);
             this.statusFileCreate = item.filter(f => f.category === CategoryFile.CRAD);
             this.statusFileCreate = this.statusFileCreate.map(status => ({

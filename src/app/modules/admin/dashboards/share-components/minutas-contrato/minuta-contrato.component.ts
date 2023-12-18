@@ -130,7 +130,8 @@ export class MinutaContratoComponent implements OnInit {
             let fechaLetras = this._shareService.calcularDiferencia(data.initialDateContract, data.finalContractDate);
             let valorLetras = this._shareService.numeroALetras(data.totalValueContract, 'PESOS');
             let totalContrato = this.addCommasToNumber(data.totalValueContract);
-            if (data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || data.comiteGenerated != true || data.previusStudy != true) {
+            debugger
+            if (!data.legalprocessAprove  ||  data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || !data.comiteGenerated || !data.previusStudy) {
                 if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
                     swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
                     this.hideComponent();
@@ -158,7 +159,7 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro el valor del contrato para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
                     });
                 } else if (data.contractNumber == null || data.contractNumber == '' || data.contractNumber == 'vacio') {
                     swal.fire({
@@ -167,7 +168,7 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro la numero de la minuta para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
                     });
 
                 } else if (supervisor == null) {
@@ -177,7 +178,16 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro la información del supervisor ',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
+                    });
+                }else if (!data.legalprocessAprove ){
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'Aun se a realizado la aprobación juridica',
+                        showConfirmButton: false,
+                        timer: 4000
                     });
                 }
             } else {
@@ -199,8 +209,6 @@ export class MinutaContratoComponent implements OnInit {
                 }
                 this.documentGenerated.push(minute);
             }
-            this._changeDetectorRef.detectChanges();
-            this._changeDetectorRef.markForCheck();
         }
         if (this.documentGenerated.length > 0) {
             this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.MNT, DocumentTypeCodes.MINUTA);
@@ -516,7 +524,7 @@ export class MinutaContratoComponent implements OnInit {
                 {
                     margin: [10, 10, 10, 10],
                     text: [
-                        'Entre los suscritos, de una parte, ' + supervisor.userName + ' con c.c. ' + supervisor.userIdentification + ', actuando en calidad de ' + supervisor.userCharge + 'del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
+                        'Entre los suscritos, de una parte, yolanda maria henao con cedula de ciudadania 43507013, actuando en calidad de jefe de oficina asesora juridica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
                         'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO - INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.contractorName + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.contractorIdentification + ' de ' + data.contractorExpeditionPlace + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas:',
                         ' PRIMERA. -OBJETO DEL CONTRATO. ' + data.elementObject,
                         '. SEGUNDA: DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + fechaLetras + ', contados a partir de la suscripción del contrato a traves de la la plataforma SECOP II. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date().getFullYear() + ' . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo 217 decreto 019 del 2012.',
@@ -1766,7 +1774,6 @@ export class MinutaContratoComponent implements OnInit {
             dataListContractorasc = dataListContractorasc.sort((a, b) => a.consecutive - b.consecutive);
 
             for (let index = 0; index < dataListContractorasc.length; index++) {
-                debugger
                 let md = dataListContractorasc[index].consecutive > 1 ? dataListContractorasc[index].consecutive : 'ACTUAL'
                 switch (dataListContractorasc[index].typeModify) {
                     case DocumentTypeFileCodes.ADC:
@@ -2151,12 +2158,10 @@ export class MinutaContratoComponent implements OnInit {
             if (documentType == null) {
                 documentType = this.typeMinute.find(f => f.code === origin)
             }
-
-
             let nombreDocumento = documentType.documentTypeDescription == null ? documentType.minuteTypeDescription : documentType.documentTypeDescription + pdfDocument[index].contractorName;
             let userId = this._auth.accessId;
             let date = this.currentDate;
-            const pdf = pdfMake.createPdf(pdfDocument[index].document).download('testOtrosi');
+            const pdf = pdfMake.createPdf(pdfDocument[index].document);
             const dataURL = await new Promise<string>((resolve) => {
                 pdf.getDataUrl((dataURL) => resolve(dataURL));
             });

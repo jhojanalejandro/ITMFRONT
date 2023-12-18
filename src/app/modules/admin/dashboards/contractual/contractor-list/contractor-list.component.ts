@@ -198,22 +198,22 @@ export class ContractorListComponent
         // Create the selected product form
 
         this.selectedContracttorForm = this._formBuilder.group({
-            expeditionPlace: new FormControl(null),
-            correo: new FormControl(null),
-            telefono: new FormControl(null),
-            direccion: new FormControl(null),
-            fechaNacimiento: new FormControl(null),
-            cdp: new FormControl(null),
-            level: new FormControl(null),
-            reserved: new FormControl(null),
-            contractValue: new FormControl(null),
-            cantDays: new FormControl(null),
+            expeditionPlace: new FormControl({ value: null , disabled: true}),
+            correo: new FormControl({ value: null , disabled: true}),
+            telefono: new FormControl({ value: null , disabled: true}),
+            direccion: new FormControl({ value: null , disabled: true}),
+            fechaNacimiento: new FormControl({ value: null , disabled: true}),
+            cdp: new FormControl({ value: null , disabled: true}),
+            level: new FormControl({ value: null , disabled: true}),
+            reserved: new FormControl({ value: null , disabled: true}),
+            contractValue: new FormControl({ value: null , disabled: true}),
+            cantDays: new FormControl({ value: null , disabled: true}),
             bankEntity: new FormControl(null),
             nacionality: new FormControl(null, Validators.required),
             arl: new FormControl(null, Validators.required),
             eps: new FormControl(null, Validators.required),
             afp: new FormControl(null),
-            contract: new FormControl(null),
+            contract: new FormControl({ value: null , disabled: true}),
           });
 
         this.configForm = this._formBuilder.group({
