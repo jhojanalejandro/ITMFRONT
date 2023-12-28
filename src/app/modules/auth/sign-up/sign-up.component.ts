@@ -7,6 +7,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 import { IUserModel } from '../model/user-model';
 import Swal from 'sweetalert2';
+import { FuseValidators } from '@fuse/validators';
 
 @Component({
     selector: 'auth-sign-up',
@@ -45,14 +46,18 @@ export class AuthSignUpComponent implements OnInit {
         this.signUpForm = this._formBuilder.group({
             userName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required],
-            confirmPassword: ['', Validators.required],
             professional: ['', Validators.required],
             phoneNumber: ['', Validators.required],
             identification: ['', Validators.required],
-            passwordMail: ['', Validators.required]
+            passwordMail: ['', Validators.required],
+            password: ['', Validators.required],
+            confirmPassword: ['', Validators.required],
+            passwordConfirm: ['', Validators.required]
+        },
+            {
+                validators: FuseValidators.mustMatch('password', 'passwordConfirm')
+
         });
-        this.validatePassword();
     }
 
     signUp() {
@@ -112,18 +117,5 @@ export class AuthSignUpComponent implements OnInit {
             }
         );
     }
-    validatePassword() {
-        this.signUpForm.get('confirmPassword').valueChanges.subscribe((newValue) => {
-            this.alertPassword = {
-                type: 'error',
-                message: 'Las contraseñas no coinciden'
-            };
-            if (newValue != this.signUpForm.value.password) {
-                this.showAlertPassword = true;
-            } else {
-                this.showAlertPassword = false;
-            }
-        });
 
-    }
 }

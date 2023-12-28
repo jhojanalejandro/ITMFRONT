@@ -127,7 +127,7 @@
 
                     <mat-form-field class="w-full">
                         <mat-label>Confirmar Contraseña</mat-label>
-                        <input id="confirmPassword" matInput type="password" formControlName="confirmPassword"
+                        <input id="passwordConfirm" matInput type="password" formControlName="passwordConfirm"
                             #confirmPasswordField>
                         <button mat-icon-button type="button"
                             (click)="confirmPasswordField.type === 'password' ? confirmPasswordField.type = 'text' : confirmPasswordField.type = 'password'"
@@ -137,8 +137,11 @@
                             <mat-icon class="icon-size-5" *ngIf="confirmPasswordField.type === 'text'"
                                 [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                         </button>
-                        <mat-error>
-                            se requiere contraseña
+                        <mat-error *ngIf="signUpForm.get('passwordConfirm').hasError('required')">
+                            confirmación de contraseña es requerida
+                        </mat-error>
+                        <mat-error *ngIf="signUpForm.get('passwordConfirm').hasError('mustMatch')">
+                            Las contraseñas no coinciden
                         </mat-error>
                     </mat-form-field>
 
