@@ -28,8 +28,7 @@ import { FileContractor } from 'app/layout/common/models/file-contractor';
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 import { DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
-import { pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
-import * as pdf from 'pdf-parse';
+
 
 import { Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
@@ -68,10 +67,10 @@ export class ContractorPaymentSecurityRegisterComponent
         correctNumberSheet: false,
         correctSheet: false,
         verifySheet: false
-        
+
     }
     date = new FormControl(moment());
-    
+
     constructor(
         private _nominaService: NominaService,
         private _homeContractorService: HomeContractorService,
@@ -92,7 +91,7 @@ export class ContractorPaymentSecurityRegisterComponent
 
     ngOnInit(): void {
         this._initData();
-    }   
+    }
 
     private _initData(){
         this.contractId = this._data.contractId;
@@ -322,7 +321,7 @@ export class ContractorPaymentSecurityRegisterComponent
     onFileSelected(event: any): void {
         this.filesWithCheckbox = [];
         this.file = event.target.files[0];
-            
+
         this.fileName = this.file.name.split('.')[0].toUpperCase();
         this.typeFile = this.file.name.split('.')[1].toUpperCase();
         this.filesWithCheckbox.push(this.file);
@@ -421,7 +420,7 @@ export class ContractorPaymentSecurityRegisterComponent
                 this.verifySheet.verifySheet = false;
             }
             for (const textItem of pageText.items) {
-                
+
                 if (textItem.str.includes(searchText)) {
                     // Si encuentra la palabra clave, agrega el resultado
                     switch (typeFilter) {
@@ -479,7 +478,7 @@ export class ContractorPaymentSecurityRegisterComponent
             });
     }
 
-    
+
     chosenYearHandler(normalizedYear: Moment) {
         const ctrlValue = this.date.value;
         this.monthYear = normalizedYear.year();

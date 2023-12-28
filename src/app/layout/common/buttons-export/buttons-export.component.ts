@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ButtonsExportService } from './buttons-export.service';
-import swal from 'sweetalert2';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { ShareService } from '../share-service/share-service.service';
@@ -43,7 +42,7 @@ export class ButtonsExportComponent implements OnInit {
                             position: 'center',
                             icon: 'success',
                             title: '',
-                            html: 'Documento descargado.',                            
+                            html: 'Documento descargado.',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -51,7 +50,7 @@ export class ButtonsExportComponent implements OnInit {
                 },
                 (response) => {
                     console.log(response);
-                    swal.fire('', 'Error al descargar la informacion!', 'error');
+                    Swal.fire('', 'Error al descargar la informacion!', 'error');
                 }
             );
     }
@@ -78,7 +77,7 @@ export class ButtonsExportComponent implements OnInit {
                     }
                 },
                 (response) => {
-                    swal.fire('', '', 'error');
+                    Swal.fire('', '', 'error');
                 }
             );
     }
@@ -114,7 +113,7 @@ export class ButtonsExportComponent implements OnInit {
             },
             (response) => {
                 console.log(response);
-                swal.fire('', 'Error al descargar la informacion!', 'error');
+                Swal.fire('', 'Error al descargar la informacion!', 'error');
             }
         );
     }
@@ -141,7 +140,7 @@ export class ButtonsExportComponent implements OnInit {
                     }
                 },
                 (response) => {
-                    swal.fire('', 'La información esta incompleta para generar el documento!', 'error');
+                    Swal.fire('', 'La información esta incompleta para generar el documento!', 'error');
                 }
             );
     }
@@ -168,7 +167,7 @@ export class ButtonsExportComponent implements OnInit {
                     }
                 },
                 (response) => {
-                    swal.fire('', '', 'error');
+                    Swal.fire('', '', 'error');
                 }
             );
     }
@@ -177,7 +176,7 @@ export class ButtonsExportComponent implements OnInit {
         this._shareService.loadAndConvertImageToBase64(RouteImageEnum.LOGOITM)
             .then(base64Data => {
                 this.itmImageBase64 = base64Data;
-                
+
             })
             .catch(error => {
                 console.error('Error al cargar y convertir la imagen:', error);

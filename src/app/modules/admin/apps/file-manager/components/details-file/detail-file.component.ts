@@ -29,6 +29,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
     contractorId: string;
     folderId: string;
     contractId: string;
+    contarctorName: string;
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
@@ -55,7 +56,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
                 }
 
                 this.fileId = item.id;
-                // Open the drawer in case it is closed 
+                // Open the drawer in case it is closed
                 this._listComponent.matDrawer.open();
                 // Get the item
                 this.item = item;
@@ -88,6 +89,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this.contractorId = this._fileManagerService.getContractorId();
         this.folderId = this._fileManagerService.getFolderId();
         this.contractId = this._fileManagerService.getContractId();
+        this.contarctorName = this._fileManagerService.getContractorName();
 
     }
 
@@ -149,7 +151,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
                             timer: 1500
                         });
                         this.closeDrawer();
-                        this._router.navigate(['/apps/file-manager/file/contractor/' + this.contractId + '/' + this.contractorId + '/' + this.folderId]);
+                        this._router.navigate(['/apps/file-manager/file/contractor/' + this.contractId + '/' + this.contractorId + '/' + this.folderId + '/' + this.contarctorName] );
                         // Mark for check
                         this._changeDetectorRef.markForCheck();
                     }

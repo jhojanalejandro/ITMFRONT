@@ -104,6 +104,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._fileManagerService.setContractId(this.contractId);
         this._fileManagerService.setContractorId(this.contractorId);
         this._fileManagerService.setFolderId(this.folderId);
+        this._fileManagerService.setContractorName(this.contarctorName);
+
     }
 
     getId(id: any) {

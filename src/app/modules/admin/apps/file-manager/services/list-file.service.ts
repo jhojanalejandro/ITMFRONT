@@ -13,6 +13,7 @@ import { ContractContractors } from 'app/modules/admin/dashboards/contractual/mo
 export class FileListManagerService {
     // Private
     contractId: string;
+    contractorName: string;
     folderId: string;
     contractorId: string;
     private _listFileContractor: BehaviorSubject<DataFile[] | null> = new BehaviorSubject(null);
@@ -23,6 +24,14 @@ export class FileListManagerService {
     apiUrl: any = environment.apiURL;
 
     constructor(private _httpClient: HttpClient) {
+    }
+
+    setContractorName(valor: any) {
+        this.contractorName = valor;
+    }
+
+    getContractorName() {
+        return this.contractorName;
     }
 
     setContractId(valor: any) {
@@ -81,7 +90,7 @@ export class FileListManagerService {
         );
     }
 
-    
+
     getFileByContractorToDownload(contractId: string | null = null, contractorId: any | null = null, folderId: string | null = null): Observable<DataFile[]> {
         const params = new HttpParams()
             .set('contractorId', contractorId)

@@ -179,7 +179,7 @@
                                         </div>
                                         <div
                                             class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                            <div class="truncate" [matTooltip]="'CUENTS DE COBRO'">ACTA
+                                            <div class="truncate" [matTooltip]="'ACTA DE SUPERVISION'">ACTA
                                             </div>
                                         </div>
                                     </a>
@@ -239,6 +239,6 @@
         </div>
     </div>
 </div>
-<app-cuenta-cobro (onGeneratePdf)="onGeneratePdf($event)" [executionReportData]="executionReportData"
+<pdf-payment (onGeneratePdf)="onGeneratePdf($event)" [executionReportData]="executionReportData"
     [chargeAccountData]="chargeAccountData" [typeGenerator]="typeGenerator"
-    *ngIf="(chargeAccountData != null && showPdfGenerated) || (executionReportData != null &&  showPdfGenerated)"></app-cuenta-cobro>
+    *ngIf="(chargeAccountData != null && showPdfGenerated) || (executionReportData != null &&  showPdfGenerated)"></pdf-payment>
