@@ -5,21 +5,27 @@
             <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
         </button>
     </div>
-    <form class="flex items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto" [formGroup]="componentForm">
-        <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
-            <mat-label>Nombre Actividad</mat-label>
-            <input matInput id="activityName" formControlName="activityName" autocomplete="off" matInput
-                placeholder="Nombre Actividad" required>
-            <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
-            <mat-error *ngIf="componentForm.get('activityName').hasError('required')">
-                El nombre de la actividad es requerido.
-            </mat-error>
-        </mat-form-field>
-    </form>
-    <div class="btn">
-        <button mat-flat-button mat-stroked-button [color]="'warn'" type="button"
-            [mat-dialog-close]="false">Cancelar</button>
-        <button class="m-2" mat-flat-button [color]="'primary'" type="sumbit" (click)="addActivity()">{{ update ?
-            'Actualizar' : 'Guardar'}}</button>
-    </div>
+    <mat-dialog-content style="margin: 0px; padding: 0px;">
+
+        <form class="flex items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto" [formGroup]="componentForm">
+            <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+                <mat-label>Nombre Actividad</mat-label>
+                <input matInput id="activityName" formControlName="activityName" autocomplete="off" matInput
+                    placeholder="Nombre Actividad" required>
+                <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                <mat-error *ngIf="componentForm.get('activityName').hasError('required')">
+                    El nombre de la actividad es requerido.
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="mr-2">
+        <div class="btn" align="end">
+            <button mat-flat-button mat-stroked-button [color]="'warn'" type="button"
+                [mat-dialog-close]="false">Cancelar</button>
+            <button class="m-2" mat-flat-button [color]="'primary'" type="sumbit" (click)="addActivity()">{{ update ?
+                'Actualizar' : 'Guardar'}}</button>
+        </div>
+    </mat-dialog-actions>
+
 </div>

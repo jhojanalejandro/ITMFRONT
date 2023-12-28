@@ -126,7 +126,6 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
         if (this.formFile.invalid) {
             return;
         }
-        debugger
         let name = this.file.name.split('.')
         const registerFile: FileContractor = {
             contractorId: this._auth.accessId,

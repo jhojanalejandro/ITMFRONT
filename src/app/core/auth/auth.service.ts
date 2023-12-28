@@ -365,7 +365,7 @@ export class AuthService {
             title: '',
             html: error.error.message,
             showConfirmButton: false,
-            timer: 3000
+            timer: 4000
         });
         return new Observable<any>();
     }

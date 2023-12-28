@@ -22,6 +22,7 @@ export interface ContractorPersonalInformation {
     eps: string;
     arl: string;
     afp: string;
+    enableEdit?: boolean;
 }
 
 export interface AcademicInformation {

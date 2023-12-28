@@ -78,6 +78,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.userName = this._auth.accessName;
         this.getContract();
+        this.getStatusUpdate();
 
     }
     uploadDialog() {
@@ -145,7 +146,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
 
     getDataContractor() {
-        if (this.contractSelected != null) {
+        if (this.contractSelected != null && this.contractSelected != '') {
             this.getChargeAccount();
             this.getExecutionReport();
         } else {
@@ -201,6 +202,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
+                    debugger
                     if (Response.data != null) {
                         if (Response.data.chargeAccountNumber == 0) {
                             Response.data.chargeAccountNumber = 1;
@@ -280,6 +282,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
 
     generatePdf(e: any) {
+        debugger
         this.typeGenerator = e;
         this.showPdfGenerated = true;
     }
@@ -318,6 +321,16 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             swal.fire('', 'No has seleccionado contrato!', 'warning');
         }
     }
+
+    private getStatusUpdate() {
+        this._contractorService
+        .getExecutionReport(this._auth.accessId, this.contractSelected)
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((Response) => {
+
+        });
+    }
+
 
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);

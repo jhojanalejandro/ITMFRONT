@@ -102,11 +102,11 @@
                     </mat-form-field>
                 </div>
                 <div class="folder">
-                    <mat-form-field *ngIf="typeContractor" appearance="fill">
-                        <mat-label>Cantidad Contratista</mat-label>
+                    <mat-form-field  appearance="fill">
+                        <mat-label>Cantidad Contratistas</mat-label>
                         <input type="number" id="contractorCant" formControlName="contractorCant"
                             (change)="calculate('valor')" autocomplete="off" matInput
-                            placeholder="Cantidad Contratista">
+                            placeholder="Cantidad Contratistas">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:duplicate'"></mat-icon>
                         <mat-error *ngIf="elementForm.get('contractorCant').hasError('required')">
                             El Campo Cantidad Contratista es requerido

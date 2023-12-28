@@ -161,7 +161,6 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
   }
 
   uploadTypeFile() {
-    debugger
     if (this.formFile.invalid) {
       this.alert = {
         type: 'error',
@@ -174,7 +173,6 @@ export class UploadFileContractComponent implements OnInit, OnDestroy {
     }
     if (this.isSelectContract == true) {
       if (this._data.origin === 'cdp') {
-        debugger
         this.uploadCdpFile();
       } else {
         this.uploadElementFile();

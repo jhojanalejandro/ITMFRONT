@@ -190,4 +190,9 @@ export class GenericService {
         const decrypted = CryptoJS.AES.decrypt(cipherText, GlobalConst.encryptSecretKey).toString(CryptoJS.enc.Utf8);
         return decrypted;
     }
+
+    decryptDataUser(cipherText: string): string {
+        const decrypted = CryptoJS.AES.decrypt(cipherText, GlobalConst.encryptSecretKeyApi).toString(CryptoJS.enc.Utf8);
+        return decrypted;
+    }
 }

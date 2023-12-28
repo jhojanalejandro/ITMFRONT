@@ -76,6 +76,7 @@ export interface PreviusStudyContractorsList{
     activityContractor: string;
     dutyContract: string;
     policeRequire: boolean;
+    legalprocessAprove: boolean;
 }
 
 export interface PersonalInCharge{
@@ -110,4 +111,6 @@ export interface MinutePdf{
     comiteGenerated: boolean;
     previusStudy: boolean;
     requirePolice: boolean;
+    legalprocessAprove: boolean;
+
 }

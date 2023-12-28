@@ -62,16 +62,6 @@ export const appRoutes: Route[] = [
         ]
     },
 
-    {
-        path: '',
-        data: {
-            layout: 'empty'
-        },
-        children   : [
-            {path: 'file', loadChildren: () => import('app/modules/acta-comite/acta-comite.module').then(m => m.ActaComiteModule)},
-        ]
-    },
-
     // Admin routes
     {
         path       : '',

@@ -42,7 +42,7 @@ export class NominaService {
         let urlEndPoint = this.apiUrl + environment.GetAllContractorPaymentsEndpoint;
         return this._httpClient.get<any>(urlEndPoint);
     }
-    
+
     getByIdContractorPayments(id: any) {
         let urlEndPoint = this.apiUrl + environment.GetByIdContractorPaymentsEndpoint;
         return this._httpClient.get<any>(urlEndPoint + id);
@@ -74,16 +74,16 @@ export class NominaService {
         );
     }
 
-    addContractorPaymentSecurity(data: any) {
+    addContractorPaymentSecurity(contractorPaymentSecurity: any) {
         let urlEndpointGenerate = this.apiUrl + environment.addContractorPaymentSecurityEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, contractorPaymentSecurity).pipe(
             catchError(this.handleError)
         );
     }
 
     private handleError(error: any): Observable<any> {
         console.log(error);
-        
+        debugger
         let errorShow = null;
         if(error.error.message == null){
             errorShow = error.error

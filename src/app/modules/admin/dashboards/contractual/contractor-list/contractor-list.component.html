@@ -149,7 +149,7 @@
 
                                 </th>
                                 <!-- <td mat-cell *matCellDef="let row">
-   
+
 
                                 </td> -->
                                 <!-- <th mat-header-cell *matHeaderCellDef>
@@ -164,7 +164,7 @@
                                     </div>
                                     <div *ngIf="columna.name !='select' && columna.name !='acciones'">
                                         <p
-                                            *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess 
+                                            *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess
                                      && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
                                      && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
                                             {{element[columna.name]}}
@@ -181,7 +181,7 @@
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!=element.previusStudy && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
+                                            *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!= element.comiteGenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
                                     'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.legalProccess === 'EN ESPERA',
@@ -203,7 +203,7 @@
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
                                 'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
-                                'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',                                                                              
+                                'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',
                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
                                             <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}
                                             </span>
@@ -212,8 +212,8 @@
                                             *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',  
-                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.previusStudy === 'RECHAZADO',                                     
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',
+                                    'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.previusStudy === 'RECHAZADO',
                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.previusStudy === 'APROBADO'}">
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
@@ -223,7 +223,7 @@
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
                                             'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.minuteGnenerated === 'RECHAZADO',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',                                       
+                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',
                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated === 'APROBADO'}">
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
@@ -244,10 +244,11 @@
                                                     <mat-icon svgIcon="heroicons_solid:pencil-alt"></mat-icon>
                                                     Agregar datos
                                                 </button>
-                                                <button [matTooltip]="'Agregar Modificacion'"
-                                                    (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
+                                                <button [matTooltip]="'Generar'"
+                                                    (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
+                                                    mat-menu-item>
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Minuta
+                                                    Generar Solicitud de comite
                                                 </button>
                                                 <button [matTooltip]="'GENERAR PDF'"
                                                     (click)="generatedPdfContractor(element,'ESTUDIOS PREVIOS')"
@@ -255,11 +256,10 @@
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
                                                     Generar Estudios Previos
                                                 </button>
-                                                <button [matTooltip]="'Generar'"
-                                                    (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
-                                                    mat-menu-item>
+                                                <button [matTooltip]="'Agregar Modificacion'"
+                                                    (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Solicitud de comite
+                                                    Generar Minuta
                                                 </button>
                                                 <button [matTooltip]="'Generar'" *ngIf="visibleOption" mat-menu-item
                                                     (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">

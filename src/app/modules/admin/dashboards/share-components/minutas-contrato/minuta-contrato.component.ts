@@ -130,7 +130,8 @@ export class MinutaContratoComponent implements OnInit {
             let fechaLetras = this._shareService.calcularDiferencia(data.initialDateContract, data.finalContractDate);
             let valorLetras = this._shareService.numeroALetras(data.totalValueContract, 'PESOS');
             let totalContrato = this.addCommasToNumber(data.totalValueContract);
-            if (data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || data.comiteGenerated != true || data.previusStudy != true) {
+            debugger
+            if (!data.legalprocessAprove  ||  data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || !data.comiteGenerated || !data.previusStudy) {
                 if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
                     swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
                     this.hideComponent();
@@ -158,7 +159,7 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro el valor del contrato para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
                     });
                 } else if (data.contractNumber == null || data.contractNumber == '' || data.contractNumber == 'vacio') {
                     swal.fire({
@@ -167,7 +168,7 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro la numero de la minuta para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
                     });
 
                 } else if (supervisor == null) {
@@ -177,7 +178,16 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro la información del supervisor ',
                         showConfirmButton: false,
-                        timer: 3000
+                        timer: 4000
+                    });
+                }else if (!data.legalprocessAprove ){
+                    swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '',
+                        html: 'Aun se a realizado la aprobación juridica',
+                        showConfirmButton: false,
+                        timer: 4000
                     });
                 }
             } else {
@@ -199,8 +209,6 @@ export class MinutaContratoComponent implements OnInit {
                 }
                 this.documentGenerated.push(minute);
             }
-            this._changeDetectorRef.detectChanges();
-            this._changeDetectorRef.markForCheck();
         }
         if (this.documentGenerated.length > 0) {
             this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.MNT, DocumentTypeCodes.MINUTA);
@@ -235,7 +243,7 @@ export class MinutaContratoComponent implements OnInit {
                         'Entre los suscritos, de una parte, yolanda maria henao con cedula de ciudadania 43507013, actuando en calidad de jefe de oficina asesora juridica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
                         'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO - INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.contractorName + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.contractorIdentification + ' de ' + data.contractorExpeditionPlace + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas:',
                         ' PRIMERA. -OBJETO DEL CONTRATO. ' + data.elementObject,
-                        '. SEGUNDA: DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + fechaLetras + ', contados a partir de la suscripción del contrato a traves de la la plataforma SECOP II. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date().getFullYear() + ' . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo 217 decreto 019 del 2012.',
+                        '. SEGUNDA: DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + fechaLetras + ', contados a partir de la suscripción del contrato a traves de la plataforma SECOP II. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + dataProject.contractNumber + ' DE ' + new Date().getFullYear() + ' . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo 217 decreto 019 del 2012.',
                         ' TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de ' + valorLetras + ' m.l ($ ' + totalContrato + ') El I.T.M. cancelará al CONTRATISTA, en pagos parciales correspondientes a la entrega previa del informe y/o producto. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades y/o productos correspondientes al mes, el Instituto no cancelará los',
                         'honorarios de dicho mes; una vez se cuente con la totalidad de las actividades cumplidas, dicho pago será efectuado en la siguiente fecha de pago programada para el proyecto. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social.',
                         'PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente.',
@@ -516,10 +524,10 @@ export class MinutaContratoComponent implements OnInit {
                 {
                     margin: [10, 10, 10, 10],
                     text: [
-                        'Entre los suscritos, de una parte, ' + supervisor.userName + ' con c.c. ' + supervisor.userIdentification + ', actuando en calidad de ' + supervisor.userCharge + 'del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
+                        'Entre los suscritos, de una parte, yolanda maria henao con cedula de ciudadania 43507013, actuando en calidad de jefe de oficina asesora juridica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 del 10 de septiembre del 2020 por medio de la cual se delegan funciones en materia de contratación, en el marco de la ley 80',
                         'de 1993, leyes modificatorias y decretos reglamentarios del INSTITUTO TECNOLÓGICO METROPOLITANO - INSTITUCIÓN UNIVERSITARIA, adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7, debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, previa adjudicación del Rector del ITM, que en adelante se denominará INSTITUTO y de otra parte ' + data.contractorName + ' mayor de edad, identificado (a) con Cédula de Ciudadanía ' + data.contractorIdentification + ' de ' + data.contractorExpeditionPlace + ' que en adelante se denominará el CONTRATISTA, se ha convenido celebrar el presente contrato, que se regirá por las siguientes cláusulas:',
                         ' PRIMERA. -OBJETO DEL CONTRATO. ' + data.elementObject,
-                        '. SEGUNDA: DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + fechaLetras + ', contados a partir de la suscripción del contrato a traves de la la plataforma SECOP II. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date().getFullYear() + ' . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo 217 decreto 019 del 2012.',
+                        '. SEGUNDA: DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + fechaLetras + ', contados a partir de la suscripción del contrato a traves de la la plataforma SECOP II. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + dataProject.contractNumber + ' DE ' + new Date().getFullYear() + ' . No tendrá lugar a la liquidación conforme al Artículo 60 ley 80 de 1993 modificado por el artículo 217 decreto 019 del 2012.',
                         ' TERCERA. - VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de ' + valorLetras + ' m.l ($ ' + totalContrato + ') El I.T.M. cancelará al CONTRATISTA, en pagos parciales correspondientes a la entrega previa del informe y/o producto. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades y/o productos correspondientes al mes, el Instituto no cancelará los',
                         'honorarios de dicho mes; una vez se cuente con la totalidad de las actividades cumplidas, dicho pago será efectuado en la siguiente fecha de pago programada para el proyecto. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el supervisor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social.',
                         'PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestion y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumularan para el periodo inmediatamente siguiente.',
@@ -773,6 +781,7 @@ export class MinutaContratoComponent implements OnInit {
     }
 
     private generateMinuteExtension(data: any,listConcat: any) {
+        debugger
         let dataProject = this.otherMinuteData.dataContract;
         let supervisor = this.otherMinuteData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.SUPERVISOR)
         let plazo = this._shareService.calcularDiferencia(data.initialDateContract, data.finalDateContract);
@@ -952,7 +961,7 @@ export class MinutaContratoComponent implements OnInit {
                     },
                     {
                         margin: [10, 10, 10, 10],
-                        text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P- ' + data.contractNumber + ' DE ' + new Date(dataProject.registerDate).getFullYear() + ' de conformidad con la necesidad que tiene la EMPRESAS ' + data.companyName + ' DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  ' + data.contractNumber + '/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P- ' + data.contractNumber + ' de ' + new Date(dataProject.registerDate).getFullYear() + ' será por un período de ' + plazoAmpliacion + ' adicionales al término primigenio.',
+                        text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P- ' + data.contractNumber + ' DE ' + new Date(dataProject.registerDate).getFullYear() + ' de conformidad con la necesidad que tiene la EMPRESAS ' + data.companyName + ' DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  ' + dataProject.contractNumber + '/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P- ' + data.contractNumber + ' de ' + new Date(dataProject.registerDate).getFullYear() + ' será por un período de ' + plazoAmpliacion + ' adicionales al término primigenio.',
                         fontSize: 10,
                         style: 'textStyle'
                     },
@@ -978,7 +987,7 @@ export class MinutaContratoComponent implements OnInit {
                     },
                     {
                         margin: [15, 10, 10, 15],
-                        text: '““SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración ' + plazoAmpliacion + ' contados a partir de la suscripción del acta de inicio - la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
+                        text: '““SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración ' + plazoAmpliacion + ' contados a partir de la suscripción del acta de inicio - la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + dataProject.contractNumber + ' Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
                         style: 'textStyle'
                     },
                     {
@@ -1023,12 +1032,7 @@ export class MinutaContratoComponent implements OnInit {
                     },
                 },
             };
-            let minute = {
-                document: minuteExtension,
-                contractorName: data.contractorName,
-                contractorId: data.contractorId
-            }
-            this.documentGenerated.push(minute);
+            return minuteExtension;
         } else {
             if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
                 swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
@@ -1229,7 +1233,7 @@ export class MinutaContratoComponent implements OnInit {
                     },
                     {
                         margin: [10, 10, 10, 10],
-                        text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P-7240 de 2022 de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  CW153520/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-3819 de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
+                        text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P-7240 de 2022 de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No. '+ dataProject.contractNumber+' , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-3819 de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
                         fontSize: 10,
                         style: 'textStyle'
                     },
@@ -1253,7 +1257,7 @@ export class MinutaContratoComponent implements OnInit {
                     },
                     {
                         margin: [15, 10, 10, 15],
-                        text: '“SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + plazo + '  contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date(data.initialDateContract).getFullYear() + ' . Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
+                        text: '“SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + plazo + ',  contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date(data.initialDateContract).getFullYear() + ' . Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
                         fontSize: 10,
                         bold: true,
                         style: 'textStyle'
@@ -1344,6 +1348,7 @@ export class MinutaContratoComponent implements OnInit {
     }
 
     private generateModifyMinute(data: any, listaData: any[]) {
+        debugger
         let dataProject = this.otherMinuteData.dataContract;
         let user = this.otherMinuteData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
         let supervisor = this.otherMinuteData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.SUPERVISOR)
@@ -1351,14 +1356,12 @@ export class MinutaContratoComponent implements OnInit {
         let fechaInicioContrato = this._shareService.transformDate(data.initialDateContract.toString());
         let fechaFinalContrato = this._shareService.transformDate(data.finalDateContract.toString());
         let valorLetras = this._shareService.numeroALetras(data.totalValueContract, 'PESOS');
-        let plazoAmpliacion = this._shareService.calcularDiferencia(data.extensionInitialDate, data.extensionFinalDate);
         data.totalValueContract = this.addCommasToNumber(data.totalValueContract);
-        data.additionValue = this.addCommasToNumber(data.additionValue);
         data.unitValueContract = this.addCommasToNumber(data.unitValueContract);
         data.specificObligations = data.specificObligations.replaceAll('->', ' ');
         data.generalObligations = data.generalObligations.replaceAll('->', ' ');
 
-        if (plazoAmpliacion != null) {
+        if (data.generalObligations != null) {
             const minutaModificacionMacro = {
                 pageSize: 'A4',
                 pageOrientation: 'FOLIO',
@@ -1549,7 +1552,7 @@ export class MinutaContratoComponent implements OnInit {
                             },
                             {
                                 style: 'text',
-                                text: '1. Apoyar el proceso de Supervisión y contratación en la plataforma SAP y las demás plataformas tecnológicas dispuestas para realizar todas las transacciones y actividades relacionadas con las etapas pre y contractual de la Secretaía de Seguridad y Convivencia.2. Colaborar con la realización de especificaciones técnicas, estudios previos y demás documentos necesarios en la etapa precontractual de la contratación de la Secretaría de Seguridad y Convivencia.3. Ayudar con la elaboración de los documentos necesarios para gestionar alguna modificacion contractual y/o de los convenios de la Secretaria de Seguridad y convivencia.4. contribuir con la ejecución de las actividades propias  de la Supervisión de los contratos y convenios de la Secretaría de Seguridad que le sean asignadas, basados en los parámetros establecidos en el marco del Manual de Contratación del Municipio de Medellín y las demás que lo modifiquen y/o complementen.5. Apoyar la liquidación de los rendimientos financieros de los contratos desde el rol de correspondiente que hayan sido  designados por la Secretaria de Seguridad y Convivencia.',
+                                text: data.specificObligations,
                             }
                         ]
                     },
@@ -1722,12 +1725,7 @@ export class MinutaContratoComponent implements OnInit {
                     }
                 }
             };
-            let minute = {
-                document: minutaModificacionMacro,
-                contractorName: data.contractorName,
-                contractorId: data.contractorId
-            }
-            this.documentGenerated.push(minute);
+            return minutaModificacionMacro;
         } else {
             if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
                 swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
@@ -1741,21 +1739,11 @@ export class MinutaContratoComponent implements OnInit {
                     showConfirmButton: false,
                     timer: 1000
                 });
-            } else if (plazoAmpliacion == null || plazoAmpliacion == '') {
-                swal.fire({
-                    position: 'center',
-                    icon: 'warning',
-                    title: '',
-                    html: 'No se encontro la numero de la minuta para el contratista ' + data.contractorName,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-
             }
         }
-        if (this.documentGenerated.length > 0) {
-            this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.APC, DocumentTypeCodes.OTROSI);
-        }
+        // if (this.documentGenerated.length > 0) {
+        //     this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.APC, DocumentTypeCodes.OTROSI);
+        // }
     }
 
     private generateAdditionMinuteTest() {
@@ -1764,12 +1752,14 @@ export class MinutaContratoComponent implements OnInit {
             let dataListContractorasc = this.otherMinuteData.getDataContractors.filter(f => f.contractorId === this.contractContractors.contractors[index]).sort((a, b) => a.consecutive - b.consecutive)
             let data = dataListContractordesc[0];
             dataListContractorasc = dataListContractorasc.sort((a, b) => a.consecutive - b.consecutive);
-
+            let md = dataListContractorasc[index].consecutive > 1 ? dataListContractorasc[index].consecutive : 'ACTUAL';
+            let cantModify= null;
             for (let index = 0; index < dataListContractorasc.length; index++) {
                 debugger
-                let md = dataListContractorasc[index].consecutive > 1 ? dataListContractorasc[index].consecutive : 'ACTUAL'
                 switch (dataListContractorasc[index].typeModify) {
                     case DocumentTypeFileCodes.ADC:
+                        cantModify = dataListContractorasc.filter(f => f.typeModify ===DocumentTypeFileCodes.ADC);
+                        md = dataListContractorasc[index].consecutive > 1 && cantModify.length >1 ? dataListContractorasc[index].consecutive : 'ACTUAL';
                         dataListContractorasc[index].additionValue = this.addCommasToNumber(dataListContractorasc[index].additionValue);
                         this.listaData[this.listaData.length] =
                             [
@@ -1790,6 +1780,8 @@ export class MinutaContratoComponent implements OnInit {
 
                         break;
                     case DocumentTypeFileCodes.APC:
+                        cantModify = dataListContractorasc.filter(f => f.typeModify ===DocumentTypeFileCodes.APC)
+                        md = dataListContractorasc[index].consecutive > 1 && cantModify.length >1 ? dataListContractorasc[index].consecutive : 'ACTUAL'
                         let plazoAmpliacion = this._shareService.calcularDiferencia(dataListContractorasc[index].extensionInitialDate, dataListContractorasc[index].extensionFinalDate);
                         this.listaData[this.listaData.length] =
                             [
@@ -1812,8 +1804,8 @@ export class MinutaContratoComponent implements OnInit {
                 }
 
             }
-            debugger
 
+            debugger
             data.totalValueContract = this.addCommasToNumber(data.totalValueContract);
             data.unitValueContract = this.addCommasToNumber(data.unitValueContract);
             let docuemnt = null;
@@ -2112,10 +2104,6 @@ export class MinutaContratoComponent implements OnInit {
                         }
                     }
                 }
-            })
-            .catch(error => {
-                swal.fire('', 'Error al cargar y convertir la imagen ' + error, 'error');
-                this.hideComponent();
             });
 
     }
@@ -2151,12 +2139,10 @@ export class MinutaContratoComponent implements OnInit {
             if (documentType == null) {
                 documentType = this.typeMinute.find(f => f.code === origin)
             }
-
-
             let nombreDocumento = documentType.documentTypeDescription == null ? documentType.minuteTypeDescription : documentType.documentTypeDescription + pdfDocument[index].contractorName;
             let userId = this._auth.accessId;
             let date = this.currentDate;
-            const pdf = pdfMake.createPdf(pdfDocument[index].document).download('testOtrosi');
+            const pdf = pdfMake.createPdf(pdfDocument[index].document);
             const dataURL = await new Promise<string>((resolve) => {
                 pdf.getDataUrl((dataURL) => resolve(dataURL));
             });

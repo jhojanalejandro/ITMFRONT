@@ -142,17 +142,17 @@ export class ShareService {
         const meses = Math.floor(diasTotales / 30);
         const dias = diasTotales % 30;
         if (meses > 0 && meses == 1) {
-            return `${meses} mes y ${dias} días.`
+            return `${meses} mes y ${dias} días`
         } else if (meses > 0 && meses > 1) {
-            return `${meses} meses y ${dias} días.`
+            return `${meses} meses y ${dias} días`
         } else {
-            return `${dias} días.`
+            return `${dias} días`
         }
     }
 
     numeroALetras(total, currency) {
         const numericValue = Number(total.toString().replace(/\./g, ''));
-    
+
         currency = currency || {};
         let data = {
             numero: numericValue,
@@ -160,7 +160,7 @@ export class ShareService {
             letrasMonedaPlural: currency.plural || 'PESOS',
             letrasMonedaSingular: currency.singular || 'PESO',
         };
-    
+
         if (data.enteros === 0) {
             return 'CERO ' + data.letrasMonedaPlural;
         } else {
@@ -169,16 +169,16 @@ export class ShareService {
             let resultado = millonesParte;
             // Verificar si se debe agregar "DE"
             const milesParte = data.enteros % 1000000;
-    
+
             if (milesParte === 0) {
                 resultado += ' DE';
             }
-        
+
             resultado += ' ' + monedaParte;
             return resultado;
         }
     }
-    
+
     transform(value: number): string {
         if (value === 0) {
             return 'cero pesos';
@@ -260,7 +260,7 @@ export class ShareService {
         return `${dia} de ${mes} del ${año}`;
     }
 
-    
+
     loadAndConvertImageToBase64(imagePath: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this._httpClient.get(imagePath, { responseType: 'blob' })

@@ -8,18 +8,19 @@ import { Subject, takeUntil, Observable, startWith, map } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CollectionAccountsService } from './collection-accounts-list.service';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { DocumentTypeFile } from 'app/layout/common/models/file-contractor';
-import { CategoryFile, DocumentTypeCode } from 'app/layout/common/enums/document-type/document-type';
+import { DetailFile, DocumentTypeFile, FileContractor } from 'app/layout/common/models/file-contractor';
+import { CategoryFile, DocumentTypeCode, DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { GenericService } from 'app/modules/admin/generic/generic.service';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 import { UploadFileDataService } from '../../../contractual/service/upload-file.service';
 import { FileListManagerService } from 'app/modules/admin/apps/file-manager/services/list-file.service';
+import { AuthService } from 'app/core/auth/auth.service';
 const moment = _rollupMoment || _moment;
 
 export const MY_FORMATS = {
@@ -66,6 +67,16 @@ export class CollectionAccountsListComponent implements OnInit {
   contratos: any;
   statusFileLoad: any;
   statusFileCreate: any;
+  detailFile: DetailFile = {
+    fileId: null,
+    registerDate: new Date(),
+    reason: null,
+    observation: null,
+    statusFileId: null,
+    passed: false,
+    userId: null,
+    contractId: '',
+}
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _changeDetectorRef: ChangeDetectorRef,
@@ -73,9 +84,11 @@ export class CollectionAccountsListComponent implements OnInit {
     private _collectionAccounts: CollectionAccountsService,
     private _fuseMediaWatcherService: FuseMediaWatcherService,
     private _matDialog: MatDialog,
-    private _uploadFileDataService: UploadFileDataService,
     private _gerenicService: GenericService,
     private _fileManagerService: FileListManagerService,
+    private _uploadService: UploadFileDataService,
+    private _auth: AuthService,
+    private _uploadFileDataService: UploadFileDataService
   ) { }
 
   ngOnInit(): void {
@@ -91,6 +104,7 @@ export class CollectionAccountsListComponent implements OnInit {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
+
   }
   /**
    * On backdrop clicked
@@ -254,7 +268,7 @@ export class CollectionAccountsListComponent implements OnInit {
       (response) => {
         console.log(response);
 
-        swal.fire('Error', 'Error al Mostrar la informacion!', 'error');
+        Swal.fire('Error', 'Error al Mostrar la informacion!', 'error');
       });
   }
 
@@ -276,7 +290,7 @@ export class CollectionAccountsListComponent implements OnInit {
       this._changeDetectorRef.markForCheck();
     },
       (response) => {
-        swal.fire('Error', 'Error al Mostrar la informacion!', 'error');
+        Swal.fire('Error', 'Error al Mostrar la informacion!', 'error');
       });
   }
 
@@ -312,6 +326,36 @@ export class CollectionAccountsListComponent implements OnInit {
                 id: status.id.toLowerCase()
             }));
         });
+}
+
+
+updateFileFileGenerated(event: any, file: FileContractor) {
+    this.detailFile.fileId = file.id;
+    this.detailFile.registerDate = new Date();
+    this.detailFile.passed = true;
+    this.detailFile.statusFileId = event.value;
+    this.detailFile.userId = this._auth.accessId;
+    this.detailFile.contractId = this.contractId;
+    // this.detailFile.contractorId = this.contractorId;
+    this._uploadService.updateStatusFileContractor(this.detailFile)
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe((res) => {
+        if (res) {
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: '',
+                html: 'Información actualizada Exitosamente!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    },
+        (response) => {
+            console.log(response);
+            Swal.fire('Error', 'Error al Actualizar la informacion!', 'error');
+        });
+
 }
 
   getContractsData() {

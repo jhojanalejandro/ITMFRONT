@@ -1,7 +1,8 @@
 import { TypeSelect, TypeSelectBool, TypeSelectNumber, TypeSelectString } from "../models/TypeSelect";
 
 export class GlobalConst {
-    public static encryptSecretKey = '576cf17b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae451f5a65ed1'
+    public static encryptSecretKey = '576cf17b09eab3c013d4ca54922bb802bec8fd5318192b0a75f201d8b3727429090fb337591abd3e44453b954555b7a0812e1081c39b740293f765eae451f5a65ed'
+    public static encryptSecretKeyApi = '1234567890123456'
 
     public static nomina: TypeSelectString[] = [
         { viewValue: 'pago efectivo' },
