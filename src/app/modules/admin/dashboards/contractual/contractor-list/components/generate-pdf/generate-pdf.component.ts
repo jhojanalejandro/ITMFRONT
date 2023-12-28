@@ -331,7 +331,7 @@ export class GeneratePdfComponent implements OnInit {
                     margin: [10, 10, 10, 10],
                     text: [
                         {
-                            text: 'La Unidad Estratégica de Negocios del ITM, requiere celebrar un contrato  de prestación de servicio para realizar la gestion de '+ data.activityContractor +' correspondientes al contrato interadministrativo No '+ data.contractNumber + ' celebrado entre empresa y el  ITM, cuyo objeto es',
+                            text: 'La Unidad Estratégica de Negocios del ITM, requiere celebrar un contrato  de prestación de servicio para realizar la gestion de '+ data.activityContractor +' correspondientes al contrato interadministrativo No '+ data.contractNumber + ' celebrado entre empresa y el  ITM, cuyo objeto es' + dataContract.contractObject,
                             fontSize: 10,
                             alignment: 'justify'
                         }
@@ -540,18 +540,18 @@ export class GeneratePdfComponent implements OnInit {
                                                 text:  data.elementObject, fontSize: 10,
                                                 alignment: 'justify'
                                             },
-                                            {
-                                                text: data.contractNumber + ' de ' + new Date(dataContract.registerDate).getFullYear(),
-                                                fontSize: 10,
-                                            },
-                                            {
-                                                text: 'celebrado entre ',
-                                                fontSize: 9,
-                                            },
-                                            {
-                                                text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
-                                                fontSize: 9,
-                                            },
+                                            // {
+                                            //     text: data.contractNumber + ' de ' + new Date(dataContract.registerDate).getFullYear(),
+                                            //     fontSize: 10,
+                                            // },
+                                            // {
+                                            //     text: 'celebrado entre ',
+                                            //     fontSize: 9,
+                                            // },
+                                            // {
+                                            //     text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
+                                            //     fontSize: 9,
+                                            // },
                                         ],
                                     },
                                     {
@@ -563,7 +563,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 bold: true,
                                             },
                                             {
-                                                text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como'+data.activityContractor,
+                                                text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como '+data.activityContractor,
                                                 style: 'fontSegundapagPeque',
                                             },
                                         ],
@@ -1794,18 +1794,18 @@ export class GeneratePdfComponent implements OnInit {
                                                 text:  data.elementObject, fontSize: 10,
                                                 alignment: 'justify'
                                             },
-                                            {
-                                                text: data.contractNumber + ' de ' + new Date(dataContract.registerDate).getFullYear(),
-                                                fontSize: 10,
-                                            },
-                                            {
-                                                text: 'celebrado entre ',
-                                                fontSize: 9,
-                                            },
-                                            {
-                                                text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
-                                                fontSize: 9,
-                                            },
+                                            // {
+                                            //     text: data.contractNumber + ' de ' + new Date(dataContract.registerDate).getFullYear(),
+                                            //     fontSize: 10,
+                                            // },
+                                            // {
+                                            //     text: 'celebrado entre ',
+                                            //     fontSize: 9,
+                                            // },
+                                            // {
+                                            //     text: ' EL DISTRITO ESPECIAL DE CIENCIA TECNOLOGÍA E INNOVACIÓN DE MEDELLÍN – DEPARTAMENTO ADMINISTRATIVO DE PLANEACIÓN y el ITM.',
+                                            //     fontSize: 9,
+                                            // },
                                         ],
                                     },
                                     {
@@ -1817,7 +1817,7 @@ export class GeneratePdfComponent implements OnInit {
                                                 bold: true,
                                             },
                                             {
-                                                text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como'+data.activityContractor,
+                                                text: ' Para el cumplimiento del objeto el contratista deberá desarrollar todas las actividades que sean necesarias para realizar la gestión como '+data.activityContractor,
                                                 style: 'fontSegundapagPeque',
                                             },
                                         ],

@@ -19,10 +19,22 @@ import { ChargeAccount, ExecutionReport } from '../../models/pdfDocument';
 import { ShareService } from 'app/layout/common/share-service/share-service.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as pdf from 'pdf-parse';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MY_FORMATS } from '../upload-file-contractor/upload-file-contractor.component';
 
 @Component({
-    selector: 'app-cuenta-cobro',
+    selector: 'pdf-payment',
     templateUrl: './pdf-payment.component.html',
+    providers: [DatePipe,
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+        },
+
+        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    ]
 })
 export class PdfPaymentComponent implements OnInit, OnDestroy {
     @ViewChild('pdfTable') pdfTable: ElementRef;
@@ -49,6 +61,7 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
+        debugger
         this.valueLetter = this._shareService.numeroALetras(
             this.chargeAccountData.totalValue,
             'PESOS'
