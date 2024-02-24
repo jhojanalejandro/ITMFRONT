@@ -26,6 +26,7 @@
 //     })
 // })
 
+
 describe('lista contratos', () => {
 
   it.only('registrar usuario', () => {
@@ -34,10 +35,10 @@ describe('lista contratos', () => {
       cy.get('[formControlName="userName"]').type('jhojan alejandro hernandez yepes');
       cy.get('[formControlName="identification"]').type('1000189631');
       cy.get('[formControlName="phoneNumber"]').type('3003853164');
-      cy.get('[formControlName="email"]').type('jhojanhernandezy24@outlook.es');
+      cy.get('[formControlName="email"]').type('corporativoWeb@outlook.com');
 
-      cy.get('[formControlName="passwordMail"]').type('ALEJO_0406');
-      cy.get('[formControlName="professional"]').type('ADMINISTRADOR PLATAFORMA');
+      cy.get('[formControlName="passwordMail"]').type('Corporativo*_*');
+      cy.get('[formControlName="professional"]').type('Administrdor plataflorma contratación');
 
       cy.get('[formControlName="password"]').type('123');
       cy.get('[formControlName="passwordConfirm"]').type('123');
@@ -61,7 +62,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="phoneNumber"]').type('32012365419');
       cy.get('[formControlName="email"]').type('mario@outlook.es');
       cy.get('[formControlName="passwordMail"]').type('827');
-      cy.get('[formControlName="professional"]').type('CONTRACTUAL 2');
+      cy.get('[formControlName="professional"]').type('Profesional encargado de lagestión de contratos');
       cy.get('[formControlName="password"]').type('4567');
       cy.get('[formControlName="passwordConfirm"]').type('4567');
       cy.contains('Registrarse').click();
@@ -77,7 +78,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="phoneNumber"]').type('3022569853');
       cy.get('[formControlName="email"]').type('sandra@outlook.es');
       cy.get('[formControlName="passwordMail"]').type('6686');
-      cy.get('[formControlName="professional"]').type('JURIDICO 2');
+      cy.get('[formControlName="professional"]').type('Abogado juridico');
       cy.get('[formControlName="password"]').type('9997');
       cy.get('[formControlName="passwordConfirm"]').type('9997');
       cy.contains('Registrarse').click();
@@ -93,7 +94,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="phoneNumber"]').type('301251879');
       cy.get('[formControlName="email"]').type('angelica20@outlook.es');
       cy.get('[formControlName="passwordMail"]').type('1590');
-      cy.get('[formControlName="professional"]').type('SUPERVISOR');
+      cy.get('[formControlName="professional"]').type('JEFE DE PROYECTOS UNIDAD ESTRATEGICA DE NEGICIOS');
       cy.get('[formControlName="password"]').type('4566');
       cy.get('[formControlName="passwordConfirm"]').type('4566');
       cy.contains('Registrarse').click();
@@ -110,7 +111,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="phoneNumber"]').type('301254879');
       cy.get('[formControlName="email"]').type('andres20@outlook.es');
       cy.get('[formControlName="passwordMail"]').type('777');
-      cy.get('[formControlName="professional"]').type('JURIDICO');
+      cy.get('[formControlName="professional"]').type('Abogado juridico competente en los diferentes ambitos legales');
       cy.get('[formControlName="password"]').type('456');
       cy.get('[formControlName="passwordConfirm"]').type('456');
       cy.contains('Registrarse').click();
@@ -146,7 +147,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="phoneNumber"]').type('32012365489');
       cy.get('[formControlName="email"]').type('carlosm@outlook.es');
       cy.get('[formControlName="passwordMail"]').type('777');
-      cy.get('[formControlName="professional"]').type('SUPERVISOR');
+      cy.get('[formControlName="professional"]').type('Supervisor unidad estrategica de negocio');
       cy.get('[formControlName="password"]').type('456');
       cy.get('[formControlName="passwordConfirm"]').type('456');
       cy.contains('Registrarse').click();
@@ -162,7 +163,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="phoneNumber"]').type('3012569853');
       cy.get('[formControlName="email"]').type('alejo@outlook.es');
       cy.get('[formControlName="passwordMail"]').type('666');
-      cy.get('[formControlName="professional"]').type('CONTRACTUAL');
+      cy.get('[formControlName="professional"]').type('profesional competente en las areas asignadas');
       cy.get('[formControlName="password"]').type('999');
       cy.get('[formControlName="passwordConfirm"]').type('999');
       cy.contains('Registrarse').click();
@@ -180,7 +181,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="email"]').type('mariaestrada@outlook.es');
 
       cy.get('[formControlName="passwordMail"]').type('888');
-      cy.get('[formControlName="professional"]').type('PLANEACIÓN');
+      cy.get('[formControlName="professional"]').type('Profesional competente en el area de planeación');
 
       cy.get('[formControlName="password"]').type('321');
       cy.get('[formControlName="passwordConfirm"]').type('321');
