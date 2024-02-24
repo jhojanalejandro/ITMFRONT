@@ -58,7 +58,7 @@ export const MY_FORMATS = {
     ]
 })
 export class UploadFileContractorComponent implements OnInit, OnDestroy {
-    date = new FormControl(null,Validators.required);
+    date = new FormControl(new Date(),Validators.required);
     @ViewChild('signInNgForm') uploadNgForm: NgForm;
     monthYear: any;
     shortLink: string = '';
@@ -72,10 +72,10 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
     base64Output: any;
     numberOfTicks = 0;
     formFile: FormGroup;
+    title: string = 'Cargar Archivos Contratación'
     showDate: boolean = false;
+    nominaShow: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-
 
     constructor(
         private ref: ChangeDetectorRef,
@@ -104,7 +104,7 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             file: new FormControl(null, Validators.required),
             filesName: new FormControl(null),
             typeDoc: new FormControl(null, Validators.required),
-            description: new FormControl(null, Validators.required)
+            description: new FormControl(null)
         });
         this.getDaTaContractor();
     }
@@ -137,13 +137,46 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
             registerDate: this.registerDate,
             modifyDate: this.registerDate,
             filedata: this.base64Output,
-            monthPayment: this.monthYear,
+            monthPayment: this.date.value.getFullYear().toString() + '/'+this.date.value.getMonth() +1,
             userId: null,
             folderId: null,
             anexo: false
         };
         this.formFile.disable();
-        this._uploadFileDataService
+        if(this.nominaShow){
+            this._uploadFileDataService
+            .SaveFileContractorPayment(registerFile)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(
+                (res) => {
+                    if (res.success) {
+                        swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: '',
+                            html: res.message,
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                        this.ref.detectChanges();
+                        this.ref.markForCheck();
+                        this.matDialogRef.close();
+                    }
+                },
+                (response) => {
+                    this.formFile.enable();
+                    // Set the alert
+                    swal.fire(
+                        'Error',
+                        'Error al Registrar la informacion!',
+                        'error'
+                    );
+                    // Show the alert
+                    this.showAlert = true;
+                }
+            );
+        }else{
+            this._uploadFileDataService
             .UploadFileContractor(registerFile)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
@@ -174,6 +207,8 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     this.showAlert = true;
                 }
             );
+        }
+
     }
 
     convertFile(file: File): Observable<string> {
@@ -279,7 +314,9 @@ export class UploadFileContractorComponent implements OnInit, OnDestroy {
                     }
                 }
                 else if(resp.activateTermPayments){
-                    this.typeDocs = this.typeDocs.filter(f => f.code == DocumentTypeCodes.PLANILLA || f.code == DocumentTypeCodes.INFORMEEJECUCIÓN || f.code == DocumentTypeCodes.CUENTACOBRO);
+                    this.nominaShow = true;
+                    this.title = 'Cargar Archivos Nomina'
+                    this.typeDocs = this.typeDocs.filter(f =>  f.code == DocumentTypeCodes.INFORMEEJECUCIÓN || f.code == DocumentTypeCodes.CUENTACOBRO);
                 }
             }
             );

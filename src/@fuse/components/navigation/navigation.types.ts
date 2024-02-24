@@ -46,6 +46,7 @@ export type FuseVerticalNavigationAppearance =
     | 'default'
     | 'compact'
     | 'dense'
+    | 'dense-contractor'
     | 'thin';
 
 export type FuseVerticalNavigationMode =

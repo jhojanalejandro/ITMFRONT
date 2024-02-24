@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation, ChangeDetectorRef, OnDest
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { fuseAnimations } from '@fuse/animations';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { DocumentTypeFile, FileContractor, Files } from 'app/layout/common/models/file-contractor';
@@ -13,396 +13,376 @@ import { DocumentTypeCodes } from 'app/layout/common/enums/document-type/documen
 import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
-  selector: 'app-upload-file-contract',
-  templateUrl: './upload-file-contract.component.html',
-  styleUrls: ['./upload-file-contract.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: fuseAnimations
+    selector: 'app-upload-file-contract',
+    templateUrl: './upload-file-contract.component.html',
+    styleUrls: ['./upload-file-contract.component.scss'],
+    animations: fuseAnimations
 })
 export class UploadFileContractComponent implements OnInit, OnDestroy {
-  alert: { type: FuseAlertType; message: string } = {
-    type: 'warn',
-    message: ''
-  };
-  shortLink: string = "";
-  loading: boolean = false; // Flag variable
-  file: any = null; // Variable to store file
-  indeterminate = false;
-  showAlert: boolean = false;
-  isSelectContract: boolean = false;
-  registerDate = new Date();
-  selectContract: any;
-  contratos: any;
-  fileName: string;
-  fileType: string;
-  base64Output: any;
-  disableButton: boolean = true;
-  mostrarContrato = false;
-  numberOfTicks = 0;
-  documentType: string;
-  formFile: FormGroup;
-  typeDocs: DocumentTypeFile[] = [];
-  aceptFile: string;
-  origin: string;
-  aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-  aceptfile: string = 'image/jpeg, image/png, application/pdf';
-  permission: boolean = false;
-  shareFile: boolean = false;
-  contractId: string = null;
-  private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-  constructor(
-    private ref: ChangeDetectorRef,
-    private _upload: UploadFileDataService,
-    private _gerenicService: GenericService,
-    private _auth: AuthService,
-    public matDialogRef: MatDialogRef<UploadFileContractComponent>,
-    private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) private _data
-  ) {
-
-    setInterval(() => {
-      this.numberOfTicks++;
-      // require view to be updated
-      this.ref.detectChanges();
-      this.ref.markForCheck();
-    }, 1000);
-  }
-
-  ngOnInit(): void {
-    this.validatePermission();
-    this.origin = this._data.origin
-    if (this._data.show && this._data.contractId != null) {
-      this.mostrarContrato = false;
-      this.isSelectContract = true;
-      this.aceptFile = this.aceptFile;
-    }
-    if (this._data.origin == 'share' && !this._data.show) {
-      this.shareFile = true
-    }
-    if (this._data.show && this._data.origin != 'cdp') {
-      this.mostrarContrato = true;
-      this.aceptFile = this.aceptExcel;
-    }
-    this.formFile = this._formBuilder.group({
-      file: new FormControl(null, Validators.required),
-      project: new FormControl({value: null, disabled: !this.mostrarContrato}, Validators.required),
-      description: new FormControl(this._data.origin == 'cdp' ? 'desc' : null, !this.mostrarContrato && !this.isSelectContract ? Validators.required : null)
-    });
-    this.getContractsData();
-    this.GetFileType();
-    this.getDocumentType();
-
-  }
-
-  onChange(event) {
-    this.disableButton = false;
-    this.file = event.target.files[0];
-    this.fileName = this.file.name.split('.')[0].toUpperCase();
-    this.fileType = this.file.type.split('/')[1].toUpperCase();
-    const reader = new FileReader();
-    reader.readAsDataURL(this.file);
-    this.convertFile(this.file).subscribe(base64 => {
-      this.base64Output = base64;
-    });
-  }
-
-
-  addFileContract(event) {
-
-    const uploadFile: Files = {
-      userId: this._auth.accessId,
-      folderId: this._data.folderId,
-      contractId: this._data.contractId,
-      filesName: this.fileName,
-      fileType: this.fileType,
-      descriptionFile: this.formFile.value.description,
-      registerDate: this.registerDate,
-      filedata: event,
-      documentType: this.documentType
+    alert: { type: FuseAlertType; message: string } = {
+        type: 'warn',
+        message: ''
     };
-    this._upload.UploadFileContract(uploadFile).subscribe((res) => {
-      if (res) {
-        swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '',
-          html: 'Información Registrada Exitosamente!',
-          showConfirmButton: false,
-          timer: 1500
-        });
-        //this.matDialogRef.close();
-        this.ref.detectChanges();
-        this.ref.markForCheck();
-        this.closeModal();
-      }
+    shortLink: string = "";
+    loading: boolean = false; // Flag variable
+    file: any = null; // Variable to store file
+    indeterminate = false;
+    showAlert: boolean = false;
+    isSelectContract: boolean = false;
+    registerDate = new Date();
+    selectContract: any;
+    contratos: any;
+    fileName: string;
+    fileType: string;
+    base64Output: any;
+    disableButton: boolean = true;
+    mostrarContrato = false;
+    numberOfTicks = 0;
+    documentType: string;
+    formFile: FormGroup;
+    typeDocs: DocumentTypeFile[] = [];
+    aceptFile: string;
+    origin: string;
+    aceptExcel: string = 'application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    aceptfile: string = 'image/jpeg, image/png, application/pdf';
+    permission: boolean = false;
+    shareFile: boolean = false;
+    contractId: string = null;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    },
-      (response) => {
-        this.formFile.enable();
-        // Set the alert
-        console.log(response);
-        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-        // Show the alert
-        this.showAlert = true;
-      });
-  }
-  getContractsData() {
-    // Get the data
-    this._gerenicService.getAllContract(true, 'Contractual')
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((data) => {
-        this.contratos = data;
-        this.formFile.patchValue({
-          project: this._data.contractId
-        })
-        this.contractId = this._data.contractId;
-      });
-  }
+    constructor(
+        private _upload: UploadFileDataService,
+        private _gerenicService: GenericService,
+        private _auth: AuthService,
+        public matDialogRef: MatDialogRef<UploadFileContractComponent>,
+        private _formBuilder: FormBuilder,
+        @Inject(MAT_DIALOG_DATA) private _data
+    ) {
 
-  uploadTypeFile() {
-    if (this.formFile.invalid) {
-      this.alert = {
-        type: 'error',
-        message: 'ERROR EN LA INFORMACION'
-      };
-
-      // Show the alert
-      this.showAlert = true;
-      return
-    }
-    if (this.isSelectContract == true) {
-      if (this._data.origin === 'cdp') {
-        this.uploadCdpFile();
-      } else {
-        this.uploadElementFile();
-      }
-    } else {
-      this.uploadPdfFile();
-    }
-  }
-
-  uploadCdpFile() {
-    if (this.formFile.invalid) {
-      this.alert = {
-        type: 'error',
-        message: 'ERROR EN LA INFORMACION'
-      };
-
-      // Show the alert
-      this.showAlert = true;
-      return
+        setInterval(() => {
+            this.numberOfTicks++;
+        }, 1000);
     }
 
-    let fileToUpload = <File>this.file;
-    const formData = new FormData();
-    formData.append('excel', fileToUpload, fileToUpload.name);
-    formData.append('userId', this._auth.accessId.toString());
-    formData.append('contractId', this._data.contractId);
-    if (this._data.show) {
-      // Should match the parameter name in backend
-      this._upload.UploadCdpFileExcel(formData).subscribe(res => {
-        if (res) {
-          swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Información Registrada Exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          //this.matDialogRef.close();
-          this.ref.detectChanges();
-          this.ref.markForCheck();
-          this.closeModal();
+    ngOnInit(): void {
+        this.validatePermission();
+        this.origin = this._data.origin
+        if (this._data.show && this._data.contractId != null) {
+            this.mostrarContrato = false;
+            this.isSelectContract = true;
+            this.aceptFile = this.aceptFile;
         }
-
-      },
-        (response) => {
-          console.log(response);
-
-          this.formFile.enable();
-          // Set the alert
-          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-          // Show the alert
-          this.showAlert = true;
-        });
-    } else {
-      this.addFileContract(this.base64Output);
-    }
-
-  }
-
-  addFileContractors(base64) {
-    const uploadFile: FileContractor = {
-      userId: this._auth.accessId,
-      folderId: null,
-      contractId: this._data.contractId,
-      filesName: this.fileName,
-      fileType: this.fileType,
-      descriptionFile: this.formFile.value.description,
-      registerDate: this.registerDate,
-      filedata: base64,
-      documentType: this.documentType,
-      contractors: this._data.contractorsId
-    };
-    this._upload.UploadFileShareContractor(uploadFile).subscribe(res => {
-      if (res) {
-        swal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '',
-          html: 'Información Registrada Exitosamente!',
-          showConfirmButton: false,
-          timer: 1500
-        });
-        //this.matDialogRef.close();
-        this.ref.detectChanges();
-        this.ref.markForCheck();
-        this.closeModal();
-      }
-
-    },
-      (response) => {
-        console.log(response);
-
-        this.formFile.enable();
-        // Set the alert
-        swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-        // Show the alert
-        this.showAlert = true;
-      });
-  }
-
-  uploadPdfFile() {
-    let fileToUpload = <File>this.file;
-    const formData = new FormData();
-    formData.append('excel', fileToUpload, fileToUpload.name);
-    formData.append('userId', this._auth.accessId.toString());
-    formData.append('contractId', this.formFile.value.project);
-    if (this._data.show) {
-      // Should match the parameter name in backend
-      this._upload.UploadFileExcel(formData).subscribe((res) => {
-        if (res) {
-          swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Información Registrada Exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          //this.matDialogRef.close();
-          this.ref.detectChanges();
-          this.ref.markForCheck();
-          this.closeModal();
+        if (this._data.origin == 'share' && !this._data.show) {
+            this.shareFile = true
         }
-
-      },
-        (response) => {
-          console.log(response);
-
-          this.formFile.enable();
-          // Set the alert
-          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-          // Show the alert
-          this.showAlert = true;
+        if (this._data.show && this._data.origin != 'cdp') {
+            this.mostrarContrato = true;
+            this.aceptFile = this.aceptExcel;
+        }
+        this.formFile = this._formBuilder.group({
+            file: new FormControl(null, Validators.required),
+            project: new FormControl({ value: null, disabled: !this.mostrarContrato }, Validators.required),
+            description: new FormControl(this._data.origin == 'cdp' ? 'desc' : null, !this.mostrarContrato && !this.isSelectContract ? Validators.required : null)
         });
-    } else {
-      if (this.shareFile) {
-        this.addFileContractors(this.base64Output);
-      } else {
-        this.addFileContract(this.base64Output);
-      }
-    }
-  }
+        this.getContractsData();
+        this.GetFileType();
+        this.getDocumentType();
 
-  validatePermission() {
-    this.permission = this._auth.validateRoll(CodeUser.RECRUITER, this._data.assignmentUser);
-    if (!this.permission) {
-      swal.fire('', 'No tienes permisos para subir documentos!', 'warning');
     }
-  }
-  convertFile(file: File): Observable<string> {
-    const result = new ReplaySubject<string>(1);
-    const reader = new FileReader();
-    reader.readAsBinaryString(file);
-    reader.onload = (event) => result.next(btoa(event.target.result.toString()));
-    return result;
-  }
 
-  private GetFileType() {
-    this._upload.getDocumentType()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((type: DocumentTypeFile[]) => {
-        if (this.shareFile) {
-          this.documentType = type.find(f => f.code === DocumentTypeCodes.RESPUESTASOLICITUDCOMITE).id;
+    onChange(event) {
+        this.disableButton = false;
+        this.file = event.target.files[0];
+        this.fileName = this.file.name.split('.')[0].toUpperCase();
+        this.fileType = this.file.type.split('/')[1].toUpperCase();
+        const reader = new FileReader();
+        reader.readAsDataURL(this.file);
+        this.convertFile(this.file).subscribe(base64 => {
+            this.base64Output = base64;
+        });
+    }
+
+
+    addFileContract(event) {
+
+        const uploadFile: Files = {
+            userId: this._auth.accessId,
+            folderId: this._data.folderId,
+            contractId: this._data.contractId,
+            filesName: this.fileName,
+            fileType: this.fileType,
+            descriptionFile: this.formFile.value.description,
+            registerDate: this.registerDate,
+            filedata: event,
+            documentType: this.documentType
+        };
+        this._upload.UploadFileContract(uploadFile).subscribe((res) => {
+            if (res) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: 'Información Registrada Exitosamente!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                this.closeModal();
+            }
+
+        },
+            (response) => {
+                this.formFile.enable();
+                // Set the alert
+                console.log(response);
+                Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+                // Show the alert
+                this.showAlert = true;
+            });
+    }
+    getContractsData() {
+        // Get the data
+        this._gerenicService.getAllContract(true, 'Contractual')
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((data) => {
+                this.contratos = data;
+                this.formFile.patchValue({
+                    project: this._data.contractId
+                })
+                this.contractId = this._data.contractId;
+            });
+    }
+
+    uploadTypeFile() {
+        if (this.formFile.invalid) {
+            this.alert = {
+                type: 'error',
+                message: 'ERROR EN LA INFORMACION'
+            };
+
+            // Show the alert
+            this.showAlert = true;
+            return
+        }
+        if (this.isSelectContract == true) {
+            if (this._data.origin === 'cdp') {
+                this.uploadCdpFile();
+            } else {
+                this.uploadElementFile();
+            }
         } else {
-          this.documentType = type.find(f => f.code === DocumentTypeCodes.ANEXO).id;
+            this.uploadPdfFile();
         }
-      });
-  }
-
-
-  uploadElementFile() {
-    let fileToUpload = <File>this.file;
-    const formData = new FormData();
-    formData.append('excel', fileToUpload, fileToUpload.name);
-    formData.append('userId', this._auth.accessId.toString());
-    formData.append('contractId', this._data.contractId);
-    if (this._data.show) {
-      // Should match the parameter name in backend
-      this._upload.UploadElementFileExcel(formData).subscribe(res => {
-        if (res) {
-          swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: '',
-            html: 'Información Registrada Exitosamente!',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          //this.matDialogRef.close();
-          this.ref.detectChanges();
-          this.ref.markForCheck();
-          this.closeModal();
-        }
-
-      },
-        (response) => {
-          console.log(response);
-
-          this.formFile.enable();
-          // Set the alert
-          swal.fire('Error', 'Error al Registrar la informacion!', 'error');
-          // Show the alert
-          this.showAlert = true;
-        });
-    } else if (this._data.contractorId != null) {
-      this.addFileContract(this.base64Output);
     }
 
-  }
+    uploadCdpFile() {
+        if (this.formFile.invalid) {
+            this.alert = {
+                type: 'error',
+                message: 'ERROR EN LA INFORMACION'
+            };
 
-  closeModal(): void {
-    this.matDialogRef.close(true);
-  }
-
-  private getDocumentType() {
-    this._upload
-      .getDocumentType()
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((res) => {
-        if (res != null) {
-          this.typeDocs = res;
+            // Show the alert
+            this.showAlert = true;
+            return
         }
-      }
-      );
-  }
 
-  ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
-    this._unsubscribeAll.next(null);
-    this._unsubscribeAll.complete();
-  }
+        let fileToUpload = <File>this.file;
+        const formData = new FormData();
+        formData.append('excel', fileToUpload, fileToUpload.name);
+        formData.append('userId', this._auth.accessId.toString());
+        formData.append('contractId', this._data.contractId);
+        if (this._data.show) {
+            // Should match the parameter name in backend
+            this._upload.UploadCdpFileExcel(formData).subscribe(res => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.closeModal();
+                }
+
+            },
+                (response) => {
+                    console.log(response);
+
+                    this.formFile.enable();
+                    // Set the alert
+                    Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+                    // Show the alert
+                    this.showAlert = true;
+                });
+        } else {
+            this.addFileContract(this.base64Output);
+        }
+
+    }
+
+    addFileContractors(base64) {
+        const uploadFile: FileContractor = {
+            userId: this._auth.accessId,
+            folderId: null,
+            contractId: this._data.contractId,
+            filesName: this.fileName,
+            fileType: this.fileType,
+            descriptionFile: this.formFile.value.description,
+            registerDate: this.registerDate,
+            filedata: base64,
+            documentType: this.documentType,
+            contractors: this._data.contractorsId
+        };
+        this._upload.UploadFileShareContractor(uploadFile).subscribe(res => {
+            if (res) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: 'Información Registrada Exitosamente!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                this.closeModal();
+            }
+
+        },
+            (response) => {
+                console.log(response);
+
+                this.formFile.enable();
+                // Set the alert
+                Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+                // Show the alert
+                this.showAlert = true;
+            });
+    }
+
+    uploadPdfFile() {
+        let fileToUpload = <File>this.file;
+        const formData = new FormData();
+        formData.append('excel', fileToUpload, fileToUpload.name);
+        formData.append('userId', this._auth.accessId.toString());
+        formData.append('contractId', this.formFile.value.project);
+        if (this._data.show) {
+            // Should match the parameter name in backend
+            this._upload.UploadFileExcel(formData).subscribe((res) => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.closeModal();
+                }
+
+            },
+                (response) => {
+                    console.log(response);
+
+                    this.formFile.enable();
+                    // Set the alert
+                    Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+                    // Show the alert
+                    this.showAlert = true;
+                });
+        } else {
+            if (this.shareFile) {
+                this.addFileContractors(this.base64Output);
+            } else {
+                this.addFileContract(this.base64Output);
+            }
+        }
+    }
+
+    validatePermission() {
+        this.permission = this._auth.validateRoll(CodeUser.RECRUITER, this._data.assignmentUser);
+        if (!this.permission) {
+            Swal.fire('', 'No tienes permisos para subir documentos!', 'warning');
+        }
+    }
+    convertFile(file: File): Observable<string> {
+        const result = new ReplaySubject<string>(1);
+        const reader = new FileReader();
+        reader.readAsBinaryString(file);
+        reader.onload = (event) => result.next(btoa(event.target.result.toString()));
+        return result;
+    }
+
+    private GetFileType() {
+        this._upload.getDocumentType()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((type: DocumentTypeFile[]) => {
+                if (this.shareFile) {
+                    this.documentType = type.find(f => f.code === DocumentTypeCodes.RESPUESTASOLICITUDCOMITE).id;
+                } else {
+                    this.documentType = type.find(f => f.code === DocumentTypeCodes.ANEXO).id;
+                }
+            });
+    }
+
+
+    uploadElementFile() {
+        let fileToUpload = <File>this.file;
+        const formData = new FormData();
+        formData.append('excel', fileToUpload, fileToUpload.name);
+        formData.append('userId', this._auth.accessId.toString());
+        formData.append('contractId', this._data.contractId);
+        if (this._data.show) {
+            // Should match the parameter name in backend
+            this._upload.UploadElementFileExcel(formData).subscribe(res => {
+                if (res) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '',
+                        html: 'Información Registrada Exitosamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.closeModal();
+                }
+
+            },
+                (response) => {
+                    console.log(response);
+
+                    this.formFile.enable();
+                    // Set the alert
+                    Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+                    // Show the alert
+                    this.showAlert = true;
+                });
+        } else if (this._data.contractorId != null) {
+            this.addFileContract(this.base64Output);
+        }
+
+    }
+
+    closeModal(): void {
+        this.matDialogRef.close(true);
+    }
+
+    private getDocumentType() {
+        this._upload
+            .getDocumentType()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((res) => {
+                if (res != null) {
+                    this.typeDocs = res;
+                }
+            }
+            );
+    }
+
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 }

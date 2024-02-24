@@ -4,7 +4,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { PlaningRoutes } from './planing.routing';
 import { ContrtactsComponent } from './contracts/contracts.component';
 import { AngularmaterialModule } from 'app/layout/common/angular material/angularmaterial.module';
-import { AddComponentsComponent } from './componentes/components.component';
+import { AddComponentsComponent } from './componentes/planing-components.component';
 import { ComponentesFormComponent } from './componentes/componentes-form/componentes-form.component';
 import { DialogChangePercentajeComponent } from './componentes/DialogChangePercentaje/DialogChangePercentaje.component';
 import { RegisterContractFolderComponent } from './componentes/register-project-folder/register-project-folder.component';

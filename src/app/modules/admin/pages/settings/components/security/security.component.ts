@@ -45,6 +45,7 @@ export class SettingsSecurityComponent implements OnInit {
             currentPassword: [this.password],
             passwordMail: [this.passwordMail],
             newPassword: [''],
+            newPasswordMail: [''],
             twoStep: [true],
             askPasswordChange: [false]
         });
@@ -59,20 +60,21 @@ export class SettingsSecurityComponent implements OnInit {
         const updateUser: any = {
             id: this._authService.accessId,
             userPassword: this.securityForm.value.newPassword,
-            passwordMail: this.securityForm.value.passwordMail,
+            passwordMail: this.securityForm.value.newPasswordMail,
         };
         // Sign in
         this._authService.updatePasswordUser(updateUser)
             .subscribe(
                 (data: any) => {
-                    if (data) {
+                    debugger
+                    if (data.success) {
                         this.securityForm.enable();
                         // Set the alert
                         swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: '',
-                            html: 'Información Registrada Exitosamente!',
+                            html: 'Información Actualizada Exitosamente!',
                             showConfirmButton: false,
                             timer: 1500
                         });
@@ -82,7 +84,7 @@ export class SettingsSecurityComponent implements OnInit {
                 (response) => {
                     this.securityForm.enable();
                     // Set the alert
-                    swal.fire('Error', 'Error al Actualizar la informacion! intente mas tarde', 'error');
+                    swal.fire('Error', 'Error al Actualizar la informacion! recargue la pagina, o intente mas tarde', 'error');
                     // Show the alert
                 });
     }

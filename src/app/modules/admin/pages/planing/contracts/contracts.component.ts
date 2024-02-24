@@ -21,13 +21,11 @@ import { OptionTypeDataComponent } from '../componentes/option-type-data/option-
   selector: 'contracts',
   styleUrls: ['./contracts.component.scss'],
   templateUrl: './contracts.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,AfterContentChecked {
+export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit {
   userName: any;
   configForm: FormGroup;
-  generateMinute: boolean = false; 
+  generateMinute: boolean = false;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -35,7 +33,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,Afte
   contracts: ContractList[] = [];
   typeContract: string;
   dataSource = new MatTableDataSource<any>();
-  selection = new SelectionModel<any>(true, []);
   showcontracts: boolean = false;
   displayedColumns: string[] = ['numberProject', 'project', 'companyName', 'projectName', 'valorContrato', 'statusContract', 'contractorsCant', 'action'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
@@ -48,7 +45,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,Afte
     private _matDialog: MatDialog,
     private auth: AuthService,
     private _router: Router,
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private _formBuilder: FormBuilder,
     private router: ActivatedRoute,
@@ -109,7 +105,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,Afte
         );
         this.dataSource.sort = this.sort;
         this.getContractsData();
-        this.cdref.detectChanges();
       });
 
   }
@@ -159,11 +154,6 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,Afte
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
-  }
-
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -249,4 +239,4 @@ export class ContrtactsComponent implements OnInit, OnDestroy,AfterViewInit,Afte
   }
 
 
-} 
+}

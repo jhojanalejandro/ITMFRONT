@@ -30,8 +30,6 @@ import { GeneralListService } from '../services/general-list.service';
     selector: 'general-list-contractors',
     templateUrl: './general-list-contractors.component.html',
     styleUrls: ['./general-list-contractors.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
 })
 export class GeneralListContractorsComponent

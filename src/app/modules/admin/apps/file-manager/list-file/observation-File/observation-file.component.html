@@ -15,7 +15,7 @@
             </fuse-alert>
         </div>
         <mat-dialog-content style="margin: 0px; padding: 0px;">
-            <form [formGroup]="formFile" class="example-form">
+            <form [formGroup]="observationForm" class="example-form">
                 <div class="observatationFolder">
                     <mat-form-field class="fieldObservation" appearance="outline">
                         <mat-label>Motivo rechazo</mat-label>
@@ -26,6 +26,9 @@
                                 {{option}}
                             </mat-option>
                         </mat-autocomplete>
+                        <mat-error *ngIf="observationForm.get('motivo').hasError('required')">
+                            Este campo es requerido
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="checkbox-list">
@@ -47,6 +50,7 @@
                 <quill-editor class="mt-1 p-0" formControlName="observation" [placeholder]="'Escriba su observación'"
                     [modules]="quillModules">
                 </quill-editor>
+
                 <div>
 
                 </div>
@@ -54,9 +58,9 @@
                     <button mat-flat-button type="button" [mat-dialog-close]="false" [color]="'warn'">
                         Cancelar
                     </button>
-                        <button mat-flat-button [color]="'primary'" [disabled]="!permission || formFile.disabled"
-                        (click)="AddObservationFile()"> <span>Enviar</span>
-                        <mat-progress-spinner *ngIf="formFile.disabled" [diameter]="24"
+                        <button mat-flat-button [color]="'primary'" [disabled]="!permission || observationForm.disabled"
+                        (click)="mostrarSweetAlert()"> <span>Enviar</span>
+                        <mat-progress-spinner *ngIf="observationForm.disabled" [diameter]="24"
                             [mode]="'indeterminate'"></mat-progress-spinner></button>
                 </mat-dialog-actions>
             </form>

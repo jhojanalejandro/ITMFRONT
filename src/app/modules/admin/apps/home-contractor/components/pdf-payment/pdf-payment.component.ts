@@ -61,7 +61,6 @@ export class PdfPaymentComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        debugger
         this.valueLetter = this._shareService.numeroALetras(
             this.chargeAccountData.totalValue,
             'PESOS'

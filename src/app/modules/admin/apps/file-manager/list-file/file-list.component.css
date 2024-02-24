@@ -1,14 +1,18 @@
 .example-h2 {
     margin: 10px;
   }
-  
+
   .example-section {
     display: flex;
     align-content: center;
     align-items: center;
     height: 60px;
   }
-  
+
   .example-margin {
     margin: 0 10px;
+  }
+  .radio{
+  border-color: red !important; /* Cambiar al color deseado cuando la condición se cumpla */
+  background-color: red !important; /* Cambiar al color deseado cuando la condición se cumpla */
   }

@@ -11,8 +11,11 @@
   <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">Exportar CDP</span>
 </button>
 <button *ngIf="showNomina" [matTooltip]="'Generar recibido de satisfacción'" class="hidden sm:inline-flex ml-3" (click)="generateSatisfactionReportate()" mat-flat-button [color]="'primary'">
-  Recibido de satisfacción
+
   <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon>
+  <span class="ml-2 mr-1">
+    Recibido de satisfacción
+</span>
 </button>
 <button *ngIf="showNomina" [matTooltip]="'Generar recibido de satisfacción'" class="hidden sm:inline-flex ml-3" (click)="generateSatisfactionReportate()" mat-flat-button [color]="'primary'">
   <mat-icon svgIcon="heroicons_outline:document-download"></mat-icon><span class="ml-2 mr-1">Reporte estado</span>

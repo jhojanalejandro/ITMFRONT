@@ -50,7 +50,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     chargeAccountData: any;
     executionReportData: ExecutionReport;
     contractList: any[] = [];
-    hired: boolean = false;
     contractSelected: string = null;
     id: any;
     userName: any;
@@ -64,6 +63,7 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
     showPdfGenerated: boolean = false;
+    showbuttonPersonalData: boolean = true;
 
     constructor(
         private _contractorService: HomeContractorService,
@@ -78,7 +78,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.userName = this._auth.accessName;
         this.getContract();
-        this.getStatusUpdate();
 
     }
     uploadDialog() {
@@ -102,10 +101,10 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     changeToViewFilesContract(event: any) {
         this.contractSelected = event.value;
         this.viewFilesContract = true;
-        this.getFilesUserByContract();
+        this.getStatusUpdate();
+        this.gevalidateDocument();
         this.getFilesUserByContract();
         this.getDataContractor();
-        this.validateHired();
     }
 
     getFilesFolder = async () => {
@@ -202,7 +201,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
                 .getPaymentAccount(this._auth.accessId, this.contractSelected)
                 .pipe(takeUntil(this._unsubscribeAll))
                 .subscribe((Response) => {
-                    debugger
                     if (Response.data != null) {
                         if (Response.data.chargeAccountNumber == 0) {
                             Response.data.chargeAccountNumber = 1;
@@ -282,7 +280,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
     }
 
     generatePdf(e: any) {
-        debugger
         this.typeGenerator = e;
         this.showPdfGenerated = true;
     }
@@ -309,26 +306,38 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
             });
     }
 
-    private validateHired() {
-        if (this.contractSelected != null) {
-            this._contractorService
-                .validateStatus(this._auth.accessId, this.contractSelected)
-                .pipe(takeUntil(this._unsubscribeAll))
-                .subscribe((Response) => {
-                    this.hired = Response;
-                });
-        } else {
-            swal.fire('', 'No has seleccionado contrato!', 'warning');
-        }
-    }
 
     private getStatusUpdate() {
         this._contractorService
-        .getExecutionReport(this._auth.accessId, this.contractSelected)
+        .getPersonalDataContractor(this._auth.accessId, this.contractSelected)
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((Response) => {
+            debugger
+            if(Response == null){
+                this.showbuttonPersonalData = false;
+            }else{
+                swal.fire('', 'Es necesario llenar los datos personales!', 'warning');
+
+            }
 
         });
+    }
+
+    private gevalidateDocument() {
+        this._contractorListService
+            .getValidateDocumentUploadEndpoint(this.contractSelected, this._auth.accessId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((resp) => {
+                if (!resp.dct || !resp.hv || !resp.secop || !resp.exam || resp.activateTermPayments) {
+                    swal.fire(
+                        '',
+                        'Aun no has cargado todos los documentos!',
+                        'warning'
+                    );
+                }
+
+            }
+            );
     }
 
 

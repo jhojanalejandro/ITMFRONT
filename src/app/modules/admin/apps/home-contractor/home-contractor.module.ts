@@ -12,6 +12,7 @@ import { AngularmaterialModule } from 'app/layout/common/angular material/angula
 import { ContractorPersonalDataComponent } from './components/contractor-personal-data/contractor-personal-data.component';
 import { ContractorPaymentSecurityRegisterComponent } from './components/payroll-security-register/contractor-payment-security-register.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { TranslocoModule } from '@ngneat/transloco';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
         MatSortModule,
         FuseCardModule,
         NgApexchartsModule,
+        TranslocoModule,
         SharedModule,
         NgxExtendedPdfViewerModule
     ],

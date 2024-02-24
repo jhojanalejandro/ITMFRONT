@@ -79,7 +79,7 @@ import { ContractorPaymentService } from '../../contractual/service/contractorPa
     ],
 })
 export class PostContractualListComponent
-    implements OnInit, OnDestroy, AfterViewInit, AfterContentChecked
+    implements OnInit, OnDestroy, AfterViewInit
 {
     contractId: string;
     data: any;
@@ -183,7 +183,6 @@ export class PostContractualListComponent
         private _genericService: GenericService,
         private _matDialog: MatDialog,
         private _authService: AuthService,
-        private cdref: ChangeDetectorRef,
         private _liveAnnouncer: LiveAnnouncer,
         private router: ActivatedRoute,
         private _formBuilder: FormBuilder,
@@ -294,9 +293,6 @@ export class PostContractualListComponent
             return item.id || index;
         }
     }
-    ngAfterContentChecked() {
-        this.cdref.detectChanges();
-    }
 
     getDataContractor() {
         this._contractorPaymentService
@@ -314,7 +310,6 @@ export class PostContractualListComponent
                     this.dataSource = new MatTableDataSource(
                         this.contractorsList
                     );
-                    this.cdref.detectChanges();
                 } else {
                     Swal.fire({
                         position: 'center',

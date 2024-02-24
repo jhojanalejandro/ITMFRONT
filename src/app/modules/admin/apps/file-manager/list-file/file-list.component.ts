@@ -18,6 +18,7 @@ import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/
 import { CategoryFile, DocumentTypeCodes } from 'app/layout/common/enums/document-type/document-type';
 import { DataFile } from '../file-manager.types';
 import { RollCodeEnum } from 'app/layout/common/enums/userEnum/route-image';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 
 
 @Component({
@@ -70,7 +71,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         private _fileManagerService: FileListManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _matDialog: MatDialog,
-        private _auth: AuthService
+        private _auth: AuthService,
+        private _generic: GenericService
     ) { }
 
     ngOnInit(): void {
@@ -81,17 +83,10 @@ export class FileListComponent implements OnInit, OnDestroy {
           });
         //   this.userPresenceService.setUserPresence(Math.floor(10000 + Math.random() * 90000), this._auth.a, true);
 
-        const isAuthenticated = this._auth.isAuthenticatedUser();
         this.permission = this._auth.validateRoll(CodeUser.JURIDICO, null);
         // this.getAdmins();
         if (!this.permission) {
             Swal.fire('', 'No tienes permisos para aprobar documentos!', 'warning');
-        } else {
-            if (isAuthenticated) {
-                Swal.fire('', 'Hay otro usuario juridico interactuando!', 'warning');
-            }else{
-                this._auth.setAuthenticated(true);
-            }
         }
         this.getStatusFile();
         this.contractorId = this._activatedRoute.snapshot.paramMap.get('contractorId') || 'null';
@@ -105,7 +100,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._fileManagerService.setContractorId(this.contractorId);
         this._fileManagerService.setFolderId(this.folderId);
         this._fileManagerService.setContractorName(this.contarctorName);
-
+        this.validatreSessionpPanel(true);
     }
 
     getId(id: any) {
@@ -372,7 +367,40 @@ export class FileListComponent implements OnInit, OnDestroy {
 
     }
 
+
+private validatreSessionpPanel(activateSession: boolean) {
+        debugger
+        const uploadFile = {
+            activateSession: activateSession,
+            panelCode: 'FLMG',
+            userId: this._auth.accessId,
+            startSessionDate: new Date(),
+            activate: activateSession,
+            finalSessionDate: activateSession ? null : new Date(),
+            contractId: this.contractId,
+            contractorId: this.contractorId
+        };
+        this._generic.validateSessionPanel(uploadFile).subscribe((res) => {
+            if (res) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: res.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+
+        },
+            (response) => {
+                console.log(response);
+                Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+            });
+    }
+
     ngOnDestroy(): void {
+        this.validatreSessionpPanel(false);
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
 

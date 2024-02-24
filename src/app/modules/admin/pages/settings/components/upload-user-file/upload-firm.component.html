@@ -55,7 +55,7 @@
                     </mat-form-field>
                 </div>
                 <div class="checkbox-list" *ngIf="filesWithCheckbox.length > 0">
-                    <span>seleccionados</span>
+                    <span>seleccionado</span>
                     <mat-checkbox [disabled]="true" [checked]="true" *ngFor="let file of filesWithCheckbox" class="mr-4"
                         [value]="file.name" [color]="'primary'">
                         {{file.name}}
@@ -63,7 +63,9 @@
                 </div>
                 <div class="text-center pt-8">
                     <input formControlName="file" type="file" mat-flat-button color="primary"
-                        accept="{{acceptExt}}" (change)="onChangeFile($event)" multiple>
+                        accept="{{acceptExt}}" (change)="onChangeFile($event)" *ngIf="!typeImageUpload && !typeImageFirmUpload" multiple>
+                    <input formControlName="file" type="file" mat-flat-button color="primary"
+                        accept="{{acceptExt}}" (change)="onChangeFile($event)" *ngIf="typeImageUpload || typeImageFirmUpload">
                 </div>
                 <!-- Shareable short link of  uploaded file -->
                 <div class="container text-center jumbotron" *ngIf="shortLink">

@@ -222,7 +222,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     }
 
     addElement(): void {
-        debugger
         if (this.elementForm.invalid) {
             this.alert = {
                 type: 'error',
@@ -334,7 +333,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 }
             }
         } else {
-            debugger
             this.valorPorDiaContratistas = Math.ceil(Number(this.elementForm.value.unitValue.toString().replace(/\./g, '')) / 30);
             this.totalValue = Math.ceil(this.elementForm.value.cantDay * this.valorPorDiaContratistas);
             this.totalExacto = this._genericService.addCommasToNumber(this.totalValue);
@@ -406,7 +404,6 @@ export class ElementCardComponent implements OnInit, OnDestroy {
     changeTypeElement(e: any) {
         let selectCode: ElementType[] = this.elementTypes.filter(f => f.id == e.value)
         let code = selectCode[0].code;
-        debugger
         if (code === ElementTypeCode.SUMINISTRO) {
             this.typeContractor = false;
             this.elementForm.patchValue({

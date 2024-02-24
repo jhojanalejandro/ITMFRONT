@@ -3,6 +3,7 @@ import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
+import { LayoutContractorComponent } from './layout/layouts/layout-contractor.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -57,7 +58,9 @@ export const appRoutes: Route[] = [
             layout: 'empty'
         },
         children   : [
-            {path: 'inicio', loadChildren: () => import('app/modules/admin/apps/home-contractor/home-contractor.module').then(m => m.HomeContractorModule)},
+            {path: '', children: [
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/apps/home-contractor/home-contractor.module').then(m => m.HomeContractorModule)},
+            ]},
             {path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)},
         ]
     },

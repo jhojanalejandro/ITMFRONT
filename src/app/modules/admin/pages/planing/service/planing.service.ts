@@ -71,13 +71,6 @@ export class PlaningService {
         );
     }
 
-    addEconomicChart(data: any) {
-        let urlEndpointGenerate =
-            this.apiUrl + environment.addContractFolderEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data).pipe(
-            catchError(this.handleError)
-        );
-    }
 
     addComponent(data: any) {
         let urlEndpointGenerate =

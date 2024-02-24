@@ -83,7 +83,6 @@ export class NominaService {
 
     private handleError(error: any): Observable<any> {
         console.log(error);
-        debugger
         let errorShow = null;
         if(error.error.message == null){
             errorShow = error.error

@@ -15,7 +15,6 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'app-contractor-payment',
   templateUrl: './contractor-payment-register.component.html',
   styleUrls: ['./contractor-payment-register.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 
@@ -193,7 +192,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
         this.economicContractor = Response;
         if(this.economicContractor[0].periodFrom == null){
           this.economicContractor[0].periodFrom = new Date();
-        } 
+        }
         let oneMonthLater = new Date(this.economicContractor[0].periodFrom);
         oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
         this.economicContractor[0].periodTo = oneMonthLater;
@@ -274,7 +273,7 @@ export class ContractorPaymentRegisterComponent implements OnInit,OnDestroy {
     });
   }
 
-  
+
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);
     this._unsubscribe$.complete();

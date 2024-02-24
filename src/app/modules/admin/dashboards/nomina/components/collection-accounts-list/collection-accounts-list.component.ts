@@ -217,8 +217,6 @@ export class CollectionAccountsListComponent implements OnInit {
     this._collectionAccounts.item$
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((item: DataFile) => {
-        debugger
-
         this.items = item;
         if(this.items.length > 0){
             this.items = this.items.map(file => ({
@@ -318,7 +316,6 @@ export class CollectionAccountsListComponent implements OnInit {
     this._fileManagerService.getStatusFile()
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((item: any) => {
-            debugger
             this.statusFileLoad = item.filter(f => f.category === CategoryFile.CGD);
             this.statusFileCreate = item.filter(f => f.category === CategoryFile.CRAD);
             this.statusFileCreate = this.statusFileCreate.map(status => ({

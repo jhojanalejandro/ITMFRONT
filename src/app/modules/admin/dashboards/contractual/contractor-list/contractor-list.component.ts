@@ -66,22 +66,23 @@ import { HistoryInnabilityComponent } from './components/history-innability/hist
             ),
         ]),
     ],
+
 })
 export class ContractorListComponent
-    implements OnInit, OnDestroy, AfterViewInit, AfterContentChecked
-{
+    implements OnInit, OnDestroy, AfterViewInit {
     contractId: string;
     data: any;
     userName: any;
     generatePdfMinute: boolean;
     generatePdf: boolean;
     pdfType: string;
-    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
+
     @ViewChild(MatTable) table!: MatTable<any>;
     elements: Elements[];
     componentes: Componente[];
     contractorListId: any[] = [];
-    contractorsList: Contractor[] = [];
+    contractorsList: Contractor[];
     configForm: FormGroup;
     componentselectId: any;
     elementselectId: any;
@@ -94,6 +95,7 @@ export class ContractorListComponent
     verticalPosition: MatSnackBarVerticalPosition = 'top';
     accountBalanceOptions: ApexOptions;
     dataSource = new MatTableDataSource<any>();
+
     idSelected: string[] = [];
     contractName: string;
     selection = new SelectionModel<any>(true, []);
@@ -161,13 +163,14 @@ export class ContractorListComponent
     afp: EntityHealth[] = [];
     expandedElement: Contractor = this.expandedEmpty;
     isButtonClicked: boolean = false;
+    timerInterval: any = null;
+    @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
     constructor(
         private _contractorListService: ContractorService,
         private _genericService: GenericService,
         private _matDialog: MatDialog,
         private _authService: AuthService,
-        private cdref: ChangeDetectorRef,
         private _liveAnnouncer: LiveAnnouncer,
         private router: ActivatedRoute,
         private _formBuilder: FormBuilder,
@@ -198,23 +201,23 @@ export class ContractorListComponent
         // Create the selected product form
 
         this.selectedContracttorForm = this._formBuilder.group({
-            expeditionPlace: new FormControl({ value: null , disabled: true}),
-            correo: new FormControl({ value: null , disabled: true}),
-            telefono: new FormControl({ value: null , disabled: true}),
-            direccion: new FormControl({ value: null , disabled: true}),
-            fechaNacimiento: new FormControl({ value: null , disabled: true}),
-            cdp: new FormControl({ value: null , disabled: true}),
-            level: new FormControl({ value: null , disabled: true}),
-            reserved: new FormControl({ value: null , disabled: true}),
-            contractValue: new FormControl({ value: null , disabled: true}),
-            cantDays: new FormControl({ value: null , disabled: true}),
+            expeditionPlace: new FormControl({ value: null, disabled: true }),
+            correo: new FormControl({ value: null, disabled: true }),
+            telefono: new FormControl({ value: null, disabled: true }),
+            direccion: new FormControl({ value: null, disabled: true }),
+            fechaNacimiento: new FormControl({ value: null, disabled: true }),
+            cdp: new FormControl({ value: null, disabled: true }),
+            level: new FormControl({ value: null, disabled: true }),
+            reserved: new FormControl({ value: null, disabled: true }),
+            contractValue: new FormControl({ value: null, disabled: true }),
+            cantDays: new FormControl({ value: null, disabled: true }),
             bankEntity: new FormControl(null),
             nacionality: new FormControl(null, Validators.required),
             arl: new FormControl(null, Validators.required),
             eps: new FormControl(null, Validators.required),
             afp: new FormControl(null),
-            contract: new FormControl({ value: null , disabled: true}),
-          });
+            contract: new FormControl({ value: null, disabled: true }),
+        });
 
         this.configForm = this._formBuilder.group({
             title: 'Eliminar Registro',
@@ -262,7 +265,7 @@ export class ContractorListComponent
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSource.sort = this.recentTransactionsTableMatSort;
     }
 
     selectRowFull(data: any) {
@@ -280,9 +283,6 @@ export class ContractorListComponent
             return item.id || index;
         }
     }
-    ngAfterContentChecked() {
-        this.cdref.detectChanges();
-    }
 
     getDataContractor() {
         this._contractorListService
@@ -295,13 +295,23 @@ export class ContractorListComponent
                             ...contractor,
                             all: 'TODOS',
                             expanded: false,
+                            legalProccess: contractor.statusContractor === 'INHABILITADO' ? contractor.statusContractor : contractor.legalProccess,
+                            hiringStatus: contractor.statusContractor === 'INHABILITADO' ? contractor.statusContractor : contractor.hiringStatus,
+
                         })
                     );
-
+                    debugger
+                    if (this.paginator) {
+                        this.paginator.length = this.contractorsList.length;
+                      }
                     this.dataSource = new MatTableDataSource(
                         this.contractorsList
                     );
-                    this.cdref.detectChanges();
+                    this.dataSource.sort = this.sort;
+                    this.dataSource.data = this.contractorsList;
+
+
+
                 } else {
                     Swal.fire({
                         position: 'center',
@@ -336,9 +346,8 @@ export class ContractorListComponent
         if (!row) {
             return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
         }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
-            row.Id + 1
-        }`;
+        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Id + 1
+            }`;
     }
 
     openConfirmationDelete(element: any): void {
@@ -374,7 +383,7 @@ export class ContractorListComponent
         }
     }
 
-    SendMailsAccounts() {
+    private SendMailsAccounts() {
         this.permission = this._authService.validateRoll(
             CodeUser.RECRUITER,
             this.contractorsList[0].assignmentUser
@@ -412,9 +421,55 @@ export class ContractorListComponent
                             timer: 1500,
                         });
                     }
+                    //Swal.close();
                     this.reloadResolve();
+                    return Response;
                 });
         }
+    }
+    mostrarSweetAlert(): void {
+        Swal.fire({
+            // title: 'Enviando...!',
+            html: 'Espera: <b></b> Enviando Correos....',
+            imageUrl: 'assets/images/flags/sendMail.gif',
+            imageWidth: 600,
+            imageHeight: 150,
+            imageAlt: 'Custom image',
+            allowOutsideClick: false,
+            showCancelButton: false,
+            showConfirmButton: false,
+            // timer: 3600000,
+            timerProgressBar: true,
+            width: 600,
+            color: '#716add',
+
+            didOpen: () => {
+                //Swal.showLoading();
+
+                const b = Swal.getHtmlContainer()?.querySelector('b');
+                this.SendMailsAccounts();
+                // this.timerInterval = setInterval(() => {
+                //     const timerLeft = Swal.getTimerLeft();
+                //     if (b) {
+                //         b.textContent = timerLeft ? timerLeft.toString() : ''; // Verifica si timerLeft es null o undefined
+                //     }
+                // }, 100);
+            },
+            willClose: () => {
+                clearInterval(this.timerInterval);
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer');
+            }
+        });
+    }
+
+    cancelarPeticion(): void {
+        // Llamar a next en ngUnsubscribe para cancelar la suscripción
+        this._unsubscribe$.next();
+        // Completar la emisión para asegurar que la suscripción se cancele
+        this._unsubscribe$.complete();
     }
 
     modificacionContrato(data: any) {
@@ -604,9 +659,9 @@ export class ContractorListComponent
     historicalPayment(item: any) {
         this._loadrouter.navigate([
             '/dashboards/nomina/payment-contractor/' +
-                this.contractId +
-                '/' +
-                item.id,
+            this.contractId +
+            '/' +
+            item.id,
         ]);
     }
 
@@ -758,11 +813,11 @@ export class ContractorListComponent
                 this.expandedElement === element ? this.expandedEmpty : element;
             if (this.expandedElement.fechaNacimiento != null) {
                 this.expandedElement.fechaNacimiento =
-                this._genericService.getTransformDate(
-                    this.expandedElement.fechaNacimiento
-                );
+                    this._genericService.getTransformDate(
+                        this.expandedElement.fechaNacimiento
+                    );
             }
-            if(this.expandedElement != null){
+            if (this.expandedElement != null) {
                 this.selectedContracttorForm.patchValue({
                     expeditionPlace: this.expandedElement.expeditionPlace,
                     correo: this.expandedElement.correo,
@@ -776,11 +831,11 @@ export class ContractorListComponent
                     cantDays: this.expandedElement.cantDays,
                     bankEntity: this.expandedElement.bankEntity,
                     nacionality: this.expandedElement.nacionality,
-                    arl:this.expandedElement.arl,
+                    arl: this.expandedElement.arl,
                     eps: this.expandedElement.eps,
                     afp: this.expandedElement.afp,
                     contract: this.expandedElement.contract
-                  });
+                });
 
             }
 
@@ -859,6 +914,7 @@ export class ContractorListComponent
                 this.contractorListId = [];
             });
     }
+
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();

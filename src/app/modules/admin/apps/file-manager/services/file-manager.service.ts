@@ -57,7 +57,7 @@ export class FileManagerService {
         let urlEndPoint = this.apiUrl + environment.GetAllContractFolderEndpoint;
         return this._httpClient.get<Item>(urlEndPoint).pipe(
             tap((response: any) => {
-                
+
                 let items = cloneDeep(response);
 
                 const folders = items.folders;
@@ -108,6 +108,14 @@ export class FileManagerService {
     UpdateContractFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
+    }
+
+
+    deleteFolder(folderId: any) {
+        const params = new HttpParams()
+        .set('folderId', folderId);
+        let urlEndpointGenerate = this.apiUrl + environment.deleteFolderFileEndpoint;
+        return this._httpClient.delete<IResponse>(urlEndpointGenerate, {params:params});
     }
 
 }

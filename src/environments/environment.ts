@@ -47,7 +47,9 @@ export const environment = {
     SaveModifyMinuteEndpoint: 'Contractor/SaveModifyMinute',
     GetByContractorIdContractEndpoint: 'Contractor/GetContractorByContract',
     GetNewnessContractorEndpoint: 'Contractor/GetNewnessContractor',
-    GetStatusContractorEndpoint: 'Contractor/GetStatusContractor',
+    GetPersonalDataEndpoint: 'Contractor/GetPersonalData',
+
+
 
 
     GetByContractorIdFolderEndpoint: 'FileManager/GetFolderFilesById/',
@@ -58,6 +60,7 @@ export const environment = {
     UpdateFolderFileContractorEndpoint: 'Folder/Update',
     GetByIdFolderFileContractorEndpoint: 'Folder/GetById/',
     GetFolderFileContractorEndpoint: 'Folder/GetAllFolderById/',
+    deleteFolderFileEndpoint: 'Folder/Delete',
 
     addContractFolderEndpoint: 'ContractFolder/SaveContract',
     UpdateContractFolderEndpoint: 'ContractFolder/UpdateCost',
@@ -90,7 +93,7 @@ export const environment = {
     DeleteEconomicDataContractorEndpoint: 'EconomicDataContractor/Delete',
     GetPaymentByIdContractAndContractorEndpoint: 'EconomicDataContractor/GetPaymentByIdContractAndContractor',
 
-    addFileEndpoint: 'Files/AddFileContractor',
+    AddOrUpdateFileContractorEndpoint: 'Files/AddOrUpdateFileContractor',
     addFileContractEndpoint: 'Files/AddFileContract',
     addFileBillsEndpoint: 'Files/AddBillsContractor',
     addDetailFileEndpoint: 'Files/AddDetailFile',
@@ -98,13 +101,13 @@ export const environment = {
     SaveCommitteeContractorEndpoint: 'Files/SaveCommitteeContractor',
     saveDetailFileCommitteeEndpoint: 'Files/CreateDetailCommittee',
     addFileShareEndpoint: 'Files/AddFileShareContractor',
+    SaveFilePayment: 'Files/SaveFilePayment',
 
     GetAllFileByFolderContractorEndpoint: 'Files/GetFileContractorByFolder',
     GetAllFileByFolderContractEndpoint: 'Files/GetFileContractByFolder',
     GetAllFileByContractEndpoint: 'Files/GetFileContractorByContract',
     GetFileContractByIdEndpoint: 'Files/GetAllFileContractById/',
     GetAllFileByDatePayment: 'Files/GetAllFileByDatePayments/',
-    updateStatusFileEndpoint: 'Files/AddFileContractor',
     GetByIdFileEndpoint: 'Files/GetFileById/',
     DeleteFileEndpoint: 'Files/DeleteFile/',
     GetFileDonwloadContractualEndpoint: 'Files/GetFileDonwloadContractual',
@@ -164,6 +167,8 @@ export const environment = {
     SaveRubroEndpoint: 'MasterData/SaveRubro',
     SaveSaveBankEndpoint: 'MasterData/SaveBank',
     SaveCpcTypeEndpoint: 'MasterData/SaveCpcType',
+
+    UpdateSessionPanelEndpoint: 'Share/UpdateSessionPanel',
 
     getDepartmentsColombia: 'https://raw.githubusercontent.com/marcovega/colombia-json/master/colombia.min.json'
 

@@ -40,7 +40,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="professional"]').type('ADMINISTRADOR PLATAFORMA');
 
       cy.get('[formControlName="password"]').type('123');
-      cy.get('[formControlName="confirmPassword"]').type('123');
+      cy.get('[formControlName="passwordConfirm"]').type('123');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
       cy.wait(3000);
@@ -63,7 +63,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('827');
       cy.get('[formControlName="professional"]').type('CONTRACTUAL 2');
       cy.get('[formControlName="password"]').type('4567');
-      cy.get('[formControlName="confirmPassword"]').type('4567');
+      cy.get('[formControlName="passwordConfirm"]').type('4567');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
       cy.wait(3000);
@@ -79,7 +79,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('6686');
       cy.get('[formControlName="professional"]').type('JURIDICO 2');
       cy.get('[formControlName="password"]').type('9997');
-      cy.get('[formControlName="confirmPassword"]').type('9997');
+      cy.get('[formControlName="passwordConfirm"]').type('9997');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
   cy.wait(3000);
@@ -95,7 +95,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('1590');
       cy.get('[formControlName="professional"]').type('SUPERVISOR');
       cy.get('[formControlName="password"]').type('4566');
-      cy.get('[formControlName="confirmPassword"]').type('4566');
+      cy.get('[formControlName="passwordConfirm"]').type('4566');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
       cy.wait(3000);
@@ -112,7 +112,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('777');
       cy.get('[formControlName="professional"]').type('JURIDICO');
       cy.get('[formControlName="password"]').type('456');
-      cy.get('[formControlName="confirmPassword"]').type('456');
+      cy.get('[formControlName="passwordConfirm"]').type('456');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
       cy.wait(3000);
@@ -129,7 +129,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('111');
       cy.get('[formControlName="professional"]').type('JEFE DE AREA DE NEGOCIOS');
       cy.get('[formControlName="password"]').type('444');
-      cy.get('[formControlName="confirmPassword"]').type('444');
+      cy.get('[formControlName="passwordConfirm"]').type('444');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
       cy.wait(3000);
@@ -148,7 +148,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('777');
       cy.get('[formControlName="professional"]').type('SUPERVISOR');
       cy.get('[formControlName="password"]').type('456');
-      cy.get('[formControlName="confirmPassword"]').type('456');
+      cy.get('[formControlName="passwordConfirm"]').type('456');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
           cy.wait(3000);
@@ -164,7 +164,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="passwordMail"]').type('666');
       cy.get('[formControlName="professional"]').type('CONTRACTUAL');
       cy.get('[formControlName="password"]').type('999');
-      cy.get('[formControlName="confirmPassword"]').type('999');
+      cy.get('[formControlName="passwordConfirm"]').type('999');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
       cy.wait(3000);
@@ -183,7 +183,7 @@ describe('lista contratos', () => {
       cy.get('[formControlName="professional"]').type('PLANEACIÓN');
 
       cy.get('[formControlName="password"]').type('321');
-      cy.get('[formControlName="confirmPassword"]').type('321');
+      cy.get('[formControlName="passwordConfirm"]').type('321');
       cy.contains('Registrarse').click();
       cy.get('[data-cy=mi-boton]').click();
   });

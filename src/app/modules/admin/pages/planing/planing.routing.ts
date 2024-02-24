@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { ContrtactsComponent } from './contracts/contracts.component';
-import { AddComponentsComponent } from './componentes/components.component';
+import { AddComponentsComponent } from './componentes/planing-components.component';
 import { PlaningComponent } from './planing.component';
 import { ContractsPlaningResolver } from './planing.resolvers';
 
@@ -23,7 +23,7 @@ export const PlaningRoutes: Route[] = [
                 runGuardsAndResolvers: 'always'
             },
 
- 
+
         ]
     },
     {

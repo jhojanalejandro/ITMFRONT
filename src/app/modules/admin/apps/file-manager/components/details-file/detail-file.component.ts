@@ -9,7 +9,7 @@ import { AuthService } from 'app/core/auth/auth.service';
 import { FileListComponent } from '../../list-file/file-list.component';
 import { FileListManagerService } from '../../services/list-file.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ShowFileComponent } from '../show-file/show-file.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,8 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'detail-file',
     templateUrl: './detail-file.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailFileComponent implements OnInit, OnDestroy {
     userName: any;
@@ -34,7 +32,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _listComponent: FileListComponent,
-        private _fileManagerService: FileListManagerService,
+        private _fileManagerListService: FileListManagerService,
         private _router: Router,
         private _formBuilder: FormBuilder,
         private _authService: AuthService,
@@ -48,7 +46,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         this._listComponent.matDrawer.open();
 
         // Get the item
-        this._fileManagerService.getfile$
+        this._fileManagerListService.getfile$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: DataFile) => {
                 if(item.observation != null){
@@ -67,7 +65,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
 
         this.configForm = this._formBuilder.group({
             title: 'Eliminar Registro',
-            message: '¿Estás seguro de que desea eliminar este archivo de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
+            message: '¿Estás seguro de que desea eliminar el registro de forma permanente? <span class="font-medium">Esta acción no se puede deshace!</span>',
             icon: this._formBuilder.group({
                 show: true,
                 name: 'heroicons_outline:exclamation',
@@ -86,10 +84,10 @@ export class DetailFileComponent implements OnInit, OnDestroy {
             }),
             dismissible: true
         });
-        this.contractorId = this._fileManagerService.getContractorId();
-        this.folderId = this._fileManagerService.getFolderId();
-        this.contractId = this._fileManagerService.getContractId();
-        this.contarctorName = this._fileManagerService.getContractorName();
+        this.contractorId = this._fileManagerListService.getContractorId();
+        this.folderId = this._fileManagerListService.getFolderId();
+        this.contractId = this._fileManagerListService.getContractId();
+        this.contarctorName = this._fileManagerListService.getContractorName();
 
     }
 
@@ -140,9 +138,9 @@ export class DetailFileComponent implements OnInit, OnDestroy {
         // Subscribe to afterClosed from the dialog reference
         dialogRef.afterClosed().subscribe((result) => {
             if (result == 'confirmed') {
-                this._fileManagerService.DeleteFile(this.fileId).subscribe((res) => {
+                this._fileManagerListService.DeleteFile(this.fileId).subscribe((res) => {
                     if (res) {
-                        swal.fire({
+                        Swal.fire({
                             position: 'center',
                             icon: 'success',
                             title: '',
@@ -158,7 +156,7 @@ export class DetailFileComponent implements OnInit, OnDestroy {
                 },
                     (response) => {
                         console.log(response);
-                        swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
+                        Swal.fire('Error', 'Error al Eliminar la informacion!', 'error');
                     });
             }
         });

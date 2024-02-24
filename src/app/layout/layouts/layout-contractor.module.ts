@@ -3,30 +3,30 @@ import { LayoutComponent } from 'app/layout/layout.component';
 import { EmptyLayoutModule } from 'app/layout/layouts/empty/empty.module';
 import { DenseLayoutModule } from 'app/layout/layouts/vertical/dense/dense.module';
 import { SharedModule } from 'app/shared/shared.module';
-import { LayoutContractorComponent } from './layouts/layout-contractor.component';
-import { DenseContractorLayoutModule } from './layouts/vertical/dense-contractor/dense-contractor.module';
+import { LayoutContractorComponent } from './layout-contractor.component';
+import { DenseContractorLayoutModule } from './vertical/dense-contractor/dense-contractor.module';
 
-const layoutModules = [
+const layoutContractorModules = [
     // Empty
     EmptyLayoutModule,
 
-    DenseLayoutModule,
+    DenseContractorLayoutModule
 
 ];
 
 @NgModule({
     declarations: [
-        LayoutComponent,
+        LayoutContractorComponent
     ],
     imports     : [
         SharedModule,
-        ...layoutModules
+        ...layoutContractorModules
     ],
     exports     : [
-        LayoutComponent,
-        ...layoutModules
+        LayoutContractorComponent,
+        ...layoutContractorModules
     ]
 })
-export class LayoutModule
+export class LayoutContractorModule
 {
 }

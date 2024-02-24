@@ -34,6 +34,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   formFile: FormGroup;
   members: any[];
   typeImageUpload: boolean = false;
+  typeImageFirmUpload: boolean = false;
   propietario: any = GlobalConst.requierePoliza;
   typeUserFile: any[];
   acceptImage: string = '.jpg, .jpeg, .png';
@@ -79,7 +80,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
 
   }
 
- 
+
   async onChangeFile(event) {
     this.disableButton = false;
     this.filesWithCheckbox = [];
@@ -92,7 +93,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.readAsDataURL(this.file);
     for (let i = 0; i < this.filesSelected.length; i++) {
-      await this.convertFile(this.filesSelected[i]).then((resp)=> 
+      await this.convertFile(this.filesSelected[i]).then((resp)=>
       this.assinmentFiles(resp,this.filesSelected[i]));
     }
 
@@ -103,7 +104,7 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
   }
   private async assinmentFiles(base64: any,getFile: File): Promise<void>{
     return await new Promise((rslv) => {
-      this.base64Output = base64;      
+      this.base64Output = base64;
       let file:UserFile = {
         userId: this.userId,
         fileData: base64,
@@ -112,8 +113,8 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
         isOwner: false,
         userFileType: this.formFile.value.typeUserFile,
         fileType: getFile.name.split('.')[1].toUpperCase(),
-        fileNameC: getFile.name.split('.')[0].toUpperCase() 
-       
+        fileNameC: getFile.name.split('.')[0].toUpperCase()
+
       }
       this.fileSelected = file;
       this.anexoFile.push(file);
@@ -186,15 +187,15 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     return new Promise<string>(async (resolve) => {
       const result = new ReplaySubject<string>(1);
       const reader = new FileReader();
-  
+
       reader.readAsBinaryString(file);
-      
+
       reader.onload = (event) => {
         const base64String = btoa(event.target.result.toString());
         result.next(base64String);
         result.complete();
       };
-  
+
       result.subscribe((base64String) => {
         resolve(base64String);
       });
@@ -210,17 +211,25 @@ export class UploadFirmComponent implements OnInit, OnDestroy {
     this.userId = this._auth.accessId;
   }
 
-  
+
   typeUploadFile(event: any) {
     let typeId = this.typeUserFile.find(f => f.code == TypeFileUserCode.FIRMA).id;
+    let typeImageId = this.typeUserFile.find(f => f.code == TypeFileUserCode.IMAGENES).id;
+
     this.typeFileSelected = event.value;
     if (event.value === typeId) {
+        this.typeImageFirmUpload = false;
       this.typeImageUpload = true;
       this.acceptExt = this.acceptImage
-    } else{
-      this.typeImageUpload = false;
-      this.acceptExt = this.acceptPdf
-    }
+    }else if(typeImageId== event.value){
+        this.typeImageUpload = false;
+        this.typeImageFirmUpload = true;
+        this.acceptExt = this.acceptImage
+    }else{
+        this.typeImageFirmUpload = false;
+        this.typeImageUpload = false;
+        this.acceptExt = this.acceptPdf
+      }
     this.userId = this._auth.accessId;
   }
 

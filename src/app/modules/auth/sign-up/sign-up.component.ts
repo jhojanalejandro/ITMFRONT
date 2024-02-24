@@ -51,7 +51,6 @@ export class AuthSignUpComponent implements OnInit {
             identification: ['', Validators.required],
             passwordMail: ['', Validators.required],
             password: ['', Validators.required],
-            confirmPassword: ['', Validators.required],
             passwordConfirm: ['', Validators.required]
         },
             {

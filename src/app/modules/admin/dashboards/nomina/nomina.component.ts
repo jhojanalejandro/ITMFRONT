@@ -15,8 +15,6 @@ import { MatPaginator } from '@angular/material/paginator';
   selector: 'nomina',
   styleUrls: ['./nomina.component.css'],
   templateUrl: './nomina.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NominaComponent implements OnInit, OnDestroy {
   selectContract: any;
@@ -37,13 +35,12 @@ export class NominaComponent implements OnInit, OnDestroy {
   constructor(
     private _genericService: GenericService,
     private auth: AuthService,
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private _router: Router
   ) {
   }
   columnas = [
-    { title: 'NUMERO CONTRATO', name: 'numberProject' },
+    { title: 'NÚMERO CONTRATO', name: 'numberProject' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
@@ -70,9 +67,6 @@ export class NominaComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
-  }
 
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {

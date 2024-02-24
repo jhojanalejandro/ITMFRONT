@@ -28,11 +28,10 @@ import { ShareService } from 'app/layout/common/share-service/share-service.serv
 import { RouteImageEnum } from 'app/layout/common/enums/route-image/route-image';
 
 @Component({
-    selector: 'components-card',
-    styleUrls: ['./components.component.scss'],
-    templateUrl: './components.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'planing-components-card',
+    styleUrls: ['./planing-components.component.scss'],
+    templateUrl: './planing-components.component.html',
+
 })
 export class AddComponentsComponent implements OnInit {
     tittle = 'Información';

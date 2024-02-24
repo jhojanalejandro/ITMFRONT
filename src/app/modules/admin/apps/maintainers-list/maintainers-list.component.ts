@@ -18,9 +18,7 @@ export class maintainersListComponent implements OnInit {
   private readonly _unsubscribe$ = new Subject<void>();
 
   constructor(
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
-    private _matDialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -34,10 +32,6 @@ export class maintainersListComponent implements OnInit {
     }
   }
 
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
-  }
 
   ngOnDestroy(): void {
     this._unsubscribe$.next(null);

@@ -7,78 +7,106 @@
 // .hiring{
 //     margin-left: 30px !important;
 // }
-  
 
-td.mat-cell, th.mat-header-cell {
+
+td.mat-cell,
+th.mat-header-cell {
     /* row border */
     text-align: center;
     border-bottom: 1px solid #1a1917;
-    justify-content:center;
-    
-  }
-  
-//   table {
-//     width: 100%;
-//     text-align: center !important;
-// }
+    justify-content: center;
 
-// .mat-sort-header-container{
-//     justify-content: center;
-// }
+}
+
 
 .mat-header-cell {
     text-align: center !important;
 }
-//   table {
-//     text-align: center !important;
-//     /* row spacing / margin */
-//     border-spacing: 0 8px !important;
-//   }
+
 table {
     width: 100%;
-  }
-  
-  tr.example-detail-row {
+}
+
+tr.example-detail-row {
     height: 0;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):hover {
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
     background: whitesmoke;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):active {
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
     background: #efefef;
-  }
-  
-  .example-element-row td {
+}
+
+.example-element-row td {
     border-bottom-width: 0;
-  }
-  
-  .example-element-detail {
+}
+
+.example-element-detail {
     overflow: hidden;
     display: flex;
-  }
-  
-  .example-element-diagram {
+}
+
+.example-element-diagram {
     min-width: 80px;
     border: 2px solid black;
     padding: 8px;
     font-weight: lighter;
     margin: 8px 0;
     height: 104px;
-  }
-  
-  .example-element-symbol {
+}
+
+.example-element-symbol {
     font-weight: bold;
     font-size: 40px;
     line-height: normal;
-  }
-  
-  .example-element-description {
+}
+
+.example-element-description {
     padding: 16px;
-  }
-  
-  .example-element-description-attribution {
+}
+
+.example-element-description-attribution {
     opacity: 0.5;
-  }
-  
+}
+
+
+.custom-loader {
+    text-align: center;
+    font-size: 24px;
+}
+
+.dot {
+    display: inline-block;
+    margin: 0 5px;
+    width: 8px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 50%;
+    animation: dot-animation 1.5s infinite ease-in-out;
+}
+
+.dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 1s;
+}
+
+@keyframes dot-animation {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.5);
+    }
+}

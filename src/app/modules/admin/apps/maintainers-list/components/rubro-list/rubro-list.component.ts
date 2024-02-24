@@ -20,8 +20,6 @@ import { MaintainerRegisterComponent } from '../maintainer-register/maintainer-r
   selector: 'app-rubro-list',
   styleUrls: ['./rubro-list.component.scss'],
   templateUrl: './rubro-list.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RubroListComponent implements OnInit, OnDestroy {
   data: any;
@@ -43,13 +41,12 @@ export class RubroListComponent implements OnInit, OnDestroy {
     private _gerenicService: GenericService,
     private _matDialog: MatDialog,
     private auth: AuthService,
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private _router: Router
   ) {
   }
   columnas = [
-    { title: 'NUMERO RUBRO', name: 'rubroNumber' },
+    { title: 'NÚMERO RUBRO', name: 'rubroNumber' },
     { title: 'NOMBRE RUBRO', name: 'rubro' },
     { title: 'OPCIÓN', name: 'action' },
   ]
@@ -68,13 +65,9 @@ export class RubroListComponent implements OnInit, OnDestroy {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
+  //metodo para animmación de columnas, para que se puedan mover de manera horizontal
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
-  }
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
   }
 
   //metodo de filtrar los datos de las columnas

@@ -16,27 +16,12 @@ export class AuthService {
     encryptText: string = 'encrypt';
     private _teams: BehaviorSubject<any> = new BehaviorSubject(null);
     private _user: ReplaySubject<IUserModel> = new ReplaySubject<IUserModel>(1);
-    private isAuthenticated: boolean = false;
     apiUrl: any = environment.apiURL;
     userPresence$ = new Subject<{ code: string, rol: string, presente: boolean }>();
 
 
     constructor(
         private _httpClient: HttpClient) {
-    }
-
-
-    setUserPresence(code: string, rol: string, presente: boolean): void {
-        this.userPresence$.next({ code, rol, presente });
-    }
-    // Método para establecer el estado de autenticación
-    setAuthenticated(status: boolean) {
-        this.isAuthenticated = status;
-    }
-
-    // Método para obtener el estado de autenticación
-    isAuthenticatedUser(): boolean {
-        return this.isAuthenticated;
     }
 
     /**

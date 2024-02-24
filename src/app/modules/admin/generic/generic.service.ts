@@ -195,4 +195,12 @@ export class GenericService {
         const decrypted = CryptoJS.AES.decrypt(cipherText, GlobalConst.encryptSecretKeyApi).toString(CryptoJS.enc.Utf8);
         return decrypted;
     }
+
+    validateSessionPanel(sessionModel: any) {
+        let urlEndpointGenerate =
+            this.apiUrl + environment.UpdateSessionPanelEndpoint;
+        return this._httpClient
+            .post<IResponse>(urlEndpointGenerate, sessionModel)
+            .pipe(catchError(this.handleError));
+    }
 }

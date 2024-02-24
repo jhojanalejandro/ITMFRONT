@@ -33,14 +33,13 @@ import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import { Moment } from 'moment';
 import { MatDatepicker } from '@angular/material/datepicker';
 import moment from 'moment';
+import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
 @Component({
     selector: 'app-contractor-payment-security',
     templateUrl: './contractor-payment-security-register.component.html',
     styleUrls: ['./contractor-payment-security-register.component.scss'],
 })
-export class ContractorPaymentSecurityRegisterComponent
-    implements OnInit, OnDestroy
-{
+export class ContractorPaymentSecurityRegisterComponent implements OnInit, OnDestroy {
     paymentsecurityData: PaymentSecurity;
     formContractorPaymentSecurity: FormGroup;
     contractId: string;
@@ -77,6 +76,7 @@ export class ContractorPaymentSecurityRegisterComponent
         private _auth: AuthService,
         private _uploadFileDataService: UploadFileDataService,
         public matDialogRef: MatDialogRef<ContractorPaymentSecurityRegisterComponent>,
+        private _contractorListService: ContractorService,
         @Inject(MAT_DIALOG_DATA) public _data: any,
         private _formBuilder: FormBuilder
     ) {
@@ -85,12 +85,11 @@ export class ContractorPaymentSecurityRegisterComponent
             // Especifica la ruta al archivo del worker de PDF.js
             pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
             //pdfDefaultOptions.assetsFolder = 'bleeding-edge';
-
-
     }
 
     ngOnInit(): void {
         this._initData();
+        this.gevalidateDocument();
     }
 
     private _initData(){
@@ -496,6 +495,31 @@ export class ContractorPaymentSecurityRegisterComponent
         this.monthYear += '/' + month;
         this.date.setValue(ctrlValue);
         datepicker.close();
+    }
+
+    private gevalidateDocument() {
+        this._contractorListService
+            .getValidateDocumentUploadEndpoint(this._data.contractId, this._data.contractorId)
+            .pipe(takeUntil(this._unsubscribe$))
+            .subscribe((resp) => {
+                if (!resp.activateTermContract && !resp.activateTermPayments) {
+                    Swal.fire(
+                        '',
+                        'ya ha terminado la fecha de entrega, comunicate con el personal encargado, para habilitar la  carga de documentos!',
+                        'warning'
+                    );
+                    this.cerrar();
+                }
+                if (!resp.activateTermPayments) {
+                    Swal.fire(
+                        '',
+                        'Carga de documentos DESHABILITADA!',
+                        'warning'
+                    );
+                    this.cerrar();
+                }
+            }
+            );
     }
 
     ngOnDestroy(): void {

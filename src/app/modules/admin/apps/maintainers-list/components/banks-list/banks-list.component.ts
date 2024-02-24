@@ -21,8 +21,6 @@ import { MaintainerRegisterComponent } from '../maintainer-register/maintainer-r
   selector: 'app-banks-list',
   styleUrls: ['./banks-list.component.scss'],
   templateUrl: './banks-list.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BanksListComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -42,8 +40,6 @@ export class BanksListComponent implements OnInit, OnDestroy {
   constructor(
     private _gerenicService: GenericService,
     private _matDialog: MatDialog,
-    private auth: AuthService,
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
   ) {
   }
@@ -64,13 +60,9 @@ export class BanksListComponent implements OnInit, OnDestroy {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
+  //metodo para animmación de columnas, para que se puedan mover de manera horizontal
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
-  }
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
   }
 
   //metodo de filtrar los datos de las columnas
@@ -124,11 +116,11 @@ export class BanksListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((result) => {
           if (result) {
- 
+
           }
       });
   }
-  
+
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions
     this._unsubscribeAll.next(null);

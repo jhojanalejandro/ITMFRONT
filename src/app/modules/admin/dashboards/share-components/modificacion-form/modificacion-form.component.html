@@ -11,8 +11,21 @@
             <!-- Card form -->
             <form class="flex flex-col flex-0 items-start w-full p-4 sm:p-4 space-y-3 overflow-y-auto"
                 [formGroup]="modifyForm">
-
-                <div>
+                <div class="divmodifyGratefield">
+                    <mat-form-field class="modifyGratefield" appearance="fill">
+                        <mat-label>Tipo Modidicacion</mat-label>
+                        <mat-select formControlName="modificationType" (selectionChange)="selectmodificacion($event)"
+                            name="modificationType">
+                            <mat-option *ngFor="let tipo of tipoModificacion" [value]="tipo.id">
+                                {{tipo.minuteTypeDescription}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="modifyForm.get('modificationType').hasError('required')">
+                            El Campo Tipo de opcion es requerido
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="folder">
                     <mat-form-field *ngIf="showDate" (click)="pickerFCo.open()" class="modifyfield" appearance="fill">
                         <mat-label>Fecha Inicio Contrato</mat-label>
                         <input matInput id="initialDateContract" (dateChange)="dateChange($event)" autocomplete="off"
@@ -34,7 +47,7 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div>
+                <div class="folder">
                     <!-- <mat-form-field class="field" appearance="fill">
                         <mat-label>Fecha Modificación</mat-label>
                         <mat-select [formControlName]="'fechaModificacion'" name="adicion">
@@ -70,20 +83,7 @@
                             Este Campo es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="modifyfield" appearance="fill">
-                        <mat-label>Tipo Modidicacion</mat-label>
-                        <mat-select formControlName="modificationType"
-                            (selectionChange)="selectmodificacion($event)" name="modificationType">
-                            <mat-option *ngFor="let tipo of tipoModificacion" [value]="tipo.id">
-                                {{tipo.minuteTypeDescription}}
-                            </mat-option>
-                        </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
-                        <mat-error *ngIf="modifyForm.get('modificationType').hasError('required')">
-                            El Campo Tipo de opcion es requerido
-                        </mat-error>
-                    </mat-form-field>
+
                 </div>
                 <div>
                     <mat-form-field class="modifyName" appearance="fill">
@@ -96,11 +96,12 @@
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div>
+                <div class="folder">
                     <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Recursos Adicionales</mat-label>
                         <span matPrefix>$</span>
-                        <input id="resources" formControlName="resources" autocomplete="off" matInput placeholder="Recuros">
+                        <input id="resources" formControlName="resources" autocomplete="off" matInput
+                            placeholder="Recuros">
                     </mat-form-field>
                     <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Cantidad Días</mat-label>
@@ -131,32 +132,65 @@
 
                 </div>
                 <div *ngIf="isAddition">
-                    <mat-form-field class="modifyfield"  appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Valor a adicionar</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" (change)="onChangeTotalValue($event)" id="additionValue"
                             formControlName="additionValue" autocomplete="off" matInput placeholder="Valor adición">
                     </mat-form-field>
-                    <mat-form-field class="modifyfield"  appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Número adición</mat-label>
                         <span matPrefix>$</span>
-                        <input type="text"  id="noAddition"
-                            formControlName="noAddition" autocomplete="off" matInput placeholder="Número adición">
+                        <input type="text" id="noAddition" formControlName="noAddition" autocomplete="off" matInput
+                            placeholder="Número adición">
                     </mat-form-field>
-                    <mat-form-field class="modifyfield"  appearance="fill">
+                    <mat-form-field class="modifyfield" appearance="fill">
                         <mat-label>Total Exacto</mat-label>
                         <span matPrefix>$</span>
-                        <input type="text" id="calculateValue"
-                            formControlName="calculateValue" autocomplete="off" matInput placeholder="Valor Exacto">
+                        <input type="text" id="calculateValue" formControlName="calculateValue" autocomplete="off"
+                            matInput placeholder="Valor Exacto">
                     </mat-form-field>
                 </div>
+                <div class="folder" *ngIf="showModify">
+                    <mat-form-field class="modifyfield" appearance="fill">
+                        <mat-label>Obligaciones a modificar</mat-label>
+                        <mat-select formControlName="obligationType" (selectionChange)="changeObligationType($event)"
+                            name="obligationType">
+                            <mat-option *ngFor="let tipo of obligationTypes" [value]="tipo.value">
+                                {{tipo.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="modifyForm.get('obligationType').hasError('required')">
+                            El Campo Tipo de opcion es requerido
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="modifyfield" *ngFor="let numeral of numeralOption" appearance="fill">
+                        <mat-label>{{numeral.title}}</mat-label>
+                        <mat-select formControlName="numeral" name="numeral" (selectionChange)="changeNumeral($event,numeral.cant)" multiple>
+                            <mat-option *ngFor="let numeral of numeral.options; let i =index" [value]="i+1">
+                                Numeral  {{i+1}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="modifyForm.get('numeral').hasError('required')">
+                            El Campo numeral es requerido
+                        </mat-error>
+                    </mat-form-field>
 
+                </div>
+                <div *ngIf="showModify" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>Texto Adicional</mat-label>
+                        <textarea type="text" class="example-full-width" id="additionalText"
+                            formControlName="additionalText" autocomplete="off" matInput
+                            placeholder="Texto Adicional"></textarea>
+                    </mat-form-field>
+                </div>
                 <div *ngIf="showModify" class="folder">
                     <mat-form-field class="modify" appearance="fill">
                         <mat-label>Objeto</mat-label>
                         <textarea type="text" class="example-full-width" id="elementObject"
                             formControlName="elementObject" autocomplete="off" matInput
-                            placeholder="Descripcion"></textarea>
+                            placeholder="Objeto"></textarea>
                     </mat-form-field>
                 </div>
                 <div *ngIf="showModify" [hidden]="true" class="folder">
@@ -175,22 +209,24 @@
                             placeholder="Perfil Profesional"></textarea>
                     </mat-form-field>
                 </div>
-                <div *ngIf="showModify" class="folder">
-                    <mat-form-field class="modify" appearance="fill">
-                        <mat-label>obligaciones Especificas</mat-label>
-                        <textarea type="text"  class="example-full-width"
-                            id="specificObligations" formControlName="specificObligations" autocomplete="off" matInput
-                            placeholder="Descripcion"></textarea>
-                    </mat-form-field>
-                </div>
-                <div *ngIf="showModify" class="folder">
+                <div *ngIf="showModify && showGeneralObligation !=2" class="folder">
                     <mat-form-field class="modify" appearance="fill">
                         <mat-label>obligaciones Generales</mat-label>
-                        <textarea type="text"  class="example-full-width"
-                            id="generalObligations" formControlName="generalObligations" autocomplete="off" matInput
+
+                        <textarea type="text" class="example-full-width" id="generalObligations"
+                            formControlName="generalObligations" autocomplete="off" matInput
                             placeholder="Descripcion"></textarea>
                     </mat-form-field>
                 </div>
+                <div *ngIf="showModify && showGeneralObligation !=1" class="folder">
+                    <mat-form-field class="modify" appearance="fill">
+                        <mat-label>obligaciones Especificas</mat-label>
+                        <textarea type="text" class="example-full-width" id="specificObligations"
+                            formControlName="specificObligations" autocomplete="off" matInput
+                            placeholder="Descripcion"></textarea>
+                    </mat-form-field>
+                </div>
+
             </form>
         </mat-dialog-content>
 

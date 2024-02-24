@@ -77,7 +77,7 @@ import { ContractorPaymentService } from '../../../contractual/service/contracto
     ],
 })
 export class PayrollContractualListComponent
-    implements OnInit, OnDestroy, AfterViewInit, AfterContentChecked
+    implements OnInit, OnDestroy, AfterViewInit
 {
     contractId: string;
     userName: any;
@@ -201,7 +201,7 @@ export class PayrollContractualListComponent
         { title: 'PAGO AFP', name: 'paymentPension' },
         { title: 'PAGO ARL', name: 'paymentArl' },
         { title: 'PAGO EPS', name: 'paymentEps' },
-        { title: 'NUMERO PLANILLA', name: 'payrollNumber' },
+        { title: 'NÚMERO PLANILLA', name: 'payrollNumber' },
         { title: 'PAGO AFP', name: 'correctAfpPayment' },
         { title: 'PAGO ARL', name: 'correctArlPayment' },
         { title: 'PAGO EPS', name: 'correctEpsPayment' },
@@ -299,9 +299,6 @@ export class PayrollContractualListComponent
         if (item != null) {
             return item.id || index;
         }
-    }
-    ngAfterContentChecked() {
-        this.cdref.detectChanges();
     }
 
     getDataContractor() {

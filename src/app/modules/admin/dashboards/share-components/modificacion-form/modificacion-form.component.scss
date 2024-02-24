@@ -17,8 +17,26 @@ textarea{
 .folder{
     margin-left: 5px;
     text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
 }
 .modifyName {
     margin-left: 20px;
     width: 790px !important;
+}
+
+.modifyGratefield {
+    width: 350px;
+    margin: 0 auto;
+}
+
+
+.divmodifyGratefield {
+    width: 350px;
+    margin: 0 auto;
+}
+
+.centerField{
+    text-align: center;
 }

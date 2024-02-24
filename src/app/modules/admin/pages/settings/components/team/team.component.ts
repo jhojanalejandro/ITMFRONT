@@ -10,8 +10,6 @@ import swal from 'sweetalert2';
 @Component({
     selector: 'settings-team',
     templateUrl: './team.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsTeamComponent implements OnInit {
     durationInSeconds = 5;
@@ -69,12 +67,12 @@ export class SettingsTeamComponent implements OnInit {
             duration: this.durationInSeconds * 1000,
         });
     }
-   
+
   private getRolls() {
     this._authService.getRoll()
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((res) => {
-        this.roles = res;
+        this.roles = res.filter(f => f.code != CodeUser.CONTRACTOR);
       });
   }
 

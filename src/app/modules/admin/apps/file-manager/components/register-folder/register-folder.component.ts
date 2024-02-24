@@ -13,9 +13,7 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 @Component({
     selector: 'app-register',
     templateUrl: './register-folder.component.html',
-    styleUrls: ['./register-folder.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    styleUrls: ['./register-folder.component.scss']
 })
 export class RegisterFolderComponent implements OnInit {
   shortLink: string = "";
@@ -25,7 +23,7 @@ export class RegisterFolderComponent implements OnInit {
   numberOfTicks = 0;
   showAlert: boolean = false;
   registerDate = new Date();
-  formProject: FormGroup; 
+  formProject: FormGroup;
   editData: boolean = false;
   folderName: any = null;
   descript: any;
@@ -34,7 +32,6 @@ export class RegisterFolderComponent implements OnInit {
   constructor(
     private _uploadService: FileManagerService,
     private _formBuilder: FormBuilder,
-    private ref: ChangeDetectorRef,
     private authService: AuthService,
     private router: ActivatedRoute,
     public matDialogRef: MatDialogRef<RegisterFolderComponent>,
@@ -42,9 +39,6 @@ export class RegisterFolderComponent implements OnInit {
     ) {
       setInterval(() => {
         this.numberOfTicks++;
-        // require view to be updated
-        this.ref.detectChanges();
-        this.ref.markForCheck();
       }, 1000);
      }
 
@@ -57,15 +51,13 @@ export class RegisterFolderComponent implements OnInit {
     }
       // this.getDepartamento();
     this.formProject = this._formBuilder.group({
-    folderName: new FormControl(this.folderName, Validators.required),      
-    description: new FormControl(this.descript, Validators.required), 
+    folderName: new FormControl(this.folderName, Validators.required),
+    description: new FormControl(this.descript, Validators.required),
 
     });
 
   }
-  ngAfterContentChecked() {
-    this.ref.detectChanges();
-  }
+
   addContractorFolder() {
     const registerGFolder: Folder={
       userId: this.authService.accessId,
@@ -73,11 +65,11 @@ export class RegisterFolderComponent implements OnInit {
       contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
-      registerDate: this.registerDate, 
+      registerDate: this.registerDate,
       modifyDate: this.registerDate,
-      folderType: this._data.folderType,      
-    };  
-    this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
+      folderType: this._data.folderType,
+    };
+    this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {
         if(res){
           swal.fire({
             position: 'center',
@@ -87,10 +79,7 @@ export class RegisterFolderComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
-          this.ref.detectChanges();
-          this.ref.markForCheck();  
-          this.cerrar();  
+          this.cerrar();
         }
 
     },(response) => {
@@ -114,11 +103,11 @@ export class RegisterFolderComponent implements OnInit {
       contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
-      registerDate: this.registerDate, 
+      registerDate: this.registerDate,
       modifyDate: this.registerDate,
-      folderType: this._data.folderType,      
-    };  
-    this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {   
+      folderType: this._data.folderType,
+    };
+    this._uploadService.addFolderContractor(registerGFolder).subscribe((res) => {
         if(res){
           swal.fire({
             position: 'center',
@@ -128,10 +117,7 @@ export class RegisterFolderComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
-          this.ref.detectChanges();
-          this.ref.markForCheck();  
-          this.cerrar();  
+          this.cerrar();
         }
 
     },(response) => {
@@ -151,11 +137,11 @@ export class RegisterFolderComponent implements OnInit {
       contractId: this._data.contractId,
       folderName: this.formProject.value.folderName,
       descriptionProject: this.formProject.value.description,
-      registerDate: this._data.data.registerDate, 
+      registerDate: this._data.data.registerDate,
       modifyDate: this.registerDate,
-      folderType: this.formProject.value.typeFolder,       
-    };  
-    this._uploadService.UpdateContractFolder(editProject).subscribe((res) => {   
+      folderType: this.formProject.value.typeFolder,
+    };
+    this._uploadService.UpdateContractFolder(editProject).subscribe((res) => {
         if(res){
           swal.fire({
             position: 'center',
@@ -165,15 +151,13 @@ export class RegisterFolderComponent implements OnInit {
             showConfirmButton: false,
             timer: 1500
           });
-          this.ref.detectChanges();
-          this.ref.markForCheck();   
-          this.cerrar();  
+          this.cerrar();
         }
 
     },
     (response) => {
       this.formProject.enable();
-      console.log('error',response);    
+      console.log('error',response);
       // Set the alert
       swal.fire('Error', 'Error al Registrar la informacion!', 'error');
       // Show the alert
@@ -183,6 +167,6 @@ export class RegisterFolderComponent implements OnInit {
   }
   cerrar(): void {
     this.matDialogRef.close(true);
-  } 
+  }
 
 }

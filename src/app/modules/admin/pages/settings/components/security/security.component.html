@@ -22,6 +22,9 @@
                         type="password"
                         matInput>
                 </mat-form-field>
+            </div>
+            <div class="sm:col-span-4">
+
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Contraseña actual Correo</mat-label>
                     <mat-icon
@@ -37,13 +40,28 @@
             <!-- New password -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Nueva contraseña</mat-label>
+                    <mat-label>Nueva contraseña plataforma</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:key'"
                         matPrefix></mat-icon>
                     <input
                         [formControlName]="'newPassword'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
+                <div class="mt-1 text-md text-hint">Mínimo 8 caracteres. Debe incluir números, letras y caracteres especiales.</div>
+            </div>
+
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Nueva contraseña Correo corporativo</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'newPasswordMail'"
                         type="password"
                         matInput>
                 </mat-form-field>

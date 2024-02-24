@@ -25,10 +25,10 @@
                         </div> -->
                     </div>
                 </div>
-                
+
             </div>
             <div class="flex-auto">
-                <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript fuse-mat-rounded w-120 min-w-50">
+                <mat-form-field class="fuse-mat-dense p-4 fuse-mat-no-subscript w-120 min-w-50">
                     <mat-icon
                         class="icon-size-5"
                         matPrefix
@@ -51,7 +51,7 @@
                 </div>
                 <div class="overflow-x-auto mx-6">
                     <table class="w-full bg-transparent" mat-table matSort [dataSource]="dataSource"
-                        [trackBy]="trackByFn" 
+                        [trackBy]="trackByFn"
                          (matSortChange)="announceSortChange($event)">
 
                         <ng-container *ngFor="let columna of columnas" matColumnDef="{{columna.name}}" class="demo">

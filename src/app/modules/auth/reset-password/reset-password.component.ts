@@ -95,7 +95,6 @@ export class AuthResetPasswordComponent implements OnInit {
             )
             .subscribe(
                 (response) => {
-                    debugger
                     // Set the alert
                     this.alert = {
                         type: 'success',
@@ -103,7 +102,6 @@ export class AuthResetPasswordComponent implements OnInit {
                     };
                 },
                 (response) => {
-                    debugger
                     // Set the alert
                     this.alert = {
                         type: 'error',

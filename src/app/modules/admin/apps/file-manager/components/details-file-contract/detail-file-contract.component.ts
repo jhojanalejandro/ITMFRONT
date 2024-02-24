@@ -17,8 +17,6 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'detail-file-contract',
     templateUrl: './detail-file-contract.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailFileContractComponent implements OnInit, OnDestroy {
     userName: any;

@@ -33,13 +33,8 @@ export class UploadFileDataService {
     }
 
     UploadFileContractor(formdata: FileContractor) {
-        let urlEndpointGenerate = this.apiUrl + environment.addFileEndpoint;
+        let urlEndpointGenerate = this.apiUrl + environment.AddOrUpdateFileContractorEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
-    }
-
-    UploadFileContractorTest(formdata: FileContractor): Promise<any> {
-        let urlEndpointGenerate = this.apiUrl + environment.addFileEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata).toPromise();
     }
 
     UploadFileContract(formdata: Files) {
@@ -109,6 +104,12 @@ export class UploadFileDataService {
 
     UploadFileShareContractor(formdata: FileContractor) {
         let urlEndpointGenerate = this.apiUrl + environment.addFileShareEndpoint;
+        return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
+    }
+
+
+    SaveFileContractorPayment(formdata: FileContractor) {
+        let urlEndpointGenerate = this.apiUrl + environment.SaveFilePayment;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, formdata);
     }
 

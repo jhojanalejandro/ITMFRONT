@@ -15,7 +15,6 @@ import { UploadFileDataService } from '../service/upload-file.service';
   selector: 'app-upload-file',
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 export class UploadFileComponent implements OnInit, OnDestroy {
@@ -146,7 +145,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
   }
 
   uploadTypeFile() {
-    
+
     if (this.isSelectContract == true) {
 
     } else {
@@ -173,7 +172,7 @@ export class UploadFileComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
+          //this.matDialogRef.close();
           this.ref.detectChanges();
           this.ref.markForCheck();
           this.closeModal();

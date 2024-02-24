@@ -29,8 +29,6 @@ import { EntityHealth } from 'app/modules/admin/apps/home-contractor/models/mate
     selector: 'app-detail-contractor',
     styleUrls: ['./detail-contractor.component.scss'],
     templateUrl: './detail-contractor.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailContractorComponent implements OnInit, OnDestroy {
     configForm: FormGroup;
@@ -76,8 +74,6 @@ export class DetailContractorComponent implements OnInit, OnDestroy {
     private readonly _unsubscribe$ = new Subject<void>();
     selectedContracttorForm: FormGroup;
     constructor(
-        private _contractorListService: ContractorService,
-        private cdref: ChangeDetectorRef,
         private _formBuilder: FormBuilder,
     ) {
         this.datePipe = new DatePipe('es');
@@ -101,10 +97,6 @@ export class DetailContractorComponent implements OnInit, OnDestroy {
             eps: new FormControl(null, Validators.required),
             afp: new FormControl(null),
         });
-    }
-
-    ngAfterContentChecked() {
-        this.cdref.detectChanges();
     }
 
     closeDetails(): void {

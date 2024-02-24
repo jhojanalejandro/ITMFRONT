@@ -20,11 +20,6 @@ export class HomeContractorService {
         return this._data.asObservable();
     }
 
-    addContractFolder(data: any) {
-        let urlEndpointGenerate = this.apiUrl + environment.addContractFolderEndpoint;
-        return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
-    }
-
     UpdateContractFolder(data: any) {
         let urlEndpointGenerate = this.apiUrl + environment.UpdateContractFolderEndpoint;
         return this._httpClient.post<IResponse>(urlEndpointGenerate, data);
@@ -100,12 +95,13 @@ export class HomeContractorService {
         );
     }
 
-    validateStatus(contractorId: string, contractId: string) {
+    getPersonalDataContractor(contractorId: string, contractId: string) {
         const params = new HttpParams()
             .set('contractorId', contractorId)
             .set('contractId', contractId)
-        let urlEndPoint = this.apiUrl + environment.GetStatusContractorEndpoint;
-        return this._httpClient.get<any>(urlEndPoint, { params: params });
+        let urlEndPoint = this.apiUrl + environment.GetPersonalDataEndpoint;
+        return this._httpClient.get<ExecutionReport>(urlEndPoint, { params: params });
     }
+
 }
 

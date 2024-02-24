@@ -15,7 +15,6 @@ import { Subject, takeUntil } from 'rxjs';
   selector: 'app-contractor-payment',
   templateUrl: './assignment-user.component.html',
   styleUrls: ['./assignment-user.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   animations: fuseAnimations
 })
 
@@ -95,7 +94,7 @@ export class AssignmentUserComponent implements OnInit {
             console.log(response);
           });
     }
-    
+
   }
 
   closePopup(): void {
@@ -228,7 +227,7 @@ export class AssignmentUserComponent implements OnInit {
           this.users[indexUserType].asign = '';
         }
         this.users[indexUser].asign = type;
-      }    
+      }
     }else{
       var index2 = this.users.findIndex(f => f.id == id && f.asign == type);
       if(index2 >=0){
@@ -241,7 +240,7 @@ export class AssignmentUserComponent implements OnInit {
 
 
   }
-  
+
   private findUserJuridic(id: string, type: string, level: number){
     if(level == 1){
       var index = this.juridics.findIndex(f => f.asign == type && f.id == id);
@@ -254,7 +253,7 @@ export class AssignmentUserComponent implements OnInit {
           this.juridics[indexUserType].asign = '';
         }
         this.juridics[indexUser].asign = type;
-      }    
+      }
     }else{
       var index2 = this.juridics.findIndex(f => f.id == id && f.asign == type);
       if(index2 >=0){

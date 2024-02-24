@@ -29,6 +29,7 @@ import { DocumentTypeFileCodes } from 'app/layout/common/enums/document-type/doc
 import { UploadFileDataService } from 'app/modules/admin/dashboards/contractual/service/upload-file.service';
 import { ContractorService } from 'app/modules/admin/dashboards/contractual/service/contractor.service';
 import { NominaService } from '../../nomina/service/nomina.service';
+import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
 
 
 
@@ -39,15 +40,24 @@ import { NominaService } from '../../nomina/service/nomina.service';
 })
 export class ModificacionFormComponent implements OnInit {
     @ViewChild('signInNgForm') elementInNgForm: NgForm;
+    allelementos: string[] = [
+        'Profesional En Sistemas',
+        'Profesional en areas de derecho',
+        'Profesional Especializad',
+        'Tecnologo',
+    ];
+    @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
+    @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     filteredOptions: Observable<string[]>;
     tipoModificacion: any;
     showDate: boolean = true;
     separatorKeysCodes: number[] = [ENTER, COMMA];
     elementoCtrl = new FormControl('');
-    minDateAdiction:Date = new Date();
+    minDateAdiction: Date = new Date();
     cpcId: string = null;
     disableField: boolean = true;
-    resources: any= null;
+    resources: any = null;
     totalValue: any = null;
     exactTotal: number = 0;
     isAddition: boolean = false;
@@ -60,27 +70,26 @@ export class ModificacionFormComponent implements OnInit {
     };
     dateContract: any;
     elementos: Elements[] = [];
-    allelementos: string[] = [
-        'Profesional En Sistemas',
-        'Profesional en areas de derecho',
-        'Profesional Especializad',
-        'Tecnologo',
-    ];
-    @ViewChild('elementoInput') elementoInput: ElementRef<HTMLInputElement>;
+
     numberOfTicks = 0;
     calculo: boolean = true;
     totalCalculate: boolean = true;
     elementselectId: any;
     showModify: boolean = true;
     configForm: FormGroup;
-    @ViewChild('labelInput') labelInput: ElementRef<HTMLInputElement>;
     modifyForm: FormGroup;
     minDate: Date;
     maxdate: Date;
     minDateFinal: Date;
     economicData: any;
+    numeralListG: any[] = [];
+    numeralListE: any[] = [];
+    showGeneralObligation: number = 0;
+    obligationTypes: any = GlobalConst.ObligationType
+    numeralObligationG: any[] = [];
+    numeralObligationE: any[] = [];
+    numeralOption: any[] = [];
 
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         public matDialogRef: MatDialogRef<ModificacionFormComponent>,
@@ -117,27 +126,30 @@ export class ModificacionFormComponent implements OnInit {
 
         this.modifyForm = this._formBuilder.group({
             contractorCant: new FormControl(null, Validators.required),
-            cantDay: new FormControl({value: null, disabled: true }, Validators.required),
-            unitValue: new FormControl({value: null, disabled: true }, Validators.required),
-            totalValue: new FormControl({value: null, disabled: true }, Validators.required),
-            unitValueDay: new FormControl({value: null, disabled: true }, Validators.required),
+            cantDay: new FormControl({ value: null, disabled: true }, Validators.required),
+            unitValue: new FormControl({ value: null, disabled: true }, Validators.required),
+            totalValue: new FormControl({ value: null, disabled: true }, Validators.required),
+            unitValueDay: new FormControl({ value: null, disabled: true }, Validators.required),
             calculateValue: new FormControl(null, Validators.required),
             additionValue: new FormControl(null, Validators.required),
             elementType: new FormControl(null, Validators.required),
-            elementName: new FormControl({value: null, disabled: true }, Validators.required),
+            elementName: new FormControl({ value: null, disabled: true }, Validators.required),
             modification: new FormControl(null, Validators.required),
-            resources: new FormControl({value: null, disabled: true }, Validators.required),
+            resources: new FormControl({ value: null, disabled: true }, Validators.required),
             initialAdditionDate: new FormControl(null),
             finalAdditionDate: new FormControl(null),
             modificationType: new FormControl(null, Validators.required),
-            elementObject: new FormControl({value: null, disabled: true }, Validators.required),
+            elementObject: new FormControl({ value: null, disabled: true }, Validators.required),
             specificObligations: new FormControl(null, Validators.required),
             generalObligations: new FormControl(null, Validators.required),
-            initialDateContract: new FormControl({value: null, disabled: true }, Validators.required),
-            finalDateContract: new FormControl({value: null, disabled: true }, Validators.required),
+            initialDateContract: new FormControl({ value: null, disabled: true }, Validators.required),
+            finalDateContract: new FormControl({ value: null, disabled: true }, Validators.required),
             academicProfile: new FormControl(null, Validators.required),
             profesionalProfile: new FormControl(null, Validators.required),
-            noAddition: new FormControl(null, Validators.required)
+            noAddition: new FormControl(null, Validators.required),
+            numeral: new FormControl(null),
+            obligationType: new FormControl(null),
+            additionalText: new FormControl(null),
         });
         this.filteredOptions =
             this.modifyForm.controls.elementName.valueChanges.pipe(
@@ -167,20 +179,20 @@ export class ModificacionFormComponent implements OnInit {
 
     addModify() {
         let modificacion: any;
-        if (this.modifyForm.value.modification   === 'Si') {
+        if (this.modifyForm.value.modification === 'Si') {
             modificacion = true;
         } else {
             modificacion = true;
         }
-        if(this.exactTotal == 0){
+        if (this.exactTotal == 0) {
             this.exactTotal = this.totalValue;
         }
         let changeContractModel: ModifyContractor = {
             elementName: this.elementData.nombreElemento,
             cantidadContratistas: this.modifyForm.value.contractorCant,
             cantDays: this.modifyForm.value.cantDay == null ? this.elementData.cantidadDias : this.modifyForm.value.cantDay,
-            unitValue:this.modifyForm.value.unitValue != null ? Number(this.modifyForm.value.unitValue.toString().replace(/\./g, '')) : this.elementData.valorUnidad,
-            totalValue:  this.exactTotal,
+            unitValue: this.modifyForm.value.unitValue != null ? Number(this.modifyForm.value.unitValue.toString().replace(/\./g, '')) : this.elementData.valorUnidad,
+            totalValue: this.exactTotal,
             valueDay: this.modifyForm.value.unitValueDay != null ? Number(this.modifyForm.value.unitValueDay.toString().replace(/\./g, '')) : this.elementData.valorPorDia,
             valorPorDiaContratista: 0,
             valorTotalContratista: 0,
@@ -201,7 +213,9 @@ export class ModificacionFormComponent implements OnInit {
             finalAdditionDate: this.modifyForm.value.finalAdditionDate,
             isAddition: this.isAddition,
             registerDate: new Date(),
-            debt: this.modifyForm.value.unitValueDay
+            debt: this.modifyForm.value.unitValueDay,
+            additionalText: this.modifyForm.value.additionalText,
+            obligationType: this.showModify ? this.modifyForm.value.obligationType.toString() : null
         };
         this._contractorService
             .saveMinuteModify(changeContractModel)
@@ -234,11 +248,11 @@ export class ModificacionFormComponent implements OnInit {
         );
         let paymentDayContractor =
             this.modifyForm.value.unitValueDay / Number(this.modifyForm.value.cantDay);
-            this.modifyForm.patchValue({
-                unitValue: this._genericService.addCommasToNumber(unitValue),
-                unitValueDay: this._genericService.addCommasToNumber(paymentDayContractor),
-                totalValue: this._genericService.addCommasToNumber(totalVlue),
-            });
+        this.modifyForm.patchValue({
+            unitValue: this._genericService.addCommasToNumber(unitValue),
+            unitValueDay: this._genericService.addCommasToNumber(paymentDayContractor),
+            totalValue: this._genericService.addCommasToNumber(totalVlue),
+        });
         if (this.modifyForm.value.cantDay >= '30') {
             //   Swal.fire(
             //     'Advertencia!',
@@ -249,6 +263,7 @@ export class ModificacionFormComponent implements OnInit {
     };
 
     selectmodificacion(event) {
+
         let codeMinute = this.tipoModificacion.find(f => f.id == event.value).code;
 
         switch (codeMinute) {
@@ -263,11 +278,11 @@ export class ModificacionFormComponent implements OnInit {
                 this.showModify = false;
                 break;
             case DocumentTypeFileCodes.ADC:
-                if(this.resources != null && Number(this.resources.toString().replace(/\./g, '')) > 0){
+                if (this.resources != null && Number(this.resources.toString().replace(/\./g, '')) > 0) {
                     this.isAddition = true;
                     this.showDate = false;
                     this.showModify = false;
-                }else{
+                } else {
                     swal.fire(
                         '',
                         'No hay recursos disponibles para adicionar', 'warning'
@@ -321,6 +336,63 @@ export class ModificacionFormComponent implements OnInit {
             });
     }
 
+    changeObligationType(event: any) {
+        this.showGeneralObligation = event.value;
+        this.numeralOption = [];
+
+        if (event.value == 1) {
+            this.numeralListG = this.modifyForm.value.specificObligations.split('->')
+            this.numeralOption.push({ options: this.numeralListG, title: 'Numeral Obligaciones generales', cant: event.value })
+        } else if (event.value == 2) {
+            this.numeralListE = this.modifyForm.value.generalObligations.split('->')
+            this.numeralOption.push({ options: this.numeralListE, title: 'Numeral Obligaciones especificas', cant: event.value })
+        } else {
+            this.numeralListE = this.modifyForm.value.generalObligations.split('->')
+            this.numeralListG = this.modifyForm.value.specificObligations.split('->')
+            this.numeralOption.push({ options: this.numeralListG, title: 'Numeral Obligaciones generales', cant: event.value }, { options: this.numeralListE, title: 'Numeral Obligaciones especificas', cant: event.value })
+        }
+
+
+
+    }
+
+    changeNumeral(event: any, origin: any) {
+        let numeralsG = '';
+        let numeralsE = '';
+        let text = '';
+        for (let index = 0; index < this.numeralOption.length; index++) {
+            origin == 1 || origin == 3 ? index < 1 ? this.numeralObligationG = event.value : null : null;
+            origin == 2 || origin == 3 ? this.numeralObligationE = event.value : null;
+            let dataList = origin == 2 || (index > 0 && origin != 2) ? this.numeralObligationE :this.numeralObligationG ;
+            numeralsG = '';
+            for (let index1 = 0; index1 < dataList.length; index1++) {
+                origin == 1 || origin == 3 || (index > 0 && origin != 1) ? numeralsG += this.numeralObligationG[index1] + ',': null;
+                origin == 2 || origin == 3 || (index > 0 && origin != 2) ?   numeralsE += this.numeralObligationE[index1] + ',': null;
+            }
+        }
+        if (this.showGeneralObligation == 1) {
+            text = 'por la necesidad del servicio en el proceso de ejecución de las actividades, se requiere cambiar el producto consagrado en el numeral ' + numeralsG + ' de las obligaciones generales, de la siguiente forma:';
+        } else if (this.showGeneralObligation == 2) {
+            text = 'por la necesidad del servicio en el proceso de ejecución de las actividades, se requiere cambiar el producto consagrado en el numeral ' + numeralsE+ ' de las obligaciones especificas, de la siguiente forma:';
+        } else {
+            // for (let index = 0; index < this.numeralObligationG.length; index++) {
+            //     numeralsG += this.numeralObligationG[index] + ',';
+            // }
+            // for (let index = 0; index < this.numeralObligationE.length; index++) {
+            //     numeralsE += this.numeralObligationE[index] + ',';
+            // }
+            text = 'por la necesidad del servicio en el proceso de ejecución de las actividades, se requiere cambiar el producto consagrado en el numeral ' + numeralsG + ' de las obligaciones generales, y ' + numeralsE + ' de las obligaciones especificas  de la siguiente forma:';
+        }
+
+        this.modifyForm.patchValue({
+            additionalText: text
+        })
+    }
+
+    getNumberArray(num: number): number[] {
+        return new Array(num).fill(0).map((_, index) => index);
+    }
+
     private getDateAdiction() {
         this._genericService.getDetalleContractById(this._data.contractId)
             .pipe(takeUntil(this._unsubscribeAll))
@@ -336,7 +408,7 @@ export class ModificacionFormComponent implements OnInit {
     }
 
     private getDateContract() {
-        this._genericService.getDateContract(this._data.data.id,this._data.contractId)
+        this._genericService.getDateContract(this._data.data.id, this._data.contractId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (resp) => {
@@ -415,7 +487,7 @@ export class ModificacionFormComponent implements OnInit {
 
 
     onChangeTotalValue(event) {
-        if (this.modifyForm.value.additionValue != null ) {
+        if (this.modifyForm.value.additionValue != null) {
             // if (this.totalValue != this.elementForm.value.totalValue) {
             //     if (this.totalValue < Number(this.elementForm.value.totalValue.toString().replace(/\./g, ''))) {
             //         this.recursos = Math.round(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')) - Number(this.totalValue));
@@ -423,7 +495,7 @@ export class ModificacionFormComponent implements OnInit {
             //         this.recursos = Math.round(Number(this.totalValue) - Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')));
             //     }
             // }
-            this.exactTotal = Math.round(this.totalValue+ Number(this.modifyForm.value.additionValue.toString().replace(/\./g, '')))
+            this.exactTotal = Math.round(this.totalValue + Number(this.modifyForm.value.additionValue.toString().replace(/\./g, '')))
             this.modifyForm.patchValue({
                 calculateValue: this._genericService.addCommasToNumber(this.exactTotal),
             });
@@ -437,16 +509,16 @@ export class ModificacionFormComponent implements OnInit {
     subscribeToValueChanges(controlName: string): void {
         this.modifyForm.get(controlName).valueChanges.subscribe(value => {
             this.formatNumberWithCommas(controlName, value);
-            if(Number(value.toString().replace(/\./g, '')) > this.resources){
+            if (Number(value.toString().replace(/\./g, '')) > this.resources) {
                 swal.fire('', 'El valor no puede ser mayor a los recursos disponibles!', 'warning');
 
                 this.modifyForm.patchValue({
                     additionValue: this._genericService.addCommasToNumber(this.resources),
                 });
-            }else{
+            } else {
                 this.formatNumberWithCommas(controlName, value);
                 let porcentaje = (this.totalValue * 30) / 100;
-                if(Number(value.toString().replace(/\./g, '')) >(porcentaje)){
+                if (Number(value.toString().replace(/\./g, '')) > (porcentaje)) {
                     swal.fire('', 'El valor no puede ser mayor al 30% del valor del contrato!', 'warning');
                 }
             }
@@ -455,7 +527,7 @@ export class ModificacionFormComponent implements OnInit {
     }
 
     formatNumberWithCommas(controlName: string, value: number): void {
-        if(value > 0 && value != null){
+        if (value > 0 && value != null) {
             const control = this.modifyForm.get(controlName);
             const previousValue = control.value;
 

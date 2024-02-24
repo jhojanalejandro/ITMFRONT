@@ -167,6 +167,12 @@ export class GlobalConst {
         { viewValue: 'INVERSION' },
     ]
 
+    public static ObligationType: TypeSelect[] = [
+        { viewValue: 'OBLIGACIONES GENERALES', value: 1  },
+        { viewValue: 'OBLIGACIONES ESPECIFICAS', value: 2  },
+        { viewValue: 'OBLIGACIONES GENERALES Y ESPECIFICAS', value: 3  },
+    ];
+
 }
 
 

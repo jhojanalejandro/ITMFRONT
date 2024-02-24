@@ -38,26 +38,26 @@ export interface ContractFolder{
     companyName: string;
     projectName: string;
     objectContract: string;
-    statusContractId: string;
-    activate: boolean;
+    // statusContractId: string;
+    // activate: boolean;
     enableProject: boolean;
-    contractorsCant: number;
-    valorContrato: number;
-    gastosOperativos: number;
-    valorSubTotal: number;
+    // contractorsCant: number;
+    // valorContrato: number;
+    // gastosOperativos: number;
+    // valorSubTotal: number;
     noAdicion: string;
     fechaInicioAmpliacion: Date | null;
     fechaDeTerminacionAmpliacion: Date | null;
-    detalleContratoDto?: DetailContractFolder;
+    detalleContrato: DetailContractFolder;
     numberProject: string;
-    rubro: string;
-    nombreRubro: string;
+    // rubro: string;
+    // nombreRubro: string;
     project: string;
-    fuenteRubro: string;
+    // fuenteRubro: string;
     dutyContract?: string;
-    resourceContract?: any;
+    // resourceContract?: any;
     areaCode: string;
-    registerDateContract: Date
+    // registerDateContract: Date
 }
 
 export interface DetailContractFolder{
@@ -96,7 +96,7 @@ export interface Elements{
     cpcId: string;
     modificacion: boolean;
     tipoElemento: string;
-    recursos?: any; 
+    recursos?: any;
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
@@ -121,7 +121,7 @@ export interface ElementComponent{
     nombreCpc: string;
     modificacion: boolean;
     tipoElemento: string;
-    recursos: number; 
+    recursos: number;
     consecutivo: string;
     obligacionesEspecificas: string;
     obligacionesGenerales: string;
@@ -144,7 +144,7 @@ export interface DetalleContrato{
 	contractId: any,
 	fechaContrato: string,
 	fechaFinalizacion: string,
-	tipoContrato: string  
+	tipoContrato: string
 }
 
 export interface ContractFolders{
@@ -224,7 +224,7 @@ export interface ModifyContractor{
     valorPorDiaContratista: number;
     cpcId: string;
     isModify: boolean;
-    resources: any; 
+    resources: any;
     consecutive: string;
     specificObligations: string;
     generalObligations: string;
@@ -240,5 +240,8 @@ export interface ModifyContractor{
     isAddition: boolean;
     registerDate: Date;
     debt: string;
+    additionalText: string;
+    obligationType: string;
+
 }
 

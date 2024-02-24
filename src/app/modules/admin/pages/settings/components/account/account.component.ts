@@ -9,7 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
     selector: 'settings-account',
     templateUrl: './account.component.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SettingsAccountComponent implements OnInit,AfterViewInit {
@@ -28,7 +27,7 @@ export class SettingsAccountComponent implements OnInit,AfterViewInit {
         private _authService: AuthService,
         private _matDialog: MatDialog,
 
-    ) { 
+    ) {
 
     }
     /**

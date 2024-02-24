@@ -14,15 +14,14 @@ import Swal from 'sweetalert2';
 import { ContractList } from 'app/modules/admin/pages/planing/models/planing-model';
 import { ModuloEnum } from 'app/layout/common/enums/modulo-enum/modulo';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-contracts-list-contarctual',
   styleUrls: ['./contracts-list.component.scss'],
   templateUrl: './contracts-list.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, AfterContentChecked {
+export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
   userName: any;
   private _unsubscribeAll: Subject<any> = new Subject<any>();
   @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
@@ -38,13 +37,12 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, A
     private _gerenicService: GenericService,
     private _matDialog: MatDialog,
     private auth: AuthService,
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer,
     private _router: Router
   ) {
   }
   columnas = [
-    { title: 'NUMERO CONTRATO', name: 'numberProject' },
+    { title: 'NÚMERO CONTRATO', name: 'numberProject' },
     { title: 'NOMBRE EMPRESA', name: 'companyName' },
     { title: 'NOMBRE PROYECTO', name: 'projectName' },
     { title: 'CANTIDAD CONTRATISTAS', name: 'contractorsCant' },
@@ -89,9 +87,6 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, A
     }
   }
 
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
-  }
 
   //metodo de filtrar los datos de las columnas
   applyFilter(event: Event) {
@@ -152,6 +147,7 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit, A
   navigateToContractorsPreNomina(data: any) {
     this._router.navigate(['/dashboards/pre-nomina-lista-contratistas/' + data.id + '/' +data.projectName]);
   }
+
 
   ngOnDestroy(): void {
     // Unsubscribe from all subscriptions

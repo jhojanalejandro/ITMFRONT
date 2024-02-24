@@ -19,8 +19,6 @@ import { CodeUser } from 'app/layout/common/enums/userEnum/enumAuth';
   selector: 'app-register-contractor',
   templateUrl: './register-project-folder.component.html',
   styleUrls: ['./register-project-folder.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations
 })
 export class RegisterContractFolderComponent implements OnInit, OnDestroy {
@@ -48,16 +46,12 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
     private _upload: UploadDataService,
     private _genericService: GenericService,
     private _formBuilder: FormBuilder,
-    private ref: ChangeDetectorRef,
     private authService: AuthService,
     public matDialogRef: MatDialogRef<RegisterContractFolderComponent>,
     @Inject(MAT_DIALOG_DATA) private _data: { data: any }
   ) {
     setInterval(() => {
       this.numberOfTicks++;
-      // require view to be updated
-      this.ref.detectChanges();
-      this.ref.markForCheck();
     }, 1000);
 
   }
@@ -97,9 +91,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
     this.fillData();
     this.subscribeToValueChanges('resource');
 
-  }
-  ngAfterContentChecked() {
-    this.ref.detectChanges();
   }
 
   saveFormContract(){
@@ -166,9 +157,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
                 showConfirmButton: false,
                 timer: 1500
               });
-              //this.matDialogRef.close();  
-              this.ref.detectChanges();
-              this.ref.markForCheck();
               this.matDialogRef.close(true);
             } else {
               Swal.fire({
@@ -206,9 +194,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
             showConfirmButton: false,
             timer: 1500
           });
-          //this.matDialogRef.close();  
-          this.ref.detectChanges();
-          this.ref.markForCheck();
           this.matDialogRef.close(true);
         }
 
@@ -229,8 +214,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
 
   dateChange(event) {
     this.minDate = event.value;
-    this.ref.markForCheck();
-
   }
 
   private getStatusContract() {
@@ -287,6 +270,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
   }
 
   private buildObject(register: boolean, id: string): any {
+    debugger
     let detalle = null;
     if (register) {
       if (this.formProject.value.statusContract == null) {
@@ -309,6 +293,18 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         registerDate: this.registerDate,
         modifyDate: this.registerDate,
         userId: this.authService.accessId,
+        contractorsCant: 0,
+        valorContrato: 0,
+        valorSubTotal: 0,
+        gastosOperativos: 0,
+        statusContractId: this.formProject.value.statusContract,
+        activate: true,
+        registerDateContract: this.formProject.value.registerDateContract,
+        rubro: this.formProject.value.rubro,
+        nombreRubro: this.formProject.value.nombreRubro,
+        fuenteRubro: this.formProject.value.fuenteRubro,
+        resourceContract: this.formProject.value.resource != null ? Math.ceil(Number(this.formProject.value.resource.toString().replace(/\./g, ''))) : 0,
+
       }
     } else {
       let adicion: boolean = false;
@@ -329,6 +325,18 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         id: this._data.data.detailContractId,
         modifyDate: this.registerDate,
         userId: this.authService.accessId,
+        contractorsCant: 0,
+        valorContrato: 0,
+        valorSubTotal: 0,
+        gastosOperativos: 0,
+        statusContractId: this.formProject.value.statusContract,
+        activate: true,
+        registerDateContract: this.formProject.value.registerDateContract,
+        rubro: this.formProject.value.rubro,
+        nombreRubro: this.formProject.value.nombreRubro,
+        fuenteRubro: this.formProject.value.fuenteRubro,
+        resourceContract: this.formProject.value.resource != null ? Math.ceil(Number(this.formProject.value.resource.toString().replace(/\./g, ''))) : 0,
+
       }
     }
     const updateProject: ContractFolder = {
@@ -336,31 +344,20 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
       companyName: this.formProject.value.companyName,
       projectName: this.formProject.value.projectName,
       objectContract: this.formProject.value.objectContract,
-      statusContractId: this.formProject.value.statusContract,
-      activate: true,
       enableProject: false,
-      contractorsCant: 0,
-      detalleContratoDto: detalle,
-      valorContrato: 0,
-      valorSubTotal: 0,
-      gastosOperativos: 0,
+      detalleContrato: detalle,
       noAdicion: this.formProject.value.noAdicion,
       fechaInicioAmpliacion: this.formProject.value.fechaInicioAmpliacion,
       fechaDeTerminacionAmpliacion: this.formProject.value.fechaDeTerminacionAmpliacion,
       numberProject: this.formProject.value.numberProject,
       project: this.formProject.value.project,
-      rubro: this.formProject.value.rubro,
-      nombreRubro: this.formProject.value.nombreRubro,
-      fuenteRubro: this.formProject.value.fuenteRubro,
       dutyContract: this.formProject.value.dutyContract,
-      resourceContract: this.formProject.value.resource != null ? Math.ceil(Number(this.formProject.value.resource.toString().replace(/\./g, ''))) : 0,
       areaCode: this.formProject.value.areaCode,
-      registerDateContract: this.formProject.value.registerDateContract
     };
     return updateProject;
   }
 
-  
+
   subscribeToValueChanges(controlName: string): void {
     this.formProject.get(controlName).valueChanges.subscribe(value => {
         this.formatNumberWithCommas(controlName, value);

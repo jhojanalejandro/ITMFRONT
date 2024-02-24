@@ -21,8 +21,6 @@ import { MaintainerRegisterComponent } from '../maintainer-register/maintainer-r
   selector: 'app-cpc-list',
   styleUrls: ['./cpc-list.component.scss'],
   templateUrl: './cpc-list.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CpcListComponent implements OnInit, OnDestroy {
   data: any;
@@ -45,7 +43,6 @@ export class CpcListComponent implements OnInit, OnDestroy {
     private _gerenicService: GenericService,
     private _matDialog: MatDialog,
     private auth: AuthService,
-    private cdref: ChangeDetectorRef,
     private _liveAnnouncer: LiveAnnouncer
   ) {
   }
@@ -65,13 +62,9 @@ export class CpcListComponent implements OnInit, OnDestroy {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
-  //metodo para animmación de columnas, para que se puedan mover de manera horizontal 
+  //metodo para animmación de columnas, para que se puedan mover de manera horizontal
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.columnsToDisplay, event.previousIndex, event.currentIndex);
-  }
-
-  ngAfterContentChecked() {
-    this.cdref.detectChanges();
   }
 
   //metodo de filtrar los datos de las columnas
@@ -146,7 +139,7 @@ export class CpcListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((result) => {
           if (result) {
- 
+
           }
       });
   }

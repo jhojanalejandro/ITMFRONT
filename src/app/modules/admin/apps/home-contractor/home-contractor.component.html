@@ -65,15 +65,15 @@
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
                                 <span>Cargar Archivo</span>
                             </button>
-                            <button *ngIf="!hired" (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                            <button *ngIf="showbuttonPersonalData" (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
                                 [routerLink]="['./']">
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                                 <span>Información Personal</span>
                             </button>
-                            <button *ngIf="hired" (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                            <button *ngIf="!showbuttonPersonalData" (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
                                 [routerLink]="['./']">
                                 <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                                <span>Cargar Archivos nomina</span>
+                                <span>Cargar Planilla</span>
                             </button>
                         </div>
 

@@ -27,7 +27,7 @@ export class MinutaContratoComponent implements OnInit {
     @Output() readonly pdfGenerated: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Input() pdfType: string;
     otherMinuteData: ResponseContractorPdf<OtherMinute>;
-    listaData: any[] = [];
+    lisDataTable: any[] = [];
     file: any;
     minutePdfData: ResponseContractorPdf<MinutePdf>;
     SaveMinuta: FileContractor[] = []
@@ -43,6 +43,8 @@ export class MinutaContratoComponent implements OnInit {
     documentGenerated: any[] = [];
     currentDate: string;
     dataMinuta: any[] = [];
+    listaAddData: any[] = [];
+
     constructor(private _economicService: ContractorService,
         private _upload: UploadFileDataService,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -113,9 +115,18 @@ export class MinutaContratoComponent implements OnInit {
             this._pdfdataService.getDataMinuteExtension(this.contractContractors)
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((Response: ResponseContractorPdf<OtherMinute>) => {
-                    this.contractContractors.typeMinute = Response.getDataContractors[0].typeModify
                     if (Response.getDataContractors.length > 0) {
+                        this.contractContractors.typeMinute = Response.getDataContractors[0].typeModify
                         this.otherMinuteData = Response;
+                    } else {
+                        swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: '',
+                            html: 'No se encontraron registros',
+                        });
+                        this.hideComponent();
+                        return;
                     }
                     rslv();
                 });
@@ -130,8 +141,7 @@ export class MinutaContratoComponent implements OnInit {
             let fechaLetras = this._shareService.calcularDiferencia(data.initialDateContract, data.finalContractDate);
             let valorLetras = this._shareService.numeroALetras(data.totalValueContract, 'PESOS');
             let totalContrato = this.addCommasToNumber(data.totalValueContract);
-            debugger
-            if (!data.legalprocessAprove  ||  data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || !data.comiteGenerated || !data.previusStudy) {
+            if (!data.legalprocessAprove || data.specificObligations == null || data.generalObligations == null || data.contractorMail == null || data.contractorName == null || supervisor == null || data.totalValueContract === null && data.contractNumber == null || data.contractNumber == 'vacio' || this.headerImageBase64 == null || this.footerImageBase64 == null || !data.comiteGenerated || !data.previusStudy) {
                 if (this.headerImageBase64 == null || this.headerImageBase64 == '' || this.footerImageBase64 == null || this.footerImageBase64 == '') {
                     swal.fire('', 'Error al cargar las imagenenes del pdf', 'warning');
                     this.hideComponent();
@@ -159,16 +169,16 @@ export class MinutaContratoComponent implements OnInit {
                         title: '',
                         html: 'No se encontro el valor del contrato para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 4000
+                        timer: 5000
                     });
                 } else if (data.contractNumber == null || data.contractNumber == '' || data.contractNumber == 'vacio') {
                     swal.fire({
                         position: 'center',
                         icon: 'warning',
                         title: '',
-                        html: 'No se encontro la numero de la minuta para el contratista ' + data.contractorName,
+                        html: 'No se encontro el número de la minuta para el contratista ' + data.contractorName,
                         showConfirmButton: false,
-                        timer: 4000
+                        timer: 5000
                     });
 
                 } else if (supervisor == null) {
@@ -180,7 +190,7 @@ export class MinutaContratoComponent implements OnInit {
                         showConfirmButton: false,
                         timer: 4000
                     });
-                }else if (!data.legalprocessAprove ){
+                } else if (!data.legalprocessAprove) {
                     swal.fire({
                         position: 'center',
                         icon: 'warning',
@@ -205,13 +215,14 @@ export class MinutaContratoComponent implements OnInit {
                 let minute = {
                     document: documentMinute,
                     contractorName: data.contractorName,
-                    contractorId: data.contractorId
+                    contractorId: data.contractorId,
+                    documentType: DocumentTypeFileCodes.MNT
                 }
                 this.documentGenerated.push(minute);
             }
         }
         if (this.documentGenerated.length > 0) {
-            this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.MNT, DocumentTypeCodes.MINUTA);
+            this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeCodes.MINUTA);
         }
     }
 
@@ -780,8 +791,7 @@ export class MinutaContratoComponent implements OnInit {
         return documentMinute;
     }
 
-    private generateMinuteExtension(data: any,listConcat: any) {
-        debugger
+    private generateMinuteExtension(data: any, listConcat: any) {
         let dataProject = this.otherMinuteData.dataContract;
         let supervisor = this.otherMinuteData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.SUPERVISOR)
         let plazo = this._shareService.calcularDiferencia(data.initialDateContract, data.finalDateContract);
@@ -834,15 +844,15 @@ export class MinutaContratoComponent implements OnInit {
                                 ],
                                 [
                                     { text: 'CLASE DE CONTRATO', bold: true },
-                                    {text: 'PRESTACION DE SERVICIOS'},
+                                    { text: 'PRESTACION DE SERVICIOS' },
                                 ],
                                 [
                                     { text: 'CONTRATISTA', bold: true },
-                                    { text: data.contractorName},
+                                    { text: data.contractorName },
                                 ],
                                 [
                                     { text: 'OBJETO', bold: true },
-                                    { text: data.object},
+                                    { text: data.object },
                                 ],
                                 [
                                     { text: 'VALOR INICIAL', bold: true },
@@ -852,14 +862,14 @@ export class MinutaContratoComponent implements OnInit {
                                     },
                                 ],
                                 [{ text: 'PLAZO', bold: true },
-                                  {text: plazo}
+                                { text: plazo }
                                 ],
                                 [
                                     {
                                         text: ' ',
                                         bold: true,
                                     },
-                                    { text: ' '},
+                                    { text: ' ' },
                                 ]
                                 // [
                                 //     { text: 'FECHA DE INICIO', bold: true },
@@ -892,45 +902,45 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'En la Ciudad de Medellín, en las instalaciones del ',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'EL INSTITUTO TECNOLÓGICO METROPOLITANO',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ', se reunieron',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: supervisor.userName,
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ' identificado con Cédula de Ciudadanía Nº ' + supervisor.userIdentification,
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'actuando en calidad de ' + supervisor.userCharge + '- Asesora Jurídica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 de 10 de septiembre de 2020  delegada para la contratación Administrativa de los convenios interadministrativos del INSTITUTO TECNOLÓGICO METROPOLITANO - INSTITUCIÓN UNIVERSITARIA',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                                 style: 'textStyle'
                             },
                             {
                                 text: ' adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7 debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                             {
                                 text: 'y ' + data.contractorName,
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ' identificado (a) con cédula de ciudadanía ' + data.contractorIdentification + ' en calidad de contratista, con el fin de hacer la siguiente modificación al contrato de prestación de servicio No. P- ' + data.contractNumber + ' de ' + new Date(dataProject.registerDate).getFullYear() + ', previa las siguientes:',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
@@ -948,7 +958,7 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: '1. De conformidad con el artículo 14 de la Ley 80 de 1993 en su parágrafo primero, las entidades estatales “tendrán la dirección general y la responsabilidad de ejercer el control y la vigilancia de la ejecución del contrato. En consecuencia, con el exclusivo objeto de evitar la paralización o la afectación grave de los servicios públicos a su cargo y asegurar la inmediata, continua y adecuada prestación, podrán, en los casos previstos en el numeral segundo de este artículo, interpretar los documentos contractuales y las estipulaciones en ellos convenidas, introducir modificaciones a lo contratado y, cuando las condiciones particulares de la prestación así lo exijan, terminar unilateralmente el contrato celebrado”. ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
@@ -956,13 +966,13 @@ export class MinutaContratoComponent implements OnInit {
                     {
                         margin: [10, 10, 10, 10],
                         text: '2. En orden a lo dicho, el ' + fechaInicioContrato + ' las partes firmaron el Contrato de Prestación de Servicios No. P - ' + data.contractNumber + ' DE ' + new Date(dataProject.registerDate).getFullYear() + ' por un valor de ' + valorLetras + ' M/L ($ ' + data.totalValueContract + ' ) y un plazo de ejecución de ' + plazo + ', contados a partir del ' + fechaInicioContrato + ' fecha en la cual fue suscrita el acta de inicio de actividades',
-                        fontSize: 10,
+                        fontSize: 12,
                         style: 'textStyle'
                     },
                     {
                         margin: [10, 10, 10, 10],
                         text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P- ' + data.contractNumber + ' DE ' + new Date(dataProject.registerDate).getFullYear() + ' de conformidad con la necesidad que tiene la EMPRESAS ' + data.companyName + ' DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  ' + dataProject.contractNumber + '/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P- ' + data.contractNumber + ' de ' + new Date(dataProject.registerDate).getFullYear() + ' será por un período de ' + plazoAmpliacion + ' adicionales al término primigenio.',
-                        fontSize: 10,
+                        fontSize: 12,
                         style: 'textStyle'
                     },
                     {
@@ -995,12 +1005,12 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA SEGUNDA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: 'Continúan vigentes y de obligatoria observancia las demás cláusulas del contrato que no hayan sido modificadas en el presente OTROSI.',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                         ],
                     },
@@ -1009,24 +1019,24 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA TERCERA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: 'Las partes con la suscripción del presente OTROSI que da cuenta de la voluntad que les asiste, manifiestan que renuncian a cualquier reclamación presente y futura inherentes a la misma.',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                         ],
                     },
-                    {
-                        margin: [10, 10, 10, 10],
-                        text: 'Para constancia se firma por las partes en la ciudad de Medellín',
-                        fontSize: 10,
-                    },
+                    // {
+                    //     margin: [10, 10, 10, 10],
+                    //     text: 'Para constancia se firma por las partes en la ciudad de Medellín',
+                    //     fontSize: 12,
+                    // },
                 ],
                 styles: {
                     textStyle: {
-                        fontSize: 10,
+                        fontSize: 12,
                         bold: true,
                         alignment: 'justify'
                     },
@@ -1083,29 +1093,29 @@ export class MinutaContratoComponent implements OnInit {
             const documentMinuteAddition = {
                 pageSize: 'A4',
                 pageOrientation: 'FOLIO',
-                pageMargins: [40, 80, 40, 60],
+                pageMargins: [40, 70, 30, 60],
                 header: {
-                    margin: [30, 30, 30, 30],
+                    margin: [20, 0, 20, 0],
                     image: this.headerImageBase64,
-                    fit: [600, 600],
+                    fit: [500, 500]
                 },
                 footer: {
-                    margin: [30, 30, 30, 30],
+                    margin: [70, -9, 20, 0],
                     image: this.footerImageBase64,
-                    fit: [600, 600],
+                    fit: [500, 500]
                 },
                 content: [
                     {
                         text: 'INSTITUTO TECNOLOGICO METROPOLITANO',
                         bold: true,
-                        margin: [0, 20, 0, 20],
+                        margin: [0, 15, 0, 15],
                         alignment: 'center',
-                        fontSize: 14,
+                        fontSize: 14
                     },
                     {
                         text: 'OTROSI No.1  AL CONTRATO No. P- ' + data.contractNumber + ' DE ' + new Date(dataProject.registerDate).getFullYear(),
                         bold: true,
-                        margin: [0, 20, 0, 20],
+                        margin: [0, 15, 0, 15],
                         alignment: 'center',
                         fontSize: 14,
                     },
@@ -1136,7 +1146,7 @@ export class MinutaContratoComponent implements OnInit {
                                     { text: 'VALOR INICIAL', bold: true },
                                     {
                                         text: valorLetras + ' M/L  ($' + data.totalValueContract + ')',
-                                        alignment: 'right',
+                                        alignment: 'justify',
                                     },
                                 ],
                                 [{ text: 'PLAZO', bold: true }, plazo],
@@ -1164,45 +1174,45 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'En la Ciudad de Medellín, en las instalaciones del ',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'EL INSTITUTO TECNOLÓGICO METROPOLITANO',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ', se reunieron',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'yolanda maria henao, ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ' identificado con Cédula de Ciudadanía Nº 43507013',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'actuando en calidad de Jefe de Oficina- Asesora Jurídica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 de 10 de septiembre de 2020  delegada para la contratación Administrativa de los convenios interadministrativos del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                                 style: 'textStyle'
                             },
                             {
                                 text: ' adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7 debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                             {
                                 text: 'y ' + data.contractorName,
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ' identificado (a) con cédula de ciudadanía ' + data.contractorIdentification + ' en calidad de contratista, con el fin de hacer la siguiente modificación al contrato de prestación de servicio No. P-7240 de 2022, previa las siguientes:',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
@@ -1220,7 +1230,7 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: '1. De conformidad con el artículo 14 de la Ley 80 de 1993 en su parágrafo primero, las entidades estatales “tendrán la dirección general y la responsabilidad de ejercer el control y la vigilancia de la ejecución del contrato. En consecuencia, con el exclusivo objeto de evitar la paralización o la afectación grave de los servicios públicos a su cargo y asegurar la inmediata, continua y adecuada prestación, podrán, en los casos previstos en el numeral segundo de este artículo, interpretar los documentos contractuales y las estipulaciones en ellos convenidas, introducir modificaciones a lo contratado y, cuando las condiciones particulares de la prestación así lo exijan, terminar unilateralmente el contrato celebrado”. ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
@@ -1228,13 +1238,13 @@ export class MinutaContratoComponent implements OnInit {
                     {
                         margin: [10, 10, 10, 10],
                         text: '2. En orden a lo dicho, el ' + fechaInicioContrato + ' las partes firmaron el Contrato de Prestación de Servicios No. P-' + data.contractNumber + ' de ' + new Date(dataProject.registerDate).getFullYear() + ', por un valor de SIETE MILLONES CIENTO SETENTA Y CINCO MIL CUATROCIENTOS SESENTA Y SIETE PESOS M/L ($ $ 7,175,467 ) y un plazo de ejecución de VEINTISIETE (27) DÍAS, contados a partir del 2 de noviembre de 2022 fecha en la cual fue suscrita el acta de inicio de actividades',
-                        fontSize: 10,
+                        fontSize: 12,
                         style: 'textStyle'
                     },
                     {
                         margin: [10, 10, 10, 10],
-                        text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P-7240 de 2022 de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No. '+ dataProject.contractNumber+' , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-3819 de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
-                        fontSize: 10,
+                        text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P-7240 de 2022 de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No. ' + dataProject.contractNumber + ' , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-3819 de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
+                        fontSize: 12,
                         style: 'textStyle'
                     },
                     {
@@ -1249,7 +1259,7 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA PRIMERA: Modificar la cláusula segunda del contrato, en el sentido de ampliar el plazo de ejecución contractual en DIEZ (10) DÍAS    que se iniciarán a contar a partir del 19/08/2022  y se extenderá hasta el 28/08/2022  la cual quedará así:',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                                 style: 'textStyle'
                             },
@@ -1258,7 +1268,7 @@ export class MinutaContratoComponent implements OnInit {
                     {
                         margin: [15, 10, 10, 15],
                         text: '“SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + plazo + ',  contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date(data.initialDateContract).getFullYear() + ' . Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
-                        fontSize: 10,
+                        fontSize: 12,
                         bold: true,
                         style: 'textStyle'
                     },
@@ -1267,35 +1277,35 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA SEGUNDA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ' Modificar la cláusula tercera del valor del contrato, en el sentido de adicionar el mismo en la suma $ ' + data.additionValue + ' con cargo al certificado de compromiso presupuestal 668/5358  de 2022 y, rubro presupuestal ' + data.rubroContract + ', la cual quedará así:',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
                     },
                     {
+                        pageBreak: 'before',
                         margin: [15, 10, 10, 15],
                         text: '“TERCERA. -VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de  $ ' + data.unitValueContract + ' El I.T.M. cancelará al CONTRATISTA, en pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestación del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el interventor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestión y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumulará para el periodo inmediatamente siguiente.”',
-                        fontSize: 10,
+                        fontSize: 12,
                         bold: true,
                         style: 'textStyle'
                     },
                     {
-                        pageBreak: 'before',
                         margin: [10, 10, 10, 10],
                         text: [
                             {
                                 text: 'CLÁUSULA TERCERA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: 'Continúan vigentes y de obligatoria observancia las demás cláusulas del contrato que no hayan sido modificadas en el presente OTROSI.',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
@@ -1305,25 +1315,25 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA CUARTA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: ': Las partes con la suscripción del presente OTROSI que da cuenta de la voluntad que les asiste, manifiestan que renuncian a cualquier reclamación presente y futura inherentes a la misma.',
-                                fontSize: 10,
+                                fontSize: 12,
                                 style: 'textStyle'
                             },
                         ],
                     },
-                    {
-                        margin: [10, 10, 10, 10],
-                        text: 'Para constancia se firma por las partes en la ciudad de Medellín',
-                        fontSize: 10,
-                    },
+                    // {
+                    //     margin: [10, 10, 10, 10],
+                    //     text: 'Para constancia se firma por las partes en la ciudad de Medellín',
+                    //     fontSize: 12,
+                    // },
                 ],
                 styles: {
                     textStyle: {
-                        fontSize: 10,
+                        fontSize: 12,
                         bold: true,
                         alignment: 'justify'
                     },
@@ -1347,8 +1357,7 @@ export class MinutaContratoComponent implements OnInit {
         }
     }
 
-    private generateModifyMinute(data: any, listaData: any[]) {
-        debugger
+    private generateModifyMinute(data: OtherMinute, lisDataTable: any[]) {
         let dataProject = this.otherMinuteData.dataContract;
         let user = this.otherMinuteData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.RECRUITER || ct.userChargeCode === CodeUser.SUPERVISORAREAC)
         let supervisor = this.otherMinuteData.personalInCharge.find(ct => ct.userChargeCode === CodeUser.SUPERVISOR)
@@ -1403,32 +1412,32 @@ export class MinutaContratoComponent implements OnInit {
                                 ],
                                 [
                                     { text: 'CLASE DE CONTRATO', bold: true },
-                                    {text: 'PRESTACION DE SERVICIOS'},
+                                    { text: 'PRESTACION DE SERVICIOS' },
                                 ],
                                 [
                                     { text: 'CONTRATISTA', bold: true },
-                                    { text: data.contractorName},
+                                    { text: data.contractorName },
                                 ],
                                 [
                                     { text: 'OBJETO', bold: true },
-                                    { text: data.object},
+                                    { text: data.object },
                                 ],
                                 [
                                     { text: 'VALOR INICIAL', bold: true },
                                     {
                                         text: valorLetras + ' M/L  ($' + data.totalValueContract + ')',
-                                        alignment: 'right',
+                                        alignment: 'justify',
                                     },
                                 ],
                                 [{ text: 'PLAZO', bold: true },
-                                  {text: plazo}
+                                { text: plazo }
                                 ],
                                 [
                                     {
                                         text: ' ',
                                         bold: true,
                                     },
-                                    { text: ' '},
+                                    { text: ' ' },
                                 ]
                                 // [
                                 //     { text: 'FECHA DE INICIO', bold: true },
@@ -1453,7 +1462,7 @@ export class MinutaContratoComponent implements OnInit {
                                 //     },
                                 //     fechaFinalAmpliacionContrato,
                                 // ]
-                            ].concat(listaData)
+                            ].concat(lisDataTable)
                         }
                     },
                     {
@@ -1461,7 +1470,7 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'En la Ciudad de Medellín, en las instalaciones del ',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 style: 'text',
@@ -1490,11 +1499,11 @@ export class MinutaContratoComponent implements OnInit {
                             },
                             {
                                 text: ' adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7 debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, ',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'y ' + data.contractorName,
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
@@ -1522,7 +1531,7 @@ export class MinutaContratoComponent implements OnInit {
                     {
                         margin: [15, 10, 10, 15],
                         text: '• Que al momento de realizar el contrato P-' + data.contractNumber + ' de ' + new Date(data.initialDateContract).getFullYear() + ', se indicaron las siguientes obligaciones específicas',
-                        fontSize: 10,
+                        fontSize: 12,
                     },
                     {
                         margin: [15, 10, 10, 15],
@@ -1534,25 +1543,39 @@ export class MinutaContratoComponent implements OnInit {
                             },
                             {
                                 style: 'text',
-                                text: 'OBLIGACIONES ESPECIFICAS: ' + data.specificObligations,
+                                text: 'OBLIGACIONES GENERALES: ' + data.generalObligations + 'OBLIGACIONES ESPECIFICAS: ' + data.specificObligations,
                             },
                         ],
                     },
                     {
                         style: 'text',
-                        text: 'por la necesidad del servicio en el proceso de ejecución de las actividades, se requiere cambiar el producto consagrado en el numeral 4 de las obligaciones específicas, de la siguiente forma:',
+                        text: data.additionalText,
                     },
                     {
                         margin: [15, 10, 10, 15],
                         text: [
                             {
-                                text: 'OBLIGACIONES ESPECIFICAS: (…) ',
+                                text: data.obligationType == '1' || data.obligationType == '3' ? 'OBLIGACIONES GENERALES' + ': (…) ' : null,
                                 fontSize: 11,
                                 bold: true,
                             },
                             {
                                 style: 'text',
-                                text: data.specificObligations,
+                                text: data.obligationType == '1' || data.obligationType == '3' ? data.generalObligations : null,
+                            }
+                        ]
+                    },
+                    {
+                        margin: [15, 10, 10, 15],
+                        text: [
+                            {
+                                text: data.obligationType == '2' || data.obligationType == '3' ? 'OBLIGACIONES ESPECIFICAS' + ': (…) ' : null,
+                                fontSize: 11,
+                                bold: true,
+                            },
+                            {
+                                style: 'text',
+                                text: data.obligationType == '2' || data.obligationType == '3' ? data.specificObligations : null,
                             }
                         ]
                     },
@@ -1572,34 +1595,34 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA PRIMERA.',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: 'Modificar la cláusula cuarta del contrato de prestación de servicios P-' + data.contractNumber + ' de ' + new Date(data.initialDateContract).getFullYear() + ' que establece las ',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                             {
                                 text: 'OBLIGACIONES DEL CONTRATISTA ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: 'con base en lo expuesto en la parte motiva de esta actuación administrativa, las cuales quedaran así:',
-                                fontSize: 10,
+                                fontSize: 12,
                             }
                         ],
                     },
                     {
                         margin: [15, 10, 10, 15],
                         text: '“CUARTA. -OBLIGACIONES DEL CONTRATISTA. ',
-                        fontSize: 10,
+                        fontSize: 12,
                         bold: true,
                     },
                     {
                         margin: [15, 10, 10, 15],
                         text: 'se obliga en forma especial a prestar el servicio objeto de este contrato en los términos señalados en la propuesta presentada por el mismo y específicamente a cumplir las siguientes: ',
-                        fontSize: 10,
+                        fontSize: 12,
                     },
                     {
                         style: 'text',
@@ -1610,12 +1633,12 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLÁUSULA SEGUNDA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 text: 'Las demás cláusulas no tienen modificación.',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                         ]
                     },
@@ -1624,77 +1647,77 @@ export class MinutaContratoComponent implements OnInit {
                         text: [
                             {
                                 text: 'CLAUSULA TERCERA: ',
-                                fontSize: 10,
+                                fontSize: 12,
                                 bold: true,
                             },
                             {
                                 aligment: 'justify',
                                 text: 'Las partes con la suscripción del presente OTROSI que da cuenta de la voluntad que les asiste, manifiestan que renuncian a cualquier reclamación presente y futura inherentes a la misma.',
-                                fontSize: 10,
+                                fontSize: 12,
                             },
                         ]
                     },
-                    {
-                        margin: [15, 10, 10, 10],
-                        text: 'Para constancia se firma por las partes en la ciudad de Medellín, a los ' + fechaInicioContrato + '.',
-                        fontSize: 12,
-                        alignment: 'justify',
-                    },
-                    {
-                        style: 'colums',
-                        columns: [
-                            {
-                                style: 'columsRight',
-                                text: 'EL INSTITUTO:'
-                            },
-                            {
-                                style: 'columsRight',
-                                text: 'EL CONTRATISTA:'
-                            }
-                        ]
-                    },
-                    {
-                        style: 'colums',
-                        columns: [
-                            {
-                                style: 'columsRight',
-                                canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1 }]
-                            },
-                            {
-                                style: 'columsRight',
-                                canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1 }]
-                            }
-                        ]
-                    },
-                    {
-                        style: 'colums',
-                        columns: [
-                            {
-                                text: [
-                                    {
-                                        style: 'columsRight',
-                                        text: 'yolanda maria henao\n',
-                                    },
-                                    {
-                                        style: 'columsRight',
-                                        text: 'C.C. 43.507.013',
-                                    }
-                                ]
-                            },
-                            {
-                                text: [
-                                    {
-                                        style: 'columsRight',
-                                        text: data.contractorName + '\n',
-                                    },
-                                    {
-                                        style: 'columsRight',
-                                        text: data.contractorIdentification,
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                    // {
+                    //     margin: [15, 10, 10, 10],
+                    //     text: 'Para constancia se firma por las partes en la ciudad de Medellín, a los ' + fechaInicioContrato + '.',
+                    //     fontSize: 12,
+                    //     alignment: 'justify',
+                    // },
+                    // {
+                    //     style: 'colums',
+                    //     columns: [
+                    //         {
+                    //             style: 'columsRight',
+                    //             text: 'EL INSTITUTO:'
+                    //         },
+                    //         {
+                    //             style: 'columsRight',
+                    //             text: 'EL CONTRATISTA:'
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     style: 'colums',
+                    //     columns: [
+                    //         {
+                    //             style: 'columsRight',
+                    //             canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1 }]
+                    //         },
+                    //         {
+                    //             style: 'columsRight',
+                    //             canvas: [{ type: 'line', x1: 0, y1: 1, x2: 300 - 2 * 40, y2: 1, lineWidth: 1 }]
+                    //         }
+                    //     ]
+                    // },
+                    // {
+                    //     style: 'colums',
+                    //     columns: [
+                    //         {
+                    //             text: [
+                    //                 {
+                    //                     style: 'columsRight',
+                    //                     text: 'yolanda maria henao\n',
+                    //                 },
+                    //                 {
+                    //                     style: 'columsRight',
+                    //                     text: 'C.C. 43.507.013',
+                    //                 }
+                    //             ]
+                    //         },
+                    //         {
+                    //             text: [
+                    //                 {
+                    //                     style: 'columsRight',
+                    //                     text: data.contractorName + '\n',
+                    //                 },
+                    //                 {
+                    //                     style: 'columsRight',
+                    //                     text: data.contractorIdentification,
+                    //                 }
+                    //             ]
+                    //         }
+                    //     ]
+                    // }
                 ],
                 styles: {
                     header: {
@@ -1747,77 +1770,162 @@ export class MinutaContratoComponent implements OnInit {
     }
 
     private generateAdditionMinuteTest() {
+        this.otherMinuteData.getDataContractors = this.otherMinuteData.getDataContractors.map(objeto => {
+            return { ...objeto, createPdf: false };
+        });
         for (let index = 0; index < this.contractContractors.contractors.length; index++) {
             let dataListContractordesc = this.otherMinuteData.getDataContractors.filter(f => f.contractorId === this.contractContractors.contractors[index]).sort((a, b) => b.consecutive - a.consecutive)
             let dataListContractorasc = this.otherMinuteData.getDataContractors.filter(f => f.contractorId === this.contractContractors.contractors[index]).sort((a, b) => a.consecutive - b.consecutive)
             let data = dataListContractordesc[0];
-            dataListContractorasc = dataListContractorasc.sort((a, b) => a.consecutive - b.consecutive);
-            let md = dataListContractorasc[index].consecutive > 1 ? dataListContractorasc[index].consecutive : 'ACTUAL';
-            let cantModify= null;
+            dataListContractorasc = dataListContractorasc.sort((a, b) => b.consecutive - a.consecutive);
+
             for (let index = 0; index < dataListContractorasc.length; index++) {
-                debugger
-                switch (dataListContractorasc[index].typeModify) {
-                    case DocumentTypeFileCodes.ADC:
-                        cantModify = dataListContractorasc.filter(f => f.typeModify ===DocumentTypeFileCodes.ADC);
-                        md = dataListContractorasc[index].consecutive > 1 && cantModify.length >1 ? dataListContractorasc[index].consecutive : 'ACTUAL';
-                        dataListContractorasc[index].additionValue = this.addCommasToNumber(dataListContractorasc[index].additionValue);
-                        this.listaData[this.listaData.length] =
-                            [
-                                {
-                                    text: 'VALOR ADICION ' + md + ':',
-                                    bold: true,
-                                },
-                                { text: '$ ' + dataListContractorasc[index].additionValue},
-                            ];
-                            this.listaData[this.listaData.length] =
-                            [
-                                {
-                                    text: ' ',
-                                    bold: true,
-                                },
-                                { text: ' '},
-                            ];
+                if (!dataListContractorasc[index].createPdf) {
+                    switch (dataListContractorasc[index].typeModify) {
+                        case DocumentTypeFileCodes.ADC:
+                            dataListContractorasc[index].createPdf = true;
+                            this.fillIngTableAddition(dataListContractorasc, index, 2)
+                            break;
+                        case DocumentTypeFileCodes.APC:
+                            dataListContractorasc[index].createPdf = true;
+                            this.fillingTableExtension(dataListContractorasc, index, 2)
+                            break;
+                        case DocumentTypeFileCodes.AA:
+                            let cont = 2;
+                            for (let index1 = 0; index1 < cont; index1++) {
+                                let adition = dataListContractorasc.find(f => f.typeModify == DocumentTypeFileCodes.ADC && f.createPdf == false)
+                                if ((index1 == 0 && dataListContractorasc.find(f => f.createPdf == false) != null) || (dataListContractorasc.length > 1 && adition != null)) {
+                                    if (index1 > 0 && dataListContractorasc.length > 1 && adition.createPdf == false) {
+                                        cont++
+                                        this.fillIngTableAddition(adition, index, 1)
+                                        let dataIndex = dataListContractorasc.findIndex(f => f.id == adition.id);
+                                        dataListContractorasc[dataIndex].createPdf = true;
+                                    }
 
-                        break;
-                    case DocumentTypeFileCodes.APC:
-                        cantModify = dataListContractorasc.filter(f => f.typeModify ===DocumentTypeFileCodes.APC)
-                        md = dataListContractorasc[index].consecutive > 1 && cantModify.length >1 ? dataListContractorasc[index].consecutive : 'ACTUAL'
-                        let plazoAmpliacion = this._shareService.calcularDiferencia(dataListContractorasc[index].extensionInitialDate, dataListContractorasc[index].extensionFinalDate);
-                        this.listaData[this.listaData.length] =
-                            [
-                                {
-                                    text: 'DURACION AMPLIACION ' + md + ':',
-                                    bold: true,
-                                },
-                                { text: plazoAmpliacion},
-                            ];
-                            this.listaData[this.listaData.length] =
-                            [
-                                {
-                                    text: ' ',
-                                    bold: true,
-                                },
-                                { text: ' '},
-                            ];
+                                    if (index1 == 0) {
+                                        this.fillIngTableAddition(dataListContractorasc, index, 2);
+                                        dataListContractorasc[index].createPdf = true;
+                                    }
+                                } else {
+                                    let extension = dataListContractorasc.find(f => f.typeModify == DocumentTypeFileCodes.APC && f.createPdf == false);
+                                    if (index1 > 1 && dataListContractorasc.length > 1 && extension != null) {
+                                        let dataIndexE = dataListContractorasc.findIndex(f => f.id == extension.id);
+                                        cont++;
+                                        this.fillingTableExtension(extension, index, 1)
+                                        dataListContractorasc[dataIndexE].createPdf = true;
 
-                        break;
+                                    }
+                                    if (extension == null) {
+                                        this.fillingTableExtension(dataListContractorasc, index, 2);
+                                        dataListContractorasc[index].createPdf = true;
+                                    }
+                                }
+                            }
+
+                            break;
+                        case DocumentTypeFileCodes.AM:
+                            for (let index1 = 0; index1 < cont; index1++) {
+                                let adition = dataListContractorasc.find(f => f.typeModify == DocumentTypeFileCodes.APC && f.createPdf == false)
+                                if ((index1 == 0 && dataListContractorasc.find(f => f.createPdf == false) != null) || (dataListContractorasc.length > 1 && adition != null)) {
+                                    if (index1 > 0 && dataListContractorasc.length > 1 && adition.createPdf == false) {
+                                        cont++
+                                        this.fillingTableExtension(adition, index, 1)
+                                        let dataIndex = dataListContractorasc.findIndex(f => f.id == adition.id);
+                                        dataListContractorasc[dataIndex].createPdf = true;
+                                    }
+
+                                    if (index1 == 0) {
+                                        this.fillingTableExtension(dataListContractorasc, index, 2);
+                                        dataListContractorasc[index].createPdf = true;
+
+                                    }
+                                } else {
+                                    let extension = dataListContractorasc.find(f => f.typeModify == DocumentTypeFileCodes.APC && f.createPdf == false);
+                                    if (index1 > 1 && dataListContractorasc.length > 1 && extension != null) {
+                                        let dataIndexE = dataListContractorasc.findIndex(f => f.id == extension.id);
+                                        cont++;
+                                        this.fillingTableExtension(dataListContractorasc, index, 2)
+                                        dataListContractorasc[dataIndexE].createPdf = true;
+
+                                    }
+
+                                    if (index1 == 1) {
+                                        this.fillIngTableAddition(dataListContractorasc, index, 2);
+                                        dataListContractorasc[index].createPdf = true;
+                                    }
+                                }
+                            }
+
+                            break;
+                        case DocumentTypeFileCodes.AAM:
+                            for (let index3 = 0; index3 < 3; index3++) {
+                                if (index3 == 0) {
+                                    this.fillIngTableAddition(dataListContractorasc, index, 1)
+
+                                } else if (index == 1) {
+                                    this.fillingTableExtension(dataListContractorasc, index, 2)
+                                }
+                                index++;
+                            }
+
+                            break;
+                    }
                 }
 
             }
 
-            debugger
             data.totalValueContract = this.addCommasToNumber(data.totalValueContract);
             data.unitValueContract = this.addCommasToNumber(data.unitValueContract);
             let docuemnt = null;
+
+            // Función para comparar números o manejar 'ACTUAL'
+            const compararNumeros = (a, b) => {
+                if (a.number === 'ACTUAL') return 1; // 'ACTUAL' siempre va al final
+                if (b.number === 'ACTUAL') return -1;
+                return parseInt(a.number, 10) - parseInt(b.number, 10);
+            };
+
+            // Ordenar el array por el campo 'number' usando la función de comparación
+            this.listaAddData = this.listaAddData.sort((a, b) => {
+                // Primero ordenar por typeModify
+                const typeModifyComparison = a.typeModify.localeCompare(b.typeModify);
+                if (a.typeModify !== b.typeModify) {
+                    return a.typeModify.localeCompare(b.typeModify);
+                  }
+                  if (a.number !== 'ACTUAL' && b.number !== 'ACTUAL') {
+                    return parseInt(a.number, 10) - parseInt(b.number, 10);
+                  }
+
+                  return compararNumeros(a.number, b.number);
+
+            });
+            debugger
+            this.listaAddData.forEach(element => {
+                this.lisDataTable.push(element.data)
+            });
+
+            console.log(this.lisDataTable);
             switch (dataListContractorasc[dataListContractorasc.length - 1].typeModify) {
                 case DocumentTypeFileCodes.APC:
-                    docuemnt = this.generateMinuteExtension(data, this.listaData);
+                    docuemnt = this.generateMinuteExtension(data, this.lisDataTable);
                     break;
                 case DocumentTypeFileCodes.ADC:
-                    docuemnt = this.generateAdditionMinute(data, this.listaData);
+                    docuemnt = this.generateAdditionMinute(data, this.lisDataTable);
                     break;
                 case DocumentTypeFileCodes.MC:
-                    docuemnt = this.generateModifyMinute(data, this.listaData);
+                    docuemnt = this.generateModifyMinute(data, this.lisDataTable);
+                    break;
+
+                default:
+                    if (dataListContractorasc[0].typeModify == DocumentTypeFileCodes.AA || dataListContractorasc[0].typeModify == DocumentTypeFileCodes.AAM || dataListContractorasc[0].typeModify == DocumentTypeFileCodes.ADC) {
+                        docuemnt = this.generateAdditionMinute(data, this.lisDataTable);
+                    }
+                    if (dataListContractorasc[0].typeModify == DocumentTypeFileCodes.AM || dataListContractorasc[0].typeModify == DocumentTypeFileCodes.APC) {
+                        docuemnt = this.generateMinuteExtension(data, this.lisDataTable);
+                    }
+                    if (dataListContractorasc[0].typeModify == DocumentTypeFileCodes.MC) {
+                        docuemnt = this.generateModifyMinute(data, this.lisDataTable);
+                    }
                     break;
             }
             // const documentMinuteAddition = {
@@ -1896,7 +2004,7 @@ export class MinutaContratoComponent implements OnInit {
             //                     //     },
             //                     //     '$ ' + data.additionValue,
             //                     // ]
-            //                 ].concat(this.listaData),
+            //                 ].concat(this.lisDataTable),
 
             //             }
             //         },
@@ -1905,45 +2013,45 @@ export class MinutaContratoComponent implements OnInit {
             //             text: [
             //                 {
             //                     text: 'En la Ciudad de Medellín, en las instalaciones del ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                 },
             //                 {
             //                     text: 'EL INSTITUTO TECNOLÓGICO METROPOLITANO',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                 },
             //                 {
             //                     text: ', se reunieron',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                 },
             //                 {
             //                     text: user.userName + ', ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                 },
             //                 {
             //                     text: ' identificado con Cédula de Ciudadanía Nº ' + user.userIdentification,
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                 },
             //                 {
             //                     text: 'actuando en calidad de Jefe de Oficina- Asesora Jurídica del Instituto Tecnológico Metropolitano, según Resolución Rectoral de nombramiento No. 1155 del 24 de noviembre de 2021 y la resolución rectoral 000775 de 10 de septiembre de 2020  delegada para la contratación Administrativa de los convenios interadministrativos del INSTITUTO TECNOLÓGICO METROPOLITANO – INSTITUCIÓN UNIVERSITARIA',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                     style: 'textStyle'
             //                 },
             //                 {
             //                     text: ' adscrita a la Alcaldía de Medellín con Nit. 800.214.750-7 debidamente autorizado por el Acuerdo 004 de 2011 del Consejo Directivo y Normas concordantes, ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     style: 'textStyle'
             //                 },
             //                 {
             //                     text: 'y ' + data.contractorName,
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                 },
             //                 {
             //                     text: ' identificado (a) con cédula de ciudadanía ' + data.contractorIdentification + ' en calidad de contratista, con el fin de hacer la siguiente modificación al contrato de prestación de servicio No. P-7240 de 2022, previa las siguientes:',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     style: 'textStyle'
             //                 },
             //             ],
@@ -1961,7 +2069,7 @@ export class MinutaContratoComponent implements OnInit {
             //             text: [
             //                 {
             //                     text: '1. De conformidad con el artículo 14 de la Ley 80 de 1993 en su parágrafo primero, las entidades estatales “tendrán la dirección general y la responsabilidad de ejercer el control y la vigilancia de la ejecución del contrato. En consecuencia, con el exclusivo objeto de evitar la paralización o la afectación grave de los servicios públicos a su cargo y asegurar la inmediata, continua y adecuada prestación, podrán, en los casos previstos en el numeral segundo de este artículo, interpretar los documentos contractuales y las estipulaciones en ellos convenidas, introducir modificaciones a lo contratado y, cuando las condiciones particulares de la prestación así lo exijan, terminar unilateralmente el contrato celebrado”. ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     style: 'textStyle'
             //                 },
             //             ],
@@ -1969,13 +2077,13 @@ export class MinutaContratoComponent implements OnInit {
             //         {
             //             margin: [10, 15, 10, 10],
             //             text: '2. En orden a lo dicho, el ' + fechaInicioContrato + ' las partes firmaron el Contrato de Prestación de Servicios No. P-' + data.contractNumber + ' de ' + new Date(dataProject.registerDate).getFullYear() + ', por un valor de ' + valorLetras + ' M/L ($ ' + data.totalValueContract + ' ) y un plazo de ejecución de ' + plazo + ', contados a partir del ' + fechaInicioContrato + ' fecha en la cual fue suscrita el acta de inicio de actividades',
-            //             fontSize: 10,
+            //             fontSize: 12,
             //             style: 'textStyle'
             //         },
             //         {
             //             margin: [10, 15, 10, 10],
             //             text: '3. Que es necesario ampliar  el contrato de prestación de servicios número P-' + data.contractNumber + ' de 2022 de conformidad con la necesidad que tiene la EMPRESAS VARIAS DE MEDELLIN S.A. al desarrollo de actividades y obligaciones en cumplimiento del alcance y el objeto del contrato interadministrativo No.  CW153520/2021-2023 , y seguir con el desarrollo de actividades legales, técnicas y operativas. La ampliación del contrato de prestación de servicios  P-' + data.contractNumber + ' de 2022 será por un período de DOS (2) DÍAS adicionales al término primigenio.',
-            //             fontSize: 10,
+            //             fontSize: 12,
             //             style: 'textStyle'
             //         },
             //         {
@@ -1990,7 +2098,7 @@ export class MinutaContratoComponent implements OnInit {
             //             text: [
             //                 {
             //                     text: 'CLÁUSULA PRIMERA: Modificar la cláusula segunda del contrato, en el sentido de ampliar el plazo de ejecución contractual en DIEZ (10) DÍAS    que se iniciarán a contar a partir del 19/08/2022  y se extenderá hasta el 28/08/2022  la cual quedará así:',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                     style: 'textStyle'
             //                 },
@@ -1999,7 +2107,7 @@ export class MinutaContratoComponent implements OnInit {
             //         {
             //             margin: [15, 10, 10, 15],
             //             text: '“SEGUNDA. -DURACIÓN DEL CONTRATO. El presente contrato tendrá una duración de ' + plazo + '  contados a partir de la suscripción del acta de inicio- la que se firmará una vez sea legalizado. PARAGRAFO El presente contrato está sujeto a la ejecución del contrato interadministrativo No. ' + data.contractNumber + ' DE ' + new Date(data.initialDateContract).getFullYear() + ' . Una vez finalizado el contrato interadministrativo, habrá lugar a la terminación y liquidación de este.”',
-            //             fontSize: 10,
+            //             fontSize: 12,
             //             bold: true,
             //             style: 'textStyle'
             //         },
@@ -2008,12 +2116,12 @@ export class MinutaContratoComponent implements OnInit {
             //             text: [
             //                 {
             //                     text: 'CLÁUSULA SEGUNDA: ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                 },
             //                 {
             //                     text: ' Modificar la cláusula tercera del valor del contrato, en el sentido de adicionar el mismo en la suma $ ' + data.additionValue + ' con cargo al certificado de compromiso presupuestal 668/5358  de 2022 y, rubro presupuestal ' + data.rubroContract + ', la cual quedará así:',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     style: 'textStyle'
             //                 },
             //             ],
@@ -2021,7 +2129,7 @@ export class MinutaContratoComponent implements OnInit {
             //         {
             //             margin: [15, 10, 10, 15],
             //             text: '“TERCERA. -VALOR DEL CONTRATO Y FORMA DE PAGO. El valor del presente contrato se fija en la suma de  $ ' + data.unitValueContract + ' El I.T.M. cancelará al CONTRATISTA, en pagos parciales correspondientes a la entrega del informe en donde conste el cumplimiento de las actividades correspondientes a la prestación del servicio. El pago se surtirá con base en los procedimientos internos, establecidos por la dependencia encargada, previo recibo a satisfacción expedido por el interventor, previa presentación de la factura o cuenta de cobro, adjuntando el comprobante del pago de aportes al Sistema de Seguridad Social. PARAGRAFO: En el evento en que el contratista no cumpla con las actividades correspondientes y/o el lleno de la totalidad de los requisitos establecidos para el pago de los honorarios (cuenta de cobro, declaración juramentada, informe de gestión y pago de la seguridad social) en las fechas establecidas según el cronograma de pagos, el pago de honorarios correspondiente a dicho periodo se acumulará para el periodo inmediatamente siguiente.”',
-            //             fontSize: 10,
+            //             fontSize: 12,
             //             bold: true,
             //             style: 'textStyle'
             //         },
@@ -2031,12 +2139,12 @@ export class MinutaContratoComponent implements OnInit {
             //             text: [
             //                 {
             //                     text: 'CLÁUSULA TERCERA: ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                 },
             //                 {
             //                     text: 'Continúan vigentes y de obligatoria observancia las demás cláusulas del contrato que no hayan sido modificadas en el presente OTROSI.',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     style: 'textStyle'
             //                 },
             //             ],
@@ -2046,12 +2154,12 @@ export class MinutaContratoComponent implements OnInit {
             //             text: [
             //                 {
             //                     text: 'CLÁUSULA CUARTA: ',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     bold: true,
             //                 },
             //                 {
             //                     text: ': Las partes con la suscripción del presente OTROSI que da cuenta de la voluntad que les asiste, manifiestan que renuncian a cualquier reclamación presente y futura inherentes a la misma.',
-            //                     fontSize: 10,
+            //                     fontSize: 12,
             //                     style: 'textStyle'
             //                 },
             //             ],
@@ -2059,12 +2167,12 @@ export class MinutaContratoComponent implements OnInit {
             //         {
             //             margin: [10, 10, 10, 10],
             //             text: 'Para constancia se firma por las partes en la ciudad de Medellín',
-            //             fontSize: 10,
+            //             fontSize: 12,
             //         },
             //     ],
             //     styles: {
             //         textStyle: {
-            //             fontSize: 10,
+            //             fontSize: 12,
             //             bold: true,
             //             alignment: 'justify'
             //         },
@@ -2073,12 +2181,13 @@ export class MinutaContratoComponent implements OnInit {
             let minute = {
                 document: docuemnt,
                 contractorName: data.contractorName,
-                contractorId: data.contractorId
+                contractorId: data.contractorId,
+                documentType: dataListContractorasc[0].typeModify
             }
             this.documentGenerated.push(minute);
         }
         if (this.documentGenerated.length > 0) {
-            this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeFileCodes.ADC, DocumentTypeCodes.OTROSI);
+            this.savePdfGenerated(this.documentGenerated, this.contractContractors.contractId, DocumentTypeCodes.OTROSI);
         }
     }
 
@@ -2130,14 +2239,14 @@ export class MinutaContratoComponent implements OnInit {
         return value.toLocaleString('es');
     }
 
-    private async savePdfGenerated(pdfDocument: any[], contractId: string, origin: string, anexo: string) {
+    private async savePdfGenerated(pdfDocument: any[], contractId: string, anexo: string) {
         let registerFileLis: FileContractor[] = [];
         for (let index = 0; index < pdfDocument.length; index++) {
-            let documentType = this.typeDocs.find(f => f.code === origin);
+            let documentType = this.typeDocs.find(f => f.code === pdfDocument[index].documentType);
             let minuteType = null;
             minuteType = this.typeDocs.find(f => f.code === anexo)
             if (documentType == null) {
-                documentType = this.typeMinute.find(f => f.code === origin)
+                documentType = this.typeMinute.find(f => f.code === pdfDocument[index].documentType)
             }
             let nombreDocumento = documentType.documentTypeDescription == null ? documentType.minuteTypeDescription : documentType.documentTypeDescription + pdfDocument[index].contractorName;
             let userId = this._auth.accessId;
@@ -2146,7 +2255,34 @@ export class MinutaContratoComponent implements OnInit {
             const dataURL = await new Promise<string>((resolve) => {
                 pdf.getDataUrl((dataURL) => resolve(dataURL));
             });
-            debugger
+            // try {
+            //     const dataURL = await new Promise<string>((resolve) => {
+            //       pdf.getDataUrl((dataURL) => resolve(dataURL));
+            //     });
+            //     const registerFile: FileContractor = {
+            //         userId: userId,
+            //         contractorId: pdfDocument[index].contractorId,
+            //         contractId: contractId,
+            //         filesName: nombreDocumento,
+            //         fileType: 'PDF',
+            //         documentType: minuteType.id,
+            //         descriptionFile: documentType.documentTypeDescription == null ? documentType.minuteTypeDescription : documentType.documentTypeDescription + ' generada',
+            //         registerDate: date,
+            //         modifyDate: date,
+            //         filedata: dataURL.split('data:application/pdf;base64,')[1],
+            //         monthPayment: null,
+            //         folderId: null,
+            //         origin: origin
+            //     };
+            //     registerFileLis.push(registerFile)
+            //     // Hacer algo con dataURL si es necesario
+
+            //     return dataURL;
+            //   } catch (error) {
+            //     // Manejar cualquier error que pueda ocurrir durante la obtención del dataURL
+            //     console.error('Error al obtener el dataURL:', error);
+            //     throw error; // Puedes lanzar el error nuevamente si es necesario
+            //   }
             const registerFile: FileContractor = {
                 userId: userId,
                 contractorId: pdfDocument[index].contractorId,
@@ -2163,6 +2299,7 @@ export class MinutaContratoComponent implements OnInit {
                 origin: origin
             };
             registerFileLis.push(registerFile)
+
         }
         this._upload.UploadFileBillContractors(registerFileLis)
             .subscribe((res) => {
@@ -2186,6 +2323,89 @@ export class MinutaContratoComponent implements OnInit {
                 });
     }
 
+    private fillIngTableAddition(dataListContractorasc: any, index: any, origin: any) {
+        let md = null;
+        let documentType = null;
+
+        if (origin == 2) {
+            documentType = dataListContractorasc[index].typeModify == DocumentTypeFileCodes.AA || dataListContractorasc[index].typeModify == DocumentTypeFileCodes.AAM || dataListContractorasc[index].typeModify == DocumentTypeFileCodes.ADMC ? DocumentTypeFileCodes.ADC : dataListContractorasc[index].typeModify
+
+            let cantModify = this.listaAddData.filter(f => f.typeModify === documentType);
+            md = cantModify.length > 1 ? cantModify[cantModify.length - 1].number : dataListContractorasc[index].consecutive > 1 ? cantModify.length > 0 ? cantModify[cantModify.length-1].number : 1 : 'ACTUAL';
+
+            dataListContractorasc[index].additionValue = this.addCommasToNumber(dataListContractorasc[index].additionValue);
+
+        } else {
+            md = index > 0 ? dataListContractorasc.consecutive : 'ACTUAL';
+            dataListContractorasc.additionValue = this.addCommasToNumber(dataListContractorasc.additionValue);
+            documentType = dataListContractorasc.typeModify == DocumentTypeFileCodes.AA || dataListContractorasc.typeModify == DocumentTypeFileCodes.AAM || dataListContractorasc.typeModify == DocumentTypeFileCodes.ADMC ? DocumentTypeFileCodes.ADC : dataListContractorasc.typeModify
+
+        }
+        let aditional = origin == 2 ? dataListContractorasc[index].additionValue : dataListContractorasc.additionValue
+        let row =
+            [
+                {
+                    text: 'VALOR ADICION ' + md + ':',
+                    bold: true,
+                },
+                { text: '$ ' + aditional },
+            ];
+        this.listaAddData.push({ typeModify: documentType, number: md,  data:row})
+
+        // this.lisDataTable[this.lisDataTable.length] =
+        //     [
+        //         {
+        //             text: ' ',
+        //             bold: true,
+        //         },
+        //         { text: ' ' },
+        //     ];
+
+    }
+
+    private fillingTableExtension(dataListContractorasc: any, index: any, origin: any) {
+        let md = null;
+        let plazoAmpliacion = null;
+        let documentType = null;
+        let modifyData = this.listaAddData.filter(f => f.typeModify == dataListContractorasc[index].typeModify)
+        if (origin == 2) {
+            plazoAmpliacion = this._shareService.calcularDiferencia(dataListContractorasc[index].extensionInitialDate, dataListContractorasc[index].extensionFinalDate);
+            documentType = dataListContractorasc[index].typeModify == DocumentTypeFileCodes.AA || dataListContractorasc[index].typeModify == DocumentTypeFileCodes.AAM || dataListContractorasc[index].typeModify == DocumentTypeFileCodes.AM ? DocumentTypeFileCodes.APC : dataListContractorasc[index].typeModify
+
+            modifyData = this.listaAddData.filter(f => f.typeModify == documentType)
+
+            // md = modifyData.length > 1 ? modifyData[modifyData.length - 1].number : (dataListContractorasc[index].consecutive > 1 || modifyData.length > 0) && index > 0 ? modifyData[modifyData.length -1].number : 'ACTUAL';
+            md = modifyData.length > 1 ? modifyData[modifyData.length - 1].number : dataListContractorasc[index].consecutive > 1  ? modifyData.length > 0 ? modifyData[modifyData.length-1].number : 1 : 'ACTUAL';
+
+        } else {
+            plazoAmpliacion = this._shareService.calcularDiferencia(dataListContractorasc.extensionInitialDate, dataListContractorasc.extensionFinalDate);
+            documentType = dataListContractorasc.typeModify == DocumentTypeFileCodes.AA || dataListContractorasc.typeModify == DocumentTypeFileCodes.AAM || dataListContractorasc.typeModify == DocumentTypeFileCodes.AM ? DocumentTypeFileCodes.APC : dataListContractorasc.typeModify
+            modifyData = this.listaAddData.filter(f => f.typeModify == documentType)
+
+            md = modifyData.length > 1 ? modifyData[modifyData.length - 1].number : (dataListContractorasc[index].consecutive > 1 || modifyData.length > 0) && index > 0 ? modifyData[modifyData.length -1].number : 'ACTUAL';
+
+
+        }
+        let row =
+            [
+                {
+                    text: 'DURACION AMPLIACION ' + md + ':',
+                    bold: true,
+                },
+                { text: plazoAmpliacion },
+            ];
+        this.listaAddData.push({ typeModify: documentType, number: md,  data: row})
+
+        // this.lisDataTable[this.lisDataTable.length] =
+        //     [
+        //         {
+        //             text: ' ',
+        //             bold: true,
+        //         },
+        //         { text: ' ' },
+        //     ];
+
+    }
     ngOnDestroy(): void {
         this._unsubscribe$.next(null);
         this._unsubscribe$.complete();

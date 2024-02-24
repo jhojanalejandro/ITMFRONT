@@ -29,8 +29,6 @@ export class GeneratePdfComponent implements OnInit {
     @Output() readonly pdfGenerated: EventEmitter<boolean> = new EventEmitter<boolean>();
     currentDate: string;
     anioAnterior: any = new Date().getFullYear() - 1;
-    headerImageBase654: any;
-    footerImageBase654: any;
     itmImageBase64: string = null;
     alcaldiaImageBase654: any;
     committeeRequestData: ResponseContractorPdf<CommitteeRequest>;
@@ -234,6 +232,8 @@ export class GeneratePdfComponent implements OnInit {
                         timer: 5000
                     });
                 }
+                this.hideComponent();
+                return;
             }
 
         }
@@ -2806,7 +2806,6 @@ export class GeneratePdfComponent implements OnInit {
                         ],
                     },
                 },
-
                 footer: {
                     margin: [10, 10],
                     text: 'Medellín - Colombia',

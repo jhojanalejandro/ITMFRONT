@@ -9,13 +9,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FileListManagerService } from '../../services/list-file.service';
 import { UploadFileContractComponent } from '../upload-file-contract/upload-file-contract.component';
+import Swal from 'sweetalert2';
+import { AuthService } from 'app/core/auth/auth.service';
+import { GenericService } from 'app/modules/admin/generic/generic.service';
 
 
 @Component({
     selector: 'file-list-contract',
     templateUrl: './file-list-contract.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileListContractComponent implements OnInit, OnDestroy {
     checked = false;
@@ -36,7 +37,6 @@ export class FileListContractComponent implements OnInit, OnDestroy {
     contractId: string;
     folderId: string;
 
-
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -44,6 +44,8 @@ export class FileListContractComponent implements OnInit, OnDestroy {
         private _fileManagerService: FileListManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _matDialog: MatDialog,
+        private _auth: AuthService,
+        private _generic: GenericService
     ) { }
 
     ngOnInit(): void {
@@ -52,6 +54,7 @@ export class FileListContractComponent implements OnInit, OnDestroy {
         this.getData();
         this._fileManagerService.setContractId(this.contractId);
         this._fileManagerService.setFolderId(this.folderId);
+        this.validatreSessionpPanel(false);
 
     }
 
@@ -135,6 +138,7 @@ export class FileListContractComponent implements OnInit, OnDestroy {
         return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.Id + 1}`;
 
     }
+
     selectRow($event: any, dataSource: any) {
         if ($event.checked) {
             this.value = dataSource;
@@ -156,14 +160,13 @@ export class FileListContractComponent implements OnInit, OnDestroy {
         );
 
         // Get the item
-        this._fileManagerService.getFileByContract(this.contractId,this.folderId)
+        this._fileManagerService.getFileByContract(this.contractId, this.folderId)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((item: any) => {
                 this.items = item;
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-
 
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
@@ -176,8 +179,40 @@ export class FileListContractComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
             });
     }
-    
+
+    validatreSessionpPanel(activateSession: boolean) {
+
+        const uploadFile = {
+            activateSession: activateSession,
+            panelCode: 'FLMG',
+            userId: this._auth.accessId,
+            startSessionDate: new Date(),
+            activate: activateSession,
+            finalSessionDate: activateSession ? null : new Date(),
+            contractId: this.contractId,
+        };
+        this._generic.validateSessionPanel(uploadFile).subscribe((res) => {
+            if (res) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: res.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+
+        },
+            (response) => {
+                console.log(response);
+                Swal.fire('Error', 'Error al Registrar la informacion!', 'error');
+            });
+    }
+
+
     ngOnDestroy(): void {
+        this.validatreSessionpPanel(false);
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

@@ -14,8 +14,6 @@ import { ShowFileComponent } from '../show-file/show-file.component';
 @Component({
     selector: 'detail-file-payment',
     templateUrl: './detail-file-payment.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailFilePaymentComponent implements OnInit, OnDestroy {
     userName: any;

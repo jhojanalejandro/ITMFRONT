@@ -23,6 +23,10 @@ export interface OtherMinute{
     generalObligations: any;
     typeModify: string;
     initialValue: any;
+    additionalText: string;
+    obligationType: string;
+    createPdf: boolean;
+
 }
 
 export interface ResponseContractorPdf<T>{
