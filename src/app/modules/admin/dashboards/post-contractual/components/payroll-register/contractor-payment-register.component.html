@@ -25,13 +25,13 @@
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Cantidad Contratista</mat-label>
-                    <input disabled="true" id="ejecucion" 
+                    <input disabled="true" id="ejecucion"
                         formControlName="cantidadContratistas" autocomplete="off" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
                 </mat-form-field>
                 <mat-form-field class="hiring" appearance="fill">
                     <mat-label>Pago Número</mat-label>
-                    <input disabled="true" id="ejecucion" 
+                    <input disabled="true" id="ejecucion"
                         formControlName="consecutive" autocomplete="off" matInput>
                     <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:scale'"></mat-icon>
                 </mat-form-field>
@@ -91,8 +91,6 @@
                             {{pago.viewValue}}
                         </mat-option>
                     </mat-select>
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:cash'">
-                    </mat-icon>
                     <mat-error *ngIf="formContractorPayment.get('cashPayment').hasError('required')">
                         El Campo pago requerido
                     </mat-error>

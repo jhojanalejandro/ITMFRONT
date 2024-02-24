@@ -21,14 +21,10 @@
                             {{contarto.projectName}}
                         </mat-option>
                     </mat-select>
-                    <mat-icon
-                    class="icon-size-5"
-                    matSuffix
-                    [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                     <mat-error *ngIf="formFile.get('IdProject').hasError('required')">
                         Este Campo es requerido
                     </mat-error>
-                </mat-form-field> 
+                </mat-form-field>
                 <div>
                 </div>
                 <div class="folder" *ngIf="!mostrarContrato">
@@ -41,7 +37,7 @@
                     </mat-form-field>
                 </div>
                 <div class="text-center pt-8">
-                    <input formControlName="file" type="file" 
+                    <input formControlName="file" type="file"
                     accept="{{aceptFile}}"
                     mat-flat-button color="primary"  (change)="onChange($event)">
                 </div>
@@ -56,7 +52,7 @@
                     <h3>Loading ...</h3>
                 </div>
             </div>
-        </form>      
+        </form>
     </div>
 
 </div>

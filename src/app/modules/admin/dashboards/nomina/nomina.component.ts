@@ -85,10 +85,6 @@ export class NominaComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }
-  selectRowFull(data: any, type: any) {
-    if (type === 'register') {
-    }
-  }
 
   getContractsData() {
     // Get the data

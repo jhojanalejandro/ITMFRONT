@@ -89,11 +89,10 @@
                         </tr>
 
                         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"
-                            (click)="selection.toggle(row); selectRowFull(row,'register')">
+                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;">
                         </tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of contracts"></mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of contracts"></mat-paginator>
 
                 </div>
             </div>

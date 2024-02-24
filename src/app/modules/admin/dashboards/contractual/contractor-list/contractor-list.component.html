@@ -241,32 +241,32 @@
                                                 </mat-icon>
                                             </button>
                                             <mat-menu #summaryMenu="matMenu">
-                                                <button class="aregar" [matTooltip]="'Agregar datos'"
+                                                <button class="aregar" [matTooltip]="'Agregar o editar datos de contratación'"
                                                     (click)="registrarDatosContratacion(element)" mat-menu-item>
                                                     <mat-icon svgIcon="heroicons_solid:pencil-alt"></mat-icon>
-                                                    Agregar datos
+                                                    Datos contrato
                                                 </button>
-                                                <button [matTooltip]="'Generar'"
+                                                <button [matTooltip]="'Generar PDF solicitud de comite'"
                                                     (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
                                                     mat-menu-item>
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Solicitud de comite
+                                                    PDF Solicitud de comite
                                                 </button>
-                                                <button [matTooltip]="'GENERAR PDF'"
+                                                <button [matTooltip]="'Generar PDF estudios previos'"
                                                     (click)="generatedPdfContractor(element,'ESTUDIOS PREVIOS')"
                                                     [color]="'primary'" mat-menu-item>
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Estudios Previos
+                                                    PDF Estudios Previos
                                                 </button>
-                                                <button [matTooltip]="'Agregar Modificacion'"
+                                                <button [matTooltip]="'Generar PDF minuta'"
                                                     (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Minuta
+                                                    PDF Minuta
                                                 </button>
-                                                <button [matTooltip]="'Generar'" *ngIf="visibleOption" mat-menu-item
+                                                <button [matTooltip]="'Generar otro sí'" *ngIf="visibleOption" mat-menu-item
                                                     (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
                                                     <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    Generar Otro si
+                                                    PDF Otro si
                                                 </button>
                                                 <button [matTooltip]="'Agregar Modificacion'"
                                                     (click)="addTermFileContract(element)" [color]="'primary'"
@@ -493,7 +493,7 @@
                         <!-- <mat-paginator [length]="contractorsList.length" [pageSizeOptions]="[1,3,10, 30, 50, 100]"
                             aria-label="Select page of contractorsList">
                         </mat-paginator> -->
-                        <mat-paginator [pageSizeOptions]="[1,3,5, 10, 25, 100]" [length]="contractorsList.length"
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [length]="contractorsList.length"
                             aria-label="Select page of contractorsList"></mat-paginator>
 
                     </div>

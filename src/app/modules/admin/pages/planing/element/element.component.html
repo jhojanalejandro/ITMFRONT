@@ -18,11 +18,11 @@
             <!-- Card form -->
             <form class="flex flex-col flex-0  w-full p-6 sm:p-4 space-y-2 overflow-y-auto"
                 [formGroup]="elementForm" #elementNgForm="ngForm">
-                <mat-form-field class="container" appearance="fill">
+                <mat-form-field class="container" appearance="fill" >
                     <mat-label>Consecutivo</mat-label>
                     <input matInput id="consecutivo" type="text" formControlName="consecutivo" autocomplete="off"
                         matInput placeholder="Consecutivo">
-                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:annotation'"></mat-icon>
+                    <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_outline:trending-up'"></mat-icon>
                     <mat-error *ngIf="elementForm.get('consecutivo').hasError('required')">
                         El Campo Consecutivo es requerido
                     </mat-error>
@@ -36,8 +36,6 @@
                                 {{modificacion.minuteTypeDescription}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                         <mat-error *ngIf="elementForm.get('modificacion').hasError('required')">
                             El Campo arl es requerido
                         </mat-error>
@@ -50,8 +48,6 @@
                                 {{modificacion.fechaFinalizacion | date}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                         <mat-error *ngIf="elementForm.get('modificacion').hasError('required')">
                             El Campo arl es requerido
                         </mat-error>
@@ -81,28 +77,24 @@
                                 {{tipo.elementTypeDescription}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="elementField">
                         <mat-label>CPC</mat-label>
                         <mat-select [formControlName]="'cpc'" (selectionChange)="changecpcType($event)" name="tipoCPC">
                             <mat-option *ngFor="let tipo of cpcType" [value]="tipo.id">
                                 {{tipo.cpcNumber}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="elementField">
                         <mat-label>Nombre Cpc</mat-label>
                         <input type="mail" id="nombreCpc" formControlName="nombreCpc" autocomplete="off" matInput
                             placeholder="Nombre Cpc">
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                     </mat-form-field>
                 </div>
-                <div class="folder">
-                    <mat-form-field  appearance="fill">
+                <div class="folder" >
+                    <mat-form-field  appearance="fill" class="elementField">
                         <mat-label>Cantidad Contratistas</mat-label>
                         <input type="number" id="contractorCant" formControlName="contractorCant"
                             (change)="calculate('valor')" autocomplete="off" matInput
@@ -112,7 +104,7 @@
                             El Campo Cantidad Contratista es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="elementField">
                         <mat-label>Cantidad Días</mat-label>
                         <input type="number" id="cantDay" formControlName="cantDay" (change)="calculate('dias')"
                             (change)="preventExceedingMax($event)" autocomplete="off" matInput
@@ -122,7 +114,7 @@
                             El Campo Cantidad Días es requerido
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="elementField">
                         <mat-label>Valor Unidad</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" id="unitValue" [formControlName]="'unitValue'" (change)="calculate('valor')"
@@ -133,13 +125,13 @@
                     </mat-form-field>
                 </div>
                 <div class="folder">
-                    <mat-form-field *ngIf="typeContractor" disable appearance="fill">
+                    <mat-form-field *ngIf="typeContractor" disable appearance="fill" class="elementField">
                         <mat-label>Valor Por día contratistas</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" formControlName="unitValueDay" autocomplete="off" matInput
                             placeholder="Valor por Día">
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="elementField">
                         <mat-label>Valor Total</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" (change)="onChangeTotalValue($event)" id="totalValue"
@@ -147,7 +139,7 @@
                         <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:currency-dollar'">
                         </mat-icon>
                     </mat-form-field>
-                    <mat-form-field appearance="fill">
+                    <mat-form-field appearance="fill" class="elementField">
                         <mat-label>Recursos </mat-label>
                         <span matPrefix>$</span>
                         <input type="text" id="recursos" formControlName="recursos" (change)="calculate('valor')"
@@ -155,7 +147,7 @@
                     </mat-form-field>
                 </div>
                 <div class="folder">
-                    <mat-form-field [hidden]="totalCalculate" appearance="fill">
+                    <mat-form-field [hidden]="totalCalculate" appearance="fill" class="elementField">
                         <mat-label>Valor por dia contratista</mat-label>
                         <span matPrefix>$</span>
                         <input type="text" id="valorDiaContratista" formControlName="valordiaContratista"

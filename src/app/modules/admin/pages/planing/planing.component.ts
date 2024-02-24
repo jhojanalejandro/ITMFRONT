@@ -3,8 +3,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 @Component({
     selector       : 'planing',
     templateUrl    : './planing.component.html',
-    encapsulation  : ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlaningComponent
 {

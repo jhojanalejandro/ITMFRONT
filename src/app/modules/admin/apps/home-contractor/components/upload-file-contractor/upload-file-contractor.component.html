@@ -19,8 +19,6 @@
                                 {{doc.documentTypeDescription}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix
-                            [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                         <mat-error *ngIf="formFile.get('typeDoc').hasError('required')">
                             Este Campo es requerido
                         </mat-error>

@@ -101,6 +101,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
     if (this._data != null) {
       this.updateData = true;
       this.titleButoon = 'Actualizar';
+      debugger
       this.formProject.patchValue({
         projectName: this._data.data.projectName,
         companyName: this._data.data.companyName,
@@ -120,7 +121,7 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
         project: this._data.data.project,
         resource: this._genericService.addCommasToNumber(this._data.data.resourceContract),
         areaCode: this._data.data.areaCode,
-        registerDateContract: this.formProject.value.registerDateContrac
+        registerDateContract: this._data.data.fechaContrato
       });
 
       // this.dataProject.rubro = this._data.data.rubro;
@@ -270,7 +271,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
   }
 
   private buildObject(register: boolean, id: string): any {
-    debugger
     let detalle = null;
     if (register) {
       if (this.formProject.value.statusContract == null) {

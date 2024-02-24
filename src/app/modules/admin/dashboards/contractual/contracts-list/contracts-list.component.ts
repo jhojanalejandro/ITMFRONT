@@ -14,7 +14,6 @@ import Swal from 'sweetalert2';
 import { ContractList } from 'app/modules/admin/pages/planing/models/planing-model';
 import { ModuloEnum } from 'app/layout/common/enums/modulo-enum/modulo';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-contracts-list-contarctual',

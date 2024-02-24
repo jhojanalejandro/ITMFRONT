@@ -36,8 +36,6 @@
                                 {{componente.nombreComponente}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                         <mat-error *ngIf="formContractor.get('componente').hasError('required')">
                             El Campo componente es obligatorio
                         </mat-error>
@@ -50,8 +48,6 @@
                                 {{activity.nombreActividad}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                     </mat-form-field>
                     <mat-form-field class="hiringField" appearance="fill">
                         <mat-label>Lista Elementos</mat-label>
@@ -61,8 +57,6 @@
                                 {{element.nombreElemento}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                         <mat-error *ngIf="formContractor.get('elemento').hasError('required')">
                             El Campo elemento es requerido
                         </mat-error>
@@ -118,8 +112,6 @@
                                 {{nivel.viewValue}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                     </mat-form-field>
                 </div>
 
@@ -132,8 +124,6 @@
                                 {{poliza.viewValue}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                     </mat-form-field>
                     <mat-form-field class="hiringField" *ngIf="showDataPoliza" appearance="fill">
                         <mat-label>Número Poliza</mat-label>

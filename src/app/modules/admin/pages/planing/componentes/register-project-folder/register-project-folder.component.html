@@ -50,7 +50,6 @@
                                 {{exe.detailTypeDescripcion}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Rubro</mat-label>
@@ -59,8 +58,6 @@
                                 {{tipo.rubroNumber}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:office-building'">
-                        </mat-icon>
                     </mat-form-field>
                     <mat-form-field class="contractField" appearance="fill">
                         <mat-label>Nombre Rubro</mat-label>
@@ -75,7 +72,6 @@
                                 {{rubro.viewValue}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
                         <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
                             Este campo es requerido
                         </mat-error>
@@ -87,7 +83,6 @@
                                 {{state.statusContractDescription}}
                             </mat-option>
                         </mat-select>
-                        <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:bookmark-alt'"></mat-icon>
                         <mat-error *ngIf="formProject.get('statusContract').hasError('required')">
                             Este campo es requerido
                         </mat-error>

@@ -35,15 +35,19 @@
         </div>
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <button [matTooltip]="'Generar cuadro economico'" class="ml-3" mat-flat-button [color]="'primary'" (click)="generateEconomicTable()">
-                <mat-icon svgIcon="mat_solid:file_download"></mat-icon>
-                <span class="ml-2 mr-1">Cuadro Economico</span>
+                <img
+                class="w-7 h-7"
+                [src]="'assets/images/flags/excelIcon.png'">                <span class="ml-2 mr-1">Cuadro Economico</span>
             </button>
             <button [matTooltip]="'Importar elemento'" class="ml-3" mat-flat-button [color]="'primary'" (click)="uploadExcel()">
-                <mat-icon svgIcon="mat_solid:upload_file"></mat-icon>
-                <span class="ml-2 mr-1">Importar</span>
+                <img
+                class="w-7 h-7"
+                [src]="'assets/images/flags/excelIcon.png'">                <span class="ml-2 mr-1">Importar</span>
             </button>
             <button  [matTooltip]="'Exportar elemento'" class="ml-3" mat-flat-button [color]="'primary'" (click)="exportarElementos()">
-                <mat-icon svgIcon="mat_solid:file_download"></mat-icon>
+                <img
+                class="w-7 h-7"
+                [src]="'assets/images/flags/excelIcon.png'">
                 <span class="ml-2 mr-1">Exportar</span>
             </button>
             <button [matTooltip]="'Cambiar Porcentaje de Cálculo'" class="ml-3 fuse-mat-button-rounded" mat-stroked-button [color]="'primary'" (click)="changeCalculo()">
