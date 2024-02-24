@@ -575,7 +575,7 @@ export class AddComponentsComponent implements OnInit {
                     var downloadURL = window.URL.createObjectURL(res);
                     var link = document.createElement('a');
                     link.href = downloadURL;
-                    link.download = "Reporte";
+                    link.download = "CuadroEconomico";
                     link.click();
                     if (res) {
                         Swal.fire({
