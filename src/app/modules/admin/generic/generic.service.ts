@@ -20,7 +20,7 @@ import { GlobalConst } from 'app/layout/common/global-constant/global-constant';
     providedIn: 'root',
 })
 export class GenericService {
-    private _data: BehaviorSubject<any> = new BehaviorSubject(null);
+    private _contractsList: BehaviorSubject<any> = new BehaviorSubject(null);
     apiUrl: any = environment.apiURL;
 
     /**
@@ -31,8 +31,8 @@ export class GenericService {
     /**
      * Getter for data
      */
-    get data$(): Observable<any> {
-        return this._data.asObservable();
+    get getContracts$(): Observable<any> {
+        return this._contractsList.asObservable();
     }
 
     UpdateContractFolder(data: any) {
@@ -57,7 +57,7 @@ export class GenericService {
         let urlEndPoint = this.apiUrl + environment.GetAllContractEndpoint;
         return this._httpClient.get(urlEndPoint, { params }).pipe(
             tap((response: any) => {
-                this._data.next(response);
+                this._contractsList.next(response);
             })
         );
     }

@@ -254,11 +254,11 @@ export class ElementCardComponent implements OnInit, OnDestroy {
             componentId: this._data.componentId,
             cantidadContratistas: this.elementForm.value.contractorCant,
             cantidadDias: this.elementForm.value.cantDay,
-            valorUnidad: Math.ceil(Number(this.elementForm.value.unitValue.toString().replace(/\./g, ''))),
-            valorTotal: Math.ceil(Number(this.totalValue.toString().replace(/\./g, ''))),
-            valorPorDia: Math.ceil(Number(this.valorPorDiaContratistas.toString().replace(/\./g, ''))),
-            valorPorDiaContratista: Math.ceil(Number(this.valorPorDiaContratista.toString().replace(/\./g, ''))),
-            valorTotalContratista: Math.ceil(Number(this.valorPorDiaContratista.toString().replace(/\./g, ''))),
+            valorUnidad: Math.round(Number(this.elementForm.value.unitValue.toString().replace(/\./g, ''))),
+            valorTotal: Math.round(Number(this.totalValue.toString().replace(/\./g, ''))),
+            valorPorDia: Math.round(Number(this.valorPorDiaContratistas.toString().replace(/\./g, ''))),
+            valorPorDiaContratista: Math.round(Number(this.valorPorDiaContratista.toString().replace(/\./g, ''))),
+            valorTotalContratista: Math.round(Number(this.valorPorDiaContratista.toString().replace(/\./g, ''))),
             cpcId: this.elementForm.value.cpc,
             modificacion: modificacion,
             tipoElemento: this.elementForm.value.tipoElemento,
@@ -305,25 +305,23 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 }
             } else {
                 this.totalCalculate = false;
-                this.valorPorDiaContratista = Math.ceil(Number(this.elementForm.value.unitValue.toString().replace(/\./g, '')) / 30);
-                this.valorPorDiaContratistas = Math.ceil(this.valorPorDiaContratista * this.elementForm.value.contractorCant);
+                this.valorPorDiaContratista = Number(this.elementForm.value.unitValue.toString().replace(/\./g, '')) / 30;
+                this.valorPorDiaContratistas = this.valorPorDiaContratista * this.elementForm.value.contractorCant;
                 if (this.elementForm.value.totalValue === null || this._data.elemento.valorTotal.toString() != this.elementForm.value.totalValue) {
-                    this.totalValue = Math.ceil(Number(
+                    this.totalValue = Number(
                         this.valorPorDiaContratistas * this.elementForm.value.cantDay
-                    ));
+                    )
                     this.totalExacto = Math.ceil(this.totalValue);
                 } else if (this._data.elemento.valorTotal.toString() != this.elementForm.value.totalValue || this.elementForm.value.totalValue != null) {
 
                     this.totalExacto = Math.ceil(Number(
                         this.valorPorDiaContratistas * this.elementForm.value.cantDay
                     ));
-                    this.valorPorDiaContratista = Math.ceil(Number(
-                        this.valorPorDiaContratista * this.elementForm.value.cantDay
-                    ));
+                    this.valorPorDiaContratista =this.valorPorDiaContratista * this.elementForm.value.cantDay;
                     this.valorPorDiaContratista * this.elementForm.value.cantDay
-                    this.valorPorDiaContratista = Math.ceil(Number(
+                    this.valorPorDiaContratista = Number(
                         this.valorPorDiaContratista * this.elementForm.value.cantDay
-                    ));
+                    );
                     this.recursos += Math.ceil(this.elementForm.value.totalValue - this.totalExacto);
                 }
                 if (this.elementForm.value.recursos != null && this.elementForm.value.recursos != '') {
@@ -333,8 +331,8 @@ export class ElementCardComponent implements OnInit, OnDestroy {
                 }
             }
         } else {
-            this.valorPorDiaContratistas = Math.ceil(Number(this.elementForm.value.unitValue.toString().replace(/\./g, '')) / 30);
-            this.totalValue = Math.ceil(this.elementForm.value.cantDay * this.valorPorDiaContratistas);
+            this.valorPorDiaContratistas = Math.round((Number(this.elementForm.value.unitValue.toString().replace(/\./g, '')) / 30) / 1000) * 1000;
+            this.totalValue = Math.round((this.elementForm.value.cantDay * this.valorPorDiaContratistas) / 1000) * 1000;
             this.totalExacto = this._genericService.addCommasToNumber(this.totalValue);
             this.valorPorDiaContratista = '0'
         }
@@ -382,15 +380,15 @@ export class ElementCardComponent implements OnInit, OnDestroy {
         if (this._data.elemento.valorTotal === null || this._data.elemento.valorTotal === 0) {
             if (this.totalValue != this.elementForm.value.totalValue) {
                 if (this.totalValue < Number(this.elementForm.value.totalValue.toString().replace(/\./g, ''))) {
-                    this.recursos = Math.ceil(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')) - Number(this.totalValue));
+                    this.recursos = Math.round(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')) - Number(this.totalValue));
                 } else if (this.totalValue > Number(this.elementForm.value.totalValue.toString().replace(/\./g, ''))) {
-                    this.recursos = Math.ceil(Number(this.totalValue) - Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')));
+                    this.recursos = Math.round(Number(this.totalValue) - Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')));
                 }
             }
-            this.totalValue = Math.ceil(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')))
+            this.totalValue = Math.round(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')))
         } else {
 
-            this.totalValue = Math.ceil(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')))
+            this.totalValue = Math.round(Number(this.elementForm.value.totalValue.toString().replace(/\./g, '')))
         }
 
         this.totalExacto = this.totalValue + this.recursos;

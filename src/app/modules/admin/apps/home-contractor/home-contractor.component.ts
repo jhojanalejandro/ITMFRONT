@@ -312,7 +312,6 @@ export class HomeContractorComponent implements OnInit, OnDestroy {
         .getPersonalDataContractor(this._auth.accessId, this.contractSelected)
         .pipe(takeUntil(this._unsubscribeAll))
         .subscribe((Response) => {
-            debugger
             if(Response == null){
                 this.showbuttonPersonalData = false;
             }else{

@@ -78,7 +78,7 @@ export const appRoutes: Route[] = [
 
             // Dashboards
             {path: 'dashboards', children: [
-                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/contractual/contracts-list/contracts-lis.module').then(m => m.ContractListModule)},
+                {path: 'inicio', loadChildren: () => import('app/modules/admin/dashboards/contractual/contracts-list/contract-lis.module').then(m => m.ContractListModule)},
                 {path: 'lista-contratistas/:id/:contractname', loadChildren: () => import('app/modules/admin/dashboards/contractual/contractor-list/contractor-list.module').then(m => m.ContractorListModule)},
                 {path: 'nomina', loadChildren: () => import('app/modules/admin/dashboards/nomina/nomina.module').then(m => m.NominaModule)},
                 {path: 'pre-nomina-lista-contratistas/:id/:contractname', loadChildren: () => import('app/modules/admin/dashboards/post-contractual/post-contractual-list/post-contractual-list.module').then(m => m.PostContractualListModule)},

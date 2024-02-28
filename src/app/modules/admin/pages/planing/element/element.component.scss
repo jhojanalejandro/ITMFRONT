@@ -8,18 +8,19 @@
     width: 750PX !important;
     max-width: 800px !important;
 }
+textarea{
+    height: 200px !important;
+}
 
 .folder {
     margin-left: 5px;
     text-align: center;
 }
 
-textarea {
-    width: 100% !important;
-}
 
 .elementName {
     width: 750px !important;
+    padding-left: 8px;
 }
 
 .container {
@@ -28,5 +29,5 @@ textarea {
 }
 .elementField{
     padding-left: 8px;
-    width: 170px;
+    width: 250px;
 }

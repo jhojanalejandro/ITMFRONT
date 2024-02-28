@@ -1899,7 +1899,6 @@ export class MinutaContratoComponent implements OnInit {
                   return compararNumeros(a.number, b.number);
 
             });
-            debugger
             this.listaAddData.forEach(element => {
                 this.lisDataTable.push(element.data)
             });

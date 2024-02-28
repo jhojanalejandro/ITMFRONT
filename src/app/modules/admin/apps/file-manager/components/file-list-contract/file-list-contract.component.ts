@@ -192,7 +192,8 @@ export class FileListContractComponent implements OnInit, OnDestroy {
             contractId: this.contractId,
         };
         this._generic.validateSessionPanel(uploadFile).subscribe((res) => {
-            if (res) {
+            debugger
+            if (!res.success) {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',

@@ -108,7 +108,7 @@ export class ContractorListComponent
         'hiringStatus',
         'comiteGenerated',
         'previusStudy',
-        'minuteGnenerated',
+        'minuteGenerated',
         'acciones',
         'all',
     ];
@@ -175,6 +175,7 @@ export class ContractorListComponent
         private router: ActivatedRoute,
         private _formBuilder: FormBuilder,
         private _loadrouter: Router,
+        private _changeDetectorRef: ChangeDetectorRef,
         private _fileService: FileListManagerService
     ) {
         this.datePipe = new DatePipe('es');
@@ -185,7 +186,7 @@ export class ContractorListComponent
         { title: 'REGISTRO', name: 'statusContractor' },
         { title: 'JURIDICO', name: 'legalProccess' },
         { title: 'CONTRACTUAL', name: 'hiringStatus' },
-        { title: 'MINUTA', name: 'minuteGnenerated' },
+        { title: 'MINUTA', name: 'minuteGenerated' },
         { title: 'COMITE', name: 'comiteGenerated' },
         { title: 'ESTUDIO PREVIO', name: 'previusStudy' },
         { title: '', name: 'all' },
@@ -285,8 +286,9 @@ export class ContractorListComponent
     }
 
     getDataContractor() {
+
         this._contractorListService
-            .getContractorsByIdProject(this.contractId)
+            .contractorsList$
             .pipe(takeUntil(this._unsubscribe$))
             .subscribe((contractorsListResponse) => {
                 if (contractorsListResponse.success) {
@@ -300,7 +302,6 @@ export class ContractorListComponent
 
                         })
                     );
-                    debugger
                     if (this.paginator) {
                         this.paginator.length = this.contractorsList.length;
                       }
@@ -376,6 +377,7 @@ export class ContractorListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
+
                         this.getDataContractor();
                     }
                     this.selection.clear();
@@ -692,6 +694,7 @@ export class ContractorListComponent
                 .pipe(takeUntil(this._unsubscribe$))
                 .subscribe((result) => {
                     if (result) {
+                        this._changeDetectorRef.detectChanges();
                         this.getDataContractor();
                     }
                     this.selection.clear();
@@ -732,7 +735,7 @@ export class ContractorListComponent
                 return data.statusContractor.includes(filter);
             }
             if (this.statusSelected.viewValue === 'MINUTA') {
-                return data.minuteGnenerated.includes(filter);
+                return data.minuteGenerated.includes(filter);
             }
             if (this.statusSelected.viewValue == 'COMITE') {
                 return data.comiteGenerated.includes(filter);

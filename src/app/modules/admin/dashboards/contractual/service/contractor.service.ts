@@ -19,6 +19,10 @@ export class ContractorService {
     constructor(private _httpClient: HttpClient) {
     }
 
+    get contractorsList$(): Observable<any> {
+        return this._contractorsByContract.asObservable();
+    }
+
     getContractorsByIdProject(contractId: string) {
         const params = new HttpParams()
             .set('contractId', contractId);

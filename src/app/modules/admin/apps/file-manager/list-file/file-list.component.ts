@@ -369,7 +369,6 @@ export class FileListComponent implements OnInit, OnDestroy {
 
 
 private validatreSessionpPanel(activateSession: boolean) {
-        debugger
         const uploadFile = {
             activateSession: activateSession,
             panelCode: 'FLMG',
@@ -381,7 +380,7 @@ private validatreSessionpPanel(activateSession: boolean) {
             contractorId: this.contractorId
         };
         this._generic.validateSessionPanel(uploadFile).subscribe((res) => {
-            if (res) {
+            if (!res.success) {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',

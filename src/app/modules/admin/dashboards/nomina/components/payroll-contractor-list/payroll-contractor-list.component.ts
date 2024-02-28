@@ -731,7 +731,7 @@ export class PayrollContractualListComponent
                 return data.statusContractor.includes(filter);
             }
             if (this.statusSelected.viewValue === 'MINUTA') {
-                return data.minuteGnenerated.includes(filter);
+                return data.minuteGenerated.includes(filter);
             }
             if (this.statusSelected.viewValue == 'COMITE') {
                 return data.comiteGenerated.includes(filter);

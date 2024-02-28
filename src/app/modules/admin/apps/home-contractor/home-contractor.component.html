@@ -51,71 +51,67 @@
                     </div>
                 </div>
             </ng-container>
-            <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
-                <div class="hidden lg:flex flex-col items-start mr-8">
-                    <ng-container *ngIf="viewFilesContract">
-                        <div class="text-xl font-semibold">
-                            &nbsp;
-                            &nbsp;
-                            &nbsp;
-                            <button (click)="uploadDialog()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
-                                [routerLink]="['./']">
-                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
-                                <span>Cargar Archivo</span>
-                            </button>
-                            <button *ngIf="showbuttonPersonalData" (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
-                                [routerLink]="['./']">
-                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                                <span>Información Personal</span>
-                            </button>
-                            <button *ngIf="!showbuttonPersonalData" (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
-                                [routerLink]="['./']">
-                                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                                <span>Cargar Planilla</span>
-                            </button>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row items-start mt-8">
-                            <div class="flex items-center mb-6 sm:mb-0">
-                                <ng-container *ngIf="!filesCharged">
-                                    <div class="flex flex-col items-center mt-2">
-                                        <div
-                                            class="text-2xl sm:text-3xl font-bold tracking-tight leading-none text-red-500">
-                                            ¡Aún no hay archivos cargados!</div>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngIf="filesCharged">
-                                    <ng-container *ngFor="let item of fileContractorList">
-                                        <a (click)="onClickDownloadPdf(item.filedata, item.filesName)"
-                                            class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
-                                            <div class="aspect-w-9 aspect-h-6">
-                                                <div class="flex items-center justify-center">
-                                                    <!-- Icons -->
-                                                    <div class="relative">
-                                                        <mat-icon class="icon-size-14 text-hint"
-                                                            [svgIcon]="'iconsmind:file'">
-                                                        </mat-icon>
-                                                        <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                                            [class.bg-red-600]="'PDF'">
-                                                            {{item.fileType}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                                                <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">
-                                                    {{item.filesName}}
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </ng-container>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </ng-container>
+            <ng-container *ngIf="viewFilesContract">
+                <div class="text-xl font-semibold">
+                    &nbsp;
+                    &nbsp;
+                    <button (click)="uploadDialog()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                        [routerLink]="['./']">
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:photograph'"></mat-icon>
+                        <span>Cargar Archivo</span>
+                    </button>
+                    <button *ngIf="showbuttonPersonalData" (click)="addPersonalData()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                        [routerLink]="['./']">
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                        <span>Información Personal</span>
+                    </button>
+                    <button *ngIf="!showbuttonPersonalData" (click)="uploadNominaFile()" class="px-3 mr-1" mat-flat-button [color]="'primary'"
+                        [routerLink]="['./']">
+                        <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                        <span>Cargar Planilla</span>
+                    </button>
                 </div>
 
+                <div class="flex flex-col sm:flex-row items-start mt-8">
+                    <div class="flex items-center mb-6 sm:mb-0">
+                        <ng-container *ngIf="!filesCharged">
+                            <div class="flex flex-col items-center mt-2">
+                                <div
+                                    class="text-2xl sm:text-3xl font-bold tracking-tight leading-none text-red-500">
+                                    ¡Aún no hay archivos cargados!</div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="filesCharged">
+                            <ng-container *ngFor="let item of fileContractorList">
+                                <a (click)="onClickDownloadPdf(item.filedata, item.filesName)"
+                                    class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card">
+                                    <div class="aspect-w-9 aspect-h-6">
+                                        <div class="flex items-center justify-center">
+                                            <!-- Icons -->
+                                            <div class="relative">
+                                                <mat-icon class="icon-size-14 text-hint"
+                                                    [svgIcon]="'iconsmind:file'">
+                                                </mat-icon>
+                                                <div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+                                                    [class.bg-red-600]="'PDF'">
+                                                    {{item.fileType}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+                                        <div class="truncate" [matTooltip]="'CUENTA DE COBRO'">
+                                            {{item.filesName}}
+                                        </div>
+                                    </div>
+                                </a>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
                 <div class="hidden lg:flex flex-col items-start mr-8">
                     <ng-container *ngIf="viewFilesContract">
                         <div class="text-xl font-semibold">Archivos Generados

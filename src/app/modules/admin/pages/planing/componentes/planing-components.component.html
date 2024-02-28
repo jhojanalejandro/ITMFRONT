@@ -37,30 +37,30 @@
             <button [matTooltip]="'Generar cuadro economico'" class="ml-3" mat-flat-button [color]="'primary'" (click)="generateEconomicTable()">
                 <img
                 class="w-7 h-7"
-                [src]="'assets/images/flags/excelIcon.png'">                <span class="ml-2 mr-1">Cuadro Economico</span>
+                [src]="'assets/images/flags/excelIcon.png'">
+                <span class="ml-1 mr-1">Cuadro Economico</span>
             </button>
             <button [matTooltip]="'Importar elemento'" class="ml-3" mat-flat-button [color]="'primary'" (click)="uploadExcel()">
                 <img
                 class="w-7 h-7"
-                [src]="'assets/images/flags/excelIcon.png'">                <span class="ml-2 mr-1">Importar</span>
+                [src]="'assets/images/flags/excelIcon.png'">
+                <span class="ml-1 mr-1">Imp Elementos</span>
             </button>
             <button  [matTooltip]="'Exportar elemento'" class="ml-3" mat-flat-button [color]="'primary'" (click)="exportarElementos()">
                 <img
                 class="w-7 h-7"
                 [src]="'assets/images/flags/excelIcon.png'">
-                <span class="ml-2 mr-1">Exportar</span>
+                <span class="ml-1 mr-1">Exp Elementos</span>
             </button>
             <button [matTooltip]="'Cambiar Porcentaje de Cálculo'" class="ml-3 fuse-mat-button-rounded" mat-stroked-button [color]="'primary'" (click)="changeCalculo()">
                 <mat-icon class="icon-size-5" svgIcon="heroicons_outline:document-report"></mat-icon>
 
-                <span class="ml-2">Porcentaje</span>
+                <span class="ml-1">Porcentaje</span>
             </button>
             <button [matTooltip]="'Agregar Componente'" class="ml-3" mat-flat-button [color]="'primary'" (click)="addComponent()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                </svg>
-                Componente
+                <mat-icon svgIcon="add_circle"></mat-icon>
+                <span class="ml-1">Componente</span>
+
             </button>
         </div>
     </div>
@@ -191,25 +191,25 @@
                                         <div>CPC: {{dataElemento.cpcNumber}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>cantidad a Contratar: {{dataElemento.cantidadContratistas}}</div>
+                                        <div>Cantidad a contratar: {{dataElemento.cantidadContratistas}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>Cantidad de Días: {{dataElemento.cantidadDias}}</div>
+                                        <div>Cantidad de días: {{dataElemento.cantidadDias}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>Valor Unidad: {{dataElemento.valorUnidad | currency:'COP '}} </div>
+                                        <div>Valor unidad: {{dataElemento.valorUnidad | currency:'COP '}} </div>
                                     </div>
                                     <div class="my-2">
-                                        <div>Valor por Día Contratistas: {{dataElemento.valorPorDia | currency:'COP '}}</div>
+                                        <div>Valor por día contratistas: {{dataElemento.valorPorDia | currency:'COP '}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>Valor Total: {{dataElemento.valorTotal | currency:'COP '}}</div>
+                                        <div>Valor total: {{dataElemento.valorTotal | currency:'COP '}}</div>
                                     </div>
                                     <div class="my-2">
                                         <div>Recursos: {{dataElemento.recursos | currency:'COP '}}</div>
                                     </div>
                                     <div class="my-2">
-                                        <div>cantidad habilitada: {{dataElemento.cantidadEnable}}</div>
+                                        <div>Cantidad habilitada: {{dataElemento.cantidadEnable}}</div>
                                     </div>
                                 </div>
                             </fuse-card>
@@ -219,7 +219,7 @@
                 <div class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6">
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Sub Total</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">SubTotal</div>
                         </div>
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
@@ -230,34 +230,15 @@
                                     <mat-icon class="mr-1 icon-size-5 text-green-500"
                                         svgIcon="heroicons_solid:information-circle"></mat-icon>
                                     <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Suma de los totales de los Gastos.
+                                        Suma de los totales de los gastos.
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                        <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos operativos</div>
-                        </div>
-                        <div class="flex items-center mt-1">
-                            <div class="flex flex-col">
-                                <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    {{gastosOperativos | currency:'COP '}}
-                                </div>
-                                <div class="flex items-center">
-                                    <mat-icon class="mr-1 icon-size-5 text-green-500"
-                                        svgIcon="heroicons_solid:information-circle"></mat-icon>
-                                    <div class="font-medium text-sm text-secondary leading-none whitespace-nowrap">
-                                        Sub total * <span class="text-green-500">{{porcentajeCalculo}}%.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos Operativos</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Gastos operativos</div>
                         </div>
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
@@ -276,7 +257,7 @@
                     </div>
                     <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                         <div class="flex items-start justify-between">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Costo Contrato</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Costo contrato</div>
                         </div>
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
@@ -316,13 +297,13 @@
                         <div class="flex items-center mt-1">
                             <div class="flex flex-col">
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    Cantidad Contratistas: {{contractorCant}}
+                                    Cantidad contratistas: {{contractorCant}}
                                 </div>
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    <span>Cantidad Componentes: </span> {{componentCant}}
+                                    <span>Cantidad componentes: </span> {{componentCant}}
                                 </div>
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
-                                    <span>Cantidad Actividades: </span> {{activitiesCant}}
+                                    <span>Cantidad actividades: </span> {{activitiesCant}}
                                 </div>
                                 <div class="text-3xl font-semibold tracking-tight leading-tight">
                                     <span>Cantidad elementos: </span> {{elementosCant}}

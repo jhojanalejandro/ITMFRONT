@@ -16,9 +16,9 @@ import { ModuloEnum } from 'app/layout/common/enums/modulo-enum/modulo';
 import { UploadFileContractComponent } from 'app/modules/admin/apps/file-manager/components/upload-file-contract/upload-file-contract.component';
 
 @Component({
-  selector: 'app-contracts-list-contarctual',
-  styleUrls: ['./contracts-list.component.scss'],
-  templateUrl: './contracts-list.component.html',
+  selector: 'app-contract-list-contarctual',
+  styleUrls: ['./contract-list.component.scss'],
+  templateUrl: './contract-list.component.html',
 })
 export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
   userName: any;
@@ -105,7 +105,7 @@ export class ContractListComponent implements OnInit, OnDestroy,AfterViewInit {
 
 
  private getContractsData() {
-    this._gerenicService.getAllContract(true, ModuloEnum.CONTARCTUAL)
+    this._gerenicService.getContracts$
     .pipe(takeUntil(this._unsubscribeAll))
       .subscribe((Response) => {
         this.dataSource = new MatTableDataSource(Response);

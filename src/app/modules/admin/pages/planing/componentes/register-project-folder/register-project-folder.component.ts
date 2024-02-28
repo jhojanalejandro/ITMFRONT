@@ -101,7 +101,6 @@ export class RegisterContractFolderComponent implements OnInit, OnDestroy {
     if (this._data != null) {
       this.updateData = true;
       this.titleButoon = 'Actualizar';
-      debugger
       this.formProject.patchValue({
         projectName: this._data.data.projectName,
         companyName: this._data.data.companyName,

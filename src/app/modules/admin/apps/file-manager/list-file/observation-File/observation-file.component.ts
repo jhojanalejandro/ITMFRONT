@@ -126,7 +126,6 @@ export class ObservationFileComponent implements OnInit, OnDestroy {
     }
 
     AddObservationFile() {
-        debugger
         if (this.observationForm.invalid) {
             this.matDialogRef.close(true);
             this.alert = {

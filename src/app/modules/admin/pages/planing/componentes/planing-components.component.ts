@@ -370,36 +370,33 @@ export class AddComponentsComponent implements OnInit {
             }
         });
     }
-    guardarCalculo() {
-        const saveCalculo: any = {
-            id: this.contractId,
-            contractorsCant: this.contractorCant,
-            valorContrato: this.total,
-            valorSubTotal: this.subTotal,
-            gastosOperativos: this.gastosOperativos,
-            recursos: this.resource
-        };
+    async guardarCalculo() {
+        try {
+            const saveCalculo: any = {
+                id: this.contractId,
+                contractorsCant: this.contractorCant,
+                valorContrato: this.total,
+                valorSubTotal: this.subTotal,
+                gastosOperativos: this.gastosOperativos,
+                recursos: this.resource
+            };
 
-        this._contrtactService.UpdateCostContractFolder(saveCalculo)
-            .pipe(takeUntil(this._unsubscribe$))
-            .subscribe((res) => {
-                if (res.success) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: '',
-                        html: 'Información Registrada Exitosamente!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
+            const res = await this._contrtactService.UpdateCostContractFolder(saveCalculo).pipe(takeUntil(this._unsubscribe$)).toPromise();
 
-            }, (response) => {
-                console.log(response);
-
-                Swal.fire('Error', 'Error al Registrar la informacion', 'error');
-            });
-
+            if (res.success) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '',
+                    html: 'Información Registrada Exitosamente!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error', 'Error al Registrar la informacion', 'error');
+        }
     }
 
     private getActivity(e: any) {
@@ -608,8 +605,10 @@ export class AddComponentsComponent implements OnInit {
 
 
     ngOnDestroy(): void {
-        this._unsubscribe$.next(null);
-        this._unsubscribe$.complete();
+        this.guardarCalculo().then(() => {
+            this._unsubscribe$.next(null);
+            this._unsubscribe$.complete();
+        });
     }
 
 }

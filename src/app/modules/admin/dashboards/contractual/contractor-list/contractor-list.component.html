@@ -164,13 +164,13 @@
                                     </div>
                                     <div *ngIf="columna.name !='select' && columna.name !='acciones'">
                                         <p
-                                            *ngIf="element[columna.name]!= element.acciones  && element[columna.name]!= element.legalProccess
-                                     && element[columna.name]!= element.hiringStatus && element[columna.name]!= element.statusContractor && element[columna.name]!=element.comiteGenerated
-                                     && element[columna.name]!=element.minuteGnenerated  && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all">
+                                            *ngIf="columna.name!= 'legalProccess'
+                                     && columna.name!= 'hiringStatus' && columna.name!= 'statusContractor' && columna.name!='comiteGenerated'
+                                     && columna.name!= 'minuteGenerated'  && columna.name!='previusStudy' && columna.name!='all'">
                                             {{element[columna.name]}}
                                         </p>
                                         <span
-                                            *ngIf="element[columna.name]=== element.statusContractor && element[columna.name] != element.hiringStatus && element[columna.name]!=element.all"
+                                            *ngIf="columna.name === 'statusContractor'"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
                                     'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.statusContractor === 'EN REVISIÓN',
@@ -181,17 +181,18 @@
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]=== element.legalProccess && element[columna.name]!= element.comiteGenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.minuteGnenerated && element[columna.name]!=element.all;"
+                                            *ngIf="columna.name === 'legalProccess'"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess == 'EN PROCESO',
+                                            [ngClass]="{'bg-purple-200 text-purple-800 dark:bg-purple-600 dark:text-purple-50': element.legalProccess == 'EN PROCESO',
                                             'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.statusContractor === 'INHABILITADO',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.legalProccess === 'EN ESPERA',
+                                            'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.legalProccess === 'PENDIENTE',
+                                    'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.legalProccess === 'EN ESPERA',
                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.legalProccess === 'APROBADO'}">
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]=== element.hiringStatus && element[columna.name] != element.legalProccess && element[columna.name]!=element.all && element[columna.name]!=element.previusStudy"
+                                            *ngIf="columna.name=== 'hiringStatus'"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
                                             [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.hiringStatus == 'EN ESPERA',
                                     'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.hiringStatus === 'CONTRATANDO',
@@ -201,32 +202,35 @@
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]===element.comiteGenerated && element[columna.name]!=element.all"
+                                            *ngIf="columna.name === 'comiteGenerated'"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated == 'PENDIENTE',
-                                'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated === 'GENERADO',
+                                            [ngClass]="{'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.comiteGenerated == 'PENDIENTE',
+                                            'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.comiteGenerated === 'EN ESPERA',
+                                'bg-purple-200 text-purple-800 dark:bg-purple-600 dark:text-purple-50': element.comiteGenerated === 'GENERADO',
                                 'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.comiteGenerated === 'RECHAZADO',
                                 'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.comiteGenerated === 'APROBADO'}">
                                             <span class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}
                                             </span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]===element.previusStudy && element[columna.name] != element.comiteGenerated && element[columna.name]!=element.all"
+                                            *ngIf="columna.name=== 'previusStudy'"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy == 'PENDIENTE',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy === 'GENERADO',
+                                            [ngClass]="{'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.previusStudy == 'PENDIENTE',
+                                            'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.previusStudy === 'EN ESPERA',
+                                    'bg-purple-200 text-purple-800 dark:bg-purple-600 dark:text-purple-50': element.previusStudy === 'GENERADO',
                                     'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.previusStudy === 'RECHAZADO',
                                     'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.previusStudy === 'APROBADO'}">
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
                                         <span
-                                            *ngIf="element[columna.name]===element.minuteGnenerated && element[columna.name]!=element.previusStudy && element[columna.name]!=element.all"
+                                            *ngIf="columna.name=== 'minuteGenerated'"
                                             class="inline-flex items-center font-bold text-xs px-2.5 py-0.5 rounded-full tracking-wide uppercase"
-                                            [ngClass]="{'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGnenerated == 'PENDIENTE',
-                                            'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.minuteGnenerated === 'RECHAZADO',
-                                    'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGnenerated === 'GENERADO',
-                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGnenerated === 'APROBADO'}">
+                                            [ngClass]="{'bg-blue-200 text-blue-800 dark:bg-blue-600 dark:text-blue-50': element.minuteGenerated == 'PENDIENTE',
+                                            'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-orange-50': element.minuteGenerated === 'EN ESPERA',
+                                            'bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-50': element.minuteGenerated === 'RECHAZADO',
+                                    'bg-purple-200 text-purple-800 dark:bg-purple-600 dark:text-purple-50': element.minuteGenerated === 'GENERADO',
+                                    'bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-50': element.minuteGenerated === 'APROBADO'}">
                                             <span
                                                 class="leading-relaxed whitespace-nowrap">{{element[columna.name]}}</span>
                                         </span>
@@ -243,30 +247,41 @@
                                             <mat-menu #summaryMenu="matMenu">
                                                 <button class="aregar" [matTooltip]="'Agregar o editar datos de contratación'"
                                                     (click)="registrarDatosContratacion(element)" mat-menu-item>
-                                                    <mat-icon svgIcon="heroicons_solid:pencil-alt"></mat-icon>
-                                                    Datos contrato
+                                                    <img
+                                                    class="w-5 h-5"
+                                                    [src]="'assets/images/avatars/HiringUser.png'">
+                                                    <span class="ml-5 mr-1">Datos contratación</span>
                                                 </button>
                                                 <button [matTooltip]="'Generar PDF solicitud de comite'"
                                                     (click)="generatedPdfContractor(element,'SOLICITUD COMITE')"
                                                     mat-menu-item>
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    PDF Solicitud de comite
+                                                    <img
+                                                        class="w-5 h-5"
+                                                        [src]="'assets/images/flags/iconopdf.jpg'">
+                                                        <span class="ml-5 mr-1">Solicitud de comite</span>
                                                 </button>
                                                 <button [matTooltip]="'Generar PDF estudios previos'"
                                                     (click)="generatedPdfContractor(element,'ESTUDIOS PREVIOS')"
                                                     [color]="'primary'" mat-menu-item>
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    PDF Estudios Previos
+                                                    <img
+                                                        class="w-5 h-5"
+                                                        [src]="'assets/images/flags/iconopdf.jpg'">
+                                                        <span class="ml-5 mr-1">Estudios Previos</span>
                                                 </button>
                                                 <button [matTooltip]="'Generar PDF minuta'"
                                                     (click)="generarMinuta(element)" [color]="'primary'" mat-menu-item>
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    PDF Minuta
+                                                    <img
+                                                        class="w-5 h-5"
+                                                        [src]="'assets/images/flags/iconopdf.jpg'">
+                                                        <span class="ml-5 mr-1">Minuta</span>
+
                                                 </button>
                                                 <button [matTooltip]="'Generar otro sí'" *ngIf="visibleOption" mat-menu-item
                                                     (click)="generatedPdfContractor(null,'SOLICITUD COMITE')">
-                                                    <mat-icon svgIcon="mat_outline:picture_as_pdf"></mat-icon>
-                                                    PDF Otro si
+                                                    <img
+                                                        class="w-4 h-5 ml-2"
+                                                        [src]="'assets/images/flags/iconopdf.jpg'">
+                                                    Otro si
                                                 </button>
                                                 <button [matTooltip]="'Agregar Modificacion'"
                                                     (click)="addTermFileContract(element)" [color]="'primary'"

@@ -18,15 +18,22 @@
     text-align: center;
 }
 
-colorGreen{
+.colorGreen{
     margin: 5px;
     color: green;
 }
-colorBlue{
+.colorBlue{
     margin: 5px;
     color: blue !important;
 }
 .ctn{
     border: 1px solid currentColor !important;
     border-radius: 8px;
+}
+.container {
+    text-align: center; /* Alinea los divs dentro del contenedor */
+}
+
+.box {
+    display: inline-block; /* Hace que los divs se comporten como elementos en línea */
 }
